@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "CYPMode: mode-aware reinterpretation of TDC's binary CYP450 inhibition benchmarks"
+version: 0.1.0
+date-released: 2026-09-20
+url: "https://github.com/mohamedtalaat-gif/CYPMode"
+repository-code: "https://github.com/mohamedtalaat-gif/CYPMode"
+license: MIT
+authors:
+  - family-names: Talaat
+    given-names: Muhammad
+    affiliation: "Faculty of Pharmacy, Ain Shams University"
+    email: mohamed.talaat@pharma.asu.edu.eg

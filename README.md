@@ -258,6 +258,12 @@ independently, days apart, from the same underlying cryo-EM release.
   confirm a static coordination geometry but, as azamulin shows, silence
   on that front doesn't rule out a real, different mechanism.
 
+## Citation
+
+See [CITATION.cff](CITATION.cff), or use GitHub's "Cite this repository"
+button. A Zenodo-archived, DOI-bearing release will replace this once one
+exists — the GitHub release alone isn't a persistent identifier.
+
 ## License
 
 MIT.
