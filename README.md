@@ -260,9 +260,27 @@ independently, days apart, from the same underlying cryo-EM release.
 
 ## Citation
 
-See [CITATION.cff](CITATION.cff), or use GitHub's "Cite this repository"
-button. A Zenodo-archived, DOI-bearing release will replace this once one
-exists — the GitHub release alone isn't a persistent identifier.
+If you use CYPMode, please cite it as software, and disclose which part
+you relied on — the motif screen is a heuristic substructure alert, not a
+validated mechanism predictor, and the structural validation covers four
+compounds by design, not the whole CYP panel (see Scope and limitations,
+above). The same information, plus APA/BibTeX export, is also available
+via GitHub's "Cite this repository" button ([CITATION.cff](CITATION.cff)):
+
+```bibtex
+@software{talaat_cypmode_2026,
+  author  = {Talaat, Muhammad},
+  title   = {CYPMode: Mode-Aware Reinterpretation of TDC's Binary CYP450
+              Inhibition Benchmarks},
+  year    = {2026},
+  version = {0.1.0},
+  url     = {https://github.com/mohamedtalaat-gif/CYPMode},
+  license = {MIT}
+}
+```
+
+A Zenodo-archived, DOI-bearing release will replace this once one exists —
+the GitHub release alone isn't a persistent identifier.
 
 ## License
 
