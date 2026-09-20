@@ -64,10 +64,18 @@ pip install -e .
 The five-isoform panel is cached locally under `data/tdc_cache/`, so the
 default install (RDKit + pandas + Streamlit) is enough to run
 `cypmode.data.panel` and the app's motif screen without a network call.
-`pip install -e ".[tdc]"` pulls in `PyTDC` itself, only needed to refresh
-that cache from source. `pip install -e ".[validate]"` adds Biopython,
-needed only to parse the Boltz-2 structures in
-`cypmode/validation/structures.py`.
+To refresh that cache from source instead, install the `tdc` extra plus
+`PyTDC` itself as a separate, `--no-deps` step (PyTDC's own dependency tree
+pulls in packages that fail to build on Windows and aren't needed for this
+project's usage of it):
+
+```bash
+pip install -e ".[tdc]"
+pip install --no-deps "PyTDC==1.1.14"
+```
+
+`pip install -e ".[validate]"` adds Biopython, needed only to parse the
+Boltz-2 structures in `cypmode/validation/structures.py`.
 
 ## Run the app
 

@@ -27,5 +27,12 @@ jobs:
       - name: Install cypmode
         run: pip install -e ".[dev,tdc]"
 
+      # Separate, --no-deps step: PyTDC's own dependency tree pulls in
+      # cellxgene-census -> tiledbsoma, which has no prebuilt Windows wheel
+      # and fails building from source on CI. Pinned to the version this
+      # project is tested against. See pyproject.toml's tdc extra comment.
+      - name: Install PyTDC (no-deps)
+        run: pip install --no-deps "PyTDC==1.1.14"
+
       - name: Run tests
         run: pytest -v

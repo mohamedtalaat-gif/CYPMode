@@ -21,10 +21,28 @@ dependencies = [
 dev = ["pytest"]
 # Needed only to reload the raw CYP panel labels (cypmode/data/panel.py);
 # a local cache is checked into data/tdc_cache so most usage doesn't need it.
+# PyTDC itself is deliberately NOT listed here -- install it separately with
+# `pip install --no-deps PyTDC` (see README.md). PyTDC's own declared
+# dependency tree pulls in cellxgene-census -> tiledbsoma, which has no
+# prebuilt Windows wheel and fails building from source on CI (confirmed:
+# a plain `pip install PyTDC` broke Windows CI with a tiledbsoma/CMake
+# build error, while macOS/Linux passed). None of that is needed for the
+# tdc.single_pred.ADME path this project actually uses -- this extra lists
+# just the real runtime dependencies of that path, installed normally.
 # setuptools<81 is pinned because PyTDC imports pkg_resources at import
 # time, which modern setuptools no longer bundles -- confirmed directly by
 # a clean install failing with ModuleNotFoundError: pkg_resources otherwise.
-tdc = ["PyTDC", "setuptools<81"]
+tdc = [
+    "setuptools<81",
+    "fuzzywuzzy",
+    "huggingface_hub",
+    "openpyxl",
+    "PyYAML",
+    "requests",
+    "scikit-learn",
+    "seaborn",
+    "tqdm",
+]
 # Needed only for cypmode/validation/structures.py, which parses Boltz-2's
 # predicted mmCIF structures for the 4 solved-structure reference compounds.
 validate = ["biopython"]
