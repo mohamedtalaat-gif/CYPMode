@@ -163,6 +163,32 @@ two turn out to be informative in different ways, not simple failures:
   sits inside a fused pyrazolo-pyrimidinone core, and the structural check
   confirms that's not behaving like a discrete coordinating azole.
 
+### Independent cross-check
+
+[Walters, `cyp-heatmap`](https://github.com/PatWalters/cyp-heatmap) (pushed
+2026-09-20) fingerprints 122 CYP3A4 structures with
+[ProLIF](https://prolif.readthedocs.io), a completely different pipeline from
+this project's: real/modeled structures rather than Boltz-2 co-folding,
+interaction-type fingerprinting rather than a raw Fe-N distance. Its manifest
+happens to include the same four compounds under this project's exact
+mechanism question. Its `HEM601.A_MetalAcceptor` column (metal-coordination
+contact with the heme iron) from `CYP3A4_heatmap_rich_data.csv`:
+
+| Compound | `MetalAcceptor` (cyp-heatmap) | Fe-N distance (this project) | Agree? |
+|---|---|---|---|
+| Ketoconazole (`ketaconazole-a`/`-b`) | 1 | 2.05 Å — coordinated | yes |
+| Ritonavir | 1 | 2.19 Å — coordinated | yes |
+| Azamulin | 0 | 13.41 Å — not coordinated | yes |
+| Vardenafil (`vardenafil21`) | 0 (`HBAcceptor`=1 instead) | 4.84 Å — not coordinated | yes |
+
+Two independent methods agree on all four, including the H-bond-not-metal
+distinction cyp-heatmap draws for vardenafil, consistent with this project's
+4.84 Å being real proximity without dative coordination. Neither pipeline
+validates the other's numeric details (a contact fingerprint isn't a
+distance, and this project's structures are predicted, not deposited), but
+the binary coordination call lines up across two unrelated approaches built
+independently, days apart, from the same underlying cryo-EM release.
+
 ## Scope and limitations
 
 - The motif screen is a substructure alert, not a mechanism predictor: a
