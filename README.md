@@ -50,6 +50,9 @@ that paper's method, it's a different, unvalidated claim.
   cysteine, not left out) and measures the heme iron-to-ligand-nitrogen
   distance for the four reference compounds, to check the motif screen
   against physics rather than against itself.
+- `cypmode/validation/build_summary.py` — regenerates
+  `data/boltz_test/validation_summary.json` from a local Boltz-2 run; see
+  Reproducing this, below.
 - `app.py` — a Streamlit tool: paste a compound, get the motif call and,
   for the four reference compounds, the structural check.
 - `docs/figures/generate_validation_figure.py` — regenerates the Fe-N bar
@@ -112,6 +115,42 @@ constraint is placed on the *inhibitor's* position relative to the heme,
 so a short predicted iron-to-ligand-nitrogen distance is a genuine,
 unforced structural prediction, not something the input forced to
 happen.
+
+### Reproducing this
+
+The `data/boltz_test/*.yaml` files above are the exact inputs; the
+predicted structures and confidence/affinity JSON they produce are not
+committed (regeneratable, and large — see below), only the small numeric
+summary derived from them is. `boltz` needs its own virtual environment
+(Python 3.10-3.12; pins PyTorch Lightning independently of this project's
+other dependencies):
+
+```bash
+python3 -m venv .venv-boltz
+source .venv-boltz/bin/activate
+pip install boltz
+boltz predict data/boltz_test/cyp3a4_ketoconazole.yaml \
+  --out_dir data/boltz_test/out --cache third_party/boltz_cache \
+  --accelerator gpu --use_msa_server
+```
+
+Repeat for `cyp3a4_ritonavir.yaml`, `cyp3a4_azamulin.yaml`, and
+`cyp3a4_vardenafil.yaml`. `--cache` is where model weights and the CCD
+chemical-component cache download to on first run — about 7.6 GB, a
+one-time cost of using Boltz-2 at all, not specific to this project (any
+Boltz-2 user pays it). `--use_msa_server` generates the MSA automatically
+via the public MMseqs2 server instead of requiring a precomputed one.
+`--accelerator gpu` auto-resolves to Metal/MPS on Apple Silicon or CUDA on
+NVIDIA. Each compound took roughly 40 minutes on an Apple M-series chip.
+
+Once all four `data/boltz_test/out/boltz_results_cyp3a4_*/` directories
+exist, regenerate the checked-in summary and figure:
+
+```bash
+pip install -e ".[validate]"   # in this project's own .venv, not .venv-boltz
+python -m cypmode.validation.build_summary
+python docs/figures/generate_validation_figure.py   # needs matplotlib
+```
 
 Results, from `cypmode/validation/structures.py`'s `summarize_compound()`
 run against the real local output in `data/boltz_test/out/`:
