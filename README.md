@@ -52,6 +52,9 @@ that paper's method, it's a different, unvalidated claim.
   against physics rather than against itself.
 - `app.py` — a Streamlit tool: paste a compound, get the motif call and,
   for the four reference compounds, the structural check.
+- `docs/figures/generate_validation_figure.py` — regenerates the Fe-N bar
+  chart below from `data/boltz_test/validation_summary.json`; needs
+  `pip install matplotlib`, not otherwise a project dependency.
 
 ## Install
 
@@ -118,6 +121,8 @@ run against the real local output in `data/boltz_test/out/`:
 | Ritonavir | Type II (thiazole) | 2.19 Å | yes | 0.40 | 0.92 |
 | Azamulin | Type II (triazole) | 13.41 Å | no | 0.73 | 0.93 |
 | Vardenafil | Type II (imidazole_Nsub) | 4.84 Å | no | 0.42 | 0.93 |
+
+![Bar chart of heme iron to closest ligand nitrogen distance for ketoconazole, ritonavir, azamulin, and vardenafil, with a dashed line at the 2.6 Å dative-coordination cutoff. Ketoconazole (2.05 Å) and ritonavir (2.19 Å) fall below the cutoff and are colored as coordinated; azamulin (13.41 Å) and vardenafil (4.84 Å) fall above it and are colored as not coordinated.](docs/figures/fe_n_validation.svg)
 
 Two of the motif screen's four calls hold up structurally, and the other
 two turn out to be informative in different ways, not simple failures:
