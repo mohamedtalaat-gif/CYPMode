@@ -1,0 +1,20 @@
+name: Feature request
+description: Suggest a new motif, isoform, or capability
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's missing
+      description: What you're trying to do that the project doesn't currently support.
+    validations:
+      required: true
+  - type: textarea
+    id: citation
+    attributes:
+      label: Source / methodology
+      description: >
+        If this is a new motif or structural alert, a paper or named method
+        it's based on — see CONTRIBUTING.md's conventions on citable sources.
+    validations:
+      required: false

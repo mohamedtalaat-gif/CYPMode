@@ -1,0 +1,31 @@
+name: Tests
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # dev + tdc extras only -- no torch/lightning/biopython needed. The
+      # panel tests read the small checked-in data/tdc_cache/, no network
+      # call required. Structural-validation tests skip cleanly without a
+      # local Boltz-2 run (see tests/test_structures.py).
+      - name: Install cypmode
+        run: pip install -e ".[dev,tdc]"
+
+      - name: Run tests
+        run: pytest -v

@@ -1,0 +1,38 @@
+name: Bug report
+description: Something doesn't work the way the docs/code say it should
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: >
+        For cypmode/metrics/ bugs, a concrete SMILES string and the motif
+        call you got is usually enough. For validation/structures.py bugs,
+        the exact Boltz-2 command you ran.
+      render: shell
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: cypmode version / commit
+    validations:
+      required: false
+  - type: dropdown
+    id: os
+    attributes:
+      label: OS
+      options:
+        - macOS
+        - Linux
+        - Windows
+    validations:
+      required: false

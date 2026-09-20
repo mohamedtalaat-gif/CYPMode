@@ -1,0 +1,11 @@
+# Pinned to what app.py is actually tested against.
+# Deployment target: Hugging Face Spaces (Streamlit SDK) or Streamlit Community Cloud.
+# app.py's Structural validation tab reads the checked-in
+# data/boltz_test/validation_summary.json rather than running Boltz-2 itself,
+# so this hosted deployment doesn't need biopython, PyTDC, or any of
+# cypmode/validation/ or cypmode/data/panel.py's dependencies -- see
+# README.md's Install section for those (local-only) extras.
+rdkit==2026.3.6
+pandas==3.0.5
+numpy==2.5.3
+streamlit==1.64.0

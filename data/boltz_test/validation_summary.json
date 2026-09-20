@@ -1,0 +1,38 @@
+{
+  "ketoconazole": {
+    "compound": "cyp3a4_ketoconazole",
+    "closest_ligand_n_atom": "N32",
+    "fe_n_distance_angstrom": 2.05,
+    "coordinated": true,
+    "affinity_pred_value": -0.9618289470672607,
+    "affinity_probability_binary": 0.855082094669342,
+    "confidence_score": 0.9225853085517883
+  },
+  "ritonavir": {
+    "compound": "cyp3a4_ritonavir",
+    "closest_ligand_n_atom": "N52",
+    "fe_n_distance_angstrom": 2.19,
+    "coordinated": true,
+    "affinity_pred_value": -0.9611287713050842,
+    "affinity_probability_binary": 0.40203016996383667,
+    "confidence_score": 0.9235350489616394
+  },
+  "azamulin": {
+    "compound": "cyp3a4_azamulin",
+    "closest_ligand_n_atom": "N41",
+    "fe_n_distance_angstrom": 13.41,
+    "coordinated": false,
+    "affinity_pred_value": -0.49237340688705444,
+    "affinity_probability_binary": 0.7270935773849487,
+    "confidence_score": 0.9328819513320923
+  },
+  "vardenafil": {
+    "compound": "cyp3a4_vardenafil",
+    "closest_ligand_n_atom": "N50",
+    "fe_n_distance_angstrom": 4.84,
+    "coordinated": false,
+    "affinity_pred_value": -1.1870265007019043,
+    "affinity_probability_binary": 0.4188699424266815,
+    "confidence_score": 0.9266602396965027
+  }
+}
