@@ -1,8 +1,80 @@
 {
+  "azamulin": {
+    "compound": "cyp3a4_azamulin",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N41",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 13.41
+      },
+      {
+        "atom": "N51",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 13.9
+      },
+      {
+        "atom": "N42",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 14.41
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N41",
+        "distance_angstrom": 13.41
+      },
+      {
+        "atom": "N51",
+        "distance_angstrom": 13.9
+      },
+      {
+        "atom": "N42",
+        "distance_angstrom": 14.41
+      },
+      {
+        "atom": "N50",
+        "distance_angstrom": 15.73
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 13.41,
+    "coordinated": false,
+    "affinity_pred_value": -0.49237340688705444,
+    "affinity_probability_binary": 0.7270935773849487,
+    "confidence_score": 0.9328819513320923
+  },
   "ketoconazole": {
     "compound": "cyp3a4_ketoconazole",
-    "closest_ligand_n_atom": "N32",
-    "fe_n_distance_angstrom": 2.05,
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N32",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.05
+      },
+      {
+        "atom": "N54",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 4.1
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N32",
+        "distance_angstrom": 2.05
+      },
+      {
+        "atom": "N54",
+        "distance_angstrom": 4.1
+      },
+      {
+        "atom": "N53",
+        "distance_angstrom": 14.49
+      },
+      {
+        "atom": "N52",
+        "distance_angstrom": 17.15
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.05,
     "coordinated": true,
     "affinity_pred_value": -0.9618289470672607,
     "affinity_probability_binary": 0.855082094669342,
@@ -10,26 +82,91 @@
   },
   "ritonavir": {
     "compound": "cyp3a4_ritonavir",
-    "closest_ligand_n_atom": "N52",
-    "fe_n_distance_angstrom": 2.19,
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N52",
+        "motif": "thiazole",
+        "distance_angstrom": 2.19
+      },
+      {
+        "atom": "N53",
+        "motif": "thiazole",
+        "distance_angstrom": 16.96
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N52",
+        "distance_angstrom": 2.19
+      },
+      {
+        "atom": "N82",
+        "distance_angstrom": 7.99
+      },
+      {
+        "atom": "N80",
+        "distance_angstrom": 10.11
+      },
+      {
+        "atom": "N81",
+        "distance_angstrom": 12.59
+      },
+      {
+        "atom": "N79",
+        "distance_angstrom": 13.33
+      },
+      {
+        "atom": "N53",
+        "distance_angstrom": 16.96
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.19,
     "coordinated": true,
     "affinity_pred_value": -0.9611287713050842,
     "affinity_probability_binary": 0.40203016996383667,
     "confidence_score": 0.9235350489616394
   },
-  "azamulin": {
-    "compound": "cyp3a4_azamulin",
-    "closest_ligand_n_atom": "N41",
-    "fe_n_distance_angstrom": 13.41,
-    "coordinated": false,
-    "affinity_pred_value": -0.49237340688705444,
-    "affinity_probability_binary": 0.7270935773849487,
-    "confidence_score": 0.9328819513320923
-  },
   "vardenafil": {
     "compound": "cyp3a4_vardenafil",
-    "closest_ligand_n_atom": "N50",
-    "fe_n_distance_angstrom": 4.84,
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N53",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 10.54
+      },
+      {
+        "atom": "N36",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 11.81
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N50",
+        "distance_angstrom": 4.84
+      },
+      {
+        "atom": "N51",
+        "distance_angstrom": 5.5
+      },
+      {
+        "atom": "N52",
+        "distance_angstrom": 9.65
+      },
+      {
+        "atom": "N53",
+        "distance_angstrom": 10.53
+      },
+      {
+        "atom": "N37",
+        "distance_angstrom": 11.2
+      },
+      {
+        "atom": "N36",
+        "distance_angstrom": 11.81
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 10.54,
     "coordinated": false,
     "affinity_pred_value": -1.1870265007019043,
     "affinity_probability_binary": 0.4188699424266815,

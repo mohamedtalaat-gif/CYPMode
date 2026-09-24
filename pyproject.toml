@@ -10,11 +10,17 @@ authors = [{name = "Muhammad Talaat"}]
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
+# Floors match what this project is actually tested against (see
+# requirements.txt's exact pins for the hosted-deployment target). rdkit is
+# additionally upper-bounded: SMARTS substructure-matching behavior is
+# load-bearing for cypmode/metrics/motifs.py's correctness, so a future
+# major release silently changing that behavior on a plain `pip install -e .`
+# is a real risk worth guarding against, not just a normal version bump.
 dependencies = [
-    "rdkit",
-    "pandas",
-    "numpy",
-    "streamlit",
+    "rdkit>=2026.3.6,<2027",
+    "pandas>=3.0.5",
+    "numpy>=2.5.3",
+    "streamlit>=1.64.0",
 ]
 
 [project.optional-dependencies]

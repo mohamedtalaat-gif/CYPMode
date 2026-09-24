@@ -116,8 +116,24 @@ def structural_validation_tab():
         st.warning(f"{VALIDATION_SUMMARY_PATH} not found — see README.md's Validation section.")
         return
 
-    results = json.loads(VALIDATION_SUMMARY_PATH.read_text())
-    st.dataframe(pd.DataFrame(results.values()), use_container_width=True)
+    try:
+        results = json.loads(VALIDATION_SUMMARY_PATH.read_text())
+        rows = [
+            {
+                "compound": name,
+                "closest_motif_nitrogen_distance_angstrom": r["closest_motif_nitrogen_distance_angstrom"],
+                "coordinated": r["coordinated"],
+                "affinity_pred_value": r["affinity_pred_value"],
+                "affinity_probability_binary": r["affinity_probability_binary"],
+                "confidence_score": r["confidence_score"],
+            }
+            for name, r in results.items()
+        ]
+    except (json.JSONDecodeError, KeyError) as e:
+        st.error(f"{VALIDATION_SUMMARY_PATH} is malformed ({e}) — try regenerating it with cypmode.validation.build_summary.")
+        return
+
+    st.dataframe(pd.DataFrame(rows), use_container_width=True)
 
 
 def app():

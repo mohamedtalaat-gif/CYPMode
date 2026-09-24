@@ -19,18 +19,11 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 
+from cypmode.validation.constants import COORDINATION_DISTANCE_CUTOFF_A as COORDINATION_CUTOFF_A
+
 ROOT = Path(__file__).resolve().parents[2]
 SUMMARY_PATH = ROOT / "data" / "boltz_test" / "validation_summary.json"
 OUT_DIR = Path(__file__).resolve().parent
-
-COORDINATION_CUTOFF_A = 2.6
-
-LABELS = {
-    "ketoconazole": "Ketoconazole",
-    "ritonavir": "Ritonavir",
-    "azamulin": "Azamulin",
-    "vardenafil": "Vardenafil",
-}
 
 # Light matches a plain white page; dark matches GitHub's own dark-theme
 # colors (#0d1117 background, #e6edf3 text, #58a6ff/#f85149 accent blue/red)
@@ -109,8 +102,8 @@ def render(theme_name: str, colors: dict, names: list, distances: list, coordina
         )
 
     ax.set_xticks(list(x))
-    ax.set_xticklabels([LABELS[n] for n in names])
-    ax.set_ylabel("Heme Fe – closest ligand N distance (Å)")
+    ax.set_xticklabels([n.capitalize() for n in names])
+    ax.set_ylabel("Heme Fe – closest motif-matched ligand N (Å)")
     ax.set_ylim(0, max(distances) + 2)
     ax.set_title(
         "Boltz-2 structural check: heme explicitly modeled,\ncovalently bonded to Cys442, ligand position unconstrained",
@@ -144,10 +137,25 @@ def render(theme_name: str, colors: dict, names: list, distances: list, coordina
 
 
 def main() -> None:
+    if not SUMMARY_PATH.exists():
+        raise SystemExit(
+            f"{SUMMARY_PATH} not found -- run cypmode.validation.build_summary first "
+            "(see README.md's Reproducing this section)."
+        )
     results = json.loads(SUMMARY_PATH.read_text())
-    names = list(LABELS)
-    distances = [results[n]["fe_n_distance_angstrom"] for n in names]
-    coordinated = [results[n]["coordinated"] for n in names]
+
+    names, distances, coordinated = [], [], []
+    for name, result in results.items():
+        distance = result.get("closest_motif_nitrogen_distance_angstrom")
+        if distance is None:
+            print(f"skipping {name}: no Type II motif match, nothing to plot on this axis")
+            continue
+        names.append(name)
+        distances.append(distance)
+        coordinated.append(result["coordinated"])
+
+    if not names:
+        raise SystemExit("no compound in the summary has a motif-matched nitrogen to plot")
 
     for theme_name, colors in THEMES.items():
         out_path = render(theme_name, colors, names, distances, coordinated)
