@@ -159,8 +159,16 @@ This builds the YAML (against CYP3A4 by default — pass
 `--protein-sequence` for a different target, and note that a different
 construct can shift residue numbering, so don't assume Cys442 carries
 over unchanged), runs `boltz predict` for real (tens of minutes, not
-skipped), and prints the structural-validation result as JSON. It's
+skipped, output streamed live rather than silent until it exits), and
+prints the structural-validation result as JSON. It's
 `run_structural_validation()` in Python if you'd rather call it directly.
+
+Runs with `--override` by default — confirmed directly (a fresh compound,
+no prior cache) that Boltz-2 can exit 0 having predicted the structure but
+silently skipped the affinity step; `--override` is what makes it actually
+run, and it still reuses the expensive MSA/preprocessing cache when the
+input hasn't changed, so this costs nothing beyond forcing the prediction
+step to complete. Pass `--no-override` to opt out.
 
 To reproduce one of the four checked-in reference compounds by hand
 instead — or if you want to run `boltz predict` yourself with different
