@@ -13,7 +13,10 @@ import json
 import re
 from pathlib import Path
 
-from cypmode.validation.structures import summarize_compound
+# Deliberately not imported at module level: summarize_compound needs
+# Biopython (the `validate` extra), but discover_compounds() and
+# _read_ligand_smiles() below don't, and should stay importable/testable
+# without it -- imported lazily inside main() instead.
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT_DIR = ROOT / "data" / "boltz_test" / "out"
@@ -48,6 +51,8 @@ def discover_compounds() -> list[str]:
 
 
 def main() -> None:
+    from cypmode.validation.structures import summarize_compound
+
     compounds = discover_compounds()
     if not compounds:
         raise SystemExit(f"no finished Boltz-2 runs found under {OUT_DIR}")

@@ -12,3 +12,16 @@ doesn't.
 # A margin above that range distinguishes a coordinating pose from one
 # where the ligand is merely nearby in the pocket.
 COORDINATION_DISTANCE_CUTOFF_A = 2.6
+
+# Human CYP3A4, UniProt P08684. The default target for
+# cypmode.validation.pipeline -- pass a different sequence for a different
+# protein/construct, and note that a different construct can shift residue
+# numbering (find_coordinating_cysteine() re-derives the axial cysteine's
+# position from whatever sequence it's given, rather than assuming this
+# one's numbering carries over).
+CYP3A4_SEQUENCE = (
+    "MALIPDLAMETWLLLAVSLVLLYLYGTHSHGLFKKLGIPGPTPLPFLGNILSYHKGFCMFDMECHKKYGKVWGFYDGQQPVLAITDPDMIKTVLVKECYSVFTNRRPFGPVGFMKSAISIAEDEEW"
+    "KRLRSLLSPTFTSGKLKEMVPIIAQYGDVLVRNLRREAETGKPVTLKDVFGAYSMDVITSTSFGVNIDSLNNPQDPFVENTKKLLRFDFLDPFFLSITVFPFLIPILEVLNICVFPREVTNFLRKSVKR"
+    "MKESRLEDTQKHRVDFLQLMIDSQNSKETESHKALSDLELVAQSIIFIFAGYETTSSVLSFIMYELATHPDVQQKLQEEIDAVLPNKAPPTYDTVLQMEYLDMVVNETLRLFPIAMRLERVCKKDVEIN"
+    "GMFIPKGVVVMIPSYALHRDPKYWTEPEKFLPERFSKKNKDNIDPYIYTPFGSGPRNCIGMRFALMNMKLALIRVLQNFSFKPCKETQIPLKLSLGGLLQPEKPVVLKVESRDGTVSGA"
+)
