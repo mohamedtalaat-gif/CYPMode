@@ -1,0 +1,11 @@
+{
+  "n_qc_passed_with_pic50": 1084,
+  "n_motif_positive": 451,
+  "n_motif_negative": 633,
+  "motif_positive_mean_pIC50": 5.3157158366518855,
+  "motif_negative_mean_pIC50": 5.1670163773815165,
+  "motif_positive_median_pIC50": 5.4265115625,
+  "motif_negative_median_pIC50": 5.30217214,
+  "mannwhitneyu_statistic": 154803.0,
+  "p_value_one_sided_greater": 0.008799808323853244
+}

@@ -45,6 +45,11 @@ that paper's method, it's a different, unvalidated claim.
   Seconds for the whole panel, not a mechanism predictor on its own.
 - `cypmode/data/panel.py` — loads and mechanism-annotates TDC's five-isoform
   CYP inhibition panel.
+- `cypmode/data/octant_benchmark.py` — checks the motif screen against a
+  different, independent axis: real CYP3A4 dose-response potency from a
+  ~1,200-compound diversity-library screen (OpenADMET/Octant), rather than
+  TDC's binary labels or the four structurally-validated reference
+  compounds. See Independent large-N potency check, below.
 - `cypmode/validation/build_input.py` — builds a Boltz-2 YAML input (protein
   + heme, covalently bonded) for any ligand SMILES, and locates the
   coordinating cysteine on any given protein sequence rather than assuming
@@ -327,6 +332,45 @@ contact fingerprint isn't a distance, and this project's structures are
 predicted, not deposited), but the binary coordination call lines up
 across two unrelated approaches built
 independently, days apart, from the same underlying cryo-EM release.
+
+### Independent large-N potency check
+
+The cross-check above confirms the motif screen's binary coordination call
+against 4 compounds. Separately: does motif presence track real inhibition
+*potency*, across many more compounds than the four this project validated
+structurally?
+
+Source: [OpenADMET/Octant's CYP inhibition & reactivity blog
+release](https://huggingface.co/datasets/openadmet/Octant_CYP_inhibition_reactivity_blog_release)
+(CC BY 4.0) — a ~1,200-compound diversity-library CYP3A4 dose-response
+screen, with a 30-minute active-enzyme pre-incubation (so measured potency
+reflects combined reversible + time-dependent inhibition). This is a
+different chemical library from both TDC's Veith panel and this project's
+four structural reference compounds — confirmed directly by SMILES
+comparison, only vardenafil overlaps with it at all.
+
+`python -m cypmode.data.octant_benchmark` (`cypmode/data/octant_benchmark.py`)
+compares CYP3A4 pIC50 between motif-positive and motif-negative compounds,
+restricted to QC-passed dose-response curves, with a one-sided Mann-Whitney
+U test. Result (`data/octant_cache/motif_potency_validation.json`):
+
+| | n | mean pIC50 | median pIC50 |
+|---|---|---|---|
+| Motif-positive | 451 | 5.32 | 5.43 |
+| Motif-negative | 633 | 5.17 | 5.30 |
+
+**p = 0.0088** (one-sided, motif-positive > motif-negative) — a real,
+statistically significant difference on a dataset the motif screen was
+never tuned against.
+
+**Honest reading:** the difference is real but small — under half a log
+unit, on two heavily overlapping distributions. This is independent
+evidence that the structural feature the screen looks for tracks a real
+pharmacological property, not proof the screen can predict potency: as
+Scope and limitations (below) already states, it was built to flag
+*capability* for heme coordination, not to rank how tightly a compound
+binds. Treat this as one more independent data point supporting the
+underlying chemistry, not an upgrade to what the screen claims to do.
 
 ## Scope and limitations
 

@@ -21,6 +21,11 @@ dependencies = [
     "pandas>=3.0.5",
     "numpy>=2.5.3",
     "streamlit>=1.64.0",
+    # For cypmode/data/octant_benchmark.py's Mann-Whitney U test. Was
+    # already present transitively (scikit-learn, in the tdc extra, pulls
+    # it in) but that's a coincidence of an unrelated extra, not something
+    # this module should rely on being installed.
+    "scipy>=1.18.1",
 ]
 
 [project.optional-dependencies]
