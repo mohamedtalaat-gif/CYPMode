@@ -67,6 +67,10 @@ that paper's method, it's a different, unvalidated claim.
   whichever ligand nitrogen(s) actually match a Type II motif — not just
   the geometrically closest one, which isn't always the same atom (see
   Methodology note, below).
+- `cypmode/validation/batch.py` — runs `run_structural_validation` across a
+  whole compound set (name -> SMILES) in one call, checkpointing results
+  after every compound so a run spanning hours survives interruption, and
+  isolating one compound's failure from the rest of the batch.
 - `cypmode/validation/build_summary.py` — regenerates
   `data/boltz_test/validation_summary.json` by discovering finished runs
   under `data/boltz_test/out/` and reading each one's SMILES back out of
@@ -371,6 +375,43 @@ Scope and limitations (below) already states, it was built to flag
 *capability* for heme coordination, not to rank how tightly a compound
 binds. Treat this as one more independent data point supporting the
 underlying chemistry, not an upgrade to what the screen claims to do.
+
+## OpenADMET CYP Blind Challenge — Structure Prediction Track (in progress)
+
+While preparing for the [OpenADMET CYP Inhibition Blind
+Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge)'s Direct
+Inhibition track, checking [the challenge dataset's own
+changelog](https://huggingface.co/datasets/openadmet/cyp-challenge-train-test)
+directly (rather than only the challenge's announcement timeline) turned up
+a third dataset config, `structure`, added 2026-09-23: a 20-compound
+blinded test set for a CYP3A4 structure-prediction/co-folding task. As of
+2026-09-24, this track is not yet visible on the challenge's own Space UI
+or FAQ — the data is public (Apache 2.0, same as the rest of the challenge
+data) a day ahead of any announcement of it.
+
+This overlaps directly with this project's own structural-validation
+pipeline (Boltz-2 + explicit heme + covalent axial-cysteine bond,
+`cypmode/validation/pipeline.py`), built for a different, earlier purpose
+(checking Type II motif calls against physics-based structure prediction
+for the 4 solved reference compounds above) but directly applicable to any
+CYP3A4-ligand SMILES pair without modification.
+
+`data/cyp_challenge/structure_track_test_blinded.csv` is this track's
+public blinded test set, saved as-is. Running the Type II motif screen
+against it: **12 of the 20 compounds (60%) carry a coordinating motif** —
+reproducible with `cypmode.metrics.motifs.detect_motifs`.
+`cypmode/validation/batch.py` is running `run_structural_validation`
+against all 20 (not only the motif-positive ones — coordination status
+isn't knowable without running the structure, that's the whole point of
+this pipeline); results will land in
+`data/cyp_challenge/structure_track_results.json` once that finishes.
+
+**Stated plainly:** this track's official scoring rules, submission
+format, and deadline aren't published anywhere as of this writing — only
+the blinded SMILES are public. Nothing here is a submission; it's early
+preparation with a pipeline this project already had, pointed at real
+compounds from a real (if not yet formally announced) part of the
+challenge.
 
 ## Scope and limitations
 
