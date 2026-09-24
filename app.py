@@ -21,6 +21,8 @@ from rdkit import Chem
 from cypmode.metrics.motifs import classify_mechanism, detect_motifs
 
 VALIDATION_SUMMARY_PATH = Path("data/boltz_test/validation_summary.json")
+CHALLENGE_COMPOUNDS_PATH = Path("data/cyp_challenge/structure_track_test_blinded.csv")
+CHALLENGE_RESULTS_PATH = Path("data/cyp_challenge/structure_track_results.csv")
 
 
 def read_smiles(file, text_input) -> list[str]:
@@ -92,7 +94,7 @@ def motif_screen_tab():
 
         df = screen_compounds(valid)
         st.subheader("Results")
-        st.dataframe(df, use_container_width=True)
+        st.dataframe(df, width="stretch")
         st.download_button(
             "Download results (CSV)",
             data=df.to_csv(index=False),
@@ -133,16 +135,71 @@ def structural_validation_tab():
         st.error(f"{VALIDATION_SUMMARY_PATH} is malformed ({e}) — try regenerating it with cypmode.validation.build_summary.")
         return
 
-    st.dataframe(pd.DataFrame(rows), use_container_width=True)
+    st.dataframe(pd.DataFrame(rows), width="stretch")
+
+
+def load_challenge_compounds() -> pd.DataFrame:
+    """The CYP Blind Challenge structure-prediction track's blinded test set,
+    with the motif screen applied live (screen_compounds).
+    """
+    compounds_df = pd.read_csv(CHALLENGE_COMPOUNDS_PATH)
+    motif_df = screen_compounds(compounds_df["SMILES"].tolist())
+    return compounds_df.merge(motif_df, on="SMILES", how="left")
+
+
+def merge_challenge_results(compounds_df: pd.DataFrame, results_df: pd.DataFrame) -> pd.DataFrame:
+    """Left-join the batch structural-validation results (cypmode.validation.batch's
+    CSV export) onto the compound table by name -- compounds the batch run
+    hasn't reached yet simply get null result columns, not an error, since
+    that run can take hours and this table should reflect whatever's done
+    so far.
+    """
+    results_df = results_df.rename(columns={"compound": "Molecule_Name"}).drop(columns=["smiles"], errors="ignore")
+    return compounds_df.merge(results_df, on="Molecule_Name", how="left")
+
+
+def challenge_tab():
+    st.caption(
+        "The OpenADMET CYP Blind Challenge's structure-prediction track "
+        "blinded test set (20 compounds, CYP3A4 co-folding) -- see "
+        "README.md's 'OpenADMET CYP Blind Challenge' section for how this "
+        "track was found and what it is. Motif calls are computed live; "
+        "structural-validation columns (from a real Boltz-2 run via "
+        "cypmode.validation.batch, not something this hosted app can run "
+        "itself) fill in as that run finishes each compound -- this table "
+        "reflects whatever's completed so far, not a final result set."
+    )
+
+    if not CHALLENGE_COMPOUNDS_PATH.exists():
+        st.warning(f"{CHALLENGE_COMPOUNDS_PATH} not found.")
+        return
+
+    df = load_challenge_compounds()
+    if CHALLENGE_RESULTS_PATH.exists():
+        df = merge_challenge_results(df, pd.read_csv(CHALLENGE_RESULTS_PATH))
+        n_done = df["coordinated"].notna().sum() if "coordinated" in df else 0
+    else:
+        n_done = 0
+    st.metric("Structural validation complete", f"{n_done} / {len(df)}")
+
+    st.dataframe(df, width="stretch")
+    st.download_button(
+        "Download table (CSV)",
+        data=df.to_csv(index=False),
+        file_name="cyp_challenge_structure_track.csv",
+        mime="text/csv",
+    )
 
 
 def app():
     st.title("CYPMode: Mode-Aware CYP450 Inhibition Screening")
-    tab1, tab2 = st.tabs(["Motif screen", "Structural validation"])
+    tab1, tab2, tab3 = st.tabs(["Motif screen", "Structural validation", "CYP Blind Challenge"])
     with tab1:
         motif_screen_tab()
     with tab2:
         structural_validation_tab()
+    with tab3:
+        challenge_tab()
 
 
 if __name__ == "__main__":
