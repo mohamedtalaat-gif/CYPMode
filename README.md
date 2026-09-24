@@ -413,6 +413,48 @@ preparation with a pipeline this project already had, pointed at real
 compounds from a real (if not yet formally announced) part of the
 challenge.
 
+### TDI reference panel — real quantitative validation, and a real gap
+
+The independent checks above validate the motif screen's binary coordination
+call and its correlation with potency at scale. Separately: does it say
+anything real about *time-dependent* inhibition (TDI) — mechanism-based
+inactivation, not reversible coordination?
+
+Source: [OpenADMET/Octant's CYP Data Engine blog post
+repo](https://github.com/OpenADMET/Octant_CYP_blog_post) (CC BY 4.0) —
+a small, 6-named-drug panel with real preincubation-vs-direct pIC50 shift
+measurements (`cypmode/validation/tdi_reference.py`,
+`data/octant_cache/tdi_reference/`). Two of the six — ketoconazole and
+azamulin — are already in this project's own structural reference set, so
+both their motif call *and* their static heme-coordination geometry are
+independently known, not just their TDI status:
+
+| Drug | TDI shift (Δ pIC50) | TDI-positive (>2-fold)? | Motif match | Coordinated (this project)? |
+|---|---|---|---|---|
+| Ketoconazole | 0.03 | No | Yes (imidazole) | Yes, 2.05 Å |
+| Clotrimazole | 0.17 | No | Yes (imidazole) | not run |
+| Diltiazem | 0.35 | **Yes** | **No** | not run |
+| Verapamil | 0.84 | **Yes** | **No** | not run |
+| Azamulin | 0.99 | **Yes** | Yes (triazole) | **No, 13.41 Å** |
+| Troleandomycin | 1.25 | **Yes** | **No** | not run |
+
+Two things line up exactly with this project's existing structural claims:
+ketoconazole (motif-positive, coordinated, real TDI shift ≈ 0 — a genuine
+reversible Type II inhibitor) and azamulin (motif-positive, *not*
+coordinated, real strong TDI shift — consistent with real mechanism-based
+inactivation rather than static coordination, not just an assumption).
+
+**The real gap, stated plainly:** diltiazem, verapamil, and troleandomycin
+are documented, clinically relevant time-dependent CYP3A4 inhibitors, and
+all three carry **no Type II motif at all** — their real mechanisms go
+through a tertiary amine (verapamil, diltiazem) or a macrolide nitroso-heme
+complex (troleandomycin), chemistry this screen was never built to detect
+(it only looks for azole/pyridine/thiazole nitrogens). Half of this small
+real panel's TDI-positive compounds would be invisible to the motif screen
+entirely — a different, larger failure mode than azamulin's "motif-positive
+but non-coordinating" case, and one no amount of Type-II-motif tuning can
+fix, since the chemistry itself is outside what the screen looks for.
+
 ## Scope and limitations
 
 - The motif screen is a substructure alert, not a mechanism predictor: a
