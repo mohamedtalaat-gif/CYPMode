@@ -273,6 +273,30 @@ two turn out to be informative in different ways, not simple failures:
   sits inside a fused pyrazolo-pyrimidinone core, and the structural check
   confirms that's not behaving like a discrete coordinating azole.
 
+### Generalization check — not a reference compound
+
+The four results above are the actual validated claim: TDC-motivated,
+scoped to compounds with independently solved cryo-EM structures, and
+cross-checked below. Separately, `cypmode.validation.pipeline` was run
+end to end on **itraconazole** (real ChEMBL SMILES, another triazole
+antifungal — same class as ketoconazole, but never used to build or tune
+any part of this project's motif patterns, cysteine-finding, or
+atom-matching code) purely as a wiring test: does the pipeline work on a
+compound it has no answer key for.
+
+It ran to completion — Fe-N = 2.02 Å, coordinated — and caught a real bug
+in the process: Boltz-2 exited 0 having predicted the structure while
+silently skipping the affinity step, on a fresh compound with no stale
+cache to blame (fixed by defaulting to `--override`; see git history).
+The 2.02 Å result is chemically unsurprising for a triazole in
+ketoconazole's own class, which is exactly the point — this confirms the
+*machinery* generalizes and found a real reliability gap while doing it,
+not that itraconazole's coordination is independently validated the way
+the four compounds below are. Itraconazole isn't in `data/boltz_test/` as
+a tracked reference input for that reason; the YAML `build_input.py`
+generated for it is reproducible from the command above, not something
+this project is claiming as a result.
+
 ### Independent cross-check
 
 [Walters, `cyp-heatmap`](https://github.com/PatWalters/cyp-heatmap) (pushed
