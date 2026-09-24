@@ -78,7 +78,9 @@ def cross_validate_baseline(df: pd.DataFrame, n_iterations: int = 10) -> pd.Data
     return pd.DataFrame(rows)
 
 
-def cross_validate_fixed_seed(df: pd.DataFrame, n_splits: int = 5, random_state: int = 42) -> pd.DataFrame:
+def cross_validate_fixed_seed(
+    df: pd.DataFrame, n_splits: int = 5, random_state: int = 42, feature_col: str = "descriptors"
+) -> pd.DataFrame:
     """A second, independent evaluation distinct from cross_validate_baseline:
     a fixed-seed StratifiedKFold rather than the tutorial's own repeated
     unseeded random splits. The tutorial's own number is useful as a sanity
@@ -86,6 +88,13 @@ def cross_validate_fixed_seed(df: pd.DataFrame, n_splits: int = 5, random_state:
     isn't reproducible run to run and isn't enough on its own for comparing
     CYPMode's later additions against -- this is the number those
     comparisons should actually use, same folds every time.
+
+    feature_col names the column holding each row's feature vector -- lets
+    the same CV logic score different feature sets (see
+    cypmode/challenge/tdi_ablation.py) without duplicating it. With the same
+    random_state and an unchanged row order, different feature_col values
+    still see identical folds, so results across feature sets are a fair,
+    paired comparison.
     """
     rows = []
     for cyp in TDI_ISOFORMS:
@@ -99,8 +108,8 @@ def cross_validate_fixed_seed(df: pd.DataFrame, n_splits: int = 5, random_state:
             y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
 
             model = LGBMClassifier(verbose=-1, random_state=random_state)
-            model.fit(np.stack(train["descriptors"]), y_train)
-            proba = model.predict_proba(np.stack(test["descriptors"]))[:, 1]
+            model.fit(np.stack(train[feature_col]), y_train)
+            proba = model.predict_proba(np.stack(test[feature_col]))[:, 1]
             pred = (proba >= 0.5).astype(int)
 
             rows.append(
