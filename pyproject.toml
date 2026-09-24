@@ -57,6 +57,10 @@ tdc = [
 # Needed only for cypmode/validation/structures.py, which parses Boltz-2's
 # predicted mmCIF structures for the 4 solved-structure reference compounds.
 validate = ["biopython"]
+# For cypmode/challenge/*.py -- reproducing and then extending the OpenADMET
+# CYP Blind Challenge tutorial's own baseline (LightGBM on RDKit descriptors
+# via useful_rdkit_utils, the same library the official tutorial uses).
+challenge = ["lightgbm", "useful_rdkit_utils", "scikit-learn"]
 
 [tool.pytest.ini_options]
 # third_party/ vendors full clones (TDC, Boltz-2) with their own pytest
