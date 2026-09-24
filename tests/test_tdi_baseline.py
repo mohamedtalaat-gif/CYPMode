@@ -4,7 +4,12 @@ import pytest
 
 pytest.importorskip("lightgbm")
 
-from cypmode.challenge.tdi_baseline import cross_validate_baseline, load_tdi_training_data, summarize
+from cypmode.challenge.tdi_baseline import (
+    cross_validate_baseline,
+    cross_validate_fixed_seed,
+    load_tdi_training_data,
+    summarize,
+)
 
 
 def test_load_tdi_training_data_matches_the_real_official_file():
@@ -50,3 +55,18 @@ def test_summarize_averages_per_isoform():
     summary = summarize(results)
     assert set(summary.index) == {"CYP3A4", "CYP2D6"}
     assert {"accuracy", "f1", "mcc", "roc_auc"} <= set(summary.columns)
+
+
+def test_cross_validate_fixed_seed_is_reproducible():
+    df = _synthetic_labeled_descriptors(n_per_class=15)
+    results_a = cross_validate_fixed_seed(df, n_splits=3, random_state=42)
+    results_b = cross_validate_fixed_seed(df, n_splits=3, random_state=42)
+    pd.testing.assert_frame_equal(results_a, results_b)
+
+
+def test_cross_validate_fixed_seed_covers_every_compound_exactly_once_per_isoform():
+    df = _synthetic_labeled_descriptors(n_per_class=15)
+    results = cross_validate_fixed_seed(df, n_splits=3, random_state=42)
+    for cyp in ["CYP3A4", "CYP2D6"]:
+        cyp_results = results[results["isoform"] == cyp]
+        assert cyp_results["n_test"].sum() == df[f"{cyp}_is_TDI"].notna().sum()

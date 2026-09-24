@@ -17,7 +17,7 @@ import pandas as pd
 import useful_rdkit_utils as uru
 from lightgbm import LGBMClassifier
 from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef, roc_auc_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold, train_test_split
 
 TDI_ISOFORMS = ["CYP3A4", "CYP2D6"]
 TDI_TRAIN_PATH = Path("data/cyp_challenge/tdi_track/cyp-challenge-TRAIN_TDI.csv")
@@ -67,6 +67,46 @@ def cross_validate_baseline(df: pd.DataFrame, n_iterations: int = 10) -> pd.Data
             rows.append(
                 {
                     "isoform": cyp,
+                    "n_train": len(train),
+                    "n_test": len(test),
+                    "accuracy": accuracy_score(y_test, pred),
+                    "f1": f1_score(y_test, pred, zero_division=0),
+                    "mcc": matthews_corrcoef(y_test, pred),
+                    "roc_auc": roc_auc_score(y_test, proba),
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def cross_validate_fixed_seed(df: pd.DataFrame, n_splits: int = 5, random_state: int = 42) -> pd.DataFrame:
+    """A second, independent evaluation distinct from cross_validate_baseline:
+    a fixed-seed StratifiedKFold rather than the tutorial's own repeated
+    unseeded random splits. The tutorial's own number is useful as a sanity
+    check that this project's pipeline matches published behavior, but it
+    isn't reproducible run to run and isn't enough on its own for comparing
+    CYPMode's later additions against -- this is the number those
+    comparisons should actually use, same folds every time.
+    """
+    rows = []
+    for cyp in TDI_ISOFORMS:
+        col = f"{cyp}_is_TDI"
+        cyp_df = df.dropna(subset=[col]).reset_index(drop=True)
+        y = cyp_df[col].astype(int)
+
+        kfold = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
+        for fold, (train_idx, test_idx) in enumerate(kfold.split(cyp_df, y)):
+            train, test = cyp_df.iloc[train_idx], cyp_df.iloc[test_idx]
+            y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+
+            model = LGBMClassifier(verbose=-1, random_state=random_state)
+            model.fit(np.stack(train["descriptors"]), y_train)
+            proba = model.predict_proba(np.stack(test["descriptors"]))[:, 1]
+            pred = (proba >= 0.5).astype(int)
+
+            rows.append(
+                {
+                    "isoform": cyp,
+                    "fold": fold,
                     "n_train": len(train),
                     "n_test": len(test),
                     "accuracy": accuracy_score(y_test, pred),
