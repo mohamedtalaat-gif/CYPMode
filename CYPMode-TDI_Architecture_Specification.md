@@ -12,10 +12,11 @@ on — this document states the conclusions, that one has the numbers.
                                        │
                  ┌─────────────────────┼─────────────────────┐
                  ▼                     ▼                     ▼
-           TIER 1 (all)           TIER 2 (all)         TIER 3 (subset)
+           TIER 1 (all)           TIER 2 (all)      TIER 3 (fixed N=50)
         Morgan + RDKit          CYPMode motif flag       Boltz-2, CYP3A4
-          descriptors           (amine flag dropped        only — heme
-                                 — see Decision Log)      coordination call
+          descriptors           (amine flag dropped     only — top-50 by
+                                 — see Decision Log)   OOF uncertainty, no
+                                                        motif OR clause
                  │                     │                     │
                  └─────────────────────┼─────────────────────┘
                                        │
@@ -71,11 +72,11 @@ on — this document states the conclusions, that one has the numbers.
 
 **Tier 2 — CYPMode mechanistic evidence.** Motif flag only (`cypmode.metrics.motifs`). The trialkylamine flag (`cypmode.metrics.amines`) was tested and dropped — it actively hurt CYP2D6 MCC and did nothing for CYP3A4 in a real multivariate model (M0–M3 ablation). The underlying chemistry (verapamil/diltiazem/troleandomycin's real trialkylamine-mediated TDI) is still real; the specific feature engineering (a standalone binary flag) is what failed at scale.
 
-**Tier 3 — structural augmentation, CYP3A4 only.** Boltz-2 + explicit heme + covalent axial-cysteine bond (`cypmode.validation.pipeline`), run only on a subset selected per CV fold — motif-positive compounds, or compounds where the Tier 1+2 model is uncertain. **Not built for CYP2D6**, deliberately: this project has no validated CYP2D6 structural pipeline, and inventing one to force architectural symmetry would be a real research project on its own, not something to improvise under this timeline. CYP2D6's head simply has no structural branch.
+**Tier 3 — structural augmentation, CYP3A4 only.** Boltz-2 + explicit heme + covalent axial-cysteine bond (`cypmode.validation.pipeline`), run only on a **fixed budget of 50 compounds** (`cypmode.challenge.tier3_selection.select_fixed_budget_oof`), ranked by out-of-fold classification uncertainty across the whole labeled population. **Not built for CYP2D6**, deliberately: this project has no validated CYP2D6 structural pipeline, and inventing one to force architectural symmetry would be a real research project on its own, not something to improvise under this timeline. CYP2D6's head simply has no structural branch.
 
-**Selection mask, fold-local.** The uncertainty ranking that decides which compounds get Tier 3 is a model trained on the training fold only, and its decision threshold is frozen from that same training fold. Applied to the validation fold at inference time only — validation labels never influence which compounds get selected, ranking thresholds, or any other Tier 2/3 decision inside a fold.
+**Selection mask — revised from the original "motif OR uncertain" spec.** Checked against the real data first: motif-positive alone covers ~42% of the labeled CYP3A4 population, so the original OR-clause selected 46–72% of ~3,584 compounds regardless of quantile — thousands of compounds against a real observed Boltz-2 cost of 15–30+ minutes each, not tractable. Motif is already a free Tier 2 feature, so spending Boltz-2 on a motif-positive compound the model already "knows about" adds nothing. Revised policy: pure OOF-uncertainty ranking, no motif clause, hard fixed budget (N=50) sized to the real compute budget rather than an open-ended fraction of the dataset. The threshold/ranking model is trained fold-internally (never sees the fold it scores) — see `cypmode/challenge/tier3_selection.py` and its leakage tests.
 
-**OOF Direct-Inhibition Bridge.** A separate regression model, predicting direct-inhibition pIC50 with out-of-fold predictions (trained on the training fold, applied to the held-out fold) to avoid leaking the TDI model's own validation labels through potency information. Uses a Tobit/censored-regression loss (borrowed from `moal`, github.com/OpenADMET/moal) rather than plain regression, because a real fraction of direct-inhibition pIC50 values are left-censored at the assay floor (pIC50 = 4), not exact measurements. Feeds into Feature/Evidence Fusion as a parallel input stream alongside Tier 1/2/3 — not a step applied after them.
+**OOF Direct-Inhibition Bridge.** A separate regression model (`cypmode.challenge.oof_bridge`), predicting direct-inhibition pIC50 with out-of-fold predictions (trained on the training fold, applied to the held-out fold) to avoid leaking the TDI model's own validation labels through potency information. **Revised from the original Tobit/censored-regression plan**: checked the real data first and found no hard censoring at the pIC50=4 floor (values continue smoothly down to ~1.9, no pile-up) — what's real is heteroscedastic measurement noise, with the reported std column jumping 5–10x below pIC50=4. Tobit assumes the wrong generating process for this data; inverse-variance weighted regression (using the real, measured std per compound) is used instead. Feeds into Feature/Evidence Fusion as a parallel input stream alongside Tier 1/2/3 — not a step applied after them. Real result: CYP3A4 OOF MAE 0.730, CYP2D6 OOF MAE 0.645 (pIC50 spans ~6 log units).
 
 **Shared Trunk.** Treated as a hypothesis to test, not an assumed design: benchmarked against fully independent per-isoform models under the same CV protocol once a real multitask implementation exists (see Remaining Work — the M0–M3 ablation used two separate LightGBM models, not a shared trunk, so this comparison hasn't actually been run yet).
 
@@ -94,22 +95,26 @@ on — this document states the conclusions, that one has the numbers.
 | Shared trunk: hypothesis requiring its own benchmark | Settled this session — not yet run |
 | Reliability score: cross-cutting, empirically validated before being named "uncertainty" | Settled |
 | Stratified familiarity evaluation | Added this session |
+| OOF bridge: inverse-variance weighted regression, not Tobit | Revised — real data has no hard censoring, just heteroscedastic noise (std jumps 5–10x below pIC50=4) |
+| Tier 3 selection: fixed N=50, uncertainty-only, no motif OR clause | Revised — motif-only already covered 42% of the population, made the OR-clause selection intractable (46–72% of ~3,584 compounds) |
 
 ## Status: done vs. remaining
 
-**Done (real code, real numbers, committed to the repo):**
+**Done (real code, real numbers, committed locally):**
 - Phase 0 data audit — `CYPMode-TDI_DATA_AUDIT.md` (leakage check, label provenance, missingness, chemistry, class balance)
 - Baseline reproduction, both tutorial-matching and this project's own fixed-seed CV protocol (`cypmode/challenge/tdi_baseline.py`) — CYP3A4 MCC 0.294, CYP2D6 MCC 0.049
 - `cypmode/metrics/amines.py` — trialkylamine detector, verified against the 6-drug reference panel, refined to exclude a real false positive (ketoconazole's N-aryl piperazine)
 - M0–M3 ablation (`cypmode/challenge/tdi_ablation.py`) — real result: motif kept, amine dropped, Morgan kept. Current best (M3): CYP3A4 MCC 0.300, CYP2D6 MCC 0.043
 - TDI reference panel (`cypmode/validation/tdi_reference.py`) — 6 real drugs, quantitative cross-check against this project's own structural coordination claims
-- Structure-track prep running in parallel (`cypmode/validation/batch.py`) — separate from the TDI track itself, uses the same Boltz-2 pipeline
+- **OOF Direct-Inhibition Bridge** (`cypmode/challenge/oof_bridge.py`) — inverse-variance weighted regression (revised from Tobit, see Decision Log), fold-internal OOF predictions. Real result: CYP3A4 MAE 0.730, CYP2D6 MAE 0.645
+- **Tier 3 selection logic** (`cypmode/challenge/tier3_selection.py`) — fixed-budget (N=50) OOF-uncertainty ranking, real 50 CYP3A4 compounds selected and saved (`data/cyp_challenge/tdi_track/tier3_selected_compounds.csv`)
+- Structure-track prep + TDI-reference-panel structural runs + Tier 3's own 50-compound structural batch, chained to run automatically in sequence on the one available GPU (`cypmode/validation/batch.py`) — real Boltz-2 predictions for Tier 3 itself are **in progress, not complete** (see below)
 
 **Not yet built:**
-1. OOF Direct-Inhibition Bridge — no code yet; needs the Tobit-loss regression model and the fold-internal OOF prediction logic.
-2. Tier 3 wired into an actual TDI classifier — the Boltz-2 pipeline exists (for the structure track), but the fold-local selection-mask logic and feeding structural features into a TDI model haven't been built.
-3. Reliability score — not built; no empirical correlation-with-error check has been run yet.
-4. Real multitask shared trunk via `openadmet-models` — not installed or integrated. Current results are from two independent single-isoform LightGBM models, not a shared architecture.
-5. Threshold optimization — current MCC numbers are all at the naive 0.5 threshold; fold-internal MCC-optimized thresholds haven't been computed.
-6. Stratified familiarity evaluation — not run yet (waits on Tier 3 being wired in).
-7. Final submission pipeline — no 750-row prediction/formatting/validation code yet.
+1. Tier 3 features actually joined into a TDI classifier — the 50 compounds are selected and queued for Boltz-2, but no results exist yet (GPU queue: structure-track batch running now → TDI-reference batch → Tier 3's 50 compounds), and no code yet merges structural output into the feature matrix once it exists.
+2. Reliability score — not built; no empirical correlation-with-error check has been run yet.
+3. Real multitask shared trunk via `openadmet-models` — not installed or integrated. Current results are from two independent single-isoform LightGBM models, not a shared architecture.
+4. Threshold optimization — current MCC numbers are all at the naive 0.5 threshold; fold-internal MCC-optimized thresholds haven't been computed.
+5. Stratified familiarity evaluation — not run yet (waits on Tier 3 being wired in).
+6. Final submission pipeline — no 750-row prediction/formatting/validation code yet.
+7. Two deliverable notebooks (full project walkthrough + self-contained educational deep-dive) — explicitly deferred until the architecture above is finished.
