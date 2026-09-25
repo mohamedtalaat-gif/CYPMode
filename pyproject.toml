@@ -60,7 +60,15 @@ validate = ["biopython"]
 # For cypmode/challenge/*.py -- reproducing and then extending the OpenADMET
 # CYP Blind Challenge tutorial's own baseline (LightGBM on RDKit descriptors
 # via useful_rdkit_utils, the same library the official tutorial uses).
-challenge = ["lightgbm", "useful_rdkit_utils", "scikit-learn"]
+# requests is for pubchem_auxiliary.py/bindingdb_auxiliary.py's targeted,
+# narrowly-scoped REST pulls (a specific bioassay/target's own data, not a
+# bulk multi-GB database dump). chembl_structure_pipeline is ChEMBL's own
+# structure standardizer (rdkit-only dependency, confirmed lightweight) --
+# used so a salt form and its free base are recognized as the same real
+# compound in cross-dataset overlap checks, which plain canonical SMILES
+# comparison misses (confirmed directly: ketoconazole vs ketoconazole.Cl
+# canonicalize to two different strings).
+challenge = ["lightgbm", "useful_rdkit_utils", "scikit-learn", "requests", "chembl_structure_pipeline"]
 # For cypmode/challenge/multitask.py's shared-trunk model -- a small, plain
 # PyTorch MLP built deliberately instead of installing openadmet-models
 # (whose own real dependencies -- PyTorch, Lightning, ChemProp+CheMeleon
