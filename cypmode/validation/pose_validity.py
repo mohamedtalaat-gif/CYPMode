@@ -20,7 +20,7 @@ from pathlib import Path
 
 from Bio.PDB import PDBIO, Select
 
-from cypmode.validation.structures import _ligand_atoms, _ligand_mol_3d
+from cypmode.validation.structures import _ligand_atoms, _ligand_mol_3d, load_structure
 
 
 class _ExcludeLigand(Select):
@@ -73,6 +73,43 @@ def check_pose_validity(structure, ligand_smiles: str, config: str = "dock") -> 
 
     checks = {k: bool(v) for k, v in result.iloc[0].to_dict().items() if k not in ("file", "molecule", "position")}
     return {"all_passed": all(checks.values()), "checks": checks}
+
+
+def select_valid_model(predictions_dir: str | Path, ligand_smiles: str, max_models: int = 10) -> dict:
+    """Real, concrete fix for a compound whose default model_0 fails
+    PoseBusters: when a batch was run with --diffusion_samples > 1,
+    Boltz-2 writes multiple ranked candidate structures to the same
+    predictions directory (name_model_0.cif, name_model_1.cif, ...,
+    confidence-ranked, 0 = best). Tries them in that ranked order and
+    returns the first one that passes every PoseBusters check, rather
+    than always trusting model_0 -- a real steric clash or geometry
+    artifact in the top-confidence sample doesn't mean every sampled
+    diffusion trajectory has the same problem.
+
+    Returns {"model_index": int, "cif_path": Path, "result": dict} for
+    the first passing model, or {"model_index": None, "cif_path": None,
+    "result": None} if none of the available models (up to max_models)
+    pass. Does not run boltz itself -- the caller is responsible for
+    having generated model_0..model_N first (e.g. via --diffusion_samples
+    N on the original batch, or a targeted re-run for compounds that
+    failed with a single sample).
+    """
+    predictions_dir = Path(predictions_dir)
+    stem = predictions_dir.name  # e.g. "cyp3a4_itraconazole"
+
+    for i in range(max_models):
+        cif_path = predictions_dir / f"{stem}_model_{i}.cif"
+        if not cif_path.exists():
+            break
+        structure = load_structure(cif_path)
+        try:
+            result = check_pose_validity(structure, ligand_smiles)
+        except Exception:
+            continue
+        if result["all_passed"]:
+            return {"model_index": i, "cif_path": cif_path, "result": result}
+
+    return {"model_index": None, "cif_path": None, "result": None}
 
 
 def _main() -> None:

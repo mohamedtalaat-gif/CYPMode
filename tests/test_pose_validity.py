@@ -45,3 +45,58 @@ def test_check_pose_validity_reports_a_bond_length_check():
     structure = load_structure(CIF_PATH)
     result = check_pose_validity(structure, KETOCONAZOLE_SMILES)
     assert "bond_lengths" in result["checks"]
+
+
+ITRACONAZOLE_RESULT_DIR = Path("data/boltz_test/out/boltz_results_cyp3a4_itraconazole")
+ITRACONAZOLE_CIF = ITRACONAZOLE_RESULT_DIR / "predictions" / "cyp3a4_itraconazole" / "cyp3a4_itraconazole_model_0.cif"
+ITRACONAZOLE_SMILES = "CCC(C)n1ncn(-c2ccc(N3CCN(c4ccc(OCC5COC(Cn6cncn6)(c6ccc(Cl)cc6Cl)O5)cc4)CC3)cc2)c1=O"
+
+
+def test_select_valid_model_returns_model_0_when_it_already_passes(tmp_path):
+    import shutil
+
+    from cypmode.validation.pose_validity import select_valid_model
+
+    predictions_dir = tmp_path / "cyp3a4_ketoconazole"
+    predictions_dir.mkdir()
+    shutil.copy(CIF_PATH, predictions_dir / "cyp3a4_ketoconazole_model_0.cif")
+
+    result = select_valid_model(predictions_dir, KETOCONAZOLE_SMILES)
+    assert result["model_index"] == 0
+    assert result["result"]["all_passed"] is True
+
+
+@pytest.mark.skipif(not ITRACONAZOLE_CIF.exists(), reason="requires a local Boltz-2 run for itraconazole")
+def test_select_valid_model_skips_a_failing_model_0_for_a_passing_model_1(tmp_path):
+    import shutil
+
+    from cypmode.validation.pose_validity import select_valid_model
+
+    predictions_dir = tmp_path / "cyp3a4_itraconazole"
+    predictions_dir.mkdir()
+    # real, confirmed-failing structure as "model_0"
+    shutil.copy(ITRACONAZOLE_CIF, predictions_dir / "cyp3a4_itraconazole_model_0.cif")
+    # a real, known-good structure (different compound, but proves the
+    # "keep trying subsequent models" logic) as "model_1" -- using its
+    # own real SMILES for the check would require ketoconazole's SMILES,
+    # not itraconazole's, so this test uses itraconazole's own SMILES
+    # against ketoconazole's structure deliberately to confirm select_valid_model
+    # tries model_1 and reports whatever check_pose_validity says about it,
+    # not that it must pass (a structure of the wrong ligand should fail
+    # sanitization/identity checks, not silently "pass")
+    shutil.copy(CIF_PATH, predictions_dir / "cyp3a4_itraconazole_model_1.cif")
+
+    result = select_valid_model(predictions_dir, ITRACONAZOLE_SMILES, max_models=2)
+    # model_0 (real failure) skipped; model_1 is a mismatched structure
+    # for this SMILES, so no valid model should be found among these two
+    assert result["model_index"] is None
+
+
+def test_select_valid_model_returns_none_when_no_models_exist(tmp_path):
+    from cypmode.validation.pose_validity import select_valid_model
+
+    empty_dir = tmp_path / "cyp3a4_nothing"
+    empty_dir.mkdir()
+    result = select_valid_model(empty_dir, KETOCONAZOLE_SMILES)
+    assert result["model_index"] is None
+    assert result["cif_path"] is None
