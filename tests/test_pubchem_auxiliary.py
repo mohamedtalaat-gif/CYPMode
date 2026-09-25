@@ -11,6 +11,7 @@ from cypmode.challenge.pubchem_auxiliary import (
     exclude_exact_overlap,
     fit_auxiliary_model,
     load_aid1851,
+    load_single_isoform_aid,
     predict_auxiliary_activity,
 )
 
@@ -77,6 +78,46 @@ def test_load_aid1851_pivots_to_one_row_per_compound(fake_aid1851_path):
     eth_row = df[df["SMILES"] == ETHANOL].iloc[0]
     assert eth_row["CYP2D6_active"] == False  # noqa: E712
     assert pd.isna(eth_row["CYP3A4_active"])  # Inconclusive -> NaN, not False
+
+
+def test_load_single_isoform_aid_parses_a_real_single_panel_schema(tmp_path):
+    # AID891/AID884's real schema: no "Panel Name" column at all (the whole
+    # file is already one isoform), unlike AID1851's 5-panel long format.
+    csv = """PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency
+RESULT_TYPE,,,,,
+RESULT_DESCR,,,,,
+RESULT_UNIT,,,,,
+RESULT_ATTR,,,,,
+1,100,1,{keto},Active,0.0016
+2,101,2,{eth},Inactive,
+3,102,3,{clot},Inconclusive,
+""".format(keto=KETOCONAZOLE, eth=ETHANOL, clot=CLOTRIMAZOLE)
+    path = tmp_path / "aid891_raw.csv"
+    path.write_text(csv)
+
+    df = load_single_isoform_aid(path, "CYP2D6")
+    assert len(df) == 3
+    assert "CYP2D6_active" in df.columns
+    keto_row = df[df["SMILES"] == KETOCONAZOLE].iloc[0]
+    assert keto_row["CYP2D6_active"] == True  # noqa: E712
+    clot_row = df[df["SMILES"] == CLOTRIMAZOLE].iloc[0]
+    assert pd.isna(clot_row["CYP2D6_active"])  # Inconclusive -> NaN
+
+
+def test_load_single_isoform_aid_collapses_replicate_rows(tmp_path):
+    csv = """PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency
+RESULT_TYPE,,,,,
+RESULT_DESCR,,,,,
+RESULT_UNIT,,,,,
+RESULT_ATTR,,,,,
+1,100,1,{keto},Active,0.001
+2,100,1,{keto},Inactive,0.5
+""".format(keto=KETOCONAZOLE)
+    path = tmp_path / "aid884_raw.csv"
+    path.write_text(csv)
+
+    df = load_single_isoform_aid(path, "CYP3A4")
+    assert len(df) == 1  # same CID, two replicate rows -- must not multiply
 
 
 def test_exclude_exact_overlap_removes_matching_compounds():

@@ -86,6 +86,37 @@ def load_aid1851(path: str | Path = AID1851_RAW_PATH) -> pd.DataFrame:
     return out
 
 
+SINGLE_ISOFORM_AID_PATHS = {
+    "CYP2D6": Path("data/pubchem_cache/aid891_cyp2d6_raw.csv"),  # AID 891 -- CYP2D6's own individual qHTS assay
+    "CYP3A4": Path("data/pubchem_cache/aid884_cyp3a4_raw.csv"),  # AID 884 -- CYP3A4's own individual qHTS assay
+}
+
+
+def load_single_isoform_aid(path: str | Path, isoform: str) -> pd.DataFrame:
+    """Parses a real, single-isoform NCATS qHTS assay (AID 891 for CYP2D6,
+    AID 884 for CYP3A4 -- the individual per-isoform screens the later
+    AID 1851 panel assay draws from, confirmed via a real compound-list
+    overlap check: only 2,193/9,385 AID891 compounds and 10/13,076 AID884
+    compounds overlap with AID1851 -- 77% and 99.9% genuinely new
+    compounds respectively, not a duplicate of that data). Same real
+    replicate-row quirk as AID 1851 (verified directly: 935 duplicate CIDs
+    in AID891, 1,079 in AID884) -- collapsed the same way, first-seen per
+    CID, before this becomes a feature.
+
+    Returns one row per compound with a `{isoform}_active` column, the
+    same schema fit_auxiliary_model/predict_auxiliary_activity already
+    expect -- reused unchanged, not reimplemented for this data source.
+    """
+    raw = pd.read_csv(path, skiprows=[1, 2, 3, 4], low_memory=False)
+    raw = raw.dropna(subset=["PUBCHEM_EXT_DATASOURCE_SMILES"]).rename(columns={"PUBCHEM_EXT_DATASOURCE_SMILES": "SMILES"})
+    raw = raw.drop_duplicates(subset=["PUBCHEM_CID"], keep="first")
+
+    active = raw["PUBCHEM_ACTIVITY_OUTCOME"].map({"Active": True, "Inactive": False})  # Inconclusive -> NaN
+    out = raw[["PUBCHEM_CID", "SMILES"]].copy()
+    out[f"{isoform}_active"] = active
+    return out.reset_index(drop=True)
+
+
 def exclude_exact_overlap(aid_df: pd.DataFrame, challenge_smiles: pd.Series) -> pd.DataFrame:
     """Drops any AID 1851 compound whose standardized parent structure
     matches a compound already in this project's own challenge data -- a
@@ -137,10 +168,46 @@ def predict_auxiliary_activity(model: LGBMClassifier, target_df: pd.DataFrame) -
     return model.predict_proba(X)[:, 1]
 
 
-def _main() -> None:
+def _run_ablation_for_isoform(tdi_df: pd.DataFrame, aid_df: pd.DataFrame, cyp: str, aux_col: str) -> pd.DataFrame:
+    """Shared M3-vs-M3+aux 5-fold CV comparison, used for both AID1851 and
+    the single-isoform AIDs (891/884) -- same protocol, different source
+    data.
+    """
     from sklearn.metrics import matthews_corrcoef
     from sklearn.model_selection import StratifiedKFold
 
+    aux_model = fit_auxiliary_model(aid_df, cyp)
+    tdi_df[aux_col] = predict_auxiliary_activity(aux_model, tdi_df)
+
+    cyp_df = tdi_df.dropna(subset=[f"{cyp}_is_TDI"]).reset_index(drop=True)
+    y = cyp_df[f"{cyp}_is_TDI"].astype(int).to_numpy()
+    m3_features = np.stack(cyp_df["m3_features"])
+    m5_features = np.hstack([m3_features, cyp_df[[aux_col]].to_numpy()])
+
+    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    rows = []
+    for fold, (train_idx, val_idx) in enumerate(kfold.split(m3_features, y)):
+        m3_model = LGBMClassifier(verbose=-1, random_state=42)
+        m3_model.fit(m3_features[train_idx], y[train_idx])
+        m3_pred = m3_model.predict(m3_features[val_idx])
+
+        m5_model = LGBMClassifier(verbose=-1, random_state=42)
+        m5_model.fit(m5_features[train_idx], y[train_idx])
+        m5_pred = m5_model.predict(m5_features[val_idx])
+
+        rows.append(
+            {
+                "isoform": cyp,
+                "fold": fold,
+                "n_val": len(val_idx),
+                "mcc_m3": matthews_corrcoef(y[val_idx], m3_pred),
+                "mcc_m3_plus_aux": matthews_corrcoef(y[val_idx], m5_pred),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _main() -> None:
     from cypmode.challenge.tdi_ablation import add_ablation_features
     from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, load_tdi_training_data
 
@@ -153,43 +220,31 @@ def _main() -> None:
 
     all_results = []
     for cyp in TDI_ISOFORMS:
-        aux_model = fit_auxiliary_model(aid_df, cyp)
-        aux_proba = predict_auxiliary_activity(aux_model, tdi_df)
-        tdi_df[f"aux_{cyp}_activity_proba"] = aux_proba
-
-        cyp_df = tdi_df.dropna(subset=[f"{cyp}_is_TDI"]).reset_index(drop=True)
-        y = cyp_df[f"{cyp}_is_TDI"].astype(int).to_numpy()
-        m3_features = np.stack(cyp_df["m3_features"])
-        m5_features = np.hstack([m3_features, cyp_df[[f"aux_{cyp}_activity_proba"]].to_numpy()])
-
-        kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-        rows = []
-        for fold, (train_idx, val_idx) in enumerate(kfold.split(m3_features, y)):
-            m3_model = LGBMClassifier(verbose=-1, random_state=42)
-            m3_model.fit(m3_features[train_idx], y[train_idx])
-            m3_pred = m3_model.predict(m3_features[val_idx])
-
-            m5_model = LGBMClassifier(verbose=-1, random_state=42)
-            m5_model.fit(m5_features[train_idx], y[train_idx])
-            m5_pred = m5_model.predict(m5_features[val_idx])
-
-            rows.append(
-                {
-                    "isoform": cyp,
-                    "fold": fold,
-                    "n_val": len(val_idx),
-                    "mcc_m3": matthews_corrcoef(y[val_idx], m3_pred),
-                    "mcc_m3_plus_aux": matthews_corrcoef(y[val_idx], m5_pred),
-                }
-            )
-        results = pd.DataFrame(rows)
+        results = _run_ablation_for_isoform(tdi_df, aid_df, cyp, f"aux_{cyp}_activity_proba")
         all_results.append(results)
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+aux={results['mcc_m3_plus_aux'].mean():.4f}")
 
     combined = pd.concat(all_results, ignore_index=True)
     out_path = Path("data/cyp_challenge/tdi_track/aid1851_auxiliary_ablation.csv")
     combined.to_csv(out_path, index=False)
-    print(f"\nwrote {out_path}")
+    print(f"wrote {out_path}")
+
+    print("\n-- single-isoform assays (AID891/AID884), the individual screens AID1851's panel draws from --")
+    single_results = []
+    for cyp in TDI_ISOFORMS:
+        single_aid_df = load_single_isoform_aid(SINGLE_ISOFORM_AID_PATHS[cyp], cyp)
+        n_before = len(single_aid_df)
+        single_aid_df = exclude_exact_overlap(single_aid_df, tdi_df["SMILES"])
+        print(f"{cyp} single-isoform AID: {n_before} compounds, {n_before - len(single_aid_df)} exact-SMILES overlap excluded")
+
+        results = _run_ablation_for_isoform(tdi_df, single_aid_df, cyp, f"aux_single_{cyp}_activity_proba")
+        single_results.append(results)
+        print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+single-isoform-aux={results['mcc_m3_plus_aux'].mean():.4f}")
+
+    single_combined = pd.concat(single_results, ignore_index=True)
+    single_out_path = Path("data/cyp_challenge/tdi_track/aid891_884_auxiliary_ablation.csv")
+    single_combined.to_csv(single_out_path, index=False)
+    print(f"wrote {single_out_path}")
 
 
 if __name__ == "__main__":
