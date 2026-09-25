@@ -1,0 +1,3 @@
+comparison,n,median_similarity,mean_similarity,frac_similarity_ge_0.5,frac_similarity_ge_0.7
+own_cv_fold_vs_own_training_portion,965,0.4477611940298507,0.49550485167313607,0.38341968911917096,0.15854922279792746
+real_blinded_test_vs_full_training_set,750,0.5692307692307692,0.565286420016719,0.8146666666666667,0.084

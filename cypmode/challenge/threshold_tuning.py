@@ -104,6 +104,195 @@ def cross_validate_with_threshold_tuning(
     return pd.DataFrame(rows)
 
 
+DEFAULT_BASE_RATE_GRID = np.linspace(0.05, 0.50, 10)
+
+
+def _mcc_from_confusion(tp: float, fn: float, fp: float, tn: float) -> float:
+    """MCC from (possibly fractional) confusion-matrix counts -- fractional
+    because find_robust_threshold uses this on expected counts under an
+    assumed base rate, not on an integer sample. 0.0 by convention when any
+    marginal is zero (matching sklearn's own MCC edge-case behavior),
+    rather than raising or returning NaN.
+    """
+    denom = np.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+    if denom == 0:
+        return 0.0
+    return (tp * tn - fp * fn) / denom
+
+
+def _roc_points(y_true: np.ndarray, y_proba: np.ndarray, thresholds: np.ndarray) -> pd.DataFrame:
+    """TPR and FPR at each threshold -- the two base-rate-independent
+    quantities a classifier's operating point is summarized by. Everything
+    base-rate-specific (confusion counts, MCC) is reconstructed from these
+    plus an assumed base rate, not recomputed from raw labels each time.
+    """
+    n_pos = (y_true == 1).sum()
+    n_neg = (y_true == 0).sum()
+    rows = []
+    for t in thresholds:
+        pred = (y_proba >= t).astype(int)
+        tpr = ((pred == 1) & (y_true == 1)).sum() / n_pos if n_pos > 0 else 0.0
+        fpr = ((pred == 1) & (y_true == 0)).sum() / n_neg if n_neg > 0 else 0.0
+        rows.append({"threshold": float(t), "tpr": tpr, "fpr": fpr})
+    return pd.DataFrame(rows)
+
+
+def find_robust_threshold(
+    y_true: np.ndarray,
+    y_proba: np.ndarray,
+    base_rates: np.ndarray = DEFAULT_BASE_RATE_GRID,
+    thresholds: np.ndarray = DEFAULT_THRESHOLD_GRID,
+    criterion: str = "worst_case",
+) -> tuple[float, pd.DataFrame]:
+    """Picks a threshold from its TPR/FPR curve (computed on y_true/y_proba
+    only -- callers are responsible for only passing training-portion data,
+    same rule as find_optimal_threshold) that stays good across a whole
+    *assumed range* of test base rates, instead of the single base rate
+    find_optimal_threshold implicitly assumes (whatever y_true's own rate
+    happens to be). Motivated directly by a real technique from another
+    OpenADMET CYP Challenge team (JacksonBurns, TDI leaderboard): they
+    found a single MCC-optimal threshold is base-rate-specific, and a
+    train/test base-rate mismatch can silently cost real MCC.
+
+    For each candidate threshold, expected confusion counts are computed
+    analytically at every base rate in `base_rates` (TP=pi*TPR,
+    FN=pi*(1-TPR), FP=(1-pi)*FPR, TN=(1-pi)*(1-FPR)), converted to MCC, and
+    aggregated across the base-rate grid: "worst_case" (this threshold's
+    minimum MCC over the grid -- maximized, a minimax choice that's robust
+    if the test base rate turns out to be anywhere in that range) or
+    "mean" (average MCC over the grid). Returns the chosen threshold and
+    the full per-threshold, per-criterion table for inspection.
+    """
+    roc = _roc_points(y_true, y_proba, thresholds)
+    rows = []
+    for _, r in roc.iterrows():
+        mccs = [_mcc_from_confusion(pi * r.tpr, pi * (1 - r.tpr), (1 - pi) * r.fpr, (1 - pi) * (1 - r.fpr)) for pi in base_rates]
+        rows.append({"threshold": r.threshold, "worst_case_mcc": min(mccs), "mean_mcc": float(np.mean(mccs))})
+    summary = pd.DataFrame(rows)
+    score_col = "worst_case_mcc" if criterion == "worst_case" else "mean_mcc"
+    best_threshold = float(summary.loc[summary[score_col].idxmax(), "threshold"])
+    return best_threshold, summary
+
+
+def _resample_to_base_rate(y_true: np.ndarray, y_proba: np.ndarray, target_rate: float, rng: np.random.Generator):
+    """Real base-rate-shift stress test, not simulated: undersamples the
+    majority class of an actual (y_true, y_proba) pair (e.g. a real outer
+    validation fold) so the resulting subset's positive rate matches
+    target_rate as closely as the available counts allow, keeping every
+    compound's real label and real predicted probability untouched.
+    """
+    pos_idx = np.where(y_true == 1)[0]
+    neg_idx = np.where(y_true == 0)[0]
+    n_pos, n_neg = len(pos_idx), len(neg_idx)
+    if n_pos == 0 or n_neg == 0:
+        return y_true, y_proba
+    # solve for the largest (n_pos', n_neg') <= (n_pos, n_neg) with n_pos'/(n_pos'+n_neg')==target_rate
+    n_pos_keep = min(n_pos, int(round(target_rate / (1 - target_rate) * n_neg)))
+    n_neg_keep = min(n_neg, int(round((1 - target_rate) / target_rate * n_pos_keep))) if n_pos_keep > 0 else 0
+    if n_pos_keep < 1 or n_neg_keep < 1:
+        return y_true, y_proba
+    keep = np.concatenate(
+        [rng.choice(pos_idx, size=n_pos_keep, replace=False), rng.choice(neg_idx, size=n_neg_keep, replace=False)]
+    )
+    return y_true[keep], y_proba[keep]
+
+
+def base_rate_shift_stress_test(
+    y_val: np.ndarray,
+    proba_val: np.ndarray,
+    naive_threshold: float,
+    robust_threshold: float,
+    target_rates: np.ndarray = DEFAULT_BASE_RATE_GRID,
+    random_state: int = 42,
+) -> pd.DataFrame:
+    """The honest check that find_robust_threshold actually buys something:
+    resamples a REAL validation fold's (label, predicted-probability) pairs
+    to a range of target base rates (see _resample_to_base_rate), and
+    scores both the naive MCC-optimal threshold and the robust threshold
+    -- both frozen beforehand from training-portion data only -- on each
+    shifted subset. If the robust threshold is doing its job, its MCC
+    should degrade less than the naive threshold's as the shifted rate
+    moves away from y_val's own natural rate.
+    """
+    rng = np.random.default_rng(random_state)
+    rows = []
+    for target_rate in target_rates:
+        y_shifted, proba_shifted = _resample_to_base_rate(y_val, proba_val, target_rate, rng)
+        if len(y_shifted) == 0 or len(set(y_shifted)) < 2:
+            continue
+        naive_pred = (proba_shifted >= naive_threshold).astype(int)
+        robust_pred = (proba_shifted >= robust_threshold).astype(int)
+        rows.append(
+            {
+                "target_base_rate": float(target_rate),
+                "n": len(y_shifted),
+                "mcc_naive_threshold": matthews_corrcoef(y_shifted, naive_pred),
+                "mcc_robust_threshold": matthews_corrcoef(y_shifted, robust_pred),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def cross_validate_with_robust_threshold_tuning(
+    df: pd.DataFrame,
+    label_col: str,
+    feature_col: str = "descriptors",
+    n_splits: int = 5,
+    inner_splits: int = 3,
+    random_state: int = 42,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Same fold-internal protocol as cross_validate_with_threshold_tuning,
+    but tunes both a naive MCC-optimal threshold and a robust
+    (find_robust_threshold) one per fold from the same inner-OOF
+    probabilities, then reports (a) both thresholds' MCC on the real,
+    unshifted outer validation fold, and (b) a base-rate-shift stress test
+    on that same fold (see base_rate_shift_stress_test) -- so the tradeoff
+    (does robust cost accuracy at the natural rate, does it actually help
+    under a shift) is visible, not asserted.
+    """
+    cyp_df = df.dropna(subset=[label_col]).reset_index(drop=True)
+    y = cyp_df[label_col].astype(int).to_numpy()
+    features = np.stack(cyp_df[feature_col])
+
+    fold_rows, stress_rows = [], []
+    outer_kfold = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
+    for fold, (train_idx, val_idx) in enumerate(outer_kfold.split(features, y)):
+        train_features, train_labels = features[train_idx], y[train_idx]
+        val_features, val_labels = features[val_idx], y[val_idx]
+
+        inner_oof_proba = np.full(len(train_labels), np.nan)
+        inner_kfold = StratifiedKFold(n_splits=inner_splits, shuffle=True, random_state=random_state)
+        for inner_train_idx, inner_val_idx in inner_kfold.split(train_features, train_labels):
+            model = LGBMClassifier(verbose=-1, random_state=random_state)
+            model.fit(train_features[inner_train_idx], train_labels[inner_train_idx])
+            inner_oof_proba[inner_val_idx] = model.predict_proba(train_features[inner_val_idx])[:, 1]
+        naive_threshold, _ = find_optimal_threshold(train_labels, inner_oof_proba)
+        robust_threshold, _ = find_robust_threshold(train_labels, inner_oof_proba)
+
+        model = LGBMClassifier(verbose=-1, random_state=random_state)
+        model.fit(train_features, train_labels)
+        val_proba = model.predict_proba(val_features)[:, 1]
+
+        naive_pred = (val_proba >= naive_threshold).astype(int)
+        robust_pred = (val_proba >= robust_threshold).astype(int)
+        fold_rows.append(
+            {
+                "fold": fold,
+                "n_val": len(val_idx),
+                "naive_threshold": naive_threshold,
+                "robust_threshold": robust_threshold,
+                "mcc_naive_threshold": matthews_corrcoef(val_labels, naive_pred),
+                "mcc_robust_threshold": matthews_corrcoef(val_labels, robust_pred),
+            }
+        )
+
+        stress = base_rate_shift_stress_test(val_labels, val_proba, naive_threshold, robust_threshold, random_state=random_state)
+        stress.insert(0, "fold", fold)
+        stress_rows.append(stress)
+
+    return pd.DataFrame(fold_rows), pd.concat(stress_rows, ignore_index=True)
+
+
 def _main() -> None:
     from cypmode.challenge.tdi_ablation import add_ablation_features
     from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
@@ -123,6 +312,29 @@ def _main() -> None:
     out_path = Path("data/cyp_challenge/tdi_track/threshold_tuning.csv")
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
+
+    print("\n-- robust (base-rate-shift-aware) threshold, same protocol --")
+    all_robust, all_stress = [], []
+    for cyp in TDI_ISOFORMS:
+        fold_results, stress_results = cross_validate_with_robust_threshold_tuning(df, label_col=f"{cyp}_is_TDI", feature_col="m3_features")
+        fold_results.insert(0, "isoform", cyp)
+        stress_results.insert(0, "isoform", cyp)
+        all_robust.append(fold_results)
+        all_stress.append(stress_results)
+        print(f"{cyp}: at natural rate -- naive-tuned MCC {fold_results['mcc_naive_threshold'].mean():.4f}, "
+              f"robust-tuned MCC {fold_results['mcc_robust_threshold'].mean():.4f}")
+
+    robust_combined = pd.concat(all_robust, ignore_index=True)
+    stress_combined = pd.concat(all_stress, ignore_index=True)
+    robust_out_path = Path("data/cyp_challenge/tdi_track/robust_threshold_tuning.csv")
+    stress_out_path = Path("data/cyp_challenge/tdi_track/robust_threshold_stress_test.csv")
+    robust_combined.to_csv(robust_out_path, index=False)
+    stress_combined.to_csv(stress_out_path, index=False)
+    print(f"wrote {robust_out_path}\nwrote {stress_out_path}")
+
+    print("\n-- stress test: mean MCC by shifted base rate (naive vs robust) --")
+    stress_summary = stress_combined.groupby(["isoform", "target_base_rate"])[["mcc_naive_threshold", "mcc_robust_threshold"]].mean()
+    print(stress_summary.to_string())
 
 
 if __name__ == "__main__":
