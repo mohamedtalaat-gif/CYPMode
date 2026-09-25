@@ -22,6 +22,25 @@ from sklearn.model_selection import KFold
 
 ISOFORMS = ["CYP3A4", "CYP2D6"]
 
+# Threshold-sweep logic duplicated from cypmode.challenge.threshold_tuning
+# rather than imported: that module imports lightgbm at module level, and
+# importing lightgbm and torch into the same process is a real, confirmed
+# segfault on this machine (see pyproject.toml's `torch` marker) -- this
+# file must stay lightgbm-free.
+DEFAULT_THRESHOLD_GRID = np.linspace(0.05, 0.95, 19)
+
+
+def _find_optimal_threshold(
+    y_true: np.ndarray, y_proba: np.ndarray, thresholds: np.ndarray = DEFAULT_THRESHOLD_GRID
+) -> tuple[float, float]:
+    best_threshold, best_mcc = 0.5, -1.0
+    for t in thresholds:
+        pred = (y_proba >= t).astype(int)
+        mcc = matthews_corrcoef(y_true, pred)
+        if mcc > best_mcc:
+            best_mcc, best_threshold = mcc, float(t)
+    return best_threshold, best_mcc
+
 
 class SharedTrunkModel(nn.Module):
     def __init__(self, input_dim: int, trunk_dim: int = 64, head_dim: int = 32, dropout: float = 0.2):
@@ -146,6 +165,101 @@ def cross_validate_shared_trunk(
     return pd.DataFrame(rows)
 
 
+def _inner_oof_threshold_shared_trunk(
+    X_train_raw: np.ndarray, y_train: dict, mask_train: dict, inner_splits: int, epochs: int, random_state: int
+) -> dict:
+    """Same idea as threshold_tuning._inner_oof_threshold, but for the
+    shared-trunk model: an inner K-fold runs entirely inside the outer
+    training portion, producing inner-OOF probabilities per isoform (a
+    property of the training portion only), and a threshold is swept per
+    isoform from those -- zero information from the outer validation fold.
+    """
+    n = X_train_raw.shape[0]
+    inner_oof_proba = {cyp: np.full(n, np.nan, dtype=np.float32) for cyp in ISOFORMS}
+    inner_kfold = KFold(n_splits=inner_splits, shuffle=True, random_state=random_state)
+    for inner_train_idx, inner_val_idx in inner_kfold.split(X_train_raw):
+        mean, std = X_train_raw[inner_train_idx].mean(axis=0), X_train_raw[inner_train_idx].std(axis=0) + 1e-8
+        X_inner_train = _standardize(X_train_raw[inner_train_idx], mean, std)
+        X_inner_val = _standardize(X_train_raw[inner_val_idx], mean, std)
+
+        model = train_shared_trunk(
+            X_inner_train,
+            {cyp: y_train[cyp][inner_train_idx] for cyp in ISOFORMS},
+            {cyp: mask_train[cyp][inner_train_idx] for cyp in ISOFORMS},
+            epochs=epochs,
+            seed=random_state,
+        )
+        proba = predict_proba(model, X_inner_val)
+        for cyp in ISOFORMS:
+            inner_oof_proba[cyp][inner_val_idx] = proba[cyp]
+
+    thresholds = {}
+    for cyp in ISOFORMS:
+        valid = mask_train[cyp].astype(bool) & ~np.isnan(inner_oof_proba[cyp])
+        threshold, _ = _find_optimal_threshold(y_train[cyp][valid].astype(int), inner_oof_proba[cyp][valid])
+        thresholds[cyp] = threshold
+    return thresholds
+
+
+def cross_validate_shared_trunk_with_threshold_tuning(
+    df: pd.DataFrame,
+    feature_col: str = "m3_features",
+    n_splits: int = 5,
+    inner_splits: int = 3,
+    random_state: int = 42,
+    epochs: int = 200,
+) -> pd.DataFrame:
+    """cross_validate_shared_trunk, plus a fold-internal MCC-tuned threshold
+    per isoform (never touching the outer validation fold's own labels) --
+    the same protocol threshold_tuning.py applies to the independent-head
+    (M3) model, so the two are directly comparable.
+    """
+    X_raw = np.stack(df[feature_col]).astype(np.float32)
+
+    y, mask = {}, {}
+    for cyp in ISOFORMS:
+        col = f"{cyp}_is_TDI"
+        mask[cyp] = df[col].notna().to_numpy().astype(np.float32)
+        y[cyp] = df[col].fillna(0).astype(int).to_numpy().astype(np.float32)
+
+    rows = []
+    outer_kfold = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
+    for fold, (train_idx, val_idx) in enumerate(outer_kfold.split(X_raw)):
+        y_train = {cyp: y[cyp][train_idx] for cyp in ISOFORMS}
+        mask_train = {cyp: mask[cyp][train_idx] for cyp in ISOFORMS}
+
+        tuned_thresholds = _inner_oof_threshold_shared_trunk(
+            X_raw[train_idx], y_train, mask_train, inner_splits, epochs, random_state
+        )
+
+        mean, std = X_raw[train_idx].mean(axis=0), X_raw[train_idx].std(axis=0) + 1e-8
+        X_train = _standardize(X_raw[train_idx], mean, std)
+        X_val = _standardize(X_raw[val_idx], mean, std)
+
+        model = train_shared_trunk(X_train, y_train, mask_train, epochs=epochs, seed=random_state)
+        proba = predict_proba(model, X_val)
+
+        for cyp in ISOFORMS:
+            val_mask = mask[cyp][val_idx].astype(bool)
+            if val_mask.sum() == 0:
+                continue
+            y_true = y[cyp][val_idx][val_mask].astype(int)
+            p = proba[cyp][val_mask]
+            naive_pred = (p >= 0.5).astype(int)
+            tuned_pred = (p >= tuned_thresholds[cyp]).astype(int)
+            rows.append(
+                {
+                    "isoform": cyp,
+                    "fold": fold,
+                    "n_val": int(val_mask.sum()),
+                    "tuned_threshold": tuned_thresholds[cyp],
+                    "mcc_naive_0.5": matthews_corrcoef(y_true, naive_pred) if len(set(y_true)) > 1 else float("nan"),
+                    "mcc_tuned": matthews_corrcoef(y_true, tuned_pred) if len(set(y_true)) > 1 else float("nan"),
+                }
+            )
+    return pd.DataFrame(rows)
+
+
 def _main() -> None:
     from pathlib import Path
 
@@ -153,12 +267,20 @@ def _main() -> None:
     from cypmode.challenge.tdi_baseline import compute_descriptors, load_tdi_training_data
 
     df = add_ablation_features(compute_descriptors(load_tdi_training_data()))
-    results = cross_validate_shared_trunk(df)
-    print(results.groupby("isoform")["mcc"].mean().to_string())
 
+    results = cross_validate_shared_trunk(df)
+    print("-- untuned (0.5 threshold) --")
+    print(results.groupby("isoform")["mcc"].mean().to_string())
     out_path = Path("data/cyp_challenge/tdi_track/shared_trunk_m1.csv")
     results.to_csv(out_path, index=False)
-    print(f"\nwrote {out_path}")
+    print(f"wrote {out_path}\n")
+
+    tuned_results = cross_validate_shared_trunk_with_threshold_tuning(df)
+    print("-- fold-internal MCC-tuned threshold --")
+    print(tuned_results.groupby("isoform")[["mcc_naive_0.5", "mcc_tuned", "tuned_threshold"]].mean().to_string())
+    tuned_out_path = Path("data/cyp_challenge/tdi_track/shared_trunk_m1_threshold_tuning.csv")
+    tuned_results.to_csv(tuned_out_path, index=False)
+    print(f"wrote {tuned_out_path}")
 
 
 if __name__ == "__main__":
