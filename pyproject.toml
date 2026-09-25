@@ -61,9 +61,26 @@ validate = ["biopython"]
 # CYP Blind Challenge tutorial's own baseline (LightGBM on RDKit descriptors
 # via useful_rdkit_utils, the same library the official tutorial uses).
 challenge = ["lightgbm", "useful_rdkit_utils", "scikit-learn"]
+# For cypmode/challenge/multitask.py's shared-trunk model -- a small, plain
+# PyTorch MLP built deliberately instead of installing openadmet-models
+# (whose own real dependencies -- PyTorch, Lightning, ChemProp+CheMeleon
+# weights, CatBoost, XGBoost, TabPFN, several git-installed packages --
+# only exist in a separate conda env, not this project's pyproject.toml,
+# and would be a large, risky addition on the 16GB machine this was
+# developed on, already under real memory pressure from Boltz-2). CPU
+# only -- this MLP doesn't need the GPU, and the machine's one GPU is
+# already busy with Boltz-2 structural runs.
+multitask = ["torch"]
 
 [tool.pytest.ini_options]
 # third_party/ vendors full clones (TDC, Boltz-2) with their own pytest
 # suites and heavy-dependency imports (torch, etc.) -- scope collection to
 # this project's own tests.
 testpaths = ["tests"]
+markers = [
+    "torch: needs both the challenge and multitask extras installed together -- run with `pytest tests/test_multitask.py` as its own, separate invocation, never mixed with the rest of the suite (a plain `-m` deselect isn't enough -- pytest still imports a deselected file during collection, which is exactly what triggers this). Confirmed directly: importing torch and lightgbm in the same process crashes with a real segfault (OpenMP runtime conflict between the two libraries' bundled libomp, macOS/Apple Silicon) -- not flaky, reproduces every time.",
+]
+# --ignore, not just a -m deselect: pytest imports every collected file
+# (including ones a marker would later deselect) to discover its tests,
+# and that import alone is what crashes the process -- confirmed directly.
+addopts = "--ignore=tests/test_multitask.py"
