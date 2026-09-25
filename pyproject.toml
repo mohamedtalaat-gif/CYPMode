@@ -61,7 +61,7 @@ tdc = [
 # upper bound conflicting with this project's own numpy>=2.5.3 floor (an
 # overly conservative pin on pyKVFinder's side, not a real incompatibility
 # -- verified by actually running its real workflow end to end).
-validate = ["biopython", "pyKVFinder"]
+validate = ["biopython", "pyKVFinder", "posebusters"]
 # For cypmode/challenge/*.py -- reproducing and then extending the OpenADMET
 # CYP Blind Challenge tutorial's own baseline (LightGBM on RDKit descriptors
 # via useful_rdkit_utils, the same library the official tutorial uses).
