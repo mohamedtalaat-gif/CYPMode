@@ -23,6 +23,7 @@ from cypmode.metrics.motifs import classify_mechanism, detect_motifs
 VALIDATION_SUMMARY_PATH = Path("data/boltz_test/validation_summary.json")
 CHALLENGE_COMPOUNDS_PATH = Path("data/cyp_challenge/structure_track_test_blinded.csv")
 CHALLENGE_RESULTS_PATH = Path("data/cyp_challenge/structure_track_results.csv")
+TDI_FIGURES_DIR = Path("docs/figures/tdi_track")
 
 
 def read_smiles(file, text_input) -> list[str]:
@@ -191,15 +192,69 @@ def challenge_tab():
     )
 
 
+def tdi_results_tab():
+    st.caption(
+        "Results from CYPMode's TDI (time-dependent inhibition) track work -- "
+        "structural/mechanistic evidence combined with classical ML to predict "
+        "mechanism-based CYP3A4/CYP2D6 inhibition. Full methodology, including "
+        "findings that didn't work, is in CYPMode-TDI_DATA_AUDIT.md and "
+        "CYPMode-TDI_Architecture_Specification.md at the repo root -- this tab "
+        "is the short version for anyone, cheminformatics background or not."
+    )
+
+    mcc_path = TDI_FIGURES_DIR / "tdi_mcc_progression-light.svg"
+    reliability_path = TDI_FIGURES_DIR / "tdi_reliability_correlation-light.svg"
+
+    if not mcc_path.exists() or not reliability_path.exists():
+        st.warning(
+            f"Figures not found under {TDI_FIGURES_DIR} -- regenerate with "
+            "`python docs/figures/generate_tdi_figures.py` (needs matplotlib)."
+        )
+        return
+
+    st.subheader("MCC by pipeline stage")
+    st.markdown(
+        "Three stages, same 5-fold cross-validation protocol throughout, so every "
+        "bar is directly comparable: a plain RDKit-descriptor baseline, CYPMode's "
+        "motif screen + a Morgan fingerprint added (**M3**), and the same model "
+        "with its decision threshold tuned for MCC inside each training fold "
+        "(never touching validation labels) instead of left at a naive 0.5 -- "
+        "TDI is a ~21%-positive imbalanced label, so 0.5 was always too "
+        "conservative. A second candidate feature (a trialkylamine flag) was "
+        "tested at the M3 stage too and **dropped** -- it measurably hurt CYP2D6 "
+        "and helped nothing, a real negative result kept in the record rather "
+        "than left out."
+    )
+    st.image(str(mcc_path), width="stretch")
+
+    st.subheader("Does the reliability score actually track real error?")
+    st.markdown(
+        "Two candidate reliability signals -- prediction variance across 5 "
+        "same-data, different-seed models, and each compound's chemical "
+        "(Tanimoto) distance from the training set -- checked against whether "
+        "a held-out prediction was actually wrong. Neither is called *validated "
+        "uncertainty quantification* here; that label is reserved for a "
+        "correlation shown to be real and reasonably strong. As measured (a "
+        "single fold, n=717): chemical distance tracks error better than model "
+        "disagreement, and both are weak-to-modest, not strong -- reported as "
+        "measured, not oversold."
+    )
+    st.image(str(reliability_path), width="stretch")
+
+
 def app():
     st.title("CYPMode: Mode-Aware CYP450 Inhibition Screening")
-    tab1, tab2, tab3 = st.tabs(["Motif screen", "Structural validation", "CYP Blind Challenge"])
+    tab1, tab2, tab3, tab4 = st.tabs(
+        ["Motif screen", "Structural validation", "CYP Blind Challenge", "TDI Track Results"]
+    )
     with tab1:
         motif_screen_tab()
     with tab2:
         structural_validation_tab()
     with tab3:
         challenge_tab()
+    with tab4:
+        tdi_results_tab()
 
 
 if __name__ == "__main__":
