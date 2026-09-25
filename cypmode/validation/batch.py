@@ -116,6 +116,17 @@ def _main() -> None:
         help="skip writing a .csv/.parquet snapshot alongside the JSON (written by default, same base name)",
     )
     parser.add_argument("--no-stream", dest="stream_output", action="store_false")
+    parser.add_argument(
+        "--no-affinity",
+        dest="predict_affinity",
+        action="store_false",
+        help="skip the affinity property entirely -- only the structure/coordination geometry is needed "
+        "for compounds that don't require a predicted affinity value (confirmed: the affinity head alone "
+        "runs 5x the diffusion sampling of the base structure by default)",
+    )
+    parser.add_argument("--recycling-steps", type=int, default=None, help="passed through to boltz predict")
+    parser.add_argument("--max-msa-seqs", type=int, default=None, help="passed through to boltz predict")
+    parser.add_argument("--num-subsampled-msa", type=int, default=None, help="passed through to boltz predict")
     args = parser.parse_args()
 
     with open(args.csv_path, newline="") as f:
@@ -123,7 +134,16 @@ def _main() -> None:
 
     results_path = Path(args.results_path)
     table_path = results_path.with_suffix("") if args.write_table else None
-    results = run_batch(compounds, results_path, table_path=table_path, stream_output=args.stream_output)
+    results = run_batch(
+        compounds,
+        results_path,
+        table_path=table_path,
+        stream_output=args.stream_output,
+        predict_affinity=args.predict_affinity,
+        recycling_steps=args.recycling_steps,
+        max_msa_seqs=args.max_msa_seqs,
+        num_subsampled_msa=args.num_subsampled_msa,
+    )
     n_errors = sum(1 for r in results.values() if "error" in r)
     print(f"done: {len(results)} compound(s), {n_errors} error(s), written to {args.results_path}")
 
