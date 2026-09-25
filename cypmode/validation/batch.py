@@ -139,6 +139,14 @@ def _main() -> None:
         "for compounds that do need affinity (confirmed directly: this is on top of, not instead of, the "
         "base structure's own single diffusion sample)",
     )
+    parser.add_argument(
+        "--write-embeddings",
+        action="store_true",
+        help="also save Boltz-2's own pooled single/pair trunk representations (a real, first-class "
+        "--write_embeddings CLI flag, confirmed in third_party/boltz-main's own source) -- a richer "
+        "structural feature than a single geometric distance, at roughly the cost of a slightly larger "
+        "output write, no extra compute (the representations are already computed either way)",
+    )
     args = parser.parse_args()
 
     with open(args.csv_path, newline="") as f:
@@ -156,6 +164,7 @@ def _main() -> None:
         max_msa_seqs=args.max_msa_seqs,
         num_subsampled_msa=args.num_subsampled_msa,
         diffusion_samples_affinity=args.diffusion_samples_affinity,
+        write_embeddings=args.write_embeddings,
     )
     n_errors = sum(1 for r in results.values() if "error" in r)
     print(f"done: {len(results)} compound(s), {n_errors} error(s), written to {args.results_path}")

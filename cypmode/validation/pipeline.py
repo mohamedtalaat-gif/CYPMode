@@ -35,6 +35,7 @@ def run_structural_validation(
     max_msa_seqs: int | None = None,
     num_subsampled_msa: int | None = None,
     diffusion_samples_affinity: int | None = None,
+    write_embeddings: bool = False,
 ) -> dict:
     """Build the input, run Boltz-2 (blocking -- tens of minutes), and summarize
     the result. Raises RuntimeError with Boltz-2's own output on failure,
@@ -85,6 +86,8 @@ def run_structural_validation(
         command += ["--num_subsampled_msa", str(num_subsampled_msa)]
     if diffusion_samples_affinity is not None:
         command += ["--diffusion_samples_affinity", str(diffusion_samples_affinity)]
+    if write_embeddings:
+        command.append("--write_embeddings")
 
     if stream_output:
         lines: list[str] = []
@@ -107,7 +110,9 @@ def run_structural_validation(
             )
 
     result_dir = Path(out_dir) / f"boltz_results_cyp3a4_{name}"
-    return summarize_compound(result_dir, ligand_smiles, expect_affinity=predict_affinity)
+    return summarize_compound(
+        result_dir, ligand_smiles, expect_affinity=predict_affinity, expect_trunk_embedding=write_embeddings
+    )
 
 
 def _main() -> None:

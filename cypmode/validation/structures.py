@@ -25,6 +25,7 @@ fragile mapping between a 2D match and a 3D atom name.
 
 from pathlib import Path
 
+import numpy as np
 from Bio.PDB.MMCIFParser import MMCIFParser
 from rdkit import Chem
 from rdkit.Chem import AllChem
@@ -167,7 +168,40 @@ def load_confidence(predictions_dir: str | Path) -> dict:
     return json.loads(files[0].read_text())
 
 
-def summarize_compound(result_dir: str | Path, ligand_smiles: str, expect_affinity: bool = True) -> dict:
+def load_trunk_embeddings(predictions_dir: str | Path) -> dict:
+    """Loads Boltz-2's own pooled single (s) and pair (z) trunk
+    representations from embeddings_*.npz -- only present when the
+    `boltz predict` run was made with the real, first-class --write_embeddings
+    CLI flag (confirmed directly in third_party/boltz-main's own source:
+    data/write/writer.py writes prediction["s"]/["z"] to this file when
+    that flag is set; model/models/boltz2.py's predict_step returns them
+    unconditionally, so the flag only controls whether they're saved, not
+    whether they're computed).
+    """
+    files = list(Path(predictions_dir).glob("embeddings_*.npz"))
+    if not files:
+        raise FileNotFoundError(f"no embeddings_*.npz in {predictions_dir} -- was --write_embeddings passed?")
+    data = np.load(files[0])
+    return {"s": data["s"], "z": data["z"]}
+
+
+def pooled_trunk_embedding(embeddings: dict) -> np.ndarray:
+    """Mean-pools s (per-token) and z (per-token-pair) down to a fixed-size
+    vector each, then concatenates -- fixed size regardless of a given
+    complex's token count, so compounds of different sizes are directly
+    comparable/usable as one ML feature vector. Every axis except the last
+    (the model's own feature/channel dimension) is pooled over -- s and z
+    have different rank (token vs. token-pair), so this is written
+    generically rather than assuming a specific number of axes.
+    """
+    s_pooled = embeddings["s"].reshape(-1, embeddings["s"].shape[-1]).mean(axis=0)
+    z_pooled = embeddings["z"].reshape(-1, embeddings["z"].shape[-1]).mean(axis=0)
+    return np.concatenate([s_pooled, z_pooled])
+
+
+def summarize_compound(
+    result_dir: str | Path, ligand_smiles: str, expect_affinity: bool = True, expect_trunk_embedding: bool = False
+) -> dict:
     """Summarize one Boltz-2 result directory, e.g. .../boltz_results_cyp3a4_ketoconazole.
 
     ligand_smiles is required -- motif matching needs the 2D structure, not
@@ -204,4 +238,9 @@ def summarize_compound(result_dir: str | Path, ligand_smiles: str, expect_affini
         affinity = load_affinity(predictions_dir)
         result["affinity_pred_value"] = affinity["affinity_pred_value"]
         result["affinity_probability_binary"] = affinity["affinity_probability_binary"]
+    if expect_trunk_embedding:
+        embeddings = load_trunk_embeddings(predictions_dir)
+        # list, not ndarray -- this result dict is JSON-serialized (batch.py's
+        # checkpointing), and json.dumps can't handle a raw numpy array.
+        result["pooled_trunk_embedding"] = pooled_trunk_embedding(embeddings).tolist()
     return result

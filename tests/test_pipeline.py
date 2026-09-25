@@ -181,3 +181,33 @@ def test_speed_flags_omitted_by_default(tmp_path):
     assert "--recycling_steps" not in command
     assert "--max_msa_seqs" not in command
     assert "--num_subsampled_msa" not in command
+
+
+def test_write_embeddings_flag_passes_through_when_true(tmp_path):
+    with (
+        patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+        patch("cypmode.validation.pipeline.summarize_compound", return_value={}) as mock_summarize,
+    ):
+        mock_popen.return_value = _mock_popen(0, [])
+
+        run_structural_validation(
+            "test", KETOCONAZOLE_SMILES, input_dir=tmp_path, out_dir=tmp_path / "out", write_embeddings=True
+        )
+
+    command = mock_popen.call_args[0][0]
+    assert "--write_embeddings" in command
+    assert mock_summarize.call_args.kwargs.get("expect_trunk_embedding") is True
+
+
+def test_write_embeddings_flag_omitted_by_default(tmp_path):
+    with (
+        patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+        patch("cypmode.validation.pipeline.summarize_compound", return_value={}) as mock_summarize,
+    ):
+        mock_popen.return_value = _mock_popen(0, [])
+
+        run_structural_validation("test", KETOCONAZOLE_SMILES, input_dir=tmp_path, out_dir=tmp_path / "out")
+
+    command = mock_popen.call_args[0][0]
+    assert "--write_embeddings" not in command
+    assert mock_summarize.call_args.kwargs.get("expect_trunk_embedding") is False
