@@ -127,6 +127,14 @@ def _main() -> None:
     parser.add_argument("--recycling-steps", type=int, default=None, help="passed through to boltz predict")
     parser.add_argument("--max-msa-seqs", type=int, default=None, help="passed through to boltz predict")
     parser.add_argument("--num-subsampled-msa", type=int, default=None, help="passed through to boltz predict")
+    parser.add_argument(
+        "--diffusion-samples-affinity",
+        type=int,
+        default=None,
+        help="passed through to boltz predict -- default is 5, the single biggest real cost/memory lever "
+        "for compounds that do need affinity (confirmed directly: this is on top of, not instead of, the "
+        "base structure's own single diffusion sample)",
+    )
     args = parser.parse_args()
 
     with open(args.csv_path, newline="") as f:
@@ -143,6 +151,7 @@ def _main() -> None:
         recycling_steps=args.recycling_steps,
         max_msa_seqs=args.max_msa_seqs,
         num_subsampled_msa=args.num_subsampled_msa,
+        diffusion_samples_affinity=args.diffusion_samples_affinity,
     )
     n_errors = sum(1 for r in results.values() if "error" in r)
     print(f"done: {len(results)} compound(s), {n_errors} error(s), written to {args.results_path}")

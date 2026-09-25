@@ -34,6 +34,7 @@ def run_structural_validation(
     recycling_steps: int | None = None,
     max_msa_seqs: int | None = None,
     num_subsampled_msa: int | None = None,
+    diffusion_samples_affinity: int | None = None,
 ) -> dict:
     """Build the input, run Boltz-2 (blocking -- tens of minutes), and summarize
     the result. Raises RuntimeError with Boltz-2's own output on failure,
@@ -82,6 +83,8 @@ def run_structural_validation(
         command += ["--max_msa_seqs", str(max_msa_seqs)]
     if num_subsampled_msa is not None:
         command += ["--num_subsampled_msa", str(num_subsampled_msa)]
+    if diffusion_samples_affinity is not None:
+        command += ["--diffusion_samples_affinity", str(diffusion_samples_affinity)]
 
     if stream_output:
         lines: list[str] = []
