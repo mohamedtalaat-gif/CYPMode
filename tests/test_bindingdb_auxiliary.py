@@ -53,6 +53,27 @@ def test_load_bindingdb_isoform_takes_median_across_repeated_measurements(tmp_pa
     assert keto_row["affinity_uM"] == pytest.approx(3.0)  # median of 1000/3000/5000 nM -> uM
 
 
+def test_load_bindingdb_isoform_drops_unparseable_extended_smiles(tmp_path):
+    # Real quirk, confirmed directly on a real CYP3A4 pull: a trailing
+    # "|r,THB:...|" extended-annotation suffix that plain RDKit can't
+    # parse -- must be dropped, not passed through to crash downstream
+    # featurization.
+    records = [
+        {
+            "query": "x",
+            "monomerid": "1",
+            "smile": "CC(=O)N1C2CCC1CN(C2)C(=O)OC1(CC1) |r,THB:11:9:3:5.6|",
+            "affinity_type": "Ki",
+            "affinity": "1000",
+        },
+        {"query": "x", "monomerid": "2", "smile": ETHANOL, "affinity_type": "Ki", "affinity": "2000"},
+    ]
+    path = _fake_bindingdb_json(tmp_path, records)
+    df = load_bindingdb_isoform(path)
+    assert len(df) == 1
+    assert df.iloc[0]["SMILES"] == ETHANOL
+
+
 def test_load_bindingdb_isoform_skips_unparseable_rows(tmp_path):
     records = [
         {"query": "x", "monomerid": "1", "smile": KETOCONAZOLE, "affinity_type": "Ki", "affinity": "not-a-number"},

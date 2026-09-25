@@ -86,6 +86,15 @@ def load_bindingdb_isoform(path: str | Path) -> pd.DataFrame:
     unique SMILES, with the median reported affinity (uM) across every
     real measurement found for that compound -- see module docstring for
     why median-combining, not row-deduplication, is the right call here.
+
+    Real data quirk, confirmed directly: a small fraction of BindingDB's
+    own "smile" strings (7 of 8,679 for a real CYP3A4 pull) carry a
+    trailing extended-annotation suffix (e.g. "...|r,THB:11:9:3:5.6|" --
+    BindingDB/ChemAxon torsion/stereo metadata for complex macrocycles)
+    that plain RDKit's Chem.MolFromSmiles doesn't parse, returning None --
+    not raising, so this would otherwise crash downstream (confirmed: a
+    real run crashed inside Morgan fingerprinting on exactly this). Rows
+    that fail to parse are dropped here rather than passed through.
     """
     data = json.loads(Path(path).read_text())
     affinities = data["getLindsByUniprotsResponse"]["affinities"]
@@ -93,6 +102,8 @@ def load_bindingdb_isoform(path: str | Path) -> pd.DataFrame:
     for a in affinities:
         nM = _parse_affinity_nM(a["affinity"])
         if nM is None:
+            continue
+        if Chem.MolFromSmiles(a["smile"]) is None:
             continue
         rows.append({"SMILES": a["smile"], "affinity_uM": nM / 1000.0})
     if not rows:
