@@ -57,8 +57,12 @@ def to_dataframe(results: dict, compounds: dict[str, str] | None = None) -> pd.D
                 closest_motif=closest["motif"] if closest else None,
                 closest_motif_atom=closest["atom"] if closest else None,
                 confidence_score=result["confidence_score"],
-                affinity_pred_value=result["affinity_pred_value"],
-                affinity_probability_binary=result["affinity_probability_binary"],
+                # Absent, not just None, when the batch ran with --no-affinity
+                # (summarize_compound(expect_affinity=False) never adds these
+                # keys at all) -- .get() rather than indexing is required, not
+                # a defensive nicety here.
+                affinity_pred_value=result.get("affinity_pred_value"),
+                affinity_probability_binary=result.get("affinity_probability_binary"),
             )
         rows.append(row)
     return pd.DataFrame(rows, columns=_TABLE_COLUMNS)

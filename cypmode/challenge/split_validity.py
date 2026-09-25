@@ -1,17 +1,13 @@
 """Checks whether a train/test split is actually informative before trusting
-any MCC computed on it -- inspired directly by a real finding from another
-OpenADMET CYP Challenge team (450nm, TDI leaderboard rank 16): they measured
-max-Tanimoto(test, train)=0.598 with 95.7% of their test compounds at
-similarity >=0.5, i.e. their test set was close analog-expansion of known
-hits rather than genuinely novel chemistry -- meaning a CV split drawn from
-train alone can look far more reliable than performance on the real test
-set actually is.
+any MCC computed on it -- a validation set that's chemically close to
+training (near-duplicates/analogs) can make a CV split look far more
+reliable than performance on genuinely novel chemistry actually is, a
+known general risk in cheminformatics benchmarking.
 
-This applies the same diagnostic to our own data: our own CV folds (i.i.d.
-from the training population, expected to look "easy"/similar) against the
-real 750-compound blinded TDI test set (the one that actually matters --
-tells us whether our cross-validated MCC is likely to transfer, the same
-honest self-check JacksonBurns reported for their own OOF-to-blind gap).
+Applies that check to our own data: our own CV folds (i.i.d. from the
+training population, expected to look "easy"/similar) against the real
+750-compound blinded TDI test set (the one that actually matters -- tells
+us whether our cross-validated MCC is likely to transfer to it).
 """
 
 from pathlib import Path
@@ -25,9 +21,8 @@ BLINDED_TEST_PATH = Path("data/cyp_challenge/tdi_track/cyp-challenge-TEST-BLINDE
 
 
 def train_test_similarity_summary(train_smiles: pd.Series, apply_smiles: pd.Series) -> dict:
-    """max-Tanimoto(each apply compound, full train set), summarized the
-    same way 450nm reported theirs -- median/mean similarity and the
-    fraction at similarity >=0.5 -- so the two are directly comparable.
+    """max-Tanimoto(each apply compound, full train set), summarized as
+    median/mean similarity and the fraction at similarity >=0.5.
     """
     distances = tanimoto_ood_distance(train_smiles, apply_smiles)
     similarities = 1.0 - distances

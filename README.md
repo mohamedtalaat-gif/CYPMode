@@ -478,6 +478,37 @@ fix, since the chemistry itself is outside what the screen looks for.
   confirm a static coordination geometry but, as azamulin shows, silence
   on that front doesn't rule out a real, different mechanism.
 
+## References
+
+Tools and data this project depends on, cited properly rather than just
+linked in passing — using someone else's published work without a real
+citation isn't acceptable here, regardless of how the link is phrased
+elsewhere in this README:
+
+- Passaro, S., Corso, G., Wohlwend, J., Reveiz, M., Thaler, S., Somnath,
+  V.R., Getz, N., Portnoi, T., Roy, J., Stark, H., Kwabi-Addo, D., Beaini,
+  D., Jaakkola, T., Barzilay, R. "Boltz-2: Towards Accurate and Efficient
+  Binding Affinity Prediction." *bioRxiv* 2025.06.14.659707 (2025).
+  https://www.biorxiv.org/content/10.1101/2025.06.14.659707
+- Huang, K., Fu, T., Gao, W., Zhao, Y., Roohani, Y., Leskovec, J., Coley,
+  C.W., Xiao, C., Sun, J., Zitnik, M. "Therapeutics Data Commons: Machine
+  Learning Datasets and Tasks for Drug Discovery and Development."
+  *NeurIPS 2021 Datasets and Benchmarks*. arXiv:2102.09548.
+- OpenADMET. "CYP Inhibition Blind Challenge."
+  https://huggingface.co/spaces/openadmet/cyp-challenge — the training
+  data, blinded test set, and TDI task definition this project's
+  `cypmode/challenge/` package works against all come from here.
+- OpenADMET/Octant. `Octant_CYP_blog_post`
+  (github.com/OpenADMET/Octant_CYP_blog_post), CC BY 4.0 — the 6-drug
+  quantitative TDI preincubation-shift panel `cypmode/validation/tdi_reference.py`
+  cross-checks against.
+- Landrum, G. et al. RDKit: Open-source cheminformatics.
+  https://www.rdkit.org — descriptors, fingerprints, and SMARTS matching
+  throughout this project are built on it.
+- Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., Liu,
+  T.-Y. "LightGBM: A Highly Efficient Gradient Boosting Decision Tree."
+  *NeurIPS* (2017). — the classifier used throughout `cypmode/challenge/`.
+
 ## Citation
 
 If you use CYPMode, please cite it as software, and disclose which part

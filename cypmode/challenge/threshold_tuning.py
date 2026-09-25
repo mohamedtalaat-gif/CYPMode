@@ -149,10 +149,8 @@ def find_robust_threshold(
     same rule as find_optimal_threshold) that stays good across a whole
     *assumed range* of test base rates, instead of the single base rate
     find_optimal_threshold implicitly assumes (whatever y_true's own rate
-    happens to be). Motivated directly by a real technique from another
-    OpenADMET CYP Challenge team (JacksonBurns, TDI leaderboard): they
-    found a single MCC-optimal threshold is base-rate-specific, and a
-    train/test base-rate mismatch can silently cost real MCC.
+    happens to be). A single MCC-optimal threshold is base-rate-specific,
+    and a train/test base-rate mismatch can silently cost real MCC.
 
     For each candidate threshold, expected confusion counts are computed
     analytically at every base rate in `base_rates` (TP=pi*TPR,
