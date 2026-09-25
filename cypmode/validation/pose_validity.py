@@ -73,3 +73,63 @@ def check_pose_validity(structure, ligand_smiles: str, config: str = "dock") -> 
 
     checks = {k: bool(v) for k, v in result.iloc[0].to_dict().items() if k not in ("file", "molecule", "position")}
     return {"all_passed": all(checks.values()), "checks": checks}
+
+
+def _main() -> None:
+    """Runs check_pose_validity across every real, already-completed
+    structure this project has (data/boltz_test/out/boltz_results_*/),
+    reading each compound's own exact ligand SMILES from its own input
+    YAML -- guaranteed to match what was actually predicted, rather than
+    cross-referencing separate CSV/dict sources that could drift out of
+    sync with the real inputs.
+    """
+    import json
+
+    import pandas as pd
+    import yaml
+
+    from cypmode.validation.structures import load_structure
+
+    input_dir = Path("data/boltz_test")
+    out_dir = input_dir / "out"
+
+    rows = []
+    for yaml_path in sorted(input_dir.glob("cyp3a4_*.yaml")):
+        name = yaml_path.stem.removeprefix("cyp3a4_")
+        data = yaml.safe_load(yaml_path.read_text())
+        ligand_smiles = next(
+            seq["ligand"]["smiles"] for seq in data["sequences"] if "ligand" in seq and "smiles" in seq["ligand"]
+        )
+
+        cif_path = out_dir / f"boltz_results_cyp3a4_{name}" / "predictions" / f"cyp3a4_{name}" / f"cyp3a4_{name}_model_0.cif"
+        if not cif_path.exists():
+            continue
+
+        try:
+            structure = load_structure(cif_path)
+            result = check_pose_validity(structure, ligand_smiles)
+            rows.append({"compound": name, "all_passed": result["all_passed"], **result["checks"]})
+        except Exception as exc:
+            rows.append({"compound": name, "all_passed": False, "error": str(exc)})
+
+    df = pd.DataFrame(rows)
+    n_passed = df["all_passed"].sum()
+    print(f"{n_passed}/{len(df)} real completed structures pass every PoseBusters check")
+
+    failed = df[~df["all_passed"]]
+    if not failed.empty:
+        print("\nfailed compounds and their failing checks:")
+        for _, row in failed.iterrows():
+            if "error" in row and pd.notna(row.get("error")):
+                print(f"  {row['compound']}: ERROR -- {row['error']}")
+                continue
+            failing_checks = [c for c in df.columns if c not in ("compound", "all_passed", "error") and row.get(c) is False]
+            print(f"  {row['compound']}: failed {failing_checks}")
+
+    out_path = Path("data/cyp_challenge/tdi_track/posebusters_validity.csv")
+    df.to_csv(out_path, index=False)
+    print(f"\nwrote {out_path}")
+
+
+if __name__ == "__main__":
+    _main()
