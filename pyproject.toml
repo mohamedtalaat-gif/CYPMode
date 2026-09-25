@@ -56,7 +56,12 @@ tdc = [
 ]
 # Needed only for cypmode/validation/structures.py, which parses Boltz-2's
 # predicted mmCIF structures for the 4 solved-structure reference compounds.
-validate = ["biopython"]
+# pyKVFinder is for cypmode/validation/pocket_geometry.py's pocket-volume
+# feature -- confirmed working directly despite its declared numpy<2.5.0
+# upper bound conflicting with this project's own numpy>=2.5.3 floor (an
+# overly conservative pin on pyKVFinder's side, not a real incompatibility
+# -- verified by actually running its real workflow end to end).
+validate = ["biopython", "pyKVFinder"]
 # For cypmode/challenge/*.py -- reproducing and then extending the OpenADMET
 # CYP Blind Challenge tutorial's own baseline (LightGBM on RDKit descriptors
 # via useful_rdkit_utils, the same library the official tutorial uses).
