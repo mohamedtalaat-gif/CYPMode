@@ -7,6 +7,7 @@ pytest.importorskip("lightgbm")
 from cypmode.challenge.reliability import (
     compute_reliability_score,
     ensemble_disagreement,
+    one_class_svm_ood_score,
     tanimoto_ood_distance,
     validate_reliability_correlation,
 )
@@ -43,6 +44,17 @@ def test_tanimoto_ood_distance_positive_for_dissimilar_compound():
     assert distances[0] > 0.8
 
 
+def test_one_class_svm_ood_score_is_higher_for_a_clear_outlier():
+    rng = np.random.default_rng(0)
+    train_features = rng.normal(loc=0.0, scale=1.0, size=(200, 4))
+    # one point deep inside the training distribution, one far outside it
+    apply_features = np.array([[0.0, 0.0, 0.0, 0.0], [50.0, 50.0, 50.0, 50.0]])
+
+    scores = one_class_svm_ood_score(train_features, apply_features)
+    assert len(scores) == 2
+    assert scores[1] > scores[0]  # the far-outside point must score more anomalous
+
+
 def test_compute_reliability_score_combines_components_without_forcing_a_single_number():
     df = compute_reliability_score(
         ensemble_disagreement_values=np.array([0.1, 0.2]),
@@ -50,6 +62,15 @@ def test_compute_reliability_score_combines_components_without_forcing_a_single_
     )
     assert list(df.columns) == ["ensemble_disagreement", "ood_distance"]
     assert len(df) == 2
+
+
+def test_compute_reliability_score_includes_svm_ood_score_when_given():
+    df = compute_reliability_score(
+        ensemble_disagreement_values=np.array([0.1]),
+        ood_distance_values=np.array([0.3]),
+        svm_ood_score_values=np.array([0.5]),
+    )
+    assert "svm_ood_score" in df.columns
 
 
 def test_compute_reliability_score_includes_structural_confidence_when_given():

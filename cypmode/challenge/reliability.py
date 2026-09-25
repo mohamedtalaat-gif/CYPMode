@@ -59,15 +59,49 @@ def tanimoto_ood_distance(train_smiles: pd.Series, apply_smiles: pd.Series) -> n
     return distances
 
 
+def one_class_svm_ood_score(
+    train_features: np.ndarray, apply_features: np.ndarray, nu: float = 0.1, random_state: int = 42
+) -> np.ndarray:
+    """One-class SVM anomaly score for how out-of-distribution each
+    apply_features compound is, relative to train_features -- fit ONLY on
+    the training portion (never apply_features), same fold-internal rule
+    as ensemble_disagreement. Higher = more anomalous, matching
+    tanimoto_ood_distance's own "higher = more OOD" convention (sklearn's
+    own decision_function returns the opposite sign -- negated here for
+    consistency across this module's components, not a different metric).
+
+    A generic, textbook anomaly-detection pattern (scale features, fit a
+    one-class SVM on the "normal" population, score new points by
+    distance from the learned boundary) -- not from a specific tool, and
+    a genuinely different signal from tanimoto_ood_distance: this operates
+    in RDKit-descriptor space (continuous, correlated physicochemical
+    properties), not ECFP4 fingerprint space (discrete substructure
+    presence/absence), so the two can disagree on which compounds count
+    as novel.
+    """
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.svm import OneClassSVM
+
+    scaler = StandardScaler()
+    train_scaled = scaler.fit_transform(train_features)
+    apply_scaled = scaler.transform(apply_features)
+
+    ocsvm = OneClassSVM(nu=nu, kernel="rbf", gamma="scale")
+    ocsvm.fit(train_scaled)
+    return -ocsvm.decision_function(apply_scaled)
+
+
 def compute_reliability_score(
     ensemble_disagreement_values: np.ndarray,
     ood_distance_values: np.ndarray,
+    svm_ood_score_values: np.ndarray | None = None,
     structural_confidence_values: np.ndarray | None = None,
 ) -> pd.DataFrame:
     """Combines the components into one table (not one number by fiat --
     z-scoring and summing would itself be an unvalidated modeling choice).
-    structural_confidence_values is optional and NaN-filled where Tier 3
-    wasn't run for a compound; validate_reliability_correlation handles
+    svm_ood_score_values and structural_confidence_values are both
+    optional; structural_confidence_values is NaN-filled where Tier 3
+    wasn't run for a compound. validate_reliability_correlation handles
     NaNs by dropping them per-component, not by imputing.
     """
     out = pd.DataFrame(
@@ -76,6 +110,8 @@ def compute_reliability_score(
             "ood_distance": ood_distance_values,
         }
     )
+    if svm_ood_score_values is not None:
+        out["svm_ood_score"] = svm_ood_score_values
     if structural_confidence_values is not None:
         out["structural_confidence"] = structural_confidence_values
     return out
@@ -118,6 +154,7 @@ def _main() -> None:
 
     disagreement = ensemble_disagreement(features[train_idx], y[train_idx], features[val_idx])
     ood = tanimoto_ood_distance(cyp_df.loc[train_idx, "SMILES"], cyp_df.loc[val_idx, "SMILES"])
+    svm_ood = one_class_svm_ood_score(features[train_idx], features[val_idx])
 
     model = LGBMClassifier(verbose=-1, random_state=42)
     model.fit(features[train_idx], y[train_idx])
@@ -125,7 +162,7 @@ def _main() -> None:
     pred = (proba >= 0.5).astype(int)
     error = (pred != y[val_idx]).astype(int)
 
-    reliability_df = compute_reliability_score(disagreement, ood)
+    reliability_df = compute_reliability_score(disagreement, ood, svm_ood)
     correlation = validate_reliability_correlation(reliability_df, error)
     print(correlation.to_string(index=False))
 
