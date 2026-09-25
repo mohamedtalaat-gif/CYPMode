@@ -30,6 +30,10 @@ def run_structural_validation(
     accelerator: str = "gpu",
     override: bool = True,
     stream_output: bool = True,
+    predict_affinity: bool = True,
+    recycling_steps: int | None = None,
+    max_msa_seqs: int | None = None,
+    num_subsampled_msa: int | None = None,
 ) -> dict:
     """Build the input, run Boltz-2 (blocking -- tens of minutes), and summarize
     the result. Raises RuntimeError with Boltz-2's own output on failure,
@@ -54,7 +58,9 @@ def run_structural_validation(
     yaml_path = input_dir / f"cyp3a4_{name}.yaml"
 
     coordinating_cys = find_coordinating_cysteine(protein_sequence)
-    yaml_path.write_text(build_boltz_yaml(protein_sequence, ligand_smiles, coordinating_cys))
+    yaml_path.write_text(
+        build_boltz_yaml(protein_sequence, ligand_smiles, coordinating_cys, predict_affinity=predict_affinity)
+    )
 
     command = [
         str(boltz_bin),
@@ -70,6 +76,12 @@ def run_structural_validation(
     ]
     if override:
         command.append("--override")
+    if recycling_steps is not None:
+        command += ["--recycling_steps", str(recycling_steps)]
+    if max_msa_seqs is not None:
+        command += ["--max_msa_seqs", str(max_msa_seqs)]
+    if num_subsampled_msa is not None:
+        command += ["--num_subsampled_msa", str(num_subsampled_msa)]
 
     if stream_output:
         lines: list[str] = []
@@ -92,7 +104,7 @@ def run_structural_validation(
             )
 
     result_dir = Path(out_dir) / f"boltz_results_cyp3a4_{name}"
-    return summarize_compound(result_dir, ligand_smiles)
+    return summarize_compound(result_dir, ligand_smiles, expect_affinity=predict_affinity)
 
 
 def _main() -> None:

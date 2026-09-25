@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 import pytest
@@ -8,6 +9,7 @@ from cypmode.validation.structures import summarize_compound
 
 KETOCONAZOLE_SMILES = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2)CC1"
 VARDENAFIL_SMILES = "CCCc1nc(C)c2c(=O)nc(-c3cc(S(=O)(=O)N4CCN(CC)CC4)ccc3OCC)[nH]n12"
+OCNT_2395436_SMILES = "CC(C)(C)NS(=O)(=O)C1(CNC2=C(Br)C=NC=C2C#N)CCC1"
 
 RESULT_DIR = Path("data/boltz_test/out/boltz_results_cyp3a4_ketoconazole")
 CIF_PATH = RESULT_DIR / "predictions" / "cyp3a4_ketoconazole" / "cyp3a4_ketoconazole_model_0.cif"
@@ -49,3 +51,29 @@ def test_motif_distance_ignores_closer_non_motif_nitrogen():
 
     all_atoms = {d["atom"] for d in result["all_ligand_nitrogen_distances"]}
     assert "N50" in all_atoms  # still visible for manual review, just not driving the call
+
+
+OCNT_2395436_RESULT_DIR = Path("data/boltz_test/out/boltz_results_cyp3a4_OCNT-2395436")
+
+
+@pytest.mark.skipif(
+    not OCNT_2395436_RESULT_DIR.exists(),
+    reason="requires a local Boltz-2 run for OCNT-2395436",
+)
+def test_summarize_compound_expect_affinity_false_skips_affinity_gracefully(tmp_path):
+    # Real completed result dir, copied so the affinity JSON can be removed
+    # without touching the actual data -- simulates a predict_affinity=False
+    # run (which never produces that file) using real structure output.
+    copy_dir = tmp_path / "boltz_results_cyp3a4_OCNT-2395436"
+    shutil.copytree(OCNT_2395436_RESULT_DIR, copy_dir)
+    predictions_dir = copy_dir / "predictions" / "cyp3a4_OCNT-2395436"
+    for affinity_file in predictions_dir.glob("affinity_*.json"):
+        affinity_file.unlink()
+
+    result = summarize_compound(copy_dir, OCNT_2395436_SMILES, expect_affinity=False)
+    assert "affinity_pred_value" not in result
+    assert "affinity_probability_binary" not in result
+    assert "confidence_score" in result  # unaffected, still present
+
+    with pytest.raises(FileNotFoundError):
+        summarize_compound(copy_dir, OCNT_2395436_SMILES, expect_affinity=True)

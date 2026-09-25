@@ -122,3 +122,62 @@ def test_non_streaming_raises_with_boltz_output_on_failure(tmp_path):
                 out_dir=tmp_path / "out",
                 stream_output=False,
             )
+
+
+def test_predict_affinity_false_omits_yaml_properties_and_passes_flag_through(tmp_path):
+    with (
+        patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+        patch("cypmode.validation.pipeline.summarize_compound", return_value={}) as mock_summarize,
+    ):
+        mock_popen.return_value = _mock_popen(0, [])
+
+        run_structural_validation(
+            "test",
+            KETOCONAZOLE_SMILES,
+            input_dir=tmp_path,
+            out_dir=tmp_path / "out",
+            predict_affinity=False,
+        )
+
+    yaml_path = tmp_path / "cyp3a4_test.yaml"
+    assert "properties:" not in yaml_path.read_text()
+    mock_summarize.assert_called_once()
+    assert mock_summarize.call_args.kwargs.get("expect_affinity") is False
+
+
+def test_recycling_and_msa_flags_pass_through_when_given(tmp_path):
+    with (
+        patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+        patch("cypmode.validation.pipeline.summarize_compound", return_value={}),
+    ):
+        mock_popen.return_value = _mock_popen(0, [])
+
+        run_structural_validation(
+            "test",
+            KETOCONAZOLE_SMILES,
+            input_dir=tmp_path,
+            out_dir=tmp_path / "out",
+            recycling_steps=1,
+            max_msa_seqs=2048,
+            num_subsampled_msa=256,
+        )
+
+    command = mock_popen.call_args[0][0]
+    assert "--recycling_steps" in command and "1" in command
+    assert "--max_msa_seqs" in command and "2048" in command
+    assert "--num_subsampled_msa" in command and "256" in command
+
+
+def test_speed_flags_omitted_by_default(tmp_path):
+    with (
+        patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+        patch("cypmode.validation.pipeline.summarize_compound", return_value={}),
+    ):
+        mock_popen.return_value = _mock_popen(0, [])
+
+        run_structural_validation("test", KETOCONAZOLE_SMILES, input_dir=tmp_path, out_dir=tmp_path / "out")
+
+    command = mock_popen.call_args[0][0]
+    assert "--recycling_steps" not in command
+    assert "--max_msa_seqs" not in command
+    assert "--num_subsampled_msa" not in command

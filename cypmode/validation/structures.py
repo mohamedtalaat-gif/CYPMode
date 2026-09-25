@@ -167,12 +167,17 @@ def load_confidence(predictions_dir: str | Path) -> dict:
     return json.loads(files[0].read_text())
 
 
-def summarize_compound(result_dir: str | Path, ligand_smiles: str) -> dict:
+def summarize_compound(result_dir: str | Path, ligand_smiles: str, expect_affinity: bool = True) -> dict:
     """Summarize one Boltz-2 result directory, e.g. .../boltz_results_cyp3a4_ketoconazole.
 
     ligand_smiles is required -- motif matching needs the 2D structure, not
     just the predicted geometry, and this function doesn't assume or look up
     a fixed set of known compounds.
+
+    expect_affinity=False skips reading the affinity JSON entirely (for a
+    run made with predict_affinity=False in build_boltz_yaml, which never
+    produces one) -- the affinity_* fields are simply absent from the
+    result rather than raising FileNotFoundError.
     """
     result_dir = Path(result_dir)
     name = result_dir.name.removeprefix("boltz_results_")
@@ -185,16 +190,18 @@ def summarize_compound(result_dir: str | Path, ligand_smiles: str) -> dict:
     all_distances = all_ligand_nitrogen_distances(structure, fe_atom)
 
     closest_motif_distance = motif_distances[0]["distance_angstrom"] if motif_distances else None
-    affinity = load_affinity(predictions_dir)
     confidence = load_confidence(predictions_dir)
 
-    return {
+    result = {
         "compound": name,
         "motif_nitrogen_distances": motif_distances,
         "all_ligand_nitrogen_distances": all_distances,
         "closest_motif_nitrogen_distance_angstrom": closest_motif_distance,
         "coordinated": closest_motif_distance is not None and closest_motif_distance <= COORDINATION_DISTANCE_CUTOFF_A,
-        "affinity_pred_value": affinity["affinity_pred_value"],
-        "affinity_probability_binary": affinity["affinity_probability_binary"],
         "confidence_score": confidence["confidence_score"],
     }
+    if expect_affinity:
+        affinity = load_affinity(predictions_dir)
+        result["affinity_pred_value"] = affinity["affinity_pred_value"]
+        result["affinity_probability_binary"] = affinity["affinity_probability_binary"]
+    return result

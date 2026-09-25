@@ -47,9 +47,18 @@ def build_boltz_yaml(
     protein_chain: str = "A",
     ligand_chain: str = "B",
     heme_chain: str = "C",
+    predict_affinity: bool = True,
 ) -> str:
     """Return Boltz-2 YAML text: protein + ligand + heme, heme covalently bonded
     to coordinating_cys's sulfur, no constraint on the ligand's own position.
+
+    predict_affinity=False omits the properties/affinity block entirely.
+    Confirmed directly (2026-09-25) that Boltz-2's affinity head runs its
+    own diffusion sampling 5x by default (diffusion_samples_affinity=5 vs
+    1 for the base structure) -- real, observed cost of 55min-10+ hours
+    per compound on this hardware for that step alone. Callers that only
+    need heme-coordination geometry (the Fe-ligand-N distance; see
+    cypmode/validation/structures.py) don't need the affinity head at all.
     """
     if coordinating_cys < 1 or coordinating_cys > len(protein_sequence):
         raise ValueError(
@@ -63,7 +72,7 @@ def build_boltz_yaml(
             "cysteine ('C') -- wrong position or wrong sequence/numbering"
         )
 
-    return (
+    yaml_text = (
         "version: 1\n"
         "sequences:\n"
         "  - protein:\n"
@@ -79,7 +88,7 @@ def build_boltz_yaml(
         "  - bond:\n"
         f"      atom1: [{protein_chain}, {coordinating_cys}, {CYSTEINE_SULFUR_ATOM}]\n"
         f"      atom2: [{heme_chain}, 1, {HEME_IRON_ATOM}]\n"
-        "properties:\n"
-        "    - affinity:\n"
-        f"        binder: {ligand_chain}\n"
     )
+    if predict_affinity:
+        yaml_text += "properties:\n" "    - affinity:\n" f"        binder: {ligand_chain}\n"
+    return yaml_text

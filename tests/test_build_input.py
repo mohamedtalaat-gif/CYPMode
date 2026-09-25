@@ -44,3 +44,12 @@ def test_build_boltz_yaml_rejects_wrong_residue():
 def test_build_boltz_yaml_rejects_out_of_range():
     with pytest.raises(ValueError, match="out of range"):
         build_boltz_yaml(CYP3A4_SEQUENCE, KETOCONAZOLE_SMILES, 99999)
+
+
+def test_build_boltz_yaml_predict_affinity_false_omits_properties_block():
+    yaml_text = build_boltz_yaml(CYP3A4_SEQUENCE, KETOCONAZOLE_SMILES, 442, predict_affinity=False)
+    assert "properties:" not in yaml_text
+    assert "affinity:" not in yaml_text
+    # everything else stays identical to the affinity-on version
+    with_affinity = build_boltz_yaml(CYP3A4_SEQUENCE, KETOCONAZOLE_SMILES, 442, predict_affinity=True)
+    assert with_affinity.startswith(yaml_text)
