@@ -156,6 +156,19 @@ def _main() -> None:
         "base structure's own single diffusion sample)",
     )
     parser.add_argument(
+        "--target",
+        default="cyp3a4",
+        help="protein name used in file/directory naming only -- must be passed explicitly "
+        "alongside --protein-sequence for a different real isoform (e.g. --target cyp2d6), "
+        "or its files would silently collide with cyp3a4's own",
+    )
+    parser.add_argument(
+        "--protein-sequence",
+        default=None,
+        help="defaults to CYP3A4 (UniProt P08684) if not given -- pass the real sequence "
+        "for whatever --target names, they are independent flags",
+    )
+    parser.add_argument(
         "--write-embeddings",
         action="store_true",
         help="also save Boltz-2's own pooled single/pair trunk representations (a real, first-class "
@@ -170,10 +183,12 @@ def _main() -> None:
 
     results_path = Path(args.results_path)
     table_path = results_path.with_suffix("") if args.write_table else None
+    protein_kwargs = {"protein_sequence": args.protein_sequence} if args.protein_sequence is not None else {}
     results = run_batch(
         compounds,
         results_path,
         table_path=table_path,
+        target=args.target,
         stream_output=args.stream_output,
         predict_affinity=args.predict_affinity,
         recycling_steps=args.recycling_steps,
@@ -181,6 +196,7 @@ def _main() -> None:
         num_subsampled_msa=args.num_subsampled_msa,
         diffusion_samples_affinity=args.diffusion_samples_affinity,
         write_embeddings=args.write_embeddings,
+        **protein_kwargs,
     )
     n_errors = sum(1 for r in results.values() if "error" in r)
     print(f"done: {len(results)} compound(s), {n_errors} error(s), written to {args.results_path}")

@@ -23,6 +23,7 @@ def run_structural_validation(
     name: str,
     ligand_smiles: str,
     protein_sequence: str = CYP3A4_SEQUENCE,
+    target: str = "cyp3a4",
     boltz_bin: str | Path = ROOT / ".venv-boltz" / "bin" / "boltz",
     out_dir: str | Path = ROOT / "data" / "structure_track" / "outputs" / "out",
     cache_dir: str | Path = ROOT / "third_party" / "boltz_cache",
@@ -54,10 +55,19 @@ def run_structural_validation(
     it until the process exits -- useful for a run that takes tens of
     minutes, since capture_output=True previously gave no signal at all
     until the very end.
+
+    target names the protein this run is against (used only in file/
+    directory naming, e.g. "cyp3a4_<name>.yaml") -- defaults to "cyp3a4"
+    to match every existing file this project has, but was a hardcoded
+    literal until now, which would have silently collided CYP2D6 runs'
+    files with CYP3A4's own under the same names. Pass target="cyp2d6"
+    (with a real CYP2D6 protein_sequence) for a different real isoform,
+    rather than reusing this default against a sequence it doesn't
+    actually name.
     """
     input_dir = Path(input_dir)
     input_dir.mkdir(parents=True, exist_ok=True)
-    yaml_path = input_dir / f"cyp3a4_{name}.yaml"
+    yaml_path = input_dir / f"{target}_{name}.yaml"
 
     coordinating_cys = find_coordinating_cysteine(protein_sequence)
     yaml_path.write_text(
@@ -109,7 +119,7 @@ def run_structural_validation(
                 f"--- stderr (tail) ---\n{result.stderr[-2000:]}"
             )
 
-    result_dir = Path(out_dir) / f"boltz_results_cyp3a4_{name}"
+    result_dir = Path(out_dir) / f"boltz_results_{target}_{name}"
     return summarize_compound(
         result_dir, ligand_smiles, expect_affinity=predict_affinity, expect_trunk_embedding=write_embeddings
     )
@@ -124,6 +134,13 @@ def _main() -> None:
     parser.add_argument("smiles", help="ligand SMILES")
     parser.add_argument("--protein-sequence", default=CYP3A4_SEQUENCE, help="defaults to CYP3A4 (UniProt P08684)")
     parser.add_argument(
+        "--target",
+        default="cyp3a4",
+        help="protein name used in file/directory naming only (e.g. 'cyp3a4_<name>.yaml') -- "
+        "must be passed explicitly alongside --protein-sequence for a different real isoform "
+        "(e.g. --target cyp2d6), or its files would silently collide with cyp3a4's own",
+    )
+    parser.add_argument(
         "--no-override",
         dest="override",
         action="store_false",
@@ -137,6 +154,7 @@ def _main() -> None:
         args.name,
         args.smiles,
         protein_sequence=args.protein_sequence,
+        target=args.target,
         override=args.override,
         stream_output=args.stream_output,
     )

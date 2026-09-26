@@ -119,25 +119,44 @@ def _main() -> None:
     YAML -- guaranteed to match what was actually predicted, rather than
     cross-referencing separate CSV/dict sources that could drift out of
     sync with the real inputs.
+
+    --target names the protein these structures are against (used only
+    in file/directory naming) -- defaults to "cyp3a4" to match every
+    existing structure this project has, but was a hardcoded literal
+    until now, which would have silently found zero CYP2D6 structures
+    rather than a real, distinct set of them.
     """
+    import argparse
 
     import pandas as pd
     import yaml
 
     from cypmode.validation.structures import load_structure
 
+    parser = argparse.ArgumentParser(description=_main.__doc__)
+    parser.add_argument("--target", default="cyp3a4", help="protein name used in file/directory naming")
+    parser.add_argument(
+        "--out-path",
+        type=Path,
+        default=None,
+        help="defaults to data/structure_track/outputs/posebusters_validity.csv -- pass a "
+        "different path for a non-cyp3a4 target so it doesn't overwrite the real CYP3A4 one",
+    )
+    args = parser.parse_args()
+    target = args.target
+
     input_dir = Path("data/structure_track/inputs")
     out_dir = Path("data/structure_track/outputs/out")
 
     rows = []
-    for yaml_path in sorted(input_dir.glob("cyp3a4_*.yaml")):
-        name = yaml_path.stem.removeprefix("cyp3a4_")
+    for yaml_path in sorted(input_dir.glob(f"{target}_*.yaml")):
+        name = yaml_path.stem.removeprefix(f"{target}_")
         data = yaml.safe_load(yaml_path.read_text())
         ligand_smiles = next(
             seq["ligand"]["smiles"] for seq in data["sequences"] if "ligand" in seq and "smiles" in seq["ligand"]
         )
 
-        cif_path = out_dir / f"boltz_results_cyp3a4_{name}" / "predictions" / f"cyp3a4_{name}" / f"cyp3a4_{name}_model_0.cif"
+        cif_path = out_dir / f"boltz_results_{target}_{name}" / "predictions" / f"{target}_{name}" / f"{target}_{name}_model_0.cif"
         if not cif_path.exists():
             continue
 
@@ -162,7 +181,7 @@ def _main() -> None:
             failing_checks = [c for c in df.columns if c not in ("compound", "all_passed", "error") and row.get(c) is False]
             print(f"  {row['compound']}: failed {failing_checks}")
 
-    out_path = Path("data/structure_track/outputs/posebusters_validity.csv")
+    out_path = args.out_path or Path("data/structure_track/outputs/posebusters_validity.csv")
     df.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

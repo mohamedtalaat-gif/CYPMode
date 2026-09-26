@@ -199,6 +199,44 @@ def test_write_embeddings_flag_passes_through_when_true(tmp_path):
     assert mock_summarize.call_args.kwargs.get("expect_trunk_embedding") is True
 
 
+def test_target_defaults_to_cyp3a4_naming(tmp_path):
+    with (
+        patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+        patch("cypmode.validation.pipeline.summarize_compound", return_value={}) as mock_summarize,
+    ):
+        mock_popen.return_value = _mock_popen(0, [])
+        run_structural_validation("test", KETOCONAZOLE_SMILES, input_dir=tmp_path, out_dir=tmp_path / "out")
+
+    assert (tmp_path / "cyp3a4_test.yaml").exists()
+    result_dir = mock_summarize.call_args[0][0]
+    assert result_dir.name == "boltz_results_cyp3a4_test"
+
+
+def test_target_cyp2d6_uses_real_distinct_naming_not_hardcoded_cyp3a4(tmp_path):
+    # Real regression: target used to be a hardcoded "cyp3a4" literal in
+    # both the input YAML filename and the result directory lookup --
+    # a CYP2D6 run would have silently written into (or read back from)
+    # CYP3A4's own file/directory names instead of its own.
+    with (
+        patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+        patch("cypmode.validation.pipeline.summarize_compound", return_value={}) as mock_summarize,
+    ):
+        mock_popen.return_value = _mock_popen(0, [])
+        run_structural_validation(
+            "test",
+            KETOCONAZOLE_SMILES,
+            protein_sequence="MSEQUENCEPLACEHOLDERFXXGXXXCXGXX",
+            target="cyp2d6",
+            input_dir=tmp_path,
+            out_dir=tmp_path / "out",
+        )
+
+    assert (tmp_path / "cyp2d6_test.yaml").exists()
+    assert not (tmp_path / "cyp3a4_test.yaml").exists()
+    result_dir = mock_summarize.call_args[0][0]
+    assert result_dir.name == "boltz_results_cyp2d6_test"
+
+
 def test_write_embeddings_flag_omitted_by_default(tmp_path):
     with (
         patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
