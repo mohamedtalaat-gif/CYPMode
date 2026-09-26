@@ -17,40 +17,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from cypmode.challenge.chemberta_features import CACHE_PATH, CHEMBERTA_EMBEDDING_DIM
+from cypmode.challenge.chemberta_features import load_cached_chemberta_embeddings  # noqa: F401 (re-exported)
 from cypmode.challenge.knn_features import _morgan_fp
 from cypmode.challenge.stacking_significance import repeated_cv_stacking_comparison, tukey_hsd_summary
 from cypmode.challenge.tdi_ablation import add_ablation_features
 from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
-
-
-def load_cached_chemberta_embeddings(df: pd.DataFrame, cache_path: str | Path = CACHE_PATH) -> pd.DataFrame:
-    """Joins df against the real ChemBERTa embedding cache by SMILES.
-    Raises a clear error (not a silent, all-missing join) if the cache
-    doesn't cover every compound in df -- a caller who forgot to run
-    chemberta_features.py's extraction step first should see exactly
-    that, not a confusing downstream shape mismatch.
-    """
-    cache_path = Path(cache_path)
-    if not cache_path.exists():
-        raise FileNotFoundError(
-            f"{cache_path} doesn't exist -- run `python -m cypmode.challenge.chemberta_features` "
-            "first to populate it (a separate, torch-only process)."
-        )
-    dim_cols = [f"dim_{i}" for i in range(CHEMBERTA_EMBEDDING_DIM)]
-    cached = pd.read_csv(cache_path)
-    missing = set(df["SMILES"]) - set(cached["SMILES"])
-    if missing:
-        raise ValueError(
-            f"{len(missing)} compound(s) in df have no cached ChemBERTa embedding -- "
-            "re-run chemberta_features.py's extraction to cover them."
-        )
-    lookup = cached.set_index("SMILES")
-    out = df.copy()
-    out["chemberta_embedding"] = [
-        lookup.loc[s, dim_cols].to_numpy(dtype=np.float64) for s in df["SMILES"]
-    ]
-    return out
 
 
 def _main() -> None:

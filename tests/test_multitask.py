@@ -15,13 +15,17 @@ from sklearn.model_selection import KFold
 
 from cypmode.challenge.multitask import (
     ISOFORMS,
+    MultiBranchSharedTrunkModel,
     SharedTrunkModel,
     _find_optimal_threshold,
     _inner_oof_threshold_shared_trunk,
+    cross_validate_multi_branch_shared_trunk,
     cross_validate_shared_trunk,
     cross_validate_shared_trunk_with_threshold_tuning,
     masked_bce_loss,
     predict_proba,
+    predict_proba_multi_branch,
+    train_multi_branch_shared_trunk,
     train_shared_trunk,
 )
 
@@ -68,6 +72,13 @@ def _synthetic_df(n: int = 200, n_features: int = 6, seed: int = 0) -> pd.DataFr
             row["CYP2D6_is_TDI"] = np.nan
         rows.append(row)
     return pd.DataFrame(rows)
+
+
+def _synthetic_df_with_chemberta(n: int = 200, n_m3_features: int = 6, n_chemberta_dims: int = 8, seed: int = 0) -> pd.DataFrame:
+    df = _synthetic_df(n=n, n_features=n_m3_features, seed=seed)
+    rng = np.random.default_rng(seed + 1)
+    df["chemberta_embedding"] = [rng.normal(size=n_chemberta_dims) for _ in range(n)]
+    return df
 
 
 def test_train_shared_trunk_runs_and_produces_finite_predictions():
@@ -155,3 +166,53 @@ def test_outer_fold_threshold_matches_a_direct_training_only_call():
     for cyp in ISOFORMS:
         fold0 = results[(results["isoform"] == cyp) & (results["fold"] == 0)]
         assert fold0["tuned_threshold"].iloc[0] == expected_thresholds[cyp]
+
+
+def test_multi_branch_model_outputs_one_logit_per_isoform():
+    model = MultiBranchSharedTrunkModel(m3_dim=5, chemberta_dim=8)
+    x_m3 = torch.randn(3, 5)
+    x_chemberta = torch.randn(3, 8)
+    out = model(x_m3, x_chemberta)
+    assert set(out.keys()) == set(ISOFORMS)
+    for cyp in ISOFORMS:
+        assert out[cyp].shape == (3,)
+
+
+def test_multi_branch_model_rejects_mismatched_m3_dim():
+    # each branch has its own Linear layer sized to its own real input
+    # dim -- passing the wrong width should fail loudly (a real shape
+    # bug), not silently broadcast or truncate.
+    model = MultiBranchSharedTrunkModel(m3_dim=5, chemberta_dim=8)
+    with pytest.raises(RuntimeError):
+        model(torch.randn(3, 4), torch.randn(3, 8))
+
+
+def test_train_multi_branch_shared_trunk_runs_and_produces_finite_predictions():
+    df = _synthetic_df_with_chemberta()
+    X_m3 = np.stack(df["m3_features"]).astype(np.float32)
+    X_cb = np.stack(df["chemberta_embedding"]).astype(np.float32)
+    y = {cyp: df[f"{cyp}_is_TDI"].fillna(0).astype(int).to_numpy().astype(np.float32) for cyp in ISOFORMS}
+    mask = {cyp: df[f"{cyp}_is_TDI"].notna().to_numpy().astype(np.float32) for cyp in ISOFORMS}
+
+    model = train_multi_branch_shared_trunk(X_m3, X_cb, y, mask, epochs=20)
+    proba = predict_proba_multi_branch(model, X_m3, X_cb)
+
+    for cyp in ISOFORMS:
+        assert np.isfinite(proba[cyp]).all()
+        assert (proba[cyp] >= 0).all() and (proba[cyp] <= 1).all()
+
+
+def test_cross_validate_multi_branch_shared_trunk_covers_both_isoforms():
+    df = _synthetic_df_with_chemberta()
+    results = cross_validate_multi_branch_shared_trunk(df, n_splits=3, epochs=20)
+    assert set(results["isoform"]) == set(ISOFORMS)
+    assert results["mcc"].notna().any()
+
+
+def test_cross_validate_multi_branch_shared_trunk_n_val_matches_labeled_counts():
+    df = _synthetic_df_with_chemberta()
+    results = cross_validate_multi_branch_shared_trunk(df, n_splits=3, epochs=20)
+    for cyp in ISOFORMS:
+        expected = df[f"{cyp}_is_TDI"].notna().sum()
+        actual = results[results["isoform"] == cyp]["n_val"].sum()
+        assert actual == expected

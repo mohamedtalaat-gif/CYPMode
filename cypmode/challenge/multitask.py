@@ -260,9 +260,153 @@ def cross_validate_shared_trunk_with_threshold_tuning(
     return pd.DataFrame(rows)
 
 
+class MultiBranchSharedTrunkModel(nn.Module):
+    """Real fix for the naive-concatenation problem confirmed in
+    CYPMode_Architecture_Specification.md: bolting ChemBERTa's raw
+    768-dim embedding onto M3's feature vector and handing it to
+    LightGBM significantly *hurt* CYP3A4 (p=0.0002) -- a tree ensemble
+    has no learned projection to denoise a dense, highly-correlated
+    embedding the way MTMM-CYP's own real architecture does (each
+    representation gets its own branch before fusion). This is that:
+    M3 and the ChemBERTa embedding each pass through their own small
+    branch (linear -> ReLU -> dropout) BEFORE concatenation, so the
+    shared trunk sees two already-denoised, comparably-scaled
+    representations instead of one raw 768-dim block dominating a
+    smaller M3 vector.
+    """
+
+    def __init__(
+        self,
+        m3_dim: int,
+        chemberta_dim: int,
+        branch_dim: int = 64,
+        trunk_dim: int = 64,
+        head_dim: int = 32,
+        dropout: float = 0.2,
+    ):
+        super().__init__()
+        self.m3_branch = nn.Sequential(nn.Linear(m3_dim, branch_dim), nn.ReLU(), nn.Dropout(dropout))
+        self.chemberta_branch = nn.Sequential(nn.Linear(chemberta_dim, branch_dim), nn.ReLU(), nn.Dropout(dropout))
+        self.trunk = nn.Sequential(
+            nn.Linear(branch_dim * 2, trunk_dim),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(trunk_dim, trunk_dim),
+            nn.ReLU(),
+        )
+        self.heads = nn.ModuleDict(
+            {cyp: nn.Sequential(nn.Linear(trunk_dim, head_dim), nn.ReLU(), nn.Linear(head_dim, 1)) for cyp in ISOFORMS}
+        )
+
+    def forward(self, x_m3: torch.Tensor, x_chemberta: torch.Tensor) -> dict:
+        fused = torch.cat([self.m3_branch(x_m3), self.chemberta_branch(x_chemberta)], dim=-1)
+        shared = self.trunk(fused)
+        return {cyp: self.heads[cyp](shared).squeeze(-1) for cyp in ISOFORMS}
+
+
+def train_multi_branch_shared_trunk(
+    X_m3_train: np.ndarray,
+    X_chemberta_train: np.ndarray,
+    y_train: dict,
+    mask_train: dict,
+    epochs: int = 200,
+    lr: float = 1e-3,
+    seed: int = 42,
+) -> MultiBranchSharedTrunkModel:
+    torch.manual_seed(seed)
+    model = MultiBranchSharedTrunkModel(m3_dim=X_m3_train.shape[1], chemberta_dim=X_chemberta_train.shape[1])
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-4)
+
+    x_m3 = torch.tensor(X_m3_train, dtype=torch.float32)
+    x_chemberta = torch.tensor(X_chemberta_train, dtype=torch.float32)
+    y = {cyp: torch.tensor(y_train[cyp], dtype=torch.float32) for cyp in ISOFORMS}
+    mask = {cyp: torch.tensor(mask_train[cyp], dtype=torch.float32) for cyp in ISOFORMS}
+
+    model.train()
+    for _ in range(epochs):
+        optimizer.zero_grad()
+        loss = masked_bce_loss(model(x_m3, x_chemberta), y, mask)
+        loss.backward()
+        optimizer.step()
+    return model
+
+
+def predict_proba_multi_branch(model: MultiBranchSharedTrunkModel, X_m3: np.ndarray, X_chemberta: np.ndarray) -> dict:
+    model.eval()
+    with torch.no_grad():
+        logits = model(torch.tensor(X_m3, dtype=torch.float32), torch.tensor(X_chemberta, dtype=torch.float32))
+    return {cyp: torch.sigmoid(logits[cyp]).numpy() for cyp in ISOFORMS}
+
+
+def cross_validate_multi_branch_shared_trunk(
+    df: pd.DataFrame,
+    m3_col: str = "m3_features",
+    chemberta_col: str = "chemberta_embedding",
+    n_splits: int = 5,
+    random_state: int = 42,
+    epochs: int = 200,
+) -> pd.DataFrame:
+    """Same spirit and same fold protocol as cross_validate_shared_trunk,
+    but training MultiBranchSharedTrunkModel on both representations
+    jointly -- directly comparable to the M3-only shared-trunk number
+    (same df, same random_state, same fold assignment) as a fair test of
+    whether a proper fusion architecture (not naive concatenation)
+    recovers real value from the ChemBERTa embedding.
+    """
+    X_m3_raw = np.stack(df[m3_col]).astype(np.float32)
+    X_chemberta_raw = np.stack(df[chemberta_col]).astype(np.float32)
+    m3_mean, m3_std = X_m3_raw.mean(axis=0), X_m3_raw.std(axis=0) + 1e-8
+    cb_mean, cb_std = X_chemberta_raw.mean(axis=0), X_chemberta_raw.std(axis=0) + 1e-8
+
+    y, mask = {}, {}
+    for cyp in ISOFORMS:
+        col = f"{cyp}_is_TDI"
+        mask[cyp] = df[col].notna().to_numpy().astype(np.float32)
+        y[cyp] = df[col].fillna(0).astype(int).to_numpy().astype(np.float32)
+
+    rows = []
+    kfold = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
+    for fold, (train_idx, val_idx) in enumerate(kfold.split(X_m3_raw)):
+        X_m3_train = _standardize(X_m3_raw[train_idx], m3_mean, m3_std)
+        X_m3_val = _standardize(X_m3_raw[val_idx], m3_mean, m3_std)
+        X_cb_train = _standardize(X_chemberta_raw[train_idx], cb_mean, cb_std)
+        X_cb_val = _standardize(X_chemberta_raw[val_idx], cb_mean, cb_std)
+
+        model = train_multi_branch_shared_trunk(
+            X_m3_train,
+            X_cb_train,
+            {cyp: y[cyp][train_idx] for cyp in ISOFORMS},
+            {cyp: mask[cyp][train_idx] for cyp in ISOFORMS},
+            epochs=epochs,
+            seed=random_state,
+        )
+        proba = predict_proba_multi_branch(model, X_m3_val, X_cb_val)
+
+        for cyp in ISOFORMS:
+            val_mask = mask[cyp][val_idx].astype(bool)
+            if val_mask.sum() == 0:
+                continue
+            y_true = y[cyp][val_idx][val_mask].astype(int)
+            y_pred = (proba[cyp][val_mask] >= 0.5).astype(int)
+            rows.append(
+                {
+                    "isoform": cyp,
+                    "fold": fold,
+                    "n_val": int(val_mask.sum()),
+                    "mcc": matthews_corrcoef(y_true, y_pred) if len(set(y_true)) > 1 else float("nan"),
+                }
+            )
+    return pd.DataFrame(rows)
+
+
 def _main() -> None:
     from pathlib import Path
 
+    # chemberta_features is safe to import here (no lightgbm anywhere in
+    # its own import chain) -- see load_cached_chemberta_embeddings' own
+    # docstring for why it deliberately lives there and not in
+    # chemberta_significance.py, which would pull lightgbm in transitively.
+    from cypmode.challenge.chemberta_features import load_cached_chemberta_embeddings
     from cypmode.challenge.tdi_ablation import add_ablation_features
     from cypmode.challenge.tdi_baseline import compute_descriptors, load_tdi_training_data
 
@@ -280,7 +424,22 @@ def _main() -> None:
     print(tuned_results.groupby("isoform")[["mcc_naive_0.5", "mcc_tuned", "tuned_threshold"]].mean().to_string())
     tuned_out_path = Path("data/cyp_challenge/tdi_track/shared_trunk_m1_threshold_tuning.csv")
     tuned_results.to_csv(tuned_out_path, index=False)
-    print(f"wrote {tuned_out_path}")
+    print(f"wrote {tuned_out_path}\n")
+
+    # The real point of this run: does a proper fusion architecture (each
+    # representation through its own branch, THEN combined) recover value
+    # from ChemBERTa that naive LightGBM-feature concatenation lost (see
+    # CYPMode_Architecture_Specification.md's real, statistically
+    # significant negative finding for that naive approach)? Directly
+    # comparable to the M3-only shared-trunk number above: same df, same
+    # random_state, same fold assignment.
+    df_with_chemberta = load_cached_chemberta_embeddings(df)
+    multi_branch_results = cross_validate_multi_branch_shared_trunk(df_with_chemberta)
+    print("-- multi-branch fusion (M3 branch + ChemBERTa branch -> shared trunk) --")
+    print(multi_branch_results.groupby("isoform")["mcc"].mean().to_string())
+    multi_branch_out_path = Path("data/cyp_challenge/tdi_track/shared_trunk_m1_chemberta_fusion.csv")
+    multi_branch_results.to_csv(multi_branch_out_path, index=False)
+    print(f"wrote {multi_branch_out_path}")
 
 
 if __name__ == "__main__":

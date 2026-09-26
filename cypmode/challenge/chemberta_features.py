@@ -121,6 +121,40 @@ def compute_chemberta_embeddings_batch(
     return lookup.loc[smiles_list].reset_index()
 
 
+def load_cached_chemberta_embeddings(df: pd.DataFrame, cache_path: str | Path = CACHE_PATH) -> pd.DataFrame:
+    """Joins df against the real ChemBERTa embedding cache by SMILES,
+    without computing anything -- the read-only counterpart to
+    add_chemberta_features (which will compute+cache anything missing).
+    Raises a clear error (not a silent, all-missing join) if the cache
+    doesn't cover every compound in df -- a caller who forgot to run
+    this module's own extraction step first should see exactly that,
+    not a confusing downstream shape mismatch. Lives here (not in
+    chemberta_significance.py, which imports it) specifically so a
+    lightgbm-free caller -- e.g. cypmode.challenge.multitask, which must
+    stay in the same process as torch -- can use it without transitively
+    pulling in lightgbm via chemberta_significance's own import of
+    cypmode.challenge.stacking_significance.
+    """
+    cache_path = Path(cache_path)
+    if not cache_path.exists():
+        raise FileNotFoundError(
+            f"{cache_path} doesn't exist -- run `python -m cypmode.challenge.chemberta_features` "
+            "first to populate it (a separate, torch-only process)."
+        )
+    dim_cols = [f"dim_{i}" for i in range(CHEMBERTA_EMBEDDING_DIM)]
+    cached = pd.read_csv(cache_path)
+    missing = set(df["SMILES"]) - set(cached["SMILES"])
+    if missing:
+        raise ValueError(
+            f"{len(missing)} compound(s) in df have no cached ChemBERTa embedding -- "
+            "re-run chemberta_features.py's extraction to cover them."
+        )
+    lookup = cached.set_index("SMILES")
+    out = df.copy()
+    out["chemberta_embedding"] = [lookup.loc[s, dim_cols].to_numpy(dtype=np.float64) for s in df["SMILES"]]
+    return out
+
+
 def add_chemberta_features(df: pd.DataFrame, cache_path: str | Path = CACHE_PATH) -> pd.DataFrame:
     """Adds a `chemberta_embedding` column (one fixed-size np.array per
     row) to df, keyed off its own SMILES column.
