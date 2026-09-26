@@ -19,9 +19,9 @@ from pathlib import Path
 # without it -- imported lazily inside main() instead.
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT_DIR = ROOT / "data" / "boltz_test" / "out"
-INPUT_DIR = ROOT / "data" / "boltz_test"
-SUMMARY_PATH = ROOT / "data" / "boltz_test" / "validation_summary.json"
+OUT_DIR = ROOT / "data" / "structure_track" / "outputs" / "out"
+INPUT_DIR = ROOT / "data" / "structure_track" / "inputs"
+SUMMARY_PATH = ROOT / "data" / "structure_track" / "outputs" / "validation_summary.json"
 
 _SMILES_LINE = re.compile(r"smiles:\s*'([^']*)'")
 
