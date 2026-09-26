@@ -75,7 +75,10 @@ validate = ["biopython", "pyKVFinder", "posebusters"]
 # canonicalize to two different strings). tblite is for
 # quantum_pharmacophore.py's GFN2-xTB features -- confirmed real, working,
 # and CPU-only (no GPU needed); xtb-python was considered and rejected as
-# unmaintained.
+# unmaintained. pmapper is for pharmacophore_fingerprint.py's 3-point
+# pharmacophore fingerprints -- lightweight (rdkit + networkx only, no
+# compiled numerical backend, so no OpenMP-conflict risk the way tblite
+# has with LightGBM).
 challenge = [
     "lightgbm",
     "useful_rdkit_utils",
@@ -83,6 +86,7 @@ challenge = [
     "requests",
     "chembl_structure_pipeline",
     "statsmodels",
+    "pmapper",
     "tblite",
 ]
 # For cypmode/challenge/multitask.py's shared-trunk model -- a small, plain
