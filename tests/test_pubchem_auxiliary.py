@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -23,16 +22,16 @@ BENZENE = "c1ccccc1"
 # Minimal fake AID1851 CSV in PubChem's real long format: 4 metadata rows
 # (skipped by load_aid1851, matching the real file's shape) + a header +
 # real data rows for 2 compounds x 2 panels each.
-FAKE_AID1851_CSV = """PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency,Panel Name
+FAKE_AID1851_CSV = f"""PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency,Panel Name
 RESULT_TYPE,,,,,,
 RESULT_DESCR,,,,,,
 RESULT_UNIT,,,,,,
 RESULT_ATTR,,,,,,
-1,100,1,{keto},Active,1.2,p450-cyp2d6
-2,100,1,{keto},Active,2.3,p450-cyp3a4
-3,101,2,{eth},Inactive,,p450-cyp2d6
-4,101,2,{eth},Inconclusive,,p450-cyp3a4
-""".format(keto=KETOCONAZOLE, eth=ETHANOL)
+1,100,1,{KETOCONAZOLE},Active,1.2,p450-cyp2d6
+2,100,1,{KETOCONAZOLE},Active,2.3,p450-cyp3a4
+3,101,2,{ETHANOL},Inactive,,p450-cyp2d6
+4,101,2,{ETHANOL},Inconclusive,,p450-cyp3a4
+"""
 
 
 @pytest.fixture
@@ -48,17 +47,17 @@ def test_load_aid1851_collapses_replicate_rows_instead_of_multiplying(tmp_path):
     # collapsing before merging, this multiplies row count per isoform
     # merge and compounds across all 5 -- confirmed directly: it inflated
     # 16,560 real compounds into 86,721 rows before this was fixed.
-    csv = """PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency,Panel Name
+    csv = f"""PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency,Panel Name
 RESULT_TYPE,,,,,,
 RESULT_DESCR,,,,,,
 RESULT_UNIT,,,,,,
 RESULT_ATTR,,,,,,
-1,100,1,{keto},Active,1.2,p450-cyp2d6
-2,100,1,{keto},Inactive,1.5,p450-cyp2d6
-3,100,1,{keto},Active,2.3,p450-cyp3a4
-4,100,1,{keto},Active,2.4,p450-cyp3a4
-5,100,1,{keto},Inactive,2.5,p450-cyp3a4
-""".format(keto=KETOCONAZOLE)
+1,100,1,{KETOCONAZOLE},Active,1.2,p450-cyp2d6
+2,100,1,{KETOCONAZOLE},Inactive,1.5,p450-cyp2d6
+3,100,1,{KETOCONAZOLE},Active,2.3,p450-cyp3a4
+4,100,1,{KETOCONAZOLE},Active,2.4,p450-cyp3a4
+5,100,1,{KETOCONAZOLE},Inactive,2.5,p450-cyp3a4
+"""
     path = tmp_path / "aid1851_raw.csv"
     path.write_text(csv)
 
@@ -73,25 +72,25 @@ def test_load_aid1851_pivots_to_one_row_per_compound(fake_aid1851_path):
     assert len(df) == 2
     assert set(AID1851_ISOFORMS) <= {c.replace("_active", "") for c in df.columns if c.endswith("_active")} | set(AID1851_ISOFORMS)
     keto_row = df[df["SMILES"] == KETOCONAZOLE].iloc[0]
-    assert keto_row["CYP2D6_active"] == True  # noqa: E712
-    assert keto_row["CYP3A4_active"] == True  # noqa: E712
+    assert keto_row["CYP2D6_active"] == True
+    assert keto_row["CYP3A4_active"] == True
     eth_row = df[df["SMILES"] == ETHANOL].iloc[0]
-    assert eth_row["CYP2D6_active"] == False  # noqa: E712
+    assert eth_row["CYP2D6_active"] == False
     assert pd.isna(eth_row["CYP3A4_active"])  # Inconclusive -> NaN, not False
 
 
 def test_load_single_isoform_aid_parses_a_real_single_panel_schema(tmp_path):
     # AID891/AID884's real schema: no "Panel Name" column at all (the whole
     # file is already one isoform), unlike AID1851's 5-panel long format.
-    csv = """PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency
+    csv = f"""PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency
 RESULT_TYPE,,,,,
 RESULT_DESCR,,,,,
 RESULT_UNIT,,,,,
 RESULT_ATTR,,,,,
-1,100,1,{keto},Active,0.0016
-2,101,2,{eth},Inactive,
-3,102,3,{clot},Inconclusive,
-""".format(keto=KETOCONAZOLE, eth=ETHANOL, clot=CLOTRIMAZOLE)
+1,100,1,{KETOCONAZOLE},Active,0.0016
+2,101,2,{ETHANOL},Inactive,
+3,102,3,{CLOTRIMAZOLE},Inconclusive,
+"""
     path = tmp_path / "aid891_raw.csv"
     path.write_text(csv)
 
@@ -99,20 +98,20 @@ RESULT_ATTR,,,,,
     assert len(df) == 3
     assert "CYP2D6_active" in df.columns
     keto_row = df[df["SMILES"] == KETOCONAZOLE].iloc[0]
-    assert keto_row["CYP2D6_active"] == True  # noqa: E712
+    assert keto_row["CYP2D6_active"] == True
     clot_row = df[df["SMILES"] == CLOTRIMAZOLE].iloc[0]
     assert pd.isna(clot_row["CYP2D6_active"])  # Inconclusive -> NaN
 
 
 def test_load_single_isoform_aid_collapses_replicate_rows(tmp_path):
-    csv = """PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency
+    csv = f"""PUBCHEM_RESULT_TAG,PUBCHEM_SID,PUBCHEM_CID,PUBCHEM_EXT_DATASOURCE_SMILES,PUBCHEM_ACTIVITY_OUTCOME,Potency
 RESULT_TYPE,,,,,
 RESULT_DESCR,,,,,
 RESULT_UNIT,,,,,
 RESULT_ATTR,,,,,
-1,100,1,{keto},Active,0.001
-2,100,1,{keto},Inactive,0.5
-""".format(keto=KETOCONAZOLE)
+1,100,1,{KETOCONAZOLE},Active,0.001
+2,100,1,{KETOCONAZOLE},Inactive,0.5
+"""
     path = tmp_path / "aid884_raw.csv"
     path.write_text(csv)
 

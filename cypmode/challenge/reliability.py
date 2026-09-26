@@ -142,7 +142,10 @@ def validate_reliability_correlation(reliability_df: pd.DataFrame, prediction_er
 def _main() -> None:
     from sklearn.model_selection import StratifiedKFold
 
-    from cypmode.challenge.tdi_baseline import compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import (
+        compute_descriptors,
+        load_tdi_training_data,
+    )
 
     df = compute_descriptors(load_tdi_training_data())
     cyp_df = df.dropna(subset=["CYP3A4_is_TDI"]).reset_index(drop=True)

@@ -185,8 +185,8 @@ def _resample_to_base_rate(y_true: np.ndarray, y_proba: np.ndarray, target_rate:
     if n_pos == 0 or n_neg == 0:
         return y_true, y_proba
     # solve for the largest (n_pos', n_neg') <= (n_pos, n_neg) with n_pos'/(n_pos'+n_neg')==target_rate
-    n_pos_keep = min(n_pos, int(round(target_rate / (1 - target_rate) * n_neg)))
-    n_neg_keep = min(n_neg, int(round((1 - target_rate) / target_rate * n_pos_keep))) if n_pos_keep > 0 else 0
+    n_pos_keep = min(n_pos, round(target_rate / (1 - target_rate) * n_neg))
+    n_neg_keep = min(n_neg, round((1 - target_rate) / target_rate * n_pos_keep)) if n_pos_keep > 0 else 0
     if n_pos_keep < 1 or n_neg_keep < 1:
         return y_true, y_proba
     keep = np.concatenate(
@@ -293,7 +293,11 @@ def cross_validate_with_robust_threshold_tuning(
 
 def _main() -> None:
     from cypmode.challenge.tdi_ablation import add_ablation_features
-    from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import (
+        TDI_ISOFORMS,
+        compute_descriptors,
+        load_tdi_training_data,
+    )
 
     df = add_ablation_features(compute_descriptors(load_tdi_training_data()))
 

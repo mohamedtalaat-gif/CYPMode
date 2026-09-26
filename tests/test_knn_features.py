@@ -23,7 +23,7 @@ def test_knn_label_features_recovers_a_clean_majority_vote():
     reference_fps = [_morgan_fp(KETOCONAZOLE), _morgan_fp(CLOTRIMAZOLE), _morgan_fp(KETOCONAZOLE), _morgan_fp(ETHANOL)]
     reference_labels = np.array([1, 1, 1, 0])
     out = knn_label_features([query_fp], reference_fps, reference_labels, k=4)
-    frac_pos, sim_weighted_frac_pos, mean_sim, n_neighbors = out[0]
+    frac_pos, sim_weighted_frac_pos, _mean_sim, n_neighbors = out[0]
     assert frac_pos == pytest.approx(0.75)
     assert n_neighbors == 4
     # similarity-weighted vote should push even higher toward 1.0 since the

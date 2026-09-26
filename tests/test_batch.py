@@ -73,7 +73,7 @@ def test_to_dataframe_flattens_a_successful_result():
     row = df.iloc[0]
     assert row["compound"] == "keto"
     assert row["smiles"] == "CC(=O)N1..."
-    assert row["coordinated"] == True  # noqa: E712 (pandas bool, not Python bool)
+    assert row["coordinated"] == True
     assert row["closest_motif_nitrogen_distance_angstrom"] == 2.05
     assert row["closest_motif"] == "imidazole_Nsub"
     assert row["closest_motif_atom"] == "N32"
@@ -100,7 +100,7 @@ def test_to_dataframe_handles_a_successful_result_with_no_affinity_keys():
     no_affinity_summary = {k: v for k, v in FAKE_SUMMARY.items() if not k.startswith("affinity_")}
     df = to_dataframe({"keto": no_affinity_summary})
     row = df.iloc[0]
-    assert row["coordinated"] == True  # noqa: E712
+    assert row["coordinated"] == True
     assert row["affinity_pred_value"] is None
     assert row["affinity_probability_binary"] is None
 

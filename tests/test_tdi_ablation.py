@@ -4,7 +4,12 @@ import pytest
 
 pytest.importorskip("lightgbm")
 
-from cypmode.challenge.tdi_ablation import MODELS, add_ablation_features, run_ablation, summarize_ablation
+from cypmode.challenge.tdi_ablation import (
+    MODELS,
+    add_ablation_features,
+    run_ablation,
+    summarize_ablation,
+)
 
 KETOCONAZOLE = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2)CC1"  # motif+, amine-
 VERAPAMIL = "COc1ccc(CCN(C)CCCC(C#N)(c2ccc(OC)c(OC)c2)C(C)C)cc1OC"  # motif-, amine+

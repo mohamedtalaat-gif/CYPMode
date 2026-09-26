@@ -5,7 +5,10 @@ import pytest
 pytest.importorskip("lightgbm")
 pytest.importorskip("statsmodels")
 
-from cypmode.challenge.stacking_significance import repeated_cv_stacking_comparison, tukey_hsd_summary
+from cypmode.challenge.stacking_significance import (
+    repeated_cv_stacking_comparison,
+    tukey_hsd_summary,
+)
 
 KETOCONAZOLE = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2)CC1"
 CLOTRIMAZOLE = "Clc1ccccc1C(c1ccccc1)(c1ccccc1)n1ccnc1"
@@ -60,7 +63,7 @@ def test_tukey_hsd_summary_detects_a_real_difference():
 
     summary = tukey_hsd_summary(results)
     row = summary[(summary["group1"] == "A") & (summary["group2"] == "B")].iloc[0]
-    assert row["reject"] == True  # noqa: E712 -- a real, large, low-noise difference must be significant
+    assert row["reject"] == True
 
 
 def test_tukey_hsd_summary_does_not_falsely_flag_identical_distributions():
@@ -74,4 +77,4 @@ def test_tukey_hsd_summary_does_not_falsely_flag_identical_distributions():
 
     summary = tukey_hsd_summary(results)
     row = summary[(summary["group1"] == "A") & (summary["group2"] == "B")].iloc[0]
-    assert row["reject"] == False  # noqa: E712 -- same real distribution, should not be flagged significant
+    assert row["reject"] == False

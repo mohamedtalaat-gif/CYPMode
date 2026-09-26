@@ -6,7 +6,11 @@ import pytest
 
 pytest.importorskip("Bio")
 
-from cypmode.validation.structures import load_trunk_embeddings, pooled_trunk_embedding, summarize_compound
+from cypmode.validation.structures import (
+    load_trunk_embeddings,
+    pooled_trunk_embedding,
+    summarize_compound,
+)
 
 KETOCONAZOLE_SMILES = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2)CC1"
 VARDENAFIL_SMILES = "CCCc1nc(C)c2c(=O)nc(-c3cc(S(=O)(=O)N4CCN(CC)CC4)ccc3OCC)[nH]n12"

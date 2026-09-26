@@ -128,7 +128,11 @@ def cross_validate_with_knn_features(
 
 def _main() -> None:
     from cypmode.challenge.tdi_ablation import add_ablation_features
-    from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import (
+        TDI_ISOFORMS,
+        compute_descriptors,
+        load_tdi_training_data,
+    )
 
     df = add_ablation_features(compute_descriptors(load_tdi_training_data()))
 

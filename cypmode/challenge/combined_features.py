@@ -20,17 +20,29 @@ from lightgbm import LGBMClassifier
 from sklearn.metrics import matthews_corrcoef
 from sklearn.model_selection import StratifiedKFold
 
-from cypmode.challenge.bindingdb_auxiliary import BINDINGDB_ISOFORM_UNIPROTS
-from cypmode.challenge.bindingdb_auxiliary import exclude_exact_overlap as exclude_bindingdb_overlap
-from cypmode.challenge.bindingdb_auxiliary import fetch_bindingdb_isoform
-from cypmode.challenge.bindingdb_auxiliary import fit_auxiliary_model as fit_bindingdb_model
-from cypmode.challenge.bindingdb_auxiliary import load_bindingdb_isoform
-from cypmode.challenge.bindingdb_auxiliary import predict_auxiliary_activity as predict_bindingdb_activity
+from cypmode.challenge.bindingdb_auxiliary import (
+    BINDINGDB_ISOFORM_UNIPROTS,
+    fetch_bindingdb_isoform,
+    load_bindingdb_isoform,
+)
+from cypmode.challenge.bindingdb_auxiliary import (
+    exclude_exact_overlap as exclude_bindingdb_overlap,
+)
+from cypmode.challenge.bindingdb_auxiliary import (
+    fit_auxiliary_model as fit_bindingdb_model,
+)
+from cypmode.challenge.bindingdb_auxiliary import (
+    predict_auxiliary_activity as predict_bindingdb_activity,
+)
 from cypmode.challenge.knn_features import _morgan_fp, add_knn_label_features_for_fold
-from cypmode.challenge.pubchem_auxiliary import exclude_exact_overlap as exclude_aid1851_overlap
+from cypmode.challenge.pubchem_auxiliary import (
+    exclude_exact_overlap as exclude_aid1851_overlap,
+)
 from cypmode.challenge.pubchem_auxiliary import fit_auxiliary_model as fit_aid1851_model
 from cypmode.challenge.pubchem_auxiliary import load_aid1851
-from cypmode.challenge.pubchem_auxiliary import predict_auxiliary_activity as predict_aid1851_activity
+from cypmode.challenge.pubchem_auxiliary import (
+    predict_auxiliary_activity as predict_aid1851_activity,
+)
 
 
 def add_external_auxiliary_features(tdi_df: pd.DataFrame, isoform: str) -> pd.DataFrame:
@@ -109,7 +121,11 @@ def cross_validate_combined(
 
 def _main() -> None:
     from cypmode.challenge.tdi_ablation import add_ablation_features
-    from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import (
+        TDI_ISOFORMS,
+        compute_descriptors,
+        load_tdi_training_data,
+    )
 
     tdi_df = add_ablation_features(compute_descriptors(load_tdi_training_data()))
 

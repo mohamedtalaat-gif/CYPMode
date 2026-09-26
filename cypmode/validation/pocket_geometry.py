@@ -33,7 +33,7 @@ import copy
 import tempfile
 from pathlib import Path
 
-from Bio.PDB import Chain, Model, PDBIO, Structure
+from Bio.PDB import PDBIO, Chain, Model, Structure
 from Bio.PDB.SASA import ShrakeRupley
 
 from cypmode.validation.structures import _ligand_atoms

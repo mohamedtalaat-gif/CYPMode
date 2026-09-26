@@ -2,7 +2,12 @@
 
 import pandas as pd
 
-from app import load_challenge_compounds, merge_challenge_results, screen_compounds, validate_smiles
+from app import (
+    load_challenge_compounds,
+    merge_challenge_results,
+    screen_compounds,
+    validate_smiles,
+)
 
 KETOCONAZOLE = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2)CC1"
 
@@ -35,5 +40,5 @@ def test_merge_challenge_results_fills_only_completed_compounds():
         [{"compound": "a", "smiles": "CCO", "coordinated": True, "confidence_score": 0.9}]
     )
     merged = merge_challenge_results(compounds_df, results_df)
-    assert merged.loc[merged["Molecule_Name"] == "a", "coordinated"].iloc[0] == True  # noqa: E712
+    assert merged.loc[merged["Molecule_Name"] == "a", "coordinated"].iloc[0] == True
     assert pd.isna(merged.loc[merged["Molecule_Name"] == "b", "coordinated"].iloc[0])

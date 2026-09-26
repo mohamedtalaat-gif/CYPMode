@@ -31,7 +31,11 @@ import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
-from cypmode.challenge.tdi_baseline import compute_descriptors, cross_validate_fixed_seed, load_tdi_training_data
+from cypmode.challenge.tdi_baseline import (
+    compute_descriptors,
+    cross_validate_fixed_seed,
+    load_tdi_training_data,
+)
 from cypmode.metrics.amines import has_trialkylamine
 from cypmode.metrics.motifs import detect_motifs
 

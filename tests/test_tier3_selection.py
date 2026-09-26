@@ -37,14 +37,14 @@ def test_uncertainty_selection_mask_threshold_is_a_training_fold_property():
     train_mask = np.zeros(len(df), dtype=bool)
     train_mask[:60] = True
 
-    selected_a, threshold_a = uncertainty_selection_mask(
+    _selected_a, threshold_a = uncertainty_selection_mask(
         features[train_mask], labels[train_mask], features, quantile=0.3
     )
     # Changing only the held-out portion's features must not change the
     # threshold -- it's derived from the training portion alone.
     features_perturbed = features.copy()
     features_perturbed[60:] = features_perturbed[60:] * 100  # wildly different held-out features
-    selected_b, threshold_b = uncertainty_selection_mask(
+    _selected_b, threshold_b = uncertainty_selection_mask(
         features[train_mask], labels[train_mask], features_perturbed, quantile=0.3
     )
     assert threshold_a == threshold_b
@@ -58,7 +58,7 @@ def test_compute_selection_combines_motif_and_uncertainty():
 
     result = compute_selection(df, train_mask, label_col="label", uncertainty_quantile=0.3)
 
-    assert result.loc[0, "motif_selected"] == True  # noqa: E712 (pandas/numpy bool)
+    assert result.loc[0, "motif_selected"] == True
     assert result.loc[0, "tier3_selected"]  # motif alone guarantees selection
     assert result["tier3_selected"].dtype == bool
     assert (result["tier3_selected"] == (result["motif_selected"] | result["uncertainty_selected"])).all()

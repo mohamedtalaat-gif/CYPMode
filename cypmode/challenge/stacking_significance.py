@@ -90,15 +90,25 @@ def tukey_hsd_summary(results_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _main() -> None:
-    from cypmode.challenge.bindingdb_auxiliary import BINDINGDB_ISOFORM_UNIPROTS
-    from cypmode.challenge.bindingdb_auxiliary import exclude_exact_overlap as exclude_bdb
-    from cypmode.challenge.bindingdb_auxiliary import fetch_bindingdb_isoform
+    from cypmode.challenge.bindingdb_auxiliary import (
+        BINDINGDB_ISOFORM_UNIPROTS,
+        fetch_bindingdb_isoform,
+        load_bindingdb_isoform,
+    )
+    from cypmode.challenge.bindingdb_auxiliary import (
+        exclude_exact_overlap as exclude_bdb,
+    )
     from cypmode.challenge.bindingdb_auxiliary import fit_auxiliary_model as fit_bdb
-    from cypmode.challenge.bindingdb_auxiliary import load_bindingdb_isoform
-    from cypmode.challenge.bindingdb_auxiliary import predict_auxiliary_activity as predict_bdb
+    from cypmode.challenge.bindingdb_auxiliary import (
+        predict_auxiliary_activity as predict_bdb,
+    )
     from cypmode.challenge.knn_features import _morgan_fp
     from cypmode.challenge.tdi_ablation import add_ablation_features
-    from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import (
+        TDI_ISOFORMS,
+        compute_descriptors,
+        load_tdi_training_data,
+    )
 
     tdi_df = add_ablation_features(compute_descriptors(load_tdi_training_data()))
 

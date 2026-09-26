@@ -17,11 +17,20 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from cypmode.challenge.chemberta_features import load_cached_chemberta_embeddings  # noqa: F401 (re-exported)
+from cypmode.challenge.chemberta_features import (
+    load_cached_chemberta_embeddings,
+)
 from cypmode.challenge.knn_features import _morgan_fp
-from cypmode.challenge.stacking_significance import repeated_cv_stacking_comparison, tukey_hsd_summary
+from cypmode.challenge.stacking_significance import (
+    repeated_cv_stacking_comparison,
+    tukey_hsd_summary,
+)
 from cypmode.challenge.tdi_ablation import add_ablation_features
-from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
+from cypmode.challenge.tdi_baseline import (
+    TDI_ISOFORMS,
+    compute_descriptors,
+    load_tdi_training_data,
+)
 
 
 def _main() -> None:

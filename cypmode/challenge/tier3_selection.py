@@ -24,7 +24,6 @@ validation fold's own predictions are used only to see who a
 train-fold-only policy would have picked, never to set that policy.
 """
 
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
