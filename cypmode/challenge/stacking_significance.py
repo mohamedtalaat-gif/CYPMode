@@ -138,12 +138,12 @@ def _main() -> None:
         print(summary.to_string(index=False))
 
     combined_results = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/cyp_challenge/tdi_track/stacking_significance_raw.csv")
+    out_path = Path("data/tdi_track/outputs/stacking_significance_raw.csv")
     combined_results.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 
     combined_summary = pd.concat(all_summaries, ignore_index=True)
-    summary_path = Path("data/cyp_challenge/tdi_track/stacking_significance_tukey.csv")
+    summary_path = Path("data/tdi_track/outputs/stacking_significance_tukey.csv")
     combined_summary.to_csv(summary_path, index=False)
     print(f"wrote {summary_path}")
 

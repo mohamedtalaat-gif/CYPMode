@@ -75,7 +75,7 @@ FEATURE_NAMES = [
     "qm_charge_max",
     "qm_charge_std",
 ]
-CACHE_PATH = Path("data/cyp_challenge/tdi_track/quantum_pharmacophore_cache.csv")
+CACHE_PATH = Path("data/tdi_track/outputs/quantum_pharmacophore_cache.csv")
 
 
 def embed_3d_conformer(smiles: str, random_seed: int = 42):
@@ -295,7 +295,7 @@ def _main() -> None:
         )
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/cyp_challenge/tdi_track/quantum_pharmacophore_ablation.csv")
+    out_path = Path("data/tdi_track/outputs/quantum_pharmacophore_ablation.csv")
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 
@@ -334,11 +334,11 @@ def _main() -> None:
         print(f"-- {cyp}: Tukey HSD pairwise comparison --")
         print(sig_summary.to_string(index=False))
 
-    sig_raw_path = Path("data/cyp_challenge/tdi_track/quantum_pharmacophore_significance_raw.csv")
+    sig_raw_path = Path("data/tdi_track/outputs/quantum_pharmacophore_significance_raw.csv")
     pd.concat(all_sig_results, ignore_index=True).to_csv(sig_raw_path, index=False)
     print(f"\nwrote {sig_raw_path}")
 
-    sig_tukey_path = Path("data/cyp_challenge/tdi_track/quantum_pharmacophore_significance_tukey.csv")
+    sig_tukey_path = Path("data/tdi_track/outputs/quantum_pharmacophore_significance_tukey.csv")
     pd.concat(all_sig_summaries, ignore_index=True).to_csv(sig_tukey_path, index=False)
     print(f"wrote {sig_tukey_path}")
 

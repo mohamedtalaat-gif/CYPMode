@@ -21,8 +21,8 @@ import pandas as pd
 
 from cypmode.metrics.motifs import detect_motifs
 
-TDI_REFERENCE_PATH = Path("data/octant_cache/tdi_reference/tdi_pic50_shift.tsv")
-VALIDATION_SUMMARY_PATH = Path("data/boltz_test/validation_summary.json")
+TDI_REFERENCE_PATH = Path("data/tdi_track/inputs/octant_cache/tdi_reference/tdi_pic50_shift.tsv")
+VALIDATION_SUMMARY_PATH = Path("data/structure_track/outputs/validation_summary.json")
 
 # tdi_pic50_shift.tsv gives drug names only, no SMILES -- each verified
 # against ChEMBL (compound_search) individually, not guessed.
@@ -64,7 +64,7 @@ def with_structural_coordination(
 ) -> pd.DataFrame:
     """Left-join this project's own structural coordination call onto
     whichever of these drugs are already in the structural reference set
-    (data/boltz_test/validation_summary.json) -- currently ketoconazole
+    (data/structure_track/outputs/validation_summary.json) -- currently ketoconazole
     and azamulin. Drugs not yet run structurally get null coordination
     columns, not an error.
     """

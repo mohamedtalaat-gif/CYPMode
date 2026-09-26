@@ -46,7 +46,7 @@ from cypmode.challenge.structure_standardization import standardized_parent_smil
 from cypmode.challenge.tdi_baseline import compute_descriptors
 
 BINDINGDB_ISOFORM_UNIPROTS = {"CYP3A4": "P08684", "CYP2D6": "P10635"}
-BINDINGDB_RAW_DIR = Path("data/bindingdb_cache")
+BINDINGDB_RAW_DIR = Path("data/tdi_track/inputs/bindingdb_cache")
 ACTIVE_THRESHOLD_UM = 10.0
 
 
@@ -208,7 +208,7 @@ def _main() -> None:
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+BindingDB={results['mcc_m3_plus_bindingdb'].mean():.4f}")
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/cyp_challenge/tdi_track/bindingdb_auxiliary_ablation.csv")
+    out_path = Path("data/tdi_track/outputs/bindingdb_auxiliary_ablation.csv")
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

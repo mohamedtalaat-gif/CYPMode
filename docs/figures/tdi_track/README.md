@@ -62,4 +62,4 @@ python docs/figures/generate_tdi_figures.py
 ```
 
 Regenerates all four SVGs from the checked-in result CSVs in
-`data/cyp_challenge/tdi_track/` — nothing here is hand-edited.
+`data/tdi_track/outputs/` — nothing here is hand-edited.

@@ -72,14 +72,14 @@ that paper's method, it's a different, unvalidated claim.
   after every compound so a run spanning hours survives interruption, and
   isolating one compound's failure from the rest of the batch.
 - `cypmode/validation/build_summary.py` — regenerates
-  `data/boltz_test/validation_summary.json` by discovering finished runs
-  under `data/boltz_test/out/` and reading each one's SMILES back out of
+  `data/structure_track/outputs/validation_summary.json` by discovering finished runs
+  under `data/structure_track/outputs/out/` and reading each one's SMILES back out of
   its own input YAML; see Reproducing this, below.
 - `app.py` — a Streamlit tool: paste a compound, get the motif call and,
   for the four reference compounds, the structural check.
 - `docs/figures/generate_validation_figure.py` — regenerates the Fe-N bar
   chart below (light and dark variants) from
-  `data/boltz_test/validation_summary.json`; needs `pip install matplotlib`,
+  `data/structure_track/outputs/validation_summary.json`; needs `pip install matplotlib`,
   not otherwise a project dependency.
 
 ## Install
@@ -90,7 +90,7 @@ source .venv/bin/activate      # Windows (cmd/PowerShell): .venv\Scripts\activat
 pip install -e .
 ```
 
-The five-isoform panel is cached locally under `data/tdc_cache/`, so the
+The five-isoform panel is cached locally under `data/tdi_track/inputs/tdc_cache/`, so the
 default install (RDKit + pandas + Streamlit) is enough to run
 `cypmode.data.panel` and the app's motif screen without a network call.
 To refresh that cache from source instead, install the `tdc` extra plus
@@ -117,7 +117,7 @@ streamlit run app.py
 *Hosted demo link pending — `requirements.txt` is prepped for Hugging Face
 Spaces (Streamlit SDK) or Streamlit Community Cloud; `app.py`'s Structural
 validation tab reads the checked-in
-`data/boltz_test/validation_summary.json` rather than needing a local
+`data/structure_track/outputs/validation_summary.json` rather than needing a local
 Boltz-2 run, so it works identically hosted or local.*
 
 ## Validation against real structures
@@ -140,7 +140,7 @@ happen.
 
 ### Reproducing this, and validating a new compound
 
-The `data/boltz_test/*.yaml` files above are the exact inputs; the
+The `data/structure_track/inputs/*.yaml` files above are the exact inputs; the
 predicted structures and confidence/affinity JSON they produce are not
 committed (regeneratable, and large — see below), only the small numeric
 summary derived from them is. `boltz` needs its own virtual environment
@@ -199,7 +199,7 @@ server instead of requiring a precomputed one. `--accelerator gpu`
 auto-resolves to Metal/MPS on Apple Silicon or CUDA on NVIDIA. Each
 compound took roughly 40 minutes on an Apple M-series chip.
 
-Once result directories exist under `data/boltz_test/out/`, regenerate the
+Once result directories exist under `data/structure_track/outputs/out/`, regenerate the
 checked-in summary and figure — `build_summary` discovers compounds from
 that directory itself, and reads each one's SMILES back out of its own
 input YAML, rather than a separate hardcoded list:
@@ -226,7 +226,7 @@ vardenafil's reported distance moved from 4.84 Å to its real value, 10.54
 right atom was being measured.
 
 Results, from `cypmode/validation/structures.py`'s `summarize_compound()`
-run against the real local output in `data/boltz_test/out/`:
+run against the real local output in `data/structure_track/outputs/out/`:
 
 | Compound | Motif call | Closest motif-N distance | Coordinated | `affinity_probability_binary` | `confidence_score` |
 |---|---|---|---|---|---|
@@ -301,7 +301,7 @@ The 2.02 Å result is chemically unsurprising for a triazole in
 ketoconazole's own class, which is exactly the point — this confirms the
 *machinery* generalizes and found a real reliability gap while doing it,
 not that itraconazole's coordination is independently validated the way
-the four compounds below are. Itraconazole isn't in `data/boltz_test/` as
+the four compounds below are. Itraconazole isn't in `data/structure_track/inputs/` as
 a tracked reference input for that reason; the YAML `build_input.py`
 generated for it is reproducible from the command above, not something
 this project is claiming as a result.
@@ -356,7 +356,7 @@ comparison, only vardenafil overlaps with it at all.
 `python -m cypmode.data.octant_benchmark` (`cypmode/data/octant_benchmark.py`)
 compares CYP3A4 pIC50 between motif-positive and motif-negative compounds,
 restricted to QC-passed dose-response curves, with a one-sided Mann-Whitney
-U test. Result (`data/octant_cache/motif_potency_validation.json`):
+U test. Result (`data/tdi_track/inputs/octant_cache/motif_potency_validation.json`):
 
 | | n | mean pIC50 | median pIC50 |
 |---|---|---|---|
@@ -396,7 +396,7 @@ pipeline (Boltz-2 + explicit heme + covalent axial-cysteine bond,
 for the 4 solved reference compounds above) but directly applicable to any
 CYP3A4-ligand SMILES pair without modification.
 
-`data/cyp_challenge/structure_track_test_blinded.csv` is this track's
+`data/structure_track/inputs/structure_track_test_blinded.csv` is this track's
 public blinded test set, saved as-is. Running the Type II motif screen
 against it: **12 of the 20 compounds (60%) carry a coordinating motif** —
 reproducible with `cypmode.metrics.motifs.detect_motifs`.
@@ -404,7 +404,7 @@ reproducible with `cypmode.metrics.motifs.detect_motifs`.
 against all 20 (not only the motif-positive ones — coordination status
 isn't knowable without running the structure, that's the whole point of
 this pipeline); results will land in
-`data/cyp_challenge/structure_track_results.json` once that finishes.
+`data/structure_track/outputs/structure_track_results.json` once that finishes.
 
 **Stated plainly:** this track's official scoring rules, submission
 format, and deadline aren't published anywhere as of this writing — only
@@ -424,7 +424,7 @@ Source: [OpenADMET/Octant's CYP Data Engine blog post
 repo](https://github.com/OpenADMET/Octant_CYP_blog_post) (CC BY 4.0) —
 a small, 6-named-drug panel with real preincubation-vs-direct pIC50 shift
 measurements (`cypmode/validation/tdi_reference.py`,
-`data/octant_cache/tdi_reference/`). Two of the six — ketoconazole and
+`data/tdi_track/inputs/octant_cache/tdi_reference/`). Two of the six — ketoconazole and
 azamulin — are already in this project's own structural reference set, so
 both their motif call *and* their static heme-coordination geometry are
 independently known, not just their TDI status:

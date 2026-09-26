@@ -114,7 +114,7 @@ def select_valid_model(predictions_dir: str | Path, ligand_smiles: str, max_mode
 
 def _main() -> None:
     """Runs check_pose_validity across every real, already-completed
-    structure this project has (data/boltz_test/out/boltz_results_*/),
+    structure this project has (data/structure_track/outputs/out/boltz_results_*/),
     reading each compound's own exact ligand SMILES from its own input
     YAML -- guaranteed to match what was actually predicted, rather than
     cross-referencing separate CSV/dict sources that could drift out of
@@ -127,7 +127,7 @@ def _main() -> None:
 
     from cypmode.validation.structures import load_structure
 
-    input_dir = Path("data/boltz_test")
+    input_dir = Path("data/structure_track/inputs")
     out_dir = input_dir / "out"
 
     rows = []
@@ -163,7 +163,7 @@ def _main() -> None:
             failing_checks = [c for c in df.columns if c not in ("compound", "all_passed", "error") and row.get(c) is False]
             print(f"  {row['compound']}: failed {failing_checks}")
 
-    out_path = Path("data/cyp_challenge/tdi_track/posebusters_validity.csv")
+    out_path = Path("data/structure_track/outputs/posebusters_validity.csv")
     df.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

@@ -1,5 +1,5 @@
 """Generates docs/figures/tdi_track/*.svg from the checked-in TDI-track
-result CSVs (data/cyp_challenge/tdi_track/).
+result CSVs (data/tdi_track/outputs/).
 
 Not part of the cypmode package or its runtime dependencies -- a one-off
 script, run manually, matching docs/figures/generate_validation_figure.py's

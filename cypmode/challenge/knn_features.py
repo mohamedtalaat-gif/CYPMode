@@ -140,7 +140,7 @@ def _main() -> None:
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+KNN={results['mcc_m3_plus_knn'].mean():.4f}")
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/cyp_challenge/tdi_track/knn_features_ablation.csv")
+    out_path = Path("data/tdi_track/outputs/knn_features_ablation.csv")
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

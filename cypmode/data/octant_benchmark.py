@@ -44,7 +44,7 @@ _PARQUET_URL = (
 )
 
 
-def load_inhibition_data(cache_path: str | Path = "data/octant_cache/inhibition.parquet") -> pd.DataFrame:
+def load_inhibition_data(cache_path: str | Path = "data/tdi_track/inputs/octant_cache/inhibition.parquet") -> pd.DataFrame:
     """Load Octant's CYP3A4 dose-response summary (one row per compound).
 
     Downloads and caches on first use; a copy is checked into the repo so
@@ -112,7 +112,7 @@ def main() -> None:
     df = annotate_motifs(load_inhibition_data())
     result = compare_potency_by_motif(df)
 
-    out_path = Path("data/octant_cache/motif_potency_validation.json")
+    out_path = Path("data/tdi_track/inputs/octant_cache/motif_potency_validation.json")
     out_path.write_text(json.dumps(result, indent=2) + "\n")
     print(f"wrote {out_path}")
     print(json.dumps(result, indent=2))

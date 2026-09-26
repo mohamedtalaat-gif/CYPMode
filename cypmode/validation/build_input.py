@@ -1,6 +1,6 @@
 """Builds Boltz-2 YAML inputs (protein + heme, covalently bonded) for any ligand.
 
-The four data/boltz_test/cyp3a4_*.yaml files were originally hand-written,
+The four data/structure_track/inputs/cyp3a4_*.yaml files were originally hand-written,
 one at a time, with the coordinating cysteine's position located once,
 inline, and typed into each file. That doesn't scale past four known
 compounds and can't be re-verified against a different protein construct.

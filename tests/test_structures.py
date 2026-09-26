@@ -12,7 +12,7 @@ KETOCONAZOLE_SMILES = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2
 VARDENAFIL_SMILES = "CCCc1nc(C)c2c(=O)nc(-c3cc(S(=O)(=O)N4CCN(CC)CC4)ccc3OCC)[nH]n12"
 OCNT_2395436_SMILES = "CC(C)(C)NS(=O)(=O)C1(CNC2=C(Br)C=NC=C2C#N)CCC1"
 
-RESULT_DIR = Path("data/boltz_test/out/boltz_results_cyp3a4_ketoconazole")
+RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_ketoconazole")
 CIF_PATH = RESULT_DIR / "predictions" / "cyp3a4_ketoconazole" / "cyp3a4_ketoconazole_model_0.cif"
 
 pytestmark = pytest.mark.skipif(
@@ -40,7 +40,7 @@ def test_motif_distance_ignores_closer_non_motif_nitrogen():
     # geometrically closest ligand nitrogen (N50, ~4.84 A) is not part of
     # any matched Type II motif. The motif-restricted distance must not
     # silently fall back to it.
-    result_dir = Path("data/boltz_test/out/boltz_results_cyp3a4_vardenafil")
+    result_dir = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_vardenafil")
     if not (result_dir / "predictions" / "cyp3a4_vardenafil" / "cyp3a4_vardenafil_model_0.cif").exists():
         pytest.skip("requires a local Boltz-2 run for vardenafil")
 
@@ -54,7 +54,7 @@ def test_motif_distance_ignores_closer_non_motif_nitrogen():
     assert "N50" in all_atoms  # still visible for manual review, just not driving the call
 
 
-OCNT_2395436_RESULT_DIR = Path("data/boltz_test/out/boltz_results_cyp3a4_OCNT-2395436")
+OCNT_2395436_RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_OCNT-2395436")
 
 
 @pytest.mark.skipif(

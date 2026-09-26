@@ -20,9 +20,9 @@ from rdkit import Chem
 
 from cypmode.metrics.motifs import classify_mechanism, detect_motifs
 
-VALIDATION_SUMMARY_PATH = Path("data/boltz_test/validation_summary.json")
-CHALLENGE_COMPOUNDS_PATH = Path("data/cyp_challenge/structure_track_test_blinded.csv")
-CHALLENGE_RESULTS_PATH = Path("data/cyp_challenge/structure_track_results.csv")
+VALIDATION_SUMMARY_PATH = Path("data/structure_track/outputs/validation_summary.json")
+CHALLENGE_COMPOUNDS_PATH = Path("data/structure_track/inputs/structure_track_test_blinded.csv")
+CHALLENGE_RESULTS_PATH = Path("data/structure_track/outputs/structure_track_results.csv")
 TDI_FIGURES_DIR = Path("docs/figures/tdi_track")
 
 

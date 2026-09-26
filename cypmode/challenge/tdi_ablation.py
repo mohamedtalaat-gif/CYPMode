@@ -96,7 +96,7 @@ def _main() -> None:
     summary = summarize_ablation(results)
     print(summary.to_string())
 
-    out_path = Path("data/cyp_challenge/tdi_track/ablation_m0_m3.csv")
+    out_path = Path("data/tdi_track/outputs/ablation_m0_m3.csv")
     results.to_csv(out_path, index=False)
     print(f"\nwrote per-fold results to {out_path}")
 

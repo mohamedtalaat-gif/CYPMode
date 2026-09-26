@@ -415,14 +415,14 @@ def _main() -> None:
     results = cross_validate_shared_trunk(df)
     print("-- untuned (0.5 threshold) --")
     print(results.groupby("isoform")["mcc"].mean().to_string())
-    out_path = Path("data/cyp_challenge/tdi_track/shared_trunk_m1.csv")
+    out_path = Path("data/tdi_track/outputs/shared_trunk_m1.csv")
     results.to_csv(out_path, index=False)
     print(f"wrote {out_path}\n")
 
     tuned_results = cross_validate_shared_trunk_with_threshold_tuning(df)
     print("-- fold-internal MCC-tuned threshold --")
     print(tuned_results.groupby("isoform")[["mcc_naive_0.5", "mcc_tuned", "tuned_threshold"]].mean().to_string())
-    tuned_out_path = Path("data/cyp_challenge/tdi_track/shared_trunk_m1_threshold_tuning.csv")
+    tuned_out_path = Path("data/tdi_track/outputs/shared_trunk_m1_threshold_tuning.csv")
     tuned_results.to_csv(tuned_out_path, index=False)
     print(f"wrote {tuned_out_path}\n")
 
@@ -437,7 +437,7 @@ def _main() -> None:
     multi_branch_results = cross_validate_multi_branch_shared_trunk(df_with_chemberta)
     print("-- multi-branch fusion (M3 branch + ChemBERTa branch -> shared trunk) --")
     print(multi_branch_results.groupby("isoform")["mcc"].mean().to_string())
-    multi_branch_out_path = Path("data/cyp_challenge/tdi_track/shared_trunk_m1_chemberta_fusion.csv")
+    multi_branch_out_path = Path("data/tdi_track/outputs/shared_trunk_m1_chemberta_fusion.csv")
     multi_branch_results.to_csv(multi_branch_out_path, index=False)
     print(f"wrote {multi_branch_out_path}")
 

@@ -32,7 +32,7 @@ from lightgbm import LGBMRegressor
 from sklearn.model_selection import KFold
 
 DIRECT_INHIBITION_ISOFORMS = ["CYP3A4", "CYP2D6"]
-TDI_TRAIN_PATH = Path("data/cyp_challenge/tdi_track/cyp-challenge-TRAIN_TDI.csv")
+TDI_TRAIN_PATH = Path("data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv")
 
 
 def load_direct_inhibition_data(path: str | Path = TDI_TRAIN_PATH) -> pd.DataFrame:
@@ -126,7 +126,7 @@ def _main() -> None:
         errors = df[f"{cyp}_pIC50_oof_abs_error"].dropna()
         print(f"{cyp}: OOF MAE = {errors.mean():.3f} (n={len(errors)})")
 
-    out_path = Path("data/cyp_challenge/tdi_track/oof_direct_inhibition.csv")
+    out_path = Path("data/tdi_track/outputs/oof_direct_inhibition.csv")
     df.drop(columns=["descriptors"]).to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

@@ -57,11 +57,11 @@ def _main() -> None:
         print(f"-- {cyp}: Tukey HSD pairwise comparison --")
         print(summary.to_string(index=False))
 
-    raw_path = Path("data/cyp_challenge/tdi_track/chemberta_significance_raw.csv")
+    raw_path = Path("data/tdi_track/outputs/chemberta_significance_raw.csv")
     pd.concat(all_results, ignore_index=True).to_csv(raw_path, index=False)
     print(f"\nwrote {raw_path}")
 
-    tukey_path = Path("data/cyp_challenge/tdi_track/chemberta_significance_tukey.csv")
+    tukey_path = Path("data/tdi_track/outputs/chemberta_significance_tukey.csv")
     pd.concat(all_summaries, ignore_index=True).to_csv(tukey_path, index=False)
     print(f"wrote {tukey_path}")
 

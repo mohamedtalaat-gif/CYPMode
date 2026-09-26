@@ -1,8 +1,8 @@
-"""Regenerates data/boltz_test/validation_summary.json from local Boltz-2 runs.
+"""Regenerates data/structure_track/outputs/validation_summary.json from local Boltz-2 runs.
 
-Discovers compounds from data/boltz_test/out/ itself rather than a fixed
+Discovers compounds from data/structure_track/outputs/out/ itself rather than a fixed
 list, and reads each one's ligand SMILES from its own input YAML
-(data/boltz_test/cyp3a4_<compound>.yaml) rather than a second, separately
+(data/structure_track/inputs/cyp3a4_<compound>.yaml) rather than a second, separately
 maintained mapping -- one source of truth per fact. Run after `boltz
 predict` has produced the result directories -- see README.md's Validation
 section. Requires the `validate` extra (`pip install -e ".[validate]"`) for

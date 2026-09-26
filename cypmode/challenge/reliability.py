@@ -166,7 +166,7 @@ def _main() -> None:
     correlation = validate_reliability_correlation(reliability_df, error)
     print(correlation.to_string(index=False))
 
-    out_path = Path("data/cyp_challenge/tdi_track/reliability_correlation.csv")
+    out_path = Path("data/tdi_track/outputs/reliability_correlation.csv")
     correlation.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

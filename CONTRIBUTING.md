@@ -19,7 +19,7 @@ The `dev` extra is enough for `cypmode/metrics/`, `cypmode/data/`, and
 kept separate:
 
 - `tdc` — refreshes the CYP panel cache from source instead of the
-  checked-in `data/tdc_cache/`.
+  checked-in `data/tdi_track/inputs/tdc_cache/`.
 - `validate` — parses the Boltz-2 structures in
   `cypmode/validation/structures.py`.
 

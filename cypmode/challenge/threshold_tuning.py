@@ -307,7 +307,7 @@ def _main() -> None:
               f"(mean tuned threshold={results['tuned_threshold'].mean():.3f})")
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/cyp_challenge/tdi_track/threshold_tuning.csv")
+    out_path = Path("data/tdi_track/outputs/threshold_tuning.csv")
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 
@@ -324,8 +324,8 @@ def _main() -> None:
 
     robust_combined = pd.concat(all_robust, ignore_index=True)
     stress_combined = pd.concat(all_stress, ignore_index=True)
-    robust_out_path = Path("data/cyp_challenge/tdi_track/robust_threshold_tuning.csv")
-    stress_out_path = Path("data/cyp_challenge/tdi_track/robust_threshold_stress_test.csv")
+    robust_out_path = Path("data/tdi_track/outputs/robust_threshold_tuning.csv")
+    stress_out_path = Path("data/tdi_track/outputs/robust_threshold_stress_test.csv")
     robust_combined.to_csv(robust_out_path, index=False)
     stress_combined.to_csv(stress_out_path, index=False)
     print(f"wrote {robust_out_path}\nwrote {stress_out_path}")

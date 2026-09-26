@@ -25,7 +25,7 @@ _TDC_LABEL_NAMES = {
 }
 
 
-def load_isoform(isoform: str, cache_path: str | Path = "data/tdc_cache") -> pd.DataFrame:
+def load_isoform(isoform: str, cache_path: str | Path = "data/tdi_track/inputs/tdc_cache") -> pd.DataFrame:
     """Load one isoform's binary inhibition labels from TDC (ADME/CYP*_Veith)."""
     if isoform not in CYP_ISOFORMS:
         raise ValueError(f"unknown isoform {isoform!r}; expected one of {CYP_ISOFORMS}")
@@ -56,7 +56,7 @@ def annotate_mechanism(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def load_panel(cache_path: str | Path = "data/tdc_cache") -> pd.DataFrame:
+def load_panel(cache_path: str | Path = "data/tdi_track/inputs/tdc_cache") -> pd.DataFrame:
     """Load and mechanism-annotate all 5 major CYP isoforms into one long DataFrame."""
     frames = [annotate_mechanism(load_isoform(isoform, cache_path)) for isoform in CYP_ISOFORMS]
     return pd.concat(frames, ignore_index=True)

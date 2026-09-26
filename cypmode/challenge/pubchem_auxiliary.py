@@ -48,7 +48,7 @@ from rdkit.Chem import AllChem
 from cypmode.challenge.structure_standardization import standardized_parent_smiles
 from cypmode.challenge.tdi_baseline import compute_descriptors
 
-AID1851_RAW_PATH = Path("data/pubchem_cache/aid1851_raw.csv")
+AID1851_RAW_PATH = Path("data/tdi_track/inputs/pubchem_cache/aid1851_raw.csv")
 AID1851_ISOFORMS = {"CYP1A2": "p450-cyp1a2", "CYP2C9": "p450-cyp2c9", "CYP2C19": "p450-cyp2c19", "CYP2D6": "p450-cyp2d6", "CYP3A4": "p450-cyp3a4"}
 
 
@@ -87,8 +87,8 @@ def load_aid1851(path: str | Path = AID1851_RAW_PATH) -> pd.DataFrame:
 
 
 SINGLE_ISOFORM_AID_PATHS = {
-    "CYP2D6": Path("data/pubchem_cache/aid891_cyp2d6_raw.csv"),  # AID 891 -- CYP2D6's own individual qHTS assay
-    "CYP3A4": Path("data/pubchem_cache/aid884_cyp3a4_raw.csv"),  # AID 884 -- CYP3A4's own individual qHTS assay
+    "CYP2D6": Path("data/tdi_track/inputs/pubchem_cache/aid891_cyp2d6_raw.csv"),  # AID 891 -- CYP2D6's own individual qHTS assay
+    "CYP3A4": Path("data/tdi_track/inputs/pubchem_cache/aid884_cyp3a4_raw.csv"),  # AID 884 -- CYP3A4's own individual qHTS assay
 }
 
 
@@ -225,7 +225,7 @@ def _main() -> None:
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+aux={results['mcc_m3_plus_aux'].mean():.4f}")
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/cyp_challenge/tdi_track/aid1851_auxiliary_ablation.csv")
+    out_path = Path("data/tdi_track/outputs/aid1851_auxiliary_ablation.csv")
     combined.to_csv(out_path, index=False)
     print(f"wrote {out_path}")
 
@@ -242,7 +242,7 @@ def _main() -> None:
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+single-isoform-aux={results['mcc_m3_plus_aux'].mean():.4f}")
 
     single_combined = pd.concat(single_results, ignore_index=True)
-    single_out_path = Path("data/cyp_challenge/tdi_track/aid891_884_auxiliary_ablation.csv")
+    single_out_path = Path("data/tdi_track/outputs/aid891_884_auxiliary_ablation.csv")
     single_combined.to_csv(single_out_path, index=False)
     print(f"wrote {single_out_path}")
 

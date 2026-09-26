@@ -5,7 +5,7 @@ evaluated over repeated stratified splits.
 This exists to get a real, verified number to compare against before
 changing anything about CYPMode's own approach -- rather than trusting a
 recalled baseline MCC, this project computes its own from the real
-training data (data/cyp_challenge/tdi_track/), matching the tutorial's own
+training data (data/tdi_track/outputs/), matching the tutorial's own
 evaluation procedure (activity_prediction.ipynb / TDI_prediction.ipynb,
 github.com/OpenADMET/CYP-Challenge-Tutorial) exactly.
 """
@@ -27,7 +27,7 @@ from sklearn.model_selection import StratifiedKFold, train_test_split
 # segfault this avoids).
 
 TDI_ISOFORMS = ["CYP3A4", "CYP2D6"]
-TDI_TRAIN_PATH = Path("data/cyp_challenge/tdi_track/cyp-challenge-TRAIN_TDI.csv")
+TDI_TRAIN_PATH = Path("data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv")
 
 
 def load_tdi_training_data(path: str | Path = TDI_TRAIN_PATH) -> pd.DataFrame:
@@ -148,7 +148,7 @@ def _main() -> None:
     summary = summarize(results)
     print(summary.to_string())
 
-    out_path = Path("data/cyp_challenge/tdi_track/baseline_reproduction.csv")
+    out_path = Path("data/tdi_track/outputs/baseline_reproduction.csv")
     results.to_csv(out_path, index=False)
     print(f"\nwrote per-iteration results to {out_path}")
 

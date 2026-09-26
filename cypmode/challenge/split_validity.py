@@ -17,7 +17,7 @@ import pandas as pd
 
 from cypmode.challenge.reliability import tanimoto_ood_distance
 
-BLINDED_TEST_PATH = Path("data/cyp_challenge/tdi_track/cyp-challenge-TEST-BLINDED.csv")
+BLINDED_TEST_PATH = Path("data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv")
 
 
 def train_test_similarity_summary(train_smiles: pd.Series, apply_smiles: pd.Series) -> dict:
@@ -64,7 +64,7 @@ def _main() -> None:
     result = pd.DataFrame(rows)
     print(result.to_string(index=False))
 
-    out_path = Path("data/cyp_challenge/tdi_track/split_validity.csv")
+    out_path = Path("data/tdi_track/outputs/split_validity.csv")
     result.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

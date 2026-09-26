@@ -2,7 +2,7 @@
 a genuinely different signal from the Fe-N coordination distance
 (cypmode.validation.structures): how much of the ligand is buried inside
 the protein, and how big the cavity around it actually is. Both operate
-on the same static .cif output already sitting under data/boltz_test/out/
+on the same static .cif output already sitting under data/structure_track/outputs/out/
 -- neither needs a new structure-prediction run.
 
 Two real tools, both confirmed directly on this project's own real

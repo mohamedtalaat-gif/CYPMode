@@ -5,7 +5,7 @@ track's own training data (see `CYPMode_Architecture_Specification.md`
 for how this fits into CYPMode's overall architecture, which also
 covers the Structure Prediction track separately). All numbers below are
 computed directly from the real official challenge data
-(`data/cyp_challenge/tdi_track/`, `openadmet/cyp-challenge-train-test` on
+(`data/tdi_track/outputs/`, `openadmet/cyp-challenge-train-test` on
 Hugging Face, Apache 2.0) and this project's own code — nothing here is
 recalled from memory or assumed.
 

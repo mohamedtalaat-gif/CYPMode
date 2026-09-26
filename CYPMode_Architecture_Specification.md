@@ -5,8 +5,8 @@ track (this document's original scope) and the Structure Prediction
 track (see the "Official challenge update" section below for how that
 track entered the project) — one project, one name, with each track's
 own inputs/outputs kept in their own separate, clearly organized
-folders (`data/cyp_challenge/tdi_track/` for TDI, `data/boltz_test/` and
-`data/cyp_challenge/structure_track_results.json` for structure
+folders (`data/tdi_track/outputs/` for TDI, `data/structure_track/inputs/` and
+`data/structure_track/outputs/structure_track_results.json` for structure
 prediction), not merged together. This document supersedes the various
 diagrams sketched earlier in planning discussion. See
 `CYPMode_DATA_AUDIT.md` for the evidence each TDI-track decision below
@@ -215,7 +215,7 @@ Separately, worth noting honestly: even without ChemBERTa, the M3-only shared-tr
 - M0–M3 ablation (`cypmode/challenge/tdi_ablation.py`) — real result: motif kept, amine dropped, Morgan kept. Best single number so far per isoform: CYP3A4 MCC 0.375 (M3 + tuned threshold), CYP2D6 MCC 0.111 (shared trunk, untuned) — no single stage wins both yet, see Decision Log and Shared Trunk section
 - TDI reference panel (`cypmode/validation/tdi_reference.py`) — 6 real drugs, quantitative cross-check against this project's own structural coordination claims
 - **OOF Direct-Inhibition Bridge** (`cypmode/challenge/oof_bridge.py`) — inverse-variance weighted regression (revised from Tobit, see Decision Log), fold-internal OOF predictions. Real result: CYP3A4 MAE 0.730, CYP2D6 MAE 0.645
-- **Tier 3 selection logic** (`cypmode/challenge/tier3_selection.py`) — fixed-budget (N=50) OOF-uncertainty ranking, real 50 CYP3A4 compounds selected and saved (`data/cyp_challenge/tdi_track/tier3_selected_compounds.csv`)
+- **Tier 3 selection logic** (`cypmode/challenge/tier3_selection.py`) — fixed-budget (N=50) OOF-uncertainty ranking, real 50 CYP3A4 compounds selected and saved (`data/tdi_track/outputs/tier3_selected_compounds.csv`)
 - Structure-track prep + TDI-reference-panel structural runs + Tier 3's own 50-compound structural batch, chained to run automatically in sequence on the one available GPU (`cypmode/validation/batch.py`) — real Boltz-2 predictions for Tier 3 itself are **in progress, not complete** (see below)
 - **Threshold optimization** (`cypmode/challenge/threshold_tuning.py`) — fold-internal MCC-optimized threshold (inner K-fold on the training portion only, never touching validation labels), replacing the naive 0.5 default. Real result: CYP3A4 MCC 0.300→0.375, CYP2D6 MCC 0.043→0.078
 - **Reliability score** (`cypmode/challenge/reliability.py`) — ensemble disagreement (5 same-data, different-seed models) + Tanimoto OOD distance, checked against real held-out error (`validate_reliability_correlation`). Real result (single fold, n=717): OOD distance r≈0.20, ensemble disagreement r≈0.10 — both weak-to-modest, **not** called "validated uncertainty quantification" per the cross-cutting rule above

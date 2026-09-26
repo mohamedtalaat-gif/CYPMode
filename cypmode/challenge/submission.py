@@ -18,7 +18,7 @@ import pandas as pd
 
 REQUIRED_COLUMNS = ["SMILES", "Molecule_Name", "CYP2D6_is_TDI", "CYP3A4_is_TDI"]
 EXPECTED_ROW_COUNT = 750
-TEST_SET_PATH = Path("data/cyp_challenge/tdi_track/cyp-challenge-TEST-BLINDED.csv")
+TEST_SET_PATH = Path("data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv")
 
 
 def build_submission(

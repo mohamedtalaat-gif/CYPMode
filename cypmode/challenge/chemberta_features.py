@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 
 CHEMBERTA_MODEL_NAME = "seyonec/ChemBERTa-zinc-base-v1"
 CHEMBERTA_EMBEDDING_DIM = 768
-CACHE_PATH = Path("data/cyp_challenge/tdi_track/chemberta_embedding_cache.csv")
+CACHE_PATH = Path("data/tdi_track/outputs/chemberta_embedding_cache.csv")
 
 
 def _load_model():

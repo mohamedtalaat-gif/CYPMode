@@ -47,7 +47,7 @@ logger = logging.getLogger(__name__)
 PMAPPER_NBITS = 2048
 PMAPPER_MIN_FEATURES = 2
 PMAPPER_MAX_FEATURES = 3
-CACHE_PATH = Path("data/cyp_challenge/tdi_track/pharmacophore_fingerprint_cache.csv")
+CACHE_PATH = Path("data/tdi_track/outputs/pharmacophore_fingerprint_cache.csv")
 
 
 def _embed_3d_conformer(smiles: str, random_seed: int = 42):
@@ -217,11 +217,11 @@ def _main() -> None:
         print(f"-- {cyp}: Tukey HSD pairwise comparison --")
         print(summary.to_string(index=False))
 
-    raw_path = Path("data/cyp_challenge/tdi_track/pharmacophore_fingerprint_significance_raw.csv")
+    raw_path = Path("data/tdi_track/outputs/pharmacophore_fingerprint_significance_raw.csv")
     pd.concat(all_results, ignore_index=True).to_csv(raw_path, index=False)
     print(f"\nwrote {raw_path}")
 
-    tukey_path = Path("data/cyp_challenge/tdi_track/pharmacophore_fingerprint_significance_tukey.csv")
+    tukey_path = Path("data/tdi_track/outputs/pharmacophore_fingerprint_significance_tukey.csv")
     pd.concat(all_summaries, ignore_index=True).to_csv(tukey_path, index=False)
     print(f"wrote {tukey_path}")
 

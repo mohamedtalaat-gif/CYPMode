@@ -31,7 +31,7 @@ def test_find_coordinating_cysteine_ambiguous_raises():
 
 def test_build_boltz_yaml_matches_hand_written_reference():
     yaml_text = build_boltz_yaml(CYP3A4_SEQUENCE, KETOCONAZOLE_SMILES, 442)
-    with open("data/boltz_test/cyp3a4_ketoconazole.yaml") as f:
+    with open("data/structure_track/inputs/cyp3a4_ketoconazole.yaml") as f:
         original = f.read()
     assert yaml_text == original
 
