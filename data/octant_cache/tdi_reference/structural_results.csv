@@ -1,0 +1,5 @@
+compound,smiles,coordinated,closest_motif_nitrogen_distance_angstrom,closest_motif,closest_motif_atom,confidence_score,affinity_pred_value,affinity_probability_binary,error
+clotrimazole,Clc1ccccc1C(c1ccccc1)(c1ccccc1)n1ccnc1,True,2.14,imidazole_Nsub,N19,0.9258203506469727,-0.7742716670036316,0.9283050298690796,
+diltiazem,COc1ccc([C@@H]2Sc3ccccc3N(CCN(C)C)C(=O)[C@@H]2OC(C)=O)cc1,False,,,,0.9231846928596497,1.5844943523406982,0.24178481101989746,
+verapamil,COc1ccc(CCN(C)CCCC(C#N)(c2ccc(OC)c(OC)c2)C(C)C)cc1OC,False,,,,0.9244118928909302,0.2875143885612488,0.5309500694274902,
+troleandomycin,CO[C@H]1C[C@H](O[C@H]2[C@H](C)[C@@H](O[C@@H]3O[C@H](C)C[C@H](N(C)C)[C@H]3OC(C)=O)[C@@H](C)C[C@@]3(CO3)C(=O)[C@H](C)[C@@H](OC(C)=O)[C@@H](C)[C@@H](C)OC(=O)[C@@H]2C)O[C@@H](C)[C@@H]1OC(C)=O,False,,,,0.8968225717544556,-0.5298588871955872,0.2515912652015686,
