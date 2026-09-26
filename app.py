@@ -197,8 +197,8 @@ def tdi_results_tab():
         "Results from CYPMode's TDI (time-dependent inhibition) track work -- "
         "structural/mechanistic evidence combined with classical ML to predict "
         "mechanism-based CYP3A4/CYP2D6 inhibition. Full methodology, including "
-        "findings that didn't work, is in CYPMode-TDI_DATA_AUDIT.md and "
-        "CYPMode-TDI_Architecture_Specification.md at the repo root -- this tab "
+        "findings that didn't work, is in CYPMode_DATA_AUDIT.md and "
+        "CYPMode_Architecture_Specification.md at the repo root -- this tab "
         "is the short version for anyone, cheminformatics background or not."
     )
 

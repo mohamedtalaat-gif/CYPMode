@@ -5,7 +5,7 @@ Motivated directly by a real methodology from Pat Walters'
 model-validation-central (patwalters.github.io/model-validation-central):
 comparing several methods on one split risks reading real fold-to-fold
 noise as a genuine effect ("pooling more methods turns outright wins into
-ties" without correction). Applied here to CYPMode-TDI's own real,
+ties" without correction). Applied here to CYPMode's own real,
 surprising finding: combining KNN + BindingDB auxiliary features together
 scored WORSE for CYP2D6 (single-split MCC 0.054) than either alone (KNN
 0.075, BindingDB 0.089) -- a real result that needs to survive repeated,
@@ -37,7 +37,7 @@ def repeated_cv_stacking_comparison(
 ) -> pd.DataFrame:
     """Repeated-CV comparison of M3 alone, M3+KNN, M3+each named aux
     feature alone, and M3+KNN+all aux features together (the real
-    variant set CYPMode-TDI's own stacking ablations compare). KNN is
+    variant set CYPMode's own stacking ablations compare). KNN is
     recomputed fold-internally on every fold of every repeat, not
     reused across repeats or precomputed globally -- the same leakage
     discipline used everywhere else KNN features appear in this project,
@@ -98,38 +98,54 @@ def _main() -> None:
     from cypmode.challenge.bindingdb_auxiliary import predict_auxiliary_activity as predict_bdb
     from cypmode.challenge.knn_features import _morgan_fp
     from cypmode.challenge.tdi_ablation import add_ablation_features
-    from cypmode.challenge.tdi_baseline import compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
 
     tdi_df = add_ablation_features(compute_descriptors(load_tdi_training_data()))
 
-    cyp = "CYP2D6"
-    bdb_path = fetch_bindingdb_isoform(cyp, BINDINGDB_ISOFORM_UNIPROTS[cyp])
-    bdb_df = load_bindingdb_isoform(bdb_path)
-    bdb_df = exclude_bdb(bdb_df, tdi_df["SMILES"])
-    bdb_model = fit_bdb(bdb_df)
-    tdi_df["bdb_proba"] = predict_bdb(bdb_model, tdi_df)
+    all_results = []
+    all_summaries = []
+    # both isoforms now, not just CYP2D6 -- CYP2D6's own 25-fold result
+    # (M3=0.067, M3+KNN=0.092, M3+BDB=0.075, M3+KNN+BDB=0.086, all
+    # pairwise reject=False) already exists from an earlier run; this
+    # applies the identical rigor to CYP3A4, whose only real result so
+    # far was a single-split combined-features number (0.321) that
+    # hasn't been checked against fold-to-fold noise the same way.
+    for cyp in TDI_ISOFORMS:
+        bdb_path = fetch_bindingdb_isoform(cyp, BINDINGDB_ISOFORM_UNIPROTS[cyp])
+        bdb_df = load_bindingdb_isoform(bdb_path)
+        bdb_df = exclude_bdb(bdb_df, tdi_df["SMILES"])
+        bdb_model = fit_bdb(bdb_df)
+        tdi_df[f"bdb_proba_{cyp}"] = predict_bdb(bdb_model, tdi_df)
 
-    cyp_df = tdi_df.dropna(subset=[f"{cyp}_is_TDI"]).reset_index(drop=True)
-    y = cyp_df[f"{cyp}_is_TDI"].astype(int).to_numpy()
-    m3 = np.stack(cyp_df["m3_features"])
-    fps = [_morgan_fp(s) for s in cyp_df["SMILES"]]
-    aux_features = {"BindingDB": cyp_df[["bdb_proba"]].to_numpy()}
+        cyp_df = tdi_df.dropna(subset=[f"{cyp}_is_TDI"]).reset_index(drop=True)
+        y = cyp_df[f"{cyp}_is_TDI"].astype(int).to_numpy()
+        m3 = np.stack(cyp_df["m3_features"])
+        fps = [_morgan_fp(s) for s in cyp_df["SMILES"]]
+        aux_features = {"BindingDB": cyp_df[[f"bdb_proba_{cyp}"]].to_numpy()}
 
-    print(f"Running 5x5=25-fold repeated comparison for {cyp}...")
-    results = repeated_cv_stacking_comparison(m3, y, fps, aux_features, n_repeats=5, n_splits=5)
+        print(f"Running 5x5=25-fold repeated comparison for {cyp}...")
+        results = repeated_cv_stacking_comparison(m3, y, fps, aux_features, n_repeats=5, n_splits=5)
+        results.insert(0, "isoform", cyp)
+        all_results.append(results)
+
+        print(f"\n-- {cyp}: mean MCC per variant (25 folds each) --")
+        print(results.groupby("variant")["mcc"].agg(["mean", "std"]).to_string())
+
+        summary = tukey_hsd_summary(results)
+        summary.insert(0, "isoform", cyp)
+        all_summaries.append(summary)
+        print(f"\n-- {cyp}: Tukey HSD pairwise comparison --")
+        print(summary.to_string(index=False))
+
+    combined_results = pd.concat(all_results, ignore_index=True)
     out_path = Path("data/cyp_challenge/tdi_track/stacking_significance_raw.csv")
-    results.to_csv(out_path, index=False)
-    print(f"wrote {out_path}")
+    combined_results.to_csv(out_path, index=False)
+    print(f"\nwrote {out_path}")
 
-    print("\n-- mean MCC per variant (25 folds each) --")
-    print(results.groupby("variant")["mcc"].agg(["mean", "std"]).to_string())
-
-    print("\n-- Tukey HSD pairwise comparison --")
-    summary = tukey_hsd_summary(results)
-    print(summary.to_string(index=False))
+    combined_summary = pd.concat(all_summaries, ignore_index=True)
     summary_path = Path("data/cyp_challenge/tdi_track/stacking_significance_tukey.csv")
-    summary.to_csv(summary_path, index=False)
-    print(f"\nwrote {summary_path}")
+    combined_summary.to_csv(summary_path, index=False)
+    print(f"wrote {summary_path}")
 
 
 if __name__ == "__main__":

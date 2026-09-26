@@ -508,6 +508,14 @@ elsewhere in this README:
 - Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., Liu,
   T.-Y. "LightGBM: A Highly Efficient Gradient Boosting Decision Tree."
   *NeurIPS* (2017). — the classifier used throughout `cypmode/challenge/`.
+- Castellanos, M.A., MacDermott-Opeskin, H., Ainsley, J., et al., Walters,
+  W.P. "Assessing the state of the art in ADMET prediction: Lessons from
+  the OpenADMET-ExpansionRx community blind challenge." *ChemRxiv*
+  (2026). https://doi.org/10.26434/chemrxiv.15009342.v1 — a separate,
+  already-completed OpenADMET blind challenge (not the CYP challenge
+  itself), whose statistical-methodology findings this project's own
+  `cypmode/challenge/stacking_significance.py` is checked against; see
+  `CYPMode_Architecture_Specification.md`.
 
 ## Citation
 

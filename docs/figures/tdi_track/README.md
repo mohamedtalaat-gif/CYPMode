@@ -5,8 +5,8 @@ predict time-dependent (mechanism-based) CYP3A4/CYP2D6 inhibition for the
 [OpenADMET CYP Inhibition Blind Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge).
 Full methodology and every intermediate finding — including the ones that
 didn't work — are in
-[`CYPMode-TDI_DATA_AUDIT.md`](../../../CYPMode-TDI_DATA_AUDIT.md) and
-[`CYPMode-TDI_Architecture_Specification.md`](../../../CYPMode-TDI_Architecture_Specification.md).
+[`CYPMode_DATA_AUDIT.md`](../../../CYPMode_DATA_AUDIT.md) and
+[`CYPMode_Architecture_Specification.md`](../../../CYPMode_Architecture_Specification.md).
 This page is the short version: what the numbers are, and what they mean.
 
 ## MCC by pipeline stage

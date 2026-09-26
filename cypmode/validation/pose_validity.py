@@ -7,7 +7,7 @@ a hard segfault -- see cypmode.validation.pocket_geometry's module
 docstring for why ProLIF was declined).
 
 This isn't just a nice-to-have QC step: OpenADMET's own Structure Track
-(launched 2026-09-25, see CYPMode-TDI_Architecture_Specification.md's
+(launched 2026-09-25, see CYPMode_Architecture_Specification.md's
 "Official challenge update" section) made PoseBusters a mandatory,
 scored part of the real competition -- any submitted structure that
 fails these checks scores LDDT-PLI=0 regardless of how geometrically

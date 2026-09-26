@@ -7,7 +7,7 @@ its own -- see module docstring's Note on scope below).
 
 Motivation: this project's own TDI training set comes from a curated,
 medicinal-chemistry-series-heavy compound pool (see
-CYPMode-TDI_DATA_AUDIT.md's scaffold analysis). AID 1851's compounds are
+CYPMode_DATA_AUDIT.md's scaffold analysis). AID 1851's compounds are
 drawn from a broader, more chemically diverse screening library, largely
 disjoint from that pool. A model trained on AID 1851 to predict general
 CYP2D6/CYP3A4 direct-activity from structure, then applied to this

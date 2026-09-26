@@ -1,7 +1,7 @@
 """Cross-cutting reliability score: ensemble disagreement + chemical OOD
 distance (+ Boltz-2 structural confidence, wired in once Tier 3 results
 exist). Deliberately kept outside the prediction path -- see
-CYPMode-TDI_Architecture_Specification.md. Not called "uncertainty
+CYPMode_Architecture_Specification.md. Not called "uncertainty
 quantification" anywhere until validate_reliability_correlation shows it
 actually tracks real error; until then it's just three computed numbers.
 """

@@ -1,7 +1,7 @@
 """Out-of-fold direct-inhibition pIC50 bridge for the TDI model.
 
 The blind test set has no direct-inhibition pIC50 exposed (see
-CYPMode-TDI_DATA_AUDIT.md's Feature Eligibility Matrix), so a TDI model
+CYPMode_DATA_AUDIT.md's Feature Eligibility Matrix), so a TDI model
 that wants potency as a feature can't just read it off the test rows.
 This module trains a separate regressor and produces out-of-fold (OOF)
 predictions on the training data -- each compound's predicted pIC50 comes

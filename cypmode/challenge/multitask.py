@@ -1,6 +1,6 @@
 """A small, plain-PyTorch shared-trunk multitask model -- tests the
 "shared representation helps" hypothesis from
-CYPMode-TDI_Architecture_Specification.md's Decision Log ("Shared trunk:
+CYPMode_Architecture_Specification.md's Decision Log ("Shared trunk:
 hypothesis requiring its own benchmark") without installing
 openadmet-models' full stack (PyTorch + Lightning + ChemProp/CheMeleon +
 CatBoost + XGBoost + TabPFN, conda-only, no pyproject.toml dependency
@@ -9,7 +9,7 @@ already busy running Boltz-2). See pyproject.toml's `multitask` extra.
 
 One shared trunk, one small head per isoform. Trained with a masked
 binary cross-entropy loss: most compounds have a label for only one
-isoform (see CYPMode-TDI_DATA_AUDIT.md's missingness section), and
+isoform (see CYPMode_DATA_AUDIT.md's missingness section), and
 masking -- not imputing a fake label -- is how that's actually handled.
 """
 

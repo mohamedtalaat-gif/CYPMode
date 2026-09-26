@@ -2,7 +2,7 @@
 flags) actually help a real multivariate TDI classifier, beyond the plain
 RDKit-descriptor baseline?
 
-CYPMode-TDI_DATA_AUDIT.md found that the motif+amine categorization has no
+CYPMode_DATA_AUDIT.md found that the motif+amine categorization has no
 useful *marginal* (univariate) association with real TDI status across the
 full training population -- the "neither" category had the highest
 TDI-positive rate for both isoforms, the opposite of what the small 6-drug

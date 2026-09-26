@@ -3,7 +3,7 @@
 Confirmed directly from the live challenge portal (not the tutorial):
 a .parquet or .csv with exactly 750 rows and 4 columns -- SMILES (string),
 Molecule_Name (string), CYP2D6_is_TDI (bool), CYP3A4_is_TDI (bool), in
-that column order. See CYPMode-TDI_Architecture_Specification.md.
+that column order. See CYPMode_Architecture_Specification.md.
 
 This module only formats and validates; it doesn't generate predictions
 itself. Building it now, independent of having a final trained model,
