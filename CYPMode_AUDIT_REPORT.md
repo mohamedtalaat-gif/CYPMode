@@ -52,15 +52,17 @@ already-published shared-trunk MCC numbers in
 real, scale-only leak. The fix is in; those numbers should be
 re-generated (see Roadmap).
 
-Total: **16 confirmed issues fixed and re-verified this session**
+Total: **17 confirmed issues fixed and re-verified this session**
 (1 Critical, 2 High, 6 Medium, 6 Low — items 1–14 below, plus the
-OCNT-2311782 bond-perception fix and the `batch.py` snapshot-write
-crash fix, both found and fixed during the follow-up exhaustive
-verification pass and described in that section further down), plus
-**10 confirmed issues documented but not fixed** (judgment calls,
+OCNT-2311782 bond-perception fix, the `batch.py` snapshot-write crash
+fix, and the shared-trunk multitask.py re-run once the standardization
+leak's real downstream numbers were regenerated and independently
+verified reproducible — see the follow-up sections further down), plus
+**9 confirmed issues documented but not fixed** (judgment calls,
 statistical redesigns, or repo-structure decisions that are yours to
-make — see "Confirmed, not fixed," including #24, found during the
-same follow-up pass), and a long list of things specifically checked
+make — see "Confirmed, not fixed"; #24 was investigated further,
+found to be a false alarm, and retracted rather than left standing),
+and a long list of things specifically checked
 and found genuinely correct (see "Verified clean" and the exhaustive
 verification section below it). All 214 tests pass across every
 required process-isolation group after every fix (183 main + 14
@@ -190,11 +192,10 @@ Still says "a motif screen plus a validation harness," lists only `dev`/`tdc`/`v
 ### 23. [Low] `cypmode/validation/constants.py` has no test file
 Pure data (a coordination-distance float, a 400+ residue protein sequence string) — low real risk, but a typo'd residue would go undetected. Cheapest possible fix if you want it: one test asserting the sequence's length and maybe a known-residue spot-check.
 
-### 24. [Medium] Shared-trunk model isn't actually reproducible run-to-run despite a fixed seed — and the doc already shows the drift
-**Location:** `cypmode/challenge/multitask.py`, `train_shared_trunk`/`cross_validate_shared_trunk`; `data/tdi_track/outputs/shared_trunk_m1.csv` vs. `shared_trunk_m1_threshold_tuning.csv`
-**Evidence:** `torch.manual_seed(seed)` is correctly called with the same `seed=42` every fold (confirmed reading the code), and the fold split itself is deterministic (`KFold(random_state=42)`). But two separate real runs of the identical protocol — `shared_trunk_m1.csv` and the naive-threshold column inside `shared_trunk_m1_threshold_tuning.csv` — give different per-fold CYP2D6 MCC values in every single one of the 5 folds (e.g. fold 0: 0.250 vs. 0.216; fold 1: 0.053 vs. 0.018), not rounding noise. Almost certainly PyTorch's well-known default non-deterministic CPU threading (reduction order in multi-threaded ops isn't fixed by `manual_seed` alone; would need `torch.use_deterministic_algorithms(True)` plus single-threaded execution, or the seed doesn't reach every RNG source this training loop touches).
-**Impact, found directly from this**: `CYPMode_Architecture_Specification.md` itself cites **two different numbers for the same conceptual measurement** (shared-trunk M3-only, untuned, CYP2D6 MCC) in two different sections — **0.099** in the main "Shared Trunk" comparison table (sourced from `shared_trunk_m1_threshold_tuning.csv`'s naive column) and **0.111** in the later multi-branch-fusion paragraph (sourced from the standalone `shared_trunk_m1.csv`). Both are real, both independently verified against their own source file — the documents just drew from two different runs of a model that doesn't reproduce exactly, without anyone noticing they'd drifted apart. Doesn't change any qualitative conclusion (both numbers still clearly beat independent-heads' CYP2D6 MCC), but it's a real precision gap in a project whose whole methodology is built on trusting specific point estimates.
-**Not fixed here** — relevant directly to the pending re-run already tracked in finding #4 (the standardization-leak fix): whoever regenerates these shared-trunk numbers next should consider running multiple seeds and reporting mean±std, the same rigor already applied to every feature-stacking claim in this project, rather than trusting one more single run as ground truth.
+### 24. [RETRACTED — see below] Originally reported as "shared-trunk model isn't reproducible"; that diagnosis was wrong
+**Original claim:** that `shared_trunk_m1.csv` vs. `shared_trunk_m1_threshold_tuning.csv` disagreeing on CYP2D6 (0.099 vs. 0.111) was PyTorch CPU non-determinism.
+**This was checked properly instead of left standing, and it was wrong.** Two things disproved it directly: (1) `train_shared_trunk` run twice on a controlled synthetic input at the real data's exact scale (3,800 rows × 2,267 features) produced bit-for-bit identical output both times — no non-determinism exists in the training loop itself. (2) The real explanation was much simpler and already known: `shared_trunk_m1.csv` (generated 15:13, before finding #4's standardization-leak fix landed at 19:31 the same day) used the *old, leaky* full-dataset standardization, while `cross_validate_shared_trunk_with_threshold_tuning` (source of the 0.099 figure) had *already* been correct all along — these were never two runs of the identical protocol, they were two different computations. Re-running `python -m cypmode.challenge.multitask` with finding #4's fix in place makes both files agree exactly (0.0994, confirmed). Running the full pipeline twice end-to-end after that produced byte-for-byte identical CSVs both times — genuinely, actually reproducible, not just asserted.
+**Lesson kept on record rather than deleted**: a plausible-sounding mechanism (PyTorch non-determinism is real and well-documented in general) is not evidence for *this specific* discrepancy when a simpler, already-known cause — a bug already found and fixed hours earlier, just not yet re-run — explains it completely. Should have checked the simple explanation before reaching for a more exotic one, the same discipline this project already applies to its own surprising ablation results (see `CYPMode_DATA_AUDIT.md`'s AID 1851 data-bug story for the same lesson learned once before). Corrected numbers are now live in `CYPMode_Architecture_Specification.md`'s Shared Trunk section.
 
 ---
 
@@ -235,13 +236,14 @@ Following up on "did you actually check every file" — yes, now, systematically
 
 **High (done):** `pose_validity.py` path fix, `quantum_pharmacophore.py` process-isolation fix — both applied and verified.
 
+**Done, same day:** `python -m cypmode.challenge.multitask` re-run after the standardization-leak fix (#4) — new numbers are live in `CYPMode_Architecture_Specification.md`, and reproducibility independently verified (two full runs, byte-for-byte identical output files; see the retracted finding #24 for the full story of why this mattered).
+
 **Medium — recommended next, in this order:**
-1. Re-run `python -m cypmode.challenge.multitask` to regenerate the shared-trunk MCC numbers now that the standardization leak (#4) is fixed, and update `CYPMode_Architecture_Specification.md` if they move.
-2. Decide the correct SMARTS fix for `amines.py` (#15) — needs a chemistry call, not a rushed pattern.
-3. Redesign `stacking_significance.py`'s Tukey HSD to respect the paired (repeat, fold) design (#16) — affects the confidence of every "not statistically significant" claim already published.
-4. Decide on the committed-cache question (#22) — `git rm --cached` + gitignore going forward is straightforward; a full history rewrite to actually shrink the repo is a separate, bigger decision.
-5. Update `README.md` (#19) and `CONTRIBUTING.md` (#20) to cover `cypmode/challenge/`, its two extras, and the 3-file test-isolation requirement.
-6. Regenerate/extend the TDI figures and `app.py`'s results tab (#21) to include the six post-M3 feature experiments.
+1. Decide the correct SMARTS fix for `amines.py` (#15) — needs a chemistry call, not a rushed pattern.
+2. Redesign `stacking_significance.py`'s Tukey HSD to respect the paired (repeat, fold) design (#16) — affects the confidence of every "not statistically significant" claim already published.
+3. Decide on the committed-cache question (#22) — `git rm --cached` + gitignore going forward is straightforward; a full history rewrite to actually shrink the repo is a separate, bigger decision.
+4. Update `README.md` (#19) and `CONTRIBUTING.md` (#20) to cover `cypmode/challenge/`, its two extras, and the 3-file test-isolation requirement.
+5. Regenerate/extend the TDI figures and `app.py`'s results tab (#21) to include the six post-M3 feature experiments.
 
 **Low — cheap, whenever convenient:**
 - Add the missing `run_batch` error-retry test (#17) and tighten the `oof_bridge.py` leakage test (#18) — both are small, well-scoped test additions.
