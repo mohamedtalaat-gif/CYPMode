@@ -3,14 +3,74 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from rdkit import Chem
 
 pytest.importorskip("Bio")
 
 from cypmode.validation.structures import (
+    _mol_from_direct_atom_correspondence,
     load_trunk_embeddings,
     pooled_trunk_embedding,
     summarize_compound,
 )
+
+
+class _FakeAtom:
+    """Minimal stand-in for a Bio.PDB Atom -- _mol_from_direct_atom_correspondence
+    only ever touches .element and .get_coord() on the ligand_atoms it's given.
+    """
+
+    def __init__(self, element: str, coord):
+        self.element = element
+        self._coord = np.array(coord, dtype=float)
+
+    def get_coord(self):
+        return self._coord
+
+
+def test_mol_from_direct_atom_correspondence_builds_a_valid_mol_when_order_matches():
+    # Ethylamine (C-C-N), real bond lengths (~1.52, ~1.47 A) at this
+    # correspondence -- the case this fallback exists for: geometry that
+    # would confuse a distance-based bond-perception heuristic (see below)
+    # but is fine once bonds are taken from the template instead of re-derived.
+    template = Chem.MolFromSmiles("CCN")
+    ligand_atoms = [
+        _FakeAtom("C", [0.0, 0.0, 0.0]),
+        _FakeAtom("C", [1.52, 0.0, 0.0]),
+        _FakeAtom("N", [1.52, 1.47, 0.0]),
+    ]
+    mol = _mol_from_direct_atom_correspondence(template, ligand_atoms)
+    assert mol is not None
+    conf = mol.GetConformer()
+    np.testing.assert_allclose(list(conf.GetAtomPosition(2)), [1.52, 1.47, 0.0])
+
+
+def test_mol_from_direct_atom_correspondence_returns_none_when_element_order_differs():
+    template = Chem.MolFromSmiles("CCN")
+    ligand_atoms = [
+        _FakeAtom("N", [0.0, 0.0, 0.0]),  # wrong order: N first, not last
+        _FakeAtom("C", [1.52, 0.0, 0.0]),
+        _FakeAtom("C", [1.52, 1.47, 0.0]),
+    ]
+    assert _mol_from_direct_atom_correspondence(template, ligand_atoms) is None
+
+
+def test_mol_from_direct_atom_correspondence_returns_none_when_a_template_bond_length_is_unreasonable():
+    # Real regression case, generalized: element order matches, but two
+    # atoms that are actually bonded in the template (0-1) sit far too close
+    # together in this geometry -- exactly the situation where trusting an
+    # unverified index correspondence would silently build a wrong molecule.
+    # Real proximity-bonding fallback data (OCNT-2311782) failed for the
+    # opposite reason -- two NON-bonded atoms sitting too close, which is
+    # what makes distance-based bond perception misfire in the first place;
+    # this checks the same underlying safeguard from the other direction.
+    template = Chem.MolFromSmiles("CCN")
+    ligand_atoms = [
+        _FakeAtom("C", [0.0, 0.0, 0.0]),
+        _FakeAtom("C", [0.1, 0.0, 0.0]),  # bonded to atom 0 in the template, but only 0.1 A away
+        _FakeAtom("N", [1.52, 1.47, 0.0]),
+    ]
+    assert _mol_from_direct_atom_correspondence(template, ligand_atoms) is None
 
 KETOCONAZOLE_SMILES = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2)CC1"
 VARDENAFIL_SMILES = "CCCc1nc(C)c2c(=O)nc(-c3cc(S(=O)(=O)N4CCN(CC)CC4)ccc3OCC)[nH]n12"
@@ -56,6 +116,29 @@ def test_motif_distance_ignores_closer_non_motif_nitrogen():
 
     all_atoms = {d["atom"] for d in result["all_ligand_nitrogen_distances"]}
     assert "N50" in all_atoms  # still visible for manual review, just not driving the call
+
+
+OCNT_2311782_SMILES = "CC(C1=CC=CC(C#N)=C1)N1CCN(C(=O)NC2CCCCC2)CC1"
+OCNT_2311782_RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_OCNT-2311782")
+
+
+@pytest.mark.skipif(
+    not (OCNT_2311782_RESULT_DIR / "predictions" / "cyp3a4_OCNT-2311782" / "cyp3a4_OCNT-2311782_model_0.cif").exists(),
+    reason="requires a local Boltz-2 run for OCNT-2311782",
+)
+def test_summarize_compound_handles_a_real_proximity_bonding_failure():
+    # Real regression: this compound's predicted geometry makes proximity
+    # bonding (and RDKit's own DetermineConnectivity, confirmed as an
+    # equally-fooled alternative) perceive 29 bonds where the real molecule
+    # has 27 -- AssignBondOrdersFromTemplate then raised AtomValenceException
+    # ("atom # 10 N, 4, is greater than permitted"). Confirmed the direct
+    # atom-correspondence fallback resolves it: this compound has no Type II
+    # motif at all (a real, valid "not coordinated" result, not a symptom of
+    # the bug), so the check here is just that it doesn't raise.
+    result = summarize_compound(OCNT_2311782_RESULT_DIR, OCNT_2311782_SMILES, expect_affinity=False)
+    assert result["compound"] == "cyp3a4_OCNT-2311782"
+    assert result["coordinated"] is False
+    assert result["motif_nitrogen_distances"] == []
 
 
 OCNT_2395436_RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_OCNT-2395436")

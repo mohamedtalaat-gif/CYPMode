@@ -80,6 +80,53 @@ def _ligand_atoms(structure):
     ]
 
 
+_BOND_LENGTH_RANGE_A = (0.8, 2.0)  # generous heavy-atom single/double/triple-bond range
+
+
+def _mol_from_direct_atom_correspondence(template, ligand_atoms):
+    """Fallback for when proximity-bonding + AssignBondOrdersFromTemplate
+    fails: builds the molecule from the template's own (known-correct)
+    bond graph, with 3D coordinates assigned directly by atom index rather
+    than re-derived from interatomic distances at all.
+
+    Confirmed directly (OCNT-2311782, a real compound whose predicted
+    conformation makes two non-bonded atoms sit closer together than two
+    actually-bonded atoms elsewhere in the same ligand): Boltz-2 does not
+    always preserve the input SMILES's atom order in its CIF output --
+    spot-checked against itraconazole/ketoconazole, where it doesn't -- so
+    this can't replace proximity bonding as the default method. But when it
+    does happen to hold, it sidesteps proximity bonding's real failure mode
+    entirely (a spurious close contact being misread as a bond, which is
+    what actually broke OCNT-2311782 -- proximity bonding found 29 bonds
+    against the template's real 27, and RDKit's own DetermineConnectivity,
+    tested as an alternative, made the identical mistake, since both are
+    fundamentally the same kind of distance-based heuristic).
+
+    Returns None (not raised) if the atom order doesn't correspond
+    (different element sequence) or the coordinates don't actually support
+    it (a template bond's length would be chemically unreasonable under
+    this direct correspondence) -- callers should fall back further, not
+    trust an unverified index match.
+    """
+    if [a.element for a in ligand_atoms] != [a.GetSymbol() for a in template.GetAtoms()]:
+        return None
+
+    coords = np.array([a.get_coord() for a in ligand_atoms])
+    low, high = _BOND_LENGTH_RANGE_A
+    for bond in template.GetBonds():
+        length = np.linalg.norm(coords[bond.GetBeginAtomIdx()] - coords[bond.GetEndAtomIdx()])
+        if not (low < length < high):
+            return None
+
+    mol = Chem.Mol(template)
+    conf = Chem.Conformer(mol.GetNumAtoms())
+    for i, (x, y, z) in enumerate(coords):
+        conf.SetAtomPosition(i, (float(x), float(y), float(z)))
+    mol.RemoveAllConformers()
+    mol.AddConformer(conf, assignId=True)
+    return mol
+
+
 def _ligand_mol_3d(structure, ligand_smiles: str):
     """Rebuild the ligand as an RDKit mol with correct bonds/aromaticity and a
     3D conformer from the predicted coordinates, so SMARTS-matched atom
@@ -108,7 +155,12 @@ def _ligand_mol_3d(structure, ligand_smiles: str):
     if template is None:
         raise ValueError(f"could not parse ligand_smiles: {ligand_smiles!r}")
 
-    mol = AllChem.AssignBondOrdersFromTemplate(template, raw_mol)
+    try:
+        mol = AllChem.AssignBondOrdersFromTemplate(template, raw_mol)
+    except Exception:
+        mol = _mol_from_direct_atom_correspondence(template, ligand_atoms)
+        if mol is None:
+            raise
     pdb_atom_names = [atom.get_name() for atom in ligand_atoms]
     return mol, pdb_atom_names
 
