@@ -20,12 +20,22 @@ jobs:
         with:
           python-version: "3.12"
 
-      # dev + tdc extras only -- no torch/lightning/biopython needed. The
-      # panel tests read the small checked-in data/tdc_cache/, no network
-      # call required. Structural-validation tests skip cleanly without a
-      # local Boltz-2 run (see tests/test_structures.py).
+      # dev + tdc + challenge extras -- no torch/lightning/biopython needed
+      # for the main run (see the isolated steps below for those). challenge
+      # is required: most of cypmode/challenge/*'s tests import lightgbm
+      # transitively (e.g. via knn_features.py), and a missing import at
+      # collection time aborts the ENTIRE pytest run, not just that file --
+      # confirmed directly (real CI-equivalent run in a clean venv,
+      # 2026-09-26: "ModuleNotFoundError: No module named 'lightgbm'" during
+      # collection of tests/test_chemberta_significance.py produced
+      # "Interrupted: 1 error during collection", meaning none of the other
+      # ~178 tests in the main group ran at all -- this omission wasn't
+      # hypothetical, it silently zeroed out CI's real coverage). The panel
+      # tests read the small checked-in data/tdc_cache/, no network call
+      # required. Structural-validation tests skip cleanly without a local
+      # Boltz-2 run (see tests/test_structures.py).
       - name: Install cypmode
-        run: pip install -e ".[dev,tdc]"
+        run: pip install -e ".[dev,tdc,challenge]"
 
       # Separate, --no-deps step: PyTDC's own dependency tree pulls in
       # cellxgene-census -> tiledbsoma, which has no prebuilt Windows wheel
@@ -34,5 +44,25 @@ jobs:
       - name: Install PyTDC (no-deps)
         run: pip install --no-deps "PyTDC==1.1.14"
 
-      - name: Run tests
+      - name: Run tests (main group)
         run: pytest -v
+
+      # These three test files each need an extra dependency (torch or
+      # tblite) that segfaults/deadlocks if imported into the same process
+      # as LightGBM -- see tests/test_multitask.py's own marker and
+      # pyproject.toml's addopts, which already --ignore these from the
+      # main group above for exactly that reason. Running them here, each
+      # in their own separate `pip install` + `pytest` step (a fresh
+      # process per step), is how they actually get verified in CI instead
+      # of silently never running at all.
+      - name: Install multitask extra
+        run: pip install -e ".[multitask]"
+
+      - name: Run tests (multitask/torch, isolated)
+        run: pytest -v tests/test_multitask.py
+
+      - name: Run tests (ChemBERTa/torch, isolated)
+        run: pytest -v tests/test_chemberta_features.py
+
+      - name: Run tests (quantum-pharmacophore/tblite, isolated)
+        run: pytest -v tests/test_quantum_pharmacophore.py

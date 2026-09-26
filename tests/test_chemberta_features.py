@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
+pytestmark = pytest.mark.torch
+
 pytest.importorskip("torch")
 pytest.importorskip("transformers")
 

@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
+pytestmark = pytest.mark.tblite
+
 pytest.importorskip("tblite")
 
 from cypmode.challenge.quantum_pharmacophore import (
@@ -11,6 +13,7 @@ from cypmode.challenge.quantum_pharmacophore import (
     compute_quantum_features_batch,
     embed_3d_conformer,
     extract_quantum_features,
+    load_cached_quantum_features,
 )
 
 ETHANOL = "CCO"
@@ -97,3 +100,44 @@ def test_add_quantum_features_adds_one_fixed_size_array_per_row(tmp_path):
     out = add_quantum_features(df, cache_path=tmp_path / "cache.csv")
     assert "quantum_features" in out.columns
     assert all(len(f) == len(FEATURE_NAMES) for f in out["quantum_features"])
+
+
+def test_compute_quantum_features_batch_works_with_multiple_workers(tmp_path):
+    """Regression test for the exact bug class pharmacophore_fingerprint.py's
+    own multi-worker test guards against: a real n_workers=8 run crashed
+    there because the compute callable passed to multiprocessing.Pool.imap
+    was a local lambda, which isn't picklable -- n_workers=1 (every other
+    test in this file) never exercises that code path at all. This module
+    passes the top-level extract_quantum_features function directly (no
+    lambda), so this should already be safe, but only a real n_workers>1
+    call proves it.
+    """
+    cache_path = tmp_path / "cache.csv"
+    result = compute_quantum_features_batch([ETHANOL, BENZENE, "C"], cache_path=cache_path, n_workers=2)
+    assert len(result) == 3
+    assert len(pd.read_csv(cache_path)) == 3
+
+
+def test_load_cached_quantum_features_raises_when_cache_missing(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        load_cached_quantum_features(pd.DataFrame({"SMILES": [ETHANOL]}), cache_path=tmp_path / "missing.csv")
+
+
+def test_load_cached_quantum_features_raises_when_a_compound_is_not_cached(tmp_path):
+    cache_path = tmp_path / "cache.csv"
+    compute_quantum_features_batch([ETHANOL], cache_path=cache_path)
+    with pytest.raises(ValueError):
+        load_cached_quantum_features(pd.DataFrame({"SMILES": [ETHANOL, BENZENE]}), cache_path=cache_path)
+
+
+def test_load_cached_quantum_features_joins_correctly(tmp_path):
+    cache_path = tmp_path / "cache.csv"
+    computed = compute_quantum_features_batch([ETHANOL, BENZENE], cache_path=cache_path)
+    loaded = load_cached_quantum_features(pd.DataFrame({"SMILES": [BENZENE, ETHANOL]}), cache_path=cache_path)
+    # order-preserving w.r.t. the input df, and values match what was computed
+    assert list(loaded["SMILES"]) == [BENZENE, ETHANOL]
+    ethanol_row = computed[computed["SMILES"] == ETHANOL].iloc[0]
+    loaded_ethanol = loaded[loaded["SMILES"] == ETHANOL].iloc[0]
+    np.testing.assert_allclose(
+        loaded_ethanol["quantum_features"], ethanol_row[FEATURE_NAMES].to_numpy(dtype=np.float64)
+    )

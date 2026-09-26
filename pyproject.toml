@@ -60,8 +60,13 @@ tdc = [
 # feature -- confirmed working directly despite its declared numpy<2.5.0
 # upper bound conflicting with this project's own numpy>=2.5.3 floor (an
 # overly conservative pin on pyKVFinder's side, not a real incompatibility
-# -- verified by actually running its real workflow end to end).
-validate = ["biopython", "pyKVFinder", "posebusters"]
+# -- verified by actually running its real workflow end to end). PyYAML is
+# for cypmode/validation/pose_validity.py's _main(), which reads Boltz-2's
+# own input YAML files -- it was only declared under the tdc extra before
+# (a real gap: README's documented reproduction path for this exact file
+# is `pip install -e ".[validate]"`, which didn't actually cover its own
+# real import).
+validate = ["biopython", "pyKVFinder", "posebusters", "PyYAML"]
 # For cypmode/challenge/*.py -- reproducing and then extending the OpenADMET
 # CYP Blind Challenge tutorial's own baseline (LightGBM on RDKit descriptors
 # via useful_rdkit_utils, the same library the official tutorial uses).
