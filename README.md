@@ -516,6 +516,13 @@ elsewhere in this README:
   itself), whose statistical-methodology findings this project's own
   `cypmode/challenge/stacking_significance.py` is checked against; see
   `CYPMode_Architecture_Specification.md`.
+- Huddleston, K. "Cofolding? I hardly know her! - Cofolding Methods on
+  ADMET Targets." *OpenADMET Blog* (2026).
+  https://doi.org/10.5281/zenodo.21785463 — real, quantified evidence
+  that Boltz-2 and OpenFold3 (both used in this project's Structure
+  track) place CYP3A4 ligands correctly only 57.8%/31.5% of the time
+  even under an optimistic oracle-ranking evaluation; see
+  `CYPMode_Architecture_Specification.md`.
 
 ## Citation
 

@@ -62,6 +62,30 @@ ADMET prediction: Lessons from the OpenADMET-ExpansionRx community blind
 challenge.* ChemRxiv, 2026-09-23. https://doi.org/10.26434/chemrxiv.15009342.v1
 (preprint, not yet peer-reviewed, CC BY 4.0).
 
+## Real, sobering evidence on Boltz-2/OpenFold3 ligand-placement accuracy for CYP3A4 (Huddleston, OpenADMET blog, 2026-06-02)
+
+A real, official OpenADMET blog post — "Cofolding? I hardly know her! -
+Cofolding Methods on ADMET Targets," Part 1 of a series, DOI
+10.5281/zenodo.21785463 — directly evaluated **Boltz-2 and OpenFold3**
+(this project's own two structure-prediction tools) against **real PDB
+structures for CYP3A4 and PXR**, using the oracle-ranking protocol (best
+of 5 samples per structure, selected against real ground truth — an
+optimistic upper bound, not what a real blind submission gets to do).
+The real, quantified result is sobering and directly relevant to this
+project's own Structure Track work:
+
+- **Ligand placement succeeds (BiSyRMSD < 2Å) only 57.8% of the time for Boltz-2 on CYP3A4, and only 31.5% of the time for OpenFold3** — despite backbone (Cα) RMSD staying under 0.75Å in every case. Getting the protein fold right is not remotely sufficient for getting the ligand pose right. (PXR was similar or worse: 38.5% / 32.7%.) A well-studied control target, p38 kinase, scored high on all metrics for both tools — confirming the CYP3A4/PXR failures are real, target-specific gaps, not a general tool malfunction.
+- **This is not simply a training-data-coverage problem.** 78.9% of the tested CYP3A4 structures were already inside Boltz-2's own training set (cutoff June 2023) — and performance was statistically the same whether a structure was in-training or held out. The models are not learning real CYP3A4 ligand chemistry even from structures they were trained on directly.
+- **A specific, real CYP3A4 failure mode, worth remembering for any of this project's own predictions**: the heme consistently anchors correctly (the models place it right essentially every time), but ligand *orientation* relative to the heme is still frequently wrong even so — and the most extreme failures (BiSyRMSD > 10Å) are consistently cases where a real *allosteric*-site ligand (e.g. progesterone) gets placed in the *orthosteric* (heme-proximal) pocket instead. If any of this project's own real Structure Track compounds are known or suspected allosteric binders, this is a concrete, named failure mode to check for specifically, not a generic caveat.
+- **Real, direct warning about confidence-based model selection**: "the confidence and ranking scores output by these methods offer no useful signal... show no meaningful correlation with BiSyRMSD, and rarely rank the best predicted structure first." This is a genuine caveat for `cypmode.validation.pose_validity.select_valid_model`, which tries `model_0`, `model_1`, ... in Boltz-2's own confidence-ranked order until one passes PoseBusters: passing PoseBusters (physical/chemical plausibility) is a real, useful, different bar than being geometrically *correct* relative to a true structure, and this post's own finding is that confidence ranking doesn't reliably surface the geometrically-correct sample even when one exists among the 5. A structure that passes PoseBusters is not thereby confirmed accurate — this project's own 78.6% PoseBusters pass rate should not be read as "78.6% of our poses are correct."
+- **Independent, real confirmation that this project's own BiSyRMSD approximation (`cypmode.validation.bisy_rmsd`) uses the right real definition**: the post's own stated method — "Ligand RMSD after binding site superposition, corrected for molecular symmetry" — is exactly the Kabsch-pocket-superposition-then-symmetry-aware-RMSD approach already built and tested here, independently arrived at before finding this post.
+
+**Real, honest implication for this project**: Boltz-2 (already in use) is the *better* of the two real open options for CYP3A4 specifically (57.8% vs. OpenFold3's 31.5%), which is a point in favor of the existing pipeline choice, not a reason to switch to OpenFold3 as a straight replacement — OpenFold3-preview's own real value here is likely as a second, independent cross-check on a prediction (given the two models' errors aren't obviously the same failure mode), not a drop-in upgrade. Given confidence scores are shown to carry no real signal, this project's own PoseBusters gate remains the right kind of check to keep running (it catches real, physically-impossible structures), but should not be treated as a proxy for pose *correctness* — a real, separate concern this project doesn't yet have a way to check locally without a true reference structure.
+
+Citation: Huddleston, K. "Cofolding? I hardly know her! - Cofolding
+Methods on ADMET Targets." *OpenADMET Blog*, 2026-06-02.
+https://doi.org/10.5281/zenodo.21785463
+
 ## Final architecture
 
 ```
