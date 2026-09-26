@@ -1,6 +1,9 @@
-# CYPMode-TDI: Data Audit
+# CYPMode: Data Audit (TDI track)
 
-Phase 0 deliverable before any TDI architecture code. All numbers below are
+Phase 0 deliverable before any TDI architecture code, scoped to the TDI
+track's own training data (see `CYPMode_Architecture_Specification.md`
+for how this fits into CYPMode's overall architecture, which also
+covers the Structure Prediction track separately). All numbers below are
 computed directly from the real official challenge data
 (`data/cyp_challenge/tdi_track/`, `openadmet/cyp-challenge-train-test` on
 Hugging Face, Apache 2.0) and this project's own code — nothing here is

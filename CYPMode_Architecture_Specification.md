@@ -1,9 +1,17 @@
-# CYPMode-TDI: Architecture Specification (v1)
+# CYPMode: Architecture Specification (v1)
 
-The single reference for the TDI-track architecture, superseding the
-various diagrams sketched earlier in planning discussion. See
-`CYPMode-TDI_DATA_AUDIT.md` for the evidence each decision below is based
-on — this document states the conclusions, that one has the numbers.
+The single reference for CYPMode's architecture, covering both the TDI
+track (this document's original scope) and the Structure Prediction
+track (see the "Official challenge update" section below for how that
+track entered the project) — one project, one name, with each track's
+own inputs/outputs kept in their own separate, clearly organized
+folders (`data/cyp_challenge/tdi_track/` for TDI, `data/boltz_test/` and
+`data/cyp_challenge/structure_track_results.json` for structure
+prediction), not merged together. This document supersedes the various
+diagrams sketched earlier in planning discussion. See
+`CYPMode_DATA_AUDIT.md` for the evidence each TDI-track decision below
+is based on — this document states the conclusions, that one has the
+numbers.
 
 ## Official challenge update (2026-09-25, halfway-point blog post)
 
@@ -17,6 +25,28 @@ project's own results should be interpreted and prioritized:
 - **A new Structure Track launched today**, running alongside TDI/Direct-Inhibition through November 3, 2026: 20 new real cryo-EM CYP3A4 structures (15 from the training set, 2 from the test set, 3 additional), scored primarily by LDDT-PLI (secondary: BiSyRMSD) via the OpenStructure pipeline. **PoseBusters is now an official, mandatory part of scoring**: any submitted structure that fails PoseBusters' physical/chemical sanity checks scores LDDT-PLI=0 regardless of geometric accuracy otherwise. This directly elevated this project's own PoseBusters installation from a nice-to-have validity gate to something worth prioritizing for real. Needs a real check: whether this project's own local 20-compound structure-track batch (run before this official announcement) matches the now-official real compound set, or needs reconciling against it.
 
 **Real PoseBusters batch result, run immediately on every real completed structure this project has** (`cypmode.validation.pose_validity`, 42 structures: structure-track + TDI reference panel + Tier 3 so far): **33/42 (78.6%) pass every check.** 9 fail: 8 on the identical check, `minimum_distance_to_protein` (a real steric clash, not a borderline rounding case — confirmed on itraconazole specifically: smallest ligand-protein distance 2.42 Å, 74.4% of the safe VDW-sum threshold, one real clashing atom pair), and 1 (`OCNT-2311782`) on an RDKit valence-parsing error during ligand reconstruction, a separate problem from pose validity itself. This is a real, direct confirmation of exactly the failure mode OpenADMET's own blog post warned about ("co-folding algorithms often optimize for raw atom placement at the expense of physical plausibility") — caught locally, before any submission, which is the entire point of running this now rather than after a real LDDT-PLI=0 on a real submission. Not yet remedied (e.g. via local clash-relief minimization or re-prediction with different settings) — a real, concrete pre-submission checklist item.
+
+## Lessons from the OpenADMET-ExpansionRx blind challenge (Castellanos et al. 2026)
+
+A separate, already-completed OpenADMET community blind challenge (nine ADMET
+endpoints — LogD, kinetic solubility, microsomal clearance, Caco-2
+permeability, protein/tissue binding — on a 7,608-compound proprietary
+dataset from Expansion Therapeutics, Sept 2025–Jan 2026) was written up by
+the same organizing team as our CYP challenge, including Pat Walters as
+corresponding author. It is not the CYP challenge itself, but several of
+its findings are directly relevant to this project's own methodology and
+are worth recording honestly, positive and negative alike:
+
+- **Real, independent confirmation of the CYP challenge's own statistical methodology.** The organizers found and fixed a genuine "pseudoreplication" bug in their first-pass significance testing: applying Tukey HSD directly to bootstrap-resampled metric distributions inflates apparent significance, because bootstrap resampling of a *fixed* set of precomputed predictions isn't the same as the independent, distinctly-retrained replicates (e.g. 5×5 nested CV with different seeds/folds) that a Tukey/ANOVA test actually assumes — treating `B` bootstrap iterations as independent samples lets `MS_Error/n → 0` and produces artificial p-value collapse. Their fix — paired bootstrap-difference distributions with Holm-Bonferroni/Benjamini-Hochberg correction — is stated explicitly to apply to "current and future challenges, such as the OpenADMET PXR and CYP blind challenges," confirming this is the real methodology behind our own challenge's Benjamini-Hochberg tiering (see above). Separately, this also confirms `cypmode.challenge.stacking_significance`'s own approach is on the methodologically correct side of this exact debate: it uses genuine repeated 5×5 CV with independent retraining per fold/seed (the "Ash et al." protocol the paper cites as valid), not bootstrap resampling of a fixed prediction set — the failure mode the organizers found and fixed doesn't apply to how this project tests its own feature-stacking claims.
+- **Real, honest caution about classical ML's ceiling.** Among the top 20 ExpansionRx entries, 2D graph neural networks (mostly Chemprop) and chemical foundation-model pretraining (CheMeleon) dominated; models relying purely on classical ML (LightGBM/XGBoost/CatBoost on descriptors/fingerprints — CYPMode's own current approach) ranked no higher than #46. This isn't proof the same holds for CYP TDI classification (different task: binary classification on ~6,100 compounds vs. 9 continuous endpoints on ~7,600 compounds from a denser, real optimization-campaign chemical series), but it's a real, relevant signal worth taking seriously rather than dismissing, especially if CYPMode's MCC plateaus well below Tier 1 after the current feature-engineering avenues are exhausted.
+- **Validates two choices already made here.** (1) External public data was strongly associated with top-tier performance (16 of the top 20 entries used it) — the same direction as this project's own PubChem/BindingDB auxiliary-feature work. (2) Hyperparameter optimization was *not* a major performance driver for top teams ("data engineering and feature augmentation mattered more than architecture-level tuning") — consistent with how this project has spent its own effort so far.
+- **A real, generic blind spot worth remembering when interpreting any result here**: both the GNN/foundation-model and classical-ML/fingerprint approaches essentially failed to predict property differences between stereoisomers — predicted differences collapsed to near-zero even where real measured differences were large (median predicted difference ~0.005–0.007 log units for enantiomers whose real median difference was 0.056, and even worse relative to diastereomers' larger real differences). Two-dimensional/topological features and even most 3D representations carry little to no stereochemical signal by construction. CYPMode's own Morgan-fingerprint + RDKit-descriptor stack almost certainly shares this exact blind spot; no fix is proposed here, just an honest acknowledgment for anyone reading a CYPMode prediction on a stereoisomer pair.
+- **"Knowing when a model applies is still harder than making it accurate"** (the paper's own words) — no applicability-domain signal they tried, including a trained error model, exceeded Spearman ρ ≈ 0.6 with real error. Relevant context for how much confidence to place in `cypmode/challenge/reliability.py`'s own OOD/applicability-domain score: a real, useful signal, but not one to over-trust as a precise reliability guarantee.
+
+Citation: Castellanos, M. A. et al. *Assessing the state of the art in
+ADMET prediction: Lessons from the OpenADMET-ExpansionRx community blind
+challenge.* ChemRxiv, 2026-09-23. https://doi.org/10.26434/chemrxiv.15009342.v1
+(preprint, not yet peer-reviewed, CC BY 4.0).
 
 ## Final architecture
 
@@ -147,7 +177,7 @@ All three auxiliary/read-across additions (KNN, AID 1851, BindingDB) were first 
 ## Status: done vs. remaining
 
 **Done (real code, real numbers, committed locally):**
-- Phase 0 data audit — `CYPMode-TDI_DATA_AUDIT.md` (leakage check, label provenance, missingness, chemistry, class balance)
+- Phase 0 data audit — `CYPMode_DATA_AUDIT.md` (leakage check, label provenance, missingness, chemistry, class balance)
 - Baseline reproduction, both tutorial-matching and this project's own fixed-seed CV protocol (`cypmode/challenge/tdi_baseline.py`) — CYP3A4 MCC 0.294, CYP2D6 MCC 0.049
 - `cypmode/metrics/amines.py` — trialkylamine detector, verified against the 6-drug reference panel, refined to exclude a real false positive (ketoconazole's N-aryl piperazine)
 - M0–M3 ablation (`cypmode/challenge/tdi_ablation.py`) — real result: motif kept, amine dropped, Morgan kept. Best single number so far per isoform: CYP3A4 MCC 0.375 (M3 + tuned threshold), CYP2D6 MCC 0.111 (shared trunk, untuned) — no single stage wins both yet, see Decision Log and Shared Trunk section
