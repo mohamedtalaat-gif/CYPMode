@@ -1,0 +1,13 @@
+isoform,group1,group2,meandiff,p-adj,lower,upper,reject
+CYP3A4,M3,M3+KNN,0.0116,0.8331,-0.0244,0.0476,False
+CYP3A4,M3,M3+KNN+Pharmacophore,0.0024,0.9982,-0.0336,0.0383,False
+CYP3A4,M3,M3+Pharmacophore,-0.0063,0.9683,-0.0422,0.0297,False
+CYP3A4,M3+KNN,M3+KNN+Pharmacophore,-0.0093,0.9071,-0.0452,0.0267,False
+CYP3A4,M3+KNN,M3+Pharmacophore,-0.0179,0.5649,-0.0539,0.0181,False
+CYP3A4,M3+KNN+Pharmacophore,M3+Pharmacophore,-0.0086,0.923,-0.0446,0.0273,False
+CYP2D6,M3,M3+KNN,0.0249,0.5147,-0.0223,0.072,False
+CYP2D6,M3,M3+KNN+Pharmacophore,-0.0083,0.9674,-0.0555,0.0389,False
+CYP2D6,M3,M3+Pharmacophore,-0.0137,0.8724,-0.0609,0.0335,False
+CYP2D6,M3+KNN,M3+KNN+Pharmacophore,-0.0332,0.2609,-0.0804,0.014,False
+CYP2D6,M3+KNN,M3+Pharmacophore,-0.0386,0.148,-0.0857,0.0086,False
+CYP2D6,M3+KNN+Pharmacophore,M3+Pharmacophore,-0.0054,0.9906,-0.0525,0.0418,False

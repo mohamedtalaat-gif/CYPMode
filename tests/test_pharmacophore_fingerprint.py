@@ -61,6 +61,18 @@ def test_compute_pharmacophore_fingerprints_batch_caches_to_disk_and_resumes(tmp
     assert len(pd.read_csv(cache_path)) == 3  # ethanol, benzene, methane
 
 
+def test_compute_pharmacophore_fingerprints_batch_works_with_multiple_workers(tmp_path):
+    # regression test: the real n_workers=8 batch run crashed with
+    # AttributeError because the compute callable passed to
+    # multiprocessing.Pool.imap was a local lambda, which isn't
+    # picklable -- n_workers=1 (every other test here) never exercises
+    # that code path, so this must use n_workers > 1 to actually catch it.
+    cache_path = tmp_path / "cache.csv"
+    result = compute_pharmacophore_fingerprints_batch([ETHANOL, BENZENE, "C"], cache_path=cache_path, n_workers=2)
+    assert len(result) == 3
+    assert len(pd.read_csv(cache_path)) == 3
+
+
 def test_compute_pharmacophore_fingerprints_batch_checkpoints_mid_run(tmp_path):
     cache_path = tmp_path / "cache.csv"
     compute_pharmacophore_fingerprints_batch([ETHANOL, BENZENE, "C"], cache_path=cache_path, checkpoint_every=1)

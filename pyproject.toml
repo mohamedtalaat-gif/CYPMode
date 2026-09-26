@@ -98,7 +98,12 @@ challenge = [
 # developed on, already under real memory pressure from Boltz-2). CPU
 # only -- this MLP doesn't need the GPU, and the machine's one GPU is
 # already busy with Boltz-2 structural runs.
-multitask = ["torch"]
+# transformers is for cypmode/challenge/chemberta_features.py's ChemBERTa
+# embeddings -- it rides along in this same extra since it needs torch
+# anyway, not a new one; it never coexists with LightGBM in one process
+# (see chemberta_features.py's own module docstring for the real,
+# confirmed reason).
+multitask = ["torch", "transformers"]
 
 [tool.pytest.ini_options]
 # third_party/ vendors full clones (TDC, Boltz-2) with their own pytest
@@ -106,12 +111,17 @@ multitask = ["torch"]
 # this project's own tests.
 testpaths = ["tests"]
 markers = [
-    "torch: needs both the challenge and multitask extras installed together -- run with `pytest tests/test_multitask.py` as its own, separate invocation, never mixed with the rest of the suite (a plain `-m` deselect isn't enough -- pytest still imports a deselected file during collection, which is exactly what triggers this). Confirmed directly: importing torch and lightgbm in the same process crashes with a real segfault (OpenMP runtime conflict between the two libraries' bundled libomp, macOS/Apple Silicon) -- not flaky, reproduces every time.",
+    "torch: needs both the challenge and multitask extras installed together -- run with `pytest tests/test_multitask.py` (or tests/test_chemberta_features.py, same real cause) as its own, separate invocation, never mixed with the rest of the suite (a plain `-m` deselect isn't enough -- pytest still imports a deselected file during collection, which is exactly what triggers this). Confirmed directly: importing torch and lightgbm in the same process crashes with a real segfault (OpenMP runtime conflict between the two libraries' bundled libomp, macOS/Apple Silicon) -- not flaky, reproduces every time.",
     "tblite: needs the challenge extra's tblite installed -- run with `pytest tests/test_quantum_pharmacophore.py` as its own, separate invocation, never mixed with the rest of the suite, for the same reason as the torch marker above: tblite's own bundled OpenMP runtime conflicts with LightGBM's once both have been loaded into one process. Confirmed directly: the full suite hangs (not a crash this time -- a real deadlock, 0% CPU, no progress) as soon as it reaches a tblite-calling test after dozens of earlier LightGBM-heavy tests; killing and re-running just tests/test_tdi_baseline.py + tests/test_quantum_pharmacophore.py together reproduces it every time.",
 ]
+# tests/test_chemberta_significance.py is deliberately NOT ignored here --
+# unlike test_chemberta_features.py, it never imports torch (only the
+# CHEMBERTA_EMBEDDING_DIM/CACHE_PATH constants from chemberta_features.py,
+# which lazily imports torch inside a function, not at module level), so
+# it's safe in the main suite alongside LightGBM.
 # --ignore, not just a -m deselect: pytest imports every collected file
 # (including ones a marker would later deselect) to discover its tests,
 # and that import alone is what crashes/hangs the process -- confirmed
-# directly for both test_multitask.py (segfault) and
-# test_quantum_pharmacophore.py (deadlock).
-addopts = "--ignore=tests/test_multitask.py --ignore=tests/test_quantum_pharmacophore.py"
+# directly for test_multitask.py and test_chemberta_features.py
+# (segfault, exit 139) and test_quantum_pharmacophore.py (deadlock).
+addopts = "--ignore=tests/test_multitask.py --ignore=tests/test_quantum_pharmacophore.py --ignore=tests/test_chemberta_features.py"

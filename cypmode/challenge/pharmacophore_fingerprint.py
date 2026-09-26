@@ -32,6 +32,7 @@ scalar QM properties, where zero would be a misleading fake value
 rather than an honest "no bits set."
 """
 
+import functools
 import logging
 import multiprocessing
 from pathlib import Path
@@ -126,7 +127,13 @@ def compute_pharmacophore_fingerprints_batch(
     todo = [s for s in smiles_list if s not in cached_smiles]
     if todo:
         pool = multiprocessing.Pool(n_workers) if n_workers > 1 else None
-        compute = lambda s: compute_pharmacophore_fingerprint(s, nbits=nbits)  # noqa: E731
+        # a plain module-level function bound via functools.partial, not a
+        # local lambda -- multiprocessing.Pool pickles the callable to send
+        # to worker processes, and a lambda closed over local variables
+        # isn't picklable (confirmed directly: this crashed the first real
+        # n_workers=8 batch run with AttributeError, even though it worked
+        # fine in tests, which only ever exercised the n_workers=1 path).
+        compute = functools.partial(compute_pharmacophore_fingerprint, nbits=nbits)
         results_iter = pool.imap(compute, todo) if pool else map(compute, todo)
 
         pending_rows = []

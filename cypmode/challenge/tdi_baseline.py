@@ -15,9 +15,16 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import useful_rdkit_utils as uru
-from lightgbm import LGBMClassifier
 from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef, roc_auc_score
 from sklearn.model_selection import StratifiedKFold, train_test_split
+
+# lightgbm is imported lazily, inside the two functions that actually
+# need it, not at module level -- load_tdi_training_data/compute_descriptors
+# are real, useful entry points on their own for a caller that needs the
+# training data but not LightGBM itself (e.g.
+# cypmode.challenge.chemberta_features, which must never share a process
+# with LightGBM -- see that module's own docstring for the real, confirmed
+# segfault this avoids).
 
 TDI_ISOFORMS = ["CYP3A4", "CYP2D6"]
 TDI_TRAIN_PATH = Path("data/cyp_challenge/tdi_track/cyp-challenge-TRAIN_TDI.csv")
@@ -51,6 +58,8 @@ def cross_validate_baseline(df: pd.DataFrame, n_iterations: int = 10) -> pd.Data
     classifier per split, reporting Accuracy/F1/MCC/ROC-AUC. `df` must
     already carry a `descriptors` column (see compute_descriptors).
     """
+    from lightgbm import LGBMClassifier
+
     rows = []
     for cyp in TDI_ISOFORMS:
         col = f"{cyp}_is_TDI"
@@ -96,6 +105,8 @@ def cross_validate_fixed_seed(
     still see identical folds, so results across feature sets are a fair,
     paired comparison.
     """
+    from lightgbm import LGBMClassifier
+
     rows = []
     for cyp in TDI_ISOFORMS:
         col = f"{cyp}_is_TDI"
