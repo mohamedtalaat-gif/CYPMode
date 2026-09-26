@@ -103,6 +103,18 @@ https://doi.org/10.5281/zenodo.21785463
                  │                     │                     │
                  └─────────────────────┼─────────────────────┘
                                        │
+------------------------------------------------------------------------  tested augmentation layer, feeds in alongside Tier 1/2
+  Each of the following was validated alone AND in combination with M3
+  via real 25-fold CV + Tukey HSD -- none beats plain M3 by a
+  statistically significant margin, on either isoform:
+
+  KNN read-across . BindingDB . PubChem AID 1851 . quantum-electronic
+  (tblite GFN2-xTB) . pharmacophore fingerprint (pmapper)
+
+  Practical default going forward: M3 + KNN (best point estimate,
+  simplest of the tied options -- not proven statistically superior)
+------------------------------------------------------------------------
+                                       │
                                        ▼
                           Feature / Evidence Fusion
                                        │
@@ -147,6 +159,17 @@ https://doi.org/10.5281/zenodo.21785463
                                   ▼
         Empirically test correlation with real held-out error
       before calling this "uncertainty quantification" anywhere
+
+
+───────────────────── tested and REJECTED — not part of the feature set ─────────────────────
+
+    ChemBERTa SMILES embeddings (seyonec/ChemBERTa-zinc-base-v1, 768-dim mean-pooled)
+      • naive concatenation onto M3's feature vector  → significantly HURTS CYP3A4
+        (M3=0.309 → M3+ChemBERTa=0.255, p-adj=0.0002; wipes out KNN's own benefit too)
+      • MultiBranchSharedTrunkModel fusion (own branch → shared trunk, not raw concat)
+        → still no benefit (point estimate worse than the M3-only shared trunk)
+    Two independent, honest attempts; both point the same direction. Kept in the
+    codebase as a documented negative result, not wired into the assembled model.
 ```
 
 ## Component-by-component
@@ -249,10 +272,17 @@ Separately, worth noting honestly: even without ChemBERTa, the M3-only shared-tr
 - **Submission validator** (`cypmode/challenge/submission.py`) — checks all official format rules (750 rows, exact columns, no dupes/nulls, boolean dtype, correct Molecule_Names) against the real blinded test set
 - **Split-validity diagnostic** (`cypmode/challenge/split_validity.py`) — Tanimoto-based train/test similarity check, applied to our own real data (see Split-validity diagnostic section above)
 - **Base-rate-shift-robust thresholding** (`cypmode/challenge/threshold_tuning.py`'s `find_robust_threshold` + real stress-test validation) — built, tested, and honestly evaluated; **not adopted as the default** (see section above and Decision Log)
+- **KNN-label read-across features** (`cypmode/challenge/knn_features.py`) — fold-internal, leakage-guarded Tanimoto neighbor labels. Real result: CYP3A4 MCC 0.300→0.312, CYP2D6 0.043→0.075 (see Component-by-component)
+- **Auxiliary external-data features** (`cypmode/challenge/pubchem_auxiliary.py`, `cypmode/challenge/bindingdb_auxiliary.py`) — PubChem AID 1851 and BindingDB, each a separate per-isoform LightGBM classifier used as a feature. Real results: AID 1851 CYP3A4 0.300→0.308 / CYP2D6 0.043→0.071; BindingDB CYP3A4 0.300→0.309 / CYP2D6 0.043→0.089
+- **Structure standardization for cross-dataset matching** (`cypmode/challenge/structure_standardization.py`) — parent-structure matching via `chembl_structure_pipeline`, fixes a real salt-form leakage-check gap in both auxiliary modules above
+- **Combined-feature stacking + statistical-significance correction** (`cypmode/challenge/combined_features.py`, `cypmode/challenge/stacking_significance.py`) — repeated 5×5 CV + Tukey HSD applied to KNN/AID 1851/BindingDB stacking for both isoforms. Real result: every pairwise comparison against plain M3 is non-significant (all p-adj ≥ 0.52) — the "combining hurts" single-split reading was fold-to-fold noise, corrected after applying Pat Walters' multiple-comparison-correction methodology
+- **Quantum-electronic features** (`cypmode/challenge/quantum_pharmacophore.py`, tblite GFN2-xTB) — HOMO/LUMO/dipole/charge features, checked at 25-fold rigor. Real result: statistically indistinguishable from plain M3 either direction (CYP3A4 p-adj ≥ 0.85, CYP2D6 p-adj ≥ 0.16)
+- **3-point pharmacophore fingerprints** (`cypmode/challenge/pharmacophore_fingerprint.py`, pmapper) — same 25-fold rigor, same honest null result (CYP3A4 p-adj ≥ 0.56, CYP2D6 p-adj ≥ 0.15)
+- **ChemBERTa SMILES embeddings** (`cypmode/challenge/chemberta_features.py`, `cypmode/challenge/chemberta_significance.py`) — the one feature addition with a real, statistically significant result: naive concatenation **significantly hurts** CYP3A4 (p-adj=0.0002). Tested and rejected, not a null result like the others
+- **Multi-branch shared-trunk fusion** (`MultiBranchSharedTrunkModel` in `cypmode/challenge/multitask.py`) — a proper neural fusion architecture (separate M3/ChemBERTa branches feeding a shared trunk, not raw concatenation), built specifically to check whether ChemBERTa's harm was a LightGBM-concatenation artifact. Real result: still no benefit, point estimate slightly worse than the M3-only shared trunk
 
 **Not yet built:**
-1. Tier 3 features actually joined into a TDI classifier — the 50 compounds are selected and queued for Boltz-2, but no results exist yet (GPU queue: structure-track batch complete → TDI-reference batch in progress → Tier 3's 50 compounds not yet started as of this check), and no code yet merges structural output into the feature matrix once it exists.
+1. Tier 3 structural features actually joined into a TDI classifier — the Boltz-2 batch is now substantially complete (37/50 real successes as of the last check, 1 known unfixable RDKit valence error, and 12 that failed from a pre-reorg path bug now queued for automatic retry once the current structure-track batch finishes), but no code yet merges the structural output into the feature matrix once it's fully in.
 2. Stratified familiarity evaluation — not run yet (waits on Tier 3 being wired in).
-3. Final assembled model + real 750-row predictions — no code yet that combines Tier 1/2/3 + OOF bridge + the now-settled per-isoform model choice (independent-head for CYP3A4, shared-trunk for CYP2D6) into one final model and produces actual submission predictions. Blocked on Tier 3 (item 1), since that could still change the CYP3A4 choice.
-4. KNN-label features and PubChem AID 1851 auxiliary data — real, concrete ideas, deliberately deferred: higher implementation effort/risk (KNN-label features are a known real leakage trap if the query compound isn't excluded from its own neighbor set) than items 1–3, and not worth pulling focus from Tier 3 before it's done.
-5. Two deliverable notebooks (full project walkthrough + self-contained educational deep-dive) — explicitly deferred until the architecture above is finished.
+3. Final assembled model + real 750-row predictions — no code yet that combines Tier 1/2/3 + the tested augmentation layer's practical default (M3+KNN) + OOF bridge + the now-settled per-isoform model choice (independent-head for CYP3A4, shared-trunk for CYP2D6) into one final model and produces actual submission predictions. Blocked on Tier 3 (item 1), since real structural features for CYP3A4 could still change that isoform's model choice.
+4. Two deliverable notebooks (full project walkthrough + self-contained educational deep-dive) — explicitly deferred until the architecture above is finished.
