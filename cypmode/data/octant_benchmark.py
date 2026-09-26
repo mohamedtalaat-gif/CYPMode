@@ -53,7 +53,14 @@ def load_inhibition_data(cache_path: str | Path = "data/tdi_track/inputs/octant_
     cache_path = Path(cache_path)
     if not cache_path.exists():
         cache_path.parent.mkdir(parents=True, exist_ok=True)
-        urllib.request.urlretrieve(_PARQUET_URL, cache_path)
+        # Download to a temp file first, then rename into place: urlretrieve
+        # writing straight to cache_path would leave a partial/corrupt file
+        # there on an interrupted download (network drop, Ctrl-C), and the
+        # `if not cache_path.exists()` guard above would then treat that
+        # corrupt file as a valid cache on every future call.
+        tmp_path = cache_path.with_suffix(cache_path.suffix + ".part")
+        urllib.request.urlretrieve(_PARQUET_URL, tmp_path)
+        tmp_path.rename(cache_path)
     return pd.read_parquet(cache_path)
 
 
@@ -94,9 +101,9 @@ def compare_potency_by_motif(df: pd.DataFrame) -> dict:
     u_statistic, p_value = stats.mannwhitneyu(positive, negative, alternative="greater")
 
     return {
-        "n_qc_passed_with_pic50": int(len(scored)),
-        "n_motif_positive": int(len(positive)),
-        "n_motif_negative": int(len(negative)),
+        "n_qc_passed_with_pic50": len(scored),
+        "n_motif_positive": len(positive),
+        "n_motif_negative": len(negative),
         "motif_positive_mean_pIC50": float(positive.mean()),
         "motif_negative_mean_pIC50": float(negative.mean()),
         "motif_positive_median_pIC50": float(positive.median()),

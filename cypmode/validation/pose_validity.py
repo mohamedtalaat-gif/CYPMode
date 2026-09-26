@@ -120,7 +120,6 @@ def _main() -> None:
     cross-referencing separate CSV/dict sources that could drift out of
     sync with the real inputs.
     """
-    import json
 
     import pandas as pd
     import yaml
@@ -128,7 +127,7 @@ def _main() -> None:
     from cypmode.validation.structures import load_structure
 
     input_dir = Path("data/structure_track/inputs")
-    out_dir = input_dir / "out"
+    out_dir = Path("data/structure_track/outputs/out")
 
     rows = []
     for yaml_path in sorted(input_dir.glob("cyp3a4_*.yaml")):

@@ -37,8 +37,11 @@ def ligand_pose_rmsd(mol_a, mol_b) -> float:
     """Symmetry-corrected RMSD between two RDKit mols of the SAME
     molecular graph (same compound, different 3D coordinates) -- e.g.
     from two different structure predictions. Callers must pass copies if
-    the original mols' conformers matter afterward: GetBestRMS aligns
-    mol_b onto mol_a as a side effect.
+    the original mols' conformers matter afterward: GetBestRMS's first
+    positional argument is the probe molecule, so it aligns mol_a onto
+    mol_b as a side effect (confirmed against RDKit's own docstring for
+    GetBestRMS(prbMol, refMol, ...) -- prbMol is left in the aligned
+    state, not refMol).
     """
     return rdMolAlign.GetBestRMS(mol_a, mol_b)
 

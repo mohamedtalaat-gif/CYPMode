@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from cypmode.metrics.motifs import classify_mechanism, detect_motifs
+from cypmode.metrics.motifs import detect_motifs
 
 CYP_ISOFORMS = ["CYP1A2", "CYP2C9", "CYP2C19", "CYP2D6", "CYP3A4"]
 
@@ -39,13 +39,25 @@ def load_isoform(isoform: str, cache_path: str | Path = "data/tdi_track/inputs/t
 
 
 def annotate_mechanism(df: pd.DataFrame) -> pd.DataFrame:
-    """Add motifs/mechanism columns; rows with unparseable SMILES get mechanism='unparseable SMILES'."""
+    """Add motifs/mechanism columns; rows with unparseable SMILES get mechanism='unparseable SMILES'.
+
+    Derives `mechanism` from the same detect_motifs() call rather than
+    also calling classify_mechanism() (which would run detect_motifs()
+    a second time on the same SMILES) -- this loop already runs
+    detect_motifs() once per row across, at load_panel() call time, all
+    5 CYP isoforms' full TDC panels (several thousand rows), so avoiding
+    the redundant second parse+substructure-match pass is worth it here.
+    """
     motifs_col = []
     mechanism_col = []
     for smiles in df["smiles"]:
         try:
             motifs = detect_motifs(smiles)
-            mechanism = classify_mechanism(smiles)
+            mechanism = (
+                "Type II (heme-coordinating motif present)"
+                if motifs
+                else "No coordinating motif detected (Type I or non-classical)"
+            )
         except ValueError:
             motifs, mechanism = None, "unparseable SMILES"
         motifs_col.append(motifs)

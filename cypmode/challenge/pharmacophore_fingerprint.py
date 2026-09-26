@@ -173,9 +173,16 @@ def _main() -> None:
     import argparse
 
     from cypmode.challenge.knn_features import _morgan_fp
-    from cypmode.challenge.stacking_significance import repeated_cv_stacking_comparison, tukey_hsd_summary
+    from cypmode.challenge.stacking_significance import (
+        repeated_cv_stacking_comparison,
+        tukey_hsd_summary,
+    )
     from cypmode.challenge.tdi_ablation import add_ablation_features
-    from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import (
+        TDI_ISOFORMS,
+        compute_descriptors,
+        load_tdi_training_data,
+    )
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--n-workers", type=int, default=1)
@@ -198,6 +205,15 @@ def _main() -> None:
     for cyp in TDI_ISOFORMS:
         col = f"{cyp}_is_TDI"
         cyp_df = tdi_df.dropna(subset=[col]).reset_index(drop=True)
+        # An all-zero fingerprint isn't a neutral value -- it's a specific
+        # false claim ("no pharmacophoric features detected"), the real
+        # signature of a failed embedding/feature-detection, not a valid
+        # observation. Excluded here the same way quantum_pharmacophore.py
+        # and chemberta_significance.py exclude their own per-compound
+        # failure sentinels before scoring -- n_empty above is a global
+        # count across all compounds, not yet isoform-filtered.
+        valid = cyp_df["pharmacophore_fp"].apply(lambda f: f.sum() != 0)
+        cyp_df = cyp_df[valid].reset_index(drop=True)
         y = cyp_df[col].astype(int).to_numpy()
         m3_features = np.stack(cyp_df["m3_features"])
         fps = [_morgan_fp(s) for s in cyp_df["SMILES"]]

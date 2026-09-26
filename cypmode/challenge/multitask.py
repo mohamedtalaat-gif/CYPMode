@@ -16,9 +16,9 @@ masking -- not imputing a fake label -- is how that's actually handled.
 import numpy as np
 import pandas as pd
 import torch
-import torch.nn as nn
 from sklearn.metrics import matthews_corrcoef
 from sklearn.model_selection import KFold
+from torch import nn
 
 ISOFORMS = ["CYP3A4", "CYP2D6"]
 
@@ -125,7 +125,6 @@ def cross_validate_shared_trunk(
     df's full row set and the same random_state.
     """
     X_raw = np.stack(df[feature_col]).astype(np.float32)
-    mean, std = X_raw.mean(axis=0), X_raw.std(axis=0) + 1e-8
 
     y, mask = {}, {}
     for cyp in ISOFORMS:
@@ -136,6 +135,14 @@ def cross_validate_shared_trunk(
     rows = []
     kfold = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
     for fold, (train_idx, val_idx) in enumerate(kfold.split(X_raw)):
+        # mean/std computed from the training fold only -- computing them
+        # over the full X_raw before the loop (as this function used to)
+        # leaks the validation fold's own feature values into the
+        # standardization statistic used to scale it, a real if scale-only
+        # leak. cross_validate_shared_trunk_with_threshold_tuning and
+        # _inner_oof_threshold_shared_trunk already get this right
+        # (train_idx-only); this brings this function in line with them.
+        mean, std = X_raw[train_idx].mean(axis=0), X_raw[train_idx].std(axis=0) + 1e-8
         X_train = _standardize(X_raw[train_idx], mean, std)
         X_val = _standardize(X_raw[val_idx], mean, std)
 
@@ -355,8 +362,6 @@ def cross_validate_multi_branch_shared_trunk(
     """
     X_m3_raw = np.stack(df[m3_col]).astype(np.float32)
     X_chemberta_raw = np.stack(df[chemberta_col]).astype(np.float32)
-    m3_mean, m3_std = X_m3_raw.mean(axis=0), X_m3_raw.std(axis=0) + 1e-8
-    cb_mean, cb_std = X_chemberta_raw.mean(axis=0), X_chemberta_raw.std(axis=0) + 1e-8
 
     y, mask = {}, {}
     for cyp in ISOFORMS:
@@ -367,6 +372,10 @@ def cross_validate_multi_branch_shared_trunk(
     rows = []
     kfold = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
     for fold, (train_idx, val_idx) in enumerate(kfold.split(X_m3_raw)):
+        # Training-fold-only mean/std -- see the identical fix and its
+        # rationale in cross_validate_shared_trunk above.
+        m3_mean, m3_std = X_m3_raw[train_idx].mean(axis=0), X_m3_raw[train_idx].std(axis=0) + 1e-8
+        cb_mean, cb_std = X_chemberta_raw[train_idx].mean(axis=0), X_chemberta_raw[train_idx].std(axis=0) + 1e-8
         X_m3_train = _standardize(X_m3_raw[train_idx], m3_mean, m3_std)
         X_m3_val = _standardize(X_m3_raw[val_idx], m3_mean, m3_std)
         X_cb_train = _standardize(X_chemberta_raw[train_idx], cb_mean, cb_std)
@@ -408,7 +417,10 @@ def _main() -> None:
     # chemberta_significance.py, which would pull lightgbm in transitively.
     from cypmode.challenge.chemberta_features import load_cached_chemberta_embeddings
     from cypmode.challenge.tdi_ablation import add_ablation_features
-    from cypmode.challenge.tdi_baseline import compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import (
+        compute_descriptors,
+        load_tdi_training_data,
+    )
 
     df = add_ablation_features(compute_descriptors(load_tdi_training_data()))
 

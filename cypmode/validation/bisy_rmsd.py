@@ -42,7 +42,11 @@ import numpy as np
 from Bio.PDB import Superimposer
 from rdkit.Chem import rdMolAlign
 
-from cypmode.validation.structures import _STANDARD_RESIDUES, _ligand_atoms, _ligand_mol_3d
+from cypmode.validation.structures import (
+    _STANDARD_RESIDUES,
+    _ligand_atoms,
+    _ligand_mol_3d,
+)
 
 BINDING_SITE_CUTOFF_A = 4.0
 
@@ -92,7 +96,6 @@ def bisy_rmsd(reference_structure, predicted_structure, ligand_smiles: str, liga
     undefined/unstable below 3 points).
     """
     ref_ca = binding_site_ca_atoms(reference_structure, ligand_cutoff)
-    pred_ca = binding_site_ca_atoms(predicted_structure, ligand_cutoff)
     # the pocket is DEFINED on the reference (see module docstring); the
     # predicted structure just needs to supply a C-alpha at each of those
     # same residue ids, not its own separately-computed pocket

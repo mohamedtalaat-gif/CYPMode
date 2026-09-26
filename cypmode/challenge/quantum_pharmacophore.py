@@ -234,17 +234,58 @@ def add_quantum_features(
     return out
 
 
+def load_cached_quantum_features(df: pd.DataFrame, cache_path: str | Path = CACHE_PATH) -> pd.DataFrame:
+    """Joins df against the real quantum-feature cache by SMILES, without
+    computing anything (and therefore never importing tblite) -- the
+    read-only counterpart to add_quantum_features, for a caller that
+    must not risk importing tblite into a process that also uses
+    LightGBM (see module docstring). Raises a clear error if the cache
+    doesn't cover every compound in df, rather than a silent, all-NaN
+    join. Lives here, not in quantum_pharmacophore_significance.py,
+    specifically so a lightgbm-free caller could use it too, matching
+    why chemberta_features.load_cached_chemberta_embeddings lives in
+    the torch-only module rather than its own significance module.
+    """
+    cache_path = Path(cache_path)
+    if not cache_path.exists():
+        raise FileNotFoundError(
+            f"{cache_path} doesn't exist -- run `python -m cypmode.challenge.quantum_pharmacophore` "
+            "first to populate it (a separate, tblite-only process)."
+        )
+    cached = pd.read_csv(cache_path)
+    missing = set(df["SMILES"]) - set(cached["SMILES"])
+    if missing:
+        raise ValueError(
+            f"{len(missing)} compound(s) in df have no cached quantum features -- "
+            "run the extraction step above against the full compound set first."
+        )
+    lookup = cached.set_index("SMILES")
+    out = df.copy()
+    out["quantum_features"] = [
+        lookup.loc[s, FEATURE_NAMES].to_numpy(dtype=np.float64) for s in df["SMILES"]
+    ]
+    return out
+
+
 def _main() -> None:
+    """Extraction only -- computes and caches quantum features, nothing
+    else. Deliberately never imports lightgbm: see module docstring for
+    the real, confirmed tblite+LightGBM same-process conflict. Run
+    `python -m cypmode.challenge.quantum_pharmacophore_significance`
+    (a separate, LightGBM-only process) afterward for the ablation/
+    significance testing against M3 -- the same two-process split
+    chemberta_features.py/chemberta_significance.py already use, for
+    the analogous torch+LightGBM conflict.
+    """
     import argparse
 
-    from sklearn.metrics import matthews_corrcoef
-    from sklearn.model_selection import StratifiedKFold
-
     from cypmode.challenge.tdi_ablation import add_ablation_features
-    from cypmode.challenge.tdi_baseline import TDI_ISOFORMS, compute_descriptors, load_tdi_training_data
-    from lightgbm import LGBMClassifier
+    from cypmode.challenge.tdi_baseline import (
+        compute_descriptors,
+        load_tdi_training_data,
+    )
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--n-workers", type=int, default=1)
     args = parser.parse_args()
 
@@ -254,93 +295,7 @@ def _main() -> None:
 
     n_failed = tdi_df["quantum_features"].apply(lambda f: np.isnan(f).any()).sum()
     print(f"{n_failed}/{len(tdi_df)} compounds had a failed QM calculation (NaN features)")
-
-    all_results = []
-    for cyp in TDI_ISOFORMS:
-        col = f"{cyp}_is_TDI"
-        cyp_df = tdi_df.dropna(subset=[col]).reset_index(drop=True)
-        valid = ~cyp_df["quantum_features"].apply(lambda f: np.isnan(f).any())
-        cyp_df = cyp_df[valid].reset_index(drop=True)
-        y = cyp_df[col].astype(int).to_numpy()
-
-        m3_features = np.stack(cyp_df["m3_features"])
-        quantum_features = np.stack(cyp_df["quantum_features"])
-        m3_plus_q_features = np.hstack([m3_features, quantum_features])
-
-        kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-        rows = []
-        for fold, (train_idx, val_idx) in enumerate(kfold.split(m3_features, y)):
-            m3_model = LGBMClassifier(verbose=-1, random_state=42)
-            m3_model.fit(m3_features[train_idx], y[train_idx])
-            m3_pred = m3_model.predict(m3_features[val_idx])
-
-            m3q_model = LGBMClassifier(verbose=-1, random_state=42)
-            m3q_model.fit(m3_plus_q_features[train_idx], y[train_idx])
-            m3q_pred = m3q_model.predict(m3_plus_q_features[val_idx])
-
-            rows.append(
-                {
-                    "isoform": cyp,
-                    "fold": fold,
-                    "n_val": len(val_idx),
-                    "mcc_m3": matthews_corrcoef(y[val_idx], m3_pred),
-                    "mcc_m3_plus_quantum": matthews_corrcoef(y[val_idx], m3q_pred),
-                }
-            )
-        results = pd.DataFrame(rows)
-        all_results.append(results)
-        print(
-            f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, "
-            f"M3+quantum={results['mcc_m3_plus_quantum'].mean():.4f} (n={len(cyp_df)})"
-        )
-
-    combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/tdi_track/outputs/quantum_pharmacophore_ablation.csv")
-    combined.to_csv(out_path, index=False)
-    print(f"\nwrote {out_path}")
-
-    # The single-split result above showed a mixed/negative point estimate
-    # for both isoforms -- per this project's own standing rule (a
-    # surprising result needs the same repeated-CV + Tukey HSD rigor
-    # already applied to KNN/BindingDB before being trusted either way,
-    # see CYPMode_Architecture_Specification.md), not just accepted at
-    # face value on one split.
-    from cypmode.challenge.knn_features import _morgan_fp
-    from cypmode.challenge.stacking_significance import repeated_cv_stacking_comparison, tukey_hsd_summary
-
-    all_sig_results = []
-    all_sig_summaries = []
-    for cyp in TDI_ISOFORMS:
-        col = f"{cyp}_is_TDI"
-        cyp_df = tdi_df.dropna(subset=[col]).reset_index(drop=True)
-        valid = ~cyp_df["quantum_features"].apply(lambda f: np.isnan(f).any())
-        cyp_df = cyp_df[valid].reset_index(drop=True)
-        y = cyp_df[col].astype(int).to_numpy()
-        m3_features = np.stack(cyp_df["m3_features"])
-        fps = [_morgan_fp(s) for s in cyp_df["SMILES"]]
-        aux_features = {"Quantum": np.stack(cyp_df["quantum_features"])}
-
-        print(f"\nRunning 5x5=25-fold repeated comparison for {cyp} (quantum features)...")
-        sig_results = repeated_cv_stacking_comparison(m3_features, y, fps, aux_features, n_repeats=5, n_splits=5)
-        sig_results.insert(0, "isoform", cyp)
-        all_sig_results.append(sig_results)
-
-        print(f"-- {cyp}: mean MCC per variant (25 folds each) --")
-        print(sig_results.groupby("variant")["mcc"].agg(["mean", "std"]).to_string())
-
-        sig_summary = tukey_hsd_summary(sig_results)
-        sig_summary.insert(0, "isoform", cyp)
-        all_sig_summaries.append(sig_summary)
-        print(f"-- {cyp}: Tukey HSD pairwise comparison --")
-        print(sig_summary.to_string(index=False))
-
-    sig_raw_path = Path("data/tdi_track/outputs/quantum_pharmacophore_significance_raw.csv")
-    pd.concat(all_sig_results, ignore_index=True).to_csv(sig_raw_path, index=False)
-    print(f"\nwrote {sig_raw_path}")
-
-    sig_tukey_path = Path("data/tdi_track/outputs/quantum_pharmacophore_significance_tukey.csv")
-    pd.concat(all_sig_summaries, ignore_index=True).to_csv(sig_tukey_path, index=False)
-    print(f"wrote {sig_tukey_path}")
+    print(f"cached to {CACHE_PATH}")
 
 
 if __name__ == "__main__":
