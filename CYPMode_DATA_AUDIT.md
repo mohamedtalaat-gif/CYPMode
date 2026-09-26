@@ -157,7 +157,7 @@ Both land in the same range as the tutorial's informally-cited ~0.31 / ~0.03 —
 | Trialkylamine flag | `cypmode.metrics.amines` (new) | ✓ | none | Tier 2, built this audit — **same caveat** |
 | Direct-inhibition pIC50 | training only | ✗ (test has none) | high if used directly | OOF bridge only, not built yet |
 | TDI-condition pIC50 | training only | ✗ | high (near-tautological with label) | excluded entirely |
-| Boltz-2 structural coordination | `cypmode.validation` pipeline | computable for any SMILES, but expensive | none (physics-based, not data-derived) | Tier 3, pipeline exists, not yet run on TDI training/test compounds |
+| Boltz-2 structural coordination | `cypmode.validation` pipeline | computable for any SMILES, but expensive | none (physics-based, not data-derived) | Tier 3, pipeline exists and has real per-compound results for the fixed 50-compound Tier 3 selection (`data/tdi_track/outputs/tier3_structural_results.json`); not yet joined into the TDI classifier's own feature matrix -- see CYPMode_Architecture_Specification.md's Status section |
 
 ## M. M0-M3 ablation — the real, multivariate answer
 
