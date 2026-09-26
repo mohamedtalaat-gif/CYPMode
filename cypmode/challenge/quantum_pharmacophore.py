@@ -299,6 +299,49 @@ def _main() -> None:
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 
+    # The single-split result above showed a mixed/negative point estimate
+    # for both isoforms -- per this project's own standing rule (a
+    # surprising result needs the same repeated-CV + Tukey HSD rigor
+    # already applied to KNN/BindingDB before being trusted either way,
+    # see CYPMode_Architecture_Specification.md), not just accepted at
+    # face value on one split.
+    from cypmode.challenge.knn_features import _morgan_fp
+    from cypmode.challenge.stacking_significance import repeated_cv_stacking_comparison, tukey_hsd_summary
+
+    all_sig_results = []
+    all_sig_summaries = []
+    for cyp in TDI_ISOFORMS:
+        col = f"{cyp}_is_TDI"
+        cyp_df = tdi_df.dropna(subset=[col]).reset_index(drop=True)
+        valid = ~cyp_df["quantum_features"].apply(lambda f: np.isnan(f).any())
+        cyp_df = cyp_df[valid].reset_index(drop=True)
+        y = cyp_df[col].astype(int).to_numpy()
+        m3_features = np.stack(cyp_df["m3_features"])
+        fps = [_morgan_fp(s) for s in cyp_df["SMILES"]]
+        aux_features = {"Quantum": np.stack(cyp_df["quantum_features"])}
+
+        print(f"\nRunning 5x5=25-fold repeated comparison for {cyp} (quantum features)...")
+        sig_results = repeated_cv_stacking_comparison(m3_features, y, fps, aux_features, n_repeats=5, n_splits=5)
+        sig_results.insert(0, "isoform", cyp)
+        all_sig_results.append(sig_results)
+
+        print(f"-- {cyp}: mean MCC per variant (25 folds each) --")
+        print(sig_results.groupby("variant")["mcc"].agg(["mean", "std"]).to_string())
+
+        sig_summary = tukey_hsd_summary(sig_results)
+        sig_summary.insert(0, "isoform", cyp)
+        all_sig_summaries.append(sig_summary)
+        print(f"-- {cyp}: Tukey HSD pairwise comparison --")
+        print(sig_summary.to_string(index=False))
+
+    sig_raw_path = Path("data/cyp_challenge/tdi_track/quantum_pharmacophore_significance_raw.csv")
+    pd.concat(all_sig_results, ignore_index=True).to_csv(sig_raw_path, index=False)
+    print(f"\nwrote {sig_raw_path}")
+
+    sig_tukey_path = Path("data/cyp_challenge/tdi_track/quantum_pharmacophore_significance_tukey.csv")
+    pd.concat(all_sig_summaries, ignore_index=True).to_csv(sig_tukey_path, index=False)
+    print(f"wrote {sig_tukey_path}")
+
 
 if __name__ == "__main__":
     _main()
