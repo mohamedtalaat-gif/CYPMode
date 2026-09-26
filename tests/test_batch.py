@@ -105,6 +105,32 @@ def test_to_dataframe_handles_a_successful_result_with_no_affinity_keys():
     assert row["affinity_probability_binary"] is None
 
 
+def test_run_batch_survives_a_table_snapshot_write_failure(tmp_path):
+    # Real regression: a batch launched without pyarrow/fastparquet
+    # installed hit "ImportError: Unable to find a usable engine" on
+    # df.to_parquet -- uncaught, it killed the whole remaining batch, not
+    # just that one snapshot write, silently losing every compound still
+    # queued after the one being processed when it happened. The JSON
+    # checkpoint (the real result) must keep accumulating regardless.
+    results_path = tmp_path / "results.json"
+    table_path = tmp_path / "results"
+
+    def fake_run(name, smiles, **kwargs):
+        return {**FAKE_SUMMARY, "compound": name}
+
+    with (
+        patch("cypmode.validation.batch.run_structural_validation", side_effect=fake_run),
+        patch("pandas.DataFrame.to_parquet", side_effect=ImportError("Unable to find a usable engine")),
+    ):
+        result = run_batch({"a": "CCO", "b": "CCN"}, results_path, table_path=table_path)
+
+    assert result == {"a": {**FAKE_SUMMARY, "compound": "a"}, "b": {**FAKE_SUMMARY, "compound": "b"}}
+    assert json.loads(results_path.read_text()) == result
+    # the CSV write (no external engine dependency) still succeeded even
+    # though parquet didn't -- the failure is isolated to what actually failed
+    assert pd.read_csv(table_path.with_suffix(".csv"))["compound"].tolist() == ["a", "b"]
+
+
 def test_run_batch_writes_csv_and_parquet_when_table_path_given(tmp_path):
     results_path = tmp_path / "results.json"
     table_path = tmp_path / "results"

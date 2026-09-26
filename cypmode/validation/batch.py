@@ -10,11 +10,14 @@ written out at the very end.
 """
 
 import json
+import logging
 from pathlib import Path
 
 import pandas as pd
 
 from cypmode.validation.pipeline import run_structural_validation
+
+logger = logging.getLogger(__name__)
 
 _TABLE_COLUMNS = [
     "compound",
@@ -99,9 +102,22 @@ def run_batch(
             results[name] = {"error": str(exc)}
         results_path.write_text(json.dumps(results, indent=2) + "\n")
         if table_path is not None:
-            df = to_dataframe(results, compounds)
-            df.to_csv(Path(table_path).with_suffix(".csv"), index=False)
-            df.to_parquet(Path(table_path).with_suffix(".parquet"), index=False)
+            # The JSON checkpoint above is the real result -- already
+            # written and safe. This snapshot is a convenience re-export
+            # that regenerates in full from `results` on the very next
+            # iteration anyway, so a failure here (confirmed directly: a
+            # process without pyarrow/fastparquet installed raises
+            # ImportError from to_parquet) must not be allowed to kill the
+            # rest of a real multi-hour batch over one missing snapshot
+            # write -- that would lose every compound still queued after
+            # the one being processed when it happened, not just this
+            # snapshot.
+            try:
+                df = to_dataframe(results, compounds)
+                df.to_csv(Path(table_path).with_suffix(".csv"), index=False)
+                df.to_parquet(Path(table_path).with_suffix(".parquet"), index=False)
+            except Exception as exc:
+                logger.warning("could not write table snapshot for %r (continuing the batch): %s", table_path, exc)
 
     return results
 
