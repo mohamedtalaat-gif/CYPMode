@@ -52,15 +52,19 @@ already-published shared-trunk MCC numbers in
 real, scale-only leak. The fix is in; those numbers should be
 re-generated (see Roadmap).
 
-Total: **14 confirmed issues fixed and re-verified this session**
-(1 Critical, 2 High, 5 Medium, 6 Low), plus **9 confirmed issues
-documented but not fixed** (judgment calls, statistical redesigns, or
-repo-structure decisions that are yours to make — see "Confirmed, not
-fixed"), and a long list of things specifically checked and found
-genuinely correct (see "Verified clean"). All 209 tests pass across every
-required process-isolation group after every fix (178 main + 14
-multitask/torch + 4 ChemBERTa/torch + 13 quantum-pharmacophore/tblite,
-the last two groups also gaining new regression tests this session).
+Total: **16 confirmed issues fixed and re-verified this session**
+(1 Critical, 2 High, 6 Medium, 6 Low — items 1–14 below, plus the
+OCNT-2311782 bond-perception fix and the `batch.py` snapshot-write
+crash fix, both found and fixed during the follow-up exhaustive
+verification pass and described in that section further down), plus
+**10 confirmed issues documented but not fixed** (judgment calls,
+statistical redesigns, or repo-structure decisions that are yours to
+make — see "Confirmed, not fixed," including #24, found during the
+same follow-up pass), and a long list of things specifically checked
+and found genuinely correct (see "Verified clean" and the exhaustive
+verification section below it). All 214 tests pass across every
+required process-isolation group after every fix (183 main + 14
+multitask/torch + 4 ChemBERTa/torch + 13 quantum-pharmacophore/tblite).
 
 ---
 
@@ -185,6 +189,25 @@ Still says "a motif screen plus a validation harness," lists only `dev`/`tdc`/`v
 
 ### 23. [Low] `cypmode/validation/constants.py` has no test file
 Pure data (a coordination-distance float, a 400+ residue protein sequence string) — low real risk, but a typo'd residue would go undetected. Cheapest possible fix if you want it: one test asserting the sequence's length and maybe a known-residue spot-check.
+
+### 24. [Medium] Shared-trunk model isn't actually reproducible run-to-run despite a fixed seed — and the doc already shows the drift
+**Location:** `cypmode/challenge/multitask.py`, `train_shared_trunk`/`cross_validate_shared_trunk`; `data/tdi_track/outputs/shared_trunk_m1.csv` vs. `shared_trunk_m1_threshold_tuning.csv`
+**Evidence:** `torch.manual_seed(seed)` is correctly called with the same `seed=42` every fold (confirmed reading the code), and the fold split itself is deterministic (`KFold(random_state=42)`). But two separate real runs of the identical protocol — `shared_trunk_m1.csv` and the naive-threshold column inside `shared_trunk_m1_threshold_tuning.csv` — give different per-fold CYP2D6 MCC values in every single one of the 5 folds (e.g. fold 0: 0.250 vs. 0.216; fold 1: 0.053 vs. 0.018), not rounding noise. Almost certainly PyTorch's well-known default non-deterministic CPU threading (reduction order in multi-threaded ops isn't fixed by `manual_seed` alone; would need `torch.use_deterministic_algorithms(True)` plus single-threaded execution, or the seed doesn't reach every RNG source this training loop touches).
+**Impact, found directly from this**: `CYPMode_Architecture_Specification.md` itself cites **two different numbers for the same conceptual measurement** (shared-trunk M3-only, untuned, CYP2D6 MCC) in two different sections — **0.099** in the main "Shared Trunk" comparison table (sourced from `shared_trunk_m1_threshold_tuning.csv`'s naive column) and **0.111** in the later multi-branch-fusion paragraph (sourced from the standalone `shared_trunk_m1.csv`). Both are real, both independently verified against their own source file — the documents just drew from two different runs of a model that doesn't reproduce exactly, without anyone noticing they'd drifted apart. Doesn't change any qualitative conclusion (both numbers still clearly beat independent-heads' CYP2D6 MCC), but it's a real precision gap in a project whose whole methodology is built on trusting specific point estimates.
+**Not fixed here** — relevant directly to the pending re-run already tracked in finding #4 (the standardization-leak fix): whoever regenerates these shared-trunk numbers next should consider running multiple seeds and reporting mean±std, the same rigor already applied to every feature-stacking claim in this project, rather than trusting one more single run as ground truth.
+
+---
+
+## Exhaustive data-file verification pass (2026-09-26, same session)
+
+Following up on "did you actually check every file" — yes, now, systematically, not sampled:
+
+- **All 78 real `boltz_results_cyp3a4_*/` structure directories** (not a sample): re-ran `check_pose_validity` + `summarize_compound` against every one with a completed prediction. 74 completed, **zero code errors on any of them** (confirms the OCNT-2311782 fix holds generally, not just in isolation). 61/74 pass every PoseBusters check; 13 fail on named, real checks (12 `minimum_distance_to_protein`, 1 `bond_angles` — OCNT-2311782, now evaluable instead of crashing, but honestly fails a different real check, not a pass). 4 have no structure yet.
+- **Caught and fixed a real bug during this same check**: a prior retry batch had silently lost 3 of 4 queued compounds (never even attempted, not just failed) because it ran under a Python environment missing `pyarrow`, and an unguarded snapshot-write crash killed the whole process after the first one. Fixed in `cypmode/validation/batch.py` (snapshot write now isolated in its own try/except, can't kill the batch) — see the dedicated commit. Relaunched correctly; as of this report 47/50 Tier 3 structures are real successes, 3 have hit repeated real MSA-server failures (public MMseqs2 server flakiness, not a code issue) and are queued for one more attempt.
+- **All 32 CSVs in `data/tdi_track/outputs/`**: every one reads cleanly, correct fold/repeat/variant structure verified for every ablation and 25-fold significance file (not assumed from row counts alone — grouped and checked exactly).
+- **All 4 Tukey HSD significance summaries independently reproduced from raw fold data** (`pairwise_tukeyhsd` recomputed directly, not just re-reading the checked-in summary) — exact match on every pairwise comparison, every isoform, all 4 feature experiments.
+- **Feature-cache population (4,822 compounds) verified identical across all three caches** (ChemBERTa/pharmacophore/quantum) and traced to its real source: exactly the training compounds labeled for at least one isoform — confirmed by direct recomputation, not assumed from consistency alone.
+- **Every numeric claim in `CYPMode_Architecture_Specification.md`'s Component-by-component section independently recomputed from the real underlying CSVs** — M0–M3 ablation, baseline/tuned-threshold MCC, KNN/AID1851/BindingDB ablations, all 8 combined-stacking 25-fold mean±std values, quantum/pharmacophore/ChemBERTa single-split and 25-fold numbers, multi-branch fusion, base-rate-robust threshold (both the natural-rate comparison and the π=0.05/0.45 stress-test values), the split-validity diagnostic's similarity statistics, and the reliability-score correlations. **Every single one matches exactly** except the one real drift documented in finding #24 above.
 
 ---
 
