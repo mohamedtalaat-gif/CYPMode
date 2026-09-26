@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-TDI_DATA = ROOT / "data" / "cyp_challenge" / "tdi_track"
+TDI_DATA = ROOT / "data" / "tdi_track" / "outputs"
 OUT_DIR = Path(__file__).resolve().parent / "tdi_track"
 
 THEMES = {
