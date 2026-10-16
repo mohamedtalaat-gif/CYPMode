@@ -1,0 +1,22 @@
+resp_cyp1a2: trained on 16361 external compounds
+resp_cyp2c9: trained on 16361 external compounds
+resp_cyp2c19: trained on 16361 external compounds
+resp_cyp2d6: trained on 16361 external compounds
+resp_cyp3a4: trained on 16361 external compounds
+pac50_cyp1a2: trained on 16333 external compounds
+pac50_cyp2c9: trained on 16337 external compounds
+pac50_cyp2c19: trained on 16321 external compounds
+pac50_cyp2d6: trained on 16345 external compounds
+pac50_cyp3a4: trained on 16355 external compounds
+6895 challenge compounds scored on 16361 external compounds; wrote data/tdi_track/outputs/caches/ext_continuous.npz
+tresp_cyp2d6: trained on 6787 Tox21 compounds
+tresp_cyp2c19: trained on 6787 Tox21 compounds
+tresp_cyp2c9: trained on 6787 Tox21 compounds
+tresp_cyp1a2: trained on 6787 Tox21 compounds
+tresp_cyp3a4: trained on 6787 Tox21 compounds
+tpac50_cyp2d6: trained on 6787 Tox21 compounds
+tpac50_cyp2c19: trained on 6787 Tox21 compounds
+tpac50_cyp2c9: trained on 6787 Tox21 compounds
+tpac50_cyp1a2: trained on 6787 Tox21 compounds
+tpac50_cyp3a4: trained on 6787 Tox21 compounds
+6895 challenge compounds scored on 7441 Tox21 compounds; wrote data/tdi_track/outputs/caches/ext_tox21.npz

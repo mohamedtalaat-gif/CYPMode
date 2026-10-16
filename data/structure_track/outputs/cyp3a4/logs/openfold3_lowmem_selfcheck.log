@@ -1,0 +1,5 @@
+/Volumes/Data/CYPMode/.venv-openfold3/lib/python3.13/site-packages/openfold3/core/model/primitives/attention.py:54: UserWarning: Triton is not available; the OpenFold3 Triton evoformer kernel is disabled and a non-kernel attention path will be used.
+  from openfold3.core.kernels.triton.evoformer import (
+/Volumes/Data/CYPMode/.venv-openfold3/lib/python3.13/site-packages/openfold3/core/model/primitives/attention.py:158: UserWarning: CUDA is not available or torch_xla is imported. Disabling autocast.
+  with torch.amp.autocast("cuda", dtype=attn_dtype):
+self-check OK: low-memory chunking equals the original chunking and the unchunked layer; call sites patched

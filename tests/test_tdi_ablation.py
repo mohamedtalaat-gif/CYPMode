@@ -29,6 +29,7 @@ def test_add_ablation_features_grows_the_feature_vector_each_tier():
     assert len(out.loc[0, "m1_features"]) == 6  # + motif flag
     assert len(out.loc[0, "m2_features"]) == 7  # + amine flag
     assert len(out.loc[0, "m3_features"]) == 7 + 2048  # + Morgan fingerprint
+    assert len(out.loc[0, "m3_no_amine_features"]) == 6 + 2048  # descriptors + motif + Morgan, no amine
 
     # ketoconazole: motif+, amine-
     assert out.loc[0, "motif_flag"][0] == 1.0
@@ -36,6 +37,25 @@ def test_add_ablation_features_grows_the_feature_vector_each_tier():
     # verapamil: motif-, amine+
     assert out.loc[1, "motif_flag"][0] == 0.0
     assert out.loc[1, "amine_flag"][0] == 1.0
+
+
+def test_m3_no_amine_features_never_contains_the_amine_flag_value():
+    """Real regression: m3_features (used everywhere downstream by default)
+    silently kept the amine flag despite the documented, settled decision
+    to drop it (CYPMode_Architecture_Specification.md's Decision Log).
+    m3_no_amine_features is the corrected production feature set --
+    confirm it's genuinely descriptors+motif+Morgan, with the amine
+    flag's value nowhere in it (not just the same length by coincidence).
+    """
+    df = pd.DataFrame({"SMILES": [VERAPAMIL], "descriptors": [np.zeros(5)]})  # verapamil: amine flag = 1.0
+    out = add_ablation_features(df)
+
+    no_amine = out.loc[0, "m3_no_amine_features"]
+    with_amine = out.loc[0, "m3_features"]
+    assert len(no_amine) == len(with_amine) - 1
+    # m3_features = [descriptors(5), motif(1), amine(1)=1.0, morgan(2048)];
+    # m3_no_amine_features must equal that with the amine slot (index 6) removed.
+    np.testing.assert_array_equal(no_amine, np.delete(with_amine, 6))
 
 
 def _synthetic_ablation_df(n_per_class: int = 20, n_features: int = 5, seed: int = 0) -> pd.DataFrame:

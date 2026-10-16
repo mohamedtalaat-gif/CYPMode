@@ -1,0 +1,4 @@
+  LDDT-PLI (ours), restrained minus unguided, primary stratum: mean change +0.015 over 14 ligands, 7 improved, Wilcoxon p 0.313 (better) / 0.708 (worse), worst drop-one mean -0.003
+  LDDT-PLI (openstructure), restrained minus unguided, primary stratum: mean change +0.030 over 14 ligands, 10 improved, Wilcoxon p 0.121 (better) / 0.892 (worse), worst drop-one mean +0.013
+STRUCTURE GATE restraint_bond_expansion_ost (the registered confirmation repeated with OpenStructure's LDDT-PLI, one-sided Wilcoxon p < 0.05, robust to dropping a ligand): NOT MET
+STRUCTURE GATE restraint_bond_harm_ost (the harm check repeated with OpenStructure's LDDT-PLI, one-sided Wilcoxon that the restraint is worse p < 0.05): NOT MET

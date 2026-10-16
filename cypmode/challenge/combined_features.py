@@ -76,7 +76,7 @@ def cross_validate_combined(
     df: pd.DataFrame,
     label_col: str,
     isoform: str,
-    feature_col: str = "m3_features",
+    feature_col: str = "m3_no_amine_features",
     k: int = 10,
     n_splits: int = 5,
     random_state: int = 42,
@@ -138,7 +138,7 @@ def _main() -> None:
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+KNN+AID1851+BindingDB={results['mcc_combined'].mean():.4f}")
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/tdi_track/outputs/combined_features_ablation.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/combined_features_ablation.csv")
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

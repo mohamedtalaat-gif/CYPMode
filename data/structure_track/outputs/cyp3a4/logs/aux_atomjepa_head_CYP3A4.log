@@ -1,0 +1,7 @@
+
+CYP3A4: 15 outer folds; base stack 23 candidates; added candidates cached: ['atomjepa_head']
+  z0=1.0  diagnostic atomjepa_head: outer AUC 0.7901
+  z0=1.0  stacked base+added vs base: AUC +0.0107 (p=0.028, better 14/15) AP +0.0115 (p=0.115, better 13/15)
+  z0=1.96 diagnostic atomjepa_head: outer AUC 0.8108
+  z0=1.96 stacked base+added vs base: AUC +0.0081 (p=0.059, better 14/15) AP +0.0119 (p=0.179, better 11/15)
+CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

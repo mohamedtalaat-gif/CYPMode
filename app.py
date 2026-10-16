@@ -20,9 +20,9 @@ from rdkit import Chem
 
 from cypmode.metrics.motifs import classify_mechanism, detect_motifs
 
-VALIDATION_SUMMARY_PATH = Path("data/structure_track/outputs/validation_summary.json")
+VALIDATION_SUMMARY_PATH = Path("data/structure_track/outputs/cyp3a4/validation_summary.json")
 CHALLENGE_COMPOUNDS_PATH = Path("data/structure_track/inputs/structure_track_test_blinded.csv")
-CHALLENGE_RESULTS_PATH = Path("data/structure_track/outputs/structure_track_results.csv")
+CHALLENGE_RESULTS_PATH = Path("data/structure_track/outputs/cyp3a4/structure_track_results.csv")
 TDI_FIGURES_DIR = Path("docs/figures/tdi_track")
 
 
@@ -192,54 +192,56 @@ def challenge_tab():
     )
 
 
-def tdi_results_tab():
-    st.caption(
-        "Results from CYPMode's TDI (time-dependent inhibition) track work -- "
-        "structural/mechanistic evidence combined with classical ML to predict "
-        "mechanism-based CYP3A4/CYP2D6 inhibition. Full methodology, including "
-        "findings that didn't work, is in CYPMode_DATA_AUDIT.md and "
-        "CYPMode_Architecture_Specification.md at the repo root -- this tab "
-        "is the short version for anyone, cheminformatics background or not."
-    )
+def _gate_ledger() -> pd.DataFrame:
+    from cypmode.audit.method_report import gate_rows
 
+    return pd.DataFrame(gate_rows(), columns=["log", "gate", "verdict"])
+
+
+def _earlier_stage_figures() -> None:
     mcc_path = TDI_FIGURES_DIR / "tdi_mcc_progression-light.svg"
     reliability_path = TDI_FIGURES_DIR / "tdi_reliability_correlation-light.svg"
-
     if not mcc_path.exists() or not reliability_path.exists():
-        st.warning(
-            f"Figures not found under {TDI_FIGURES_DIR} -- regenerate with "
-            "`python docs/figures/generate_tdi_figures.py` (needs matplotlib)."
-        )
+        st.info(f"Earlier-stage figures not found under {TDI_FIGURES_DIR}; regenerate with `python docs/figures/generate_tdi_figures.py` (needs matplotlib).")
         return
-
-    st.subheader("MCC by pipeline stage")
+    st.subheader("Earlier stages: MCC by pipeline stage")
     st.markdown(
-        "Three stages, same 5-fold cross-validation protocol throughout, so every "
-        "bar is directly comparable: a plain RDKit-descriptor baseline, CYPMode's "
-        "motif screen + a Morgan fingerprint added (**M3**), and the same model "
-        "with its decision threshold tuned for MCC inside each training fold "
-        "(never touching validation labels) instead of left at a naive 0.5 -- "
-        "TDI is a ~21%-positive imbalanced label, so 0.5 was always too "
-        "conservative. A second candidate feature (a trialkylamine flag) was "
-        "tested at the M3 stage too and **dropped** -- it measurably hurt CYP2D6 "
-        "and helped nothing, a real negative result kept in the record rather "
-        "than left out."
+        "Three stages under the same 5-fold cross-validation: a plain RDKit-descriptor baseline, the motif screen plus a Morgan "
+        "fingerprint (**M3**), and the same model with its decision threshold tuned for MCC inside each training fold. A trialkylamine "
+        "flag was tested at the M3 stage and dropped because it lowered CYP2D6 performance."
     )
     st.image(str(mcc_path), width="stretch")
-
-    st.subheader("Does the reliability score actually track real error?")
+    st.subheader("Does the reliability score track real error?")
     st.markdown(
-        "Two candidate reliability signals -- prediction variance across 5 "
-        "same-data, different-seed models, and each compound's chemical "
-        "(Tanimoto) distance from the training set -- checked against whether "
-        "a held-out prediction was actually wrong. Neither is called *validated "
-        "uncertainty quantification* here; that label is reserved for a "
-        "correlation shown to be real and reasonably strong. As measured (a "
-        "single fold, n=717): chemical distance tracks error better than model "
-        "disagreement, and both are weak-to-modest, not strong -- reported as "
-        "measured, not oversold."
+        "Two reliability signals, prediction variance across five models with different seeds and each compound's Tanimoto distance from "
+        "the training set, were compared with whether a held-out prediction was wrong (one fold, n=717). Chemical distance tracked error "
+        "better than model disagreement; both were weak to modest."
     )
     st.image(str(reliability_path), width="stretch")
+
+
+def tdi_results_tab():
+    st.caption(
+        "Current results of the TDI (time-dependent inhibition) track. The tables below are generated from the run logs and the final "
+        "build; the method is described in METHOD_REPORT.md and the negative results in NEGATIVE_RESULTS.md at the repository root."
+    )
+    final = Path("data/tdi_track/outputs/final/final_report.md")
+    st.subheader("Final stack")
+    if final.exists():
+        st.markdown(final.read_text())
+    else:
+        st.info("The final build has not been run in this checkout.")
+    st.subheader("Gate ledger")
+    st.markdown(
+        "Every addition to the model is tested alone and inside the full stack with the corrected resampled t at two confidence "
+        "cut-offs; an addition enters only when its gate is met."
+    )
+    ledger = _gate_ledger()
+    if len(ledger):
+        st.dataframe(ledger, hide_index=True, width="stretch")
+    else:
+        st.info("No gate logs found in this checkout.")
+    _earlier_stage_figures()
 
 
 def app():

@@ -35,7 +35,14 @@ def run_structural_validation(
     recycling_steps: int | None = None,
     max_msa_seqs: int | None = None,
     num_subsampled_msa: int | None = None,
+    diffusion_samples: int | None = None,
     diffusion_samples_affinity: int | None = None,
+    max_parallel_samples: int | None = None,
+    donor_restraint: str | None = None,
+    templates: list | None = None,
+    protein_msa: str | Path | None = None,
+    step_scale: float | None = None,
+    seed: int | None = None,
     write_embeddings: bool = False,
 ) -> dict:
     """Build the input, run Boltz-2 (blocking -- tens of minutes), and summarize
@@ -56,14 +63,20 @@ def run_structural_validation(
     minutes, since capture_output=True previously gave no signal at all
     until the very end.
 
-    target names the protein this run is against (used only in file/
-    directory naming, e.g. "cyp3a4_<name>.yaml") -- defaults to "cyp3a4"
-    to match every existing file this project has, but was a hardcoded
-    literal until now, which would have silently collided CYP2D6 runs'
-    files with CYP3A4's own under the same names. Pass target="cyp2d6"
-    (with a real CYP2D6 protein_sequence) for a different real isoform,
-    rather than reusing this default against a sequence it doesn't
-    actually name.
+    target names the protein this run is against (used in file/directory
+    naming, e.g. "cyp3a4_<name>.yaml") -- defaults to "cyp3a4" to match
+    every existing file this project has, but was a hardcoded literal
+    until now, which would have silently collided CYP2D6 runs' files
+    with CYP3A4's own under the same names. Pass target="cyp2d6" (with a
+    real CYP2D6 protein_sequence) for a different real isoform, rather
+    than reusing this default against a sequence it doesn't actually
+    name.
+
+    out_dir is the shared base for every target's results -- this
+    function always writes to out_dir/target/, not out_dir directly
+    (e.g. the real default resolves to .../outputs/out/cyp3a4/ or
+    .../outputs/out/cyp2d6/), so two targets' Boltz-2 results are never
+    mixed in one flat directory.
     """
     input_dir = Path(input_dir)
     input_dir.mkdir(parents=True, exist_ok=True)
@@ -71,15 +84,24 @@ def run_structural_validation(
 
     coordinating_cys = find_coordinating_cysteine(protein_sequence)
     yaml_path.write_text(
-        build_boltz_yaml(protein_sequence, ligand_smiles, coordinating_cys, predict_affinity=predict_affinity)
+        build_boltz_yaml(
+            protein_sequence, ligand_smiles, coordinating_cys, predict_affinity=predict_affinity, donor_restraint=donor_restraint,
+            templates=templates,
+            protein_msa=protein_msa,
+        )
     )
+
+    # Nested by target so CYP3A4 and CYP2D6 (or any future isoform) results
+    # never land in the same flat directory -- out_dir is the shared base,
+    # this is where boltz is actually told to write for this specific run.
+    target_out_dir = Path(out_dir) / target
 
     command = [
         str(boltz_bin),
         "predict",
         str(yaml_path),
         "--out_dir",
-        str(out_dir),
+        str(target_out_dir),
         "--cache",
         str(cache_dir),
         "--accelerator",
@@ -94,8 +116,16 @@ def run_structural_validation(
         command += ["--max_msa_seqs", str(max_msa_seqs)]
     if num_subsampled_msa is not None:
         command += ["--num_subsampled_msa", str(num_subsampled_msa)]
+    if diffusion_samples is not None:
+        command += ["--diffusion_samples", str(diffusion_samples)]
     if diffusion_samples_affinity is not None:
         command += ["--diffusion_samples_affinity", str(diffusion_samples_affinity)]
+    if step_scale is not None:
+        command += ["--step_scale", str(step_scale)]
+    if seed is not None:
+        command += ["--seed", str(seed)]
+    if max_parallel_samples is not None:
+        command += ["--max_parallel_samples", str(max_parallel_samples)]
     if write_embeddings:
         command.append("--write_embeddings")
 
@@ -111,7 +141,7 @@ def run_structural_validation(
         if returncode != 0:
             raise RuntimeError(f"boltz predict failed for {name!r} (exit {returncode}):\n" + "".join(lines[-100:]))
     else:
-        result = subprocess.run(command, capture_output=True, text=True)
+        result = subprocess.run(command, capture_output=True, text=True, check=False)
         if result.returncode != 0:
             raise RuntimeError(
                 f"boltz predict failed for {name!r} (exit {result.returncode}):\n"
@@ -119,7 +149,7 @@ def run_structural_validation(
                 f"--- stderr (tail) ---\n{result.stderr[-2000:]}"
             )
 
-    result_dir = Path(out_dir) / f"boltz_results_{target}_{name}"
+    result_dir = target_out_dir / f"boltz_results_{target}_{name}"
     return summarize_compound(
         result_dir, ligand_smiles, expect_affinity=predict_affinity, expect_trunk_embedding=write_embeddings
     )

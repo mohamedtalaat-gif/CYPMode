@@ -1,0 +1,30 @@
+2026-10-08 01:59:30,049 lgbm_A_deep_cdrop10: 10/50 tasks
+2026-10-08 01:59:48,357 lgbm_A_deep_cdrop10: 20/50 tasks
+2026-10-08 02:00:01,858 lgbm_A_deep_cdrop10: 30/50 tasks
+2026-10-08 02:00:14,650 lgbm_A_deep_cdrop10: 40/50 tasks
+2026-10-08 02:00:27,992 lgbm_A_deep_cdrop10: 50/50 tasks
+2026-10-08 02:00:41,238 lgbm_A_deep_csoft: 10/50 tasks
+2026-10-08 02:00:52,380 lgbm_A_deep_csoft: 20/50 tasks
+2026-10-08 02:01:03,292 lgbm_A_deep_csoft: 30/50 tasks
+2026-10-08 02:01:14,241 lgbm_A_deep_csoft: 40/50 tasks
+2026-10-08 02:01:24,835 lgbm_A_deep_csoft: 50/50 tasks
+2026-10-08 02:01:45,818 lgbm_A+fps_deep_cdrop10: 10/50 tasks
+2026-10-08 02:02:02,976 lgbm_A+fps_deep_cdrop10: 20/50 tasks
+2026-10-08 02:02:20,355 lgbm_A+fps_deep_cdrop10: 30/50 tasks
+2026-10-08 02:02:37,398 lgbm_A+fps_deep_cdrop10: 40/50 tasks
+2026-10-08 02:02:54,928 lgbm_A+fps_deep_cdrop10: 50/50 tasks
+2026-10-08 02:03:14,057 lgbm_A+fps_deep_csoft: 10/50 tasks
+2026-10-08 02:03:32,973 lgbm_A+fps_deep_csoft: 20/50 tasks
+2026-10-08 02:03:52,409 lgbm_A+fps_deep_csoft: 30/50 tasks
+2026-10-08 02:04:11,708 lgbm_A+fps_deep_csoft: 40/50 tasks
+2026-10-08 02:04:31,309 lgbm_A+fps_deep_csoft: 50/50 tasks
+
+CYP2D6: 15 outer folds; evaluation = similarity x prevalence x confident rows
+  z0=1.0  lgbm_A_deep_cdrop10          vs plain: AUC 0.6964 -> 0.7059 (+0.0095, p=0.601, better 8/15) | AP +0.0670 (p=0.084)
+  z0=1.0  lgbm_A_deep_csoft            vs plain: AUC 0.6964 -> 0.7072 (+0.0108, p=0.525, better 9/15) | AP +0.0327 (p=0.300)
+  z0=1.0  lgbm_A+fps_deep_cdrop10      vs plain: AUC 0.7185 -> 0.7347 (+0.0162, p=0.322, better 10/15) | AP +0.0280 (p=0.568)
+  z0=1.0  lgbm_A+fps_deep_csoft        vs plain: AUC 0.7185 -> 0.7250 (+0.0065, p=0.618, better 9/15) | AP -0.0011 (p=0.972)
+  z0=1.96 lgbm_A_deep_cdrop10          vs plain: AUC 0.7267 -> 0.7435 (+0.0167, p=0.508, better 9/15) | AP +0.0938 (p=0.116)
+  z0=1.96 lgbm_A_deep_csoft            vs plain: AUC 0.7267 -> 0.7488 (+0.0221, p=0.271, better 11/15) | AP +0.0657 (p=0.242)
+  z0=1.96 lgbm_A+fps_deep_cdrop10      vs plain: AUC 0.7396 -> 0.7509 (+0.0113, p=0.560, better 10/15) | AP +0.0259 (p=0.659)
+  z0=1.96 lgbm_A+fps_deep_csoft        vs plain: AUC 0.7396 -> 0.7479 (+0.0083, p=0.623, better 10/15) | AP +0.0068 (p=0.890)

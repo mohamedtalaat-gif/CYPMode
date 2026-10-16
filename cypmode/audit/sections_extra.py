@@ -1,0 +1,191 @@
+"""Audit sections added with the gate-driven build: gate ledger, checklist consistency, environment and seeds, feature-block
+leakage, enforced rules, and the final candidate files. Same contract as ``sections``: everything is computed at run time."""
+
+import re
+import subprocess
+import sys
+import zipfile
+
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+from cypmode.audit.core import LOGS, ROOT, Context, Section, fmt, md_table, sha256
+
+FINAL_TDI = ROOT / "data/tdi_track/outputs/final"
+FINAL_STRUCTURE = ROOT / "data/structure_track/outputs/cyp3a4/final"
+TDI_GATE = re.compile(r"^(CYP\w+) GATE \(([^)]*)\): (MET|NOT MET)", re.M)
+STRUCTURE_GATE = re.compile(r"^STRUCTURE GATE (\w+)([^:\n]*): (MET|NOT MET)", re.M)
+PRIVATE_PATHS = (str(Path.home()), str(ROOT))
+
+
+def gate_ledger(ctx: Context) -> Section:
+    s = Section("14. Gate ledger (every pre-registered verdict found in the run logs, including the negative ones)")
+    rows = []
+    for f in sorted(LOGS.glob("*.log")):
+        text = f.read_text(errors="ignore")
+        rows += [(f.name, iso, rule.strip(), verdict) for iso, rule, verdict in TDI_GATE.findall(text)]
+        rows += [(f.name, "structure", (name + rule).strip(), verdict) for name, rule, verdict in STRUCTURE_GATE.findall(text)]
+    table = pd.DataFrame(rows, columns=["log", "target", "gate", "verdict"])
+    s.body.append(md_table(table) if len(table) else "No gate lines found yet.")
+    met, not_met = int((table.verdict == "MET").sum()) if len(table) else 0, int((table.verdict == "NOT MET").sum()) if len(table) else 0
+    s.body.append(f"\n{met} gates MET, {not_met} NOT MET. A gate that is NOT MET is a measured negative result: the idea is dropped, not tuned until it passes.")
+    s.add("gate verdicts parsed", None, f"{met} met, {not_met} not met")
+    ctx.metrics.update(gates_met=met, gates_not_met=not_met)
+    return s
+
+
+def checklist(ctx: Context) -> Section:
+    from cypmode.audit.checklist import check
+
+    s = Section("15. Checklist consistency (every promise points at something that exists)")
+    problems, loose, counts = check()
+    s.body.append(f"Items: {counts['done']} done, {counts['running']} running, {counts['open']} open. Jobs in the queue: {len(list((ROOT / 'queue/jobs').glob('*.sh')))}.")
+    s.body += [f"- PROBLEM: {p}" for p in problems] or ["No missing job, module or code file."]
+    s.body += [f"- no queue job: {item}" for item in loose]
+    s.add("checklist references resolve", not problems, f"{len(problems)} problems")
+    s.add("every open item has a queue job", not loose, f"{len(loose)} without")
+    return s
+
+
+def environment_and_seeds(ctx: Context) -> Section:
+    s = Section("16. Pinned environment and seed registry")
+    for venv, lock in ((".venv", "requirements-lock.txt"), (".venv-ml", "requirements-lock-ml.txt")):
+        path = ROOT / "environment" / lock
+        py = ROOT / venv / "bin" / "python"
+        if not (path.exists() and py.exists()):
+            s.add(f"{venv} matches {lock}", None, "missing")
+            continue
+        live = subprocess.run([str(py), "-m", "pip", "freeze"], capture_output=True, text=True, check=False).stdout.splitlines()
+        pinned = path.read_text().splitlines()
+
+        def unpinned(line: str) -> str:  # an editable install names the commit it was installed from; the project's own commit changes with every commit
+            return re.sub(r"(-e git\+\S+?)@[0-9a-f]{7,40}", r"\1", line)
+
+        drift = sorted({unpinned(x) for x in live} ^ {unpinned(x) for x in pinned})
+        s.add(f"{venv} matches {lock}", not drift, f"{len(drift)} lines differ")
+        s.body.append(f"`{lock}`: {len(pinned)} pinned packages, sha256 {sha256(path)[:16]}")
+        if drift:
+            s.body.append("Differences: " + "; ".join(drift[:8]) + (" ..." if len(drift) > 8 else ""))
+    seed_rows = []
+    for f in sorted((ROOT / "cypmode").rglob("*.py")):
+        if "audit" in f.parts:
+            continue
+        text = f.read_text(errors="ignore")
+        for m in re.finditer(r"(random_state|seed)\s*[=:]\s*(\d+)", text):
+            seed_rows.append((str(f.relative_to(ROOT)), m.group(1), m.group(2)))
+    table = pd.DataFrame(seed_rows, columns=["file", "kind", "value"]).value_counts().reset_index(name="count").sort_values(["file", "kind", "value"])
+    s.body.append(f"\nSeed registry: {len(table)} distinct (file, kind, value) entries; fixed seeds make every cache reproducible.\n\n" + md_table(table.head(60)))
+    s.add("fixed seeds present", len(table) > 0, f"{len(table)} entries")
+    return s
+
+
+def block_leakage(ctx: Context) -> Section:
+    """No feature block may depend on a label: blocks take structures only, caches hold no label columns."""
+    import inspect
+
+    from cypmode.challenge.feature_store import BLOCKS, OPT_IN_BLOCKS
+    from cypmode.challenge.physics_block import FEATURE_NAMES
+
+    s = Section("17. Feature-block leakage checks")
+    rows = []
+    for name, fn in sorted(BLOCKS.items()):
+        params = list(inspect.signature(fn).parameters) if callable(fn) else []
+        rows.append((name, "opt-in" if name in OPT_IN_BLOCKS else "default", ",".join(params), "structures only" if params in (["mols"], ["mols_"]) or len(params) == 1 else "CHECK"))
+    s.body.append(md_table(pd.DataFrame(rows, columns=["block", "kind", "arguments", "inputs"])))
+    s.add("every feature block takes only structures", all(r[3] == "structures only" for r in rows), "label-free by construction (ext_activity uses external panels, tested separately)")
+    physics = ROOT / "data/tdi_track/outputs/caches/physics_cache.csv"
+    if physics.exists():
+        cols = set(pd.read_csv(physics, nrows=1).columns)
+        s.add("physics cache holds no label or measurement column", cols <= set(FEATURE_NAMES) | {"SMILES"}, f"{len(cols)} columns")
+    mmp = ROOT / "data/tdi_track/outputs/caches/mmp_pairs.npz"
+    if mmp.exists():
+        keys = set(np.load(mmp, allow_pickle=True).files)
+        s.add("matched-pair cache is label-free", keys <= {"key", "a", "b", "t", "names"}, ", ".join(sorted(keys)))
+    chem = ROOT / "data/tdi_track/outputs/caches/chemeleon_embeddings.npz"
+    if chem.exists():
+        keys = set(np.load(chem, allow_pickle=True).files)
+        s.add("CheMeleon cache is label-free", keys <= {"smiles", "embeddings"}, ", ".join(sorted(keys)))
+    return s
+
+
+def enforced_rules(ctx: Context) -> Section:
+    s = Section("18. Standing rules enforced by script")
+    arabic = re.compile("[" + chr(0x0600) + "-" + chr(0x06FF) + "]")  # Arabic script block, built from code points so this file stays ASCII
+    offenders, private = [], []
+    for base in ("cypmode", "scripts", "tests", "queue"):
+        for f in sorted((ROOT / base).rglob("*")):
+            if f.suffix not in (".py", ".sh") or "__pycache__" in f.parts:
+                continue
+            text = f.read_text(errors="ignore")
+            if arabic.search(text):
+                offenders.append(str(f.relative_to(ROOT)))
+    for name in ("README.md", "CONTRIBUTING.md", "CITATION.cff", "METHOD_REPORT.md", "NEGATIVE_RESULTS.md"):
+        f = ROOT / name
+        if f.exists() and any(p in f.read_text(errors="ignore") for p in PRIVATE_PATHS):
+            private.append(name)
+    s.add("source code comments are English only (no Arabic script in code)", not offenders, ", ".join(offenders[:5]) or "none found")
+    s.add("public documents carry no private local paths", not private, ", ".join(private) or "none found")
+    s.body.append("Rules checked: code comments in English; no private paths in the documents meant to be public; attribution hygiene is section 12.")
+    return s
+
+
+def final_candidates(ctx: Context) -> Section:
+    from cypmode.challenge.submission import portal_validate_classification, portal_validate_structure
+
+    s = Section("19. Final candidate files (hashes and the portal's own checks)")
+    rows = []
+    for f in sorted(FINAL_TDI.glob("candidate_*.csv")):
+        ok, message = portal_validate_classification(f)
+        d = pd.read_csv(f)
+        order_ok = d["Molecule_Name"].tolist() == ctx.test["Molecule_Name"].tolist()
+        rows.append((f.name, sha256(f)[:16], ok and order_ok, float(d.CYP3A4_is_TDI.mean()), float(d.CYP2D6_is_TDI.mean())))
+        s.add(f"{f.name} passes the portal checks and keeps the test-file order", ok and order_ok, message)
+    zips = sorted(FINAL_STRUCTURE.glob("*.zip"))
+    for z in zips:
+        ok, message = portal_validate_structure(z)
+        with zipfile.ZipFile(z) as zf:
+            n = len(zf.namelist())
+        s.add(f"{z.name} passes the portal check ({n} files)", ok, message)
+        s.body.append(f"`{z.name}` sha256 {sha256(z)[:16]}")
+        try:
+            from cypmode.validation.official_posebusters import MARGIN_FLOOR, check_zip
+
+            official = pd.read_csv(ROOT / "data/structure_track/inputs/structure_track_test_blinded.csv")
+            reports = check_zip(z, dict(zip(official.Molecule_Name, official.SMILES, strict=True)))
+            passes = sum(r.passed for r in reports.values())
+            smallest = min((r.distance_margin for r in reports.values() if np.isfinite(r.distance_margin)), default=float("nan"))
+            s.body.append("\nThe zip checked the way the organisers' scorer checks it (22 PoseBusters checks, dock configuration, bond orders from the SMILES, receptor = the complex minus the ligand):\n")
+            s.body.append(md_table(pd.DataFrame([(k, r.passed, r.n_checks, fmt(r.distance_margin, 3), ",".join(r.failed) or r.error or "-") for k, r in reports.items()], columns=["compound", "passes", "checks", "smallest relative distance", "failed"])))
+            s.add(f"{z.name}: every structure passes the scorer's own PoseBusters call", passes == len(reports) == 20, f"{passes} of {len(reports)} pass")
+            s.add(f"{z.name}: every structure clears a relative distance of {MARGIN_FLOOR} to the receptor (the scorer's threshold is 0.75)", bool(smallest >= MARGIN_FLOOR), f"smallest {fmt(smallest, 3)}")
+        except ImportError:
+            s.add(f"{z.name}: scorer-exact PoseBusters check", None, "posebusters not installed")
+    s.body.insert(0, md_table(pd.DataFrame(rows, columns=["file", "sha256", "valid", "CYP3A4 rate", "CYP2D6 rate"])) if rows else "No final TDI candidate files yet (job 090).")
+    if not rows:
+        s.add("final TDI candidate files present", None, "pending job 090")
+    return s
+
+
+EXTRA = [gate_ledger, checklist, environment_and_seeds, block_leakage, enforced_rules, final_candidates]
+_ = sys
+
+
+def multiplicity(ctx: Context) -> Section:
+    from cypmode.challenge.multiplicity import collect
+
+    s = Section("14b. Multiplicity of the additions tested together (Holm adjustment next to the pre-registered gates)")
+    table = collect(LOGS)
+    if not len(table):
+        s.body.append("No stacked test of the added candidates found in the logs yet.")
+        s.add("Holm-adjusted p-values of the added tests", None, "pending")
+        return s
+    s.body.append("The p-value of an addition is the larger of its two confidence cut-offs (its gate needs both); Holm adjusts those over every addition of the batch. The pre-registered gate decides what enters the model.\n")
+    s.body.append(md_table(table.round(4)))
+    survivors = table[(table.holm_adjusted < 0.05) & table.gain_positive_at_both]
+    s.add("additions whose stacked gain survives the Holm adjustment over the batch", None, f"{len(survivors)} of {len(table)}")
+    return s
+
+
+EXTRA.insert(1, multiplicity)

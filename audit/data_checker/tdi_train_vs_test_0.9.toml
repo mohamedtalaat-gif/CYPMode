@@ -1,0 +1,14 @@
+# The organisers' data checker (https://github.com/OpenADMET/challenge-data-checker): the TDI training file against the blinded test file with a near-duplicate threshold of 0.9 (the test set was built from analogs of training-set hits, so close pairs are expected; the count is information, not a defect).
+[paths]
+train_files = ["data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv"]
+test_files = ["data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv"]
+report_output = "audit/data_checker/tdi_train_vs_test_0.9.json"
+
+[columns]
+smiles_column = "SMILES"
+identifier_columns = ["Molecule_Name"]
+
+[settings]
+tautomer_standardisation = false
+max_train_test_similarity = 0.9
+report_format = "json"

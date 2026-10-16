@@ -1,0 +1,7 @@
+compound,smiles,coordinated,closest_motif_nitrogen_distance_angstrom,closest_motif,closest_motif_atom,confidence_score,affinity_pred_value,affinity_probability_binary,error
+bench-2QH-febond,Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F,True,1.98,pyridine,N28,0.9293575286865234,,,
+bench-PK9-febond,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,1.95,pyridine,N30,0.9329367876052856,,,
+bench-TPF-febond,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,1.97,triazole_1_2_4,N15,0.9513601064682007,,,
+bench-MWV-febond,CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F,False,14.93,imidazole,N41,0.917892575263977,,,
+bench-A1ASV-febond,CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F,True,1.99,imidazole_Nsub,N21,0.9593923687934875,,,
+bench-A1A4S-febond,c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5,True,2.1,pyridine,N39,0.9377113580703735,,,

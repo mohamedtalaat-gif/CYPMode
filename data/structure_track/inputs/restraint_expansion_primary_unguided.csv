@@ -1,0 +1,15 @@
+Molecule_Name,SMILES
+exp-08J,Cc1ncc2n1-c3ccc(cc3C(=NC2)c4ccccc4F)Cl
+exp-80K,CC(C)(C)OC(=O)NCCSCC(C(=O)NCc1cccnc1)Nc2ccccc2
+exp-A1ASP,c1ccc(c(c1)CC(=O)Nc2cc(ccc2n3ccnc3)C(F)(F)F)Cl
+exp-A1ASQ,c1ccc(c(c1)CCCl)NC(=O)Nc2cc(ccc2n3ccnc3)C(F)(F)F
+exp-A1ASR,c1ccc(c(c1)NC(=O)Nc2cc(ccc2n3ccnc3)C(F)(F)F)Cl
+exp-A1ASS,c1cc(c(cc1C(F)(F)F)NC(=O)C2CCC2)n3ccnc3
+exp-A1AST,c1ccc(c(c1)CCC(=O)NCC2Cc3cccc(c3O2)c4cccnc4)Cl
+exp-A1ASU,Cc1nc(cs1)c2ccc(cc2)n3c(cnn3)c4ccc(cc4)OC
+exp-CFF,Cn1cnc2c1C(=O)N(C(=O)N2C)C
+exp-CL6,c1ccc(cc1)C(c2ccccc2)(c3ccccc3Cl)n4ccnc4
+exp-D7M,CC(C)(C)OC(=O)NCCSCC(C(=O)NCc1cccnc1)NC2CCCC2
+exp-D7Y,CC(C)NC(CSCCNC(=O)OC(C)(C)C)C(=O)NCc1cccnc1
+exp-J9K,CC(C)(C)OC(=O)NC(Cc1ccccc1)CSCCC(=O)NCc2cccnc2
+exp-MYT,CC(C)(c1cccnc1)C(=O)c2cccnc2

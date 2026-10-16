@@ -1,0 +1,17 @@
+
+CYP2D6: 13078 directed matched pairs among 6895 compounds; pool compounds with a matched partner in the pool 0.090; test compounds with a partner in the pool 0.249
+best-supported transformations (shrunk mean label change n -> q, training pairs):
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['lgbm_mmp_A', 'lgbm_mmp_A+fps']
+  z0=1.0  diagnostic lgbm_mmp_A: outer AUC 0.7031
+  z0=1.0  diagnostic lgbm_mmp_A+fps: outer AUC 0.7227
+  z0=1.0  alone  lgbm_mmp_A               vs lgbm_A_deep     : AUC 0.6964 -> 0.7031 (+0.0067, p=0.707, better 8/15) | AP +0.0076 (p=0.782)
+  z0=1.0  alone  lgbm_mmp_A+fps           vs lgbm_A+fps_deep : AUC 0.7185 -> 0.7227 (+0.0041, p=0.814, better 7/15) | AP -0.0058 (p=0.831)
+  z0=1.0  stacked base+added vs base: AUC -0.0048 (p=0.520, better 5/15) AP -0.0048 (p=0.467, better 5/15)
+  z0=1.96 diagnostic lgbm_mmp_A: outer AUC 0.7337
+  z0=1.96 diagnostic lgbm_mmp_A+fps: outer AUC 0.7458
+  z0=1.96 alone  lgbm_mmp_A               vs lgbm_A_deep     : AUC 0.7267 -> 0.7337 (+0.0070, p=0.735, better 7/15) | AP +0.0112 (p=0.789)
+  z0=1.96 alone  lgbm_mmp_A+fps           vs lgbm_A+fps_deep : AUC 0.7396 -> 0.7458 (+0.0062, p=0.756, better 8/15) | AP +0.0070 (p=0.858)
+  z0=1.96 stacked base+added vs base: AUC +0.0010 (p=0.774, better 7/15) AP +0.0014 (p=0.833, better 6/15)
+CYP2D6 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

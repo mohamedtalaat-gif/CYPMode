@@ -1,17 +1,20 @@
-"""Joins Tier 3's real Boltz-2 structural evidence into the TDI feature
-matrix, and tests whether it moves CYP3A4 classification performance --
-the real question CYPMode_Architecture_Specification.md's Decision Log
-flags as still open ("[shared trunk] Not treated as final until Tier 3's
-structural features are wired in for CYP3A4, which could change its
-calculus again").
+"""Joins a Tier 3 (real Boltz-2 structural evidence) batch into the TDI
+feature matrix, and tests whether it moves that isoform's classification
+performance. Originally built for CYP3A4 only, per
+CYPMode_Architecture_Specification.md's Decision Log ("[shared trunk] Not
+treated as final until Tier 3's structural features are wired in for
+CYP3A4"); generalized to any isoform (CYP2D6's own due-diligence batch,
+same OOF-uncertainty budgeted-selection methodology, see
+cypmode.challenge.tier3_selection) via --isoform, since the join/compare
+logic below never actually depended on which isoform it was.
 
-Tier 3 covers a fixed budget of 50 CYP3A4 compounds only (see
-cypmode.challenge.tier3_selection), so on the full ~3,584-compound
-labeled population this feature is missing (NaN) for all but ~1.4% of
-rows -- LightGBM's native NaN handling (already relied on elsewhere in
-this project, e.g. the OOF Direct-Inhibition Bridge's own missingness)
-means the model can use it where present without needing to impute or
-drop rows. But a full-population MCC delta would dilute any real effect
+Tier 3 covers a fixed budget of 50 compounds only (see
+cypmode.challenge.tier3_selection), so on the full labeled population
+this feature is missing (NaN) for all but a small fraction of rows --
+LightGBM's native NaN handling (already relied on elsewhere in this
+project, e.g. the OOF Direct-Inhibition Bridge's own missingness) means
+the model can use it where present without needing to impute or drop
+rows. But a full-population MCC delta would dilute any real effect
 almost to invisibility by construction: the only fair test is the effect
 specifically on compounds Tier 3 actually covers, which is what the
 repeated-CV comparison here measures (matching this project's own
@@ -35,7 +38,7 @@ from lightgbm import LGBMClassifier
 from sklearn.metrics import matthews_corrcoef
 from sklearn.model_selection import StratifiedKFold
 
-TIER3_RESULTS_PATH = Path("data/tdi_track/outputs/tier3_structural_results.json")
+TIER3_RESULTS_PATH = Path("data/tdi_track/outputs/cyp3a4/tier3_structural_results.json")
 TIER3_FEATURE_COLUMNS = ["tier3_coordinated", "tier3_fe_n_distance", "tier3_confidence_score"]
 
 # Real observed Fe-N distances run ~2-14 A (see CYPMode_Architecture_Specification.md's
@@ -107,7 +110,7 @@ def repeated_cv_tier3_comparison(
     restricted to stay honest about where it can plausibly help.
 
     Long-format output (one row per repeat x fold x variant) -- directly
-    usable by cypmode.challenge.stacking_significance.tukey_hsd_summary.
+    usable by cypmode.challenge.stacking_significance.paired_comparison_summary.
     A repeat/fold with zero Tier3-covered validation rows contributes no
     row at all (nothing to score); one with a single-class Tier3 subset
     (rare at n~10, but real at this small a scale) contributes a NaN mcc
@@ -149,29 +152,57 @@ def repeated_cv_tier3_comparison(
     return pd.DataFrame(rows)
 
 
+CYP2D6_RESULTS_PATH = Path("data/tdi_track/outputs/cyp2d6/tier3_structural_results.json")
+
+
 def _main() -> None:
-    from cypmode.challenge.stacking_significance import tukey_hsd_summary
+    import argparse
+
+    from cypmode.challenge.stacking_significance import paired_comparison_summary
     from cypmode.challenge.tdi_ablation import add_ablation_features
-    from cypmode.challenge.tdi_baseline import compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import (
+        compute_descriptors,
+        load_tdi_training_data,
+    )
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--isoform", default="CYP3A4", choices=["CYP3A4", "CYP2D6"], help="which isoform's TDI label + Tier3 batch to test"
+    )
+    parser.add_argument(
+        "--results-path", type=Path, default=None, help="defaults to that isoform's own real Tier3 results file"
+    )
+    args = parser.parse_args()
+    isoform = args.isoform
+    is_default_isoform = isoform == "CYP3A4"
+
+    results_path = args.results_path or (TIER3_RESULTS_PATH if is_default_isoform else CYP2D6_RESULTS_PATH)
 
     df = add_ablation_features(compute_descriptors(load_tdi_training_data()))
-    df = add_tier3_features(df)
+    df = add_tier3_features(df, results_path=results_path)
 
-    cyp_df = df.dropna(subset=["CYP3A4_is_TDI"]).reset_index(drop=True)
-    y = cyp_df["CYP3A4_is_TDI"].astype(int).to_numpy()
-    m3_features = np.stack(cyp_df["m3_features"])
+    label_col = f"{isoform}_is_TDI"
+    cyp_df = df.dropna(subset=[label_col]).reset_index(drop=True)
+    y = cyp_df[label_col].astype(int).to_numpy()
+    # m3_no_amine_features, not m3_features -- see cypmode.challenge.tdi_ablation's
+    # own docstring for why m3_features (amine flag still included) is the wrong
+    # production base; a real, previously-undiscovered bug, already fixed and
+    # re-verified for every other module in this project.
+    m3_features = np.stack(cyp_df["m3_no_amine_features"])
     tier3_features = cyp_df[TIER3_FEATURE_COLUMNS].to_numpy(dtype=np.float64)
     has_tier3 = cyp_df["has_tier3_data"].to_numpy()
 
     n_covered = int(has_tier3.sum())
-    print(f"CYP3A4: {n_covered}/{len(cyp_df)} labeled compounds have real Tier 3 structural data")
+    print(f"{isoform}: {n_covered}/{len(cyp_df)} labeled compounds have real Tier 3 structural data")
 
     results = repeated_cv_tier3_comparison(m3_features, tier3_features, y, has_tier3)
     print(f"\n{results['n_val_tier3'].groupby(results['repeat']).sum().to_dict()}")
     print("\n-- mean MCC per variant, scored only on Tier3-covered validation rows --")
     print(results.groupby("variant")["mcc"].agg(["mean", "std", "count"]).to_string())
 
-    out_path = Path("data/tdi_track/outputs/tier3_significance_raw.csv")
+    isoform_dir = Path(f"data/tdi_track/outputs/{isoform.lower()}")
+    isoform_dir.mkdir(parents=True, exist_ok=True)
+    out_path = isoform_dir / "tier3_significance_raw.csv"
     results.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 
@@ -180,10 +211,10 @@ def _main() -> None:
     if n_dropped:
         print(f"({n_dropped} repeat/fold rows had an undefined MCC -- single-class Tier3 validation subset -- excluded from the Tukey test)")
 
-    summary = tukey_hsd_summary(scoreable)
+    summary = paired_comparison_summary(scoreable)
     print("\n-- Tukey HSD pairwise comparison (M3 vs M3+Tier3) --")
     print(summary.to_string(index=False))
-    summary_path = Path("data/tdi_track/outputs/tier3_significance_tukey.csv")
+    summary_path = isoform_dir / "tier3_significance_tukey.csv"
     summary.to_csv(summary_path, index=False)
     print(f"wrote {summary_path}")
 

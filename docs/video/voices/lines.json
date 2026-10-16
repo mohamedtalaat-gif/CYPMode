@@ -1,0 +1,474 @@
+[
+ {
+  "speaker": "Narrator",
+  "kind": "subtitle",
+  "start": 3.15,
+  "end": 6.25,
+  "text": "Meet Cap, a drug molecule.",
+  "scene": "open"
+ },
+ {
+  "speaker": "Narrator",
+  "kind": "subtitle",
+  "start": 8.65,
+  "end": 12.55,
+  "text": "CYP3A4 is a liver enzyme that clears many medicines from the body.",
+  "scene": "open"
+ },
+ {
+  "speaker": "Narrator",
+  "kind": "subtitle",
+  "start": 12.950000000000001,
+  "end": 16.95,
+  "text": "Will Cap switch it off, and keep it off?",
+  "scene": "open"
+ },
+ {
+  "speaker": "Narrator",
+  "kind": "subtitle",
+  "start": 18.349999999999998,
+  "end": 22.15,
+  "text": "CYPMode answers this for two real tasks of the OpenADMET challenge.",
+  "scene": "open"
+ },
+ {
+  "speaker": "Narrator",
+  "kind": "subtitle",
+  "start": 22.549999999999997,
+  "end": 25.75,
+  "text": "750 hidden molecules to classify, and 20 ligands to place in the enzyme.",
+  "scene": "open"
+ },
+ {
+  "speaker": "Kai",
+  "kind": "card",
+  "start": 31.5,
+  "end": 43.7,
+  "text": "I run the assay. Every compound is measured twice: at once, and after a head start with the enzyme.",
+  "scene": "kai"
+ },
+ {
+  "speaker": "Kai",
+  "kind": "card",
+  "start": 32.5,
+  "end": 43.7,
+  "text": "The shift between the two is the label.",
+  "scene": "kai"
+ },
+ {
+  "speaker": "Kai",
+  "kind": "subtitle",
+  "start": 44.75,
+  "end": 48.15,
+  "text": "Kai measures every compound twice.",
+  "scene": "kai"
+ },
+ {
+  "speaker": "Kai",
+  "kind": "subtitle",
+  "start": 48.75,
+  "end": 52.95,
+  "text": "Cap's two measurements agree: the compound is not time-dependent.",
+  "scene": "kai"
+ },
+ {
+  "speaker": "Kai",
+  "kind": "subtitle",
+  "start": 54.75,
+  "end": 60.55,
+  "text": "Real data: every point is one compound of the challenge.",
+  "scene": "kai"
+ },
+ {
+  "speaker": "Kai",
+  "kind": "subtitle",
+  "start": 61.15,
+  "end": 67.35,
+  "text": "Above the line, the head start made the compound clearly stronger: that is the label.",
+  "scene": "kai"
+ },
+ {
+  "speaker": "Scout",
+  "kind": "card",
+  "start": 69.5,
+  "end": 81.7,
+  "text": "I go through every file the organisers released and compare it, by compound name, with the blinded test set.",
+  "scene": "scout"
+ },
+ {
+  "speaker": "Scout",
+  "kind": "card",
+  "start": 70.5,
+  "end": 81.7,
+  "text": "A compound of the test set is taken out before anything is computed.",
+  "scene": "scout"
+ },
+ {
+  "speaker": "Scout",
+  "kind": "subtitle",
+  "start": 82.75,
+  "end": 87.15,
+  "text": "Scout goes through every file the organisers released.",
+  "scene": "scout"
+ },
+ {
+  "speaker": "Scout",
+  "kind": "subtitle",
+  "start": 87.75,
+  "end": 93.15,
+  "text": "Only names are compared: the measurement of a test compound is never read.",
+  "scene": "scout"
+ },
+ {
+  "speaker": "Scout",
+  "kind": "subtitle",
+  "start": 93.75,
+  "end": 99.15,
+  "text": "Three of the six files hold test compounds, five in all. They are taken out first.",
+  "scene": "scout"
+ },
+ {
+  "speaker": "Scout",
+  "kind": "subtitle",
+  "start": 99.75,
+  "end": 105.35,
+  "text": "The organisers confirmed the overlap of the Octant release.",
+  "scene": "scout"
+ },
+ {
+  "speaker": "Bits",
+  "kind": "card",
+  "start": 107.5,
+  "end": 119.7,
+  "text": "I turn molecules into numbers a model can read: which small groups of atoms are present, how big, how polar, how reactive.",
+  "scene": "bits"
+ },
+ {
+  "speaker": "Bits",
+  "kind": "card",
+  "start": 108.5,
+  "end": 119.7,
+  "text": "12,262 numbers for every compound.",
+  "scene": "bits"
+ },
+ {
+  "speaker": "Bits",
+  "kind": "subtitle",
+  "start": 120.75,
+  "end": 125.35,
+  "text": "Bits turns a real molecule into numbers.",
+  "scene": "bits"
+ },
+ {
+  "speaker": "Bits",
+  "kind": "subtitle",
+  "start": 126.15,
+  "end": 131.35,
+  "text": "A fingerprint records which small groups of atoms the molecule contains.",
+  "scene": "bits"
+ },
+ {
+  "speaker": "Bits",
+  "kind": "subtitle",
+  "start": 132.15,
+  "end": 137.55,
+  "text": "Descriptors record its size, its shape and how polar it is.",
+  "scene": "bits"
+ },
+ {
+  "speaker": "Bits",
+  "kind": "subtitle",
+  "start": 138.15,
+  "end": 143.35,
+  "text": "Together: 12,262 numbers describe every compound.",
+  "scene": "bits"
+ },
+ {
+  "speaker": "Stacker",
+  "kind": "card",
+  "start": 145.5,
+  "end": 157.7,
+  "text": "I train 23 different models. Each votes on whether a compound switches an enzyme off for good.",
+  "scene": "stacker"
+ },
+ {
+  "speaker": "Stacker",
+  "kind": "card",
+  "start": 146.5,
+  "end": 157.7,
+  "text": "Then a logistic stack learns whom to trust and blends the votes into one score.",
+  "scene": "stacker"
+ },
+ {
+  "speaker": "Stacker",
+  "kind": "subtitle",
+  "start": 158.75,
+  "end": 165.15,
+  "text": "Stacker's 23 models each cast a vote.",
+  "scene": "stacker"
+ },
+ {
+  "speaker": "Stacker",
+  "kind": "subtitle",
+  "start": 166.15,
+  "end": 171.35,
+  "text": "A logistic stack learns whom to trust.",
+  "scene": "stacker"
+ },
+ {
+  "speaker": "Stacker",
+  "kind": "subtitle",
+  "start": 172.15,
+  "end": 177.15,
+  "text": "Its ranking is checked on folds that no choice has seen.",
+  "scene": "stacker"
+ },
+ {
+  "speaker": "Stacker",
+  "kind": "subtitle",
+  "start": 177.75,
+  "end": 181.35,
+  "text": "One score per compound: the highest are called positive.",
+  "scene": "stacker"
+ },
+ {
+  "speaker": "Gatekeeper",
+  "kind": "card",
+  "start": 183.5,
+  "end": 195.7,
+  "text": "Before an experiment runs, I write down the rule it must pass. Nothing is tuned until it passes.",
+  "scene": "gate"
+ },
+ {
+  "speaker": "Gatekeeper",
+  "kind": "card",
+  "start": 184.5,
+  "end": 195.7,
+  "text": "Every idea is judged alone and inside the final blend.",
+  "scene": "gate"
+ },
+ {
+  "speaker": "Gatekeeper",
+  "kind": "subtitle",
+  "start": 196.55,
+  "end": 199.75,
+  "text": "Gatekeeper fixes the rule before the result exists.",
+  "scene": "gate"
+ },
+ {
+  "speaker": "Gatekeeper",
+  "kind": "subtitle",
+  "start": 200.35,
+  "end": 205.35,
+  "text": "Every idea the project tried is in the ledger.",
+  "scene": "gate"
+ },
+ {
+  "speaker": "Gatekeeper",
+  "kind": "subtitle",
+  "start": 205.95000000000002,
+  "end": 211.55,
+  "text": "Almost all of them ended \"not met\": the data did not support them.",
+  "scene": "gate"
+ },
+ {
+  "speaker": "Quanta",
+  "kind": "card",
+  "start": 213.5,
+  "end": 225.7,
+  "text": "I computed orbitals and reactive sites with GFN2-xTB, atom by atom, for thousands of molecules.",
+  "scene": "gate"
+ },
+ {
+  "speaker": "Quanta",
+  "kind": "subtitle",
+  "start": 226.75,
+  "end": 230.95,
+  "text": "Quanta computed physics for every compound with GFN2-xTB.",
+  "scene": "gate"
+ },
+ {
+  "speaker": "Quanta",
+  "kind": "subtitle",
+  "start": 231.55,
+  "end": 235.35,
+  "text": "Some columns carry signal alone, but no physics idea passed its gate.",
+  "scene": "gate"
+ },
+ {
+  "speaker": "Quanta",
+  "kind": "subtitle",
+  "start": 235.95000000000002,
+  "end": 239.35,
+  "text": "Beautiful physics: honestly reported as not used.",
+  "scene": "gate"
+ },
+ {
+  "speaker": "Foundry",
+  "kind": "card",
+  "start": 243.5,
+  "end": 255.7,
+  "text": "I start from models pretrained on millions of molecules and ask whether any of them improves the blend.",
+  "scene": "foundry"
+ },
+ {
+  "speaker": "Foundry",
+  "kind": "card",
+  "start": 244.5,
+  "end": 255.7,
+  "text": "Each one is added to the stack and judged by the same rule.",
+  "scene": "foundry"
+ },
+ {
+  "speaker": "Foundry",
+  "kind": "subtitle",
+  "start": 256.75,
+  "end": 261.15,
+  "text": "Foundry starts from models pretrained on millions of molecules.",
+  "scene": "foundry"
+ },
+ {
+  "speaker": "Foundry",
+  "kind": "subtitle",
+  "start": 261.75,
+  "end": 267.15,
+  "text": "Each one is added to the stack and judged by the same rule.",
+  "scene": "foundry"
+ },
+ {
+  "speaker": "Foundry",
+  "kind": "subtitle",
+  "start": 267.75,
+  "end": 273.15,
+  "text": "2 of the 2 judged so far did not pass.",
+  "scene": "foundry"
+ },
+ {
+  "speaker": "Foundry",
+  "kind": "subtitle",
+  "start": 273.75,
+  "end": 279.35,
+  "text": "A model that adds nothing to the blend is reported as nothing.",
+  "scene": "foundry"
+ },
+ {
+  "speaker": "Dock",
+  "kind": "card",
+  "start": 283.5,
+  "end": 295.7,
+  "text": "I fold each ligand into the enzyme with Boltz-2, restrain the nitrogen that can bind the iron, and check every pose.",
+  "scene": "dock"
+ },
+ {
+  "speaker": "Dock",
+  "kind": "card",
+  "start": 284.5,
+  "end": 295.7,
+  "text": "Two co-folding models work with me.",
+  "scene": "dock"
+ },
+ {
+  "speaker": "Dock",
+  "kind": "subtitle",
+  "start": 296.75,
+  "end": 303.15,
+  "text": "Dock folds the molecule into the enzyme with Boltz-2.",
+  "scene": "dock"
+ },
+ {
+  "speaker": "Dock",
+  "kind": "subtitle",
+  "start": 304.15,
+  "end": 311.35,
+  "text": "Some molecules bind the heme iron through a nitrogen: a Type II interaction.",
+  "scene": "dock"
+ },
+ {
+  "speaker": "Dock",
+  "kind": "subtitle",
+  "start": 312.15,
+  "end": 318.15,
+  "text": "For some ligands the nitrogen is placed far from the iron, so Dock restrains it.",
+  "scene": "dock"
+ },
+ {
+  "speaker": "Dock",
+  "kind": "subtitle",
+  "start": 318.75,
+  "end": 322.75,
+  "text": "On the crystal benchmark the restraint passed its pre-declared gate.",
+  "scene": "dock"
+ },
+ {
+  "speaker": "Dock",
+  "kind": "subtitle",
+  "start": 324.15,
+  "end": 331.35,
+  "text": "Every pose is checked with PoseBusters before it is handed in.",
+  "scene": "dock"
+ },
+ {
+  "speaker": "Auditor",
+  "kind": "card",
+  "start": 335.5,
+  "end": 347.7,
+  "text": "I run the whole project twice and compare the two reports byte for byte.",
+  "scene": "auditor"
+ },
+ {
+  "speaker": "Auditor",
+  "kind": "card",
+  "start": 336.5,
+  "end": 347.7,
+  "text": "If one byte differs, the work is not reproducible and I say so.",
+  "scene": "auditor"
+ },
+ {
+  "speaker": "Auditor",
+  "kind": "subtitle",
+  "start": 348.75,
+  "end": 354.15,
+  "text": "The Auditor runs everything twice.",
+  "scene": "auditor"
+ },
+ {
+  "speaker": "Auditor",
+  "kind": "subtitle",
+  "start": 354.75,
+  "end": 359.35,
+  "text": "The two audit reports are identical, byte for byte.",
+  "scene": "auditor"
+ },
+ {
+  "speaker": "Auditor",
+  "kind": "subtitle",
+  "start": 359.95,
+  "end": 365.35,
+  "text": "Tests, queue jobs and the final zip are all accounted for.",
+  "scene": "auditor"
+ },
+ {
+  "speaker": "Narrator",
+  "kind": "subtitle",
+  "start": 368.65,
+  "end": 373.75,
+  "text": "The results, estimated on the training data with nested cross-validation.",
+  "scene": "finale"
+ },
+ {
+  "speaker": "Narrator",
+  "kind": "subtitle",
+  "start": 374.54999999999995,
+  "end": 379.75,
+  "text": "Nine specialists, one molecule, and every number read from the project's own files.",
+  "scene": "finale"
+ },
+ {
+  "speaker": "Narrator",
+  "kind": "subtitle",
+  "start": 380.54999999999995,
+  "end": 386.15,
+  "text": "The challenge closes on 3 November 2026.",
+  "scene": "finale"
+ }
+]

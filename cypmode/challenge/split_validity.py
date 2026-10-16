@@ -64,7 +64,7 @@ def _main() -> None:
     result = pd.DataFrame(rows)
     print(result.to_string(index=False))
 
-    out_path = Path("data/tdi_track/outputs/split_validity.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/split_validity.csv")
     result.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

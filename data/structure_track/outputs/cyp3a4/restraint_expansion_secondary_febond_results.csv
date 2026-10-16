@@ -1,0 +1,7 @@
+compound,smiles,coordinated,closest_motif_nitrogen_distance_angstrom,closest_motif,closest_motif_atom,confidence_score,affinity_pred_value,affinity_probability_binary,error
+exp-A1ASO-febond,c1ccc(c(c1)N(Cc2cccc(c2)O)C(=O)Nc3cc(ccc3n4ccnc4)C(F)(F)F)Cl,True,1.99,imidazole_Nsub,N24,0.9427580833435059,,,
+exp-A1BNX-febond,c1ccc(c(c1)NC(=O)N(Cc2cccc(c2)O)c3cc(ccc3n4ccnc4)C(F)(F)F)Cl,True,1.96,imidazole_Nsub,N24,0.9473938941955566,,,
+exp-D7J-febond,CC(C)NC(CSCC(Cc1ccccc1)NC(=O)OC(C)(C)C)C(=O)NCc2cccnc2,True,2.15,pyridine,N41,0.9390220642089844,,,
+exp-MWY-febond,CCC1(CC(C2(C(CCC3(C2C(=O)CC3)C(C1O)C)C)C)OC(=O)CSc4nc([nH]n4)N)C,True,2.03,triazole_1_2_4,N42,0.9357549548149109,,,
+exp-PKT-febond,CC(C)(C)OC(=O)NC(Cc1c[nH]c2c1cccc2)CSCCC(=O)NCc3cccnc3,True,2.06,pyridine,N35,0.9241161346435547,,,
+exp-VDN-febond,CCCc1nc(c2n1NC(=NC2=O)c3cc(ccc3OCC)S(=O)(=O)N4CCN(CC4)CC)C,False,11.76,imidazole_Nsub,N53,0.9322715997695923,,,

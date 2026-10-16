@@ -1,0 +1,22 @@
+2026-10-08 01:55:30,443 lgbm_A_deep_cdrop10: 10/29 tasks
+2026-10-08 01:55:42,016 lgbm_A_deep_cdrop10: 20/29 tasks
+2026-10-08 01:55:51,882 lgbm_A_deep_cdrop10: 29/29 tasks
+2026-10-08 01:56:03,936 lgbm_A_deep_csoft: 10/29 tasks
+2026-10-08 01:56:16,285 lgbm_A_deep_csoft: 20/29 tasks
+2026-10-08 01:56:27,258 lgbm_A_deep_csoft: 29/29 tasks
+2026-10-08 01:56:49,182 lgbm_A+fps_deep_cdrop10: 10/29 tasks
+2026-10-08 01:57:10,169 lgbm_A+fps_deep_cdrop10: 20/29 tasks
+2026-10-08 01:57:29,588 lgbm_A+fps_deep_cdrop10: 29/29 tasks
+2026-10-08 01:57:53,241 lgbm_A+fps_deep_csoft: 10/29 tasks
+2026-10-08 01:58:16,562 lgbm_A+fps_deep_csoft: 20/29 tasks
+2026-10-08 01:58:44,281 lgbm_A+fps_deep_csoft: 29/29 tasks
+
+CYP3A4: 5 outer folds; evaluation = similarity x prevalence x confident rows
+  z0=1.0  lgbm_A_deep_cdrop10          vs plain: AUC 0.7760 -> 0.7760 (+0.0001, p=0.996, better 3/5) | AP +0.0046 (p=0.845)
+  z0=1.0  lgbm_A_deep_csoft            vs plain: AUC 0.7760 -> 0.7834 (+0.0074, p=0.388, better 4/5) | AP +0.0133 (p=0.594)
+  z0=1.0  lgbm_A+fps_deep_cdrop10      vs plain: AUC 0.7988 -> 0.7999 (+0.0011, p=0.867, better 3/5) | AP +0.0044 (p=0.677)
+  z0=1.0  lgbm_A+fps_deep_csoft        vs plain: AUC 0.7988 -> 0.8025 (+0.0037, p=0.165, better 4/5) | AP +0.0093 (p=0.207)
+  z0=1.96 lgbm_A_deep_cdrop10          vs plain: AUC 0.8057 -> 0.8040 (-0.0017, p=0.916, better 2/5) | AP -0.0063 (p=0.780)
+  z0=1.96 lgbm_A_deep_csoft            vs plain: AUC 0.8057 -> 0.8123 (+0.0066, p=0.427, better 3/5) | AP +0.0079 (p=0.686)
+  z0=1.96 lgbm_A+fps_deep_cdrop10      vs plain: AUC 0.8289 -> 0.8292 (+0.0002, p=0.974, better 2/5) | AP +0.0051 (p=0.484)
+  z0=1.96 lgbm_A+fps_deep_csoft        vs plain: AUC 0.8289 -> 0.8338 (+0.0049, p=0.477, better 4/5) | AP +0.0164 (p=0.204)

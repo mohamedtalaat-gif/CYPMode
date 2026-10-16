@@ -1,0 +1,22 @@
+compound,smiles,coordinated,closest_motif_nitrogen_distance_angstrom,closest_motif,closest_motif_atom,confidence_score,affinity_pred_value,affinity_probability_binary,error
+bench-A1CIW-seed1,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.9361937642097473,,,
+bench-A1CIW-seed3,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.9305216670036316,,,
+bench-A1CIW-cf1,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.9357240796089172,,,
+bench-A1CIW-cf2,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.9328835606575012,,,
+bench-A1CIW-cf3,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.939651370048523,,,
+bench-PK9-seed1,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.22,pyridine,N30,0.9395393133163452,,,
+bench-PK9-seed2,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.21,pyridine,N30,0.9374021291732788,,,
+bench-PK9-seed3,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.2,pyridine,N30,0.9419309496879578,,,
+bench-PK9-cf1,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.21,pyridine,N30,0.941665530204773,,,
+bench-PK9-cf2,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.23,pyridine,N30,0.938306987285614,,,
+bench-PK9-cf3,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.17,pyridine,N30,0.9373494982719421,,,
+bench-TPF-seed1,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.12,triazole_1_2_4,N16,0.9511678814888,,,
+bench-TPF-seed2,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.14,triazole_1_2_4,N16,0.9494144320487976,,,
+bench-TPF-seed3,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.11,triazole_1_2_4,N15,0.9454935193061829,,,
+bench-TPF-cf1,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.13,triazole_1_2_4,N15,0.9438477754592896,,,
+bench-TPF-cf2,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.14,triazole_1_2_4,N15,0.9448847770690918,,,
+bench-TPF-cf3,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.15,triazole_1_2_4,N15,0.9422420263290405,,,
+bench-A1CIW-seed2,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.9361544847488403,,,
+bench-A1CIW-ss,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,,,,,,,,No matching found
+bench-PK9-ss,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,,,,,,,,No matching found
+bench-TPF-ss,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,,,,,,,,No matching found

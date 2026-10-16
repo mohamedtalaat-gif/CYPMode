@@ -1,0 +1,10 @@
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['lgbm_reg_arms_clip_A', 'lgbm_reg_arms_clip_A+fps']
+  z0=1.0  alone  lgbm_reg_arms_clip_A     vs lgbm_reg_arms_A : AUC 0.6564 -> 0.6203 (-0.0361, p=0.376, better 5/15) | AP +0.0077 (p=0.814)
+  z0=1.0  alone  lgbm_reg_arms_clip_A+fps vs lgbm_reg_arms_A+fps: AUC 0.6398 -> 0.6522 (+0.0124, p=0.831, better 8/15) | AP +0.0243 (p=0.294)
+  z0=1.0  stacked base+added vs base: AUC -0.0046 (p=0.589, better 7/15) AP -0.0059 (p=0.592, better 7/15)
+  z0=1.96 alone  lgbm_reg_arms_clip_A     vs lgbm_reg_arms_A : AUC 0.6697 -> 0.6327 (-0.0370, p=0.419, better 6/15) | AP +0.0079 (p=0.861)
+  z0=1.96 alone  lgbm_reg_arms_clip_A+fps vs lgbm_reg_arms_A+fps: AUC 0.6503 -> 0.6685 (+0.0182, p=0.803, better 8/15) | AP +0.0323 (p=0.446)
+  z0=1.96 stacked base+added vs base: AUC -0.0069 (p=0.635, better 6/15) AP +0.0057 (p=0.734, better 11/15)
+CYP2D6 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

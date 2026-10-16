@@ -1,0 +1,7 @@
+Molecule_Name,SMILES
+exp-A1ASO,c1ccc(c(c1)N(Cc2cccc(c2)O)C(=O)Nc3cc(ccc3n4ccnc4)C(F)(F)F)Cl
+exp-A1BNX,c1ccc(c(c1)NC(=O)N(Cc2cccc(c2)O)c3cc(ccc3n4ccnc4)C(F)(F)F)Cl
+exp-D7J,CC(C)NC(CSCC(Cc1ccccc1)NC(=O)OC(C)(C)C)C(=O)NCc2cccnc2
+exp-MWY,CCC1(CC(C2(C(CCC3(C2C(=O)CC3)C(C1O)C)C)C)OC(=O)CSc4nc([nH]n4)N)C
+exp-PKT,CC(C)(C)OC(=O)NC(Cc1c[nH]c2c1cccc2)CSCCC(=O)NCc3cccnc3
+exp-VDN,CCCc1nc(c2n1NC(=NC2=O)c3cc(ccc3OCC)S(=O)(=O)N4CCN(CC4)CC)C

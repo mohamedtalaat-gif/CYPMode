@@ -1,0 +1,10 @@
+
+CYP3A4: 30 outer folds; base stack 23 candidates; added candidates cached: ['lgbm_A+physk20_deep', 'lgbm_A+fps+physk20_deep']
+  z0=1.0  alone  lgbm_A+physk20_deep      vs lgbm_A_deep     : AUC 0.7888 -> 0.8030 (+0.0142, p=0.063, better 25/30) | AP +0.0147 (p=0.279)
+  z0=1.0  alone  lgbm_A+fps+physk20_deep  vs lgbm_A+fps_deep : AUC 0.8073 -> 0.8128 (+0.0056, p=0.362, better 15/30) | AP +0.0031 (p=0.770)
+  z0=1.0  stacked base+added vs base: AUC +0.0037 (p=0.054, better 24/30) AP +0.0039 (p=0.343, better 19/30)
+  z0=1.96 alone  lgbm_A+physk20_deep      vs lgbm_A_deep     : AUC 0.8250 -> 0.8386 (+0.0136, p=0.081, better 25/30) | AP +0.0278 (p=0.027)
+  z0=1.96 alone  lgbm_A+fps+physk20_deep  vs lgbm_A+fps_deep : AUC 0.8397 -> 0.8460 (+0.0063, p=0.271, better 20/30) | AP +0.0124 (p=0.361)
+  z0=1.96 stacked base+added vs base: AUC +0.0043 (p=0.025, better 24/30) AP +0.0098 (p=0.030, better 25/30)
+CYP3A4 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

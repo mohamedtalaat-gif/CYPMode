@@ -1,0 +1,36 @@
+2026-10-16 21:54:05,981 lgbm_A+aj_deep: 10/79 tasks
+2026-10-16 21:54:18,263 lgbm_A+aj_deep: 20/79 tasks
+2026-10-16 21:54:31,138 lgbm_A+aj_deep: 30/79 tasks
+2026-10-16 21:54:43,368 lgbm_A+aj_deep: 40/79 tasks
+2026-10-16 21:54:56,544 lgbm_A+aj_deep: 50/79 tasks
+2026-10-16 21:55:09,253 lgbm_A+aj_deep: 60/79 tasks
+2026-10-16 21:55:21,235 lgbm_A+aj_deep: 70/79 tasks
+2026-10-16 21:55:32,319 lgbm_A+aj_deep: 79/79 tasks
+2026-10-16 21:55:54,013 lgbm_A+fps+aj_deep: 10/79 tasks
+2026-10-16 21:56:15,901 lgbm_A+fps+aj_deep: 20/79 tasks
+2026-10-16 21:56:37,299 lgbm_A+fps+aj_deep: 30/79 tasks
+2026-10-16 21:56:58,960 lgbm_A+fps+aj_deep: 40/79 tasks
+2026-10-16 21:57:20,695 lgbm_A+fps+aj_deep: 50/79 tasks
+2026-10-16 21:57:42,242 lgbm_A+fps+aj_deep: 60/79 tasks
+2026-10-16 21:58:04,902 lgbm_A+fps+aj_deep: 70/79 tasks
+2026-10-16 21:58:24,725 lgbm_A+fps+aj_deep: 79/79 tasks
+2026-10-16 21:58:29,561 lgbm_aj_deep: 10/79 tasks
+2026-10-16 21:58:34,339 lgbm_aj_deep: 20/79 tasks
+2026-10-16 21:58:39,258 lgbm_aj_deep: 30/79 tasks
+2026-10-16 21:58:44,095 lgbm_aj_deep: 40/79 tasks
+2026-10-16 21:58:50,105 lgbm_aj_deep: 50/79 tasks
+2026-10-16 21:58:57,327 lgbm_aj_deep: 60/79 tasks
+2026-10-16 21:59:04,526 lgbm_aj_deep: 70/79 tasks
+2026-10-16 21:59:11,043 lgbm_aj_deep: 79/79 tasks
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['lgbm_A+aj_deep', 'lgbm_A+fps+aj_deep', 'lgbm_aj_deep']
+  z0=1.0  diagnostic lgbm_aj_deep: outer AUC 0.6098
+  z0=1.0  alone  lgbm_A+aj_deep           vs lgbm_A_deep     : AUC 0.6964 -> 0.6750 (-0.0214, p=0.524, better 5/15) | AP -0.0012 (p=0.976)
+  z0=1.0  alone  lgbm_A+fps+aj_deep       vs lgbm_A+fps_deep : AUC 0.7185 -> 0.7060 (-0.0125, p=0.299, better 3/15) | AP -0.0461 (p=0.455)
+  z0=1.0  stacked base+added vs base: AUC -0.0069 (p=0.492, better 5/15) AP -0.0082 (p=0.595, better 3/15)
+  z0=1.96 diagnostic lgbm_aj_deep: outer AUC 0.6180
+  z0=1.96 alone  lgbm_A+aj_deep           vs lgbm_A_deep     : AUC 0.7267 -> 0.6961 (-0.0307, p=0.449, better 6/15) | AP -0.0050 (p=0.938)
+  z0=1.96 alone  lgbm_A+fps+aj_deep       vs lgbm_A+fps_deep : AUC 0.7396 -> 0.7183 (-0.0213, p=0.319, better 6/15) | AP -0.0557 (p=0.484)
+  z0=1.96 stacked base+added vs base: AUC -0.0051 (p=0.407, better 8/15) AP -0.0134 (p=0.670, better 8/15)
+CYP2D6 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

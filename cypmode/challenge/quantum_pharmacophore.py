@@ -75,7 +75,7 @@ FEATURE_NAMES = [
     "qm_charge_max",
     "qm_charge_std",
 ]
-CACHE_PATH = Path("data/tdi_track/outputs/quantum_pharmacophore_cache.csv")
+CACHE_PATH = Path("data/tdi_track/outputs/caches/quantum_pharmacophore_cache.csv")
 
 
 def embed_3d_conformer(smiles: str, random_seed: int = 42):

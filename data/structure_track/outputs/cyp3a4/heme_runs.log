@@ -1,0 +1,175 @@
+=== ketoconazole ===
+MSA server enabled: https://api.colabfold.com
+MSA server authentication: no credentials provided
+Checking input data.
+Processing 1 inputs with 1 threads.
+  0%|          | 0/1 [00:00<?, ?it/s]Generating MSA for data/boltz_test/cyp3a4_ketoconazole.yaml with 1 protein entities.
+Calling MSA server for target cyp3a4_ketoconazole with 1 sequences
+MSA server URL: https://api.colabfold.com
+MSA pairing strategy: greedy
+No authentication provided for MSA server
+
+  0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+SUBMIT:   0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+COMPLETE:   0%|          | 0/150 [elapsed: 00:01 remaining: ?][A
+COMPLETE: 100%|██████████| 150/150 [elapsed: 00:01 remaining: 00:00][ACOMPLETE: 100%|██████████| 150/150 [elapsed: 00:04 remaining: 00:00]
+100%|██████████| 1/1 [00:05<00:00,  5.88s/it]100%|██████████| 1/1 [00:05<00:00,  5.88s/it]
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Running structure prediction for 1 input.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:420: Consider setting `persistent_workers=True` in 'predict_dataloader' to speed up the dataloader worker initialization.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/torch/utils/data/dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py:115: CUDA is not available or torch_xla is imported. Disabling autocast.
+Predicting DataLoader 0: 100%|██████████| 1/1 [49:23<00:00,  0.00it/s]Number of failed examples: 0
+Predicting DataLoader 0: 100%|██████████| 1/1 [49:23<00:00,  0.00it/s]
+
+Predicting property: affinity
+
+Checking input data for affinity.
+Running affinity prediction for 1 input.
+Python(38849) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(38865) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0: 100%|██████████| 1/1 [31:12<00:00,  0.00it/s]Number of failed examples: 0
+Predicting DataLoader 0: 100%|██████████| 1/1 [31:12<00:00,  0.00it/s]
+=== ritonavir ===
+MSA server enabled: https://api.colabfold.com
+MSA server authentication: no credentials provided
+Checking input data.
+Processing 1 inputs with 1 threads.
+  0%|          | 0/1 [00:00<?, ?it/s]Generating MSA for data/boltz_test/cyp3a4_ritonavir.yaml with 1 protein entities.
+Calling MSA server for target cyp3a4_ritonavir with 1 sequences
+MSA server URL: https://api.colabfold.com
+MSA pairing strategy: greedy
+No authentication provided for MSA server
+
+  0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+SUBMIT:   0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+COMPLETE:   0%|          | 0/150 [elapsed: 00:01 remaining: ?][A
+COMPLETE: 100%|██████████| 150/150 [elapsed: 00:01 remaining: 00:00][ACOMPLETE: 100%|██████████| 150/150 [elapsed: 00:07 remaining: 00:00]
+100%|██████████| 1/1 [00:09<00:00,  9.09s/it]100%|██████████| 1/1 [00:09<00:00,  9.09s/it]
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Running structure prediction for 1 input.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:420: Consider setting `persistent_workers=True` in 'predict_dataloader' to speed up the dataloader worker initialization.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/torch/utils/data/dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py:115: CUDA is not available or torch_xla is imported. Disabling autocast.
+Predicting DataLoader 0: 100%|██████████| 1/1 [36:42<00:00,  0.00it/s]Number of failed examples: 0
+Predicting DataLoader 0: 100%|██████████| 1/1 [36:42<00:00,  0.00it/s]
+
+Predicting property: affinity
+
+Checking input data for affinity.
+Running affinity prediction for 1 input.
+Python(43320) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(43323) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0: 100%|██████████| 1/1 [56:15<00:00,  0.00it/s]Number of failed examples: 0
+Predicting DataLoader 0: 100%|██████████| 1/1 [56:15<00:00,  0.00it/s]
+=== azamulin ===
+MSA server enabled: https://api.colabfold.com
+MSA server authentication: no credentials provided
+Checking input data.
+Processing 1 inputs with 1 threads.
+  0%|          | 0/1 [00:00<?, ?it/s]Generating MSA for data/boltz_test/cyp3a4_azamulin.yaml with 1 protein entities.
+Calling MSA server for target cyp3a4_azamulin with 1 sequences
+MSA server URL: https://api.colabfold.com
+MSA pairing strategy: greedy
+No authentication provided for MSA server
+
+  0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+SUBMIT:   0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+COMPLETE:   0%|          | 0/150 [elapsed: 00:01 remaining: ?][A
+COMPLETE: 100%|██████████| 150/150 [elapsed: 00:01 remaining: 00:00][ACOMPLETE: 100%|██████████| 150/150 [elapsed: 00:06 remaining: 00:00]
+100%|██████████| 1/1 [00:12<00:00, 12.09s/it]100%|██████████| 1/1 [00:12<00:00, 12.09s/it]
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Running structure prediction for 1 input.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:420: Consider setting `persistent_workers=True` in 'predict_dataloader' to speed up the dataloader worker initialization.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/torch/utils/data/dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py:115: CUDA is not available or torch_xla is imported. Disabling autocast.
+=== azamulin (resumed) ===
+MSA server enabled: https://api.colabfold.com
+MSA server authentication: no credentials provided
+Checking input data.
+All inputs are already processed.
+Processing 0 inputs with 0 threads.
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Running structure prediction for 1 input.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:420: Consider setting `persistent_workers=True` in 'predict_dataloader' to speed up the dataloader worker initialization.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/torch/utils/data/dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py:115: CUDA is not available or torch_xla is imported. Disabling autocast.
+Predicting DataLoader 0: 100%|██████████| 1/1 [1:48:03<00:00,  0.00it/s]Number of failed examples: 0
+Predicting DataLoader 0: 100%|██████████| 1/1 [1:48:03<00:00,  0.00it/s]
+
+Predicting property: affinity
+
+Checking input data for affinity.
+Running affinity prediction for 1 input.
+Python(19941) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(19942) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0: 100%|██████████| 1/1 [30:03<00:00,  0.00it/s]Number of failed examples: 0
+Predicting DataLoader 0: 100%|██████████| 1/1 [30:03<00:00,  0.00it/s]
+=== vardenafil (resumed) ===
+MSA server enabled: https://api.colabfold.com
+MSA server authentication: no credentials provided
+Checking input data.
+Processing 1 inputs with 1 threads.
+  0%|          | 0/1 [00:00<?, ?it/s]Generating MSA for data/boltz_test/cyp3a4_vardenafil.yaml with 1 protein entities.
+Calling MSA server for target cyp3a4_vardenafil with 1 sequences
+MSA server URL: https://api.colabfold.com
+MSA pairing strategy: greedy
+No authentication provided for MSA server
+
+  0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+SUBMIT:   0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+COMPLETE:   0%|          | 0/150 [elapsed: 00:01 remaining: ?][A
+COMPLETE: 100%|██████████| 150/150 [elapsed: 00:01 remaining: 00:00][ACOMPLETE: 100%|██████████| 150/150 [elapsed: 00:05 remaining: 00:00]
+100%|██████████| 1/1 [00:07<00:00,  7.97s/it]100%|██████████| 1/1 [00:07<00:00,  7.97s/it]
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Running structure prediction for 1 input.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:420: Consider setting `persistent_workers=True` in 'predict_dataloader' to speed up the dataloader worker initialization.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/torch/utils/data/dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py:115: CUDA is not available or torch_xla is imported. Disabling autocast.
+Predicting DataLoader 0: 100%|██████████| 1/1 [5:37:32<00:00,  0.00it/s]Number of failed examples: 0
+Predicting DataLoader 0: 100%|██████████| 1/1 [5:37:32<00:00,  0.00it/s]
+
+Predicting property: affinity
+
+Checking input data for affinity.
+Running affinity prediction for 1 input.
+Python(23225) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(23229) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0: 100%|██████████| 1/1 [50:20<00:00,  0.00it/s]Number of failed examples: 0
+Predicting DataLoader 0: 100%|██████████| 1/1 [50:20<00:00,  0.00it/s]

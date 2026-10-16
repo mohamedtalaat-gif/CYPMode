@@ -1,0 +1,14 @@
+Checking input data.
+Processing 1 inputs with 1 threads.
+  0%|          | 0/1 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "/Volumes/Data/CYPMode/third_party/boltz-main/src/boltz/main.py", line 583, in process_input
+    raise RuntimeError(msg)  # noqa: TRY301
+    ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Missing MSA's in input and --use_msa_server flag not set.
+100%|██████████| 1/1 [00:01<00:00,  1.14s/it]100%|██████████| 1/1 [00:01<00:00,  1.14s/it]
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Failed to process data/boltz_test/cyp3a4_vardenafil.yaml. Skipping. Error: Missing MSA's in input and --use_msa_server flag not set..

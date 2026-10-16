@@ -1,0 +1,4 @@
+running OpenFold3 on 1 compound(s), one at a time (~16 min each)
+memory mode: config
+  bench-YNV: ERROR run_openfold exited 0 but wrote no *_model.cif under data/structure_track/outputs/openfold3/cyp3a4/bench-YNV: RuntimeError: Invalid buffer size: 9.27 GiB
+1 of 1 compound(s) without a structure: bench-YNV

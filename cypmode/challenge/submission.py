@@ -92,3 +92,55 @@ def validate_submission(
 
 def load_test_set(path: str | Path = TEST_SET_PATH) -> pd.DataFrame:
     return pd.read_csv(path)
+
+
+# -- the portal's own checks, reproduced -------------------------------------------------------------
+# Source: the public Hugging Face Space ``openadmet/cyp-challenge`` (files ``submission.py`` and ``config.py``), read on
+# 2026-10-08. The portal accepts extra columns and 0/1 as well as True/False, but rejects NaN, non-binary values and a
+# column holding a single class ("a constant prediction cannot be scored"); validate_submission above is stricter on
+# purpose, and this function adds exactly the checks the portal runs so a file cannot pass ours and fail theirs.
+
+PORTAL_ROWS = 750
+PORTAL_IDENTIFIERS = ["SMILES", "Molecule_Name"]
+PORTAL_CLASSIFICATION_ENDPOINTS = ["CYP2D6_is_TDI", "CYP3A4_is_TDI"]
+PORTAL_STRUCTURE_FILES = 20
+
+
+def portal_validate_classification(path: str | Path) -> tuple[bool, str]:
+    path = Path(path)
+    suffix = path.suffix.lower()
+    try:
+        df = pd.read_parquet(path) if suffix == ".parquet" else pd.read_csv(path) if suffix == ".csv" else None
+    except Exception as exc:  # noqa: BLE001 - the portal reports any read failure the same way
+        return False, f"Could not read {suffix} file: {exc}"
+    if df is None:
+        return False, "Classification submissions must be a .parquet or .csv file."
+    if len(df) != PORTAL_ROWS:
+        return False, f"Expected {PORTAL_ROWS} rows, got {len(df)}."
+    missing = set(PORTAL_IDENTIFIERS + PORTAL_CLASSIFICATION_ENDPOINTS) - set(df.columns)
+    if missing:
+        return False, f"Missing required columns: {missing}"
+    for col in PORTAL_CLASSIFICATION_ENDPOINTS:
+        if df[col].isnull().any():
+            return False, f"{col} column contains NaN values."
+        if not df[col].isin([0, 1, True, False]).all():
+            return False, f"{col} column contains non-binary values."
+        if df[col].nunique() <= 1:
+            return False, f"{col} predictions are all one class; a constant prediction cannot be scored."
+    return True, "ok"
+
+
+def portal_validate_structure(path: str | Path) -> tuple[bool, str]:
+    import zipfile
+
+    path = Path(path)
+    if path.suffix.lower() != ".zip":
+        return False, "Structure submissions must be a .zip file."
+    try:
+        with zipfile.ZipFile(path) as zf:
+            n_files = len(zf.namelist())
+    except Exception as exc:  # noqa: BLE001
+        return False, f"Could not read zip file: {exc}"
+    if n_files != PORTAL_STRUCTURE_FILES:
+        return False, f"Expected {PORTAL_STRUCTURE_FILES} files in zip, got {n_files}."
+    return True, "ok"

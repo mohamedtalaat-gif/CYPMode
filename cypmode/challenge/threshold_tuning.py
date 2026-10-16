@@ -303,7 +303,7 @@ def _main() -> None:
 
     all_results = []
     for cyp in TDI_ISOFORMS:
-        results = cross_validate_with_threshold_tuning(df, label_col=f"{cyp}_is_TDI", feature_col="m3_features")
+        results = cross_validate_with_threshold_tuning(df, label_col=f"{cyp}_is_TDI", feature_col="m3_no_amine_features")
         results.insert(0, "isoform", cyp)
         all_results.append(results)
         print(f"{cyp}: mean MCC naive=0.5 -> {results['mcc_naive_0.5'].mean():.4f}, "
@@ -311,14 +311,14 @@ def _main() -> None:
               f"(mean tuned threshold={results['tuned_threshold'].mean():.3f})")
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/tdi_track/outputs/threshold_tuning.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/threshold_tuning.csv")
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 
     print("\n-- robust (base-rate-shift-aware) threshold, same protocol --")
     all_robust, all_stress = [], []
     for cyp in TDI_ISOFORMS:
-        fold_results, stress_results = cross_validate_with_robust_threshold_tuning(df, label_col=f"{cyp}_is_TDI", feature_col="m3_features")
+        fold_results, stress_results = cross_validate_with_robust_threshold_tuning(df, label_col=f"{cyp}_is_TDI", feature_col="m3_no_amine_features")
         fold_results.insert(0, "isoform", cyp)
         stress_results.insert(0, "isoform", cyp)
         all_robust.append(fold_results)
@@ -328,8 +328,8 @@ def _main() -> None:
 
     robust_combined = pd.concat(all_robust, ignore_index=True)
     stress_combined = pd.concat(all_stress, ignore_index=True)
-    robust_out_path = Path("data/tdi_track/outputs/robust_threshold_tuning.csv")
-    stress_out_path = Path("data/tdi_track/outputs/robust_threshold_stress_test.csv")
+    robust_out_path = Path("data/tdi_track/outputs/comparisons/robust_threshold_tuning.csv")
+    stress_out_path = Path("data/tdi_track/outputs/comparisons/robust_threshold_stress_test.csv")
     robust_combined.to_csv(robust_out_path, index=False)
     stress_combined.to_csv(stress_out_path, index=False)
     print(f"wrote {robust_out_path}\nwrote {stress_out_path}")

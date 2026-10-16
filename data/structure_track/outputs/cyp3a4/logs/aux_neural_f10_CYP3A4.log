@@ -1,0 +1,5 @@
+
+CYP3A4: 30 outer folds; base stack 23 candidates; added candidates cached: ['mlp_multitask_label', 'mlp_multitask_shift', 'chemprop_mt_shift']
+  z0=1.0  stacked base+added vs base: AUC +0.0109 (p=0.026, better 25/30) AP +0.0280 (p=0.010, better 25/30)
+  z0=1.96 stacked base+added vs base: AUC +0.0115 (p=0.038, better 24/30) AP +0.0320 (p=0.031, better 23/30)
+CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): MET

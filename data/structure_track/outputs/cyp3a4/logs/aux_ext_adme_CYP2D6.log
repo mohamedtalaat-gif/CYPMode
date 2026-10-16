@@ -1,0 +1,26 @@
+2026-10-16 21:02:05,134 lgbm_A+ad_deep: 10/79 tasks
+2026-10-16 21:02:14,038 lgbm_A+ad_deep: 20/79 tasks
+2026-10-16 21:02:23,324 lgbm_A+ad_deep: 30/79 tasks
+2026-10-16 21:02:32,640 lgbm_A+ad_deep: 40/79 tasks
+2026-10-16 21:02:41,720 lgbm_A+ad_deep: 50/79 tasks
+2026-10-16 21:02:50,884 lgbm_A+ad_deep: 60/79 tasks
+2026-10-16 21:03:00,342 lgbm_A+ad_deep: 70/79 tasks
+2026-10-16 21:03:08,809 lgbm_A+ad_deep: 79/79 tasks
+2026-10-16 21:03:26,757 lgbm_A+fps+ad_deep: 10/79 tasks
+2026-10-16 21:03:44,613 lgbm_A+fps+ad_deep: 20/79 tasks
+2026-10-16 21:04:03,152 lgbm_A+fps+ad_deep: 30/79 tasks
+2026-10-16 21:04:21,454 lgbm_A+fps+ad_deep: 40/79 tasks
+2026-10-16 21:04:39,812 lgbm_A+fps+ad_deep: 50/79 tasks
+2026-10-16 21:04:57,930 lgbm_A+fps+ad_deep: 60/79 tasks
+2026-10-16 21:05:16,390 lgbm_A+fps+ad_deep: 70/79 tasks
+2026-10-16 21:05:32,433 lgbm_A+fps+ad_deep: 79/79 tasks
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['lgbm_A+ad_deep', 'lgbm_A+fps+ad_deep']
+  z0=1.0  alone  lgbm_A+ad_deep           vs lgbm_A_deep     : AUC 0.6964 -> 0.7088 (+0.0123, p=0.477, better 10/15) | AP +0.0131 (p=0.552)
+  z0=1.0  alone  lgbm_A+fps+ad_deep       vs lgbm_A+fps_deep : AUC 0.7185 -> 0.7206 (+0.0021, p=0.887, better 7/15) | AP -0.0204 (p=0.572)
+  z0=1.0  stacked base+added vs base: AUC -0.0034 (p=0.677, better 8/15) AP +0.0009 (p=0.829, better 8/15)
+  z0=1.96 alone  lgbm_A+ad_deep           vs lgbm_A_deep     : AUC 0.7267 -> 0.7374 (+0.0107, p=0.679, better 9/15) | AP +0.0156 (p=0.602)
+  z0=1.96 alone  lgbm_A+fps+ad_deep       vs lgbm_A+fps_deep : AUC 0.7396 -> 0.7423 (+0.0028, p=0.849, better 9/15) | AP -0.0145 (p=0.746)
+  z0=1.96 stacked base+added vs base: AUC +0.0026 (p=0.474, better 9/15) AP +0.0045 (p=0.450, better 8/15)
+CYP2D6 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

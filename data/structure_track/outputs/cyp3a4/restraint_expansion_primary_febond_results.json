@@ -1,0 +1,451 @@
+{
+  "exp-08J-febond": {
+    "compound": "cyp3a4_exp-08J-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N17",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.09
+      },
+      {
+        "atom": "N34",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 4.13
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N17",
+        "distance_angstrom": 2.09
+      },
+      {
+        "atom": "N34",
+        "distance_angstrom": 4.13
+      },
+      {
+        "atom": "N16",
+        "distance_angstrom": 5.68
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.09,
+    "coordinated": true,
+    "confidence_score": 0.9440274238586426
+  },
+  "exp-80K-febond": {
+    "compound": "cyp3a4_exp-80K-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N33",
+        "motif": "pyridine",
+        "distance_angstrom": 1.98
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N33",
+        "distance_angstrom": 1.98
+      },
+      {
+        "atom": "N49",
+        "distance_angstrom": 6.48
+      },
+      {
+        "atom": "N51",
+        "distance_angstrom": 9.09
+      },
+      {
+        "atom": "N50",
+        "distance_angstrom": 9.33
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 1.98,
+    "coordinated": true,
+    "confidence_score": 0.9344064593315125
+  },
+  "exp-A1ASP-febond": {
+    "compound": "cyp3a4_exp-A1ASP-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N19",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.03
+      },
+      {
+        "atom": "N37",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 4.0
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N19",
+        "distance_angstrom": 2.03
+      },
+      {
+        "atom": "N37",
+        "distance_angstrom": 4.0
+      },
+      {
+        "atom": "N36",
+        "distance_angstrom": 5.55
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.03,
+    "coordinated": true,
+    "confidence_score": 0.9407719373703003
+  },
+  "exp-A1ASQ-febond": {
+    "compound": "cyp3a4_exp-A1ASQ-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N22",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 1.99
+      },
+      {
+        "atom": "N41",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 3.98
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N22",
+        "distance_angstrom": 1.99
+      },
+      {
+        "atom": "N41",
+        "distance_angstrom": 3.98
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 5.7
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 5.71
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 1.99,
+    "coordinated": true,
+    "confidence_score": 0.9475051760673523
+  },
+  "exp-A1ASR-febond": {
+    "compound": "cyp3a4_exp-A1ASR-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N18",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.03
+      },
+      {
+        "atom": "N37",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 4.0
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N18",
+        "distance_angstrom": 2.03
+      },
+      {
+        "atom": "N37",
+        "distance_angstrom": 4.0
+      },
+      {
+        "atom": "N35",
+        "distance_angstrom": 5.62
+      },
+      {
+        "atom": "N36",
+        "distance_angstrom": 5.65
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.03,
+    "coordinated": true,
+    "confidence_score": 0.9340845942497253
+  },
+  "exp-A1ASS-febond": {
+    "compound": "cyp3a4_exp-A1ASS-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N19",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.05
+      },
+      {
+        "atom": "N31",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 3.98
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N19",
+        "distance_angstrom": 2.05
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 3.98
+      },
+      {
+        "atom": "N30",
+        "distance_angstrom": 6.24
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.05,
+    "coordinated": true,
+    "confidence_score": 0.9418226480484009
+  },
+  "exp-A1AST-febond": {
+    "compound": "cyp3a4_exp-A1AST-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N24",
+        "motif": "pyridine",
+        "distance_angstrom": 2.0
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N24",
+        "distance_angstrom": 2.0
+      },
+      {
+        "atom": "N44",
+        "distance_angstrom": 5.98
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.0,
+    "coordinated": true,
+    "confidence_score": 0.9322086572647095
+  },
+  "exp-A1ASU-febond": {
+    "compound": "cyp3a4_exp-A1ASU-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N17",
+        "motif": "triazole_1_2_3",
+        "distance_angstrom": 1.8
+      },
+      {
+        "atom": "N19",
+        "motif": "triazole_1_2_3",
+        "distance_angstrom": 2.6
+      },
+      {
+        "atom": "N39",
+        "motif": "triazole_1_2_3",
+        "distance_angstrom": 3.66
+      },
+      {
+        "atom": "N18",
+        "motif": "thiazole",
+        "distance_angstrom": 9.29
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N17",
+        "distance_angstrom": 1.8
+      },
+      {
+        "atom": "N19",
+        "distance_angstrom": 2.6
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 3.66
+      },
+      {
+        "atom": "N18",
+        "distance_angstrom": 9.29
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 1.8,
+    "coordinated": true,
+    "confidence_score": 0.9403009414672852
+  },
+  "exp-CFF-febond": {
+    "compound": "cyp3a4_exp-CFF-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N13",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.45
+      },
+      {
+        "atom": "N20",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 4.02
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N13",
+        "distance_angstrom": 2.45
+      },
+      {
+        "atom": "N20",
+        "distance_angstrom": 4.02
+      },
+      {
+        "atom": "N21",
+        "distance_angstrom": 4.55
+      },
+      {
+        "atom": "N19",
+        "distance_angstrom": 6.39
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.45,
+    "coordinated": true,
+    "confidence_score": 0.9474854469299316
+  },
+  "exp-CL6-febond": {
+    "compound": "cyp3a4_exp-CL6-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N19",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 1.98
+      },
+      {
+        "atom": "N41",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 3.94
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N19",
+        "distance_angstrom": 1.98
+      },
+      {
+        "atom": "N41",
+        "distance_angstrom": 3.94
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 1.98,
+    "coordinated": true,
+    "confidence_score": 0.9323581457138062
+  },
+  "exp-D7M-febond": {
+    "compound": "cyp3a4_exp-D7M-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N37",
+        "motif": "pyridine",
+        "distance_angstrom": 2.07
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N37",
+        "distance_angstrom": 2.07
+      },
+      {
+        "atom": "N47",
+        "distance_angstrom": 6.12
+      },
+      {
+        "atom": "N48",
+        "distance_angstrom": 7.18
+      },
+      {
+        "atom": "N49",
+        "distance_angstrom": 7.85
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.07,
+    "coordinated": true,
+    "confidence_score": 0.9276937246322632
+  },
+  "exp-D7Y-febond": {
+    "compound": "cyp3a4_exp-D7Y-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N35",
+        "motif": "pyridine",
+        "distance_angstrom": 2.07
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N35",
+        "distance_angstrom": 2.07
+      },
+      {
+        "atom": "N45",
+        "distance_angstrom": 6.16
+      },
+      {
+        "atom": "N46",
+        "distance_angstrom": 7.68
+      },
+      {
+        "atom": "N47",
+        "distance_angstrom": 8.62
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.07,
+    "coordinated": true,
+    "confidence_score": 0.9344175457954407
+  },
+  "exp-J9K-febond": {
+    "compound": "cyp3a4_exp-J9K-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N34",
+        "motif": "pyridine",
+        "distance_angstrom": 1.98
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N34",
+        "distance_angstrom": 1.98
+      },
+      {
+        "atom": "N50",
+        "distance_angstrom": 6.34
+      },
+      {
+        "atom": "N51",
+        "distance_angstrom": 9.54
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 1.98,
+    "coordinated": true,
+    "confidence_score": 0.9370191693305969
+  },
+  "exp-MYT-febond": {
+    "compound": "cyp3a4_exp-MYT-febond",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N17",
+        "motif": "pyridine",
+        "distance_angstrom": 2.04
+      },
+      {
+        "atom": "N16",
+        "motif": "pyridine",
+        "distance_angstrom": 7.35
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N17",
+        "distance_angstrom": 2.04
+      },
+      {
+        "atom": "N16",
+        "distance_angstrom": 7.35
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.04,
+    "coordinated": true,
+    "confidence_score": 0.9500910043716431
+  }
+}

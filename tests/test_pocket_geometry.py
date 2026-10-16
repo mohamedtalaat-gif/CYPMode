@@ -6,7 +6,7 @@ pytest.importorskip("Bio")
 
 from cypmode.validation.structures import load_structure
 
-RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_ketoconazole")
+RESULT_DIR = Path("data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_ketoconazole")
 CIF_PATH = RESULT_DIR / "predictions" / "cyp3a4_ketoconazole" / "cyp3a4_ketoconazole_model_0.cif"
 
 pytestmark = pytest.mark.skipif(

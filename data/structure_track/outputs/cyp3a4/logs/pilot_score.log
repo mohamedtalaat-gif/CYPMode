@@ -1,0 +1,65 @@
+[22:48:44] WARNING: More than one matching pattern found - picking one
+
+[22:48:44] WARNING: More than one matching pattern found - picking one
+
+[22:48:44] WARNING: More than one matching pattern found - picking one
+
+[22:48:44] WARNING: More than one matching pattern found - picking one
+
+[22:48:44] WARNING: More than one matching pattern found - picking one
+
+[22:48:44] WARNING: More than one matching pattern found - picking one
+
+[22:48:44] WARNING: More than one matching pattern found - picking one
+
+[22:48:45] WARNING: More than one matching pattern found - picking one
+
+[22:48:45] WARNING: More than one matching pattern found - picking one
+
+[22:48:45] WARNING: More than one matching pattern found - picking one
+
+[22:48:45] WARNING: More than one matching pattern found - picking one
+
+[22:48:45] WARNING: More than one matching pattern found - picking one
+
+[22:48:45] WARNING: More than one matching pattern found - picking one
+
+[22:48:45] WARNING: More than one matching pattern found - picking one
+
+[22:48:46] WARNING: More than one matching pattern found - picking one
+
+[22:48:46] WARNING: More than one matching pattern found - picking one
+
+[22:48:46] WARNING: More than one matching pattern found - picking one
+
+[22:48:46] WARNING: More than one matching pattern found - picking one
+
+         compound engine  sample  n_crystal_copies  true_rmsd  template_score  template_support  occupancy_score  novel_template_score  novel_template_support  novel_occupancy_score
+bench-A1CIW-seed1  boltz       0                 1      6.578           0.379             0.186            0.467                 0.379                   0.186                  0.467
+bench-A1CIW-seed2  boltz       0                 1      6.404           0.403             0.186            0.487                 0.403                   0.186                  0.487
+bench-A1CIW-seed3  boltz       0                 1      5.647           0.364             0.186            0.471                 0.364                   0.186                  0.471
+  bench-A1CIW-cf1  boltz       0                 1      6.309           0.401             0.186            0.490                 0.401                   0.186                  0.490
+  bench-A1CIW-cf2  boltz       0                 1      6.518           0.393             0.186            0.455                 0.393                   0.186                  0.455
+  bench-A1CIW-cf3  boltz       0                 1      6.355           0.403             0.186            0.461                 0.403                   0.186                  0.461
+   bench-A1CIW-ss  boltz       0                 1        NaN           0.450             0.186            0.520                 0.450                   0.186                  0.520
+   bench-A1CIW-ss  boltz       1                 1        NaN           0.403             0.186            0.499                 0.403                   0.186                  0.499
+   bench-A1CIW-ss  boltz       2                 1        NaN           0.187             0.186            0.257                 0.187                   0.186                  0.257
+  bench-PK9-seed1  boltz       0                 2      4.863           0.614             0.562            0.636                 0.471                   0.486                  0.633
+  bench-PK9-seed2  boltz       0                 2      4.537           0.587             0.562            0.634                 0.480                   0.486                  0.632
+  bench-PK9-seed3  boltz       0                 2      4.808           0.623             0.562            0.681                 0.548                   0.486                  0.679
+    bench-PK9-cf1  boltz       0                 2      4.736           0.641             0.562            0.666                 0.553                   0.486                  0.663
+    bench-PK9-cf2  boltz       0                 2      4.649           0.652             0.562            0.683                 0.591                   0.486                  0.681
+    bench-PK9-cf3  boltz       0                 2      3.000           0.566             0.562            0.634                 0.494                   0.486                  0.632
+     bench-PK9-ss  boltz       0                 2        NaN           0.529             0.562            0.585                 0.462                   0.486                  0.584
+     bench-PK9-ss  boltz       1                 2        NaN           0.425             0.562            0.507                 0.305                   0.486                  0.506
+     bench-PK9-ss  boltz       2                 2        NaN           0.559             0.562            0.608                 0.511                   0.486                  0.607
+  bench-TPF-seed1  boltz       0                 1      3.941           0.460             0.188            0.646                 0.460                   0.188                  0.646
+  bench-TPF-seed2  boltz       0                 1      4.052           0.461             0.188            0.655                 0.461                   0.188                  0.655
+  bench-TPF-seed3  boltz       0                 1      4.445           0.413             0.188            0.598                 0.413                   0.188                  0.598
+    bench-TPF-cf1  boltz       0                 1      2.288           0.352             0.188            0.556                 0.352                   0.188                  0.556
+    bench-TPF-cf2  boltz       0                 1      3.710           0.425             0.188            0.620                 0.425                   0.188                  0.620
+    bench-TPF-cf3  boltz       0                 1      4.772           0.361             0.188            0.575                 0.361                   0.188                  0.575
+     bench-TPF-ss  boltz       0                 1        NaN           0.311             0.188            0.589                 0.311                   0.188                  0.589
+     bench-TPF-ss  boltz       1                 1        NaN           0.369             0.188            0.444                 0.369                   0.188                  0.444
+     bench-TPF-ss  boltz       2                 1        NaN           0.318             0.188            0.578                 0.318                   0.188                  0.578
+wrote data/structure_track/outputs/cyp3a4/diversity_pilot_poses.csv

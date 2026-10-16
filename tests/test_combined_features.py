@@ -20,7 +20,7 @@ def _synthetic_df(n: int = 150, seed: int = 0) -> pd.DataFrame:
         rows.append(
             {
                 "SMILES": real_smiles[i % 4],
-                "m3_features": rng.normal(size=5),
+                "m3_no_amine_features": rng.normal(size=5),
                 "aux_aid1851_CYP3A4": rng.uniform(0, 1),
                 "aux_bindingdb_CYP3A4": rng.uniform(0, 1),
                 "CYP3A4_is_TDI": bool(rng.random() > 0.5),

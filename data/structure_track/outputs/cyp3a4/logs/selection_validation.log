@@ -1,0 +1,168 @@
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:41] WARNING: More than one matching pattern found - picking one
+
+[08:49:42] WARNING: More than one matching pattern found - picking one
+
+[08:49:42] WARNING: More than one matching pattern found - picking one
+
+[08:49:42] WARNING: More than one matching pattern found - picking one
+
+[08:49:42] WARNING: More than one matching pattern found - picking one
+
+[08:49:42] WARNING: More than one matching pattern found - picking one
+
+[08:49:42] WARNING: More than one matching pattern found - picking one
+
+[08:49:42] WARNING: More than one matching pattern found - picking one
+
+[08:49:42] WARNING: More than one matching pattern found - picking one
+
+[08:49:42] WARNING: More than one matching pattern found - picking one
+
+[08:49:43] WARNING: More than one matching pattern found - picking one
+
+[08:49:43] WARNING: More than one matching pattern found - picking one
+
+[08:49:43] WARNING: More than one matching pattern found - picking one
+
+[08:49:43] WARNING: More than one matching pattern found - picking one
+
+[08:49:43] WARNING: More than one matching pattern found - picking one
+
+[08:49:43] WARNING: More than one matching pattern found - picking one
+
+[08:49:43] WARNING: More than one matching pattern found - picking one
+
+[08:49:43] WARNING: More than one matching pattern found - picking one
+
+[08:49:44] WARNING: More than one matching pattern found - picking one
+
+[08:49:44] WARNING: More than one matching pattern found - picking one
+
+[08:49:44] WARNING: More than one matching pattern found - picking one
+
+[08:49:44] WARNING: More than one matching pattern found - picking one
+
+[08:49:44] WARNING: More than one matching pattern found - picking one
+
+[08:49:44] WARNING: More than one matching pattern found - picking one
+
+[08:49:44] WARNING: More than one matching pattern found - picking one
+
+[08:49:44] WARNING: More than one matching pattern found - picking one
+
+[08:49:45] WARNING: More than one matching pattern found - picking one
+
+[08:49:45] WARNING: More than one matching pattern found - picking one
+
+[08:49:45] WARNING: More than one matching pattern found - picking one
+
+[08:49:45] WARNING: More than one matching pattern found - picking one
+
+[08:49:45] WARNING: More than one matching pattern found - picking one
+
+[08:49:45] WARNING: More than one matching pattern found - picking one
+
+[08:49:45] WARNING: More than one matching pattern found - picking one
+
+[08:49:45] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:46] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:47] WARNING: More than one matching pattern found - picking one
+
+[08:49:48] WARNING: More than one matching pattern found - picking one
+
+[08:49:48] WARNING: More than one matching pattern found - picking one
+
+[08:49:48] WARNING: More than one matching pattern found - picking one
+
+[08:49:48] WARNING: More than one matching pattern found - picking one
+
+[08:49:48] WARNING: More than one matching pattern found - picking one
+
+[08:49:48] WARNING: More than one matching pattern found - picking one
+
+[08:49:48] WARNING: More than one matching pattern found - picking one
+
+[08:49:48] WARNING: More than one matching pattern found - picking one
+
+pose table data/structure_track/outputs/cyp3a4/benchmark_engine_pose_validation.csv: 10 ligands with a pool
+        first_boltz  mbr_boltz  mean_pool_boltz  oracle_boltz  first_openfold3  mbr_both  oracle_both
+mean          4.193      3.876            4.022         3.420            5.452     4.025        2.959
+median        4.786      4.350            4.376         4.073            5.132     4.743        2.414
+  mbr_selection: mean improvement +0.317 A over 10 ligands, 4 wins, Wilcoxon p 0.234, worst drop-one mean +0.035
+STRUCTURE GATE mbr_selection (paired, drop-one robust, p < 0.1): NOT MET
+  engine_consensus: mean improvement -0.148 A over 10 ligands, 5 wins, Wilcoxon p 0.219, worst drop-one mean -0.213, errors correlation rho 0.48
+STRUCTURE GATE engine_consensus (paired, drop-one robust, p < 0.1): NOT MET

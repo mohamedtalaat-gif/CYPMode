@@ -1,0 +1,74 @@
+[01:44:41] WARNING: More than one matching pattern found - picking one
+
+[01:44:41] WARNING: More than one matching pattern found - picking one
+
+[01:44:41] WARNING: More than one matching pattern found - picking one
+
+[01:44:41] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:42] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+[01:44:43] WARNING: More than one matching pattern found - picking one
+
+    compound engine  sample  n_crystal_copies  true_rmsd  template_score  template_support  occupancy_score  novel_template_score  novel_template_support  novel_occupancy_score
+  series-J9K  boltz       0                 1      5.838           0.501             0.765            0.601                 0.603                   0.476                  0.556
+  series-J9K  boltz       1                 1      5.863           0.503             0.765            0.603                 0.616                   0.476                  0.559
+  series-J9K  boltz       2                 1      5.967           0.495             0.765            0.597                 0.610                   0.476                  0.553
+  series-J9K  boltz       3                 1      6.023           0.497             0.765            0.591                 0.627                   0.476                  0.550
+  series-D7J  boltz       0                 1      2.133           0.604             0.815            0.579                 0.597                   0.494                  0.549
+  series-D7J  boltz       1                 1      2.275           0.588             0.815            0.572                 0.586                   0.494                  0.539
+  series-D7J  boltz       2                 1      2.619           0.595             0.815            0.577                 0.600                   0.494                  0.544
+  series-D7J  boltz       3                 1      3.004           0.583             0.815            0.570                 0.575                   0.494                  0.540
+  series-G0D  boltz       0                 4      2.019           0.632             0.833            0.578                 0.492                   0.494                  0.494
+  series-G0D  boltz       1                 4      2.167           0.629             0.833            0.583                 0.501                   0.494                  0.501
+  series-G0D  boltz       2                 4      2.088           0.630             0.833            0.581                 0.508                   0.494                  0.501
+  series-G0D  boltz       3                 4      2.060           0.639             0.833            0.581                 0.492                   0.494                  0.499
+  series-G0J  boltz       0                 1      2.957           0.588             0.831            0.572                 0.766                   0.494                  0.554
+  series-G0J  boltz       1                 1      2.617           0.663             0.831            0.589                 0.828                   0.494                  0.568
+  series-G0J  boltz       2                 1      2.403           0.662             0.831            0.590                 0.784                   0.494                  0.570
+  series-G0J  boltz       3                 1      3.558           0.601             0.831            0.558                 0.633                   0.494                  0.533
+  series-NXR  boltz       0                 2      1.234           0.738             0.852            0.575                 0.530                   0.438                  0.501
+  series-NXR  boltz       1                 2      0.992           0.730             0.852            0.567                 0.524                   0.438                  0.497
+  series-NXR  boltz       2                 2      1.147           0.747             0.852            0.565                 0.521                   0.438                  0.494
+  series-NXR  boltz       3                 2      1.162           0.747             0.852            0.573                 0.527                   0.438                  0.499
+series-A1A4U  boltz       0                 1      5.182           0.742             0.703            0.575                 0.625                   0.494                  0.529
+series-A1A4U  boltz       1                 1      1.853           0.719             0.703            0.585                 0.661                   0.494                  0.540
+series-A1A4U  boltz       2                 1      1.945           0.734             0.703            0.582                 0.635                   0.494                  0.537
+series-A1A4U  boltz       3                 1      1.893           0.721             0.703            0.580                 0.635                   0.494                  0.535
+wrote data/structure_track/outputs/cyp3a4/series_pose_validation.csv

@@ -1,6 +1,307 @@
 # CYPMode
 
-Mode-aware reinterpretation of TDC's binary CYP450 inhibition benchmarks.
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/card/cypmode_card-dark.png">
+    <img src="docs/card/cypmode_card-light.png" alt="CYPMode: the CYP3A4 enzyme with its heme and a ligand, six complexes with their compounds and the headline numbers" width="100%">
+  </picture>
+</p>
+
+## What CYPMode is
+
+**CYPMode is a set of reproducible predictors, with the evidence behind them, for one question: will a drug-like molecule switch off a cytochrome P450 enzyme, and does it keep it off?**
+Cytochrome P450 enzymes such as CYP3A4 and CYP2D6 clear most medicines from the body. A compound can block an enzyme while it is present (direct inhibition) or after the enzyme has
+processed it (time-dependent inhibition, TDI: a reactive product stays bound), and TDI is the form that makes drug-drug interactions dangerous. Many inhibitors bind the iron of the
+enzyme's heme through a nitrogen atom (a Type II ligand), which is also why the geometry of a bound compound carries information.
+
+The repository answers the question for the two tasks of the OpenADMET CYP Inhibition Blind Challenge:
+
+- **TDI classification (CYP3A4 and CYP2D6).** For each of the 750 blinded compounds: is it a time-dependent inhibitor? The label is a function of two measured potencies: it is positive
+  exactly when the pIC50 after pre-incubation with the enzyme exceeds the direct-inhibition pIC50 (floored at 4) by more than log10 2, a factor of two. The rule was reproduced exactly from the
+  training file.
+- **CYP3A4 structure prediction.** For each of 20 ligands: the three-dimensional complex with the enzyme (Boltz-2 co-folding, with an iron-nitrogen restraint for ligands that have a Type II
+  donor), every pose checked under the organisers' own PoseBusters call.
+
+**How it works.** For TDI, label-free features (fingerprints, descriptors, motif flags, GFN2-xTB physics) feed a stack of diverse models; the blend is cut by transferring the expected rate of
+positive calls of the scored population. CYP2D6 has one more candidate, a selection-aware model, because compounds were not tested on every enzyme at random. For structures, a recipe of restraint,
+pose-validity and margin rules in which every lever was decided by a gate on crystal-structure benchmarks.
+
+**What is different here.**
+
+1. *Honest evaluation.* Models are judged by nested cross-validation that reproduces the scored population (similarity to the blinded set, test prevalence, only confidently labelled
+   compounds), with every selection step inside the loop, and compared with the corrected resampled t test of Nadeau and Bengio.
+2. *Pre-registered gates.* The rule an idea must pass is written down before the idea is tested. An idea that fails stays in a ledger of negative results; it is not tuned until it passes. The
+   ledger and its counts are generated from the run logs: [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md) and [METHOD_REPORT.md](METHOD_REPORT.md).
+3. *Generated and audited.* The reports are produced by code from the logs; an automated audit runs twice and must agree byte for byte; a leakage audit checks that no test label and no
+   board-derived label is used.
+4. *Uncertainty by construction.* Reliability tiers by similarity to the training data (`applicability_domain.py`), probabilities calibrated on inner out-of-fold scores, and the disagreement of the
+   committee, reported with every prediction.
+
+**What it does not claim.** Cross-validation estimates are not the challenge score: the challenge scores hidden labels, and its test set is closer to the training set than a cross-validation
+fold is. A predicted structure is a model, not a measurement. The numbers on the card above come from nested cross-validation on the training data and from checks of the predicted coordinates. One piece of aggregate information about the hidden labels is used: the positive rate of the scored set, which the public leaderboards make recoverable from the accuracy, precision and recall they publish (it weights the yardstick and sets the call rate); no label of any compound and no probing submission is used, and the method report lists it as a limitation.
+
+**Where to look next.** [METHOD_REPORT.md](METHOD_REPORT.md) (what was done, with every gate and number), [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md) (what did not work), [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md)
+(what was checked), `notebooks/` (the teaching notebook, from first principles) and the architecture sections below.
+
+<!-- held-back:film
+## The film
+
+A 6.5-minute animated film explains the project from the question to the results, scene by scene, with nine characters who each stand for one part of the work (the assay, the data scout, the
+features, the stack, the statistician, the physics, the pretrained models, the structure track and the audit). Every number on screen is read from this repository's own files, every molecule and pocket is
+drawn from real coordinates, and the voices are synthesised (Kokoro-82M). Click the picture to play the film (H.264, `docs/video/cypmode_overview_web.mp4`); the storyboard and the build are in
+[`docs/video/STORYBOARD.md`](docs/video/STORYBOARD.md).
+
+<p align="center">
+  <a href="docs/video/cypmode_overview_web.mp4">
+    <img src="docs/video/cypmode_overview_poster.png" alt="The poster of the CYPMode film: the title, the question, four numbers and the whole team" width="90%">
+  </a>
+</p>
+
+held-back:film-end -->
+
+## Origin of the project and the two parts of this file
+
+CYPMode began as a heme-coordination motif screen for CYP450 inhibitors with a structure-based check (described in the second part of
+this file). It now also contains an entry for the OpenADMET CYP blind challenge:
+
+- **TDI classification** (time-dependent inhibition of CYP3A4 and CYP2D6): a label-process-aware model evaluated with a nested,
+  selection-honest cross-validation on the same population the challenge scores.
+- **CYP3A4 structure prediction**: Boltz-2 (and optionally OpenFold3) co-folding with a gated pose-selection recipe.
+
+Every addition to a model passes through a pre-registered gate (corrected resampled t, both confidence cut-offs, alone and inside the
+assembled stack). Results are generated by code from the run logs: [METHOD_REPORT.md](METHOD_REPORT.md),
+[NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md) and [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md). [SUBMISSION_CHECKLIST.md](SUBMISSION_CHECKLIST.md)
+lists every planned experiment with its gate and the queue job that runs it (`python -m cypmode.audit.checklist --status` prints what is
+done, running and queued).
+
+## Architecture: TDI classification
+
+```
+                         SMILES  (training compounds + the blinded test structures; features are label-free)
+                            |
+        +-------------------+----------------------------+
+        v                                                v
+ 2D FEATURE BLOCKS                              PHYSICS BLOCKS (GFN2-xTB via tblite, own process)
+ Morgan counts, RDKit descriptors,              tier A   molecule: conformer ensemble, vertical IP / EA, hardness,
+ MACCS, Avalon, ErG, torsion,                              solvation, shape
+ feature-Morgan, motifs, alerts                          atom: charges, Fukui f- / f+, C-H abstraction energy,
+                                                           proton affinity of N atoms, SASA
+ opt-in blocks:                                          site: per-role statistics (benzylic, alpha-N, azole N ...)
+ CheMeleon embeddings (frozen, 64 PCs)                   pharmacophore: heme-binder <-> oxidation-site distances
+                                                tier B   Boltzmann-weighted conformers, locally relaxed hydrogen abstraction
+                                                compact  the 20 physics columns with the largest gain, chosen from the
+                                                         training rows of every task (evaluation rows never pick columns)
+        |                                                |
+        +-------------------+----------------------------+
+                            v
+          MODEL MEMBERS  (nested CV; a member enters the stack only when its gate is met)
+ +----------------------+---------------------+--------------------------+--------------------------+
+ | A  Classifiers       | B  SAR-aware pairs  | C  Label-process model   | D  Selection-aware       |
+ | LightGBM (A, A+fps,  | each compound vs    | committee of two-arm     | CYP2D6 only              |
+ | A+physics, A+compact | its nearest labelled| regressors (TDI arm and  | P(label) =               |
+ | physics, A+arms of   | neighbours: deltas  | direct arm, floor-clipped| P(hit) x P(label | hit)  |
+ | the other isoforms), | of descriptors and  | at 4, noise-weighted)    | gate fitted on the       |
+ | ExtraTrees, RF,      | of physics; matched | -> exact P(shift >       | all-isoform panel block  |
+ | kNN / SVM (Tanimoto),| molecular pairs     | log10 2) and expected    | (4,352 compounds); the   |
+ | two-arm regressors   |                     | improvement              | physics block is an      |
+ |                      |                     |                          | optional input of its    |
+ |                      |                     |                          | gate and label models    |
+ +----------+-----------+----------+----------+------------+-------------+------------+-------------+
+            +----------------------+-----------------------+--------------------------+
+                                   |   optional training weights: similarity to the test structures
+                                   |   (density ratio, tempered); measurement-variance weights in C
+                                   v
+            STACK    logistic blend of the members' inner out-of-fold scores (L1 / L2, chosen by inner CV)
+                                   v
+            CYP2D6 only   HEDGED BLEND  rank blend of the hits-only stack and the selection-aware stack, judged across
+                          regimes of the share of never-promoted compounds in the scored set (label-shift estimate of that
+                          share from the test structures: test_nonhit_share); written as a candidate file only if its
+                          minimax gate is met
+                                   v
+            CALIBRATION   raw, Platt or isotonic, whichever meets ECE <= 0.05 and slope in [0.8, 1.2]
+                                   v
+            DECISION      positive calls = a pre-declared multiple of the scored prevalence (rate transfer),
+                          the top-scoring compounds of the test file are called
+                                   v
+            candidate files (schema checked with the challenge portal's own rules) + SHA-256 manifest
+```
+
+How the sketch is evaluated and assembled:
+
+- **Nested evaluation.** 5 outer folds x 3 repeats; every selection (members, stack weights, calibration, threshold rule) happens inside
+  the training part of each outer fold. Comparisons use the corrected resampled t of Nadeau and Bengio with Holm adjustment.
+- **Gate.** An addition counts only when it beats its reference with corrected p < 0.05 at both confidence cut-offs, alone and inside the
+  assembled stack (`final_tdi_build.py` reads the verdict lines and applies one fixed rule; nothing is chosen by hand).
+- **Replicate.** The physics additions are re-judged with 10 outer folds (`--design 10`, variance factor 0.144 instead of 0.317); an addition
+  counts as replicated only if the 10-fold gate is met and the 5-fold sign is positive (`replicate_verdict.py`).
+- **Reproduction.** `scripts/reproduce_tdi.sh` rebuilds the candidate files from the raw files and checks them against the portal rules.
+
+Label rule (recovered from the data and reproduced exactly): `s = t - max(d, 4) > log10 2`, with `t` the TDI-condition pIC50 and `d`
+the direct-inhibition pIC50. Evaluation weights follow similarity to the test structures, the estimated test prevalence and the
+confidence of each label (`|s - log10 2| / sd(s)` at two cut-offs).
+
+### Final stack and verdicts
+
+<!-- generated:final-stack begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
+Final stack per isoform, from the nested cross-validation on the population the challenge scores (z0 is the confidence cut-off of the label weights; MCC is at the rate transferred from the scored prevalence):
+
+| isoform | stack | members | groups added by a met gate | AUC (z0 1.0) | AUC (z0 1.96) | MCC (z0 1.0 / 1.96) |
+| --- | --- | --- | --- | --- | --- | --- |
+| CYP3A4 | default | 23 | none | 0.817 | 0.844 | 0.442 / 0.487 |
+| CYP2D6 | default | 23 | none | 0.731 | 0.754 | 0.167 / 0.204 |
+
+Members of the default stack: k-nearest neighbours (Tanimoto) (3), support vector machine (Tanimoto kernel) (3), LightGBM classifier (11), extremely randomised trees (1), random forest (1), LightGBM regressor of the arm shift (2), LightGBM regressors of the two arms (2); 23 members in all.
+<!-- generated:final-stack end -->
+
+<!-- generated:gate-verdicts begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
+Every addition was judged by a rule fixed before its result. 133 gate verdicts from 46 experiments: 5 MET and 128 NOT MET. The gates that were met: bond restraint, contact restraint, force-field relaxation of poses, negative control (permuted labels). A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: none was.
+
+<details><summary>All verdicts</summary>
+
+| experiment | TDI CYP3A4 | TDI CYP2D6 | structure |
+| --- | --- | --- | --- |
+| Emax of both arms as a predicted block | NOT MET | NOT MET | - |
+| Monroe (GRIT) embeddings | NOT MET | NOT MET | - |
+| PXR-induction readings as a predicted block | NOT MET | NOT MET | - |
+| SAR pair transfer | NOT MET | NOT MET | - |
+| SAR pair transfer with physics | NOT MET | NOT MET | - |
+| TabICL in the stack | NOT MET | NOT MET | - |
+| TabICL on Monroe embeddings | NOT MET | NOT MET | - |
+| TabPFN in the stack | NOT MET | NOT MET | - |
+| basic-centre block (protonation states, centre classes) | NOT MET | NOT MET | - |
+| bond restraint confirmed on new ligands | - | - | NOT MET |
+| committee label-process model | NOT MET | NOT MET | - |
+| compact physics block | NOT MET | NOT MET | - |
+| compact physics block, replicate with 10 outer folds | NOT MET | NOT MET | - |
+| compounds without a direct curve | NOT MET | - | - |
+| consensus of poses across a chemical series | - | - | NOT MET |
+| cross-isoform transfer of the assay arms | NOT MET | NOT MET | - |
+| expected-improvement sampling of poses | - | - | NOT MET |
+| force-field relaxation of poses | - | - | MET |
+| frozen CheMeleon embeddings | NOT MET | NOT MET | - |
+| gate-shift features | NOT MET | NOT MET | - |
+| hedged blend of the hits-only and the selection-aware stacks | - | NOT MET | - |
+| heme-frame prior over poses | - | - | NOT MET |
+| matched-molecular-pair transfer | NOT MET | NOT MET | - |
+| minimum Bayes risk and restraint judged by LDDT-PLI (exploratory) | - | - | NOT MET |
+| minimum Bayes risk selection and engine consensus | - | - | NOT MET |
+| multitask network in the stack | NOT MET | NOT MET | - |
+| multitask network with the screen and Emax as auxiliary heads | NOT MET | NOT MET | - |
+| negative control (permuted labels) | MET | MET | - |
+| non-negative stacking | NOT MET | NOT MET | - |
+| our LDDT-PLI against OpenStructure's | - | - | NOT MET |
+| physics block tier A, replicate with 10 outer folds | NOT MET | NOT MET | - |
+| physics block tier B, replicate with 10 outer folds | NOT MET | NOT MET | - |
+| physics block, tier A | NOT MET | NOT MET | - |
+| physics block, tier B | NOT MET | NOT MET | - |
+| physics, pharmacophore and combined pose terms | - | - | NOT MET |
+| plain Chemprop in the stack | NOT MET | NOT MET | - |
+| replicates with 10 outer folds | NOT MET | NOT MET | - |
+| restraint confirmation repeated with OpenStructure's LDDT-PLI | - | - | NOT MET |
+| restraints and pose-diversity pilots | - | - | restraint_bond MET; restraint_contact MET; pilot_conformers NOT MET; pilot_cryoem NOT MET; pilot_seeds NOT MET |
+| selection-aware CYP2D6 model with physics | - | NOT MET | - |
+| selection-aware CYP2D6 model with the screen | - | NOT MET | - |
+| selection-aware model, second version | - | NOT MET | - |
+| single-concentration screen as a predicted block | NOT MET | NOT MET | - |
+| softmax-temperature selector | NOT MET | NOT MET | - |
+| test-likeness weighting | NOT MET | NOT MET | - |
+| two-arm regressors, floor-clipped | NOT MET | NOT MET | - |
+
+</details>
+<!-- generated:gate-verdicts end -->
+
+## Architecture: structure track
+
+```
+ ligand SMILES + CYP3A4 sequence (UniProt P08684, precomputed MSA)
+        |
+        v
+ Boltz-2 co-folding  <---- optional levers, each used only when its gate is met ------+
+        |                  Fe-donor bond / contact restraint (Type II donors)         |
+        |                  crystal and cryo-EM conformer templates, seeds, step scale |
+        |                  OpenFold3 as a second engine (low-memory chunking)        |
+        v                                                                            |
+ pose pool per ligand  <---------------------------------------------------------+
+        |
+        v
+ PoseBusters validity filter -> selection among valid poses, mean rank of:
+        expected LDDT-PLI (minimum Bayes risk)                                        (selection_validation)
+        physics / molecule terms (match to the xTB conformer ensemble and its         each term enters
+          energy, burial, contacts, clashes)                                           only when its
+        pharmacophore terms (Fe-donor distance error, oxidation site in the           gate is met
+          substrate window)                                                           (pose_awareness)
+        SAR term (core agreement with the poses of the ligand's analogs, maximum
+          common substructure after superposing the C-alpha atoms)                    (series, series_consensus)
+        heme-frame pose prior from 148 crystal ligands                                (heme_frame_prior)
+        |
+        v
+ extra samples allocated by pool disagreement (optional, ei_sampling) -> one pose per ligand -> zip
+        |
+        v
+ final_recipe.py   reads the gate verdicts, applies one fixed mapping to the recipe, runs the 20 official ligands, validates with the
+                   portal's rules and lists, per ligand, the donor status, the closest analog and the measured CYP3A4 values of
+                   the same compound in the TDI training file
+```
+
+Benchmark for every structure gate: crystal-anchored CYP3A4 complexes (true ligand RMSD of the picked pose, PoseBusters validity),
+plus a series benchmark of analog pairs that have crystal structures. The earlier Boltz-only zip stays untouched as the fallback.
+
+### Final recipe
+
+<!-- generated:structure-recipe begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
+How the 20 poses of the submitted zip were chosen, from the verdicts of the gates and the recipe that reads them (`cypmode/validation/final_recipe.py`):
+
+- restraint 'bond': gate MET
+- diversity levers: none (no pilot gate MET)
+- Boltz only: engine_consensus not MET
+- selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)
+- extra samples allocated uniformly: ei_sampling not MET
+- margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)
+- force-field relaxation of the chosen poses: (pending: job 243)
+<!-- generated:structure-recipe end -->
+
+## Repository map
+
+| Path | Content |
+| --- | --- |
+| `cypmode/challenge/` | TDI engine: feature store, nested cross-validation harness (`nested.py`, `nested_runners.py`), label confidence, library blocks, physics blocks (`physics_block.py`, `physics_tierb.py`, `population_physics.py`), SAR models (`pair_transfer.py`, `mmp_transfer.py`), label-process committee, cross-isoform arm transfer (`xiso_transfer.py`), selection-aware models (`selection_aware_v2.py`, `hedged_blend.py`, `test_nonhit_share.py`), frozen embeddings, calibration, `replicate_verdict.py`, `final_tdi_build.py` |
+| `cypmode/validation/` | structure tools: input builder, Boltz-2 / OpenFold3 runners, PoseBusters checks, pose pools, templates (`conformers.py` crystal, `cryoem_templates.py` cryo-EM), selection (`selection_validation.py`), gates (`structure_gates.py`), pose terms (`pose_awareness.py`), analog series (`series.py`, `series_consensus.py`), heme-frame prior, expected-improvement sampling, `final_recipe.py` |
+| `cypmode/audit/` | automated audit report, gate ledger, checklist consistency check (`checklist.py`), method-report generator (`method_report.py`), public-readiness scan (`public_readiness.py`) |
+| `cypmode/metrics/`, `cypmode/data/` | the original motif screen and panel loaders |
+| `queue/`, `scripts/` | the permanent job queue (`queue/jobs/NNN_*.sh`, helpers in `queue/lib.sh`), runner, memory / battery guards (`scripts/guards.sh`), reproduction and audit scripts, the low-memory OpenFold3 launcher (`scripts/run_openfold_lowmem.py`) |
+| `notebooks/` | the notebook `cypmode_notebook`: the teaching text and the laboratory notebook of the project, built from `notebooks/parts/` by `python -m notebooks.build_notebook` (ipynb, html, pdf) |
+| `environment/` | pinned package lists for the two Python environments with checksums |
+| `tests/` | test suite (the torch and tblite files run in their own processes, see below) |
+| `data/` | inputs, caches and outputs of both tracks |
+| `app.py` | Streamlit app: the original screen and a TDI results tab that reads the generated final report and gate ledger |
+
+## Quick start
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e ".[challenge,validate]"
+python -m pytest tests -q                       # main suite
+python -m pytest tests/test_quantum_pharmacophore.py tests/test_physics_block.py tests/test_physics_tierb.py -q   # tblite, own process
+bash scripts/run_audit.sh                       # audit report, generated twice and compared byte for byte
+bash scripts/reproduce_tdi.sh                   # raw files -> validated TDI candidate files (hours, resumable)
+bash scripts/queue_start.sh                     # start the permanent queue; bash scripts/queue_status.sh to inspect it
+python -m cypmode.audit.checklist --status      # what is done, running, queued
+python -m cypmode.audit.method_report           # regenerate METHOD_REPORT.md and NEGATIVE_RESULTS.md from the logs
+python -m cypmode.audit.public_readiness        # scan for private paths, credentials, large files, third-party text
+bash scripts/mirror_check.sh                      # after a push: remote branch, HEAD and working tree are identical
+python -m notebooks.build_notebook              # rebuild the notebook (ipynb, html, pdf)
+```
+
+Torch-based tests (`tests/test_multitask.py`, `tests/test_chemberta_features.py`) and the tblite tests must not share a process with
+LightGBM; `CONTRIBUTING.md` explains why and how each is run.
+
+## Credits and sources
+
+Published sources are listed in [CITATION.cff](CITATION.cff) and in section 12 of [METHOD_REPORT.md](METHOD_REPORT.md).
+
+---
+
+# Original scope: mode-aware reinterpretation of TDC's CYP450 inhibition benchmarks
 
 ## Problem
 
@@ -356,14 +657,14 @@ comparison, only vardenafil overlaps with it at all.
 `python -m cypmode.data.octant_benchmark` (`cypmode/data/octant_benchmark.py`)
 compares CYP3A4 pIC50 between motif-positive and motif-negative compounds,
 restricted to QC-passed dose-response curves, with a one-sided Mann-Whitney
-U test. Result (`data/tdi_track/inputs/octant_cache/motif_potency_validation.json`):
+U test. The one compound of the release that is also in the challenge's blinded test set is excluded and never read. Result (`data/tdi_track/inputs/octant_cache/motif_potency_validation.json`):
 
 | | n | mean pIC50 | median pIC50 |
 |---|---|---|---|
-| Motif-positive | 451 | 5.32 | 5.43 |
+| Motif-positive | 450 | 5.32 | 5.43 |
 | Motif-negative | 633 | 5.17 | 5.30 |
 
-**p = 0.0088** (one-sided, motif-positive > motif-negative) — a real,
+**p = 0.0085** (one-sided, motif-positive > motif-negative) — a real,
 statistically significant difference on a dataset the motif screen was
 never tuned against.
 
@@ -541,7 +842,7 @@ via GitHub's "Cite this repository" button ([CITATION.cff](CITATION.cff)):
   year    = {2026},
   version = {0.1.0},
   url     = {https://github.com/mohamedtalaat-gif/CYPMode},
-  license = {MIT}
+  license = {MIT OR Apache-2.0}
 }
 ```
 
@@ -550,4 +851,4 @@ the GitHub release alone isn't a persistent identifier.
 
 ## License
 
-MIT.
+Licensed under either of [MIT](LICENSE-MIT) or [Apache License 2.0](LICENSE-APACHE), at your option. Contributions are accepted under the same terms.

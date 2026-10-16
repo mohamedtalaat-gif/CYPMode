@@ -1,0 +1,43 @@
+───────────────────── challenge-data-checker audit summary ─────────────────────
+  Generated          : 2026-10-16T19:11:12+03:00
+  Rows processed     : train=6145  test=750
+  Unparseable SMILES : 0 (train=0, test=0)
+
+Train-test leakage
+                                                   
+ Check                                      Result 
+ ───────────────────────────────────────────────── 
+ Train compounds in train/test overlap         ✓ 0 
+ Test compounds in train/test overlap          ✓ 0 
+ Identifier overlap events                     ✓ 0 
+ Tanimoto similarity flags (>= threshold)      ✓ 0 
+                                                   
+
+Internal duplicates (within split)
+                                          
+ Representation              Train   Test 
+ ──────────────────────────────────────── 
+ raw_smiles                    ✓ 0    ✓ 0 
+ canonical_smiles              ✓ 0    ✓ 0 
+ inchikey                      ✓ 0    ✓ 0 
+ identifier[Molecule_Name]     ✓ 0    ✓ 0 
+                                          
+
+Identifier namespace issues
+                                                                       
+ Identifier column   1 id -> many structures   1 structure -> many ids 
+ ───────────────────────────────────────────────────────────────────── 
+ Molecule_Name                           ✓ 0                       ✓ 0 
+                                                                       
+
+Quality filter flags
+                                      
+ Filter                  Train   Test 
+ ──────────────────────────────────── 
+ Mixtures/disconnected     ✓ 0    ✓ 0 
+ Salts/metal complexes     ✓ 0    ✓ 0 
+ Suspicious fragments      ✓ 0    ✓ 0 
+                                      
+
+───────────────────── ✓ OVERALL PASS - no issues detected ──────────────────────
+Full detailed report written to: audit/data_checker/tdi_train_vs_test.json

@@ -1,0 +1,7 @@
+compound,smiles,coordinated,closest_motif_nitrogen_distance_angstrom,closest_motif,closest_motif_atom,confidence_score,affinity_pred_value,affinity_probability_binary,error
+exp-A1ASO,c1ccc(c(c1)N(Cc2cccc(c2)O)C(=O)Nc3cc(ccc3n4ccnc4)C(F)(F)F)Cl,True,2.33,imidazole_Nsub,N24,0.9458191990852356,,,
+exp-A1BNX,c1ccc(c(c1)NC(=O)N(Cc2cccc(c2)O)c3cc(ccc3n4ccnc4)C(F)(F)F)Cl,True,2.14,imidazole_Nsub,N24,0.9414957165718079,,,
+exp-D7J,CC(C)NC(CSCC(Cc1ccccc1)NC(=O)OC(C)(C)C)C(=O)NCc2cccnc2,True,2.21,pyridine,N41,0.9437848329544067,,,
+exp-MWY,CCC1(CC(C2(C(CCC3(C2C(=O)CC3)C(C1O)C)C)C)OC(=O)CSc4nc([nH]n4)N)C,False,12.98,triazole_1_2_4,N41,0.9316508173942566,,,
+exp-PKT,CC(C)(C)OC(=O)NC(Cc1c[nH]c2c1cccc2)CSCCC(=O)NCc3cccnc3,True,2.27,pyridine,N35,0.9377347230911255,,,
+exp-VDN,CCCc1nc(c2n1NC(=NC2=O)c3cc(ccc3OCC)S(=O)(=O)N4CCN(CC4)CC)C,False,4.45,imidazole_Nsub,N36,0.9239746332168579,,,

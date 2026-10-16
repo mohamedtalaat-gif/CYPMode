@@ -1,0 +1,5 @@
+           ligands  mean_rmsd_first_pick  mean_rmsd_best_sample  mean_rmsd_template_pick  under_2A_first_pick  under_2A_best_sample  under_2A_template_pick
+variant                                                                                                                                                    
+febond           6                 2.675                  2.487                    2.667                0.333                 0.500                   0.333
+fecontact        6                 3.750                  2.884                    3.758                0.167                 0.333                   0.167
+unguided         6                 3.830                  3.131                    3.901                0.167                 0.333                   0.167

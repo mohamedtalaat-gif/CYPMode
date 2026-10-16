@@ -13,6 +13,3 @@ constraints:
   - bond:
       atom1: [A, 442, SG]
       atom2: [C, 1, FE]
-properties:
-    - affinity:
-        binder: B

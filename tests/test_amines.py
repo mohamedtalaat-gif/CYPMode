@@ -31,3 +31,22 @@ def test_raises_on_unparseable_smiles():
 def test_raises_on_empty_smiles():
     with pytest.raises(ValueError):
         has_trialkylamine("")
+
+
+@pytest.mark.parametrize(
+    "smiles",
+    [
+        "CN(C)S(=O)(=O)c1ccccc1",  # sulfonamide nitrogen
+        "CC=CN(C)C",  # enamine nitrogen
+        "CN(C)C(=N)N",  # guanidine nitrogen
+        "CN(C)C(=N)C",  # amidine nitrogen
+    ],
+)
+def test_excludes_delocalised_nitrogens_that_are_not_trialkylamines(smiles):
+    assert has_trialkylamine(smiles) is False
+
+
+def test_still_matches_plain_secondary_and_tertiary_alkylamines():
+    assert has_trialkylamine("CCN(CC)CC") is True
+    assert has_trialkylamine("CCNCC") is True
+    assert has_trialkylamine("CN(C)CCc1ccccc1") is True  # an aromatic ring elsewhere in the molecule does not matter

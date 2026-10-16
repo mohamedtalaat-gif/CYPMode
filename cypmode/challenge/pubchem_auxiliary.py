@@ -181,7 +181,7 @@ def _run_ablation_for_isoform(tdi_df: pd.DataFrame, aid_df: pd.DataFrame, cyp: s
 
     cyp_df = tdi_df.dropna(subset=[f"{cyp}_is_TDI"]).reset_index(drop=True)
     y = cyp_df[f"{cyp}_is_TDI"].astype(int).to_numpy()
-    m3_features = np.stack(cyp_df["m3_features"])
+    m3_features = np.stack(cyp_df["m3_no_amine_features"])
     m5_features = np.hstack([m3_features, cyp_df[[aux_col]].to_numpy()])
 
     kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
@@ -225,7 +225,7 @@ def _main() -> None:
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+aux={results['mcc_m3_plus_aux'].mean():.4f}")
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/tdi_track/outputs/aid1851_auxiliary_ablation.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/aid1851_auxiliary_ablation.csv")
     combined.to_csv(out_path, index=False)
     print(f"wrote {out_path}")
 
@@ -242,7 +242,7 @@ def _main() -> None:
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+single-isoform-aux={results['mcc_m3_plus_aux'].mean():.4f}")
 
     single_combined = pd.concat(single_results, ignore_index=True)
-    single_out_path = Path("data/tdi_track/outputs/aid891_884_auxiliary_ablation.csv")
+    single_out_path = Path("data/tdi_track/outputs/comparisons/aid891_884_auxiliary_ablation.csv")
     single_combined.to_csv(single_out_path, index=False)
     print(f"wrote {single_out_path}")
 

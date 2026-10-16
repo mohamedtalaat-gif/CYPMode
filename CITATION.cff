@@ -5,7 +5,9 @@ version: 0.1.0
 date-released: 2026-09-20
 url: "https://github.com/mohamedtalaat-gif/CYPMode"
 repository-code: "https://github.com/mohamedtalaat-gif/CYPMode"
-license: MIT
+license:
+  - MIT
+  - Apache-2.0
 authors:
   - family-names: Talaat
     given-names: Muhammad

@@ -1,0 +1,38 @@
+2026-10-08 02:44:43,428 popgate_A_deep: 10/29 tasks
+2026-10-08 02:45:16,348 popgate_A_deep: 20/29 tasks
+2026-10-08 02:45:38,274 popgate_A_deep: 29/29 tasks
+2026-10-08 02:45:54,758 pophits_A_deep: 10/29 tasks
+2026-10-08 02:46:10,329 pophits_A_deep: 20/29 tasks
+2026-10-08 02:46:23,559 pophits_A_deep: 29/29 tasks
+2026-10-08 02:46:48,374 poptwo_A_deep: 10/29 tasks
+2026-10-08 02:47:10,744 poptwo_A_deep: 20/29 tasks
+2026-10-08 02:47:29,390 poptwo_A_deep: 29/29 tasks
+2026-10-08 02:47:41,886 pop_A_deep: 10/29 tasks
+2026-10-08 02:47:54,743 pop_A_deep: 20/29 tasks
+2026-10-08 02:48:05,961 pop_A_deep: 29/29 tasks
+2026-10-08 02:48:36,905 popgate_A+fps_deep: 10/29 tasks
+2026-10-08 02:49:06,521 popgate_A+fps_deep: 20/29 tasks
+2026-10-08 02:49:33,764 popgate_A+fps_deep: 29/29 tasks
+2026-10-08 02:49:50,345 pophits_A+fps_deep: 10/29 tasks
+2026-10-08 02:50:06,612 pophits_A+fps_deep: 20/29 tasks
+2026-10-08 02:50:21,478 pophits_A+fps_deep: 29/29 tasks
+2026-10-08 02:51:07,445 poptwo_A+fps_deep: 10/29 tasks
+2026-10-08 02:52:03,632 poptwo_A+fps_deep: 20/29 tasks
+2026-10-08 02:53:03,077 poptwo_A+fps_deep: 29/29 tasks
+2026-10-08 02:53:42,880 pop_A+fps_deep: 10/29 tasks
+2026-10-08 02:54:19,766 pop_A+fps_deep: 20/29 tasks
+2026-10-08 02:54:52,442 pop_A+fps_deep: 29/29 tasks
+
+CYP2D6: population pool 4348 compounds, 308 positives; 5 outer folds; test prevalence 0.059
+
+  evaluation: similarity x prevalence x confident rows (z0 = 1.0)
+    S0 hits-only     outer AUC 0.5820  outer MCC at transferred rate +0.0601
+    S1 +gate         outer AUC 0.6980  outer MCC at transferred rate +0.0983 | vs S0 AUC +0.1160 (p=0.308, better 4/5) | vs S0 AP +0.0115 (p=0.604, better 3/5)
+    S2 +two-part     outer AUC 0.6983  outer MCC at transferred rate +0.1091 | vs S0 AUC +0.1162 (p=0.282, better 4/5) | vs S0 AP +0.0371 (p=0.151, better 5/5)
+    S3 +end-to-end   outer AUC 0.6942  outer MCC at transferred rate +0.1212 | vs S0 AUC +0.1121 (p=0.288, better 4/5) | vs S0 AP +0.0311 (p=0.147, better 5/5)
+
+  evaluation: similarity x prevalence x confident rows (z0 = 1.96)
+    S0 hits-only     outer AUC 0.5562  outer MCC at transferred rate +0.0196
+    S1 +gate         outer AUC 0.7287  outer MCC at transferred rate +0.1029 | vs S0 AUC +0.1726 (p=0.163, better 5/5) | vs S0 AP +0.0254 (p=0.301, better 5/5)
+    S2 +two-part     outer AUC 0.7171  outer MCC at transferred rate +0.0834 | vs S0 AUC +0.1610 (p=0.222, better 4/5) | vs S0 AP +0.0529 (p=0.119, better 5/5)
+    S3 +end-to-end   outer AUC 0.7125  outer MCC at transferred rate +0.1026 | vs S0 AUC +0.1563 (p=0.243, better 4/5) | vs S0 AP +0.0542 (p=0.150, better 5/5)

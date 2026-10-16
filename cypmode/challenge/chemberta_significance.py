@@ -23,7 +23,7 @@ from cypmode.challenge.chemberta_features import (
 from cypmode.challenge.knn_features import _morgan_fp
 from cypmode.challenge.stacking_significance import (
     repeated_cv_stacking_comparison,
-    tukey_hsd_summary,
+    paired_comparison_summary,
 )
 from cypmode.challenge.tdi_ablation import add_ablation_features
 from cypmode.challenge.tdi_baseline import (
@@ -48,7 +48,7 @@ def _main() -> None:
         valid = ~cyp_df["chemberta_embedding"].apply(lambda e: np.isnan(e).any())
         cyp_df = cyp_df[valid].reset_index(drop=True)
         y = cyp_df[col].astype(int).to_numpy()
-        m3_features = np.stack(cyp_df["m3_features"])
+        m3_features = np.stack(cyp_df["m3_no_amine_features"])
         fps = [_morgan_fp(s) for s in cyp_df["SMILES"]]
         aux_features = {"ChemBERTa": np.stack(cyp_df["chemberta_embedding"])}
 
@@ -60,17 +60,17 @@ def _main() -> None:
         print(f"-- {cyp}: mean MCC per variant (25 folds each) --")
         print(results.groupby("variant")["mcc"].agg(["mean", "std"]).to_string())
 
-        summary = tukey_hsd_summary(results)
+        summary = paired_comparison_summary(results)
         summary.insert(0, "isoform", cyp)
         all_summaries.append(summary)
         print(f"-- {cyp}: Tukey HSD pairwise comparison --")
         print(summary.to_string(index=False))
 
-    raw_path = Path("data/tdi_track/outputs/chemberta_significance_raw.csv")
+    raw_path = Path("data/tdi_track/outputs/comparisons/chemberta_significance_raw.csv")
     pd.concat(all_results, ignore_index=True).to_csv(raw_path, index=False)
     print(f"\nwrote {raw_path}")
 
-    tukey_path = Path("data/tdi_track/outputs/chemberta_significance_tukey.csv")
+    tukey_path = Path("data/tdi_track/outputs/comparisons/chemberta_significance_tukey.csv")
     pd.concat(all_summaries, ignore_index=True).to_csv(tukey_path, index=False)
     print(f"wrote {tukey_path}")
 

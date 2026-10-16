@@ -60,7 +60,7 @@ def _synthetic_df(n: int = 200, n_features: int = 6, seed: int = 0) -> pd.DataFr
     rows = []
     for i in range(n):
         desc = rng.normal(size=n_features)
-        row = {"m3_features": desc}
+        row = {"m3_no_amine_features": desc}
         # sparse labels: most rows get only one isoform, matching the real data shape
         if i % 3 != 0:
             row["CYP3A4_is_TDI"] = bool(desc[0] > 0)
@@ -83,7 +83,7 @@ def _synthetic_df_with_chemberta(n: int = 200, n_m3_features: int = 6, n_chember
 
 def test_train_shared_trunk_runs_and_produces_finite_predictions():
     df = _synthetic_df()
-    X = np.stack(df["m3_features"]).astype(np.float32)
+    X = np.stack(df["m3_no_amine_features"]).astype(np.float32)
     y = {cyp: df[f"{cyp}_is_TDI"].fillna(0).astype(int).to_numpy().astype(np.float32) for cyp in ISOFORMS}
     mask = {cyp: df[f"{cyp}_is_TDI"].notna().to_numpy().astype(np.float32) for cyp in ISOFORMS}
 
@@ -121,7 +121,7 @@ def test_find_optimal_threshold_picks_the_best_mcc():
 
 def test_inner_oof_threshold_shared_trunk_is_a_training_only_property():
     df = _synthetic_df()
-    X = np.stack(df["m3_features"]).astype(np.float32)
+    X = np.stack(df["m3_no_amine_features"]).astype(np.float32)
     y = {cyp: df[f"{cyp}_is_TDI"].fillna(0).astype(int).to_numpy().astype(np.float32) for cyp in ISOFORMS}
     mask = {cyp: df[f"{cyp}_is_TDI"].notna().to_numpy().astype(np.float32) for cyp in ISOFORMS}
 
@@ -147,7 +147,7 @@ def test_outer_fold_threshold_matches_a_direct_training_only_call():
     that fold's training split -- proving the outer loop never lets the
     threshold see the validation fold's labels."""
     df = _synthetic_df()
-    X = np.stack(df["m3_features"]).astype(np.float32)
+    X = np.stack(df["m3_no_amine_features"]).astype(np.float32)
     y = {cyp: df[f"{cyp}_is_TDI"].fillna(0).astype(int).to_numpy().astype(np.float32) for cyp in ISOFORMS}
     mask = {cyp: df[f"{cyp}_is_TDI"].notna().to_numpy().astype(np.float32) for cyp in ISOFORMS}
 
@@ -189,7 +189,7 @@ def test_multi_branch_model_rejects_mismatched_m3_dim():
 
 def test_train_multi_branch_shared_trunk_runs_and_produces_finite_predictions():
     df = _synthetic_df_with_chemberta()
-    X_m3 = np.stack(df["m3_features"]).astype(np.float32)
+    X_m3 = np.stack(df["m3_no_amine_features"]).astype(np.float32)
     X_cb = np.stack(df["chemberta_embedding"]).astype(np.float32)
     y = {cyp: df[f"{cyp}_is_TDI"].fillna(0).astype(int).to_numpy().astype(np.float32) for cyp in ISOFORMS}
     mask = {cyp: df[f"{cyp}_is_TDI"].notna().to_numpy().astype(np.float32) for cyp in ISOFORMS}

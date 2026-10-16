@@ -1,0 +1,659 @@
+{
+  "bench-A1CIW-seed1": {
+    "compound": "cyp3a4_bench-A1CIW-seed1",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N52",
+        "distance_angstrom": 6.8
+      },
+      {
+        "atom": "N53",
+        "distance_angstrom": 10.57
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.9361937642097473
+  },
+  "bench-A1CIW-seed3": {
+    "compound": "cyp3a4_bench-A1CIW-seed3",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N52",
+        "distance_angstrom": 4.21
+      },
+      {
+        "atom": "N53",
+        "distance_angstrom": 8.33
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.9305216670036316
+  },
+  "bench-A1CIW-cf1": {
+    "compound": "cyp3a4_bench-A1CIW-cf1",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N52",
+        "distance_angstrom": 6.03
+      },
+      {
+        "atom": "N53",
+        "distance_angstrom": 10.45
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.9357240796089172
+  },
+  "bench-A1CIW-cf2": {
+    "compound": "cyp3a4_bench-A1CIW-cf2",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N52",
+        "distance_angstrom": 6.19
+      },
+      {
+        "atom": "N53",
+        "distance_angstrom": 10.84
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.9328835606575012
+  },
+  "bench-A1CIW-cf3": {
+    "compound": "cyp3a4_bench-A1CIW-cf3",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N52",
+        "distance_angstrom": 7.04
+      },
+      {
+        "atom": "N53",
+        "distance_angstrom": 11.01
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.939651370048523
+  },
+  "bench-PK9-seed1": {
+    "compound": "cyp3a4_bench-PK9-seed1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "motif": "pyridine",
+        "distance_angstrom": 2.22
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "distance_angstrom": 2.22
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 6.66
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 6.87
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.22,
+    "coordinated": true,
+    "confidence_score": 0.9395393133163452
+  },
+  "bench-PK9-seed2": {
+    "compound": "cyp3a4_bench-PK9-seed2",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "motif": "pyridine",
+        "distance_angstrom": 2.21
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "distance_angstrom": 2.21
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 6.58
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 7.31
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.21,
+    "coordinated": true,
+    "confidence_score": 0.9374021291732788
+  },
+  "bench-PK9-seed3": {
+    "compound": "cyp3a4_bench-PK9-seed3",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "motif": "pyridine",
+        "distance_angstrom": 2.2
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "distance_angstrom": 2.2
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 6.67
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 9.09
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.2,
+    "coordinated": true,
+    "confidence_score": 0.9419309496879578
+  },
+  "bench-PK9-cf1": {
+    "compound": "cyp3a4_bench-PK9-cf1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "motif": "pyridine",
+        "distance_angstrom": 2.21
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "distance_angstrom": 2.21
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 6.69
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 8.45
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.21,
+    "coordinated": true,
+    "confidence_score": 0.941665530204773
+  },
+  "bench-PK9-cf2": {
+    "compound": "cyp3a4_bench-PK9-cf2",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "motif": "pyridine",
+        "distance_angstrom": 2.23
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "distance_angstrom": 2.23
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 6.75
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 8.44
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.23,
+    "coordinated": true,
+    "confidence_score": 0.938306987285614
+  },
+  "bench-PK9-cf3": {
+    "compound": "cyp3a4_bench-PK9-cf3",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "motif": "pyridine",
+        "distance_angstrom": 2.17
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N30",
+        "distance_angstrom": 2.17
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 5.83
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 8.07
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.17,
+    "coordinated": true,
+    "confidence_score": 0.9373494982719421
+  },
+  "bench-TPF-seed1": {
+    "compound": "cyp3a4_bench-TPF-seed1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N16",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 2.12
+      },
+      {
+        "atom": "N31",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.19
+      },
+      {
+        "atom": "N18",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.24
+      },
+      {
+        "atom": "N30",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 8.38
+      },
+      {
+        "atom": "N15",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 9.47
+      },
+      {
+        "atom": "N17",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 9.5
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N16",
+        "distance_angstrom": 2.12
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 4.19
+      },
+      {
+        "atom": "N18",
+        "distance_angstrom": 4.24
+      },
+      {
+        "atom": "N30",
+        "distance_angstrom": 8.38
+      },
+      {
+        "atom": "N15",
+        "distance_angstrom": 9.47
+      },
+      {
+        "atom": "N17",
+        "distance_angstrom": 9.5
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.12,
+    "coordinated": true,
+    "confidence_score": 0.9511678814888
+  },
+  "bench-TPF-seed2": {
+    "compound": "cyp3a4_bench-TPF-seed2",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N16",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 2.14
+      },
+      {
+        "atom": "N31",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.18
+      },
+      {
+        "atom": "N18",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.26
+      },
+      {
+        "atom": "N30",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 8.42
+      },
+      {
+        "atom": "N17",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 9.5
+      },
+      {
+        "atom": "N15",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 9.65
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N16",
+        "distance_angstrom": 2.14
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 4.18
+      },
+      {
+        "atom": "N18",
+        "distance_angstrom": 4.26
+      },
+      {
+        "atom": "N30",
+        "distance_angstrom": 8.42
+      },
+      {
+        "atom": "N17",
+        "distance_angstrom": 9.5
+      },
+      {
+        "atom": "N15",
+        "distance_angstrom": 9.65
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.14,
+    "coordinated": true,
+    "confidence_score": 0.9494144320487976
+  },
+  "bench-TPF-seed3": {
+    "compound": "cyp3a4_bench-TPF-seed3",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N15",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 2.11
+      },
+      {
+        "atom": "N30",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.12
+      },
+      {
+        "atom": "N17",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.15
+      },
+      {
+        "atom": "N18",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 7.79
+      },
+      {
+        "atom": "N31",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 7.98
+      },
+      {
+        "atom": "N16",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 9.3
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N15",
+        "distance_angstrom": 2.11
+      },
+      {
+        "atom": "N30",
+        "distance_angstrom": 4.12
+      },
+      {
+        "atom": "N17",
+        "distance_angstrom": 4.15
+      },
+      {
+        "atom": "N18",
+        "distance_angstrom": 7.79
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 7.98
+      },
+      {
+        "atom": "N16",
+        "distance_angstrom": 9.3
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.11,
+    "coordinated": true,
+    "confidence_score": 0.9454935193061829
+  },
+  "bench-TPF-cf1": {
+    "compound": "cyp3a4_bench-TPF-cf1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N15",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 2.13
+      },
+      {
+        "atom": "N17",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.15
+      },
+      {
+        "atom": "N30",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.16
+      },
+      {
+        "atom": "N31",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 7.15
+      },
+      {
+        "atom": "N18",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 8.3
+      },
+      {
+        "atom": "N16",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 8.84
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N15",
+        "distance_angstrom": 2.13
+      },
+      {
+        "atom": "N17",
+        "distance_angstrom": 4.15
+      },
+      {
+        "atom": "N30",
+        "distance_angstrom": 4.16
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 7.15
+      },
+      {
+        "atom": "N18",
+        "distance_angstrom": 8.3
+      },
+      {
+        "atom": "N16",
+        "distance_angstrom": 8.84
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.13,
+    "coordinated": true,
+    "confidence_score": 0.9438477754592896
+  },
+  "bench-TPF-cf2": {
+    "compound": "cyp3a4_bench-TPF-cf2",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N15",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 2.14
+      },
+      {
+        "atom": "N30",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.2
+      },
+      {
+        "atom": "N17",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.24
+      },
+      {
+        "atom": "N31",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 8.35
+      },
+      {
+        "atom": "N18",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 9.1
+      },
+      {
+        "atom": "N16",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 9.58
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N15",
+        "distance_angstrom": 2.14
+      },
+      {
+        "atom": "N30",
+        "distance_angstrom": 4.2
+      },
+      {
+        "atom": "N17",
+        "distance_angstrom": 4.24
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 8.35
+      },
+      {
+        "atom": "N18",
+        "distance_angstrom": 9.1
+      },
+      {
+        "atom": "N16",
+        "distance_angstrom": 9.58
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.14,
+    "coordinated": true,
+    "confidence_score": 0.9448847770690918
+  },
+  "bench-TPF-cf3": {
+    "compound": "cyp3a4_bench-TPF-cf3",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N15",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 2.15
+      },
+      {
+        "atom": "N30",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.14
+      },
+      {
+        "atom": "N17",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.2
+      },
+      {
+        "atom": "N31",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 7.26
+      },
+      {
+        "atom": "N18",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 8.42
+      },
+      {
+        "atom": "N16",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 8.97
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N15",
+        "distance_angstrom": 2.15
+      },
+      {
+        "atom": "N30",
+        "distance_angstrom": 4.14
+      },
+      {
+        "atom": "N17",
+        "distance_angstrom": 4.2
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 7.26
+      },
+      {
+        "atom": "N18",
+        "distance_angstrom": 8.42
+      },
+      {
+        "atom": "N16",
+        "distance_angstrom": 8.97
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.15,
+    "coordinated": true,
+    "confidence_score": 0.9422420263290405
+  },
+  "bench-A1CIW-seed2": {
+    "compound": "cyp3a4_bench-A1CIW-seed2",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N52",
+        "distance_angstrom": 5.63
+      },
+      {
+        "atom": "N53",
+        "distance_angstrom": 10.11
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.9361544847488403
+  },
+  "bench-A1CIW-ss": {
+    "status": "poses written; post-processing skipped (No matching found)"
+  },
+  "bench-PK9-ss": {
+    "status": "poses written; post-processing skipped (No matching found)"
+  },
+  "bench-TPF-ss": {
+    "status": "poses written; post-processing skipped (No matching found)"
+  }
+}

@@ -1,0 +1,14 @@
+
+CYP3A4: population pool 4295 compounds, 609 positives; 5 outer folds; test prevalence 0.310
+
+  evaluation: similarity x prevalence x confident rows (z0 = 1.0)
+    S0 hits-only     outer AUC 0.7176  outer MCC at transferred rate +0.3172
+    S1 +gate         outer AUC 0.7326  outer MCC at transferred rate +0.2844 | vs S0 AUC +0.0150 (p=0.348, better 4/5) | vs S0 AP +0.0359 (p=0.045, better 5/5)
+    S2 +two-part     outer AUC 0.7419  outer MCC at transferred rate +0.3056 | vs S0 AUC +0.0243 (p=0.094, better 4/5) | vs S0 AP +0.0538 (p=0.052, better 5/5)
+    S3 +end-to-end   outer AUC 0.7490  outer MCC at transferred rate +0.3204 | vs S0 AUC +0.0315 (p=0.029, better 5/5) | vs S0 AP +0.0551 (p=0.069, better 5/5)
+
+  evaluation: similarity x prevalence x confident rows (z0 = 1.96)
+    S0 hits-only     outer AUC 0.7455  outer MCC at transferred rate +0.3350
+    S1 +gate         outer AUC 0.7606  outer MCC at transferred rate +0.3177 | vs S0 AUC +0.0152 (p=0.315, better 4/5) | vs S0 AP +0.0495 (p=0.006, better 5/5)
+    S2 +two-part     outer AUC 0.7706  outer MCC at transferred rate +0.3366 | vs S0 AUC +0.0252 (p=0.156, better 4/5) | vs S0 AP +0.0680 (p=0.044, better 5/5)
+    S3 +end-to-end   outer AUC 0.7756  outer MCC at transferred rate +0.3284 | vs S0 AUC +0.0301 (p=0.043, better 5/5) | vs S0 AP +0.0664 (p=0.050, better 5/5)

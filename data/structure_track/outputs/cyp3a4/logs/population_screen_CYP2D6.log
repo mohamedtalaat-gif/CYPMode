@@ -1,0 +1,68 @@
+2026-10-15 15:12:02,382 scr2_A_deep: 10/79 tasks
+2026-10-15 15:12:56,866 scr2_A_deep: 20/79 tasks
+2026-10-15 15:13:55,158 scr2_A_deep: 30/79 tasks
+2026-10-15 15:14:51,707 scr2_A_deep: 40/79 tasks
+2026-10-15 15:15:41,917 scr2_A_deep: 50/79 tasks
+2026-10-15 15:16:33,524 scr2_A_deep: 60/79 tasks
+2026-10-15 15:17:24,756 scr2_A_deep: 70/79 tasks
+2026-10-15 15:18:11,580 scr2_A_deep: 79/79 tasks
+2026-10-15 15:19:50,512 scr2_A+fps_deep: 10/79 tasks
+2026-10-15 15:20:54,910 scr2_A+fps_deep: 20/79 tasks
+2026-10-15 15:22:07,827 scr2_A+fps_deep: 30/79 tasks
+2026-10-15 15:23:19,315 scr2_A+fps_deep: 40/79 tasks
+2026-10-15 15:24:28,675 scr2_A+fps_deep: 50/79 tasks
+2026-10-15 15:25:36,654 scr2_A+fps_deep: 60/79 tasks
+2026-10-15 15:26:42,214 scr2_A+fps_deep: 70/79 tasks
+2026-10-15 15:27:42,037 scr2_A+fps_deep: 79/79 tasks
+2026-10-15 15:30:18,446 popscr_A_deep: 10/79 tasks
+2026-10-15 15:32:52,318 popscr_A_deep: 20/79 tasks
+2026-10-15 15:35:29,161 popscr_A_deep: 30/79 tasks
+2026-10-15 15:38:04,620 popscr_A_deep: 40/79 tasks
+2026-10-15 15:40:39,081 popscr_A_deep: 50/79 tasks
+2026-10-15 15:43:15,560 popscr_A_deep: 60/79 tasks
+2026-10-15 15:45:50,020 popscr_A_deep: 70/79 tasks
+2026-10-15 15:48:14,186 popscr_A_deep: 79/79 tasks
+2026-10-15 15:48:53,569 popscr_A+fps_deep: 10/79 tasks
+2026-10-15 15:49:32,190 popscr_A+fps_deep: 20/79 tasks
+2026-10-15 15:50:11,728 popscr_A+fps_deep: 30/79 tasks
+2026-10-15 15:50:51,639 popscr_A+fps_deep: 40/79 tasks
+2026-10-15 15:51:31,697 popscr_A+fps_deep: 50/79 tasks
+2026-10-15 15:52:12,145 popscr_A+fps_deep: 60/79 tasks
+2026-10-15 15:52:51,339 popscr_A+fps_deep: 70/79 tasks
+2026-10-15 15:53:27,552 popscr_A+fps_deep: 79/79 tasks
+/Volumes/Data/CYPMode/.venv/lib/python3.13/site-packages/sklearn/svm/_base.py:1295: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(
+/Volumes/Data/CYPMode/.venv/lib/python3.13/site-packages/sklearn/svm/_base.py:1295: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(
+/Volumes/Data/CYPMode/.venv/lib/python3.13/site-packages/sklearn/svm/_base.py:1295: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(
+
+CYP2D6: population pool 4348, 15 outer folds; screen candidates cached: 4 of 4
+  z0=1.0  selection-aware stack  outer AUC 0.7278  MCC at transferred rate +0.1258
+  z0=1.0  with the screen        outer AUC 0.7356  MCC at transferred rate +0.1064
+  z0=1.0  stacked with the screen vs without: AUC +0.0078 (p=0.127, better 12/15) AP +0.0059 (p=0.393, better 12/15)
+  z0=1.0  diagnostic scr2_A_deep        best-single outer AUC 0.6601
+  z0=1.0  diagnostic scr2_A+fps_deep    best-single outer AUC 0.6886
+  z0=1.0  diagnostic popscr_A_deep      best-single outer AUC 0.7098
+  z0=1.0  diagnostic popscr_A+fps_deep  best-single outer AUC 0.7261
+  z0=1.96 selection-aware stack  outer AUC 0.7598  MCC at transferred rate +0.1042
+  z0=1.96 with the screen        outer AUC 0.7639  MCC at transferred rate +0.1058
+  z0=1.96 stacked with the screen vs without: AUC +0.0041 (p=0.419, better 11/15) AP +0.0042 (p=0.728, better 10/15)
+  z0=1.96 diagnostic scr2_A_deep        best-single outer AUC 0.6881
+  z0=1.96 diagnostic scr2_A+fps_deep    best-single outer AUC 0.7020
+  z0=1.96 diagnostic popscr_A_deep      best-single outer AUC 0.7392
+  z0=1.96 diagnostic popscr_A+fps_deep  best-single outer AUC 0.7480
+CYP2D6 GATE (population screen stacked, corrected p < 0.05 at both z0): NOT MET
+
+  regimes: stacks fitted under non-hit weight 1.0, scored under each true weight; mean outer AUC | MCC at the transferred rate
+
+    z0 = 1.0      w=0.0    w=0.1    w=0.25   w=0.4    w=0.5    w=0.68   w=1.0  
+      selection_aware         0.517|+0.03  0.595|+0.09  0.651|+0.12  0.681|+0.13  0.694|+0.13  0.710|+0.13  0.728|+0.13
+      selection_aware_screen  0.541|+0.01  0.613|+0.07  0.665|+0.09  0.692|+0.10  0.705|+0.11  0.720|+0.11  0.736|+0.11
+    z0=1.0  screen minus plain: | w=0.4: +0.011 (p=0.05) | w=0.5: +0.010 (p=0.06) | w=0.68: +0.009 (p=0.09)
+
+    z0 = 1.96      w=0.0    w=0.1    w=0.25   w=0.4    w=0.5    w=0.68   w=1.0  
+      selection_aware         0.537|+0.04  0.640|+0.12  0.697|+0.14  0.724|+0.15  0.735|+0.15  0.747|+0.14  0.760|+0.13
+      selection_aware_screen  0.562|+0.00  0.655|+0.08  0.708|+0.11  0.732|+0.12  0.741|+0.12  0.753|+0.11  0.765|+0.11
+    z0=1.96 screen minus plain: | w=0.4: +0.008 (p=0.11) | w=0.5: +0.007 (p=0.16) | w=0.68: +0.006 (p=0.23)
+CYP2D6 GATE (population screen over the band, corrected p < 0.05 at every band weight at both z0, fit weight 1.0): NOT MET

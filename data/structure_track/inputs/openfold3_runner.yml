@@ -1,0 +1,13 @@
+# OpenFold3 runner settings for this 16 GB Mac (cypmode/validation/openfold3.py passes this file with --runner-yaml).
+# The "predict" preset sets the pair-stack chunk size to 1024 and lets the chunk tuner pick the largest size that fits
+# the first block; later blocks then run out of Metal memory (MPS backend out of memory, ~8.8 GiB single allocations).
+# A smaller upper bound caps every attention buffer (chunk_size // 4 rows of the triangle attention at a time). Chunking evaluates the
+# same attention row by row, so the predictions are unchanged.
+model_update:
+  presets:
+    - predict
+  custom:
+    settings:
+      memory:
+        eval:
+          chunk_size: 128

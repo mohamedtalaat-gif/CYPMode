@@ -1,0 +1,7 @@
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['tabicl_svd']
+  z0=1.0  diagnostic tabicl_svd: outer AUC 0.6964
+  z0=1.0  stacked base+added vs base: AUC -0.0008 (p=0.724, better 6/15) AP -0.0071 (p=0.628, better 6/15)
+  z0=1.96 diagnostic tabicl_svd: outer AUC 0.7247
+  z0=1.96 stacked base+added vs base: AUC +0.0018 (p=0.484, better 9/15) AP -0.0065 (p=0.800, better 9/15)
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

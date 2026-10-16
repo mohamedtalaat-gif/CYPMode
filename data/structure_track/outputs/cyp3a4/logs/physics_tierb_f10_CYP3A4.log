@@ -1,0 +1,14 @@
+
+CYP3A4: 30 outer folds; base stack 23 candidates; added candidates cached: ['lgbm_physB_deep', 'lgbm_A+physB_deep', 'lgbm_A+fps+physB_deep', 'lgbm_A+phys+physB_deep']
+  z0=1.0  diagnostic lgbm_physB_deep: outer AUC 0.6660
+  z0=1.0  alone  lgbm_A+physB_deep        vs lgbm_A_deep     : AUC 0.7888 -> 0.7932 (+0.0044, p=0.536, better 22/30) | AP +0.0032 (p=0.800)
+  z0=1.0  alone  lgbm_A+fps+physB_deep    vs lgbm_A+fps_deep : AUC 0.8073 -> 0.8066 (-0.0007, p=0.932, better 15/30) | AP +0.0029 (p=0.839)
+  z0=1.0  alone  lgbm_A+phys+physB_deep   vs lgbm_A+phys_deep: AUC 0.8052 -> 0.8008 (-0.0044, p=0.384, better 11/30) | AP -0.0074 (p=0.447)
+  z0=1.0  stacked base+added vs base: AUC +0.0010 (p=0.734, better 17/30) AP +0.0014 (p=0.804, better 15/30)
+  z0=1.96 diagnostic lgbm_physB_deep: outer AUC 0.6799
+  z0=1.96 alone  lgbm_A+physB_deep        vs lgbm_A_deep     : AUC 0.8250 -> 0.8255 (+0.0006, p=0.933, better 21/30) | AP +0.0064 (p=0.654)
+  z0=1.96 alone  lgbm_A+fps+physB_deep    vs lgbm_A+fps_deep : AUC 0.8397 -> 0.8385 (-0.0013, p=0.852, better 15/30) | AP +0.0082 (p=0.661)
+  z0=1.96 alone  lgbm_A+phys+physB_deep   vs lgbm_A+phys_deep: AUC 0.8403 -> 0.8353 (-0.0050, p=0.332, better 12/30) | AP -0.0077 (p=0.525)
+  z0=1.96 stacked base+added vs base: AUC +0.0014 (p=0.563, better 18/30) AP +0.0054 (p=0.537, better 17/30)
+CYP3A4 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

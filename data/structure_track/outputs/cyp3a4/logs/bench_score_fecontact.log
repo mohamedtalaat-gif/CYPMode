@@ -1,0 +1,56 @@
+[22:48:41] WARNING: More than one matching pattern found - picking one
+
+[22:48:41] WARNING: More than one matching pattern found - picking one
+
+[22:48:41] WARNING: More than one matching pattern found - picking one
+
+[22:48:41] WARNING: More than one matching pattern found - picking one
+
+[22:48:41] WARNING: More than one matching pattern found - picking one
+
+[22:48:41] WARNING: More than one matching pattern found - picking one
+
+[22:48:41] WARNING: More than one matching pattern found - picking one
+
+[22:48:41] WARNING: More than one matching pattern found - picking one
+
+[22:48:41] WARNING: More than one matching pattern found - picking one
+
+[22:48:42] WARNING: More than one matching pattern found - picking one
+
+[22:48:42] WARNING: More than one matching pattern found - picking one
+
+[22:48:42] WARNING: More than one matching pattern found - picking one
+
+[22:48:42] WARNING: More than one matching pattern found - picking one
+
+[22:48:42] WARNING: More than one matching pattern found - picking one
+
+[22:48:42] WARNING: More than one matching pattern found - picking one
+
+[22:48:42] WARNING: More than one matching pattern found - picking one
+
+[22:48:42] WARNING: More than one matching pattern found - picking one
+
+[22:48:42] WARNING: More than one matching pattern found - picking one
+
+             compound engine  sample  n_crystal_copies  true_rmsd  template_score  template_support  occupancy_score  novel_template_score  novel_template_support  novel_occupancy_score
+  bench-2QH-fecontact  boltz       0                 1      0.566           0.348             0.202            0.534                 0.348                   0.202                  0.534
+  bench-2QH-fecontact  boltz       1                 1      0.734           0.346             0.202            0.543                 0.346                   0.202                  0.543
+  bench-2QH-fecontact  boltz       2                 1      0.590           0.341             0.202            0.540                 0.341                   0.202                  0.540
+  bench-PK9-fecontact  boltz       0                 2      4.717           0.634             0.562            0.677                 0.563                   0.486                  0.675
+  bench-PK9-fecontact  boltz       1                 2      1.796           0.616             0.562            0.616                 0.514                   0.486                  0.613
+  bench-PK9-fecontact  boltz       2                 2      6.198           0.381             0.562            0.563                 0.379                   0.486                  0.564
+  bench-TPF-fecontact  boltz       0                 1      3.559           0.413             0.188            0.633                 0.413                   0.188                  0.633
+  bench-TPF-fecontact  boltz       1                 1      3.724           0.437             0.188            0.647                 0.437                   0.188                  0.647
+  bench-TPF-fecontact  boltz       2                 1      3.335           0.358             0.188            0.577                 0.358                   0.188                  0.577
+  bench-MWV-fecontact  boltz       0                 1      4.913           0.537             0.159            0.456                 0.537                   0.159                  0.456
+  bench-MWV-fecontact  boltz       1                 1      4.793           0.548             0.159            0.455                 0.548                   0.159                  0.455
+  bench-MWV-fecontact  boltz       2                 1      4.879           0.544             0.159            0.450                 0.544                   0.159                  0.450
+bench-A1ASV-fecontact  boltz       0                 1      2.885           0.641             0.660            0.664                 0.666                   0.438                  0.660
+bench-A1ASV-fecontact  boltz       1                 1      2.504           0.688             0.660            0.652                 0.644                   0.438                  0.646
+bench-A1ASV-fecontact  boltz       2                 1      2.585           0.703             0.660            0.656                 0.639                   0.438                  0.650
+bench-A1A4S-fecontact  boltz       0                 1      5.862           0.632             0.779            0.568                 0.704                   0.482                  0.522
+bench-A1A4S-fecontact  boltz       1                 1      5.931           0.604             0.779            0.563                 0.671                   0.482                  0.525
+bench-A1A4S-fecontact  boltz       2                 1      4.312           0.525             0.779            0.510                 0.479                   0.482                  0.483
+wrote data/structure_track/outputs/cyp3a4/benchmark_engine_pose_validation_fecontact.csv

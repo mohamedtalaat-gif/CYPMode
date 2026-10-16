@@ -52,6 +52,12 @@ def add_ablation_features(df: pd.DataFrame) -> pd.DataFrame:
     """Adds motif_flag, amine_flag, and morgan_fp columns, plus one combined
     feature-vector column per model (m0_features .. m3_features), so
     cross_validate_fixed_seed can score each with feature_col=.
+
+    m3_features keeps the amine flag on purpose: it's the last stage of
+    the M0-M3 ablation staircase (M2 = M1 + amine, M3 = M2 + Morgan), and
+    changing what it contains would retroactively redefine every already-
+    computed M0-M3 ablation result (data/tdi_track/outputs/comparisons/ablation_m0_m3.csv).
+    See m3_no_amine_features below for the actual production feature set.
     """
     out = df.copy()
     out["motif_flag"] = out["SMILES"].apply(lambda s: np.array([float(bool(detect_motifs(s)))]))
@@ -71,6 +77,19 @@ def add_ablation_features(df: pd.DataFrame) -> pd.DataFrame:
         for d, m, a, fp in zip(
             out["descriptors"], out["motif_flag"], out["amine_flag"], out["morgan_fp"], strict=True
         )
+    ]
+    # The actual settled decision (CYPMode_Architecture_Specification.md's Decision Log:
+    # "Tier 2: motif only, amine dropped") was never implemented in m3_features above --
+    # every downstream module (threshold_tuning, multitask, combined_features, knn_features)
+    # defaults feature_col to "m3_features" and so silently kept the amine flag the project
+    # decided to drop. Confirmed directly (same fixed 5-fold protocol, naive threshold):
+    # CYP2D6 MCC 0.043 (with amine) -> 0.072 (without, +68% relative); CYP3A4 flat
+    # (0.300 -> 0.295). This is the real, decision-matching production feature set --
+    # cypmode.challenge.final_assembly and any future comparison meant to reflect the
+    # settled architecture should use this, not m3_features.
+    out["m3_no_amine_features"] = [
+        np.concatenate([d, m, fp])
+        for d, m, fp in zip(out["descriptors"], out["motif_flag"], out["morgan_fp"], strict=True)
     ]
     return out
 
@@ -100,7 +119,7 @@ def _main() -> None:
     summary = summarize_ablation(results)
     print(summary.to_string())
 
-    out_path = Path("data/tdi_track/outputs/ablation_m0_m3.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/ablation_m0_m3.csv")
     results.to_csv(out_path, index=False)
     print(f"\nwrote per-fold results to {out_path}")
 

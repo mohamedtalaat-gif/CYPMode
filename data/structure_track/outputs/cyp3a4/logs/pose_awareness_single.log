@@ -1,0 +1,118 @@
+[05:55:32] WARNING: More than one matching pattern found - picking one
+
+[05:55:33] WARNING: More than one matching pattern found - picking one
+
+[05:55:33] WARNING: More than one matching pattern found - picking one
+
+[05:55:33] WARNING: More than one matching pattern found - picking one
+
+[05:55:34] WARNING: More than one matching pattern found - picking one
+
+[05:55:45] WARNING: More than one matching pattern found - picking one
+
+[05:55:46] WARNING: More than one matching pattern found - picking one
+
+[05:55:46] WARNING: More than one matching pattern found - picking one
+
+[05:55:46] WARNING: More than one matching pattern found - picking one
+
+[05:55:47] WARNING: More than one matching pattern found - picking one
+
+[05:55:49] WARNING: More than one matching pattern found - picking one
+
+[05:55:50] WARNING: More than one matching pattern found - picking one
+
+[05:55:50] WARNING: More than one matching pattern found - picking one
+
+[05:55:50] WARNING: More than one matching pattern found - picking one
+
+[05:55:51] WARNING: More than one matching pattern found - picking one
+
+[05:55:57] WARNING: More than one matching pattern found - picking one
+
+[05:55:58] WARNING: More than one matching pattern found - picking one
+
+[05:55:58] WARNING: More than one matching pattern found - picking one
+
+[05:55:58] WARNING: More than one matching pattern found - picking one
+
+[05:55:59] WARNING: More than one matching pattern found - picking one
+
+[05:56:04] WARNING: More than one matching pattern found - picking one
+
+[05:56:04] WARNING: More than one matching pattern found - picking one
+
+[05:56:04] WARNING: More than one matching pattern found - picking one
+
+[05:56:05] WARNING: More than one matching pattern found - picking one
+
+[05:56:05] WARNING: More than one matching pattern found - picking one
+
+[05:56:16] WARNING: More than one matching pattern found - picking one
+
+[05:56:17] WARNING: More than one matching pattern found - picking one
+
+[05:56:17] WARNING: More than one matching pattern found - picking one
+
+[05:56:17] WARNING: More than one matching pattern found - picking one
+
+[05:56:18] WARNING: More than one matching pattern found - picking one
+
+[05:56:22] WARNING: More than one matching pattern found - picking one
+
+[05:56:23] WARNING: More than one matching pattern found - picking one
+
+[05:56:23] WARNING: More than one matching pattern found - picking one
+
+[05:56:24] WARNING: More than one matching pattern found - picking one
+
+[05:56:24] WARNING: More than one matching pattern found - picking one
+
+[05:56:29] WARNING: More than one matching pattern found - picking one
+
+[05:56:29] WARNING: More than one matching pattern found - picking one
+
+[05:56:30] WARNING: More than one matching pattern found - picking one
+
+[05:56:30] WARNING: More than one matching pattern found - picking one
+
+[05:56:30] WARNING: More than one matching pattern found - picking one
+
+[05:56:33] WARNING: More than one matching pattern found - picking one
+
+[05:56:34] WARNING: More than one matching pattern found - picking one
+
+[05:56:34] WARNING: More than one matching pattern found - picking one
+
+[05:56:34] WARNING: More than one matching pattern found - picking one
+
+[05:56:35] WARNING: More than one matching pattern found - picking one
+
+[05:57:01] WARNING: More than one matching pattern found - picking one
+
+[05:57:01] WARNING: More than one matching pattern found - picking one
+
+[05:57:01] WARNING: More than one matching pattern found - picking one
+
+[05:57:02] WARNING: More than one matching pattern found - picking one
+
+[05:57:02] WARNING: More than one matching pattern found - picking one
+
+mode single: 50 poses of 10 ligands
+   compound  poses  mean_pool  mbr_pick  rho_physics  physics_pick  rho_pharmacophore  pharmacophore_pick  rho_combined  combined_pick
+  bench-2QH      5      0.668     0.767        0.359         0.580             -0.900               0.767        -0.872          0.767
+bench-A1A4S      5      5.615     6.068       -0.700         6.237              0.600               4.527        -0.600          6.237
+bench-A1ASV      5      2.657     2.777        0.600         2.415             -0.600               2.777         0.200          2.777
+bench-A1CIW      5      5.914     6.301       -0.600         6.293              1.000               5.267        -0.700          6.301
+  bench-MWS      5      1.872     1.323        0.300         1.722              0.900               1.323         1.000          1.323
+  bench-MWV      5      4.970     4.811        0.900         4.811             -0.500               5.042         0.200          4.811
+  bench-PK9      5      3.097     1.907       -0.154         4.761             -0.200               1.907         0.300          1.907
+  bench-TCI      5      5.734     4.947       -0.100         4.947              0.894               4.947         0.700          4.947
+  bench-TPF      5      3.783     3.889       -0.900         3.975              0.900               3.619        -0.300          3.670
+  bench-YNV      5      5.909     5.870        0.300         6.223              0.224               6.377         0.200          5.846
+physics: mean Spearman rho +0.001, positive for 50% of 10 ligands, mean RMSD of the top-scored pose 4.196 (MBR 3.866, random pose 4.022)
+information (not a gate) pose_physics (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
+pharmacophore: mean Spearman rho +0.232, positive for 60% of 10 ligands, mean RMSD of the top-scored pose 3.655 (MBR 3.866, random pose 4.022)
+information (not a gate) pose_pharmacophore (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
+combined: mean Spearman rho +0.013, positive for 60% of 10 ligands, mean RMSD of the top-scored pose 3.859 (MBR 3.866, random pose 4.022)
+information (not a gate) pose_combined (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET

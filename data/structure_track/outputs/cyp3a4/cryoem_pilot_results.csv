@@ -1,0 +1,10 @@
+compound,smiles,coordinated,closest_motif_nitrogen_distance_angstrom,closest_motif,closest_motif_atom,confidence_score,affinity_pred_value,affinity_probability_binary,error
+bench-A1CIW-em1,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.930456280708313,,,
+bench-A1CIW-em2,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.9338210821151733,,,
+bench-A1CIW-em3,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.9359750747680664,,,
+bench-PK9-em1,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.21,pyridine,N30,0.9398742914199829,,,
+bench-PK9-em2,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.09,pyridine,N30,0.9362939596176147,,,
+bench-PK9-em3,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.2,pyridine,N30,0.9360815286636353,,,
+bench-TPF-em1,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.03,triazole_1_2_4,N15,0.9444613456726074,,,
+bench-TPF-em2,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.16,triazole_1_2_4,N15,0.9448663592338562,,,
+bench-TPF-em3,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.11,triazole_1_2_4,N15,0.94664067029953,,,

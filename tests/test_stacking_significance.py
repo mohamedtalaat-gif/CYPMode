@@ -7,7 +7,7 @@ pytest.importorskip("statsmodels")
 
 from cypmode.challenge.stacking_significance import (
     repeated_cv_stacking_comparison,
-    tukey_hsd_summary,
+    paired_comparison_summary,
 )
 
 KETOCONAZOLE = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2)CC1"
@@ -51,7 +51,7 @@ def test_repeated_cv_stacking_comparison_without_aux_features_still_runs():
     assert set(results["variant"]) == {"M3", "M3+KNN"}
 
 
-def test_tukey_hsd_summary_detects_a_real_difference():
+def test_paired_comparison_summary_detects_a_real_difference():
     rng = np.random.default_rng(0)
     # variant A scores consistently higher than variant B, no overlap
     rows = []
@@ -61,12 +61,12 @@ def test_tukey_hsd_summary_detects_a_real_difference():
             rows.append({"repeat": repeat, "fold": fold, "variant": "B", "mcc": 0.2 + rng.normal(scale=0.01)})
     results = pd.DataFrame(rows)
 
-    summary = tukey_hsd_summary(results)
+    summary = paired_comparison_summary(results)
     row = summary[(summary["group1"] == "A") & (summary["group2"] == "B")].iloc[0]
     assert row["reject"] == True
 
 
-def test_tukey_hsd_summary_does_not_falsely_flag_identical_distributions():
+def test_paired_comparison_summary_does_not_falsely_flag_identical_distributions():
     rng = np.random.default_rng(0)
     rows = []
     for repeat in range(5):
@@ -75,6 +75,21 @@ def test_tukey_hsd_summary_does_not_falsely_flag_identical_distributions():
             rows.append({"repeat": repeat, "fold": fold, "variant": "B", "mcc": 0.5 + rng.normal(scale=0.05)})
     results = pd.DataFrame(rows)
 
-    summary = tukey_hsd_summary(results)
+    summary = paired_comparison_summary(results)
     row = summary[(summary["group1"] == "A") & (summary["group2"] == "B")].iloc[0]
     assert row["reject"] == False
+
+
+def test_paired_comparison_uses_the_corrected_variance_and_holm_adjustment():
+    rng = np.random.default_rng(3)
+    rows = []
+    shared = rng.normal(scale=0.05, size=(5, 5))  # fold-level difficulty shared by all variants, as in a paired design
+    for repeat in range(5):
+        for fold in range(5):
+            for name, shift in (("A", 0.0), ("B", 0.01), ("C", 0.0)):
+                rows.append({"repeat": repeat, "fold": fold, "variant": name, "mcc": 0.4 + shared[repeat, fold] + shift + rng.normal(scale=0.02)})
+    summary = paired_comparison_summary(pd.DataFrame(rows))
+    assert len(summary) == 3 and list(summary.columns) == ["group1", "group2", "meandiff", "p-adj", "lower", "upper", "reject"]
+    assert (summary["p-adj"] >= 0).all() and (summary["p-adj"] <= 1).all()
+    ab = summary[(summary.group1 == "A") & (summary.group2 == "B")].iloc[0]
+    assert ab["lower"] < ab["meandiff"] < ab["upper"] and ab["meandiff"] > 0

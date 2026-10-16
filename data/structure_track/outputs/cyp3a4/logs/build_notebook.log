@@ -1,0 +1,58 @@
+Found local copy...
+Loading...
+Done!
+Found local copy...
+Loading...
+Done!
+Found local copy...
+Loading...
+Done!
+Found local copy...
+Loading...
+Done!
+Found local copy...
+Loading...
+Done!
+cypmode_notebook.ipynb: 79 cells, 0 failed cells [], 0 glossary problems, 259 repository files not yet explained
+  not explained: module: cypmode/audit/checklist.py
+  not explained: module: cypmode/audit/core.py
+  not explained: module: cypmode/audit/public_readiness.py
+  not explained: module: cypmode/audit/sections_extra.py
+  not explained: module: cypmode/challenge/addition_experiment.py
+  not explained: module: cypmode/challenge/architecture_significance.py
+  not explained: module: cypmode/challenge/bindingdb_auxiliary.py
+  not explained: module: cypmode/challenge/block_holdout.py
+  not explained: module: cypmode/challenge/calibration_experiment.py
+  not explained: module: cypmode/challenge/chemberta_features.py
+  not explained: module: cypmode/challenge/chemberta_significance.py
+  not explained: module: cypmode/challenge/chembl_auxiliary.py
+  not explained: module: cypmode/challenge/combined_features.py
+  not explained: module: cypmode/challenge/committee_uncertainty.py
+  not explained: module: cypmode/challenge/confidence_experiment.py
+  not explained: module: cypmode/challenge/cyp2d6_tuning_significance.py
+  not explained: module: cypmode/challenge/external_activity.py
+  not explained: module: cypmode/challenge/external_auxiliary_significance.py
+  not explained: module: cypmode/challenge/final_assembly.py
+  not explained: module: cypmode/challenge/final_assembly_cyp2d6.py
+  not explained: module: cypmode/challenge/final_tdi_build.py
+  not explained: module: cypmode/challenge/frozen_embeddings.py
+  not explained: module: cypmode/challenge/grouping.py
+  not explained: module: cypmode/challenge/knn_features.py
+  not explained: module: cypmode/challenge/label_confidence.py
+  not explained: module: cypmode/challenge/leaderboard_prior.py
+  not explained: module: cypmode/challenge/library_blocks.py
+  not explained: module: cypmode/challenge/model_comparison.py
+  not explained: module: cypmode/challenge/multitask.py
+  not explained: module: cypmode/challenge/nested_deploy.py
+  not explained: module: cypmode/challenge/nested_report.py
+  not explained: module: cypmode/challenge/nested_runners.py
+  not explained: module: cypmode/challenge/nested_runners_chemprop.py
+  not explained: module: cypmode/challenge/nested_runners_torch.py
+  not explained: module: cypmode/challenge/oof_bridge.py
+  not explained: module: cypmode/challenge/pharmacophore_fingerprint.py
+  not explained: module: cypmode/challenge/physics_block.py
+  not explained: module: cypmode/challenge/physics_compact_experiment.py
+  not explained: module: cypmode/challenge/physics_tierb_experiment.py
+  not explained: module: cypmode/challenge/population_experiment.py
+cypmode_notebook.html: 4.3 MB
+cypmode_notebook.pdf: 4.2 MB

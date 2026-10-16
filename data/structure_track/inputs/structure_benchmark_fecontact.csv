@@ -1,0 +1,7 @@
+Molecule_Name,SMILES
+bench-2QH-fecontact,Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F
+bench-PK9-fecontact,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1
+bench-TPF-fecontact,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O
+bench-MWV-fecontact,CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F
+bench-A1ASV-fecontact,CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F
+bench-A1A4S-fecontact,c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5

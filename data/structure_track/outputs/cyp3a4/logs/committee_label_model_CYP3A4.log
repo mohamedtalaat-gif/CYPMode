@@ -1,0 +1,15 @@
+
+CYP3A4: 15 outer folds; base stack 23 candidates; added candidates cached: ['committee_m_A+fps', 'committee_p_A+fps', 'committee_ei_A+fps']
+  z0=1.0  diagnostic committee_m_A+fps: outer AUC 0.7631
+  z0=1.0  diagnostic committee_p_A+fps: outer AUC 0.7633
+  z0=1.0  diagnostic committee_ei_A+fps: outer AUC 0.7623
+  z0=1.0  stacked base+added vs base: AUC +0.0023 (p=0.405, better 11/15) AP +0.0046 (p=0.372, better 11/15)
+  z0=1.96 diagnostic committee_m_A+fps: outer AUC 0.7950
+  z0=1.96 diagnostic committee_p_A+fps: outer AUC 0.7950
+  z0=1.96 diagnostic committee_ei_A+fps: outer AUC 0.7930
+  z0=1.96 stacked base+added vs base: AUC +0.0033 (p=0.394, better 10/15) AP +0.0055 (p=0.426, better 8/15)
+CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): NOT MET
+
+CYP3A4: calibration of committee_p_A+fps exactly as it comes out (no recalibration); gate ECE <= 0.05, slope in [0.8, 1.2]
+  z0=1.0  ECE 0.1410  Brier 0.1942  slope 1.494  mean predicted 0.449 vs observed 0.310  -> calibration gate NOT MET
+  z0=1.96 ECE 0.1345  Brier 0.1838  slope 1.727  mean predicted 0.444 vs observed 0.315  -> calibration gate NOT MET

@@ -1,0 +1,11 @@
+                                       compounds  mean_rmsd  median_rmsd  success_under_2A
+rule                                                                                      
+either engine best sample (oracle)            10      2.959        2.414               0.3
+boltz best sample (oracle)                    10      3.420        4.073               0.3
+openfold3 best sample (oracle)                10      4.005        4.381               0.0
+template score over Boltz samples             10      4.153        4.854               0.1
+boltz first pick                              10      4.193        4.786               0.2
+template score over OpenFold3 samples         10      4.307        4.381               0.0
+template score over both engines              10      4.618        4.902               0.0
+openfold3 first sample                        10      5.452        5.132               0.0
+wrote data/structure_track/outputs/cyp3a4/benchmark_selection_outcomes.csv

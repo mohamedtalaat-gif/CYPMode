@@ -90,7 +90,7 @@ Interrupted: 1 error during collection
 ### 2. [High] `pose_validity.py`: live, currently-broken path
 **Location:** `cypmode/validation/pose_validity.py`, `_main()`
 **Evidence:** `out_dir = input_dir / "out"` where `input_dir = Path("data/structure_track/inputs")` → resolves to `data/structure_track/inputs/out`, which does not exist (`ls`: No such file or directory). The real Boltz-2 output lives at `data/structure_track/outputs/out`.
-**Problem:** Reintroduced by the September 26 reorg commit (`b5fc67d`); missed by the earlier `grep -rln '"data"'` sweep this session because here the base path is one combined string literal (`Path("data/structure_track/inputs")`) with `"out"` appended via `/`, not three separate literals — a different shape of the same bug class already fixed twice elsewhere today.
+**Problem:** Reintroduced by the September 26 reorg commit (`3279aca`); missed by the earlier `grep -rln '"data"'` sweep this session because here the base path is one combined string literal (`Path("data/structure_track/inputs")`) with `"out"` appended via `/`, not three separate literals — a different shape of the same bug class already fixed twice elsewhere today.
 **Impact:** The next run of `python -m cypmode.validation.pose_validity` (needed imminently, to refresh the now-stale `posebusters_validity.csv` once the in-flight Structure Track batch finishes) would silently find zero structures and overwrite the real 57-row result with an empty one.
 **Fix:** Corrected to `Path("data/structure_track/outputs/out")`.
 

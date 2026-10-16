@@ -1,15 +1,12 @@
 .venv/
 .venv-boltz/
 .venv-openfold3/
+.venv-audit/
+.venv-atomjepa/
 .conda-openadmet-models/
 __pycache__/
 *.pyc
 .pytest_cache/
-
-# local symlinks into .venv's bundled Streamlit skill doc — broken on a
-# fresh clone since .venv isn't committed; not project content
-.agents/
-.claude/
 
 .DS_Store
 
@@ -31,3 +28,126 @@ third_party/boltz_cache/
 # what's tracked.
 data/structure_track/outputs/out/
 data/structure_track/outputs/*.log
+
+# OpenFold3 run outputs (cypmode/validation/openfold3.py): same reasoning as
+# Boltz-2's out/ above -- raw structures, MSAs and ~11 MB-per-compound
+# confidence JSONs, regenerated, not committed. What's tracked is the derived
+# per-compound engine_consensus.csv (cypmode/validation/pose_consensus.py).
+data/structure_track/outputs/openfold3/
+
+# Raw PDB mmCIFs downloaded by cypmode/validation/reference_ligands.py (public, regenerable);
+# the compact cyp3a4_reference_ligands.json derived from them IS tracked.
+data/structure_track/inputs/pdb_cache/
+
+# isolated env for torch-based model families (TabICL, Chemprop): never shares a process with LightGBM
+.venv-ml/
+
+# nested-CV prediction caches (large, regenerable by cypmode.challenge.nested_runners) and the all-compound feature store
+data/tdi_track/outputs/nested/*/cache/
+data/tdi_track/outputs/caches/feature_store.npz
+
+# physics, matched-pair and embedding caches of the TDI track (regenerable: physics_block / physics_tierb / mmp_transfer / frozen_embeddings)
+data/tdi_track/outputs/caches/physics_cache.csv
+data/tdi_track/outputs/caches/physics_atoms.csv.gz
+data/tdi_track/outputs/caches/physics_b_cache.csv
+data/tdi_track/outputs/caches/chemeleon_embeddings.npz
+data/tdi_track/outputs/caches/atomjepa_atoms.npz
+data/tdi_track/outputs/caches/atomjepa_chunks/
+data/tdi_track/outputs/caches/atomjepa_embeddings.npz
+data/tdi_track/outputs/caches/monroe_embeddings.npz
+data/tdi_track/outputs/caches/mmp_pairs.npz
+
+# 10-outer-fold replicate caches and the pairwise pose-pool matrices (regenerable)
+data/tdi_track/outputs/nested_f10/*/cache/
+data/structure_track/outputs/cyp3a4/pose_pool_cache/
+
+# queue runtime state and scratch
+queue/state/
+queue/logs/
+queue/STATUS.md
+
+# generated pilot / restraint inputs (absolute template and MSA paths; rebuilt by the pilot and benchmark builders)
+data/structure_track/inputs/cyp3a4_bench-*-*.yaml
+data/structure_track/inputs/cyp3a4_series-*.yaml
+data/structure_track/inputs/cyp3a4_OCNT-*-u.yaml
+data/structure_track/inputs/cyp3a4_OCNT-*-rs.yaml
+data/structure_track/inputs/cyp3a4_OCNT-*-ex[0-9]*.yaml
+data/structure_track/inputs/cyp3a4_OCNT-*-seed[0-9]*.yaml
+data/structure_track/inputs/cyp3a4_OCNT-*-cf[0-9]*.yaml
+data/structure_track/inputs/cyp3a4_OCNT-*-em[0-9]*.yaml
+data/structure_track/inputs/cyp3a4_OCNT-*-ss.yaml
+
+# public cryo-EM CYP3A4 entries used as templates (cryoem_templates.py fetch downloads them); the derived ligand / pocket JSON is tracked
+data/structure_track/inputs/cryoem_templates/
+
+# animation build products (the frames and the compiled encoder); the final mp4, gif and poster are kept
+docs/video/_frames/
+docs/video/_build/
+
+# the animation page reads its numbers from this generated file
+docs/video/anime/facts.js
+
+# Real-structure pictures of the film (rendered by docs/video/pymol_clips.py) and the PyMOL render cache of the figures
+docs/video/anime/assets/
+docs/video/anime/assets.js
+docs/video/anime/clips/
+docs/video/anime/assets_clips.js
+docs/figures/_pymol_cache/
+docs/video/anime/characters/
+docs/video/anime/assets_characters.js
+
+# Intermediate files of the README card (docs/card/build_card.py); the two finished pictures are tracked
+docs/card/_build/
+
+# The voices of the film are regenerated from voices/manifest.json (docs/video/voices.py); the manifest and the line list are tracked, the audio is not
+docs/video/voices/*.wav
+docs/video/voices/scenes.json
+docs/video/anime/assets_voice.js
+.venv-voice/
+
+# The full-size film (1080p, over 100 MB, the limit of a GitHub file) stays local; the README links the 720p copy cypmode_overview_web.mp4, the poster and the preview gif, which are tracked
+docs/video/cypmode_overview.mp4
+docs/video/_silent.mp4
+
+# Downloaded or regenerable files over the 100 MB limit of a GitHub file or large enough to bloat every clone; the code that fetches or rebuilds them, their SHA-256 sums and the audit stay tracked
+data/tdi_track/inputs/monroe/weights.pt
+data/tdi_track/inputs/openadmet_surrogate/*/checkpoints/
+data/tdi_track/inputs/openadmet_foundation/
+data/tdi_track/inputs/chembl_cache/*.json
+data/tdi_track/outputs/caches/chemberta_embedding_cache.csv
+data/tdi_track/outputs/caches/pharmacophore_fingerprint_cache.csv
+
+# Third-party data that holds readings of blinded test compounds (excluded from every use and never read by a model, see limitation L11 and the official-extra audit): not redistributed here.
+# The files are downloaded from the organisers' public repositories; the names and SHA-256 sums are in data/tdi_track/inputs/official_extra/SHA256SUMS, which stays tracked.
+data/tdi_track/inputs/official_extra/*/
+data/tdi_track/inputs/octant_cache/inhibition.parquet
+
+# >>> HELD BACK UNTIL AFTER THE DEADLINE (2026-11-03 23:59 UTC)
+# Results for the blinded compounds, and the pictures, film and notebook exports that show them, stay on the local machine until the challenge has closed; scripts/release_after_deadline.py
+# removes this block. The reports carry the SHA-256 of every submitted file and the code regenerates them. cypmode.audit.public_readiness fails if anything that names blinded results escapes.
+submissions/tdi_track/*.csv
+submissions/manifest.json
+submissions/structure_track/pdb_files/
+submissions/structure_track/*.zip
+submissions/_superseded/
+data/tdi_track/outputs/final/
+data/tdi_track/outputs/final_f10/
+data/tdi_track/outputs/cyp2d6/final_assembly_predictions.csv
+data/tdi_track/outputs/nested/superseded_candidates/
+data/tdi_track/outputs/nested/*/deploy_scores.csv
+data/tdi_track/outputs/nested/*/reliability_deploy.csv
+data/structure_track/outputs/cyp3a4/final/
+data/structure_track/outputs/cyp3a4/engine_consensus.csv
+data/structure_track/outputs/cyp3a4/structure_track_results.*
+data/structure_track/outputs/cyp3a4/posebusters_validity.csv
+data/structure_track/outputs/cyp3a4/posebusters_validity_official20.csv
+data/structure_track/outputs/cyp3a4/logs/official_posebusters_*.log
+docs/figures/structure/struct_all20_gallery-*
+docs/figures/structure/struct_posebusters-*
+docs/video/cypmode_overview_web.mp4
+docs/video/cypmode_overview_preview.gif
+notebooks/cypmode_notebook.ipynb
+notebooks/cypmode_notebook.html
+notebooks/cypmode_notebook.pdf
+# <<< HELD BACK
+.venv-checker/

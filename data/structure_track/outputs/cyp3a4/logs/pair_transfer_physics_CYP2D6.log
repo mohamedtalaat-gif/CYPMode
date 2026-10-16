@@ -1,0 +1,9 @@
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['pair_desc', 'pair_desc+phys']
+  z0=1.0  diagnostic pair_desc: outer AUC 0.6474
+  z0=1.0  diagnostic pair_desc+phys: outer AUC 0.6893
+  z0=1.0  stacked base+added vs base: AUC -0.0010 (p=0.916, better 9/15) AP +0.0072 (p=0.738, better 8/15)
+  z0=1.96 diagnostic pair_desc: outer AUC 0.6798
+  z0=1.96 diagnostic pair_desc+phys: outer AUC 0.7064
+  z0=1.96 stacked base+added vs base: AUC +0.0019 (p=0.630, better 9/15) AP -0.0017 (p=0.945, better 9/15)
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

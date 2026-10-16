@@ -1,0 +1,8 @@
+10 ligands with pools of [5] samples; k0 = 2, 400 permutations per ligand
+
+extra budget 1 samples per ligand on average: mean expected RMSD of the MBR pick  uniform 3.951  random 3.994  ei 3.903
+  ei vs uniform: mean improvement +0.048 A, 6/10 ligands better, Wilcoxon p 0.348, worst drop-one mean +0.006
+
+extra budget 2 samples per ligand on average: mean expected RMSD of the MBR pick  uniform 4.026  random 3.954  ei 3.845
+  ei vs uniform: mean improvement +0.180 A, 5/10 ligands better, Wilcoxon p 0.348, worst drop-one mean +0.081
+STRUCTURE GATE ei_sampling (ei beats uniform at equal compute, paired, drop-one robust, p < 0.1): NOT MET

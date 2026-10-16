@@ -1,0 +1,17 @@
+{
+ "readme_card": {
+  "built_utc": "2026-10-16 03:44:06",
+  "extra": {
+   "html_sha256": {
+    "dark": "bb84ecc18697debefc3278ae4d71919ff017b77d2aee9c5dc244ed0814b26206",
+    "light": "36d816f143d5eaf707d244f045d4aabbab70a7deef827c4d5c7ec67e94931210"
+   },
+   "mode": "public"
+  },
+  "fingerprint": "ec00fe4e4f22401b2226efb0aa43b339ccad3c1bbb2fc5b84fde879cf9d23cc0",
+  "outputs": {
+   "docs/card/cypmode_card-dark.png": "00ee0df4bfdbeab177bd320f5ae898fb9d55e9c5d08617079eeabe2aad325af8",
+   "docs/card/cypmode_card-light.png": "a34a6ee82e8991e9b3eb8d444a01acffab6e4b1d7d7aba00ede8d3bfb94b6a00"
+  }
+ }
+}

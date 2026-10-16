@@ -1,0 +1,9 @@
+
+CYP3A4: 15 outer folds; base stack 23 candidates; added candidates cached: ['mlp_multitask_label', 'mlp_multitask_shift']
+  z0=1.0  diagnostic mlp_multitask_label: outer AUC 0.7680
+  z0=1.0  diagnostic mlp_multitask_shift: outer AUC 0.7963
+  z0=1.0  stacked base+added vs base: AUC +0.0077 (p=0.043, better 12/15) AP +0.0206 (p=0.032, better 13/15)
+  z0=1.96 diagnostic mlp_multitask_label: outer AUC 0.7949
+  z0=1.96 diagnostic mlp_multitask_shift: outer AUC 0.8241
+  z0=1.96 stacked base+added vs base: AUC +0.0072 (p=0.080, better 13/15) AP +0.0209 (p=0.104, better 13/15)
+CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

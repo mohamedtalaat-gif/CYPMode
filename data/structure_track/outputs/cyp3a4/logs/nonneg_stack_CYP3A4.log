@@ -1,0 +1,5 @@
+
+CYP3A4: 15 outer folds, 23 candidates of the default stack
+  z0=1.0  outer AUC: logistic blend 0.8170, non-negative blend 0.8173 (+0.0002, p=0.934, better 7/15) | MCC at the transferred rate +0.4415 vs +0.4353
+  z0=1.96 outer AUC: logistic blend 0.8443, non-negative blend 0.8451 (+0.0008, p=0.686, better 8/15) | MCC at the transferred rate +0.4867 vs +0.4941
+CYP3A4 GATE (selector, corrected p < 0.05 at both z0): NOT MET

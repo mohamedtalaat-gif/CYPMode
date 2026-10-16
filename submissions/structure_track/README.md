@@ -1,47 +1,45 @@
-# Structure Prediction track — submission
+# Structure track: submission file
 
-## Required format (verified directly against the live HF Space's `submission.py`, 2026-09-26 —
-quoting the literal help text shown on the submission form itself, not a paraphrase)
+`structure_track_submission.zip` is the final zip of `cypmode.validation.final_recipe`, copied unchanged. **It has not been uploaded.** `pdb_files/` holds the same 20 complexes, unpacked from it for inspection.
 
-> "Submit a `.zip` archive containing exactly **20 `.pdb` files**, one per
-> compound, named after the compound identifier (e.g. `x00011-1.pdb`).
-> Each file must be a full protein–ligand complex with the ligand residue
-> named `LIG`."
+## Required format (quoted from the portal's submission form, 2026-09-26)
 
-Concretely, for our own real 20-compound official test set
-(`data/structure_track/inputs/structure_track_test_blinded.csv`, whose
-identifier column is `Molecule_Name`, values like `OCNT-2313038`), that
-means: `OCNT-2313038.pdb`, one such file per row, all 20 zipped together.
+> Submit a `.zip` archive containing exactly **20 `.pdb` files**, one per compound, named after the compound identifier (e.g. `x00011-1.pdb`). Each file must be a full protein-ligand complex with the ligand residue named `LIG`.
 
-## A real, concrete gap this check surfaced
+## Checks
 
-**No code in this project currently produces this file.** What exists today:
+- portal check (a `.zip` with exactly 20 files): ok
+- PoseBusters on the 20 complexes: 0 of 20 fail any check (a failing structure scores zero on the structure metrics, so none is handed in)
+- the zip is built with fixed timestamps, so rebuilding it from the same predictions gives the same bytes
+- sha256 of the zip: `05a0cfd167b4961d6249d68b917b01e2d0c2747afde5cb9149471e12df767f68`
 
-- Real Boltz-2 predictions, but as **`.cif`**, not `.pdb`
-  (`data/structure_track/outputs/out/boltz_results_*/predictions/*/*_model_0.cif`).
-- The ligand residue in that CIF is named **`LIG1`** (4 characters — Boltz-2's
-  own convention), not the **`LIG`** (3 characters, legacy PDB field width)
-  the submission format requires.
-- `cypmode/validation/pose_validity.py` and `cypmode/validation/pocket_geometry.py`
-  do write temporary `.pdb` files internally (for PoseBusters / Kabsch
-  work), but those are scratch files for validation math, not
-  submission-formatted, not named by `Molecule_Name`, and not kept.
+## How the poses were chosen
 
-So a real conversion step is still needed before this track can ever be
-submitted: CIF → PDB (e.g. via `gemmi` or Biopython's own CIF/PDB
-converters, both already-used dependencies elsewhere in this project),
-rename the ligand residue `LIG1` → `LIG`, name each output file
-`{Molecule_Name}.pdb`, and zip all 20 together. Not built yet — flagged
-here rather than assumed away.
+- restraint 'bond': gate MET
+- diversity levers: none (no pilot gate MET)
+- Boltz only: engine_consensus not MET
+- selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)
+- extra samples allocated uniformly: ei_sampling not MET
 
-## Current status
+## Contents
 
-As of the last check this session: **19/20** official compounds have a
-real, completed Boltz-2 prediction; the 20th (`OCNT-2535422`) is the one
-currently running in the in-flight retry batch. PoseBusters validity
-(`data/structure_track/outputs/posebusters_validity.csv`) is itself
-slightly stale relative to that — last computed before the most recent
-retries landed — and should be re-run once the batch is fully done.
-
-Nothing belongs in this folder yet: the raw predictions aren't
-submission-formatted, and PoseBusters hasn't re-validated the complete set.
+- `OCNT-2312554.pdb`
+- `OCNT-2312966.pdb`
+- `OCNT-2313038.pdb`
+- `OCNT-2313300.pdb`
+- `OCNT-2313397.pdb`
+- `OCNT-2313429.pdb`
+- `OCNT-2315379.pdb`
+- `OCNT-2395328.pdb`
+- `OCNT-2395342.pdb`
+- `OCNT-2395415.pdb`
+- `OCNT-2395436.pdb`
+- `OCNT-2395457.pdb`
+- `OCNT-2395460.pdb`
+- `OCNT-2395464.pdb`
+- `OCNT-2395503.pdb`
+- `OCNT-2395645.pdb`
+- `OCNT-2395712.pdb`
+- `OCNT-2395789.pdb`
+- `OCNT-2535422.pdb`
+- `OCNT-2535519.pdb`

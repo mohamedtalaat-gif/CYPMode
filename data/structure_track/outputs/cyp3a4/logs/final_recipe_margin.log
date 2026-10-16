@@ -1,0 +1,24 @@
+done: 17 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/base_unguided_results.json
+done: 20 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/restraint_bond_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round0_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round1_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round2_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round3_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round4_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round5_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round6_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round7_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round8_results.json
+done: 4 compound(s), 0 error(s), written to data/structure_track/outputs/cyp3a4/final/runs/extra_round9_results.json
+verdicts read: {'ei_sampling': False, 'engine_consensus': False, 'heme_frame_prior': False, 'mbr_selection': False, 'pilot_conformers': False, 'pilot_cryoem': False, 'pilot_seeds': False, 'pose_combined': False, 'pose_pharmacophore': False, 'pose_physics': False, 'restraint_bond': True, 'restraint_bond_expansion': False, 'restraint_bond_harm': False, 'restraint_contact': True, 'series_consensus': False}
+  - restraint 'bond': gate MET
+  - diversity levers: none (no pilot gate MET)
+  - Boltz only: engine_consensus not MET
+  - selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)
+  - extra samples allocated uniformly: ei_sampling not MET
+  - margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)
+estimated compute: 20.2 h (existing samples counted)
+ligands: 12 with a Type II donor, 15 also in the TDI training set, 3 with an analog among the 20
+== run group base_unguided: 17 rows
+== run group restraint_bond: 20 rows
+wrote data/structure_track/outputs/cyp3a4/final/structures_final.zip (sha256 e878e145e81a5140...); PoseBusters failures: 0/20

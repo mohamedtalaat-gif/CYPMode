@@ -16,13 +16,17 @@ aryl-delocalized, chemically distinct from a trialkylamine's. Excluding
 any nitrogen bonded to an aromatic atom (`!$(N-a)`) removes that false
 positive while still matching verapamil, diltiazem, and troleandomycin --
 the panel's three real trialkylamine-bearing TDI-positive drugs.
+
+Three further chemotypes have a nitrogen whose lone pair is delocalised in the same way and were also matched by the first pattern:
+a sulfonamide (or phosphoramide) nitrogen (`!$(N-[S,P]=[O,S,N])`), an enamine nitrogen (`!$(N-C=C)`) and an amidine or guanidine
+nitrogen (`!$(N-C=N)`). They are excluded for the same reason as the N-aryl case; the amide and thioamide exclusion was already there.
 """
 
 from rdkit import Chem
 
 _TRIALKYLAMINE_PATTERNS = {
-    "tertiary_trialkylamine": Chem.MolFromSmarts("[NX3;H0;!$(NC=[O,S]);!$(N=*);!a;!$(N-a)]"),
-    "secondary_trialkylamine": Chem.MolFromSmarts("[NX3;H1;!$(NC=[O,S]);!$(N=*);!a;!$(N-a)]"),
+    "tertiary_trialkylamine": Chem.MolFromSmarts("[NX3;H0;!$(NC=[O,S]);!$(N=*);!a;!$(N-a);!$(N-[S,P]=[O,S,N]);!$(N-C=C);!$(N-C=N)]"),
+    "secondary_trialkylamine": Chem.MolFromSmarts("[NX3;H1;!$(NC=[O,S]);!$(N=*);!a;!$(N-a);!$(N-[S,P]=[O,S,N]);!$(N-C=C);!$(N-C=N)]"),
 }
 
 

@@ -148,7 +148,7 @@ def _main() -> None:
     summary = summarize(results)
     print(summary.to_string())
 
-    out_path = Path("data/tdi_track/outputs/baseline_reproduction.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/baseline_reproduction.csv")
     results.to_csv(out_path, index=False)
     print(f"\nwrote per-iteration results to {out_path}")
 

@@ -142,3 +142,24 @@ def test_run_batch_writes_csv_and_parquet_when_table_path_given(tmp_path):
     parquet_df = pd.read_parquet(table_path.with_suffix(".parquet"))
     assert csv_df.iloc[0]["compound"] == "keto"
     assert parquet_df.iloc[0]["compound"] == "keto"
+
+
+def test_run_batch_skips_a_compound_whose_earlier_result_is_an_error_placeholder(tmp_path):
+    """A name already present in the results file is skipped even when its entry is an error: the entry has to be deleted before a retry."""
+    results_path = tmp_path / "results.json"
+    results_path.write_text(json.dumps({"a": {"error": "boom"}}))
+    calls = []
+
+    def fake_run(name, smiles, **kwargs):
+        calls.append(name)
+        return {"compound": name}
+
+    with patch("cypmode.validation.batch.run_structural_validation", side_effect=fake_run):
+        result = run_batch({"a": "CCO", "b": "CCN"}, results_path)
+
+    assert calls == ["b"] and result["a"] == {"error": "boom"}
+    kept = {k: v for k, v in json.loads(results_path.read_text()).items() if "error" not in v}
+    results_path.write_text(json.dumps(kept))  # what scripts/clear_batch_errors.py does
+    with patch("cypmode.validation.batch.run_structural_validation", side_effect=fake_run):
+        run_batch({"a": "CCO", "b": "CCN"}, results_path)
+    assert calls == ["b", "a"]

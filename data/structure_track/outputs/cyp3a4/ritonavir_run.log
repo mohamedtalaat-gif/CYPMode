@@ -1,0 +1,28 @@
+MSA server enabled: https://api.colabfold.com
+MSA server authentication: no credentials provided
+Checking input data.
+Found 0 existing processed inputs, skipping them.
+Processing 1 inputs with 1 threads.
+  0%|          | 0/1 [00:00<?, ?it/s]Generating MSA for data/boltz_test/cyp3a4_ritonavir.yaml with 1 protein entities.
+Calling MSA server for target cyp3a4_ritonavir with 1 sequences
+MSA server URL: https://api.colabfold.com
+MSA pairing strategy: greedy
+No authentication provided for MSA server
+
+  0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+SUBMIT:   0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+COMPLETE:   0%|          | 0/150 [elapsed: 00:00 remaining: ?][A
+COMPLETE: 100%|██████████| 150/150 [elapsed: 00:00 remaining: 00:00][ACOMPLETE: 100%|██████████| 150/150 [elapsed: 00:03 remaining: 00:00]
+100%|██████████| 1/1 [00:05<00:00,  5.47s/it]100%|██████████| 1/1 [00:05<00:00,  5.47s/it]
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Running structure prediction for 1 input.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:420: Consider setting `persistent_workers=True` in 'predict_dataloader' to speed up the dataloader worker initialization.
+/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/torch/utils/data/dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+Predicting: |          | 0/? [00:00<?, ?it/s]Predicting:   0%|          | 0/1 [00:00<?, ?it/s]Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]/Volumes/Data/CYPMode/.venv-boltz/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py:115: CUDA is not available or torch_xla is imported. Disabling autocast.

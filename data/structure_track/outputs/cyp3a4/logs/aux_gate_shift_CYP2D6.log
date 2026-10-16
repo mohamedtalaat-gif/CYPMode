@@ -1,0 +1,66 @@
+2026-10-15 13:06:29,888 tgate_A_deep: 10/79 tasks
+2026-10-15 13:06:50,284 tgate_A_deep: 20/79 tasks
+2026-10-15 13:07:08,649 tgate_A_deep: 30/79 tasks
+2026-10-15 13:07:26,476 tgate_A_deep: 40/79 tasks
+2026-10-15 13:07:44,340 tgate_A_deep: 50/79 tasks
+2026-10-15 13:08:03,843 tgate_A_deep: 60/79 tasks
+2026-10-15 13:08:26,275 tgate_A_deep: 70/79 tasks
+2026-10-15 13:08:46,357 tgate_A_deep: 79/79 tasks
+2026-10-15 13:09:07,858 tshift_A_deep: 10/79 tasks
+2026-10-15 13:09:28,865 tshift_A_deep: 20/79 tasks
+2026-10-15 13:09:49,448 tshift_A_deep: 30/79 tasks
+2026-10-15 13:10:10,111 tshift_A_deep: 40/79 tasks
+2026-10-15 13:10:30,820 tshift_A_deep: 50/79 tasks
+2026-10-15 13:10:51,908 tshift_A_deep: 60/79 tasks
+2026-10-15 13:11:11,832 tshift_A_deep: 70/79 tasks
+2026-10-15 13:11:29,331 tshift_A_deep: 79/79 tasks
+2026-10-15 13:12:10,936 gs_A_deep: 10/79 tasks
+2026-10-15 13:12:55,347 gs_A_deep: 20/79 tasks
+2026-10-15 13:13:38,319 gs_A_deep: 30/79 tasks
+2026-10-15 13:14:20,536 gs_A_deep: 40/79 tasks
+2026-10-15 13:15:02,795 gs_A_deep: 50/79 tasks
+2026-10-15 13:15:42,693 gs_A_deep: 60/79 tasks
+2026-10-15 13:16:12,730 gs_A_deep: 70/79 tasks
+2026-10-15 13:16:40,167 gs_A_deep: 79/79 tasks
+2026-10-15 13:17:08,151 tgate_A+fps_deep: 10/79 tasks
+2026-10-15 13:17:36,441 tgate_A+fps_deep: 20/79 tasks
+2026-10-15 13:18:03,713 tgate_A+fps_deep: 30/79 tasks
+2026-10-15 13:18:30,477 tgate_A+fps_deep: 40/79 tasks
+2026-10-15 13:18:58,415 tgate_A+fps_deep: 50/79 tasks
+2026-10-15 13:19:33,489 tgate_A+fps_deep: 60/79 tasks
+2026-10-15 13:20:00,883 tgate_A+fps_deep: 70/79 tasks
+2026-10-15 13:20:26,252 tgate_A+fps_deep: 79/79 tasks
+2026-10-15 13:20:56,223 tshift_A+fps_deep: 10/79 tasks
+2026-10-15 13:21:27,284 tshift_A+fps_deep: 20/79 tasks
+2026-10-15 13:21:58,532 tshift_A+fps_deep: 30/79 tasks
+2026-10-15 13:22:28,478 tshift_A+fps_deep: 40/79 tasks
+2026-10-15 13:23:01,906 tshift_A+fps_deep: 50/79 tasks
+2026-10-15 13:23:32,170 tshift_A+fps_deep: 60/79 tasks
+2026-10-15 13:24:01,424 tshift_A+fps_deep: 70/79 tasks
+2026-10-15 13:24:25,760 tshift_A+fps_deep: 79/79 tasks
+2026-10-15 13:25:21,314 gs_A+fps_deep: 10/79 tasks
+2026-10-15 13:26:33,484 gs_A+fps_deep: 20/79 tasks
+2026-10-15 13:27:36,778 gs_A+fps_deep: 30/79 tasks
+2026-10-15 13:28:30,919 gs_A+fps_deep: 40/79 tasks
+2026-10-15 13:29:25,487 gs_A+fps_deep: 50/79 tasks
+2026-10-15 13:30:17,993 gs_A+fps_deep: 60/79 tasks
+2026-10-15 13:31:10,205 gs_A+fps_deep: 70/79 tasks
+2026-10-15 13:31:55,885 gs_A+fps_deep: 79/79 tasks
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['tgate_A_deep', 'tshift_A_deep', 'gs_A_deep', 'tgate_A+fps_deep', 'tshift_A+fps_deep', 'gs_A+fps_deep']
+  z0=1.0  diagnostic tgate_A_deep: outer AUC 0.4552
+  z0=1.0  diagnostic tshift_A_deep: outer AUC 0.6981
+  z0=1.0  diagnostic tgate_A+fps_deep: outer AUC 0.4509
+  z0=1.0  diagnostic tshift_A+fps_deep: outer AUC 0.7251
+  z0=1.0  alone  gs_A_deep                vs lgbm_A_deep     : AUC 0.6964 -> 0.6986 (+0.0022, p=0.932, better 9/15) | AP -0.0126 (p=0.686)
+  z0=1.0  alone  gs_A+fps_deep            vs lgbm_A+fps_deep : AUC 0.7185 -> 0.7253 (+0.0068, p=0.724, better 9/15) | AP -0.0299 (p=0.290)
+  z0=1.0  stacked base+added vs base: AUC -0.0017 (p=0.853, better 8/15) AP -0.0158 (p=0.266, better 4/15)
+  z0=1.96 diagnostic tgate_A_deep: outer AUC 0.4507
+  z0=1.96 diagnostic tshift_A_deep: outer AUC 0.7245
+  z0=1.96 diagnostic tgate_A+fps_deep: outer AUC 0.4479
+  z0=1.96 diagnostic tshift_A+fps_deep: outer AUC 0.7457
+  z0=1.96 alone  gs_A_deep                vs lgbm_A_deep     : AUC 0.7267 -> 0.7248 (-0.0019, p=0.952, better 8/15) | AP -0.0242 (p=0.607)
+  z0=1.96 alone  gs_A+fps_deep            vs lgbm_A+fps_deep : AUC 0.7396 -> 0.7462 (+0.0066, p=0.774, better 10/15) | AP -0.0531 (p=0.290)
+  z0=1.96 stacked base+added vs base: AUC +0.0013 (p=0.850, better 9/15) AP -0.0222 (p=0.503, better 8/15)
+CYP2D6 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

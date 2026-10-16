@@ -1,0 +1,47 @@
+2026-10-12 13:41:34,989 train rows 1851, held-out block rows 483 (positive rate 0.298)
+2026-10-12 13:41:35,237 knn_tanimoto_k5: block AUC 0.680
+2026-10-12 13:41:35,507 knn_tanimoto_k15: block AUC 0.669
+2026-10-12 13:41:35,748 knn_tanimoto_k40: block AUC 0.675
+2026-10-12 13:41:36,011 svm_tanimoto_C0.3: block AUC 0.696
+2026-10-12 13:41:36,255 svm_tanimoto_C1: block AUC 0.738
+2026-10-12 13:41:36,500 svm_tanimoto_C3: block AUC 0.726
+2026-10-12 13:41:37,420 lgbm_desc_deep: block AUC 0.749
+2026-10-12 13:41:38,072 lgbm_desc_shallow: block AUC 0.746
+2026-10-12 13:41:39,268 lgbm_A_deep: block AUC 0.763
+2026-10-12 13:41:40,193 lgbm_A_shallow: block AUC 0.760
+2026-10-12 13:41:42,729 lgbm_A+fps_deep: block AUC 0.793
+2026-10-12 13:41:45,043 lgbm_A+fps_shallow: block AUC 0.768
+2026-10-12 13:41:46,330 lgbm_A+ext_deep: block AUC 0.762
+2026-10-12 13:41:48,898 lgbm_A+fps+ext+alerts_deep: block AUC 0.804
+2026-10-12 13:41:51,305 lgbm_A+fps+ext_deep: block AUC 0.793
+2026-10-12 13:41:53,716 extratrees_A: block AUC 0.775
+2026-10-12 13:41:55,604 rf_A: block AUC 0.759
+2026-10-12 13:41:56,848 lgbm_reg_shift_A: block AUC 0.742
+2026-10-12 13:41:59,128 lgbm_reg_shift_A+fps: block AUC 0.723
+
+CYP3A4 test-like block holdout: 483 compounds, positive rate 0.298; trained on 1851 other compounds
+
+                 candidate  cv_auc_unweighted  block_auc  block_auc_lo  block_auc_hi  block_ap  block_mcc_at_prevalence
+lgbm_A+fps+ext+alerts_deep             0.7750     0.8037        0.7618        0.8446    0.5971                   0.3964
+       lgbm_A+fps+ext_deep             0.7740     0.7926        0.7499        0.8298    0.5625                   0.3964
+           lgbm_A+fps_deep             0.7731     0.7928        0.7489        0.8299    0.5709                   0.4063
+        lgbm_A+fps_shallow             0.7699     0.7676        0.7226        0.8108    0.5599                   0.3470
+           lgbm_A+ext_deep             0.7568     0.7620        0.7187        0.8042    0.5458                   0.2975
+               lgbm_A_deep             0.7559     0.7634        0.7182        0.8056    0.5352                   0.3272
+            lgbm_A_shallow             0.7550     0.7603        0.7182        0.8034    0.5293                   0.3371
+              extratrees_A             0.7478     0.7750        0.7308        0.8154    0.5410                   0.3569
+      lgbm_reg_shift_A+fps             0.7478     0.7230        0.6730        0.7693    0.5343                   0.2876
+         lgbm_desc_shallow             0.7440     0.7461        0.7029        0.7949    0.5238                   0.3074
+            lgbm_desc_deep             0.7425     0.7489        0.7076        0.7916    0.5151                   0.3074
+          lgbm_reg_shift_A             0.7379     0.7417        0.6967        0.7875    0.5369                   0.3569
+                      rf_A             0.7371     0.7589        0.7149        0.8016    0.5436                   0.3074
+           svm_tanimoto_C1             0.7104     0.7385        0.6926        0.7831    0.5335                   0.2579
+           svm_tanimoto_C3             0.6985     0.7256        0.6734        0.7734    0.5072                   0.3173
+         svm_tanimoto_C0.3             0.6916     0.6961        0.6448        0.7466    0.5054                   0.2678
+          knn_tanimoto_k40             0.6459     0.6752        0.6247        0.7250    0.4400                   0.1986
+          knn_tanimoto_k15             0.6293     0.6692        0.6161        0.7205    0.4514                   0.2085
+           knn_tanimoto_k5             0.5941     0.6800        0.6219        0.7331    0.4512                   0.2579
+
+best candidate by cross-validation alone: lgbm_A+fps+ext+alerts_deep (cv AUC 0.7750) -> block AUC 0.8037 [0.762, 0.845]
+equal-weight rank committee of all 19 candidates: block AUC 0.7972 [0.754, 0.836], AP 0.5818, MCC at the block prevalence 0.3767
+agreement of the two yardsticks across candidates: Spearman rho between cv AUC and block AUC = 0.925

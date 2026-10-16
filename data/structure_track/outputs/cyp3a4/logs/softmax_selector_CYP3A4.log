@@ -1,0 +1,6 @@
+
+CYP3A4: 15 outer folds, 23 candidates of the default stack
+  z0=1.0  outer AUC: logistic blend 0.8170, softmax blend 0.8099 (-0.0071, p=0.149, better 2/15) | MCC at the transferred rate 0.4415 against 0.4331
+  z0=1.96 outer AUC: logistic blend 0.8443, softmax blend 0.8423 (-0.0020, p=0.649, better 5/15) | MCC at the transferred rate 0.4867 against 0.4979
+curve written to data/tdi_track/outputs/comparisons/softmax_curve_CYP3A4.csv
+CYP3A4 GATE (selector, corrected p < 0.05 at both z0): NOT MET

@@ -23,6 +23,7 @@ for SMARTS matching also carry the predicted 3D coordinates -- no separate,
 fragile mapping between a 2D match and a 3D atom name.
 """
 
+import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -55,9 +56,40 @@ _STANDARD_RESIDUES = {
 _COMPILED_MOTIFS = {name: Chem.MolFromSmarts(smarts) for name, smarts in TYPE_II_MOTIFS.items()}
 
 
+def _add_missing_occupancy(cif_text: str) -> str:
+    """OpenFold3's mmCIF output omits the optional `_atom_site.occupancy`
+    column (its B-factor column carries per-atom pLDDT instead), which
+    Biopython's MMCIFParser requires. Adds the column with a constant 1.0 --
+    valid for a predicted model, which has no partial occupancy -- relying on
+    OpenFold3 writing one atom per line, so a row's trailing token lines up
+    with the new header appended last. Returns the text unchanged if there's
+    no `_atom_site` loop to patch.
+    """
+    lines = cif_text.splitlines()
+    header_ends = [i for i, line in enumerate(lines) if line.startswith("_atom_site.")]
+    if not header_ends:
+        return cif_text
+    last_header = header_ends[-1]
+    out = lines[: last_header + 1] + ["_atom_site.occupancy"]
+    for line in lines[last_header + 1 :]:
+        if line.startswith(("ATOM", "HETATM")):
+            line = f"{line.rstrip()} 1.0"
+        out.append(line)
+    return "\n".join(out) + "\n"
+
+
 def load_structure(cif_path: str | Path):
     parser = MMCIFParser(QUIET=True)
-    return parser.get_structure("complex", str(cif_path))
+    try:
+        return parser.get_structure("complex", str(cif_path))
+    except KeyError as exc:
+        if exc.args != ("_atom_site.occupancy",):
+            raise
+    patched = _add_missing_occupancy(Path(cif_path).read_text())
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        patched_path = Path(tmp_dir) / "patched.cif"
+        patched_path.write_text(patched)
+        return MMCIFParser(QUIET=True).get_structure("complex", str(patched_path))
 
 
 def find_heme_iron(structure):

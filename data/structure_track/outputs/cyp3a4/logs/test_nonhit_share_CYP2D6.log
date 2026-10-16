@@ -1,0 +1,8 @@
+CYP2D6: panel pool 4348 compounds, hit share 0.328; 750 test structures; gate out-of-fold AUC 0.803
+mean P(hit): panel hits 0.490 | panel non-hits 0.198 | test 0.340
+probabilistic adjusted count: hit share of the test set 0.487 (95% bootstrap 0.415-0.553); panel 0.328
+equivalent non-hit weight on the job-012 axis: 0.51 (95%: 0.39-0.69)
+classify and count at 0.3: TPR 0.67 FPR 0.23 test called-hit rate 0.420 -> hit share 0.438
+classify and count at 0.4: TPR 0.58 FPR 0.15 test called-hit rate 0.335 -> hit share 0.435
+classify and count at 0.5: TPR 0.48 FPR 0.09 test called-hit rate 0.280 -> hit share 0.489
+sanity check, hit fraction among the 5 nearest panel neighbours: test 0.366 vs panel leave-one-out 0.291

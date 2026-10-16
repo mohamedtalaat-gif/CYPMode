@@ -1,0 +1,46 @@
+2026-10-15 13:32:53,718 ndneg_A_deep: 10/79 tasks
+2026-10-15 13:33:09,283 ndneg_A_deep: 20/79 tasks
+2026-10-15 13:33:25,011 ndneg_A_deep: 30/79 tasks
+2026-10-15 13:33:40,660 ndneg_A_deep: 40/79 tasks
+2026-10-15 13:33:56,504 ndneg_A_deep: 50/79 tasks
+2026-10-15 13:34:12,285 ndneg_A_deep: 60/79 tasks
+2026-10-15 13:34:28,160 ndneg_A_deep: 70/79 tasks
+2026-10-15 13:34:42,846 ndneg_A_deep: 79/79 tasks
+2026-10-15 13:35:17,060 ndsoft_A_deep: 10/79 tasks
+2026-10-15 13:35:51,321 ndsoft_A_deep: 20/79 tasks
+2026-10-15 13:36:25,453 ndsoft_A_deep: 30/79 tasks
+2026-10-15 13:36:59,320 ndsoft_A_deep: 40/79 tasks
+2026-10-15 13:37:33,854 ndsoft_A_deep: 50/79 tasks
+2026-10-15 13:38:08,034 ndsoft_A_deep: 60/79 tasks
+2026-10-15 13:38:41,790 ndsoft_A_deep: 70/79 tasks
+2026-10-15 13:39:13,214 ndsoft_A_deep: 79/79 tasks
+2026-10-15 13:39:43,955 ndneg_A+fps_deep: 10/79 tasks
+2026-10-15 13:40:18,439 ndneg_A+fps_deep: 20/79 tasks
+2026-10-15 13:40:50,378 ndneg_A+fps_deep: 30/79 tasks
+2026-10-15 13:41:22,493 ndneg_A+fps_deep: 40/79 tasks
+2026-10-15 13:41:54,493 ndneg_A+fps_deep: 50/79 tasks
+2026-10-15 13:42:26,575 ndneg_A+fps_deep: 60/79 tasks
+2026-10-15 13:42:59,539 ndneg_A+fps_deep: 70/79 tasks
+2026-10-15 13:43:29,739 ndneg_A+fps_deep: 79/79 tasks
+2026-10-15 13:44:41,663 ndsoft_A+fps_deep: 10/79 tasks
+2026-10-15 13:45:53,928 ndsoft_A+fps_deep: 20/79 tasks
+2026-10-15 13:47:07,372 ndsoft_A+fps_deep: 30/79 tasks
+2026-10-15 13:48:22,802 ndsoft_A+fps_deep: 40/79 tasks
+2026-10-15 13:49:34,939 ndsoft_A+fps_deep: 50/79 tasks
+2026-10-15 13:50:52,959 ndsoft_A+fps_deep: 60/79 tasks
+2026-10-15 13:52:12,866 ndsoft_A+fps_deep: 70/79 tasks
+2026-10-15 13:53:27,440 ndsoft_A+fps_deep: 79/79 tasks
+
+CYP3A4: 15 outer folds; base stack 23 candidates; added candidates cached: ['ndneg_A_deep', 'ndsoft_A_deep', 'ndneg_A+fps_deep', 'ndsoft_A+fps_deep']
+  z0=1.0  diagnostic ndneg_A_deep: outer AUC 0.7812
+  z0=1.0  diagnostic ndneg_A+fps_deep: outer AUC 0.7979
+  z0=1.0  alone  ndsoft_A_deep            vs lgbm_A_deep     : AUC 0.7850 -> 0.7923 (+0.0073, p=0.263, better 11/15) | AP +0.0066 (p=0.616)
+  z0=1.0  alone  ndsoft_A+fps_deep        vs lgbm_A+fps_deep : AUC 0.8027 -> 0.8046 (+0.0019, p=0.734, better 8/15) | AP +0.0036 (p=0.725)
+  z0=1.0  stacked base+added vs base: AUC +0.0004 (p=0.776, better 10/15) AP -0.0002 (p=0.936, better 8/15)
+  z0=1.96 diagnostic ndneg_A_deep: outer AUC 0.8150
+  z0=1.96 diagnostic ndneg_A+fps_deep: outer AUC 0.8304
+  z0=1.96 alone  ndsoft_A_deep            vs lgbm_A_deep     : AUC 0.8192 -> 0.8254 (+0.0061, p=0.450, better 8/15) | AP +0.0038 (p=0.820)
+  z0=1.96 alone  ndsoft_A+fps_deep        vs lgbm_A+fps_deep : AUC 0.8354 -> 0.8354 (+0.0001, p=0.992, better 5/15) | AP +0.0008 (p=0.946)
+  z0=1.96 stacked base+added vs base: AUC +0.0005 (p=0.655, better 11/15) AP +0.0011 (p=0.673, better 9/15)
+CYP3A4 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

@@ -126,7 +126,7 @@ def _main() -> None:
         errors = df[f"{cyp}_pIC50_oof_abs_error"].dropna()
         print(f"{cyp}: OOF MAE = {errors.mean():.3f} (n={len(errors)})")
 
-    out_path = Path("data/tdi_track/outputs/oof_direct_inhibition.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/oof_direct_inhibition.csv")
     df.drop(columns=["descriptors"]).to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

@@ -1,0 +1,54 @@
+{
+  "isoform": "CYP2D6",
+  "components": {
+    "boundary_margin": {
+      "auroc": 0.599,
+      "gain_over_margin": null,
+      "gain_p": null,
+      "verdict": "baseline",
+      "acting_on_it_improves_mcc": true,
+      "used_to_alter_predictions": false
+    },
+    "novelty": {
+      "auroc": 0.549,
+      "gain_over_margin": 0.001,
+      "gain_p": 0.1244,
+      "verdict": "redundant_with_margin",
+      "acting_on_it_improves_mcc": null,
+      "used_to_alter_predictions": false
+    },
+    "qbc_vote_entropy": {
+      "auroc": 0.593,
+      "gain_over_margin": 0.009,
+      "gain_p": 0.005,
+      "verdict": "adds_information",
+      "acting_on_it_improves_mcc": false,
+      "used_to_alter_predictions": false
+    },
+    "qbc_spread": {
+      "auroc": 0.457,
+      "gain_over_margin": 0.016,
+      "gain_p": 0.005,
+      "verdict": "adds_information",
+      "acting_on_it_improves_mcc": false,
+      "used_to_alter_predictions": false
+    },
+    "qbc_vote_entropy_top5": {
+      "auroc": 0.503,
+      "gain_over_margin": -0.001,
+      "gain_p": 0.204,
+      "verdict": "no_signal",
+      "acting_on_it_improves_mcc": false,
+      "used_to_alter_predictions": false
+    },
+    "qbc_spread_family": {
+      "auroc": 0.499,
+      "gain_over_margin": -0.001,
+      "gain_p": 0.7264,
+      "verdict": "no_signal",
+      "acting_on_it_improves_mcc": false,
+      "used_to_alter_predictions": false
+    }
+  },
+  "policy": "a component alters a prediction only if it adds information beyond the margin AND acting on it improves MCC; every other component is reported as a measured negative result and never used to alter a prediction"
+}

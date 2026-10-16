@@ -168,6 +168,58 @@ def test_recycling_and_msa_flags_pass_through_when_given(tmp_path):
     assert "--num_subsampled_msa" in command and "256" in command
 
 
+def test_diffusion_samples_flag_passes_through_when_given(tmp_path):
+    # Real use: a compound whose default single sample fails PoseBusters
+    # (a real steric clash, e.g. minimum_distance_to_protein) can be
+    # re-run with multiple diffusion samples, then cypmode.validation.pose_validity.select_valid_model
+    # picks the first one that actually passes -- instead of shipping a
+    # known-bad pose, see submissions/structure_track/.
+    with (
+        patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+        patch("cypmode.validation.pipeline.summarize_compound", return_value={}),
+    ):
+        mock_popen.return_value = _mock_popen(0, [])
+
+        run_structural_validation(
+            "test", KETOCONAZOLE_SMILES, input_dir=tmp_path, out_dir=tmp_path / "out", diffusion_samples=5
+        )
+
+    command = mock_popen.call_args[0][0]
+    assert "--diffusion_samples" in command and "5" in command
+
+
+def test_diffusion_samples_omitted_by_default(tmp_path):
+    with (
+        patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+        patch("cypmode.validation.pipeline.summarize_compound", return_value={}),
+    ):
+        mock_popen.return_value = _mock_popen(0, [])
+
+        run_structural_validation("test", KETOCONAZOLE_SMILES, input_dir=tmp_path, out_dir=tmp_path / "out")
+
+    assert "--diffusion_samples" not in mock_popen.call_args[0][0]
+
+
+def test_max_parallel_samples_caps_memory_and_is_omitted_by_default(tmp_path):
+    # Five samples at once exhausted swap on a 16 GB Mac and kernel-panicked it (watchdog timeout);
+    # one at a time keeps the peak at a single sample's footprint.
+    commands = []
+    for kwargs in ({"max_parallel_samples": 1}, {}):
+        with (
+            patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,
+            patch("cypmode.validation.pipeline.summarize_compound", return_value={}),
+        ):
+            mock_popen.return_value = _mock_popen(0, [])
+            run_structural_validation(
+                "test", KETOCONAZOLE_SMILES, input_dir=tmp_path, out_dir=tmp_path / "out", diffusion_samples=5, **kwargs
+            )
+        commands.append(mock_popen.call_args[0][0])
+
+    capped, default = commands
+    assert capped[capped.index("--max_parallel_samples") + 1] == "1"
+    assert "--max_parallel_samples" not in default
+
+
 def test_speed_flags_omitted_by_default(tmp_path):
     with (
         patch("cypmode.validation.pipeline.subprocess.Popen") as mock_popen,

@@ -61,17 +61,23 @@ class SharedTrunkModel(nn.Module):
         return {cyp: self.heads[cyp](shared).squeeze(-1) for cyp in ISOFORMS}
 
 
-def masked_bce_loss(logits: dict, targets: dict, masks: dict) -> torch.Tensor:
+def masked_bce_loss(logits: dict, targets: dict, masks: dict, pos_weight: dict | None = None) -> torch.Tensor:
     """Binary cross-entropy per isoform, restricted to that isoform's
     labeled compounds only -- an unlabeled compound contributes zero
     gradient for that head, rather than being imputed as a negative.
+
+    `pos_weight`, if given, is a {isoform: float} multiplier on the
+    positive-class term (torch.nn.BCEWithLogitsLoss's own pos_weight
+    convention -- see its docs), applied per isoform independently.
+    None (the default) reproduces the original unweighted loss exactly.
     """
-    loss_fn = nn.BCEWithLogitsLoss(reduction="none")
     total = torch.tensor(0.0)
     count = torch.tensor(0.0)
     for cyp in ISOFORMS:
         if masks[cyp].sum() == 0:
             continue
+        weight = torch.tensor(pos_weight[cyp]) if pos_weight and cyp in pos_weight else None
+        loss_fn = nn.BCEWithLogitsLoss(reduction="none", pos_weight=weight)
         per_example = loss_fn(logits[cyp], targets[cyp])
         total = total + (per_example * masks[cyp]).sum()
         count = count + masks[cyp].sum()
@@ -85,9 +91,17 @@ def train_shared_trunk(
     epochs: int = 200,
     lr: float = 1e-3,
     seed: int = 42,
+    trunk_dim: int = 64,
+    head_dim: int = 32,
+    dropout: float = 0.2,
+    pos_weight: dict | None = None,
 ) -> SharedTrunkModel:
+    """trunk_dim/head_dim/dropout/pos_weight all default to the original
+    hardcoded values -- an existing caller passing none of them gets the
+    exact same model and loss as before this function grew these knobs.
+    """
     torch.manual_seed(seed)
-    model = SharedTrunkModel(input_dim=X_train.shape[1])
+    model = SharedTrunkModel(input_dim=X_train.shape[1], trunk_dim=trunk_dim, head_dim=head_dim, dropout=dropout)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-4)
 
     X = torch.tensor(X_train, dtype=torch.float32)
@@ -97,7 +111,7 @@ def train_shared_trunk(
     model.train()
     for _ in range(epochs):
         optimizer.zero_grad()
-        loss = masked_bce_loss(model(X), y, mask)
+        loss = masked_bce_loss(model(X), y, mask, pos_weight=pos_weight)
         loss.backward()
         optimizer.step()
     return model
@@ -115,7 +129,7 @@ def _standardize(X: np.ndarray, mean: np.ndarray, std: np.ndarray) -> np.ndarray
 
 
 def cross_validate_shared_trunk(
-    df: pd.DataFrame, feature_col: str = "m3_features", n_splits: int = 5, random_state: int = 42, epochs: int = 200
+    df: pd.DataFrame, feature_col: str = "m3_no_amine_features", n_splits: int = 5, random_state: int = 42, epochs: int = 200
 ) -> pd.DataFrame:
     """Same spirit as tdi_baseline.cross_validate_fixed_seed, but ONE
     shared model per fold trained on both isoforms' (masked) labels
@@ -210,7 +224,7 @@ def _inner_oof_threshold_shared_trunk(
 
 def cross_validate_shared_trunk_with_threshold_tuning(
     df: pd.DataFrame,
-    feature_col: str = "m3_features",
+    feature_col: str = "m3_no_amine_features",
     n_splits: int = 5,
     inner_splits: int = 3,
     random_state: int = 42,
@@ -347,7 +361,7 @@ def predict_proba_multi_branch(model: MultiBranchSharedTrunkModel, X_m3: np.ndar
 
 def cross_validate_multi_branch_shared_trunk(
     df: pd.DataFrame,
-    m3_col: str = "m3_features",
+    m3_col: str = "m3_no_amine_features",
     chemberta_col: str = "chemberta_embedding",
     n_splits: int = 5,
     random_state: int = 42,
@@ -427,14 +441,14 @@ def _main() -> None:
     results = cross_validate_shared_trunk(df)
     print("-- untuned (0.5 threshold) --")
     print(results.groupby("isoform")["mcc"].mean().to_string())
-    out_path = Path("data/tdi_track/outputs/shared_trunk_m1.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/shared_trunk_m1.csv")
     results.to_csv(out_path, index=False)
     print(f"wrote {out_path}\n")
 
     tuned_results = cross_validate_shared_trunk_with_threshold_tuning(df)
     print("-- fold-internal MCC-tuned threshold --")
     print(tuned_results.groupby("isoform")[["mcc_naive_0.5", "mcc_tuned", "tuned_threshold"]].mean().to_string())
-    tuned_out_path = Path("data/tdi_track/outputs/shared_trunk_m1_threshold_tuning.csv")
+    tuned_out_path = Path("data/tdi_track/outputs/comparisons/shared_trunk_m1_threshold_tuning.csv")
     tuned_results.to_csv(tuned_out_path, index=False)
     print(f"wrote {tuned_out_path}\n")
 
@@ -449,7 +463,7 @@ def _main() -> None:
     multi_branch_results = cross_validate_multi_branch_shared_trunk(df_with_chemberta)
     print("-- multi-branch fusion (M3 branch + ChemBERTa branch -> shared trunk) --")
     print(multi_branch_results.groupby("isoform")["mcc"].mean().to_string())
-    multi_branch_out_path = Path("data/tdi_track/outputs/shared_trunk_m1_chemberta_fusion.csv")
+    multi_branch_out_path = Path("data/tdi_track/outputs/comparisons/shared_trunk_m1_chemberta_fusion.csv")
     multi_branch_results.to_csv(multi_branch_out_path, index=False)
     print(f"wrote {multi_branch_out_path}")
 

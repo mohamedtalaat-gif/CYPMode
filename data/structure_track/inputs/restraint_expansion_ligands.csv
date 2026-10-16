@@ -1,0 +1,21 @@
+comp_id,name,smiles,n_heavy,resolution,pdb_id,min_fe_distance,stratum,deposited
+08J,"8-chloro-6-(2-fluorophenyl)-1-methyl-4H-imidazo[1,5-a][1,4]benzodiazepine",Cc1ncc2n1-c3ccc(cc3C(=NC2)c4ccccc4F)Cl,23,2.7,5TE8,3.39,primary,2016-09-20
+80K,tert-butyl (2-{[(2S)-3-oxo-2-(phenylamino)-3-{[(pyridin-3-yl)methyl]amino}propyl]sulfanyl}ethyl)carbamate,CC(C)(C)OC(=O)NCCSCC(C(=O)NCc1cccnc1)Nc2ccccc2,30,2.5,6BD6,2.23,primary,2017-10-21
+A1ASO,N-(2-chlorophenyl)-N-[(3-hydroxyphenyl)methyl]-N'-[(2P)-2-(1H-imidazol-1-yl)-5-(trifluoromethyl)phenyl]urea,c1ccc(c(c1)N(Cc2cccc(c2)O)C(=O)Nc3cc(ccc3n4ccnc4)C(F)(F)F)Cl,34,2.8,9BVC,2.23,secondary,2024-05-20
+A1ASP,2-(2-chlorophenyl)-N-[(2P)-2-(1H-imidazol-1-yl)-5-(trifluoromethyl)phenyl]acetamide,c1ccc(c(c1)CC(=O)Nc2cc(ccc2n3ccnc3)C(F)(F)F)Cl,26,3.0,9BVB,2.22,primary,2024-05-20
+A1ASQ,N-[2-(2-chloroethyl)phenyl]-N'-[(2P)-2-(1H-imidazol-1-yl)-5-(trifluoromethyl)phenyl]urea,c1ccc(c(c1)CCCl)NC(=O)Nc2cc(ccc2n3ccnc3)C(F)(F)F,28,3.02,9BVA,2.2,primary,2024-05-20
+A1ASR,N-(2-chlorophenyl)-N'-[(2P)-2-(1H-imidazol-1-yl)-5-(trifluoromethyl)phenyl]urea,c1ccc(c(c1)NC(=O)Nc2cc(ccc2n3ccnc3)C(F)(F)F)Cl,26,2.95,9BV9,2.25,primary,2024-05-20
+A1ASS,N-[(2P)-2-(1H-imidazol-1-yl)-5-(trifluoromethyl)phenyl]cyclobutanecarboxamide,c1cc(c(cc1C(F)(F)F)NC(=O)C2CCC2)n3ccnc3,22,3.0,9BV8,2.22,primary,2024-05-20
+A1AST,"3-(2-chlorophenyl)-N-{[(2S,7M)-7-(pyridin-3-yl)-2,3-dihydro-1-benzofuran-2-yl]methyl}propanamide",c1ccc(c(c1)CCC(=O)NCC2Cc3cccc(c3O2)c4cccnc4)Cl,28,3.21,9BV7,2.23,primary,2024-05-20
+A1ASU,"5-(4-methoxyphenyl)-1-[4-(2-methyl-1,3-thiazol-4-yl)phenyl]-1H-1,2,3-triazole",Cc1nc(cs1)c2ccc(cc2)n3c(cnn3)c4ccc(cc4)OC,25,3.1,9BV6,2.21,primary,2024-05-20
+A1BNX,N'-(2-chlorophenyl)-N-[(3-hydroxyphenyl)methyl]-N-[(2P)-2-(1H-imidazol-1-yl)-5-(trifluoromethyl)phenyl]urea,c1ccc(c(c1)NC(=O)N(Cc2cccc(c2)O)c3cc(ccc3n4ccnc4)C(F)(F)F)Cl,34,3.4,9MS1,2.36,secondary,2025-01-09
+CFF,CAFFEINE,Cn1cnc2c1C(=O)N(C(=O)N2C)C,14,2.05,8SO1,3.68,primary,2023-04-28
+CL6,1-[(2-CHLOROPHENYL)(DIPHENYL)METHYL]-1H-IMIDAZOLE,c1ccc(cc1)C(c2ccccc2)(c3ccccc3Cl)n4ccnc4,25,2.9,8SPD,1.94,primary,2023-05-02
+D7J,tert-butyl [(2S)-1-{[(2R)-3-oxo-2-[(propan-2-yl)amino]-3-{[(pyridin-3-yl)methyl]amino}propyl]sulfanyl}-3-phenylpropan-2-yl]carbamate,CC(C)NC(CSCC(Cc1ccccc1)NC(=O)OC(C)(C)C)C(=O)NCc2cccnc2,34,2.42,6BD7,2.21,secondary,2017-10-21
+D7M,tert-butyl (2-{[(2R)-2-(cyclopentylamino)-3-oxo-3-{[(pyridin-3-yl)methyl]amino}propyl]sulfanyl}ethyl)carbamate,CC(C)(C)OC(=O)NCCSCC(C(=O)NCc1cccnc1)NC2CCCC2,29,2.5,6BD5,2.26,primary,2017-10-21
+D7Y,tert-butyl (2-{[(2R)-3-oxo-2-[(propan-2-yl)amino]-3-{[(pyridin-3-yl)methyl]amino}propyl]sulfanyl}ethyl)carbamate,CC(C)NC(CSCCNC(=O)OC(C)(C)C)C(=O)NCc1cccnc1,27,2.23,6BCZ,2.28,primary,2017-10-20
+J9K,tert-butyl [(2S)-1-({3-oxo-3-[(pyridin-3-ylmethyl)amino]propyl}sulfanyl)-3-phenylpropan-2-yl]carbamate,CC(C)(C)OC(=O)NC(Cc1ccccc1)CSCCC(=O)NCc2cccnc2,30,2.8,4D78,2.12,primary,2014-11-21
+MWY,"(3aS,4R,5S,6R,8R,9R,9aR,10R)-6-ethyl-5-hydroxy-4,6,9,10-tetramethyl-1-oxodecahydro-3a,9-propanocyclopenta[8]annulen-8-yl [(5-amino-1H-1,2,4-triazol-3-yl)sulfanyl]acetate",CCC1(CC(C2(C(CCC3(C2C(=O)CC3)C(C1O)C)C)C)OC(=O)CSc4nc([nH]n4)N)C,33,2.52,6OOA,4.27,secondary,2019-04-22
+MYT,METYRAPONE,CC(C)(c1cccnc1)C(=O)c2cccnc2,17,2.182,6MA6,2.31,primary,2018-08-26
+PKT,tert-butyl [(2S)-1-(1H-indol-3-yl)-3-({3-oxo-3-[(pyridin-3-ylmethyl)amino]propyl}sulfanyl)propan-2-yl]carbamate,CC(C)(C)OC(=O)NC(Cc1c[nH]c2c1cccc2)CSCCC(=O)NCc3cccnc3,33,2.76,4D7D,2.01,secondary,2014-11-22
+VDN,"2-{2-ETHOXY-5-[(4-ETHYLPIPERAZIN-1-YL)SULFONYL]PHENYL}-5-METHYL-7-PROPYLIMIDAZO[5,1-F][1,2,4]TRIAZIN-4(1H)-ONE",CCCc1nc(c2n1NC(=NC2=O)c3cc(ccc3OCC)S(=O)(=O)N4CCN(CC4)CC)C,34,3.5,38FY,3.67,secondary,2026-08-24

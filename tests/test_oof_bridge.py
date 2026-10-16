@@ -92,3 +92,18 @@ def test_inverse_variance_weighting_reduces_influence_of_noisy_points():
     pred_at_origin = model.predict(np.array([[0.0, 0.0, 0.0]]))[0]
     # a model that gave the outlier full weight would predict close to 100
     assert pred_at_origin < 50
+
+
+def test_out_of_fold_predictions_carry_no_information_about_a_compounds_own_label():
+    """With labels that are pure noise a model that has seen a compound cannot be told from one that has not unless the predictions
+    leak: a leaking implementation would fit each compound's own noise (high correlation), an honest out-of-fold one cannot."""
+    rng = np.random.default_rng(1)
+    df = _synthetic_regression_df(n=200, seed=1)
+    for cyp in DIRECT_INHIBITION_ISOFORMS:
+        measured = df[f"{cyp}_pIC50_direct_inhibition"].notna()
+        df.loc[measured, f"{cyp}_pIC50_direct_inhibition"] = rng.normal(size=int(measured.sum()))  # no relation to the descriptors
+    result = compute_oof_predictions(df, n_splits=5)
+    for cyp in DIRECT_INHIBITION_ISOFORMS:
+        labeled = result[result[f"{cyp}_pIC50_direct_inhibition"].notna()]
+        corr = np.corrcoef(labeled[f"{cyp}_pIC50_oof"], labeled[f"{cyp}_pIC50_direct_inhibition"])[0, 1]
+        assert abs(corr) < 0.25

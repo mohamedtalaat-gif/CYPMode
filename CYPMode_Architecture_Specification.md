@@ -92,55 +92,42 @@ https://doi.org/10.5281/zenodo.21785463
 
 ## Final architecture
 
+**Corrected 2026-09-27 to match what's actually deployed** (`cypmode/challenge/final_assembly.py` +
+`final_assembly_cyp2d6.py`), not the original, more elaborate design this diagram described until now.
+The real, evidence-tested model is simpler than that original design — most of the additions it
+called out (Tier 3, the OOF bridge) were tested and did not survive honest checking. That's not a
+gap; it's the actual finding. See the second block below for what was tried and rejected.
+
 ```
                                     SMILES
                                        │
-                 ┌─────────────────────┼─────────────────────┐
-                 ▼                     ▼                     ▼
-           TIER 1 (all)           TIER 2 (all)      TIER 3 (fixed N=50)
-        Morgan + RDKit          CYPMode motif flag       Boltz-2, CYP3A4
-          descriptors           (amine flag dropped     only — top-50 by
-                                 — see Decision Log)   OOF uncertainty, no
-                                                        motif OR clause
-                 │                     │                     │
-                 └─────────────────────┼─────────────────────┘
+                 ┌─────────────────────┴─────────────────────┐
+                 ▼                                             ▼
+           TIER 1 (all)                                  TIER 2 (all)
+        Morgan + RDKit                                CYPMode motif flag
+          descriptors                                (amine flag dropped
+                                                        — see Decision Log)
+                 └─────────────────────┬─────────────────────┘
                                        │
-------------------------------------------------------------------------  tested augmentation layer, feeds in alongside Tier 1/2
-  Each of the following was validated alone AND in combination with M3
-  via real 25-fold CV + Tukey HSD -- none beats plain M3 by a
-  statistically significant margin, on either isoform:
-
-  KNN read-across . BindingDB . PubChem AID 1851 . quantum-electronic
-  (tblite GFN2-xTB) . pharmacophore fingerprint (pmapper)
-
-  Practical default going forward: M3 + KNN (best point estimate,
-  simplest of the tied options -- not proven statistically superior)
-------------------------------------------------------------------------
-                                       │
-                                       ▼
-                          Feature / Evidence Fusion
-                                       │
-                    ┌──────────────────┴──────────────────┐
-                    │                                     │
-                    │      OOF Direct-Inhibition           │
-                    │      Bridge (parallel input,          │
-                    │      not a downstream step —          │
-                    │      see Decision Log)                │
-                    │                                       │
-                    └──────────────────┬──────────────────┘
-                                       ▼
-                              Shared Trunk
-                     (hypothesis, not assumption —
-                      benchmarked against independent
-                      per-isoform heads, see Decision Log)
+                              m3_no_amine_features
                                        │
                      ┌──────────────────┴──────────────────┐
                      ▼                                     ▼
-               CYP3A4 Head                            CYP2D6 Head
-             (Tier 1+2+3 + bridge)                (Tier 1+2 + bridge only
-                                                    — no structural data
-                                                    for this isoform)
-                     │                                     │
+          CYP3A4: + KNN read-across                CYP2D6: as-is,
+       (leak-safe, fold-internal; best              no augmentation
+        point estimate of the tied                  (KNN and the OOF
+        options, not proven                          bridge were both
+        statistically superior)                      tested and hurt
+                     │                                or didn't help
+                     ▼                                this head specifically)
+        Independent-head LightGBM                          │
+       (wins CYP3A4 in every real                           ▼
+        variant tested)                                Shared Trunk
+                     │                          (wins CYP2D6 in every real
+                     │                           variant tested; hypothesis
+                     │                           benchmarked against
+                     │                           independent heads, not
+                     │                           assumed — see Decision Log)
                      ▼                                     ▼
                   P(TDI)                                P(TDI)
                      │                                     │
@@ -148,6 +135,45 @@ https://doi.org/10.5281/zenodo.21785463
                                         ▼
                           CV-fold-internal threshold
                              tuning, optimizing MCC
+
+
+──────────── tested at real budget/rigor, NOT wired into the deployed model above ────────────
+
+  TIER 3 (Boltz-2, CYP3A4 only, fixed N=50, top-50 by OOF uncertainty, no motif OR clause):
+    real null result on the compounds it covers (M3=0.356 vs M3+Tier3=0.343, p-adj=0.873)
+    AND zero overlap with the real 750-row test set -- could never become a deployed
+    per-row feature even with a positive result. Two independent reasons, same conclusion.
+
+  OOF Direct-Inhibition Bridge (predicted direct-inhibition pIC50 as a TDI feature):
+    looked like the single biggest win found all project on a naive read (CYP3A4 tuned
+    0.387 -> 0.470) -- RETRACTED after honest re-checking. Root cause: ~35% of CYP3A4-labeled
+    training compounds have no real direct-inhibition measurement at all and are TDI-negative
+    near-deterministically by construction (the label formula needs a direct-inhibition
+    baseline to compute a "shift" from). The naive feature encoded that fact via a
+    "missing_flag" the model could read as a near-perfect shortcut -- but the real blind test
+    set never exposes measurement availability (SMILES + Molecule_Name only, every row), so
+    the shortcut couldn't fire at deployment and predictions skewed to 60.9% positive against
+    a real 21.3% training base rate. Re-verified via CV that actually simulates deployment
+    (validation-fold compounds scored with zero awareness of their own missingness): tuned MCC
+    0.378 -- *below* plain M3 alone (0.387), the difference inside normal fold-to-fold noise
+    for this project (std ~0.03-0.06 at this scale). Not a real effect. Not included.
+
+  BindingDB . PubChem AID 1851 . quantum-electronic (tblite GFN2-xTB) . pharmacophore
+  fingerprint (pmapper): each validated alone AND combined with M3 via real 25-fold CV +
+  the paired corrected resampled t with a Holm adjustment -- none beats plain M3 by a statistically significant margin, on either isoform.
+
+  ChemBERTa SMILES embeddings (seyonec/ChemBERTa-zinc-base-v1, 768-dim mean-pooled):
+    • naive concatenation onto M3's feature vector  → lowers CYP3A4 MCC
+      (M3=0.309 → M3+ChemBERTa=0.255; paired corrected t, adjusted p = 0.23: a point-estimate
+      loss that is not statistically established; KNN's benefit is also absent once ChemBERTa joins)
+    • MultiBranchSharedTrunkModel fusion (own branch → shared trunk, not raw concat)
+      → still no benefit (point estimate worse than the M3-only shared trunk)
+
+  A real, consistent pattern across every one of the above: none of them beats the simple
+  M3 (+ KNN for CYP3A4) baseline once tested with real rigor -- not a failure of effort, a
+  genuine empirical result. "Wire more things together" does not reliably improve MCC here;
+  each addition only helps if it carries real information the simpler model didn't already
+  have, and most of the mechanistically-motivated ones tried didn't.
 
 
 ─────────────────────── cross-cutting, not in the prediction path ───────────────────────
@@ -161,17 +187,6 @@ https://doi.org/10.5281/zenodo.21785463
                                   ▼
         Empirically test correlation with real held-out error
       before calling this "uncertainty quantification" anywhere
-
-
-───────────────────── tested and REJECTED — not part of the feature set ─────────────────────
-
-    ChemBERTa SMILES embeddings (seyonec/ChemBERTa-zinc-base-v1, 768-dim mean-pooled)
-      • naive concatenation onto M3's feature vector  → significantly HURTS CYP3A4
-        (M3=0.309 → M3+ChemBERTa=0.255, p-adj=0.0002; wipes out KNN's own benefit too)
-      • MultiBranchSharedTrunkModel fusion (own branch → shared trunk, not raw concat)
-        → still no benefit (point estimate worse than the M3-only shared trunk)
-    Two independent, honest attempts; both point the same direction. Kept in the
-    codebase as a documented negative result, not wired into the assembled model.
 ```
 
 ## Component-by-component
@@ -179,6 +194,8 @@ https://doi.org/10.5281/zenodo.21785463
 **Tier 1 — universal chemical representation.** Morgan fingerprints (ECFP4, radius 2, 2048 bits) + RDKit descriptors. Computed for every compound, train and test. No missingness.
 
 **Tier 2 — CYPMode mechanistic evidence.** Motif flag only (`cypmode.metrics.motifs`). The trialkylamine flag (`cypmode.metrics.amines`) was tested and dropped — it actively hurt CYP2D6 MCC and did nothing for CYP3A4 in a real multivariate model (M0–M3 ablation). The underlying chemistry (verapamil/diltiazem/troleandomycin's real trialkylamine-mediated TDI) is still real; the specific feature engineering (a standalone binary flag) is what failed at scale.
+
+**Correction (2026-10-16).** The evidence given above for dropping the trialkylamine flag does not hold. It rests on one five-fold partition (CYP2D6 MCC 0.069 → 0.038, corrected p = 0.31). Re-run with the pattern as it is today, the same step on that partition gives +0.040 (p = 0.51), and over five partitions (25 folds) the change in MCC from the motif-only to the motif-plus-amine model is +0.004 (corrected p = 0.88), with the partitions ranging from −0.040 to +0.040. The data neither support nor refute the flag. The decision to leave it out stands, since the flag (the `amine` block of the feature store) is not an input of any member of the final stack; the reason given for it does not.
 
 **Tier 3 — structural augmentation, CYP3A4 only.** Boltz-2 + explicit heme + covalent axial-cysteine bond (`cypmode.validation.pipeline`), run only on a **fixed budget of 50 compounds** (`cypmode.challenge.tier3_selection.select_fixed_budget_oof`), ranked by out-of-fold classification uncertainty across the whole labeled population. **Not built for CYP2D6**, deliberately: this project has no validated CYP2D6 structural pipeline, and inventing one to force architectural symmetry would be a real research project on its own, not something to improvise under this timeline. CYP2D6's head simply has no structural branch.
 
@@ -211,7 +228,22 @@ Threshold tuning helps both architectures, but helps the independent-head model 
 
 **Split-validity diagnostic** (`cypmode.challenge.split_validity`). A CV split can look far more reliable than it is if the validation compounds are chemically close to training (near-duplicates/analogs) rather than a genuine test of generalization — a known, general risk in cheminformatics benchmarking, not something specific to this challenge. Checked on our own real data: **our own i.i.d. CV folds are, if anything, chemically less similar to their own training portion (median similarity 0.448, 38.3% ≥0.5) than the real 750-compound blinded TDI test set is to our full training set (median 0.569, 81.5% ≥0.5)**. A mildly reassuring sign (not a guarantee) that our CV-measured MCC is unlikely to collapse on the blind set the way it could if the blind set were instead the more chemically-novel side of that comparison. **Since confirmed with a real mechanistic explanation, not just an observed number**: the challenge's own public documentation (`config.py`'s `ABOUT_MD` on the official HF Space) states the blind test set was built by "hit expansion... purchasing the top 10 chemisimilars (ECFP4 Tanimoto similarity) per hit compound" from the training population's own top hits (CYP1A2/CYP2C9/CYP3A4 hits specifically). Our similarity finding isn't a coincidence — it's a direct, documented consequence of how the test set was constructed. Reported honestly as a diagnostic with a now-confirmed mechanism, still not proof of transfer.
 
-**Official scoring harness — verified as far as publicly possible.** The actual metric-computation code runs in a private AWS Lambda (`backend/lambda_handler.py`, referenced but not included in the public HF Space repo) — not independently auditable. What the public repo *does* confirm directly (`config.py`, `submission.py`): the TDI track's primary metric is plain Matthews Correlation Coefficient (no custom variant), macro-averaged (unweighted mean) across exactly `CYP2D6_is_TDI` and `CYP3A4_is_TDI`; the required submission schema (`SMILES`, `Molecule_Name`, `CYP2D6_is_TDI`, `CYP3A4_is_TDI`, 750 rows, no NaN, boolean values) matches `cypmode.challenge.submission`'s validator exactly; and the positive/negative/inferred-positive/assigned-negative label rule (direct-inhibition pIC50 vs. 4, TDI-arm shift vs. log10(2)=0.301) matches `cypmode.validation.tdi_reference.TDI_SHIFT_LOG2_THRESHOLD` exactly. One previously-unknown, real detail: **not every compound's prediction is actually scored** — "only compounds whose label can be assigned with confidence contribute to the score," per the official FAQ. Also newly confirmed: CYP2D6 uses a *different, label-free mass-spectrometry assay* (not the fluorescence-based kit used for the other three isoforms) specifically because "fluorogenic 2D6 probes exhibited poor signal-to-noise ratios" — a real, assay-level reason (not just a chemistry/modeling one) that CYP2D6 is the harder isoform for every team on the leaderboard, not just us.
+**Official scoring harness — no longer "unauditable," corrected 2026-09-27.** Earlier draft of this doc assumed the metric-computation code runs only in a private AWS Lambda and isn't independently auditable. That's now known to be wrong: OpenADMET open-sourced their real scoring backend (Apache 2.0, `github.com/OpenADMET/blind-challenge-template` + `github.com/OpenADMET/challenge-data-checker`, confirmed by cloning and reading it directly, not inferred from blog posts). Caveat: the template is genericized (placeholder endpoint names `ENDPOINT_1..6`, a placeholder `ACTIVITY_DATASET_SIZE`/`STRUCTURE_DATASET_SIZE`), so the scoring *mechanism* is confirmed with certainty but the exact deployed CYP-challenge config values are organizer-set constants not present in the public repo. Confirmed directly from the code:
+- TDI metric: plain sklearn `matthews_corrcoef`, macro-averaged as a **plain unweighted arithmetic mean** across endpoints per bootstrap sample (`backend/evaluate_predictions.py`). Leaderboard ties broken by earliest submission timestamp.
+- Submission schema: presence of `SMILES`, `Molecule_Name`, and the classification columns (bool/0-1) is enforced via a `pandera` schema with **`strict=False` and no `ordered=True`** — column *order* is explicitly not validated, correcting this doc's earlier "in that order" phrasing. `cypmode.challenge.submission`'s own validator doesn't enforce order either, so no code change was needed there.
+- Structure Track penalty, confirmed exactly: `POSEBUSTERS_MAX_FAILURES = 0` and `BISYRMSD_NAN_PENALTY = 20.0`. A PoseBusters failure (any single failed check) zeroes **all three** metrics (LDDT-PLI, LDDT-LP → 0.0, BiSyRMSD → 20.0) via `score_single_structure`, not just LDDT-PLI as this doc previously implied. A separate OpenStructure alignment failure zeroes only BiSyRMSD/LDDT-LP (LDDT-PLI survives) unless the failure is total (no ligand match), which forces the same worst-case penalties by a different code path. Both converge on the same numbers, just via different logic — `cypmode.challenge.structure_submission`'s existing PoseBusters pre-check (`posebusters_validity_official20.csv`) is the right local gate either way.
+- **Ligand residue naming is confirmed NOT validated at upload time**, but a wrong residue name "silently becomes a coverage=0 / worst-case-penalty row" during scoring (`docs/structure-scoring.md`) — this retroactively confirms `cypmode.challenge.structure_submission.convert_cif_to_pdb`'s `LIG1`→`LIG` rename is load-bearing, not a defensive nicety; skipping it would have produced a silent zero, not a validation error.
+- Benjamini-Hochberg tiering is real, implemented code (`backend/leaderboard.py`'s `EntryComparison`/`FinalLeaderboard`), with two display modes (compact letter display, and the default "tiers" — walks the ranked list, starts a new tier whenever BH-adjusted pairwise significance vs. the active tier's baseline is reached). Matches this doc's earlier characterization of the interim leaderboard as a real 26-way statistical tie, not an approximation.
+- **Real "Challenge Tracks" text, directly quoted from the user 2026-09-27** (the live HF Space's own overview, more authoritative than the genericized template repo above — supersedes it wherever they conflict): Structure Track submission note confirmed verbatim: *"Co-folding models, docking software, public PDB structures, or proprietary data are all fair game."* TDI label definition confirmed verbatim: *"Positive means the TDI-arm IC50 shift exceeds 2-fold relative to direct inhibition, including inferred positives among low-activity compounds where a shift can't be measured directly."* Direct Inhibition Track (a track this project doesn't attempt) confirmed real and separate: pIC50 regression across all 4 isoforms (CYP3A4, CYP2C9, CYP2D6, CYP1A2 — no CYP2C19), primary metric Macro-Averaged Soft-Threshold RAE (MA-ST-RAE), which zeroes error for any prediction falling inside the fitted dose-response curve's credible interval.
+
+- **Gone straight to the two primary sources 2026-09-27** (`huggingface.co/spaces/openadmet/cyp-challenge` via a real browser session — plain WebFetch can't render it, it's a JS app — and `github.com/OpenADMET/CYP-Challenge-Tutorial`, whose `evaluation/` folder is explicitly "eval code from backend," not a generic template) rather than continuing to rely on blog posts and the genericized `blind-challenge-template`:
+  - **The PoseBusters-penalty ambiguity is resolved**: the live Space's own FAQ/About text says a PoseBusters failure gives "an LDDT-PLI score of 0" (only mentions one metric), which reads narrower than what the earlier `blind-challenge-template` scoring-code audit found (all three metrics zeroed). Reading the actual CYP-specific backend code (`evaluation/evaluate_predictions.py`'s `score_single_structure`) settles it: a copy that fails more than `POSEBUSTERS_MAX_FAILURES` (=0) checks has its scores overridden to **LDDT-PLI=0, LDDT-LP=0, BiSyRMSD=`BISYRMSD_NAN_PENALTY`** — all three, confirmed on the real deployed code, not just the template. The About page's wording is a simplified summary, not a narrower rule; the template repo's finding was right all along.
+  - **The exact TDI label thresholds, confirmed precisely** (live Space FAQ, "How exactly are TDI positive/negative labels assigned?"): Positive = direct-inhibition pIC50 > 4 AND shift > 2-fold; Negative = direct-inhibition pIC50 > 4 AND shift ≤ 2-fold; **Inferred positive = direct-inhibition pIC50 ≤ 4 but TDI-arm pIC50 > 4.301** (not just "> 4" — 4 + log10(2) = 4.301 is the exact real threshold, chosen so that even the worst-case unmeasured direct-inhibition value of exactly 4 still guarantees a >2-fold shift); Assigned negative = direct-inhibition pIC50 ≤ 4 AND TDI-arm pIC50 ≤ 4. This sharpens (and confirms as correct, not just plausible) the diagnosis behind the OOF-bridge retraction above: a compound's direct-inhibition value genuinely does partly define its own TDI label by explicit organizer rule, not just correlate with it.
+  - **`evaluation/config.py`, "ported from the challenge backend, so it should match exactly what you see on the leaderboard"**: `CLASSIFICATION_ENDPOINTS = ["CYP2D6_is_TDI", "CYP3A4_is_TDI"]`, `CLASSIFICATION_METRICS` = MCC (plain `sklearn.matthews_corrcoef`) + Accuracy/Precision/Recall/F1 secondary, `SORT_CLASSIFICATION_LEADERBOARD_BY = "MCC"`, `BOOTSTRAP_SAMPLES = 1000`, `ACTIVITY_DATASET_SIZE = 750` — all now confirmed as the real deployed constants, not template placeholders.
+  - **Macro-averaging mechanism, more precise than previously understood**: "MA" (`MACRO_ENDPOINT_LABEL`) is a synthetic pseudo-endpoint computed *inside* each individual bootstrap sample (`compute_macro_bootstrap_results`: for every bootstrap sample, plain arithmetic mean of that sample's per-endpoint metric across CYP3A4/CYP2D6), not a post-hoc average of two independently-bootstrapped point estimates. Functionally similar to what this project assumed for its own honest reporting, but the real mechanism is per-sample, which is what makes the leaderboard's own bootstrap confidence intervals on "MA-MCC" valid.
+  - **The real, official TDI submission validator** (`validation/tdi_validation.py`) matches `cypmode.challenge.submission`'s validator almost exactly: same 4 required columns (`SMILES`, `Molecule_Name`, `CYP2D6_is_TDI`, `CYP3A4_is_TDI`), same 750-row check, no column-order enforcement (confirmed again, independently, on CYP-specific code this time). One real, minor gap: the official validator accepts a wider set of boolean representations (`"true"/"false"/"1"/"0"/"1.0"/"0.0"`, case-insensitive strings) where `cypmode.challenge.submission.validate_submission` requires actual Python `bool` objects — not a functional bug since `final_assembly.py` always writes real booleans, but worth matching for robustness if the submission file is ever hand-edited.
+  - **Confirms exactly which compounds get excluded as "can't be assigned with confidence"**: `score_activity_predictions`'s `has_ground_truth = ~pd.isna(y_true)` — a compound is dropped from an endpoint's scoring purely because the organizers' own ground-truth value for that endpoint is NaN. This is data curation on their side, not a rule this project could predict or replicate; nothing new to build here, just now confirmed directly rather than left as an open question.
+- **Not confirmed in code**: exactly which compounds get excluded as "can't be assigned with confidence" — `hf_space/config.py`'s own FAQ template has an *unfilled* stub for this ("Spell out the positive/negative label rules, including any handling of low-confidence or below-detection compounds... Delete if no classification track"), confirming this is organizer-authored data curation, not public logic. The `pIC50 vs. 4` floor / `log10(2)` shift threshold description in this doc's Decision Log remains this project's best real understanding, cross-checked against `cypmode.validation.tdi_reference.TDI_SHIFT_LOG2_THRESHOLD`, but isn't verifiable further from the public repos. Also still true and newly re-confirmed by a separate source (Correy/Walters/Fraser et al., "Operational insights from the front lines of OpenADMET"): CYP2D6 uses a different, label-free mass-spectrometry assay (not the fluorescence kit used for the other three isoforms) specifically because "fluorogenic 2D6 probes exhibited poor signal-to-noise ratios" — a real, assay-level reason CYP2D6 is the harder isoform for every team on the leaderboard, not just us.
 
 **Base-rate-shift-robust thresholding** (`cypmode.challenge.threshold_tuning.find_robust_threshold` / `cross_validate_with_robust_threshold_tuning`). A single MCC-optimal threshold implicitly assumes the test base rate matches training's; a real base-rate mismatch can silently cost MCC — a known general risk for any threshold picked by optimizing on one label distribution and applying it to another. Implemented as a minimax choice over an assumed base-rate grid (0.05–0.50), validated with a real base-rate-shift stress test (resampling real validation-fold labels/probabilities to different rates, not simulated). **Real, honest result: the effect is real but asymmetric, not a clean win.** At the natural (unshifted) rate, robust ≈ naive (CYP3A4 0.372 vs 0.375, CYP2D6 0.080 vs 0.078 — negligible either way). Under a shift toward a *rarer* positive class than training (π below ~0.20), the robust threshold clearly helps (e.g. CYP3A4 at π=0.05: 0.232 vs 0.199 naive). Under a shift toward a *more common* positive class (π above ~0.30), it clearly hurts, sometimes substantially (CYP3A4 at π=0.45: 0.415 robust vs 0.481 naive) — the minimax criterion buys protection in one direction at real cost in the other. A "mean" criterion (average MCC across the same grid, instead of worst-case) was also tested and turned out to pick the *exact same threshold* as the naive MCC-optimal one in both isoforms — a wash, not an improvement. **Decision: not adopted as the default threshold** — we have no real evidence the blind test's TDI base rate skews lower than training's (if anything, the split-validity diagnostic above points the other way), so the minimax threshold's asymmetric cost isn't clearly justified. Kept as real, tested, documented infrastructure, usable if external evidence about the blind test's base rate ever surfaces.
 
@@ -238,7 +270,7 @@ All three auxiliary/read-across additions (KNN, AID 1851, BindingDB) were first 
 
 **Transformer-based SMILES embeddings** (`cypmode.challenge.chemberta_features`, via ChemBERTa — `seyonec/ChemBERTa-zinc-base-v1`, a real, published RoBERTa model pretrained on ~77M ZINC SMILES strings). A third molecular representation alongside M3's existing two, following MTMM-CYP's own real methodological idea (multiple representations, shared across isoforms) without adopting MTMM-CYP's own code (Python 3.7/TensorFlow-1.x-pinned, no license — see the decision log). Confirmed directly: 768-dim mean-pooled embedding, ~35 ms/molecule on CPU (~3.6 min for the full training set), no 3D conformer step needed at all (operates on tokenized SMILES directly), so essentially no embedding-failure mode the way the quantum and pharmacophore features have. **Real architectural constraint, confirmed freshly this session**: `import torch` followed by fitting an `LGBMClassifier` in the same process segfaults (exit code 139) — the same OpenMP conflict already documented for `cypmode.challenge.multitask`, now confirmed to extend to this module too. `chemberta_features.py`'s own `_main()` therefore only extracts and caches embeddings; evaluating them against M3 happens in a fully separate process (`cypmode.challenge.chemberta_significance`, LightGBM-only, never imports torch), the same isolation discipline `tests/test_multitask.py` already requires.
 
-**Real, statistically significant result — and unlike every feature above, this one didn't come back a null result.** Adding raw ChemBERTa embeddings directly to M3's feature vector *significantly hurts* CYP3A4: M3=0.309 → M3+ChemBERTa=0.255 (meandiff=-0.0545, p-adj=0.0002, reject=True), and M3+KNN=0.321 → M3+KNN+ChemBERTa=0.256 (meandiff=-0.0644, p-adj<0.0001, reject=True) — KNN's own real (if individually non-significant) benefit is wiped out once ChemBERTa joins the feature vector. CYP2D6 shows the identical direction at a smaller, not-quite-significant magnitude for the M3 comparison (p=0.118) but a significant loss once KNN is involved (M3+KNN=0.092 → M3+KNN+ChemBERTa=0.038, p=0.0096).
+**Adding raw ChemBERTa embeddings directly to M3's feature vector lowers CYP3A4 MCC, but the loss is not statistically established.** M3=0.309 → M3+ChemBERTa=0.255 (meandiff=-0.0545, paired corrected t with Holm adjustment: adjusted p=0.23, 95% interval -0.111 to +0.002), and M3+KNN=0.321 → M3+KNN+ChemBERTa=0.256 (meandiff=-0.0644, adjusted p=0.11). An earlier version of this section reported these as significant (Tukey HSD, adjusted p=0.0002 and below 0.0001); that test treated the 25 correlated folds of each variant as independent groups and is replaced by the paired comparison (`stacking_significance.paired_comparison_summary`, applied to the saved per-fold scores by `recompute_paired_summaries.py`). On CYP2D6 no comparison is significant (smallest adjusted p = 0.82). Under both tests the point estimates move in the same direction and the addition was not adopted.
 
 **Real interpretation, not just "ChemBERTa doesn't help": this is very likely a data-representation mismatch, not evidence against transformer embeddings generally.** Concatenating a dense, highly-correlated 768-dimensional embedding onto M3's already-large feature vector, then handing the result to a tree-based gradient-boosting model trained on only ~3,500–4,800 examples, is a real recipe for the model spending its limited splits on noisy embedding dimensions instead of the cleaner signal already in the fingerprint/descriptors — LightGBM has no learned projection step to compress or denoise a dense embedding the way a neural fusion layer would. This is consistent with, not contradicting, the MTMM-CYP/FP-GNN/ExpansionRx pattern noted above: those approaches don't bolt a transformer embedding onto a tree model's raw feature matrix either — they route each representation through its own learned branch before fusion.
 
@@ -246,12 +278,32 @@ All three auxiliary/read-across additions (KNN, AID 1851, BindingDB) were first 
 
 Separately, worth noting honestly: even without ChemBERTa, the M3-only shared-trunk neural model (0.25–0.27 for CYP3A4) doesn't beat the classical LightGBM M3 baseline (~0.31) on this same task — the shared-trunk hypothesis itself remains unproven, independent of the ChemBERTa question.
 
+## Corrected TDI population and selection-honest evaluation (2026-10-04)
+
+**This section supersedes the CYP3A4 CV numbers and the "no feature helps" conclusions above wherever they conflict.** Three facts, each verified against the real training file and the public boards:
+
+1. **The label is a deterministic function of two columns that were never used.** `positive <=> t - max(d, 4) > log10(2)` (t = TDI-arm pIC50, d = direct-inhibition pIC50; floor 4) reproduces every given label exactly (`cypmode.challenge.tdi_targets`, tested against the real file).
+2. **A third of CYP3A4's labeled rows follow a different convention than the scored test set.** 1,249 of 3,584 rows have no direct pIC50 (but a potent TDI arm, median 5.4) and are all labeled negative; the blinded test set was assayed in both arms, so it has none. Training on them and evaluating on them -- as every earlier CYP3A4 number did -- mixes populations. On the 2,334 both-arms rows the same LightGBM gains +0.033 AUC (0.724 -> 0.757) from dropping them. The earlier feature ablations (KNN, BindingDB, AID1851, ChemBERTa, ...) were run on the mixed population and are being redone on the corrected one. CYP2D6 is unaffected (1,493 of 1,497 rows have both arms).
+3. **Random CV is not test-like.** The test compounds are analogs of top screening hits: 54% have a training neighbor at Tanimoto >= 0.5 against 33% in a CV fold, and the official baseline scores ~0.08-0.13 MCC higher on the real boards than in our CV. Positive rates differ from training too (CYP3A4 ~0.31, CYP2D6 ~0.059 vs 0.213 / 0.216), recovered from the leaderboard rows by `cypmode.challenge.leaderboard_prior` rather than typed in. `cypmode.challenge.validation_matching` re-weights validation predictions to the test set's nearest-neighbor-similarity profile and prior; it narrows but does not close the gap, so only the ORDER of candidates under matched conditions is meaningful.
+
+**Selection is now part of what is evaluated.** `cypmode.challenge.nested` fixes a plan of outer/inner folds on disk (inner folds live inside the outer-training rows), lets any model in any environment fill a prediction cache from it, and scores the whole procedure -- candidate choice, blend weights (L1/L2 stack with penalty chosen in the inner loop), operating threshold (bootstrap-smoothed, transferred as a positive RATE, not a score) -- on outer rows it never saw. Tests include a pure-noise case (best of 40 noise models: inner AUC > 0.58, outer ~0.50) and leakage guards for every runner. Nothing in it is a hand-set number: prior, similarity matching, thresholds and stack weights are all derived from data. First honest numbers (similarity- and prior-matched, 5 outer folds): CYP3A4 best single candidate AUC 0.771, stack 0.782 (MCC ~0.38); CYP2D6 best single 0.683, stack 0.684 (MCC ~0.11-0.13); selection optimism ~0 or negative. Extra fingerprint blocks add <= 0.01 AUC; no block helps CYP2D6.
+
+**Also fixed/guarded:** training-fold-only standardization now has a regression test (`tests/test_multitask_no_standardization_leak.py`, mutation-checked). Label-free feature blocks added to the store: `ext_activity` (inhibitor probabilities from models trained only on the Veith panels, with any challenge compound removed from the external training set) and `tdi_alerts` (mechanism-based-inactivation structural alerts).
+
+## Uncertainty: query by committee, tested against real errors (2026-10-05)
+
+**Question.** Query by committee (QBC) measures uncertainty as disagreement inside a diverse ensemble of distinct models, instead of the stochastic passes of a single model (MC dropout) or the seed-to-seed spread of one algorithm (what `cypmode.challenge.reliability.ensemble_disagreement` did, r ~ 0.10 with error). The nested harness already holds out-of-fold predictions for 25 heterogeneous candidates, so the committee is free. `cypmode.challenge.committee_uncertainty` evaluates it on compounds no candidate or selector saw (all nested outer folds: 2,334 for CYP3A4, 1,493 for CYP2D6) with a bar higher than "correlates with error": it must add information beyond the **margin** (distance of the stack's score from its own decision threshold), judged against a permutation null with Bonferroni correction, and acting on it (falling back to a negative call on the most uncertain compounds) must improve MCC.
+
+**Result.** AUROC for flagging the stack's mistakes, margin vs committee (vote entropy / spread): CYP3A4 0.687 vs 0.620 / 0.557, CYP2D6 0.599 vs 0.593 / 0.457. CYP3A4: every committee signal is redundant with the margin (gain over margin -0.001, p >= 0.2). CYP2D6: vote entropy and spread each add a small but statistically detectable amount beyond the margin (+0.009 and +0.016 AUROC, permutation p = 0.005; the spread's relationship is inverted, high disagreement meaning FEWER errors), yet acting on them lowers MCC (0.096 -> 0.063-0.087 for entropy), so neither may alter a prediction. Restricting the committee to its best members, or to one algorithm family, did not help; diversity across families did not beat a LightGBM-only committee on CYP3A4. Mistakes here are mostly collective (all models miss the same information), and a committee can only see mistakes the models disagree about.
+
+**Decision.** The committee signals and the margin are part of the reliability table (`reliability.compute_reliability_score`, deployment values in `data/tdi_track/outputs/nested/<isoform>/reliability_deploy.csv`) and are reported, not used: a component alters a prediction only if it adds information beyond the margin AND acting on it improves MCC (`decision_record` writes this per component to `data/tdi_track/outputs/comparisons/committee_uncertainty_decision_<isoform>.json`). Today none does. This is a measured negative result, kept as such on purpose: a competitor's accuracy gain is reproducible, an uncertainty claim that was never checked against the simplest baseline is not.
+
 ## Decision log (what changed, and why)
 
 | Decision | Status |
 |---|---|
 | Track: TDI, not Direct Inhibition | Settled |
-| Tier 2: motif only, amine dropped | Settled — real M0–M3 ablation evidence (CYP2D6 MCC 0.069→0.038 with the amine flag added) |
+| Tier 2: motif only, amine dropped | Decision stands; its evidence does not (the 0.069→0.038 of one partition is within noise, see the correction under Tier 2, 2026-10-16) |
 | Tier 3: CYP3A4 only, no forced CYP2D6 symmetry | Settled |
 | OOF bridge: parallel fusion input, not downstream step | Settled this session |
 | Shared trunk: hypothesis requiring its own benchmark | Run, with threshold tuning on both sides — real result: independent heads win CYP3A4 in every variant, shared trunk wins CYP2D6 in every variant. Settled as a **per-isoform choice**, not one global architecture (pending Tier 3 for CYP3A4) |
@@ -284,15 +336,92 @@ Separately, worth noting honestly: even without ChemBERTa, the M3-only shared-tr
 - **Combined-feature stacking + statistical-significance correction** (`cypmode/challenge/combined_features.py`, `cypmode/challenge/stacking_significance.py`) — repeated 5×5 CV + Tukey HSD applied to KNN/AID 1851/BindingDB stacking for both isoforms. Real result: every pairwise comparison against plain M3 is non-significant (all p-adj ≥ 0.52) — the "combining hurts" single-split reading was fold-to-fold noise, corrected after applying Pat Walters' multiple-comparison-correction methodology
 - **Quantum-electronic features** (`cypmode/challenge/quantum_pharmacophore.py`, tblite GFN2-xTB) — HOMO/LUMO/dipole/charge features, checked at 25-fold rigor. Real result: statistically indistinguishable from plain M3 either direction (CYP3A4 p-adj ≥ 0.85, CYP2D6 p-adj ≥ 0.16)
 - **3-point pharmacophore fingerprints** (`cypmode/challenge/pharmacophore_fingerprint.py`, pmapper) — same 25-fold rigor, same honest null result (CYP3A4 p-adj ≥ 0.56, CYP2D6 p-adj ≥ 0.15)
-- **ChemBERTa SMILES embeddings** (`cypmode/challenge/chemberta_features.py`, `cypmode/challenge/chemberta_significance.py`) — the one feature addition with a real, statistically significant result: naive concatenation **significantly hurts** CYP3A4 (p-adj=0.0002). Tested and rejected, not a null result like the others
+- **ChemBERTa SMILES embeddings** (`cypmode/challenge/chemberta_features.py`, `cypmode/challenge/chemberta_significance.py`) — naive concatenation lowers CYP3A4 MCC by 0.055 (adjusted p = 0.23 under the paired corrected t; the earlier Tukey p-adj=0.0002 is superseded). Tested and not adopted, like the other additions
 - **Multi-branch shared-trunk fusion** (`MultiBranchSharedTrunkModel` in `cypmode/challenge/multitask.py`) — a proper neural fusion architecture (separate M3/ChemBERTa branches feeding a shared trunk, not raw concatenation), built specifically to check whether ChemBERTa's harm was a LightGBM-concatenation artifact. Real result: still no benefit, point estimate slightly worse than the M3-only shared trunk
 
 **Done since the above was last stale:**
 - Tier 3 structural batch: **complete, 50/50 real successes, zero errors** (the RDKit valence-parsing error was a real bug in ligand reconstruction, not the compound itself, fixed — see `CYPMode_AUDIT_REPORT.md`; the remaining failures were a transient public MSA-server issue, resolved by retrying, not a code bug).
 - Tier 3 joined into the TDI feature matrix and tested (`cypmode.challenge.tier3_features`): real, honest null result — see the Decision Log update above. **Settled**: Tier 3 doesn't change CYP3A4's model choice, and structurally can't become a deployed feature at all (zero overlap with the real test set).
+- **A real, previously-undiscovered bug fixed**: `m3_features` (the column every downstream module defaulted `feature_col` to) never actually implemented the "amine flag dropped" decision — it silently kept concatenating the amine flag. Every headline MCC number in this doc, including the two numbers that decide the per-isoform architecture choice, was computed on the wrong feature set. Fixed in `cypmode.challenge.tdi_ablation` (new `m3_no_amine_features` column); every number in the tables above is the re-verified, corrected one. Real effect: CYP2D6 shared-trunk tuned MCC 0.113→0.163 (+44% relative), CYP3A4 independent-head tuned 0.375→0.387 — both improved or flat, never worse.
+- **OOF Direct-Inhibition Bridge tested as a real TDI classification feature, then retracted** — see the architecture diagram's "tested, not deployed" block above for the full story (looked like the biggest win in the project, turned out to be a leak).
+- **Final assembled model built and producing real predictions** (`cypmode.challenge.final_assembly` + `final_assembly_cyp2d6`, split across two files/processes per this codebase's torch/lightgbm isolation discipline): CYP3A4 = independent-head LightGBM on m3_no_amine_features + KNN, tuned threshold; CYP2D6 = shared trunk on m3_no_amine_features alone, tuned threshold. Fit on all labeled training data, predicts on the real 750-row blinded test set, validated against `cypmode.challenge.submission`'s real schema checker. Written to `submissions/tdi_track/tdi_track_submission.csv`.
+- **CYP2D6 structural pipeline: first real validation run succeeded.** Boltz-2 against CYP2D6 + prinomastat (target="cyp2d6", the real curl-verified UniProt P10635 sequence) correctly predicts the pyridine nitrogen coordinating the heme iron at 2.31 Å — matching PDB 3QM4's documented finding almost exactly. Same bar CYP3A4's pipeline had to clear, now cleared for CYP2D6 too.
 
 **Not yet built:**
 1. Stratified familiarity evaluation — the original motivation (does Tier 3 help disproportionately on uncertain compounds) is now moot given Tier 3's null result above; if still worth running for its own sake (structural/mechanistic augmentation generally, not Tier-3-specific), not yet done.
-2. Final assembled model + real 750-row predictions — no code yet that combines Tier 1/2 + the tested augmentation layer's practical default (M3+KNN) + OOF bridge + the now-fully-settled per-isoform model choice (independent-head for CYP3A4, shared-trunk for CYP2D6) into one final model and produces actual submission predictions. No longer blocked on Tier 3 (that question is resolved) — the real remaining blocker is simply that this assembly code hasn't been written yet.
-3. A real CYP2D6 structural pipeline — deliberately out of scope originally ("no validated CYP2D6 structural pipeline... a real research project on its own"), revisited given CYP2D6 is the real bottleneck (MCC 0.113 vs. CYP3A4's 0.375): the core machinery (`find_coordinating_cysteine`, `build_boltz_yaml`) was already generic, and the hardcoded "cyp3a4" naming blocking a real CYP2D6 run has now been fixed (`target` parameter added throughout `cypmode.validation`). Real, independently-solved CYP2D6 reference structures with bound inhibitors exist (PDB 3QM4/prinomastat — documented heme-nitrogen coordination — plus 4WNW, 5TFT/5TFU, 4XRY/4XRZ), a real basis for a CYP2D6 reference panel mirroring the CYP3A4 cryo-EM one. Not yet built.
-4. Two deliverable notebooks (full project walkthrough + self-contained educational deep-dive) — explicitly deferred until the architecture above is finished.
+2. A CYP2D6 Tier-3-equivalent structural batch — decided as due diligence despite an honest expectation of a null result (Tier 3's own null finding on CYP3A4 used the same feature type and budget size, and CYP2D6's real bottleneck looks assay-driven, not feature-driven — see the official scoring harness section's mass-spec-assay finding). 50 compounds selected by the same OOF-uncertainty method as CYP3A4's Tier 3 (`data/tdi_track/outputs/tier3_selected_compounds_cyp2d6.csv`), queued with thioridazine (the second real CYP2D6 reference compound, PDB 4WNW) as one 51-compound batch, running with `--no-affinity` for tractability. In progress.
+3. The Structure Track's own 3 PoseBusters failures (all failing the same check, `minimum_distance_to_protein`) — being re-run with `--diffusion_samples 5` and `cypmode.validation.pose_validity.select_valid_model` to find a genuinely passing pose rather than shipping a known-bad one. In progress.
+4. **Independent geometric sanity-check of the CYP2D6 reference structures — done, and it found a real, previously-wrong assumption.** Fetched the real mmCIF depositions for 3QM4 and 4WNW directly from RCSB and computed the Fe-N distance straight from the deposited crystal coordinates (not from anything Boltz-2 predicted), motivated by a real external finding (OpenADMET's own PXR structure re-refinement post: PDB depositions, cryo-EM or X-ray, shouldn't be trusted as perfect ground truth without a check). Real ligand residue codes confirmed directly from the raw HETATM records (not assumed): `PN0` for prinomastat in 3QM4, `RTZ` for thioridazine in 4WNW.
+   - **3QM4/prinomastat: independently confirmed.** Real deposited Fe-N2 distance = 2.21 A (chain A) / 2.22 A (chain B), both copies in the asymmetric unit agreeing, no suspiciously-close atom pairs in the deposited ligand geometry. Matches this project's own Boltz-2 prediction (2.31 A) to within 0.1 A. This reference is genuinely trustworthy for this claim, and the pipeline's prediction for it is accurate against the real crystal structure, not just plausible.
+   - **4WNW/thioridazine: a real, previously-unverified assumption was wrong.** This project had been treating thioridazine/4WNW as a documented Type II (heme-coordinating) reference without ever directly checking the deposited geometry. The real crystal structure shows the closest ligand nitrogen at 9.1-9.8 A from the heme iron -- nowhere near coordination range. 4WNW was almost certainly solved to demonstrate something else (an open/closed conformer study, matching an earlier session note about "two thioridazines bound in active site" / PDB 3TBG), not a Type II coordination claim. **Correction: thioridazine is not a positive (coordinating) reference the way prinomastat is** -- if our own Boltz-2 prediction for thioridazine also shows no coordination, that's the pipeline getting the real answer right, not a failure; if it predicts coordination, that would be a real Boltz-2 error worth investigating, not evidence the reference is bad.
+5. One deliverable notebook, `cypmode_notebook` (the teaching text and the laboratory notebook of the project; plan in `notebooks/PLAN.md`) — explicitly deferred until the architecture above is finished.
+
+## Update: nested evaluation, gated additions and the assembled model
+
+The deployed design described above (m3_no_amine_features with independent LightGBM heads for CYP3A4 and a shared trunk for CYP2D6, tuned
+thresholds) predates the nested evaluation harness. The current TDI engine is documented in the README (architecture sketches for both
+tracks), in `METHOD_REPORT.md` and `NEGATIVE_RESULTS.md` (generated from the run logs by `cypmode/audit/method_report.py`) and in
+`audit/AUDIT_REPORT.md`. In short:
+
+- Evaluation is nested cross-validation (repeats x outer x inner folds) on the population the challenge scores: both arms measured,
+  similarity to the test structures, estimated test prevalence and confident labels at two cut-offs (z0 = 1.0 and 1.96).
+- The model is a logistic stack of 23 members (boosted trees on several feature sets, forests, Tanimoto kNN/SVM, two-arm regressors),
+  calibrated per isoform, called by a pre-declared multiple of the scored prevalence.
+- Every addition (physics blocks, SAR pair and matched-pair models, label-process committee, frozen embeddings, test-likeness weighting,
+  floor-clipped arms, selection-aware CYP2D6 model) is a candidate group that enters the stack only when its pre-registered gate is met:
+  corrected resampled t below 0.05 at both cut-offs, alone and inside the stack. `cypmode/challenge/final_tdi_build.py` applies the gates.
+- The structure track uses Boltz-2 (optionally OpenFold3) with levers that each pass a gate on the crystal-anchored benchmark;
+  `cypmode/validation/final_recipe.py` maps the verdicts to the recipe.
+
+Significance statements in the sections above that rest on Tukey's HSD were recomputed from their saved per-fold scores with the paired
+corrected resampled t (Holm-adjusted); where the two differ the paired result is the one stated.
+
+Additions to the engine since that section was written, each behind its own gate:
+
+- Physics blocks (GFN2-xTB through tblite, in a separate process): tier A (133 columns: molecule, atom, site-role and pharmacophore
+  geometry), a compact variant that keeps the 20 columns with the largest gain chosen from the training rows of each task
+  (`lgbm_clf_select`), tier B (Boltzmann-weighted conformers and locally relaxed hydrogen abstraction), and the same block inside the
+  selection-aware CYP2D6 model (`population_physics.py`).
+- Replicate design with 10 outer folds (`replicate_verdict.py`, `final_tdi_build.py --design 10`) for the physics additions; the variance
+  factor of the corrected resampled t drops from 0.317 to 0.144.
+- Hedged blend of the hits-only and selection-aware CYP2D6 stacks (`hedged_blend.py`) and a label-shift estimate of the never-promoted
+  share of the test structures (`test_nonhit_share.py`); the blend is written as a candidate only if its minimax gate is met.
+- Structure track: pose terms that use the ligand and pocket physics (`pose_awareness.py`: match to the xTB conformer ensemble, burial,
+  contacts, clashes, Fe-donor error, oxidation-site window), SAR consistency across analogs (`series.py`, `series_consensus.py`), the
+  heme-frame prior and expected-improvement sampling; `final_recipe.py` combines the terms whose gates are met and lists, for every
+  official ligand, the measured CYP3A4 values of the same compound in the TDI training file.
+- Tooling: `cypmode/audit/checklist.py` (`--status`), `cypmode/audit/public_readiness.py`, `scripts/reproduce_tdi.sh`,
+  `python -m notebooks.build_notebook`.
+- Cryo-EM protein templates (`cryoem_templates.py`): the five cryo-EM CYP3A4 entries 38FU-38FY (chain A of each trimer) as one more pose-diversity lever, judged by the same pilot gate as the crystal-conformer, seed and step-scale levers.
+- Cross-isoform arm transfer (`xiso_transfer.py`): the assay arms of the other isoforms, predicted from structure with cross-fitted regressors, as features of the target-isoform classifier; same gate as every other addition.
+
+## Final state of the engine (generated)
+
+The tables below are written by `cypmode/audit/docs_state.py` from the final build, the logs of the gates and the structure recipe; they are rewritten whenever those change.
+
+### TDI stack
+
+<!-- generated:final-stack begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
+Final stack per isoform, from the nested cross-validation on the population the challenge scores (z0 is the confidence cut-off of the label weights; MCC is at the rate transferred from the scored prevalence):
+
+| isoform | stack | members | groups added by a met gate | AUC (z0 1.0) | AUC (z0 1.96) | MCC (z0 1.0 / 1.96) |
+| --- | --- | --- | --- | --- | --- | --- |
+| CYP3A4 | default | 23 | none | 0.817 | 0.844 | 0.442 / 0.487 |
+| CYP2D6 | default | 23 | none | 0.731 | 0.754 | 0.167 / 0.204 |
+
+Members of the default stack: k-nearest neighbours (Tanimoto) (3), support vector machine (Tanimoto kernel) (3), LightGBM classifier (11), extremely randomised trees (1), random forest (1), LightGBM regressor of the arm shift (2), LightGBM regressors of the two arms (2); 23 members in all.
+<!-- generated:final-stack end -->
+
+### Structure recipe
+
+<!-- generated:structure-recipe begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
+How the 20 poses of the submitted zip were chosen, from the verdicts of the gates and the recipe that reads them (`cypmode/validation/final_recipe.py`):
+
+- restraint 'bond': gate MET
+- diversity levers: none (no pilot gate MET)
+- Boltz only: engine_consensus not MET
+- selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)
+- extra samples allocated uniformly: ei_sampling not MET
+- margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)
+- force-field relaxation of the chosen poses: (pending: job 243)
+<!-- generated:structure-recipe end -->

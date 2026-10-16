@@ -1,0 +1,14 @@
+/Volumes/Data/CYPMode/.venv/lib/python3.13/site-packages/sklearn/svm/_base.py:1295: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(
+
+CYP2D6: sensitivity to the share of non-hits in the evaluation population (weight multiplier on never-measured compounds)
+  z0=1.0  non-hit weight 0.0  | S0 AUC 0.681 MCC +0.195 | S1 AUC 0.683 MCC +0.112 | S2 AUC 0.676 MCC +0.127 | S3 AUC 0.673 MCC +0.145
+  z0=1.0  non-hit weight 0.1  | S0 AUC 0.637 MCC +0.121 | S1 AUC 0.581 MCC +0.084 | S2 AUC 0.583 MCC +0.108 | S3 AUC 0.577 MCC +0.096
+  z0=1.0  non-hit weight 0.25 | S0 AUC 0.606 MCC +0.088 | S1 AUC 0.535 MCC +0.050 | S2 AUC 0.551 MCC +0.041 | S3 AUC 0.565 MCC +0.062
+  z0=1.0  non-hit weight 0.5  | S0 AUC 0.583 MCC +0.053 | S1 AUC 0.577 MCC +0.060 | S2 AUC 0.611 MCC +0.084 | S3 AUC 0.621 MCC +0.087
+  z0=1.0  non-hit weight 1.0  | S0 AUC 0.562 MCC +0.030 | S1 AUC 0.720 MCC +0.101 | S2 AUC 0.724 MCC +0.101 | S3 AUC 0.728 MCC +0.126
+  z0=1.96 non-hit weight 0.0  | S0 AUC 0.679 MCC +0.212 | S1 AUC 0.686 MCC +0.124 | S2 AUC 0.682 MCC +0.167 | S3 AUC 0.677 MCC +0.169
+  z0=1.96 non-hit weight 0.1  | S0 AUC 0.630 MCC +0.127 | S1 AUC 0.552 MCC +0.063 | S2 AUC 0.554 MCC +0.092 | S3 AUC 0.553 MCC +0.093
+  z0=1.96 non-hit weight 0.25 | S0 AUC 0.603 MCC +0.060 | S1 AUC 0.524 MCC +0.027 | S2 AUC 0.564 MCC +0.060 | S3 AUC 0.568 MCC +0.042
+  z0=1.96 non-hit weight 0.5  | S0 AUC 0.584 MCC +0.049 | S1 AUC 0.695 MCC +0.100 | S2 AUC 0.711 MCC +0.122 | S3 AUC 0.715 MCC +0.130
+  z0=1.96 non-hit weight 1.0  | S0 AUC 0.554 MCC +0.014 | S1 AUC 0.757 MCC +0.095 | S2 AUC 0.756 MCC +0.090 | S3 AUC 0.760 MCC +0.104

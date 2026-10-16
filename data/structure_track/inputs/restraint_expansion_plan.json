@@ -1,0 +1,56 @@
+{
+  "registered": "2026-10-12",
+  "question": "Does the iron-nitrogen bond restraint improve the first predicted pose of ligands that were not used to decide it?",
+  "why": "The restraint was adopted on a benchmark of six ligands run both ways, where two ligands carry most of the gain; the official score is LDDT-PLI against the crystal-like truth. This plan fixes, before any result exists, which new ligands are run, how they are scored, and what each outcome changes.",
+  "eligibility": {
+    "source": "data/structure_track/inputs/cyp3a4_reference_ligands.json (the CYP3A4 co-crystal ligands of the PDB)",
+    "one_row_per": "distinct ligand (InChIKey connectivity block), the entry with the best resolution",
+    "has_type_ii_donor": "heme_donor_atom(smiles) is not None, the condition under which the final recipe applies the restraint",
+    "organic_only": "elements in C N O F S Cl Br I P, a single fragment",
+    "max_resolution_angstrom": 3.5,
+    "not_in_benchmark": "the connectivity block is not one of the ligands of structure_benchmark.csv",
+    "strata": {
+      "primary": {
+        "min_heavy_atoms": 8,
+        "max_heavy_atoms": 30,
+        "note": "the size range of the official ligands (18 to 27 heavy atoms) extended to 30; every eligible ligand is run, nothing is picked"
+      },
+      "secondary": {
+        "min_heavy_atoms": 31,
+        "max_heavy_atoms": 34,
+        "note": "slightly larger ligands, reported separately and never used for the decision"
+      }
+    }
+  },
+  "design": {
+    "engine": "Boltz-2, the settings of the benchmark runs of jobs 100 and 110 (one diffusion sample at a time, the target's MSA)",
+    "conditions": [
+      "unguided",
+      "bond restraint on the donor nitrogen"
+    ],
+    "samples_per_condition": 2,
+    "naming": "exp-<component id> for the unguided run, exp-<component id>-febond for the restrained run"
+  },
+  "endpoints": {
+    "unit": "ligand",
+    "score_of_a_ligand_in_a_condition": "mean over its samples of the LDDT-PLI to the crystal pose (best over the crystal copies of the ligand)",
+    "primary_difference": "score under the restraint minus score without it",
+    "primary_test": "one-sided Wilcoxon signed-rank test that the difference is positive, on the primary stratum",
+    "alpha": 0.05,
+    "robustness": "the mean difference is positive and stays positive when any one ligand is dropped",
+    "secondary": [
+      "the same test on the RMSD to the crystal pose (negated)",
+      "the primary difference by whether the crystal nitrogen coordinates the iron (closest ligand atom to the iron at most 2.6 A) or not",
+      "the share of first samples that pass PoseBusters in each condition",
+      "the same analysis on the secondary stratum",
+      "the primary difference by whether the entry was deposited before or after 2023-06-01, the end of the structure training data reported for Boltz-2",
+      "the same test with ligands of one chemical series (connected components of Tanimoto similarity >= 0.5 on Morgan radius-2 fingerprints) averaged into one unit, because several eligible ligands are close analogs"
+    ],
+    "series_similarity_threshold": 0.5
+  },
+  "decisions": {
+    "confirmed": "primary test significant and robust: the restraint is confirmed on ligands that were not used to decide it",
+    "harm": "the one-sided test that the difference is negative is significant at alpha: the restraint is withdrawn from the final recipe",
+    "otherwise": "the restraint stays as decided by its earlier gate and is reported as not confirmed on the new ligands"
+  }
+}

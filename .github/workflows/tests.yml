@@ -47,6 +47,9 @@ jobs:
       - name: Run tests (main group)
         run: pytest -v
 
+      - name: Checklist consistency
+        run: python -m cypmode.audit.checklist
+
       # These three test files each need an extra dependency (torch or
       # tblite) that segfaults/deadlocks if imported into the same process
       # as LightGBM -- see tests/test_multitask.py's own marker and
@@ -64,5 +67,5 @@ jobs:
       - name: Run tests (ChemBERTa/torch, isolated)
         run: pytest -v tests/test_chemberta_features.py
 
-      - name: Run tests (quantum-pharmacophore/tblite, isolated)
-        run: pytest -v tests/test_quantum_pharmacophore.py
+      - name: Run tests (quantum-pharmacophore and physics blocks/tblite, isolated)
+        run: pytest -v tests/test_quantum_pharmacophore.py tests/test_physics_block.py tests/test_physics_tierb.py

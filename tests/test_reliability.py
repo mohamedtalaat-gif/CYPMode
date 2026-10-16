@@ -104,3 +104,25 @@ def test_validate_reliability_correlation_handles_missing_values():
     error = np.array([0, 1, 0, 1, 0, 1, 0, 1])
     result = validate_reliability_correlation(reliability_df, error)
     assert result.iloc[0]["n"] == 6  # 2 NaNs dropped
+
+
+def test_compute_reliability_score_includes_committee_components_when_given():
+    df = compute_reliability_score(
+        np.array([0.1, 0.2]),
+        np.array([0.3, 0.4]),
+        committee_vote_entropy_values=np.array([0.0, 0.69]),
+        committee_spread_values=np.array([0.05, 0.3]),
+        boundary_margin_values=np.array([-0.2, -1.5]),
+    )
+    assert {"committee_vote_entropy", "committee_spread", "boundary_margin"} <= set(df.columns)
+
+
+def test_committee_components_maps_a_deploy_frame_onto_the_reliability_arguments():
+    import pandas as pd
+
+    from cypmode.challenge.reliability import committee_components
+
+    frame = pd.DataFrame({"qbc_vote_entropy": [0.1, 0.2], "qbc_spread": [0.3, 0.4], "boundary_margin": [-1.0, -2.0]})
+    kwargs = committee_components(frame)
+    df = compute_reliability_score(np.zeros(2), np.zeros(2), **kwargs)
+    assert df["committee_spread"].tolist() == [0.3, 0.4] and df["boundary_margin"].tolist() == [-1.0, -2.0]

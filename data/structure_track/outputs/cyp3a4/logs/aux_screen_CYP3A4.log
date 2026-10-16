@@ -1,0 +1,26 @@
+2026-10-15 14:06:27,717 scrblk_A_deep: 10/79 tasks
+2026-10-15 14:09:39,078 scrblk_A_deep: 20/79 tasks
+2026-10-15 14:12:54,786 scrblk_A_deep: 30/79 tasks
+2026-10-15 14:15:45,221 scrblk_A_deep: 40/79 tasks
+2026-10-15 14:18:45,610 scrblk_A_deep: 50/79 tasks
+2026-10-15 14:21:46,064 scrblk_A_deep: 60/79 tasks
+2026-10-15 14:24:42,695 scrblk_A_deep: 70/79 tasks
+2026-10-15 14:27:18,166 scrblk_A_deep: 79/79 tasks
+2026-10-15 14:27:54,663 scrblk_A+fps_deep: 10/79 tasks
+2026-10-15 14:28:31,590 scrblk_A+fps_deep: 20/79 tasks
+2026-10-15 14:29:09,955 scrblk_A+fps_deep: 30/79 tasks
+2026-10-15 14:29:47,363 scrblk_A+fps_deep: 40/79 tasks
+2026-10-15 14:30:22,276 scrblk_A+fps_deep: 50/79 tasks
+2026-10-15 14:31:03,065 scrblk_A+fps_deep: 60/79 tasks
+2026-10-15 14:31:40,857 scrblk_A+fps_deep: 70/79 tasks
+2026-10-15 14:32:14,606 scrblk_A+fps_deep: 79/79 tasks
+
+CYP3A4: 15 outer folds; base stack 23 candidates; added candidates cached: ['scrblk_A_deep', 'scrblk_A+fps_deep']
+  z0=1.0  alone  scrblk_A_deep            vs lgbm_A_deep     : AUC 0.7850 -> 0.7929 (+0.0079, p=0.192, better 10/15) | AP +0.0144 (p=0.188)
+  z0=1.0  alone  scrblk_A+fps_deep        vs lgbm_A+fps_deep : AUC 0.8027 -> 0.8070 (+0.0043, p=0.460, better 9/15) | AP +0.0048 (p=0.647)
+  z0=1.0  stacked base+added vs base: AUC +0.0001 (p=0.916, better 10/15) AP +0.0003 (p=0.825, better 9/15)
+  z0=1.96 alone  scrblk_A_deep            vs lgbm_A_deep     : AUC 0.8192 -> 0.8259 (+0.0067, p=0.415, better 9/15) | AP +0.0122 (p=0.283)
+  z0=1.96 alone  scrblk_A+fps_deep        vs lgbm_A+fps_deep : AUC 0.8354 -> 0.8378 (+0.0024, p=0.706, better 6/15) | AP +0.0040 (p=0.727)
+  z0=1.96 stacked base+added vs base: AUC +0.0008 (p=0.607, better 11/15) AP +0.0020 (p=0.284, better 12/15)
+CYP3A4 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

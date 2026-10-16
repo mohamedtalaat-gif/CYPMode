@@ -1,0 +1,42 @@
+2026-10-08 02:12:45,893 lgbm_A+ctx_deep: 10/79 tasks
+2026-10-08 02:13:04,887 lgbm_A+ctx_deep: 20/79 tasks
+2026-10-08 02:13:24,421 lgbm_A+ctx_deep: 30/79 tasks
+2026-10-08 02:13:45,592 lgbm_A+ctx_deep: 40/79 tasks
+2026-10-08 02:14:06,256 lgbm_A+ctx_deep: 50/79 tasks
+2026-10-08 02:14:26,483 lgbm_A+ctx_deep: 60/79 tasks
+2026-10-08 02:14:46,654 lgbm_A+ctx_deep: 70/79 tasks
+2026-10-08 02:15:04,870 lgbm_A+ctx_deep: 79/79 tasks
+2026-10-08 02:15:23,003 lgbm_A+ctx_deep_cdrop10: 10/79 tasks
+2026-10-08 02:15:41,048 lgbm_A+ctx_deep_cdrop10: 20/79 tasks
+2026-10-08 02:15:59,445 lgbm_A+ctx_deep_cdrop10: 30/79 tasks
+2026-10-08 02:16:18,011 lgbm_A+ctx_deep_cdrop10: 40/79 tasks
+2026-10-08 02:16:36,402 lgbm_A+ctx_deep_cdrop10: 50/79 tasks
+2026-10-08 02:16:54,965 lgbm_A+ctx_deep_cdrop10: 60/79 tasks
+2026-10-08 02:17:10,721 lgbm_A+ctx_deep_cdrop10: 70/79 tasks
+2026-10-08 02:17:25,366 lgbm_A+ctx_deep_cdrop10: 79/79 tasks
+2026-10-08 02:17:56,754 lgbm_A+fps+ctx_deep: 10/79 tasks
+2026-10-08 02:18:29,798 lgbm_A+fps+ctx_deep: 20/79 tasks
+2026-10-08 02:19:05,280 lgbm_A+fps+ctx_deep: 30/79 tasks
+2026-10-08 02:19:41,520 lgbm_A+fps+ctx_deep: 40/79 tasks
+2026-10-08 02:20:16,781 lgbm_A+fps+ctx_deep: 50/79 tasks
+2026-10-08 02:20:54,357 lgbm_A+fps+ctx_deep: 60/79 tasks
+2026-10-08 02:21:32,556 lgbm_A+fps+ctx_deep: 70/79 tasks
+2026-10-08 02:22:04,935 lgbm_A+fps+ctx_deep: 79/79 tasks
+2026-10-08 02:22:37,933 lgbm_A+fps+ctx_deep_cdrop10: 10/79 tasks
+2026-10-08 02:23:11,379 lgbm_A+fps+ctx_deep_cdrop10: 20/79 tasks
+2026-10-08 02:23:48,373 lgbm_A+fps+ctx_deep_cdrop10: 30/79 tasks
+2026-10-08 02:24:22,618 lgbm_A+fps+ctx_deep_cdrop10: 40/79 tasks
+2026-10-08 02:24:57,277 lgbm_A+fps+ctx_deep_cdrop10: 50/79 tasks
+2026-10-08 02:25:37,814 lgbm_A+fps+ctx_deep_cdrop10: 60/79 tasks
+2026-10-08 02:26:20,288 lgbm_A+fps+ctx_deep_cdrop10: 70/79 tasks
+2026-10-08 02:27:00,235 lgbm_A+fps+ctx_deep_cdrop10: 79/79 tasks
+
+CYP2D6: 15 outer folds; evaluation = similarity x prevalence x confident rows
+  z0=1.0  lgbm_A+ctx_deep              vs plain: AUC 0.6964 -> 0.6972 (+0.0007, p=0.941, better 7/15) | AP +0.0071 (p=0.586)
+  z0=1.0  lgbm_A+fps+ctx_deep          vs plain: AUC 0.7185 -> 0.7223 (+0.0038, p=0.760, better 7/15) | AP -0.0249 (p=0.548)
+  z0=1.0  lgbm_A+ctx_deep_cdrop10      vs plain: AUC 0.7059 -> 0.7031 (-0.0028, p=0.768, better 6/15) | AP -0.0138 (p=0.460)
+  z0=1.0  lgbm_A+fps+ctx_deep_cdrop10  vs plain: AUC 0.7347 -> 0.7335 (-0.0012, p=0.906, better 7/15) | AP -0.0085 (p=0.675)
+  z0=1.96 lgbm_A+ctx_deep              vs plain: AUC 0.7267 -> 0.7274 (+0.0007, p=0.962, better 6/15) | AP +0.0054 (p=0.826)
+  z0=1.96 lgbm_A+fps+ctx_deep          vs plain: AUC 0.7396 -> 0.7460 (+0.0064, p=0.723, better 8/15) | AP -0.0367 (p=0.524)
+  z0=1.96 lgbm_A+ctx_deep_cdrop10      vs plain: AUC 0.7435 -> 0.7444 (+0.0009, p=0.947, better 9/15) | AP -0.0127 (p=0.573)
+  z0=1.96 lgbm_A+fps+ctx_deep_cdrop10  vs plain: AUC 0.7509 -> 0.7483 (-0.0026, p=0.832, better 6/15) | AP +0.0011 (p=0.961)

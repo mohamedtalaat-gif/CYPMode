@@ -1,0 +1,10 @@
+Molecule_Name,SMILES,Template_PDB,Diffusion_Samples
+bench-A1CIW-em1,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,38FU,1
+bench-A1CIW-em2,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,38FV,1
+bench-A1CIW-em3,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,38FX,1
+bench-PK9-em1,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,38FU,1
+bench-PK9-em2,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,38FV,1
+bench-PK9-em3,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,38FX,1
+bench-TPF-em1,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,38FU,1
+bench-TPF-em2,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,38FV,1
+bench-TPF-em3,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,38FX,1

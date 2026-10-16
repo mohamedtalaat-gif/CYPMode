@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 from cypmode.validation.constants import COORDINATION_DISTANCE_CUTOFF_A as COORDINATION_CUTOFF_A
 
 ROOT = Path(__file__).resolve().parents[2]
-SUMMARY_PATH = ROOT / "data" / "structure_track" / "outputs" / "validation_summary.json"
+SUMMARY_PATH = ROOT / "data" / "structure_track" / "outputs" / "cyp3a4" / "validation_summary.json"
 OUT_DIR = Path(__file__).resolve().parent
 
 # Light matches a plain white page; dark matches GitHub's own dark-theme

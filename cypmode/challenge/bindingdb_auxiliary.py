@@ -180,7 +180,7 @@ def _main() -> None:
 
         cyp_df = tdi_df.dropna(subset=[f"{cyp}_is_TDI"]).reset_index(drop=True)
         y = cyp_df[f"{cyp}_is_TDI"].astype(int).to_numpy()
-        m3_features = np.stack(cyp_df["m3_features"])
+        m3_features = np.stack(cyp_df["m3_no_amine_features"])
         m5_features = np.hstack([m3_features, cyp_df[[f"bdb_{cyp}_activity_proba"]].to_numpy()])
 
         kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
@@ -208,7 +208,7 @@ def _main() -> None:
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+BindingDB={results['mcc_m3_plus_bindingdb'].mean():.4f}")
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/tdi_track/outputs/bindingdb_auxiliary_ablation.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/bindingdb_auxiliary_ablation.csv")
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

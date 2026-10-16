@@ -76,7 +76,7 @@ KETOCONAZOLE_SMILES = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2
 VARDENAFIL_SMILES = "CCCc1nc(C)c2c(=O)nc(-c3cc(S(=O)(=O)N4CCN(CC)CC4)ccc3OCC)[nH]n12"
 OCNT_2395436_SMILES = "CC(C)(C)NS(=O)(=O)C1(CNC2=C(Br)C=NC=C2C#N)CCC1"
 
-RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_ketoconazole")
+RESULT_DIR = Path("data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_ketoconazole")
 CIF_PATH = RESULT_DIR / "predictions" / "cyp3a4_ketoconazole" / "cyp3a4_ketoconazole_model_0.cif"
 
 pytestmark = pytest.mark.skipif(
@@ -104,7 +104,7 @@ def test_motif_distance_ignores_closer_non_motif_nitrogen():
     # geometrically closest ligand nitrogen (N50, ~4.84 A) is not part of
     # any matched Type II motif. The motif-restricted distance must not
     # silently fall back to it.
-    result_dir = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_vardenafil")
+    result_dir = Path("data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_vardenafil")
     if not (result_dir / "predictions" / "cyp3a4_vardenafil" / "cyp3a4_vardenafil_model_0.cif").exists():
         pytest.skip("requires a local Boltz-2 run for vardenafil")
 
@@ -119,7 +119,7 @@ def test_motif_distance_ignores_closer_non_motif_nitrogen():
 
 
 OCNT_2311782_SMILES = "CC(C1=CC=CC(C#N)=C1)N1CCN(C(=O)NC2CCCCC2)CC1"
-OCNT_2311782_RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_OCNT-2311782")
+OCNT_2311782_RESULT_DIR = Path("data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2311782")
 
 
 @pytest.mark.skipif(
@@ -141,7 +141,7 @@ def test_summarize_compound_handles_a_real_proximity_bonding_failure():
     assert result["motif_nitrogen_distances"] == []
 
 
-OCNT_2395436_RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_OCNT-2395436")
+OCNT_2395436_RESULT_DIR = Path("data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395436")
 
 
 @pytest.mark.skipif(
@@ -215,3 +215,78 @@ def test_summarize_compound_expect_trunk_embedding_true_includes_pooled_vector(t
     assert "pooled_trunk_embedding" in result
     assert isinstance(result["pooled_trunk_embedding"], list)  # JSON-serializable, not a raw ndarray
     assert len(result["pooled_trunk_embedding"]) == 12
+
+
+OPENFOLD3_STYLE_CIF = """\
+data_test
+#
+loop_
+_atom_site.group_PDB 
+_atom_site.type_symbol 
+_atom_site.label_atom_id 
+_atom_site.label_alt_id 
+_atom_site.label_comp_id 
+_atom_site.label_asym_id 
+_atom_site.label_seq_id 
+_atom_site.pdbx_PDB_ins_code 
+_atom_site.auth_seq_id 
+_atom_site.auth_comp_id 
+_atom_site.auth_asym_id 
+_atom_site.auth_atom_id 
+_atom_site.B_iso_or_equiv 
+_atom_site.pdbx_formal_charge 
+_atom_site.label_entity_id 
+_atom_site.Cartn_x 
+_atom_site.Cartn_y 
+_atom_site.Cartn_z 
+_atom_site.pdbx_PDB_model_num 
+_atom_site.id 
+ATOM   N  N   . MET  A 1   . 1   MET  A N   54.080345 ? 3 10.490353      16.666998    -65.594154   1 1
+ATOM   C  CA  . MET  A 1   . 1   MET  A CA  51.701153 ? 3 9.095121       16.414791    -65.19926    1 2
+HETATM FE FE  . HEM  C 1   . 1   HEM  C FE  90.000000 ? 5 1.5            2.5          -3.5         1 3
+#
+"""
+
+
+def test_add_missing_occupancy_appends_one_column_header_and_one_value_per_atom_row():
+    from cypmode.validation.structures import _add_missing_occupancy
+
+    patched = _add_missing_occupancy(OPENFOLD3_STYLE_CIF).splitlines()
+    assert patched.count("_atom_site.occupancy") == 1
+    rows = [line for line in patched if line.startswith(("ATOM", "HETATM"))]
+    assert len(rows) == 3 and all(row.endswith(" 1.0") for row in rows)
+    # the new header goes after the last existing _atom_site header, before the first row
+    assert patched.index("_atom_site.occupancy") == patched.index("_atom_site.id ") + 1
+    assert patched[-1] == "#"
+
+
+def test_add_missing_occupancy_leaves_a_cif_without_an_atom_site_loop_alone():
+    from cypmode.validation.structures import _add_missing_occupancy
+
+    text = "data_x\n#\n_entry.id x\n"
+    assert _add_missing_occupancy(text) == text
+
+
+def test_load_structure_reads_an_openfold3_style_cif_that_lacks_occupancy(tmp_path):
+    from cypmode.validation.structures import find_heme_iron, load_structure
+
+    cif = tmp_path / "of3.cif"
+    cif.write_text(OPENFOLD3_STYLE_CIF)
+    structure = load_structure(cif)
+
+    atoms = list(structure.get_atoms())
+    assert [a.get_name() for a in atoms] == ["N", "CA", "FE"]
+    assert atoms[0].coord == pytest.approx([10.490353, 16.666998, -65.594154], abs=1e-4)
+    assert atoms[0].bfactor == pytest.approx(54.080345)  # OpenFold3's B-factor column is per-atom pLDDT
+    assert all(a.occupancy == 1.0 for a in atoms)
+    assert find_heme_iron(structure).get_name() == "FE"
+    assert "occupancy" not in cif.read_text()  # the source file itself is never rewritten
+
+
+def test_load_structure_still_raises_for_other_missing_columns(tmp_path):
+    from cypmode.validation.structures import load_structure
+
+    cif = tmp_path / "bad.cif"
+    cif.write_text(OPENFOLD3_STYLE_CIF.replace("_atom_site.Cartn_x \n", "_atom_site.Cartn_x_renamed \n"))
+    with pytest.raises(KeyError):
+        load_structure(cif)

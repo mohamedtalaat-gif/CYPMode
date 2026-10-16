@@ -7,7 +7,7 @@ pytest.importorskip("posebusters")
 
 from cypmode.validation.structures import load_structure
 
-RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_ketoconazole")
+RESULT_DIR = Path("data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_ketoconazole")
 CIF_PATH = RESULT_DIR / "predictions" / "cyp3a4_ketoconazole" / "cyp3a4_ketoconazole_model_0.cif"
 KETOCONAZOLE_SMILES = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2)CC1"
 
@@ -47,7 +47,7 @@ def test_check_pose_validity_reports_a_bond_length_check():
     assert "bond_lengths" in result["checks"]
 
 
-ITRACONAZOLE_RESULT_DIR = Path("data/structure_track/outputs/out/boltz_results_cyp3a4_itraconazole")
+ITRACONAZOLE_RESULT_DIR = Path("data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_itraconazole")
 ITRACONAZOLE_CIF = ITRACONAZOLE_RESULT_DIR / "predictions" / "cyp3a4_itraconazole" / "cyp3a4_itraconazole_model_0.cif"
 ITRACONAZOLE_SMILES = "CCC(C)n1ncn(-c2ccc(N3CCN(c4ccc(OCC5COC(Cn6cncn6)(c6ccc(Cl)cc6Cl)O5)cc4)CC3)cc2)c1=O"
 

@@ -1,0 +1,14 @@
+
+CYP2D6: population pool 4348 compounds, 308 positives; 15 outer folds; test prevalence 0.059
+
+  evaluation: similarity x prevalence x confident rows (z0 = 1.0)
+    S0 hits-only     outer AUC 0.5618  outer MCC at transferred rate +0.0302
+    S1 +gate         outer AUC 0.7200  outer MCC at transferred rate +0.1010 | vs S0 AUC +0.1583 (p=0.039, better 13/15) | vs S0 AP +0.0202 (p=0.413, better 10/15)
+    S2 +two-part     outer AUC 0.7245  outer MCC at transferred rate +0.1013 | vs S0 AUC +0.1627 (p=0.031, better 13/15) | vs S0 AP +0.0398 (p=0.131, better 14/15)
+    S3 +end-to-end   outer AUC 0.7278  outer MCC at transferred rate +0.1258 | vs S0 AUC +0.1660 (p=0.026, better 14/15) | vs S0 AP +0.0424 (p=0.105, better 14/15)
+
+  evaluation: similarity x prevalence x confident rows (z0 = 1.96)
+    S0 hits-only     outer AUC 0.5538  outer MCC at transferred rate +0.0142
+    S1 +gate         outer AUC 0.7573  outer MCC at transferred rate +0.0946 | vs S0 AUC +0.2035 (p=0.006, better 15/15) | vs S0 AP +0.0328 (p=0.341, better 12/15)
+    S2 +two-part     outer AUC 0.7563  outer MCC at transferred rate +0.0903 | vs S0 AUC +0.2025 (p=0.008, better 14/15) | vs S0 AP +0.0495 (p=0.167, better 13/15)
+    S3 +end-to-end   outer AUC 0.7598  outer MCC at transferred rate +0.1042 | vs S0 AUC +0.2061 (p=0.009, better 14/15) | vs S0 AP +0.0580 (p=0.094, better 13/15)

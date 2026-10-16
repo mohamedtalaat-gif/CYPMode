@@ -1,0 +1,30 @@
+
+CYP2D6: population pool 4348, 15 outer folds; v2 candidates cached: ['sel2gate_A', 'sel2two_A', 'sel2heck_A']
+
+  z0 = 1.0
+    hits-only                  outer AUC 0.5618  MCC at transferred rate +0.0302
+    V1 (v1 gate + two-part)    outer AUC 0.7245  MCC at transferred rate +0.1013
+    V2 (V1 + v2)               outer AUC 0.7307  MCC at transferred rate +0.0971
+    V2 vs V1: AUC +0.0062 (p=0.639, better 8/15) AP -0.0018 (p=0.765, better 9/15)
+    gate head to head: sel2gate_A 0.7192 vs popgate_A_deep 0.7065 (+0.0127, p=0.518, better 8/15)
+
+  z0 = 1.96
+    hits-only                  outer AUC 0.5538  MCC at transferred rate +0.0142
+    V1 (v1 gate + two-part)    outer AUC 0.7563  MCC at transferred rate +0.0903
+    V2 (V1 + v2)               outer AUC 0.7619  MCC at transferred rate +0.0863
+    V2 vs V1: AUC +0.0056 (p=0.699, better 8/15) AP +0.0010 (p=0.800, better 9/15)
+    gate head to head: sel2gate_A 0.7486 vs popgate_A_deep 0.7417 (+0.0069, p=0.773, better 9/15)
+
+  sensitivity to the share of non-hits in the scored set (weight multiplier on never-measured compounds)
+    z0=1.0  non-hit weight 0.0  | hits-only AUC 0.681 MCC +0.195 | V1 AUC 0.676 MCC +0.127 | V2 AUC 0.672 MCC +0.130
+    z0=1.0  non-hit weight 0.1  | hits-only AUC 0.637 MCC +0.121 | V1 AUC 0.583 MCC +0.108 | V2 AUC 0.573 MCC +0.076
+    z0=1.0  non-hit weight 0.25 | hits-only AUC 0.606 MCC +0.088 | V1 AUC 0.551 MCC +0.041 | V2 AUC 0.546 MCC +0.054
+    z0=1.0  non-hit weight 0.5  | hits-only AUC 0.583 MCC +0.053 | V1 AUC 0.611 MCC +0.084 | V2 AUC 0.614 MCC +0.095
+    z0=1.0  non-hit weight 1.0  | hits-only AUC 0.562 MCC +0.030 | V1 AUC 0.724 MCC +0.101 | V2 AUC 0.731 MCC +0.097
+    z0=1.96 non-hit weight 0.0  | hits-only AUC 0.679 MCC +0.212 | V1 AUC 0.682 MCC +0.167 | V2 AUC 0.675 MCC +0.134
+    z0=1.96 non-hit weight 0.1  | hits-only AUC 0.630 MCC +0.127 | V1 AUC 0.554 MCC +0.092 | V2 AUC 0.548 MCC +0.079
+    z0=1.96 non-hit weight 0.25 | hits-only AUC 0.603 MCC +0.060 | V1 AUC 0.564 MCC +0.060 | V2 AUC 0.559 MCC +0.052
+    z0=1.96 non-hit weight 0.5  | hits-only AUC 0.584 MCC +0.049 | V1 AUC 0.711 MCC +0.122 | V2 AUC 0.718 MCC +0.137
+    z0=1.96 non-hit weight 1.0  | hits-only AUC 0.554 MCC +0.014 | V1 AUC 0.756 MCC +0.090 | V2 AUC 0.762 MCC +0.086
+
+CYP2D6 GATE (V2 beats V1, corrected p < 0.05 at both z0, AUC): NOT MET

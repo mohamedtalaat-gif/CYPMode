@@ -1,0 +1,12 @@
+
+CYP2D6: 30 outer folds; base stack 23 candidates; added candidates cached: ['lgbm_phys_deep', 'lgbm_A+phys_deep', 'lgbm_A+fps+phys_deep']
+  z0=1.0  diagnostic lgbm_phys_deep: outer AUC 0.6338
+  z0=1.0  alone  lgbm_A+phys_deep         vs lgbm_A_deep     : AUC 0.6995 -> 0.7094 (+0.0099, p=0.704, better 17/30) | AP -0.0201 (p=0.548)
+  z0=1.0  alone  lgbm_A+fps+phys_deep     vs lgbm_A+fps_deep : AUC 0.7241 -> 0.7443 (+0.0202, p=0.190, better 20/30) | AP +0.0375 (p=0.202)
+  z0=1.0  stacked base+added vs base: AUC +0.0034 (p=0.494, better 18/30) AP -0.0065 (p=0.726, better 16/30)
+  z0=1.96 diagnostic lgbm_phys_deep: outer AUC 0.6204
+  z0=1.96 alone  lgbm_A+phys_deep         vs lgbm_A_deep     : AUC 0.7176 -> 0.7251 (+0.0075, p=0.810, better 16/30) | AP -0.0271 (p=0.567)
+  z0=1.96 alone  lgbm_A+fps+phys_deep     vs lgbm_A+fps_deep : AUC 0.7328 -> 0.7563 (+0.0234, p=0.206, better 20/30) | AP +0.0271 (p=0.554)
+  z0=1.96 stacked base+added vs base: AUC +0.0061 (p=0.186, better 20/30) AP -0.0029 (p=0.863, better 17/30)
+CYP2D6 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

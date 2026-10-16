@@ -1,0 +1,9 @@
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['mlp_multitask_aux_label', 'mlp_multitask_aux_shift']
+  z0=1.0  diagnostic mlp_multitask_aux_label: outer AUC 0.7122
+  z0=1.0  diagnostic mlp_multitask_aux_shift: outer AUC 0.6818
+  z0=1.0  stacked base+added vs base: AUC +0.0030 (p=0.543, better 7/15) AP -0.0015 (p=0.847, better 5/15)
+  z0=1.96 diagnostic mlp_multitask_aux_label: outer AUC 0.7383
+  z0=1.96 diagnostic mlp_multitask_aux_shift: outer AUC 0.7065
+  z0=1.96 stacked base+added vs base: AUC +0.0041 (p=0.526, better 9/15) AP -0.0072 (p=0.436, better 8/15)
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

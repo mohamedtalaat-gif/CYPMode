@@ -1,0 +1,7 @@
+group1,group2,meandiff,p-adj,lower,upper,reject
+M3,M3+KNN,-0.1273,0.4154,-0.343,0.0884,False
+M3,M3+Tier3,-0.0494,0.9319,-0.2651,0.1662,False
+M3,M3+Tier3+KNN,-0.0792,0.7715,-0.2949,0.1364,False
+M3+KNN,M3+Tier3,0.0779,0.7808,-0.1378,0.2935,False
+M3+KNN,M3+Tier3+KNN,0.0481,0.937,-0.1676,0.2637,False
+M3+Tier3,M3+Tier3+KNN,-0.0298,0.9837,-0.2455,0.1858,False

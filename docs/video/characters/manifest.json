@@ -1,0 +1,198 @@
+{
+ "model": {
+  "name": "Anima Aesthetic v1.1 (CircleStone Labs)",
+  "source": "https://huggingface.co/circlestone-labs/Anima",
+  "files": {
+   "diffusion": "3c1868387a3a1ff504bbb87c33678321965ead381fcf87afbd0264daa600c082",
+   "text_encoder": "cd2a512003e2f9f3cd3c32a9c3573f820bb28c940f73c57b1ddaa983d9223eba",
+   "vae": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f"
+  }
+ },
+ "settings": {
+  "width": 768,
+  "height": 1024,
+  "steps": 30,
+  "cfg": 4.0,
+  "sampler": "er_sde",
+  "scheduler": "simple"
+ },
+ "negative_prompt": "worst quality, low quality, score_1, score_2, score_3, blurry, jpeg artifacts, artist name, signature, watermark, text, 1girl, multiple boys, extra fingers, bad hands",
+ "members": {
+  "kai": {
+   "traits": "1boy, young man, teal hair, messy hair, short hair, green eyes, blush, goggles on head, white labcoat, rolled sleeves, green shirt, blue gloves, slim, pipette in breast pocket",
+   "seed": 1101,
+   "sprites": {
+    "calm": {
+     "source": "kai_calm_s1101.png",
+     "sha256": "4bf3e22eb4fba125d8116f9c6d525c2b81166ad47edf94fa99ee957c0ffdbcbb"
+    },
+    "blink": {
+     "source": "kai_blink.png",
+     "sha256": "b2e7cf3dc4eb046e43c293d04ad2ed1b662ddb80165245b2f9db185b061eb8c5"
+    },
+    "talk": {
+     "source": "kai_talk.png",
+     "sha256": "c8845262ff1bcce60a972bc0db0b020f3fcff8a3c48d9bef628b72be92bfce4c"
+    },
+    "happy": {
+     "source": "kai_happy.png",
+     "sha256": "1ab01c16f18871060aad5ddf4ac7e24c7c9fd0826843d899741af9d208b9f3d7"
+    }
+   }
+  },
+  "bits": {
+   "traits": "1boy, young man, orange hair, side-parted hair, purple eyes, round glasses, purple hoodie, white labcoat, headphones around neck, tall, slender",
+   "seed": 1202,
+   "sprites": {
+    "calm": {
+     "source": "bits_calm_s1202.png",
+     "sha256": "ce3dafe73863c11876108d47dddbc3a8fa2dbf405f648ec0cbbbdda8d78b06bf"
+    },
+    "blink": {
+     "source": "bits_blink.png",
+     "sha256": "a6f18fb22f00b0cd752509e0d10a7e42aadf75ca87bfeb89174effb283f57c37"
+    },
+    "talk": {
+     "source": "bits_talk.png",
+     "sha256": "d5532a9e88fb607827eccb17e3be96a9ab9696a61b7b099c16e86cd3c841c728"
+    },
+    "happy": {
+     "source": "bits_happy.png",
+     "sha256": "6b97a190b7e86e6469f7549c8dfcf49e7482bbac8242f3479b46d53fb70a295e"
+    }
+   }
+  },
+  "stacker": {
+   "traits": "1boy, adult man, brown hair, spiked hair, brown eyes, red headband, red scarf, stubble, tan skin, white labcoat, grey shirt, rolled sleeves, broad shoulders, confident",
+   "seed": 1303,
+   "sprites": {
+    "calm": {
+     "source": "stacker_calm_s1303.png",
+     "sha256": "c2f0354db4df397588c350c85254f996bbdc7aa612637368881399b7c3d87704"
+    },
+    "blink": {
+     "source": "stacker_blink.png",
+     "sha256": "462f05046835176b69bf30abcb760521f3e5c0a6118241d94d1d0cdb2a1cb2bb"
+    },
+    "talk": {
+     "source": "stacker_talk.png",
+     "sha256": "d3244156562c5dd3783a2d657b5212368c8c419ae06f17ff897f1273523b8729"
+    },
+    "happy": {
+     "source": "stacker_happy.png",
+     "sha256": "f351fc77e0fb71bb596dc0d2ba4877182e6d686eea316535106fdf0c179d7bdc"
+    }
+   }
+  },
+  "gatekeeper": {
+   "traits": "1boy, mature man, grey hair, short hair, goatee, blue eyes, wrinkles, white labcoat, white shirt, blue necktie, holding clipboard, tall, calm",
+   "seed": 1404,
+   "sprites": {
+    "calm": {
+     "source": "gatekeeper_calm_s1404.png",
+     "sha256": "72ceff0b114baacb0cb9c86ec50d3d9802877e860bd3794716d7583b370fb3dd"
+    },
+    "blink": {
+     "source": "gatekeeper_blink.png",
+     "sha256": "ed31e8897b8cab06c4dc6c2590fb1c02584d7e25468018a718f48189a9157bd1"
+    },
+    "talk": {
+     "source": "gatekeeper_talk.png",
+     "sha256": "eb220a8ec454c888d940ece46bb8257c8c74c5a37b8db37f27a9d1ed963c3c69"
+    },
+    "happy": {
+     "source": "gatekeeper_happy.png",
+     "sha256": "0afa6237d9f6d4f372b838872b63b2a9e3580861f626817819226e4e970458c5"
+    }
+   }
+  },
+  "dock": {
+   "traits": "1boy, adult man, dark skin, black hair, full beard, amber eyes, blue visor, white labcoat, orange shirt, rolled sleeves, broad shoulders, friendly",
+   "seed": 1505,
+   "sprites": {
+    "calm": {
+     "source": "dock_calm_s1505.png",
+     "sha256": "84c2640139a51148549827d5bbddf4a331be67c4a6ed4891ac3c5a0d9d791c98"
+    },
+    "blink": {
+     "source": "dock_blink.png",
+     "sha256": "a4ed1c8eb15a5aca817e94ba6a39b399436403cc90e315cc57b2a075dab52008"
+    },
+    "talk": {
+     "source": "dock_talk.png",
+     "sha256": "4408b8dd2016c88ea522317fcd07ecddf168ca3594f48bda9d15f6963087d10f"
+    },
+    "happy": {
+     "source": "dock_happy.png",
+     "sha256": "e46889066390e34eebbbc4b8816e2eab71d82ac5d504c4792bb9a8edd3ab3fd6"
+    }
+   }
+  },
+  "auditor": {
+   "traits": "1boy, adult man, navy blue hair, short hair, rectangular glasses, green eyes, tan skin, white labcoat, white shirt, green necktie, lanyard with id card, neat",
+   "seed": 1606,
+   "sprites": {
+    "calm": {
+     "source": "auditor_calm_s1606.png",
+     "sha256": "08b4d84674dd783d65c98fa4127e04874f64ef0c592c0ba90a6b799b20208de3"
+    },
+    "blink": {
+     "source": "auditor_blink.png",
+     "sha256": "4958b9026eb36bbc7984cf367f6f57bd445c4e0e1b380e2ed8943dfc91c7f30b"
+    },
+    "talk": {
+     "source": "auditor_talk.png",
+     "sha256": "c5284770413325a1b465e5caaac08efc520d049f983ff42c75d4acef70ab14b7"
+    },
+    "happy": {
+     "source": "auditor_happy.png",
+     "sha256": "1ce3d5886b49dc10130be02f029787d5953b3436706edad56b748dd6321d9e91"
+    }
+   }
+  },
+  "scout": {
+   "traits": "1boy, young man, blonde hair, messy short hair, freckles, brown eyes, binoculars around neck, white labcoat, magenta sweater, satchel strap, curious, smile",
+   "seed": 1707,
+   "sprites": {
+    "calm": {
+     "source": "scout_calm_s1707.png",
+     "sha256": "c97544461f3b0b36da7265225c5fc235920b619174c3924fb54ac8d021e4256a"
+    },
+    "blink": {
+     "source": "scout_blink.png",
+     "sha256": "8a51c23b29c309bfb6e8f2ab2aa590662bb83459524c14163e35144215558750"
+    },
+    "talk": {
+     "source": "scout_talk.png",
+     "sha256": "410e0910e2ca429ad274c5cbb44b9e7816fc9eff80ed44582e1e2e57d4767778"
+    },
+    "happy": {
+     "source": "scout_happy.png",
+     "sha256": "dbfa90305ff2b20dea58bf8946ece3301407836564eda36a6c0ce191e05e537d"
+    }
+   }
+  },
+  "foundry": {
+   "traits": "1boy, adult man, bald, thick mustache, brown eyes, safety goggles on forehead, white labcoat, cyan shirt, rolled sleeves, stocky, broad shoulders, confident",
+   "seed": 1808,
+   "sprites": {
+    "calm": {
+     "source": "foundry_calm_s1808.png",
+     "sha256": "a465c0b77101695b708349e1036d2984e03ca44f968b495cf03c903e395e5dc6"
+    },
+    "blink": {
+     "source": "foundry_blink.png",
+     "sha256": "7c12889a59aaf981a7ec77a4bd7ea4ad6e7b51e4cc37ae0fd782d7fd700b53c6"
+    },
+    "talk": {
+     "source": "foundry_talk.png",
+     "sha256": "e3bf07f2963a1b46962c866444717394153ac346d4eb3374c0465fb18e21f2b5"
+    },
+    "happy": {
+     "source": "foundry_happy.png",
+     "sha256": "40ec85b2281cd0d6cec7d9fed0c9862fc89447060151d4609aa22ba92520303d"
+    }
+   }
+  }
+ }
+}

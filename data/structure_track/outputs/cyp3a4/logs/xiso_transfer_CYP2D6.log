@@ -1,0 +1,21 @@
+CYP2D6: Spearman correlation with the other isoforms on compounds measured on both
+ other quantity   n  spearman
+CYP1A2      tdi 429     0.063
+CYP1A2   direct 427     0.059
+CYP1A2    shift 427     0.063
+CYP2C9      tdi 231    -0.142
+CYP2C9   direct 230    -0.120
+CYP2C9    shift 230    -0.045
+CYP3A4      tdi 259     0.037
+CYP3A4   direct 250     0.056
+CYP3A4    shift 250     0.061
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['xiso_A_deep', 'xiso_A+fps_deep']
+  z0=1.0  alone  xiso_A_deep              vs lgbm_A_deep     : AUC 0.6964 -> 0.6942 (-0.0022, p=0.916, better 8/15) | AP +0.0031 (p=0.907)
+  z0=1.0  alone  xiso_A+fps_deep          vs lgbm_A+fps_deep : AUC 0.7185 -> 0.7317 (+0.0132, p=0.229, better 11/15) | AP +0.0058 (p=0.888)
+  z0=1.0  stacked base+added vs base: AUC -0.0032 (p=0.719, better 5/15) AP -0.0008 (p=0.901, better 8/15)
+  z0=1.96 alone  xiso_A_deep              vs lgbm_A_deep     : AUC 0.7267 -> 0.7231 (-0.0036, p=0.879, better 6/15) | AP -0.0010 (p=0.979)
+  z0=1.96 alone  xiso_A+fps_deep          vs lgbm_A+fps_deep : AUC 0.7396 -> 0.7559 (+0.0163, p=0.216, better 11/15) | AP +0.0158 (p=0.791)
+  z0=1.96 stacked base+added vs base: AUC +0.0004 (p=0.940, better 6/15) AP -0.0009 (p=0.891, better 6/15)
+CYP2D6 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

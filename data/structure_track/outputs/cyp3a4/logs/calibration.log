@@ -1,0 +1,9 @@
+isoform   method    ece  brier   slope  intercept  mean_pred  mean_obs  gate_met
+ CYP3A4      raw 0.0431 0.1740  1.1813    -0.1630     0.3631    0.3200      True
+ CYP3A4    platt 0.0264 0.1720  1.0754     0.0940     0.3121    0.3200      True
+ CYP3A4 isotonic 0.0189 0.1726  0.9252     0.0048     0.3120    0.3200      True
+ CYP2D6      raw 0.3592 0.2087 -0.0164    -2.8100     0.4142    0.0571     False
+ CYP2D6    platt 0.0038 0.0528  1.3008     0.7904     0.0583    0.0571     False
+ CYP2D6 isotonic 0.0054 0.0521  0.8249    -0.4984     0.0593    0.0571      True
+CYP3A4: gate (ECE <= 0.05, slope in [0.8, 1.2]) met by: raw, platt, isotonic
+CYP2D6: gate (ECE <= 0.05, slope in [0.8, 1.2]) met by: isotonic

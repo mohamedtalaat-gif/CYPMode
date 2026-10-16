@@ -1,0 +1,11 @@
+compound,smiles,coordinated,closest_motif_nitrogen_distance_angstrom,closest_motif,closest_motif_atom,confidence_score,affinity_pred_value,affinity_probability_binary,error
+bench-MWS,CC(=CCOc1c2ccoc2cc3c1C=CC(=O)O3)CCC(C(C)(C)O)O,False,,,,0.9375700950622559,,,
+bench-TCI,CCCCCc1cc(c2c(c1)OC(C3C2C=C(CC3)C)(C)C)O,False,,,,0.9437482953071594,,,
+bench-2QH,Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F,True,2.23,pyridine,N28,0.931862473487854,,,
+bench-A1CIW,c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N,False,,,,0.9354031682014465,,,
+bench-YNV,CC12CCC3C(C1CCC2O)C(CC4=CC(=O)CCC34C)CC=CCC5CC6=CC(=O)CCC6(C7C5C8CCC(C8(CC7)C)O)C,False,,,,0.9126343727111816,,,
+bench-PK9,CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1,True,2.17,pyridine,N30,0.9399423599243164,,,
+bench-TPF,c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O,True,2.17,triazole_1_2_4,N15,0.9483864903450012,,,
+bench-MWV,CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F,False,15.12,imidazole,N59,0.9253055453300476,,,
+bench-A1ASV,CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F,True,2.21,imidazole_Nsub,N21,0.9608029127120972,,,
+bench-A1A4S,c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5,True,2.25,pyridine,N39,0.9460791349411011,,,

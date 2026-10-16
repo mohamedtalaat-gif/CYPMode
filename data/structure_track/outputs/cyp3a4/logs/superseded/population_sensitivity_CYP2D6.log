@@ -1,0 +1,12 @@
+
+CYP2D6: sensitivity to the share of non-hits in the evaluation population (weight multiplier on never-measured compounds)
+  z0=1.0  non-hit weight 0.0  | S0 AUC 0.655 MCC +0.125 | S1 AUC 0.643 MCC +0.050 | S2 AUC 0.627 MCC +0.060 | S3 AUC 0.609 MCC +0.061
+  z0=1.0  non-hit weight 0.1  | S0 AUC 0.606 MCC +0.084 | S1 AUC 0.485 MCC +0.013 | S2 AUC 0.516 MCC +0.048 | S3 AUC 0.524 MCC +0.015
+  z0=1.0  non-hit weight 0.25 | S0 AUC 0.579 MCC +0.080 | S1 AUC 0.517 MCC -0.001 | S2 AUC 0.530 MCC +0.018 | S3 AUC 0.532 MCC +0.044
+  z0=1.0  non-hit weight 0.5  | S0 AUC 0.562 MCC +0.043 | S1 AUC 0.669 MCC +0.122 | S2 AUC 0.687 MCC +0.148 | S3 AUC 0.701 MCC +0.174
+  z0=1.0  non-hit weight 1.0  | S0 AUC 0.532 MCC +0.049 | S1 AUC 0.790 MCC +0.165 | S2 AUC 0.797 MCC +0.130 | S3 AUC 0.800 MCC +0.163
+  z0=1.96 non-hit weight 0.0  | S0 AUC 0.668 MCC +0.197 | S1 AUC 0.646 MCC +0.046 | S2 AUC 0.622 MCC +0.023 | S3 AUC 0.597 MCC +0.080
+  z0=1.96 non-hit weight 0.1  | S0 AUC 0.613 MCC +0.121 | S1 AUC 0.499 MCC -0.010 | S2 AUC 0.514 MCC -0.008 | S3 AUC 0.509 MCC +0.013
+  z0=1.96 non-hit weight 0.25 | S0 AUC 0.591 MCC +0.092 | S1 AUC 0.522 MCC +0.034 | S2 AUC 0.559 MCC +0.087 | S3 AUC 0.564 MCC +0.102
+  z0=1.96 non-hit weight 0.5  | S0 AUC 0.579 MCC +0.074 | S1 AUC 0.766 MCC +0.156 | S2 AUC 0.770 MCC +0.142 | S3 AUC 0.774 MCC +0.159
+  z0=1.96 non-hit weight 1.0  | S0 AUC 0.546 MCC +0.024 | S1 AUC 0.821 MCC +0.167 | S2 AUC 0.823 MCC +0.130 | S3 AUC 0.823 MCC +0.147

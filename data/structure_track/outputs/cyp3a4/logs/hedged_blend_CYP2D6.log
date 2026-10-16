@@ -1,0 +1,77 @@
+
+CYP2D6: stacks fitted under non-hit weight 0.25, scored under each true weight (columns); mean outer AUC | MCC at the transferred rate
+
+  z0 = 1.0      w=0.0    w=0.1    w=0.25   w=0.4    w=0.5    w=0.68   w=1.0  
+    hits_only       0.681|+0.19  0.637|+0.12  0.606|+0.09  0.590|+0.07  0.583|+0.06  0.574|+0.05  0.565|+0.04
+    selection_aware 0.621|+0.11  0.588|+0.08  0.565|+0.06  0.553|+0.05  0.547|+0.05  0.541|+0.04  0.534|+0.03
+    blend           0.685|+0.17  0.637|+0.11  0.603|+0.07  0.585|+0.06  0.577|+0.05  0.567|+0.04  0.557|+0.03
+
+  z0 = 1.96      w=0.0    w=0.1    w=0.25   w=0.4    w=0.5    w=0.68   w=1.0  
+    hits_only       0.680|+0.21  0.631|+0.13  0.603|+0.09  0.591|+0.07  0.586|+0.06  0.579|+0.05  0.573|+0.04
+    selection_aware 0.626|+0.13  0.587|+0.08  0.566|+0.06  0.556|+0.05  0.552|+0.04  0.547|+0.04  0.542|+0.03
+    blend           0.689|+0.18  0.631|+0.11  0.599|+0.07  0.585|+0.06  0.579|+0.05  0.572|+0.04  0.565|+0.03
+
+  paired differences over outer folds, corrected resampled t on AUC (mean difference, p):
+    z0=1.0  selection_aware - hits_only        | w=0.4: -0.037 (p=0.53) | w=0.5: -0.036 (p=0.56) | w=0.68: -0.033 (p=0.60)
+    z0=1.0  blend - hits_only        | w=0.4: -0.005 (p=0.80) | w=0.5: -0.006 (p=0.79) | w=0.68: -0.007 (p=0.78)
+    z0=1.0  blend - selection_aware  | w=0.4: +0.032 (p=0.51) | w=0.5: +0.030 (p=0.55) | w=0.68: +0.027 (p=0.59)
+    z0=1.96 selection_aware - hits_only        | w=0.4: -0.035 (p=0.65) | w=0.5: -0.034 (p=0.67) | w=0.68: -0.033 (p=0.69)
+    z0=1.96 blend - hits_only        | w=0.4: -0.006 (p=0.83) | w=0.5: -0.007 (p=0.81) | w=0.68: -0.008 (p=0.80)
+    z0=1.96 blend - selection_aware  | w=0.4: +0.029 (p=0.64) | w=0.5: +0.027 (p=0.66) | w=0.68: +0.025 (p=0.69)
+
+  worst-case AUC over the plausible band (0.4, 0.5, 0.68): hits_only 0.574, selection_aware 0.541, blend 0.567
+  worst-case AUC over the whole grid:           hits_only 0.565, selection_aware 0.534, blend 0.557
+CYP2D6 GATE (hedged blend adopted by the minimax rule, fit weight 0.25): NOT MET
+CYP2D6 GATE (selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 0.25): NOT MET
+
+CYP2D6: stacks fitted under non-hit weight 0.5, scored under each true weight (columns); mean outer AUC | MCC at the transferred rate
+
+  z0 = 1.0      w=0.0    w=0.1    w=0.25   w=0.4    w=0.5    w=0.68   w=1.0  
+    hits_only       0.682|+0.17  0.638|+0.11  0.607|+0.08  0.590|+0.06  0.583|+0.05  0.574|+0.04  0.565|+0.04
+    selection_aware 0.674|+0.16  0.650|+0.13  0.633|+0.11  0.625|+0.09  0.621|+0.09  0.616|+0.08  0.612|+0.07
+    blend           0.679|+0.18  0.646|+0.14  0.622|+0.11  0.610|+0.09  0.604|+0.08  0.598|+0.07  0.591|+0.06
+
+  z0 = 1.96      w=0.0    w=0.1    w=0.25   w=0.4    w=0.5    w=0.68   w=1.0  
+    hits_only       0.681|+0.19  0.631|+0.11  0.603|+0.08  0.590|+0.06  0.585|+0.05  0.578|+0.05  0.572|+0.04
+    selection_aware 0.681|+0.17  0.658|+0.13  0.645|+0.11  0.640|+0.09  0.637|+0.09  0.635|+0.08  0.632|+0.07
+    blend           0.681|+0.21  0.646|+0.15  0.627|+0.11  0.618|+0.09  0.615|+0.08  0.611|+0.07  0.606|+0.06
+
+  paired differences over outer folds, corrected resampled t on AUC (mean difference, p):
+    z0=1.0  selection_aware - hits_only        | w=0.4: +0.035 (p=0.17) | w=0.5: +0.038 (p=0.16) | w=0.68: +0.042 (p=0.16)
+    z0=1.0  blend - hits_only        | w=0.4: +0.019 (p=0.18) | w=0.5: +0.021 (p=0.18) | w=0.68: +0.024 (p=0.18)
+    z0=1.0  blend - selection_aware  | w=0.4: -0.015 (p=0.18) | w=0.5: -0.017 (p=0.16) | w=0.68: -0.019 (p=0.15)
+    z0=1.96 selection_aware - hits_only        | w=0.4: +0.050 (p=0.16) | w=0.5: +0.053 (p=0.16) | w=0.68: +0.056 (p=0.16)
+    z0=1.96 blend - hits_only        | w=0.4: +0.028 (p=0.17) | w=0.5: +0.030 (p=0.17) | w=0.68: +0.032 (p=0.18)
+    z0=1.96 blend - selection_aware  | w=0.4: -0.021 (p=0.18) | w=0.5: -0.023 (p=0.17) | w=0.68: -0.024 (p=0.17)
+
+  worst-case AUC over the plausible band (0.4, 0.5, 0.68): hits_only 0.574, selection_aware 0.616, blend 0.598
+  worst-case AUC over the whole grid:           hits_only 0.565, selection_aware 0.612, blend 0.591
+CYP2D6 GATE (hedged blend adopted by the minimax rule, fit weight 0.5): NOT MET
+CYP2D6 GATE (selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 0.5): NOT MET
+
+CYP2D6: stacks fitted under non-hit weight 1.0, scored under each true weight (columns); mean outer AUC | MCC at the transferred rate
+
+  z0 = 1.0      w=0.0    w=0.1    w=0.25   w=0.4    w=0.5    w=0.68   w=1.0  
+    hits_only       0.661|+0.15  0.624|+0.10  0.598|+0.07  0.584|+0.05  0.578|+0.05  0.570|+0.04  0.562|+0.03
+    selection_aware 0.517|+0.03  0.595|+0.09  0.651|+0.12  0.681|+0.13  0.694|+0.13  0.710|+0.13  0.728|+0.13
+    blend           0.542|+0.03  0.608|+0.08  0.655|+0.10  0.680|+0.11  0.691|+0.11  0.705|+0.11  0.720|+0.10
+
+  z0 = 1.96      w=0.0    w=0.1    w=0.25   w=0.4    w=0.5    w=0.68   w=1.0  
+    hits_only       0.661|+0.18  0.623|+0.11  0.601|+0.07  0.591|+0.06  0.587|+0.05  0.582|+0.04  0.578|+0.04
+    selection_aware 0.537|+0.04  0.640|+0.12  0.697|+0.14  0.724|+0.15  0.735|+0.15  0.747|+0.14  0.760|+0.13
+    blend           0.568|+0.05  0.653|+0.11  0.700|+0.13  0.722|+0.13  0.730|+0.13  0.741|+0.12  0.752|+0.11
+
+  paired differences over outer folds, corrected resampled t on AUC (mean difference, p):
+    z0=1.0  selection_aware - hits_only        | w=0.4: +0.097 (p=0.16) | w=0.5: +0.117 (p=0.10) | w=0.68: +0.141 (p=0.05)
+    z0=1.0  blend - hits_only        | w=0.4: +0.097 (p=0.14) | w=0.5: +0.114 (p=0.09) | w=0.68: +0.135 (p=0.05)
+    z0=1.0  blend - selection_aware  | w=0.4: -0.001 (p=0.94) | w=0.5: -0.003 (p=0.79) | w=0.68: -0.005 (p=0.63)
+    z0=1.96 selection_aware - hits_only        | w=0.4: +0.132 (p=0.13) | w=0.5: +0.147 (p=0.09) | w=0.68: +0.165 (p=0.06)
+    z0=1.96 blend - hits_only        | w=0.4: +0.130 (p=0.11) | w=0.5: +0.143 (p=0.08) | w=0.68: +0.159 (p=0.06)
+    z0=1.96 blend - selection_aware  | w=0.4: -0.002 (p=0.88) | w=0.5: -0.004 (p=0.78) | w=0.68: -0.006 (p=0.67)
+
+  worst-case AUC over the plausible band (0.4, 0.5, 0.68): hits_only 0.570, selection_aware 0.681, blend 0.680
+  worst-case AUC over the whole grid:           hits_only 0.562, selection_aware 0.517, blend 0.542
+CYP2D6 GATE (hedged blend adopted by the minimax rule, fit weight 1.0): NOT MET
+CYP2D6 GATE (selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 1.0): NOT MET
+
+CYP2D6 fit weight with the best worst-case selection-aware AUC over the band: 1.0 (worst case 0.681)

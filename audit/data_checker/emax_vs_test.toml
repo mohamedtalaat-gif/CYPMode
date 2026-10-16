@@ -1,0 +1,14 @@
+# The organisers' data checker (https://github.com/OpenADMET/challenge-data-checker): the official Emax file against the blinded test file.
+[paths]
+train_files = ["data/tdi_track/inputs/official_extra/cyp_challenge/cyp-challenge-TRAIN_Emax.csv"]
+test_files = ["data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv"]
+report_output = "audit/data_checker/emax_vs_test.json"
+
+[columns]
+smiles_column = "SMILES"
+identifier_columns = ["Molecule_Name"]
+
+[settings]
+tautomer_standardisation = false
+max_train_test_similarity = 1.0
+report_format = "json"

@@ -1,9 +1,17 @@
 """Cross-cutting reliability score: ensemble disagreement + chemical OOD
 distance (+ Boltz-2 structural confidence, wired in once Tier 3 results
-exist). Deliberately kept outside the prediction path -- see
+exist) and, from the nested harness, the query-by-committee signals and the
+decision margin. Deliberately kept outside the prediction path -- see
 CYPMode_Architecture_Specification.md. Not called "uncertainty
 quantification" anywhere until validate_reliability_correlation shows it
-actually tracks real error; until then it's just three computed numbers.
+actually tracks real error; until then it's just computed numbers.
+
+The committee/margin components are judged by cypmode.challenge.committee_uncertainty
+on held-out nested folds, against the margin as a baseline; its decision records
+(data/tdi_track/outputs/comparisons/committee_uncertainty_decision_*.json) say, per
+component, whether it adds information and whether acting on it helps. A component
+appears in the table regardless, but only one that passes both checks may alter a
+prediction -- today none does.
 """
 
 from pathlib import Path
@@ -96,6 +104,9 @@ def compute_reliability_score(
     ood_distance_values: np.ndarray,
     svm_ood_score_values: np.ndarray | None = None,
     structural_confidence_values: np.ndarray | None = None,
+    committee_vote_entropy_values: np.ndarray | None = None,
+    committee_spread_values: np.ndarray | None = None,
+    boundary_margin_values: np.ndarray | None = None,
 ) -> pd.DataFrame:
     """Combines the components into one table (not one number by fiat --
     z-scoring and summing would itself be an unvalidated modeling choice).
@@ -114,7 +125,25 @@ def compute_reliability_score(
         out["svm_ood_score"] = svm_ood_score_values
     if structural_confidence_values is not None:
         out["structural_confidence"] = structural_confidence_values
+    for column, values in (
+        ("committee_vote_entropy", committee_vote_entropy_values),
+        ("committee_spread", committee_spread_values),
+        ("boundary_margin", boundary_margin_values),
+    ):
+        if values is not None:
+            out[column] = values
     return out
+
+
+def committee_components(deploy_signals: pd.DataFrame) -> dict[str, np.ndarray]:
+    """The keyword arguments of compute_reliability_score that a committee_uncertainty.deploy_signals
+    frame (or its saved reliability_deploy.csv) supplies.
+    """
+    return {
+        "committee_vote_entropy_values": deploy_signals["qbc_vote_entropy"].to_numpy(),
+        "committee_spread_values": deploy_signals["qbc_spread"].to_numpy(),
+        "boundary_margin_values": deploy_signals["boundary_margin"].to_numpy(),
+    }
 
 
 def validate_reliability_correlation(reliability_df: pd.DataFrame, prediction_error: np.ndarray) -> pd.DataFrame:
@@ -169,7 +198,7 @@ def _main() -> None:
     correlation = validate_reliability_correlation(reliability_df, error)
     print(correlation.to_string(index=False))
 
-    out_path = Path("data/tdi_track/outputs/reliability_correlation.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/reliability_correlation.csv")
     correlation.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

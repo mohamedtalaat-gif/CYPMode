@@ -114,14 +114,15 @@ def select_valid_model(predictions_dir: str | Path, ligand_smiles: str, max_mode
 
 def _main() -> None:
     """Runs check_pose_validity across every real, already-completed
-    structure this project has (data/structure_track/outputs/out/boltz_results_*/),
+    structure this project has for one target
+    (data/structure_track/outputs/out/{target}/boltz_results_*/),
     reading each compound's own exact ligand SMILES from its own input
     YAML -- guaranteed to match what was actually predicted, rather than
     cross-referencing separate CSV/dict sources that could drift out of
     sync with the real inputs.
 
-    --target names the protein these structures are against (used only
-    in file/directory naming) -- defaults to "cyp3a4" to match every
+    --target names the protein these structures are against (used in
+    file/directory naming) -- defaults to "cyp3a4" to match every
     existing structure this project has, but was a hardcoded literal
     until now, which would have silently found zero CYP2D6 structures
     rather than a real, distinct set of them.
@@ -139,14 +140,13 @@ def _main() -> None:
         "--out-path",
         type=Path,
         default=None,
-        help="defaults to data/structure_track/outputs/posebusters_validity.csv -- pass a "
-        "different path for a non-cyp3a4 target so it doesn't overwrite the real CYP3A4 one",
+        help="defaults to data/structure_track/outputs/{target}/posebusters_validity.csv",
     )
     args = parser.parse_args()
     target = args.target
 
     input_dir = Path("data/structure_track/inputs")
-    out_dir = Path("data/structure_track/outputs/out")
+    out_dir = Path("data/structure_track/outputs/out") / target
 
     rows = []
     for yaml_path in sorted(input_dir.glob(f"{target}_*.yaml")):
@@ -181,7 +181,7 @@ def _main() -> None:
             failing_checks = [c for c in df.columns if c not in ("compound", "all_passed", "error") and row.get(c) is False]
             print(f"  {row['compound']}: failed {failing_checks}")
 
-    out_path = args.out_path or Path("data/structure_track/outputs/posebusters_validity.csv")
+    out_path = args.out_path or Path(f"data/structure_track/outputs/{target}/posebusters_validity.csv")
     df.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

@@ -1,0 +1,6 @@
+physics: 5-fold stacked z0=1.0: +0.0027 (p=0.775); z0=1.96: +0.0050 (p=0.112) | 10-fold stacked z0=1.0: +0.0034 (p=0.494); z0=1.96: +0.0061 (p=0.186)
+CYP2D6 GATE (replicate physics, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design): NOT MET
+physics_compact: 5-fold stacked z0=1.0: -0.0022 (p=0.786); z0=1.96: +0.0034 (p=0.468) | 10-fold stacked z0=1.0: +0.0028 (p=0.394); z0=1.96: +0.0014 (p=0.687)
+CYP2D6 GATE (replicate physics_compact, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design): NOT MET
+physics_b: 5-fold stacked z0=1.0: +0.0015 (p=0.643); z0=1.96: +0.0028 (p=0.492) | 10-fold stacked z0=1.0: -0.0030 (p=0.692); z0=1.96: +0.0037 (p=0.564)
+CYP2D6 GATE (replicate physics_b, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design): NOT MET

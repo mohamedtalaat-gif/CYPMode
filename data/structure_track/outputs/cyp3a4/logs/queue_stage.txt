@@ -1,0 +1,13 @@
+18:53:41 1/4 Boltz-2, 5 samples one at a time, 10 benchmark ligands | swap used 2464.81M
+10-08 01:16:37 old queue stopped and replaced (battery was 4% off AC; AC is back)
+10-08 01:16:38 1/4 Boltz-2 unguided, 5 samples one at a time, 10 benchmark ligands | swap used 2263.12M
+10-08 01:38:11 1/4 Boltz-2 with the donor-to-iron bond restraint, 3 samples | swap used 2725.56M
+10-08 01:50:58 TDI label-confidence experiment, CYP2D6 (CPU) | swap used 7049.56M
+10-08 01:55:16 TDI label-confidence experiment, CYP3A4 (CPU) | swap used 2184.38M
+10-08 01:59:03 TDI label-confidence experiment, CYP2D6, 3 repeats x 5 folds (CPU) | swap used 1783.88M
+10-08 02:04:54 TDI label-confidence experiment, CYP3A4, 3 repeats x 5 folds (CPU) | swap used 1743.88M
+10-08 02:12:24 TDI alert-context experiment, CYP2D6, 3 repeats x 5 folds (CPU) | swap used 1655.88M
+10-08 02:27:39 TDI alert-context experiment, CYP3A4, 3 repeats x 5 folds (CPU) | swap used 1575.88M
+10-08 02:41:13 TDI experiments done -- restarting the structure queue | swap used 1543.88M
+10-08 02:41:14 1/4 Boltz-2 unguided, 5 samples one at a time, 10 benchmark ligands | swap used 1543.88M
+10-08 02:41:15 1/4 Boltz-2 with the donor-to-iron bond restraint, 3 samples | swap used 1543.88M

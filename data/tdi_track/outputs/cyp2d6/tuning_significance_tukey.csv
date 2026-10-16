@@ -1,0 +1,7 @@
+group1,group2,meandiff,p-adj,lower,upper,reject
+Baseline,Class-weighted,-0.0,1.0,-0.0468,0.0468,False
+Baseline,Seed-ensembled,0.0114,0.9202,-0.0354,0.0581,False
+Baseline,Smaller+Dropout,-0.0046,0.9939,-0.0514,0.0421,False
+Class-weighted,Seed-ensembled,0.0114,0.92,-0.0354,0.0582,False
+Class-weighted,Smaller+Dropout,-0.0046,0.994,-0.0514,0.0422,False
+Seed-ensembled,Smaller+Dropout,-0.016,0.808,-0.0628,0.0308,False

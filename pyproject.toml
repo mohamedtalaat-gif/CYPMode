@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Mode-aware (Type I / Type II) reinterpretation of TDC's binary CYP450 inhibition benchmarks"
 authors = [{name = "Muhammad Talaat"}]
 readme = "README.md"
-license = {text = "MIT"}
+license = {text = "MIT OR Apache-2.0"}
 requires-python = ">=3.10"
 # Floors match what this project is actually tested against (see
 # requirements.txt's exact pins for the hosted-deployment target). rdkit is
@@ -40,11 +40,13 @@ dev = ["pytest"]
 # build error, while macOS/Linux passed). None of that is needed for the
 # tdc.single_pred.ADME path this project actually uses -- this extra lists
 # just the real runtime dependencies of that path, installed normally.
-# setuptools<81 is pinned because PyTDC imports pkg_resources at import
-# time, which modern setuptools no longer bundles -- confirmed directly by
-# a clean install failing with ModuleNotFoundError: pkg_resources otherwise.
+# No setuptools pin here: PyTDC's own pkg_resources imports (in
+# oracles.py and metadata.py, the two modules on this project's actual
+# tdc.single_pred.ADME import path) are patched in the local vendored
+# copy at third_party/TDC-main to use importlib.metadata instead --
+# pinning setuptools<81 to keep pkg_resources around would otherwise
+# force a version with a known CVE (PYSEC-2026-3447, fixed in 83.0.0+).
 tdc = [
-    "setuptools<81",
     "fuzzywuzzy",
     "huggingface_hub",
     "openpyxl",
@@ -129,4 +131,20 @@ markers = [
 # and that import alone is what crashes/hangs the process -- confirmed
 # directly for test_multitask.py and test_chemberta_features.py
 # (segfault, exit 139) and test_quantum_pharmacophore.py (deadlock).
-addopts = "--ignore=tests/test_multitask.py --ignore=tests/test_quantum_pharmacophore.py --ignore=tests/test_chemberta_features.py"
+addopts = "--ignore=tests/test_multitask.py --ignore=tests/test_multitask_no_standardization_leak.py --ignore=tests/test_nested_runners_torch.py --ignore=tests/test_quantum_pharmacophore.py --ignore=tests/test_physics_block.py --ignore=tests/test_physics_tierb.py --ignore=tests/test_chemberta_features.py --ignore=tests/test_final_assembly_cyp2d6.py"
+
+[tool.ruff.lint]
+# Ruff's own defaults include flake8-bandit (S) and flake8-blind-except
+# (BLE) rules that fire on two patterns used deliberately, repeatedly,
+# and documented throughout this codebase -- not oversights:
+#   BLE001/S112 "blind except" / "try-except-continue": real, intentional
+#     resilience in batch/retry code (cypmode.validation.batch.run_batch,
+#     cypmode.validation.pose_validity.select_valid_model) -- one bad
+#     compound or one failed model sample must not kill the rest of a
+#     real multi-hour Boltz-2 batch. Narrowing these to a specific
+#     exception type would defeat the actual purpose (any failure mode,
+#     not just the ones anticipated in advance, must not be fatal here).
+# Everything else stays at ruff's real defaults (pyflakes/pycodestyle) --
+# this ignore list is scoped to these two rules specifically, not a
+# blanket loosening.
+ignore = ["BLE001", "S112"]

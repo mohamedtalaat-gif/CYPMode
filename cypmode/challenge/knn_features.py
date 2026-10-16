@@ -88,7 +88,7 @@ def add_knn_label_features_for_fold(
 
 
 def cross_validate_with_knn_features(
-    df: pd.DataFrame, label_col: str, feature_col: str = "m3_features", k: int = 10, n_splits: int = 5, random_state: int = 42
+    df: pd.DataFrame, label_col: str, feature_col: str = "m3_no_amine_features", k: int = 10, n_splits: int = 5, random_state: int = 42
 ) -> pd.DataFrame:
     """Same fold-internal protocol as the rest of cypmode.challenge:
     outer StratifiedKFold, KNN features built fold-internally (see above),
@@ -144,7 +144,7 @@ def _main() -> None:
         print(f"{cyp}: mean MCC M3={results['mcc_m3'].mean():.4f}, M3+KNN={results['mcc_m3_plus_knn'].mean():.4f}")
 
     combined = pd.concat(all_results, ignore_index=True)
-    out_path = Path("data/tdi_track/outputs/knn_features_ablation.csv")
+    out_path = Path("data/tdi_track/outputs/comparisons/knn_features_ablation.csv")
     combined.to_csv(out_path, index=False)
     print(f"\nwrote {out_path}")
 

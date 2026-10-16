@@ -1,0 +1,15 @@
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['committee_m_A+fps', 'committee_p_A+fps', 'committee_ei_A+fps']
+  z0=1.0  diagnostic committee_m_A+fps: outer AUC 0.6411
+  z0=1.0  diagnostic committee_p_A+fps: outer AUC 0.6394
+  z0=1.0  diagnostic committee_ei_A+fps: outer AUC 0.6328
+  z0=1.0  stacked base+added vs base: AUC -0.0070 (p=0.615, better 6/15) AP -0.0016 (p=0.909, better 6/15)
+  z0=1.96 diagnostic committee_m_A+fps: outer AUC 0.6764
+  z0=1.96 diagnostic committee_p_A+fps: outer AUC 0.6761
+  z0=1.96 diagnostic committee_ei_A+fps: outer AUC 0.6698
+  z0=1.96 stacked base+added vs base: AUC -0.0059 (p=0.758, better 8/15) AP -0.0051 (p=0.891, better 9/15)
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET
+
+CYP2D6: calibration of committee_p_A+fps exactly as it comes out (no recalibration); gate ECE <= 0.05, slope in [0.8, 1.2]
+  z0=1.0  ECE 0.3059  Brier 0.1266  slope 4.215  mean predicted 0.338 vs observed 0.039  -> calibration gate NOT MET
+  z0=1.96 ECE 0.3125  Brier 0.1259  slope 5.496  mean predicted 0.338 vs observed 0.041  -> calibration gate NOT MET

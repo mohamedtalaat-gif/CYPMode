@@ -21,7 +21,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 OUT_DIR = ROOT / "data" / "structure_track" / "outputs" / "out"
 INPUT_DIR = ROOT / "data" / "structure_track" / "inputs"
-SUMMARY_PATH = ROOT / "data" / "structure_track" / "outputs" / "validation_summary.json"
 
 _SMILES_LINE = re.compile(r"smiles:\s*'([^']*)'")
 
@@ -42,12 +41,14 @@ def _read_ligand_smiles(yaml_path: Path) -> str:
 
 def discover_compounds(target: str = "cyp3a4") -> list[str]:
     """Compound names with both a finished Boltz-2 run and an input YAML,
-    for the given target protein (used only in file/directory naming --
-    was a hardcoded "cyp3a4" literal until now, which would have silently
-    found zero CYP2D6 runs rather than a real, distinct set of them).
+    for the given target protein. Boltz-2 output is nested by target
+    (data/structure_track/outputs/out/{target}/, mirroring
+    cypmode.validation.pipeline's own out_dir nesting) so CYP3A4 and
+    CYP2D6 runs are never mixed in one flat directory.
     """
     names = []
-    for result_dir in sorted(OUT_DIR.glob(f"boltz_results_{target}_*")):
+    target_out_dir = OUT_DIR / target
+    for result_dir in sorted(target_out_dir.glob(f"boltz_results_{target}_*")):
         name = result_dir.name.removeprefix(f"boltz_results_{target}_")
         if (INPUT_DIR / f"{target}_{name}.yaml").exists():
             names.append(name)
@@ -57,17 +58,19 @@ def discover_compounds(target: str = "cyp3a4") -> list[str]:
 def main(target: str = "cyp3a4", summary_path: Path | None = None) -> None:
     from cypmode.validation.structures import summarize_compound
 
+    target_out_dir = OUT_DIR / target
     compounds = discover_compounds(target)
     if not compounds:
-        raise SystemExit(f"no finished Boltz-2 runs found under {OUT_DIR} for target={target!r}")
+        raise SystemExit(f"no finished Boltz-2 runs found under {target_out_dir} for target={target!r}")
 
     results = {}
     for name in compounds:
-        result_dir = OUT_DIR / f"boltz_results_{target}_{name}"
+        result_dir = target_out_dir / f"boltz_results_{target}_{name}"
         ligand_smiles = _read_ligand_smiles(INPUT_DIR / f"{target}_{name}.yaml")
         results[name] = summarize_compound(result_dir, ligand_smiles)
 
-    out_path = summary_path or SUMMARY_PATH
+    out_path = summary_path or (ROOT / "data" / "structure_track" / "outputs" / target / "validation_summary.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(results, indent=2) + "\n")
     print(f"wrote {out_path} ({len(results)} compound(s): {', '.join(compounds)})")
 
@@ -85,9 +88,7 @@ if __name__ == "__main__":
         "--summary-path",
         type=Path,
         default=None,
-        help="defaults to data/structure_track/outputs/validation_summary.json -- "
-        "pass a different path for a non-cyp3a4 target so its summary doesn't "
-        "overwrite the real CYP3A4 one",
+        help="defaults to data/structure_track/outputs/{target}/validation_summary.json",
     )
     args = parser.parse_args()
     main(target=args.target, summary_path=args.summary_path)

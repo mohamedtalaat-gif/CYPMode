@@ -1,0 +1,121 @@
+{
+  "generated_at": "2026-10-16T19:11:15+03:00",
+  "config": {
+    "train_files": [
+      "data/tdi_track/inputs/official_extra/cyp_challenge/cyp-challenge-TRAIN_Emax.csv"
+    ],
+    "test_files": [
+      "data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv"
+    ],
+    "smiles_column": "SMILES",
+    "resolved_smiles_columns": {
+      "train": {
+        "data/tdi_track/inputs/official_extra/cyp_challenge/cyp-challenge-TRAIN_Emax.csv": "SMILES"
+      },
+      "test": {
+        "data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv": "SMILES"
+      }
+    },
+    "identifier_columns": [
+      "Molecule_Name"
+    ],
+    "tautomer_standardisation": false,
+    "max_train_test_similarity": 1.0,
+    "fp_radius": 2,
+    "fp_n_bits": 2048,
+    "report_format": "json"
+  },
+  "summary": {
+    "total_train_rows": 6145,
+    "total_test_rows": 750,
+    "total_unparseable": 0,
+    "total_unparseable_train": 0,
+    "total_unparseable_test": 0,
+    "total_exact_leaked_train_molecules": 0,
+    "total_exact_leaked_test_molecules": 0,
+    "total_identifier_leakage_events": 0,
+    "total_tanimoto_leakage_pairs": 0,
+    "total_internal_duplicates_train": {
+      "raw_smiles": 0,
+      "canonical_smiles": 0,
+      "inchikey": 0
+    },
+    "total_internal_duplicates_test": {
+      "raw_smiles": 0,
+      "canonical_smiles": 0,
+      "inchikey": 0
+    },
+    "total_internal_duplicates_train_identifiers": {
+      "Molecule_Name": 0
+    },
+    "total_internal_duplicates_test_identifiers": {
+      "Molecule_Name": 0
+    },
+    "total_identifier_namespace_issues": {
+      "Molecule_Name": {
+        "one_id_multiple_structures": 0,
+        "one_structure_multiple_ids": 0
+      }
+    },
+    "total_mixtures": {
+      "train": 0,
+      "test": 0
+    },
+    "total_salts_or_metal_complexes": {
+      "train": 0,
+      "test": 0
+    },
+    "total_suspicious_fragments": {
+      "train": 0,
+      "test": 0
+    }
+  },
+  "unparseable_smiles": [],
+  "train_test_leakage": {
+    "exact": {
+      "raw_smiles": [],
+      "canonical_smiles": [],
+      "inchikey": []
+    },
+    "identifiers": {
+      "Molecule_Name": []
+    },
+    "tanimoto_similarity": []
+  },
+  "internal_duplicates": {
+    "train": {
+      "raw_smiles": [],
+      "canonical_smiles": [],
+      "inchikey": [],
+      "identifiers": {
+        "Molecule_Name": []
+      }
+    },
+    "test": {
+      "raw_smiles": [],
+      "canonical_smiles": [],
+      "inchikey": [],
+      "identifiers": {
+        "Molecule_Name": []
+      }
+    }
+  },
+  "identifier_namespace_issues": {
+    "Molecule_Name": {
+      "one_id_multiple_structures": [],
+      "one_structure_multiple_ids": []
+    }
+  },
+  "quality_flags": {
+    "train": {
+      "mixtures": [],
+      "salts_or_metal_complexes": [],
+      "suspicious_fragments": []
+    },
+    "test": {
+      "mixtures": [],
+      "salts_or_metal_complexes": [],
+      "suspicious_fragments": []
+    }
+  }
+}

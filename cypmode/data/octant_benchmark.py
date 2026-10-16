@@ -116,8 +116,14 @@ def compare_potency_by_motif(df: pd.DataFrame) -> dict:
 def main() -> None:
     import json
 
-    df = annotate_motifs(load_inhibition_data())
+    from cypmode.challenge.official_extra import exclude_test_compounds
+
+    released = load_inhibition_data()
+    guarded, dropped = exclude_test_compounds(released, "ocnt_batch")
+    print(f"guard: {len(dropped)} blinded test compound(s) in the release, excluded and never read: {', '.join(dropped) or 'none'} ({len(guarded)} of {len(released)} rows kept)")
+    df = annotate_motifs(guarded)
     result = compare_potency_by_motif(df)
+    result["excluded_test_compounds"] = dropped
 
     out_path = Path("data/tdi_track/inputs/octant_cache/motif_potency_validation.json")
     out_path.write_text(json.dumps(result, indent=2) + "\n")

@@ -1,0 +1,7 @@
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['chemprop_mt_shift']
+  z0=1.0  diagnostic chemprop_mt_shift: outer AUC 0.5441
+  z0=1.0  stacked base+added vs base: AUC +0.0016 (p=0.811, better 6/15) AP +0.0031 (p=0.686, better 6/15)
+  z0=1.96 diagnostic chemprop_mt_shift: outer AUC 0.5314
+  z0=1.96 stacked base+added vs base: AUC -0.0009 (p=0.861, better 6/15) AP +0.0001 (p=0.988, better 5/15)
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

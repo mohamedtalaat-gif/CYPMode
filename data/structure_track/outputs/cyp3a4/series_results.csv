@@ -1,0 +1,7 @@
+compound,smiles,coordinated,closest_motif_nitrogen_distance_angstrom,closest_motif,closest_motif_atom,confidence_score,affinity_pred_value,affinity_probability_binary,error
+series-J9K,CC(C)(C)OC(=O)NC(Cc1ccccc1)CSCCC(=O)NCc2cccnc2,True,2.17,pyridine,N34,0.9375468492507935,,,
+series-D7J,CC(C)NC(CSCC(Cc1ccccc1)NC(=O)OC(C)(C)C)C(=O)NCc2cccnc2,True,2.24,pyridine,N41,0.9415079951286316,,,
+series-G0D,CC(C)(C)OC(=O)NC(Cc1ccccc1)CSC(Cc2ccccc2)C(=O)NCc3cccnc3,True,2.21,pyridine,N38,0.9436876177787781,,,
+series-G0J,CC(C)(C)OC(=O)NC(Cc1ccccc1)CNC(Cc2ccccc2)C(=O)NCc3cccnc3,True,2.24,pyridine,N39,0.9297170639038086,,,
+series-NXR,c1ccc(cc1)CC(CSC(Cc2ccccc2)C(=O)NCCCc3cccnc3)NC(=O)c4cccnc4,True,2.21,pyridine,N38,0.9333707690238953,,,
+series-A1A4U,c1ccc(cc1)CC(CSC(Cc2ccccc2)C(=O)NCCCc3cccnc3)NS(=O)(=O)c4ccccc4,True,2.23,pyridine,N39,0.9318218231201172,,,

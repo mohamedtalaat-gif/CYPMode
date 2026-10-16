@@ -1,0 +1,81 @@
+compound,rule,rmsd
+bench-2QH,boltz first pick,0.5801094977775875
+bench-2QH,openfold3 first sample,3.546116562730361
+bench-2QH,boltz best sample (oracle),0.5801094977775875
+bench-2QH,openfold3 best sample (oracle),3.546116562730361
+bench-2QH,either engine best sample (oracle),0.5801094977775875
+bench-2QH,template score over Boltz samples,0.6743392626686293
+bench-2QH,template score over OpenFold3 samples,4.287034786971747
+bench-2QH,template score over both engines,4.287034786971747
+bench-A1A4S,boltz first pick,6.236533267006292
+bench-A1A4S,openfold3 first sample,7.651828248701029
+bench-A1A4S,boltz best sample (oracle),4.526907067219085
+bench-A1A4S,openfold3 best sample (oracle),2.1536614946024675
+bench-A1A4S,either engine best sample (oracle),2.1536614946024675
+bench-A1A4S,template score over Boltz samples,6.067691596441254
+bench-A1A4S,template score over OpenFold3 samples,2.1536614946024675
+bench-A1A4S,template score over both engines,6.067691596441254
+bench-A1ASV,boltz first pick,2.972849941172153
+bench-A1ASV,openfold3 first sample,3.129139738011072
+bench-A1ASV,boltz best sample (oracle),2.3466266891395016
+bench-A1ASV,openfold3 best sample (oracle),2.2885735930725697
+bench-A1ASV,either engine best sample (oracle),2.2885735930725697
+bench-A1ASV,template score over Boltz samples,2.972849941172153
+bench-A1ASV,template score over OpenFold3 samples,3.129139738011072
+bench-A1ASV,template score over both engines,2.972849941172153
+bench-A1CIW,boltz first pick,6.301162749842287
+bench-A1CIW,openfold3 first sample,5.241129953311595
+bench-A1CIW,boltz best sample (oracle),5.26682738942525
+bench-A1CIW,openfold3 best sample (oracle),4.834357975083144
+bench-A1CIW,either engine best sample (oracle),4.834357975083144
+bench-A1CIW,template score over Boltz samples,5.26682738942525
+bench-A1CIW,template score over OpenFold3 samples,5.241129953311595
+bench-A1CIW,template score over both engines,5.241129953311595
+bench-MWS,boltz first pick,1.3225034621532783
+bench-MWS,openfold3 first sample,7.064267635234541
+bench-MWS,boltz best sample (oracle),1.3225034621532783
+bench-MWS,openfold3 best sample (oracle),4.56937027430517
+bench-MWS,either engine best sample (oracle),1.3225034621532783
+bench-MWS,template score over Boltz samples,2.595447445903007
+bench-MWS,template score over OpenFold3 samples,5.605845662573364
+bench-MWS,template score over both engines,5.605845662573364
+bench-MWV,boltz first pick,4.8110522295601355
+bench-MWV,openfold3 first sample,4.388209069009057
+bench-MWV,boltz best sample (oracle),4.8110522295601355
+bench-MWV,openfold3 best sample (oracle),4.388209069009057
+bench-MWV,either engine best sample (oracle),4.388209069009057
+bench-MWV,template score over Boltz samples,5.0423285763843495
+bench-MWV,template score over OpenFold3 samples,4.388209069009057
+bench-MWV,template score over both engines,5.0423285763843495
+bench-PK9,boltz first pick,4.760958599127774
+bench-PK9,openfold3 first sample,4.374715285145647
+bench-PK9,boltz best sample (oracle),1.8184863868422096
+bench-PK9,openfold3 best sample (oracle),4.374715285145647
+bench-PK9,either engine best sample (oracle),1.8184863868422096
+bench-PK9,template score over Boltz samples,4.760958599127774
+bench-PK9,template score over OpenFold3 samples,4.374715285145647
+bench-PK9,template score over both engines,4.760958599127774
+bench-TCI,boltz first pick,4.94734593318566
+bench-TCI,openfold3 first sample,7.0584560172764474
+bench-TCI,boltz best sample (oracle),4.675693205987935
+bench-TCI,openfold3 best sample (oracle),4.429667894117335
+bench-TCI,either engine best sample (oracle),4.429667894117335
+bench-TCI,template score over Boltz samples,4.94734593318566
+bench-TCI,template score over OpenFold3 samples,4.429667894117335
+bench-TCI,template score over both engines,4.429667894117335
+bench-TPF,boltz first pick,3.619396703872069
+bench-TPF,openfold3 first sample,5.022964870562912
+bench-TPF,boltz best sample (oracle),3.619396703872069
+bench-TPF,openfold3 best sample (oracle),2.538863605846306
+bench-TPF,either engine best sample (oracle),2.538863605846306
+bench-TPF,template score over Boltz samples,3.9749391819246744
+bench-TPF,template score over OpenFold3 samples,2.538863605846306
+bench-TPF,template score over both engines,2.538863605846306
+bench-YNV,boltz first pick,6.3767065235085525
+bench-YNV,openfold3 first sample,7.039599406525049
+bench-YNV,boltz best sample (oracle),5.230847651401627
+bench-YNV,openfold3 best sample (oracle),6.925251423783016
+bench-YNV,either engine best sample (oracle),5.230847651401627
+bench-YNV,template score over Boltz samples,5.230847651401627
+bench-YNV,template score over OpenFold3 samples,6.925251423783016
+bench-YNV,template score over both engines,5.230847651401627

@@ -1,0 +1,74 @@
+[09:32:44] WARNING: More than one matching pattern found - picking one
+
+[09:32:44] WARNING: More than one matching pattern found - picking one
+
+[09:32:45] WARNING: More than one matching pattern found - picking one
+
+[09:32:45] WARNING: More than one matching pattern found - picking one
+
+[09:32:45] WARNING: More than one matching pattern found - picking one
+
+[09:32:45] WARNING: More than one matching pattern found - picking one
+
+[09:32:45] WARNING: More than one matching pattern found - picking one
+
+[09:32:45] WARNING: More than one matching pattern found - picking one
+
+[09:32:45] WARNING: More than one matching pattern found - picking one
+
+[09:32:45] WARNING: More than one matching pattern found - picking one
+
+[09:32:46] WARNING: More than one matching pattern found - picking one
+
+[09:32:46] WARNING: More than one matching pattern found - picking one
+
+[09:32:46] WARNING: More than one matching pattern found - picking one
+
+[09:32:46] WARNING: More than one matching pattern found - picking one
+
+[09:32:47] WARNING: More than one matching pattern found - picking one
+
+[09:32:47] WARNING: More than one matching pattern found - picking one
+
+[09:32:47] WARNING: More than one matching pattern found - picking one
+
+[09:32:47] WARNING: More than one matching pattern found - picking one
+
+[09:32:47] WARNING: More than one matching pattern found - picking one
+
+[09:32:47] WARNING: More than one matching pattern found - picking one
+
+[09:32:47] WARNING: More than one matching pattern found - picking one
+
+[09:32:47] WARNING: More than one matching pattern found - picking one
+
+ compound engine  sample  n_crystal_copies  true_rmsd  template_score  template_support  occupancy_score  novel_template_score  novel_template_support  novel_occupancy_score
+  exp-08J  boltz       0                 3      3.595           0.418             0.202            0.530                 0.418                   0.202                  0.530
+  exp-08J  boltz       1                 3      4.907           0.515             0.202            0.538                 0.515                   0.202                  0.538
+  exp-80K  boltz       0                 1      5.564           0.542             0.774            0.583                 0.535                   0.483                  0.580
+  exp-80K  boltz       1                 1      3.836           0.590             0.774            0.601                 0.597                   0.483                  0.598
+exp-A1ASP  boltz       0                 1      2.864           0.598             0.719            0.639                 0.525                   0.297                  0.637
+exp-A1ASP  boltz       1                 1      2.925           0.602             0.719            0.637                 0.522                   0.297                  0.634
+exp-A1ASQ  boltz       0                 1      2.611           0.655             0.737            0.585                 0.508                   0.474                  0.583
+exp-A1ASQ  boltz       1                 1      2.563           0.594             0.737            0.588                 0.497                   0.474                  0.586
+exp-A1ASR  boltz       0                 1      3.107           0.552             0.737            0.621                 0.396                   0.317                  0.619
+exp-A1ASR  boltz       1                 1      2.771           0.586             0.737            0.633                 0.408                   0.317                  0.631
+exp-A1ASS  boltz       0                 1      3.059           0.655             0.660            0.668                 0.567                   0.493                  0.665
+exp-A1ASS  boltz       1                 1      3.009           0.668             0.660            0.656                 0.582                   0.493                  0.653
+exp-A1AST  boltz       0                 1      3.504           0.535             0.266            0.602                 0.535                   0.266                  0.602
+exp-A1AST  boltz       1                 1      3.379           0.563             0.266            0.596                 0.563                   0.266                  0.596
+exp-A1ASU  boltz       0                 1      3.381           0.416             0.130            0.566                 0.416                   0.130                  0.566
+exp-A1ASU  boltz       1                 1      2.795           0.367             0.130            0.534                 0.367                   0.130                  0.534
+  exp-CFF  boltz       0                 4      2.461           0.498             0.130            0.631                 0.498                   0.130                  0.631
+  exp-CFF  boltz       1                 4      2.530           0.507             0.130            0.644                 0.507                   0.130                  0.644
+  exp-CL6  boltz       0                 1      3.839           0.676             0.317            0.570                 0.676                   0.317                  0.570
+  exp-CL6  boltz       1                 1      3.905           0.651             0.317            0.566                 0.651                   0.317                  0.566
+  exp-D7M  boltz       0                 1      3.893           0.555             0.778            0.569                 0.512                   0.494                  0.570
+  exp-D7M  boltz       1                 1      6.082           0.604             0.778            0.611                 0.548                   0.494                  0.610
+  exp-D7Y  boltz       0                 1      2.151           0.615             0.778            0.606                 0.514                   0.494                  0.599
+  exp-D7Y  boltz       1                 1      2.664           0.593             0.778            0.586                 0.505                   0.494                  0.578
+  exp-J9K  boltz       0                 1      5.962           0.502             0.765            0.607                 0.610                   0.476                  0.564
+  exp-J9K  boltz       1                 1      5.827           0.504             0.765            0.606                 0.621                   0.476                  0.563
+  exp-MYT  boltz       0                 2      1.692           0.468             0.298            0.660                 0.468                   0.298                  0.660
+  exp-MYT  boltz       1                 2      1.714           0.474             0.298            0.661                 0.474                   0.298                  0.661
+wrote data/structure_track/outputs/cyp3a4/restraint_expansion_primary_unguided_poses.csv

@@ -1,0 +1,5 @@
+
+CYP2D6: 15 outer folds, 23 candidates of the default stack
+  z0=1.0  outer AUC: logistic blend 0.7312, non-negative blend 0.7353 (+0.0041, p=0.688, better 8/15) | MCC at the transferred rate +0.1672 vs +0.1715
+  z0=1.96 outer AUC: logistic blend 0.7536, non-negative blend 0.7577 (+0.0041, p=0.698, better 7/15) | MCC at the transferred rate +0.2036 vs +0.1902
+CYP2D6 GATE (selector, corrected p < 0.05 at both z0): NOT MET
