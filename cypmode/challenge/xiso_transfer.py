@@ -85,7 +85,7 @@ def stage_one_features(ctx: Context, task: Task, seed: int) -> tuple[np.ndarray,
             target = np.maximum(values[fit_rows], ASSAY_FLOOR)
             x_fit = ctx.store.matrix(STAGE_ONE_BLOCKS, fit_rows)
 
-            def fitted(rows: np.ndarray) -> LGBMRegressor:
+            def fitted(rows: np.ndarray, x_fit: np.ndarray = x_fit, target: np.ndarray = target) -> LGBMRegressor:
                 return LGBMRegressor(verbose=-1, n_jobs=ctx.n_jobs, random_state=seed % 2**31, **STAGE_ONE).fit(x_fit[rows], target[rows])
 
             everything = fitted(np.arange(len(fit_rows)))

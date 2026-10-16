@@ -38,11 +38,6 @@ GIF_SIZE, GIF_FPS, GIF_START, GIF_SECONDS = (640, 360), 12, 3.2, 8.0
 def render_frames(chrome: Chrome, duration: float) -> int:
     if FRAMES.exists():
         shutil.rmtree(FRAMES)
-    from cypmode.audit.artifacts import asset_digest, record
-
-    digests = dom_digests()
-    record("film", [p for p in (MP4, WEB, GIF) if p.exists()], {"dom_digest": digests["film"], "assets": asset_digest(), "frames": total, "voices": VOICE_TRACK.exists()})
-    record("poster", [POSTER], {"dom_digest": digests["poster"]})
     FRAMES.mkdir(parents=True)
     total = round(duration * FPS)
     for index in range(total):
@@ -130,6 +125,11 @@ def main() -> int:
     write_web_copy()
     write_gif()
     shutil.rmtree(FRAMES)
+    from cypmode.audit.artifacts import asset_digest, record
+
+    digests = dom_digests()
+    record("film", [p for p in (MP4, WEB, GIF) if p.exists()], {"dom_digest": digests["film"], "assets": asset_digest(), "frames": total, "voices": VOICE_TRACK.exists()})
+    record("poster", [POSTER], {"dom_digest": digests["poster"]})
     print(f"wrote {MP4.name} ({MP4.stat().st_size / 1e6:.1f} MB), {GIF.name} ({GIF.stat().st_size / 1e6:.1f} MB) and {POSTER.name}; {total} frames at {FPS} per second")
     return 0
 
