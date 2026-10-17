@@ -124,7 +124,7 @@ This appendix is the path through the repository for a reader who wants to run i
 
 ## A.1 Environments and pins
 
-> **Field:** Software engineering · Reproducible research
+> **Field:** Software engineering
 
 Software changes: a package that is updated a year later can give a different number from the same code. The remedy is to **pin** the environment, which means to record the exact version of every package that was installed, in a **lock file** that anyone can install from. The repository holds four pin files in `environment/`: `requirements-lock.txt` for the main environment (the TDI track and the tests), `requirements-lock-ml.txt` for the neural models (Chemprop, TabICL, TabPFN, CheMeleon), `openmm-environment.yml` for the force-field relaxation of 11.10 and `ost-environment.yml` for the scoring with OpenStructure. The last two are conda environments, which can install programs that are not Python packages. Boltz-2 and OpenFold3 run in **virtual environments** of their own (a folder with its own copy of Python and its own packages, so that installing one tool cannot break another), `.venv-boltz` and `.venv-openfold3`, which are outside the pin files; that is a gap in the record, and the versions that ran are in the manifests of the structure track.
 
@@ -138,7 +138,7 @@ The reason for several environments is practical. A package such as LightGBM, wh
 
 ## A.2 The map of the repository
 
-> **Field:** Software engineering · Reproducible research
+> **Field:** Software engineering
 
 The repository has the code of two tracks, the tools that check them, the queue that runs them, and the text. The next cell lists the places that hold code, says in a line what each holds, and counts the files, so that the map and the repository cannot drift apart.
 """),
@@ -148,7 +148,7 @@ The code of the five packages is {{=n_python_files}} Python files, and the test 
 
 ## A.3 Every stage as a runnable path
 
-> **Field:** Software engineering · Reproducible research
+> **Field:** Software engineering
 
 The project is run in the order that follows; each command is resumable, which means that it keeps what it has finished and a second run continues where the first stopped.
 
@@ -170,7 +170,7 @@ Step 3 is the TDI path alone, from the raw files to the candidate files: it buil
 
 ## A.4 The jobs of the queue
 
-> **Field:** Software engineering · Reproducible research
+> **Field:** Software engineering
 
 The table is generated from the jobs. A job is a shell script; it starts with `source queue/lib.sh`, which gives it the helpers described in 12.4, and its first comment line says what it does.
 """),
@@ -180,7 +180,7 @@ The queue holds {{=n_jobs}} jobs: {{=range_counts['000 to 099']}} numbered below
 
 ## A.5 How a gate reaches the final build
 
-> **Field:** Software engineering · Reproducible research
+> **Field:** Software engineering
 
 A new idea becomes part of the final model only through the line that its log writes: "CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): MET" or "NOT MET". The next cell shows how the final build (`cypmode/challenge/final_tdi_build.py`) reads those lines, on logs made for the purpose in a temporary folder, including the two rules that matter.
 """),
@@ -192,7 +192,7 @@ The first two rows are the plain rule. The third and fourth are the rule for a g
 
 ## A.6 Adding a model to the TDI track through a gate
 
-> **Field:** Software engineering · Reproducible research
+> **Field:** Software engineering
 
 A model for the TDI track is added in four steps, and the order is the point.
 
@@ -203,7 +203,7 @@ A model for the TDI track is added in four steps, and the order is the point.
 
 ## A.7 Adding a lever to the structure track
 
-> **Field:** Software engineering · Reproducible research
+> **Field:** Software engineering
 
 A lever for the structure track (a restraint, a way of sampling more poses, a rule for choosing among poses) follows the same logic with different files. The lever is a change to the input or to the selection (`build_input.py`, `pose_selection.py` and their neighbours in `cypmode/validation`); a job runs it on the crystal-anchored benchmark and scores it; the scoring job writes one line "STRUCTURE GATE <name>: MET|NOT MET" with the rule that was written before the run; and `final_recipe.decide` maps the verdicts to the choices of the final recipe. The next cell lists the gates that the recipe of this project reads.
 """),

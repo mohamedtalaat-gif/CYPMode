@@ -56,7 +56,7 @@ This appendix is made by code from the notebook and from the glossary file, so t
 
 ## B.1 Symbols
 
-> **Field:** Mathematics · Documentation
+> **Field:** Mathematics · Software engineering
 
 The notebook defines a symbol in the section where it uses it, and the builder checks that every symbol of an equation is named in the text of its section before the equation. It does not keep a single list of meanings, because a single list would be wrong: the same letter is used for different things in different parts of science, and the text follows each field's own convention. The letter $A$ is the adjacency matrix of a molecule in 2.1 and the accuracy of a submitted file in 2.10. What the reader needs from an appendix is therefore the place to look, and the next cell makes that: for every short piece of inline mathematics in the text, the sections in which it appears.
 """),
@@ -66,7 +66,7 @@ The index has {{=n_symbols}} entries. The letter $A$ appears in the sections {{=
 
 ## B.2 Abbreviations
 
-> **Field:** Mathematics · Documentation
+> **Field:** Mathematics · Software engineering
 
 An abbreviation is a term written in capital letters; its meaning is the glossary's, so that the two cannot differ.
 """),
@@ -76,7 +76,7 @@ There are {{=n_abbreviations}} abbreviations in the table.
 
 ## B.3 Glossary
 
-> **Field:** Mathematics · Documentation
+> **Field:** Mathematics · Software engineering
 
 Every term that the notebook defines is listed once, alphabetically, with the definition it was given where it first appeared. The definitions are the short form; the section that introduces a term explains it in full, with its reason and its use.
 """),
