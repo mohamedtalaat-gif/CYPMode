@@ -23,14 +23,14 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "docs/figures/gen"), str(ROOT / "docs/video"), str(ROOT / "docs/video/anime")]
 
-import facts as facts_module  # noqa: E402
-import pymol_scene  # noqa: E402
-from chrome import Chrome  # noqa: E402
-from rdkit import Chem  # noqa: E402
-from rdkit.Chem import rdDepictor  # noqa: E402
-from rdkit.Chem.Draw import rdMolDraw2D  # noqa: E402
+import facts as facts_module
+import pymol_scene
+from chrome import Chrome
+from rdkit import Chem
+from rdkit.Chem import rdDepictor
+from rdkit.Chem.Draw import rdMolDraw2D
 
-from cypmode.validation.build_input import heme_donor_atom  # noqa: E402
+from cypmode.validation.build_input import heme_donor_atom
 
 FINAL = ROOT / "data/structure_track/outputs/cyp3a4/final/_pdb_files"
 SMILES = ROOT / "data/structure_track/inputs/structure_track_test_blinded.csv"

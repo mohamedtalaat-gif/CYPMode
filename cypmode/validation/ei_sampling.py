@@ -68,7 +68,11 @@ def main() -> None:
     parser.add_argument("--out", default="data/structure_track/outputs/cyp3a4/ei_sampling_outcomes.csv")
     args = parser.parse_args()
     from cypmode.validation.pose_pools import pairwise_lddt, pool_paths
-    from cypmode.validation.selection_validation import DEFAULT_TABLES, P_VALUE, paired_gate
+    from cypmode.validation.selection_validation import (
+        DEFAULT_TABLES,
+        P_VALUE,
+        paired_gate,
+    )
 
     path = args.table or next((t for t in DEFAULT_TABLES if Path(t).exists()), None)
     if path is None:

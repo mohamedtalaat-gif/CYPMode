@@ -76,7 +76,7 @@ def final_stack_rows() -> list[list] | None:
     text = report.read_text()
     rows = []
     for iso in ISOFORMS:
-        section = re.search(rf"^## {iso}\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+        section = re.search(rf"^## {iso}\n(.*?)(?=^## |\Z)", text, re.MULTILINE | re.DOTALL)
         found = re.search(r"Final stack: \*\*(.+?)\*\* \((\d+) candidates\); surviving groups: ([^;]*);", section.group(1)) if section else None
         choice = FINAL_TDI / f"{iso}_stack_choice.csv"
         if not (found and choice.exists()):
@@ -179,7 +179,7 @@ TARGETS = {"README.md": ("final-stack", "gate-verdicts", "structure-recipe"), "C
 
 
 def pattern(name: str) -> re.Pattern:
-    return re.compile(rf"(<!-- generated:{re.escape(name)} begin[^>]*-->\n)(.*?)(\n<!-- generated:{re.escape(name)} end -->)", re.S)
+    return re.compile(rf"(<!-- generated:{re.escape(name)} begin[^>]*-->\n)(.*?)(\n<!-- generated:{re.escape(name)} end -->)", re.DOTALL)
 
 
 def render(text: str, names: tuple[str, ...], blocks: dict | None = None) -> str:

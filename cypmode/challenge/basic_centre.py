@@ -77,7 +77,7 @@ def protonation_states(smiles: str) -> list[str]:
 
     try:
         states = [s.split()[0].split(",")[0] for s in protonate_smiles(smiles, ph_min=PH_MIN, ph_max=PH_MAX, precision=1.0, max_variants=MAX_VARIANTS, validate_output=True)]
-    except Exception:  # noqa: BLE001 - a molecule the tool cannot process keeps its neutral form
+    except Exception:
         states = []
     return states or [smiles]
 

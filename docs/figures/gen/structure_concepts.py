@@ -1,17 +1,17 @@
 """Concept figures of the structure track: how the minimum-Bayes-risk rule picks a pose from a pool (on a real pool), and how a diffusion model turns noise into a pose (a toy denoiser
 that knows two poses, driven by the real forward and reverse equations)."""
 
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from PIL import Image
-
 from catalog import figure
-from gen.pymol_scene import cif, pose_comparison
+from PIL import Image
 from style import apply, tidy
+
+from gen.pymol_scene import cif, pose_comparison
 
 GROUP = "structure"
 ROOT = Path(__file__).resolve().parents[3]
@@ -92,7 +92,7 @@ def mbr_pool(theme_name):
 REAL_LIGAND = "OCNT-2395712"  # a donor ligand of the official set: its restrained and its unguided Boltz-2 pose are the two poses the denoiser knows
 
 
-@lru_cache(maxsize=None)
+@cache
 def real_poses():
     """The two real poses of the denoiser: the first Boltz-2 sample of the ligand with the restraint (pose A) and without it (pose B), the second superposed on the first by the protein backbone, both
     projected on the plane of the ligand's two principal axes (angstrom, centred). Also the bonds of the ligand, found from the distances of pose A."""

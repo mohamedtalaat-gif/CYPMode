@@ -50,7 +50,7 @@ def test_selection_prefers_the_valid_consensus_pose_and_falls_back_when_nothing_
     np.fill_diagonal(m, 1.0)
     monkeypatch.setattr(pose_pools, "pairwise_lddt", lambda paths, smiles=None: m)
     pool = [("r", "boltz", Path(f"p{i}.cif")) for i in range(4)]
-    valid_all = lambda p: True  # noqa: E731
+    valid_all = lambda p: True
     best, ok, _ = fr.select_pose(pool, "mbr", valid_all)
     assert best in (0, 1, 2) and ok
     best, ok, _ = fr.select_pose(pool, "mbr", lambda p: p.name != "p0.cif")  # the best consensus pose fails PoseBusters
@@ -93,7 +93,7 @@ def test_ligand_table_links_official_ligands_to_donor_status_analogs_and_tdi_mea
 
 def test_cryoem_lever_adds_template_runs_to_the_diversity_group(monkeypatch):
     rows = pd.DataFrame({"Molecule_Name": ["a-em1", "a-em2"], "SMILES": ["CCO", "CCO"], "Template_PDB": ["38FU", "38FV"], "Diffusion_Samples": [1, 1]})
-    monkeypatch.setattr("cypmode.validation.cryoem_templates.load_records", lambda: {})
+    monkeypatch.setattr("cypmode.validation.cryoem_templates.load_records", dict)
     monkeypatch.setattr("cypmode.validation.cryoem_templates.build_cryoem_table", lambda official, record, n_runs: rows)
     recipe = fr.decide({"pilot_cryoem": True})
     assert recipe.levers == ["cryoem"]

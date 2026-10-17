@@ -1,6 +1,6 @@
 """Part IV (third part): message passing and attention, principal components and tabular in-context learning, the metrics."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 MPNN = '''
 # A directed message-passing network (the form Chemprop uses), forward pass only, with random weights, for the example compound. An atom starts as a vector of nine numbers (which of five elements it is,

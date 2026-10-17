@@ -44,7 +44,7 @@ INPUTS = Path("data/structure_track/inputs")
 OFFICIAL = INPUTS / "structure_track_test_blinded.csv"
 MSA = INPUTS / "msa" / "cyp3a4_P08684.csv"
 GATE_LOGS = ("selection_validation.log", "heme_frame_prior.log", "ei_sampling.log", "structure_gates.log", "pose_awareness.log", "series_consensus.log", "restraint_expansion.log")
-GATE_LINE = re.compile(r"^STRUCTURE GATE (\w+)[^:\n]*: (MET|NOT MET)", re.M)
+GATE_LINE = re.compile(r"^STRUCTURE GATE (\w+)[^:\n]*: (MET|NOT MET)", re.MULTILINE)
 BASE_SAMPLES, LEVER_RUNS, RESTRAINT_SAMPLES, OPENFOLD3_SAMPLES = 5, 3, 3, 3
 LEVER_SEED_OFFSET = 1000
 HOURS_PER_BOLTZ_SAMPLE, HOURS_PER_OPENFOLD3_SAMPLE = 0.12, 0.27  # measured on this Mac: about 7 min and 16 min
@@ -121,7 +121,10 @@ def run_groups(recipe: Recipe, official: pd.DataFrame, existing: dict[str, int],
     """Batch jobs the recipe needs: [{label, rows (DataFrame), flags}], each resumable through its checkpoint JSON."""
     from cypmode.validation.cryoem_templates import build_cryoem_table
     from cypmode.validation.cryoem_templates import load_records as load_cryoem_records
-    from cypmode.validation.diversity_pilot import STEP_SCALE, build_pilot_table, lever_of
+    from cypmode.validation.diversity_pilot import (
+        build_pilot_table,
+        lever_of,
+    )
 
     groups = []
     need = official[official.Molecule_Name.map(lambda n: existing[n] < BASE_SAMPLES)]
@@ -222,7 +225,11 @@ def select_pose(pool: list[tuple[str, str, Path]], selection: str, valid, prior=
 
 def pose_extras(ligand: str, smiles: str, pool: list, terms: list[str], partner: dict) -> dict:
     """Per-pose scores (higher is better) for the extra rank terms; poses whose ligand terms cannot be computed get NaN."""
-    from cypmode.validation.pose_awareness import ligand_context, pose_terms, within_pool_scores
+    from cypmode.validation.pose_awareness import (
+        ligand_context,
+        pose_terms,
+        within_pool_scores,
+    )
 
     out: dict[str, np.ndarray] = {}
     if {"physics", "pharmacophore"} & set(terms):
@@ -257,7 +264,7 @@ def ligand_table(official: pd.DataFrame, train: pd.DataFrame, test: pd.DataFrame
 
     from cypmode.validation.build_input import heme_donor_atom
 
-    canonical = lambda smi: Chem.MolToSmiles(Chem.MolFromSmiles(smi))  # noqa: E731
+    canonical = lambda smi: Chem.MolToSmiles(Chem.MolFromSmiles(smi))
     known = {canonical(smi): row for smi, row in zip(train.SMILES, train.itertuples(index=False), strict=True)}
     in_test = {canonical(smi) for smi in test.SMILES}
     mate = {}
@@ -336,7 +343,11 @@ def main() -> None:
     if recipe.openfold3:
         subprocess.run([sys.executable, "-m", "cypmode.validation.openfold3", "--names", *names, "--samples", str(OPENFOLD3_SAMPLES), "--strict"], check=True)
 
-    from cypmode.validation.heme_frame_prior import HemePrior, crystal_descriptors, structure_descriptor
+    from cypmode.validation.heme_frame_prior import (
+        HemePrior,
+        crystal_descriptors,
+        structure_descriptor,
+    )
     from cypmode.validation.pose_margins import audit
     from cypmode.validation.structures import load_structure
 

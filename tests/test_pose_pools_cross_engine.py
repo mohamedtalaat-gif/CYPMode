@@ -13,7 +13,11 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 from cypmode.validation import pose_pools
-from cypmode.validation.pose_pools import symmetric_lddt_pli, template_automorphisms, template_ligand_coordinates
+from cypmode.validation.pose_pools import (
+    symmetric_lddt_pli,
+    template_automorphisms,
+    template_ligand_coordinates,
+)
 
 SMILES = "CCO"
 

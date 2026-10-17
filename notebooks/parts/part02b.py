@@ -1,6 +1,6 @@
 """Part II (second half): how the compounds were measured, how the test set differs from the training set, the other data sources, matching structures across sources, the leaderboard as data."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 PANEL_BLOCK = '''
 # The training file is not one library. Compounds were measured on several enzymes, and which enzymes a compound was measured on depends on where its number lies. library_blocks finds the

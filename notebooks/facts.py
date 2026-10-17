@@ -86,5 +86,5 @@ def load() -> Facts:
         scripts=len([p for p in (ROOT / "scripts").iterdir() if p.is_file()]),
         jobs=len(list((ROOT / "queue/jobs").glob("*.sh"))),
         test_files=len(tests),
-        test_functions=sum(len(re.findall(r"^def test_", p.read_text(), re.M)) for p in tests),
+        test_functions=sum(len(re.findall(r"^def test_", p.read_text(), re.MULTILINE)) for p in tests),
     )

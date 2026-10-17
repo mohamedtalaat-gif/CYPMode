@@ -34,9 +34,20 @@ from sklearn.metrics import roc_auc_score
 from cypmode.challenge import final_tdi_build as final
 from cypmode.challenge.feature_store import FeatureStore
 from cypmode.challenge.leaderboard_prior import estimate_from_csv
-from cypmode.challenge.nested import OUTER_REFIT, NestedPlan, PredictionCache, StackedLogit, _weights, inner_oof
+from cypmode.challenge.nested import (
+    OUTER_REFIT,
+    NestedPlan,
+    PredictionCache,
+    StackedLogit,
+    _weights,
+    inner_oof,
+)
 from cypmode.challenge.submission import load_test_set
-from cypmode.challenge.validation_matching import SimilarityMatcher, nearest_neighbor_similarity, tanimoto_matrix
+from cypmode.challenge.validation_matching import (
+    SimilarityMatcher,
+    nearest_neighbor_similarity,
+    tanimoto_matrix,
+)
 
 BIN_EDGES = np.array([0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 1.01])
 BIN_LABELS = ["< 0.3", "0.3 - 0.4", "0.4 - 0.5", "0.5 - 0.6", "0.6 - 0.7", ">= 0.7"]

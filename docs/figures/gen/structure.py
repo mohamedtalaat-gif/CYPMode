@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import yaml
-
 from catalog import figure
-from gen.pymol_scene import cif, pose_comparison
 from style import apply, tidy
+
+from gen.pymol_scene import cif, pose_comparison
 
 GROUP = "structure"
 ROOT = Path(__file__).resolve().parents[3]

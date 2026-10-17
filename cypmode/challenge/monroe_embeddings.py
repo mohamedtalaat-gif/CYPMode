@@ -37,7 +37,11 @@ TEST_CSV = "data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv"
 def load_encoder(checkpoint: Path = CHECKPOINT):
     """The Monroe encoder with the released weights, read without executing pickled code; every encoder tensor must match."""
     import torch
-    from monroe.model.constants import EDGE_FEAT_LIST_ONE_HOT, NODE_FEAT_LIST_FLOAT, NODE_FEAT_LIST_ONE_HOT
+    from monroe.model.constants import (
+        EDGE_FEAT_LIST_ONE_HOT,
+        NODE_FEAT_LIST_FLOAT,
+        NODE_FEAT_LIST_ONE_HOT,
+    )
     from monroe.model.grit import GritTransformer
 
     config = json.loads((checkpoint / "config.json").read_text())["encoder"]

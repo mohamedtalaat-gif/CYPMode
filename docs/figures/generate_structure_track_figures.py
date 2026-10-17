@@ -118,7 +118,7 @@ def main() -> None:
     failed = df[~df["all_passed"]]
     check_failures = []
     for c in check_cols:
-        n_fail = int((failed[c] == False).sum())  # noqa: E712 (real boolean comparison, not identity)
+        n_fail = int((failed[c] == False).sum())
         if n_fail > 0:
             check_failures.append((c, n_fail))
     n_parse_errors = int(failed["error"].notna().sum()) if "error" in failed.columns else 0

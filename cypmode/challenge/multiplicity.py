@@ -15,7 +15,7 @@ import pandas as pd
 
 STACKED = re.compile(r"z0=(\S+)\s+stacked[^:\n]*:\s+AUC\s+([+-]\d+\.\d+)\s+\(p=(\d+\.\d+)")
 SELECTOR = re.compile(r"z0=(\S+)\s+outer AUC: .*?\(([+-]\d+\.\d+), p=(\d+\.\d+)")
-ISOFORM = re.compile(r"^(CYP\d[A-Z]\d) GATE \(", re.M)
+ISOFORM = re.compile(r"^(CYP\d[A-Z]\d) GATE \(", re.MULTILINE)
 BATCH = ("aux_*_CYP*.log", "monroe_embeddings_CYP*.log", "population_screen_CYP2D6.log", "nonneg_stack_CYP*.log")
 
 

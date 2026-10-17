@@ -41,7 +41,7 @@ OFFICIAL = Path("data/structure_track/inputs/structure_track_test_blinded.csv")
 GATE_LOG = OUT / "logs" / "relaxation_gate.log"
 MAX_MOVEMENT_A = 1.0
 MAX_FE_N_CHANGE_A = 0.2
-GATE_LINE = re.compile(r"^STRUCTURE GATE force_field_relaxation[^:\n]*: (MET|NOT MET)", re.M)
+GATE_LINE = re.compile(r"^STRUCTURE GATE force_field_relaxation[^:\n]*: (MET|NOT MET)", re.MULTILINE)
 
 
 def gate_met(log: Path = GATE_LOG) -> bool:

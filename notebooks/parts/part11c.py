@@ -1,6 +1,6 @@
 """Part XI (third part): the reference ligands and the crystal-anchored benchmark (11.5)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 REFERENCE_SET = '''
 # The reference set (cypmode/validation/reference_ligands.py): every CYP3A4 entry of the Protein Data Bank (UniProt P08684) that holds a drug-like ligand in the active site, one record for each placement of a ligand, with the

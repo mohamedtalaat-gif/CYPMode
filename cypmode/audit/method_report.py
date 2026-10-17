@@ -21,7 +21,7 @@ COMPARISONS = ROOT / "data/tdi_track/outputs/comparisons"
 FINAL_TDI = ROOT / "data/tdi_track/outputs/final"
 FINAL_STRUCTURE = ROOT / "data/structure_track/outputs/cyp3a4/final"
 AUDIT = ROOT / "audit/AUDIT_REPORT.md"
-GATE = re.compile(r"^(?:STRUCTURE GATE (\w+)[^:\n]*|(CYP\w+) GATE \(([^)]*)\)): (MET|NOT MET)", re.M)
+GATE = re.compile(r"^(?:STRUCTURE GATE (\w+)[^:\n]*|(CYP\w+) GATE \(([^)]*)\)): (MET|NOT MET)", re.MULTILINE)
 
 
 def pending(job: str) -> str:
@@ -40,7 +40,7 @@ def audit_section(prefix: str) -> str:
     if not AUDIT.exists():
         return pending("job 900")
     text = AUDIT.read_text()
-    m = re.search(rf"^## {re.escape(prefix)}.*?(?=^## |\Z)", text, re.M | re.S)
+    m = re.search(rf"^## {re.escape(prefix)}.*?(?=^## |\Z)", text, re.MULTILINE | re.DOTALL)
     if not m:
         return pending("job 900")
     first, _, rest = m.group(0).strip().partition("\n")

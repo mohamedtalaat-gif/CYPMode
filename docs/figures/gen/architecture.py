@@ -6,12 +6,12 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.patches import Rectangle
-
 from catalog import figure
+from matplotlib.patches import Rectangle
+from style import apply
+
 from cypmode.audit.method_report import gate_rows
 from gen._draw import arrow, box, canvas
-from style import apply
 
 GROUP = "architecture"
 ROOT = Path(__file__).resolve().parents[3]

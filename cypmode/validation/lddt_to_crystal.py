@@ -10,12 +10,16 @@ The mmCIF files come from ``data/structure_track/inputs/pdb_cache`` (regenerable
 """
 
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 import numpy as np
 
-from cypmode.validation.pose_pools import symmetric_lddt_pli, template_automorphisms, template_ligand_coordinates
+from cypmode.validation.pose_pools import (
+    symmetric_lddt_pli,
+    template_automorphisms,
+    template_ligand_coordinates,
+)
 from cypmode.validation.pose_rescoring import connectivity_key
 from cypmode.validation.pose_rescoring_validation import crystal_mol
 from cypmode.validation.pose_selection import complex_arrays
@@ -31,7 +35,7 @@ class CrystalReference:
     protein: dict  # (residue number, atom name) -> coordinates of the protein chain that holds the ligand
 
 
-@lru_cache(maxsize=None)
+@cache
 def _chain_atoms(pdb_id: str, anchor: tuple[float, float, float]) -> dict:
     """Protein heavy atoms, keyed by (residue number, atom name), of the chain of the entry that contains the atom at ``anchor``."""
     from Bio.PDB import MMCIFParser

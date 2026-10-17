@@ -20,7 +20,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from cypmode.validation.conformers import entry_pockets, excluded_entries, pick_conformers
+from cypmode.validation.conformers import (
+    entry_pockets,
+    excluded_entries,
+    pick_conformers,
+)
 from cypmode.validation.pose_rescoring_validation import NOVEL_SIMILARITY
 from cypmode.validation.reference_ligands import load_reference_set
 

@@ -110,12 +110,30 @@ def committee_predict(ctx, task, member_sets: list[tuple[str, ...]], n_seeds: in
 
 
 def main() -> None:
-    from cypmode.challenge.addition_experiment import STORE, TEST_CSV, TRAIN_CSV, evaluate_addition
-    from cypmode.challenge.calibration_experiment import ECE_GATE, SLOPE_HI, SLOPE_LO, calibration_metrics
+    from cypmode.challenge.addition_experiment import (
+        STORE,
+        TEST_CSV,
+        TRAIN_CSV,
+        evaluate_addition,
+    )
+    from cypmode.challenge.calibration_experiment import (
+        ECE_GATE,
+        SLOPE_HI,
+        SLOPE_LO,
+        calibration_metrics,
+    )
     from cypmode.challenge.label_confidence import confident_weights
     from cypmode.challenge.leaderboard_prior import estimate_from_csv
-    from cypmode.challenge.nested import OUTER_REFIT, NestedPlan, PredictionCache, _weights
-    from cypmode.challenge.nested_runners import build_context_and_plan, committee_candidates
+    from cypmode.challenge.nested import (
+        OUTER_REFIT,
+        NestedPlan,
+        PredictionCache,
+        _weights,
+    )
+    from cypmode.challenge.nested_runners import (
+        build_context_and_plan,
+        committee_candidates,
+    )
     from cypmode.challenge.validation_matching import SimilarityMatcher
 
     parser = argparse.ArgumentParser(description=__doc__)

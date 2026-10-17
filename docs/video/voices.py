@@ -58,7 +58,7 @@ def harvest() -> int:
             chrome.evaluate(f"render({second + 0.5})")
         log = chrome.evaluate("SPEECH_LOG")
     gate = next(s for s in scenes if s["id"] == "gate")
-    scene_at = lambda t: next(s for s in scenes if s["start"] <= t < s["end"])  # noqa: E731
+    scene_at = lambda t: next(s for s in scenes if s["start"] <= t < s["end"])
     for item in log:
         if item["kind"] == "card":
             scene = scene_at(item["start"] + 0.1)
@@ -88,8 +88,8 @@ def sha256(path: Path) -> str:
 
 
 def speak() -> int:
-    from kokoro import KPipeline
     from huggingface_hub import hf_hub_download
+    from kokoro import KPipeline
 
     lines = json.loads(LINES.read_text())
     pipelines: dict[str, KPipeline] = {}
@@ -100,7 +100,7 @@ def speak() -> int:
         return np.concatenate(parts) if parts else np.zeros(0, dtype=np.float32)
 
     scenes = json.loads((VOICES / "scenes.json").read_text())
-    scene_end = lambda t0: next(s["end"] for s in scenes if s["start"] <= t0 + 0.1 < s["end"])  # noqa: E731
+    scene_end = lambda t0: next(s["end"] for s in scenes if s["start"] <= t0 + 0.1 < s["end"])
     clips, report, cursor = [], [], 0.0
     for line in lines:  # one speaker at a time: a line starts when it is due or when the previous one has ended
         voice = VOICE_OF[line["speaker"]]

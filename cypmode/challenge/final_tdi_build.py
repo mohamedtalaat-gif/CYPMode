@@ -38,7 +38,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from cypmode.challenge.aux_blocks import aux_candidates, gate_shift_candidates, nodirect_candidates, screen_selection_candidates
+from cypmode.challenge.aux_blocks import (
+    aux_candidates,
+    gate_shift_candidates,
+    nodirect_candidates,
+    screen_selection_candidates,
+)
 from cypmode.challenge.cached_candidates import GROUPS as CACHED_GROUPS
 from cypmode.challenge.calibration_experiment import fit_calibrator
 from cypmode.challenge.feature_store import FeatureStore
@@ -59,16 +64,16 @@ from cypmode.challenge.nested import (
 )
 from cypmode.challenge.nested_runners import (
     arm_candidates,
-    basic_centre_candidates,
-    ext_cont_candidates,
     atomjepa_candidates,
-    ext_adme_candidates,
-    ext_tox_candidates,
+    basic_centre_candidates,
     build_context_and_plan,
     committee_candidates,
     compact_physics_candidates,
     default_candidates,
     embedding_candidates,
+    ext_adme_candidates,
+    ext_cont_candidates,
+    ext_tox_candidates,
     mmp_candidates,
     monroe_candidates,
     pair_candidates,
@@ -80,7 +85,12 @@ from cypmode.challenge.nested_runners import (
     testlike_candidates,
     xiso_candidates,
 )
-from cypmode.challenge.submission import build_submission, load_test_set, portal_validate_classification, validate_submission
+from cypmode.challenge.submission import (
+    build_submission,
+    load_test_set,
+    portal_validate_classification,
+    validate_submission,
+)
 from cypmode.challenge.validation_matching import SimilarityMatcher, weighted_mcc
 
 LOGS = Path("data/structure_track/outputs/cyp3a4/logs")
@@ -121,9 +131,9 @@ GROUPS = {
     "monroe": (monroe_candidates, "monroe_embeddings_{iso}.log"),
     **{name: (builder, f"aux_{name}_{{iso}}.log") for name, builder in CACHED_GROUPS.items()},
 }
-REPLICATE_LINE = re.compile(r"^(CYP\w+) GATE \(replicate (\w+)[^)]*\): (MET|NOT MET)", re.M)
+REPLICATE_LINE = re.compile(r"^(CYP\w+) GATE \(replicate (\w+)[^)]*\): (MET|NOT MET)", re.MULTILINE)
 DESIGN = {"outer": 5, "root": NESTED}  # design 10 switches to the 10-outer-fold replicate (see replicate_verdict.py)
-GATE_LINE = re.compile(r"^(CYP\w+) GATE \((alone|stacked)[^)]*\): (MET|NOT MET)", re.M)
+GATE_LINE = re.compile(r"^(CYP\w+) GATE \((alone|stacked)[^)]*\): (MET|NOT MET)", re.MULTILINE)
 
 
 CONFIRMED_GROUPS = ("neural",)  # groups found after looking at the 15-fold results: their stacked pass counts only when the 10-outer-fold replicate (replicate_verdict.py) is MET as well
@@ -392,7 +402,7 @@ def main() -> None:
     if blend_met and selection_aware is not None:
         from cypmode.challenge.nested import call_top_fraction
 
-        rank = lambda s: pd.Series(s).rank(pct=True).to_numpy()  # noqa: E731
+        rank = lambda s: pd.Series(s).rank(pct=True).to_numpy()
         blend = 0.5 * (rank(results["CYP2D6"]["scores"]) + rank(selection_aware["scores"]))
         files.append(write_validated(test, call_top_fraction(blend, results["CYP2D6"]["called_rate"]), results["CYP3A4"]["calls"], out_dir / "candidate_C_hedged_blend.csv"))
 

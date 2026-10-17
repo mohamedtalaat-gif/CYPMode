@@ -5,12 +5,12 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import yaml
-from rdkit import Chem
-
 from catalog import figure
+from rdkit import Chem
+from style import apply
+
 from cypmode.metrics.motifs import TYPE_II_MOTIFS
 from gen.molecules import draw
-from style import apply
 
 GROUP = "biology"
 ROOT = Path(__file__).resolve().parents[3]

@@ -7,9 +7,9 @@ import pytest
 VIDEO = Path("docs/video")
 sys.path[:0] = [str(VIDEO), str(VIDEO / "anime"), "."]
 
-import facts as facts_module  # noqa: E402
-import render_video  # noqa: E402
-from chrome import CHROME, Chrome  # noqa: E402
+import facts as facts_module
+import render_video
+from chrome import CHROME, Chrome
 
 FACTS = facts_module.Facts(n_train=6145, n_test=750, n_columns=12242, n_models=23, gates=78, gates_not_met=76, auc={"CYP3A4": 0.817, "CYP2D6": 0.731}, mcc={"CYP3A4": 0.44, "CYP2D6": 0.17},
                            poses=20, pose_failures=0, audit_reproducible=True, zip_hash="05a0cfd1")

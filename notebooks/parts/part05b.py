@@ -1,6 +1,6 @@
 """Part V (second part): the panel data and the odds ratio (5.3), the test against potency (5.4)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 PANEL = '''
 # The five tables of the panel, annotated by the project's loader (cypmode/data/panel.py): one row per compound and enzyme, with the label (1 = inhibitor), the motifs found in the compound and the mechanism sentence.

@@ -1,6 +1,6 @@
 """Part VI (second part): making the validation resemble the test (6.4) and comparing two models honestly (6.5)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 SIMILARITY = '''
 # How close a validation compound is to the training compounds, against how close a test compound is. For the first outer fold of the plan: the highest Tanimoto similarity (section 3.2) of every outer-validation

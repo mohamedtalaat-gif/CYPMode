@@ -53,7 +53,7 @@ def build_pairs(smiles: list[str]) -> tuple[np.ndarray, np.ndarray, np.ndarray, 
             continue
         try:
             fragmentations = rdMMPA.FragmentMol(mol, maxCuts=1, maxCutBonds=30, resultsAsMols=False)
-        except Exception:  # noqa: BLE001 - one odd molecule must not stop the batch
+        except Exception:
             continue
         for _, chains in fragmentations:
             parts = chains.split(".")
@@ -153,7 +153,12 @@ def transformation_report(pairs, train_rows: np.ndarray, y_train: np.ndarray, to
 
 
 def main() -> None:
-    from cypmode.challenge.addition_experiment import STORE, TEST_CSV, TRAIN_CSV, evaluate_addition
+    from cypmode.challenge.addition_experiment import (
+        STORE,
+        TEST_CSV,
+        TRAIN_CSV,
+        evaluate_addition,
+    )
     from cypmode.challenge.nested_runners import build_context_and_plan, mmp_candidates
 
     parser = argparse.ArgumentParser(description=__doc__)

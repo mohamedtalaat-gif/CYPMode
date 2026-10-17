@@ -18,7 +18,7 @@ import sys
 
 def patch_chunk_layer() -> int:
     """Make low_mem=True the default of chunk_layer in every OpenFold3 module that imported it; returns the number of bindings changed."""
-    import openfold3.core.utils.chunk_utils as chunk_utils
+    from openfold3.core.utils import chunk_utils
 
     original = chunk_utils.chunk_layer
     if getattr(original, "_low_mem_default", False):
@@ -43,9 +43,8 @@ def patch_chunk_layer() -> int:
 def self_check() -> None:
     """The patched path gives the same output as the original path and as no chunking, and is in effect at every call site."""
     import torch
-
-    import openfold3.core.utils.chunk_utils as chunk_utils
     from openfold3.core.model.layers.triangular_attention import TriangleAttention
+    from openfold3.core.utils import chunk_utils
 
     original = chunk_utils.chunk_layer
     patch_chunk_layer()

@@ -1,6 +1,6 @@
 """Part XI (fourth part): the iron-nitrogen restraint and its confirmation (11.6)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 RESTRAINT_BENCHMARK = '''
 # The restraint on the benchmark. The six benchmark ligands that have a Type II donor were run three ways with Boltz-2 (three samples each): without a restraint, with the donor nitrogen bonded to the iron, and with a contact

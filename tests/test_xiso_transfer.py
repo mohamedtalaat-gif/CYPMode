@@ -7,7 +7,13 @@ pytest.importorskip("lightgbm")
 from cypmode.challenge import xiso_transfer as xt
 from cypmode.challenge.feature_store import FeatureStore
 from cypmode.challenge.nested import NestedPlan
-from cypmode.challenge.nested_runners import ISOFORM_ORDER, Candidate, Context, fit_predict, xiso_candidates
+from cypmode.challenge.nested_runners import (
+    ISOFORM_ORDER,
+    Candidate,
+    Context,
+    fit_predict,
+    xiso_candidates,
+)
 from cypmode.challenge.validation_matching import tanimoto_matrix
 
 PIECES = ["CCO", "CCN", "c1ccccc1", "c1ccncc1", "CC(=O)O", "C1CCCCC1", "c1ccoc1", "CCS", "c1ccsc1", "C1CCNCC1", "C1CCOC1"]

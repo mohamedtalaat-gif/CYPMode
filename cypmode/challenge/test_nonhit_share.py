@@ -39,7 +39,11 @@ def main() -> None:
     from sklearn.metrics import roc_auc_score
     from sklearn.model_selection import StratifiedKFold
 
-    from cypmode.challenge.nested_runners import FEATURE_SETS, LGBM_PRESETS, build_context_and_plan
+    from cypmode.challenge.nested_runners import (
+        FEATURE_SETS,
+        LGBM_PRESETS,
+        build_context_and_plan,
+    )
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--isoform", default="CYP2D6", choices=["CYP2D6", "CYP3A4"])

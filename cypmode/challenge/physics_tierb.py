@@ -138,7 +138,7 @@ def compute_molecule_b(smiles: str, sites: list[tuple[int, float, str]]) -> dict
     if not rows:
         return out
     w = boltzmann_weights(np.array([r["e_water"] for r in rows]))
-    avg = lambda key: float(sum(wi * r[key] for wi, r in zip(w, rows, strict=True)))  # noqa: E731
+    avg = lambda key: float(sum(wi * r[key] for wi, r in zip(w, rows, strict=True)))
     fm_avg = sum(wi * r["fm"] for wi, r in zip(w, rows, strict=True))
 
     def group_max(roles: list[str], names: tuple[str, ...]) -> float:
@@ -175,7 +175,7 @@ def _worker(job: tuple[str, list]):
     smiles, sites = job
     try:
         return compute_molecule_b(smiles, sites)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.warning("tier-B extraction failed for %s: %s", smiles, exc)
         return {n: np.nan for n in FEATURE_NAMES}
 

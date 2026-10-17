@@ -1,6 +1,6 @@
 """Part VII (fourth part): external data as an auxiliary signal (7.7)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 EXT_SOURCES = '''
 # The external sources of the first TDI models, counted from the files the project cached. Each is a set of compounds with a reading of how strongly, or whether, they inhibit a cytochrome enzyme, from an assay

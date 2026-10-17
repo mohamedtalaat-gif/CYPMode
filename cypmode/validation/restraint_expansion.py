@@ -21,7 +21,7 @@ PLAN_PATH = INPUTS / "restraint_expansion_plan.json"
 RESTRAINED_SUFFIX = "-febond"
 COORDINATION_DISTANCE_A = 2.6
 TRAINING_CUTOFF = "2023-06-01"
-ORGANIC = frozenset("C N O F S Cl Br I P".split())
+ORGANIC = frozenset(["C", "N", "O", "F", "S", "Cl", "Br", "I", "P"])
 
 
 def load_plan(path: Path = PLAN_PATH) -> dict:
@@ -158,7 +158,7 @@ def validity_line(ligands: pd.DataFrame, smiles_of: dict[str, str]) -> str:
             return None
         try:
             return bool(check_pose_validity(load_structure(paths[0]), smiles_of[name])["all_passed"])
-        except Exception:  # noqa: BLE001 - a structure PoseBusters cannot process counts as invalid
+        except Exception:
             return False
 
     names = [f"exp-{c}" for c in ligands["comp_id"]]

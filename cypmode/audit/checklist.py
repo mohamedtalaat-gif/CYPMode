@@ -56,7 +56,7 @@ def job_problems() -> list[str]:
         for module in re.findall(r"-m (cypmode(?:\.\w+)+)", text):
             if not (ROOT / (module.replace(".", "/") + ".py")).exists():
                 problems.append(f"{job.name}: module {module} does not exist")
-        for target in re.findall(r"^need_file (\S+)", text, re.M):
+        for target in re.findall(r"^need_file (\S+)", text, re.MULTILINE):
             if target.endswith(".py") and not (ROOT / target).exists():
                 problems.append(f"{job.name}: waits for code that does not exist: {target}")
         for script in re.findall(r"(?:bash|python3?) (scripts/\S+\.(?:sh|py))", text):

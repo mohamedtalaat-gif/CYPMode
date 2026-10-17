@@ -7,11 +7,10 @@ from pathlib import Path
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
 import numpy as np
 import pandas as pd
-
 from catalog import figure
+from matplotlib.patches import Patch
 from style import apply, tidy
 
 GROUP = "engineering"
@@ -90,7 +89,7 @@ def power_log() -> str:
 
 
 def power_log_start(text: str) -> str:
-    return min(re.findall(r"^(\d{4}-\d\d-\d\d) ", text, re.M))
+    return min(re.findall(r"^(\d{4}-\d\d-\d\d) ", text, re.MULTILINE))
 
 
 def power_events(since: str = "2026-10-08") -> pd.DataFrame:
@@ -136,7 +135,7 @@ def power_events_figure(theme_name):
 def test_counts() -> pd.DataFrame:
     rows = []
     for path in sorted((ROOT / "tests").glob("test_*.py")):
-        rows.append({"module": path.stem.removeprefix("test_"), "tests": len(re.findall(r"^\s*def test_", path.read_text(), re.M))})
+        rows.append({"module": path.stem.removeprefix("test_"), "tests": len(re.findall(r"^\s*def test_", path.read_text(), re.MULTILINE))})
     return pd.DataFrame(rows).sort_values("tests", ascending=False)
 
 

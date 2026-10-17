@@ -15,7 +15,11 @@ from pathlib import Path
 import pandas as pd
 
 from cypmode.validation.final_recipe import FINAL, LEVER_RUNS, OFFICIAL
-from cypmode.validation.official_posebusters import MARGIN_FLOOR, OfficialReport, check_cif
+from cypmode.validation.official_posebusters import (
+    MARGIN_FLOOR,
+    OfficialReport,
+    check_cif,
+)
 from cypmode.validation.pose_pools import pool_paths
 
 TABLE = FINAL / "official_posebusters_pools.csv"

@@ -1,6 +1,6 @@
 """Part X (third part): the quantities of the physics block (10.5) and the experiments with them (10.6)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 QUANTITIES = '''
 # The quantities of the physics block (cypmode/challenge/physics_block.py) computed on three small molecules with the project's own functions, run in an isolated interpreter (10.1). Toluene has a benzylic C-H, the

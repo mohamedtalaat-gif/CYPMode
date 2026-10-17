@@ -1,6 +1,6 @@
 """Part XI (second part): how a pose is scored (11.4)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 SCORING_TOYS = '''
 # The three ideas behind the scores, on small examples that can be checked by hand. (1) The Kabsch algorithm finds the rotation that best superposes two sets of points (the singular value decomposition of the matrix of their

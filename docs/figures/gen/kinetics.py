@@ -10,10 +10,9 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+from catalog import figure
 from PIL import Image
 from scipy.integrate import solve_ivp
-
-from catalog import figure
 from style import apply, tidy
 
 GROUP = "kinetics"

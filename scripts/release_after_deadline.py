@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEADLINE = datetime(2026, 11, 3, 23, 59, tzinfo=timezone.utc)
-BLOCK = re.compile(r"\n# >>> HELD BACK UNTIL AFTER THE DEADLINE.*?# <<< HELD BACK\n", re.S)
+BLOCK = re.compile(r"\n# >>> HELD BACK UNTIL AFTER THE DEADLINE.*?# <<< HELD BACK\n", re.DOTALL)
 FILM_OPEN, FILM_CLOSE = "<!-- held-back:film\n", "held-back:film-end -->\n"
 
 

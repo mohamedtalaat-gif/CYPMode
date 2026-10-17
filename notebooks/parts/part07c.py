@@ -1,6 +1,6 @@
 """Part VII (third part): the decision threshold and the reliability of a prediction (7.5), query by committee (7.6)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 THRESHOLD_RULES = '''
 # Four ways of choosing the threshold, on the same probabilities. The model is the LightGBM of 7.1 on the descriptors; five outer folds; for each outer fold the training part gets an inner four-fold cross-validation to produce

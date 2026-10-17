@@ -32,7 +32,7 @@ MIN_RANK_CORRELATION, MAX_MEAN_ABSOLUTE_DIFFERENCE, MIN_PAIR_AGREEMENT = 0.9, 0.
 
 def write_reference_pdb(record: dict, path: Path) -> None:
     """The crystal complex of a reference record as a submission-format PDB: protein chain A, the ligand as residue LIG of chain B, the nearest heme as chain C."""
-    from Bio.PDB import MMCIFParser, PDBIO, Select
+    from Bio.PDB import PDBIO, MMCIFParser, Select
     from Bio.PDB.Chain import Chain
     from Bio.PDB.Model import Model
     from Bio.PDB.Structure import Structure
@@ -109,7 +109,7 @@ def score_against_copies(model_pdb: Path, smiles: str, records: list[dict], work
         reference = workdir / f"ref_{k}.pdb"
         try:
             write_reference_pdb(record, reference)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             best.setdefault("error", f"reference {record['pdb_id']}: {exc}")
             continue
         result = ost_score(model_pdb, reference, smiles)

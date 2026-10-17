@@ -1,6 +1,6 @@
 """Part VIII (second part): turning scores into calls (8.4), calibration (8.5), the candidate files and their checks (8.6), the results with their uncertainty (8.7)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 CALL_RULES = '''
 # Two ways of turning the stack's scores into calls. The stack gives every compound a score. The classical way freezes a score threshold on the training part (the one that maximises the weighted MCC of the inner

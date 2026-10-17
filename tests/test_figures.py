@@ -7,7 +7,7 @@ import pytest
 FIGURES = Path("docs/figures")
 sys.path[:0] = [str(FIGURES), str(FIGURES.parent.parent)]
 
-from catalog import REGISTRY, Figure, caption_text, figure  # noqa: E402
+from catalog import REGISTRY, Figure, caption_text, figure
 
 pytestmark = pytest.mark.skipif(not Path("data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv").exists(), reason="the training data is not in this checkout")
 

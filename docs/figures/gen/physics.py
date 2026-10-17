@@ -4,17 +4,16 @@ hydrogen-abstraction energies by site type, and the signal each physics column c
 import re
 import subprocess
 import sys
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from catalog import figure
 from PIL import Image
 from rdkit import Chem
 from sklearn.metrics import roc_auc_score
-
-from catalog import figure
 from style import apply, tidy
 
 GROUP = "physics"
@@ -22,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[3]
 CACHES = "data/tdi_track/outputs/caches"
 TRAIN = "data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv"
 EXAMPLE = "Cc1ccccc1"  # toluene, the benzylic hydrogen-abstraction probe of the physics block
-CYCLE = re.compile(r"^\s+(\d+)\s+(-?\d+\.\d+)\s+(-?[\d.]+E[+-]\d+)\s+([\d.]+E[+-]\d+)\s*$", re.M)
+CYCLE = re.compile(r"^\s+(\d+)\s+(-?\d+\.\d+)\s+(-?[\d.]+E[+-]\d+)\s+([\d.]+E[+-]\d+)\s*$", re.MULTILINE)
 
 
 SINGLE_POINT = """
@@ -43,7 +42,7 @@ calc.singlepoint()
 """
 
 
-@lru_cache(maxsize=None)
+@cache
 def scf_trace(smiles: str = EXAMPLE) -> pd.DataFrame:
     """The cycle table GFN2-xTB prints for one single point (total energy in Eh, energy error, density error). The library prints it from compiled code, so the calculation
     runs in a child process whose output is captured whole."""

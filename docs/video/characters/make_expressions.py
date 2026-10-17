@@ -9,9 +9,9 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import bible  # noqa: E402
-import expressions  # noqa: E402
-import generate  # noqa: E402
+import bible
+import expressions
+import generate
 
 
 def main() -> int:

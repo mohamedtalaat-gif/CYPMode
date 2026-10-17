@@ -2,7 +2,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from cypmode.challenge.label_confidence import confidence_z, confident_weights, training_weights
+from cypmode.challenge.label_confidence import (
+    confidence_z,
+    confident_weights,
+    training_weights,
+)
 from cypmode.challenge.tdi_targets import SHIFT_THRESHOLD, direct_column, tdi_column
 
 ISO = "CYP3A4"

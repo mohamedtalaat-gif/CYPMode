@@ -1,6 +1,18 @@
 import json
 
-from notebooks.notebook_builder import build, code, contents_cell, coverage, failures, fill, glossary_problems, headings, md, planned_parts, section_of_cells, unwritten_parts
+from notebooks.notebook_builder import (
+    build,
+    code,
+    contents_cell,
+    coverage,
+    failures,
+    glossary_problems,
+    headings,
+    md,
+    planned_parts,
+    section_of_cells,
+    unwritten_parts,
+)
 
 
 def test_cells_run_in_a_shared_namespace_and_outputs_are_recorded(tmp_path):

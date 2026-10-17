@@ -1,6 +1,6 @@
 """Part IX (first part): additions that were tested. The tools for reading a gate (9.0), the selection-aware CYP2D6 model (9.1), SAR pair models and matched pairs (9.2), the label-process committee (9.3)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 GATE_TOOLS = '''
 # Reading the verdicts. Every experiment of this part writes a log whose lines have the same form (cypmode/challenge/addition_experiment.py): for each confidence cut-off z0, the stacked comparison of the default stack plus the

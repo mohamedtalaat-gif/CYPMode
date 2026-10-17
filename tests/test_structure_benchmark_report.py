@@ -1,6 +1,11 @@
 import pandas as pd
 
-from cypmode.validation.structure_benchmark_report import selection_outcomes, summarize, summarize_variants, variant_comparison
+from cypmode.validation.structure_benchmark_report import (
+    selection_outcomes,
+    summarize,
+    summarize_variants,
+    variant_comparison,
+)
 
 TABLE = pd.DataFrame(
     [

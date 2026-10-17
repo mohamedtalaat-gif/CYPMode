@@ -31,7 +31,12 @@ from cypmode.challenge.feature_store import FeatureStore
 from cypmode.challenge.label_confidence import confident_weights
 from cypmode.challenge.leaderboard_prior import estimate_from_csv
 from cypmode.challenge.model_comparison import corrected_resampled_t, plan_sizes
-from cypmode.challenge.nested import NestedPlan, PredictionCache, StackedLogit, nested_evaluate
+from cypmode.challenge.nested import (
+    NestedPlan,
+    PredictionCache,
+    StackedLogit,
+    nested_evaluate,
+)
 from cypmode.challenge.nested_runners import build_context_and_plan, default_candidates
 from cypmode.challenge.validation_matching import SimilarityMatcher
 
@@ -50,7 +55,7 @@ class _NonNegativeLogit:
         self.coef_ = np.zeros((1, 0))
         self.intercept_ = np.zeros(1)
 
-    def fit(self, z: np.ndarray, y: np.ndarray, sample_weight: np.ndarray | None = None) -> "_NonNegativeLogit":
+    def fit(self, z: np.ndarray, y: np.ndarray, sample_weight: np.ndarray | None = None) -> _NonNegativeLogit:
         n, k = z.shape
         w = np.ones(n) if sample_weight is None else np.asarray(sample_weight, dtype=float)
         w = w / w.mean()

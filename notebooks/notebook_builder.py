@@ -44,7 +44,7 @@ TEMPLATE = re.compile(r"\{\{=(.+?)\}\}")
 
 def fill(source: str, namespace: dict) -> str:
     """Replace every ``{{=expression}}`` of a Markdown cell by its value, formatted like an f-string field."""
-    return TEMPLATE.sub(lambda m: eval("f" + repr("{" + m.group(1).strip() + "}"), namespace), source)  # noqa: S307 - the notebook source is project code
+    return TEMPLATE.sub(lambda m: eval("f" + repr("{" + m.group(1).strip() + "}"), namespace), source)
 
 
 # -- outputs that cells can ask for --------------------------------------------------------------------------------------------------------
@@ -163,7 +163,7 @@ def execute(cells: list[dict]) -> list[dict]:
             try:
                 with contextlib.redirect_stdout(stdout):
                     exec(compile(cell["source"], f"<cell {count}>", "exec"), namespace)  # noqa: S102 - the notebook source is project code
-            except Exception:  # noqa: BLE001 - recorded in the notebook so that a failing cell is visible and fails the build
+            except Exception:
                 produced.append({"output_type": "error", "ename": "Error", "evalue": "cell failed", "traceback": traceback.format_exc().splitlines()})
             if stdout.getvalue():
                 produced.insert(0, {"output_type": "stream", "name": "stdout", "text": stdout.getvalue()})
@@ -178,8 +178,8 @@ def execute(cells: list[dict]) -> list[dict]:
 
 # -- structure: headings, sections, generated cells -----------------------------------------------------------------------------------------
 
-HEADING = re.compile(r"^(#{1,3}) (.+)$", re.M)
-FENCE = re.compile(r"```.*?```", re.S)
+HEADING = re.compile(r"^(#{1,3}) (.+)$", re.MULTILINE)
+FENCE = re.compile(r"```.*?```", re.DOTALL)
 
 
 def slug(text: str) -> str:
@@ -199,9 +199,9 @@ def headings(cells: list[dict]) -> list[tuple[int, str, int]]:
 
 def planned_parts(plan_text: str) -> list[str]:
     """The labels of the parts and appendices that the plan lists: 'Part 0', 'Part IV', ..., 'Appendix A' to 'Appendix D'."""
-    found = [f"Part {m.group(1)}" for m in re.finditer(r"^## Part (0|[IVX]+)\.", plan_text, re.M)]
-    if re.search(r"^## Appendices", plan_text, re.M):
-        found += [f"Appendix {m.group(1)}" for m in re.finditer(r"^- ([A-D])\. ", plan_text, re.M)]
+    found = [f"Part {m.group(1)}" for m in re.finditer(r"^## Part (0|[IVX]+)\.", plan_text, re.MULTILINE)]
+    if re.search(r"^## Appendices", plan_text, re.MULTILINE):
+        found += [f"Appendix {m.group(1)}" for m in re.finditer(r"^- ([A-D])\. ", plan_text, re.MULTILINE)]
     return found
 
 
@@ -261,8 +261,8 @@ def glossary_problems(cells: list[dict], terms: list[str], start: int = 0) -> li
     """Terms whose first use (from cell ``start`` on, the front matter being only a summary) is in a cell that does not define them in bold, and terms never used at all. A plural counts as a use."""
     problems = []
     for term in terms:
-        use = re.compile(rf"(?<![\w-]){re.escape(term)}(?:e?s)?(?![\w-])", re.I)
-        bold = re.compile(rf"\*\*{re.escape(term)}(?:e?s)?\*\*", re.I)
+        use = re.compile(rf"(?<![\w-]){re.escape(term)}(?:e?s)?(?![\w-])", re.IGNORECASE)
+        bold = re.compile(rf"\*\*{re.escape(term)}(?:e?s)?\*\*", re.IGNORECASE)
         for i, c in enumerate(cells):
             if i >= start and c["cell_type"] == "markdown" and not c.get("generated") and use.search(FENCE.sub("", c["source"])):
                 if not bold.search(c["source"]):
@@ -277,8 +277,8 @@ FIELDS = (
     "Overview", "Mathematics", "Statistics", "Biology", "Biochemistry", "Pharmacology", "Chemistry", "Cheminformatics", "Computational chemistry", "Quantum chemistry", "Physics",
     "Bioinformatics", "Structural biology", "Machine learning", "Data science", "Software engineering",
 )
-FIELD_LINE = re.compile(r"^> \*\*Field:\*\* (.+)$", re.M)
-SECTION_HEADING = re.compile(r"^## (?:\d+\.\d+|Appendix [A-Z]\b)", re.M)
+FIELD_LINE = re.compile(r"^> \*\*Field:\*\* (.+)$", re.MULTILINE)
+SECTION_HEADING = re.compile(r"^## (?:\d+\.\d+|Appendix [A-Z]\b)", re.MULTILINE)
 
 
 def field_problems(cells: list[dict]) -> list[str]:
@@ -301,13 +301,13 @@ def field_problems(cells: list[dict]) -> list[str]:
     return problems
 
 
-DISPLAY = re.compile(r"\$\$(.+?)\$\$", re.S)
-INLINE = re.compile(r"(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)", re.S)
+DISPLAY = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
+INLINE = re.compile(r"(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)", re.DOTALL)
 MATH_COMMANDS = {
     "frac", "sum", "int", "prod", "ln", "log", "exp", "max", "min", "mathrm", "text", "left", "right", "cdot", "quad", "qquad", "Longrightarrow", "Rightarrow", "ldots", "cdots", "times", "to", "approx",
     "in", "infty", "partial", "sqrt", "mathbb", "mathbf", "mathcal", "operatorname", "begin", "end", "hat", "bar", "tilde", "vec", "le", "ge", "leq", "geq", "neq", "ne", "sim", "propto", "pm", "mid", "sin",
     "cos", "tanh", "arg", "lim", "det", "ell", "binom", "underbrace", "overline", "dots", "equiv", "cap", "cup", "land", "lor", "neg", "forall", "exists", "subset", "nabla", "langle", "rangle", "Big", "big",
-    "lbrace", "rbrace", "vert", "Vert", "lVert", "rVert", "lfloor", "rfloor", "stackrel", "overset", "limits", "bigl", "bigr", "tfrac", "dfrac", "displaystyle", "mathit", "boldsymbol", "scriptstyle", "colon", "prime", "longrightarrow", "longleftarrow", "rightarrow", "leftarrow", "leftrightarrow", "rightleftharpoons", "underset", "overset", "Bigl", "Bigr", "biggl", "biggr", "Biggl", "Biggr", "Bigg", "bigg",
+    "lbrace", "rbrace", "vert", "Vert", "lVert", "rVert", "lfloor", "rfloor", "stackrel", "overset", "limits", "bigl", "bigr", "tfrac", "dfrac", "displaystyle", "mathit", "boldsymbol", "scriptstyle", "colon", "prime", "longrightarrow", "longleftarrow", "rightarrow", "leftarrow", "leftrightarrow", "rightleftharpoons", "underset", "Bigl", "Bigr", "biggl", "biggr", "Biggl", "Biggr", "Bigg", "bigg",
     "setminus", "top", "hspace", "vspace", "phantom", "substack", "atop", "choose", "over", "mathop", "mathbin", "mathrel", "boxed", "cancel",
 }
 UNIVERSAL_SYMBOLS = {"e", "pi", "d", "dt", "dx"}  # the constant e, pi, and the d of a differential, defined in section 0.x and 1.1 and never redefined

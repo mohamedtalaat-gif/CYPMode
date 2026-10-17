@@ -5,16 +5,16 @@ at the projected positions of the atoms, and the distances in the caption are me
 """
 
 import json
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 from Bio.PDB import MMCIFParser
-
 from catalog import figure
-from gen.pymol_scene import pocket as render_pocket
 from style import apply
+
+from gen.pymol_scene import pocket as render_pocket
 
 GROUP = "biology"
 ROOT = Path(__file__).resolve().parents[3]
@@ -34,13 +34,13 @@ class Atom:
         self.element, self.name, self.xyz, self.group, self.residue = element.upper(), name, np.asarray(xyz, dtype=float), group, residue
 
 
-@lru_cache(maxsize=None)
+@cache
 def reference_record(pdb_id: str, comp_id: str) -> dict:
     records = json.loads((ROOT / REFERENCES).read_text())["ligands"]
     return min((r for r in records if r["pdb_id"] == pdb_id and r["comp_id"] == comp_id), key=lambda r: r["min_fe_distance"])
 
 
-@lru_cache(maxsize=None)
+@cache
 def pocket_atoms(pdb_id: str, comp_id: str):
     """(atoms, residue labels, entry resolution): ligand, heme, the pocket residues and any water on the iron, read from the deposited entry."""
     record = reference_record(pdb_id, comp_id)

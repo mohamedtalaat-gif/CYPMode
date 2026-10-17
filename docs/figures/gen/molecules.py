@@ -1,18 +1,17 @@
 """Figures about turning a molecule into numbers: the Morgan algorithm step by step on a real compound, Tanimoto similarity between real compounds, and the size of every feature block."""
 
 import io
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from catalog import figure
 from PIL import Image
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem
 from rdkit.Chem.Draw import rdMolDraw2D
-
-from catalog import figure
 from style import THEMES, apply, tidy
 
 GROUP = "molecules"
@@ -43,7 +42,7 @@ def draw(mol, theme_name, atoms=(), bonds=(), size=(520, 400), atom_colors=None,
     return np.asarray(Image.open(io.BytesIO(drawer.GetDrawingText())).convert("RGB"))
 
 
-@lru_cache(maxsize=None)
+@cache
 def labelled_compounds() -> pd.DataFrame:
     train = pd.read_csv(ROOT / TRAIN)
     keep = train["CYP3A4_is_TDI"].notna() & train["CYP3A4_pIC50_TDI_condition"].notna() & train["CYP3A4_pIC50_direct_inhibition"].notna()

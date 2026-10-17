@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 from cypmode.validation import structure_gates as sg
@@ -16,10 +15,10 @@ def test_restraint_gate_needs_lower_first_pick_rmsd_and_not_worse_validity():
     unguided = table("u", {"a": [5.0, 5, 5], "b": [4.0, 4, 4], "c": [6.0, 6, 6]})
     better = table("v", {"a": [2.0, 2, 2], "b": [3.0, 3, 3], "c": [5.0, 5, 5]}, "-febond")
     worse = table("v", {"a": [7.0, 7, 7], "b": [6.0, 6, 6], "c": [8.0, 8, 8]}, "-fecontact")
-    always = lambda compound, variant: True  # noqa: E731
+    always = lambda compound, variant: True
     out = sg.restraint_gates(unguided, {"febond": better, "fecontact": worse}, always)
     assert out["restraint_bond"]["met"] is True and out["restraint_contact"]["met"] is False
-    invalid = lambda compound, variant: variant == "unguided"  # noqa: E731  restrained poses fail PoseBusters
+    invalid = lambda compound, variant: variant == "unguided"
     assert sg.restraint_gates(unguided, {"febond": better}, invalid)["restraint_bond"]["met"] is False
 
 

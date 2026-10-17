@@ -6,7 +6,14 @@ import pandas as pd
 import pytest
 
 from cypmode.validation import final_recipe
-from cypmode.validation.restraint_expansion import PLAN_PATH, eligible, load_plan, paired_statistics, per_ligand, series_of
+from cypmode.validation.restraint_expansion import (
+    PLAN_PATH,
+    eligible,
+    load_plan,
+    paired_statistics,
+    per_ligand,
+    series_of,
+)
 
 PYRIDINE_AMIDE = "CC(=O)NCc1cccnc1"  # a bare aromatic nitrogen: a Type II donor, 10 heavy atoms
 NO_DONOR = "CC(=O)NCc1ccccc1"

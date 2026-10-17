@@ -92,7 +92,11 @@ def determinism(ctx: Context) -> Section:
 
     from cypmode.challenge.feature_store import BLOCKS
     from cypmode.challenge.nested import NestedPlan
-    from cypmode.challenge.nested_runners import Candidate, default_candidates, fit_predict
+    from cypmode.challenge.nested_runners import (
+        Candidate,
+        default_candidates,
+        fit_predict,
+    )
 
     s = Section("3. Determinism and cache consistency")
     rows = []
@@ -224,7 +228,10 @@ def baselines(ctx: Context) -> Section:
 
     from cypmode.challenge.label_confidence import confidence_z
     from cypmode.challenge.nested import BestSingle, StackedLogit, nested_evaluate
-    from cypmode.challenge.tdi_baseline import compute_descriptors, load_tdi_training_data
+    from cypmode.challenge.tdi_baseline import (
+        compute_descriptors,
+        load_tdi_training_data,
+    )
 
     s = Section("5. Baselines against the current model")
     raw = ctx.train
@@ -278,7 +285,13 @@ def baselines(ctx: Context) -> Section:
 
 
 def committee(ctx: Context) -> Section:
-    from cypmode.challenge.committee_uncertainty import BASELINE, collect_signals, decision_record, evaluate_components, selective_fallback
+    from cypmode.challenge.committee_uncertainty import (
+        BASELINE,
+        collect_signals,
+        decision_record,
+        evaluate_components,
+        selective_fallback,
+    )
     from cypmode.challenge.nested_runners import default_candidates
 
     s = Section("6. Committee (query-by-committee) backtest against the margin baseline")
@@ -309,7 +322,13 @@ def committee(ctx: Context) -> Section:
 def calibration(ctx: Context) -> Section:
     from scipy.special import expit
 
-    from cypmode.challenge.calibration_experiment import ECE_GATE, SLOPE_HI, SLOPE_LO, calibration_metrics, fit_calibrator
+    from cypmode.challenge.calibration_experiment import (
+        ECE_GATE,
+        SLOPE_HI,
+        SLOPE_LO,
+        calibration_metrics,
+        fit_calibrator,
+    )
     from cypmode.challenge.nested import OUTER_REFIT, StackedLogit, _weights, inner_oof
 
     s = Section("7. Calibration of the stack on held-out compounds")
@@ -509,14 +528,14 @@ def readiness(ctx: Context) -> Section:
             "750 rows": len(d) == 750,
             "required columns present": all(c in d.columns for c in cols),
             "no missing values": bool(d[cols].notna().all().all()) if all(c in d.columns for c in cols) else False,
-            "calls are boolean": all(set(d[c].unique()) <= {True, False, 0, 1} for c in ("CYP2D6_is_TDI", "CYP3A4_is_TDI") if c in d.columns),
+            "calls are boolean": all(set(d[c].unique()) <= {True, False} for c in ("CYP2D6_is_TDI", "CYP3A4_is_TDI") if c in d.columns),
             "Molecule_Name order equals the test file": d["Molecule_Name"].tolist() == test["Molecule_Name"].tolist() if "Molecule_Name" in d.columns else False,
             "SMILES equal the test file": d["SMILES"].tolist() == test["SMILES"].tolist() if "SMILES" in d.columns else False,
         }
         for name, ok in checks.items():
             s.add(f"TDI file: {name}", ok)
         rates = {c: float(d[c].astype(int).mean()) for c in ("CYP2D6_is_TDI", "CYP3A4_is_TDI") if c in d.columns}
-        s.body.append(f"`{f.relative_to(ROOT)}` (sha256 {sha256(f)}): " + ", ".join(f"called rate {c} = {fmt(v)}" for c, v in rates.items()) + f" (test prevalence estimates: " + ", ".join(f"{iso} {fmt(ctx.prevalence(iso))}" for iso in ISOFORMS) + ")")
+        s.body.append(f"`{f.relative_to(ROOT)}` (sha256 {sha256(f)}): " + ", ".join(f"called rate {c} = {fmt(v)}" for c, v in rates.items()) + " (test prevalence estimates: " + ", ".join(f"{iso} {fmt(ctx.prevalence(iso))}" for iso in ISOFORMS) + ")")
         s.body.append("\nThis is the file currently on disk; it is a candidate, not evidence that anything was submitted.")
     else:
         s.body.append("No TDI submission file on disk.")
@@ -584,7 +603,7 @@ def attribution(ctx: Context) -> Section:
     terms = local_terms()
     forbidden = {
         "leaderboard alias used as a credit": re.compile(r"\b450nm\b"),
-        **({"words of the private list": re.compile("|".join(terms), re.I)} if terms else {}),
+        **({"words of the private list": re.compile("|".join(terms), re.IGNORECASE)} if terms else {}),
     }
     tracked = run(["git", "ls-files"]).splitlines() + run(["git", "ls-files", "--others", "--exclude-standard"]).splitlines()
     text_ext = (".py", ".md", ".sh", ".txt", ".yaml", ".yml", ".toml", ".ipynb", ".cfg", ".html")
@@ -633,7 +652,9 @@ def limitations(ctx: Context) -> Section:
     return s
 
 
-from cypmode.audit.sections_extra import EXTRA  # noqa: E402 - appended sections live in their own module
+from cypmode.audit.sections_extra import (
+    EXTRA,
+)
 
 ALL = [provenance, tests, determinism, data_integrity, baselines, committee, calibration, chemistry, ledger, structure, readiness, population, attribution, *EXTRA, limitations]
 _ = (islice, json, FAIL, INFO, PASS, NESTED_ROOT, STORE_NPZ)  # names kept importable for callers

@@ -19,7 +19,9 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 
-from cypmode.validation.constants import COORDINATION_DISTANCE_CUTOFF_A as COORDINATION_CUTOFF_A
+from cypmode.validation.constants import (
+    COORDINATION_DISTANCE_CUTOFF_A as COORDINATION_CUTOFF_A,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 SUMMARY_PATH = ROOT / "data" / "structure_track" / "outputs" / "cyp3a4" / "validation_summary.json"

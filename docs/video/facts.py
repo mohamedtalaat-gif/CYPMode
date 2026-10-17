@@ -142,7 +142,7 @@ def _scatter(n: int = 420) -> dict:
     both = training_view(pd.read_csv(TRAIN), "CYP3A4").query("population == 'both_arms'")
     sample = both.sample(n=n, random_state=7)
     return {"points": [[round(float(max(d, 4.0)), 3), round(float(t), 3), int(bool(lab))] for d, t, lab in zip(sample["direct"], sample["tdi"], sample["label"], strict=True)],
-            "n": int(len(both)), "positives": int(both["label"].astype(bool).sum())}
+            "n": len(both), "positives": int(both["label"].astype(bool).sum())}
 
 
 def _curves() -> dict:
@@ -175,7 +175,7 @@ def _structure_checks() -> dict:
     table = pd.read_csv(STRUCTURE / "posebusters_validity_official20.csv")
     checks = [c for c in table.columns if c not in ("compound", "all_passed", "model_index")]
     recipe = json.loads((STRUCTURE / "final/recipe.json").read_text())
-    return {"checks": [c.replace("_", " ") for c in checks], "passed": [int(table[c].astype(bool).sum()) for c in checks], "n": int(len(table)), "donors": [r["ligand"] for r in recipe["ligands"] if r["type_ii_donor"]]}
+    return {"checks": [c.replace("_", " ") for c in checks], "passed": [int(table[c].astype(bool).sum()) for c in checks], "n": len(table), "donors": [r["ligand"] for r in recipe["ligands"] if r["type_ii_donor"]]}
 
 
 def _families() -> dict:
@@ -189,7 +189,7 @@ def _families() -> dict:
 def _repo_and_audit() -> dict:
     tests = sorted((ROOT / "tests").glob("test_*.py"))
     report = ROOT / "audit/AUDIT_REPORT.md"
-    return {"modules": len([p for p in (ROOT / "cypmode").rglob("*.py") if p.name != "__init__.py"]), "test_files": len(tests), "test_functions": sum(len(re.findall(r"^def test_", p.read_text(), re.M)) for p in tests),
+    return {"modules": len([p for p in (ROOT / "cypmode").rglob("*.py") if p.name != "__init__.py"]), "test_files": len(tests), "test_functions": sum(len(re.findall(r"^def test_", p.read_text(), re.MULTILINE)) for p in tests),
             "jobs": len(list((ROOT / "queue/jobs").glob("*.sh"))), "audit_hash": hashlib.sha256(report.read_bytes()).hexdigest()[:12]}
 
 
@@ -214,7 +214,7 @@ def _scout() -> dict:
     rows = []
     for label, ids in sources:
         compounds = set(ids)
-        rows.append({"label": label, "rows": int(len(ids)), "compounds": len(compounds), "in_training": len(compounds & train), "in_test": sorted(compounds & test)})
+        rows.append({"label": label, "rows": len(ids), "compounds": len(compounds), "in_training": len(compounds & train), "in_test": sorted(compounds & test)})
     return {"sources": [{**r, "in_test": len(r["in_test"])} for r in rows], "excluded": sorted({c for r in rows for c in r["in_test"]})}
 
 

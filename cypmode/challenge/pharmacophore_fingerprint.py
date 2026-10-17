@@ -174,8 +174,8 @@ def _main() -> None:
 
     from cypmode.challenge.knn_features import _morgan_fp
     from cypmode.challenge.stacking_significance import (
-        repeated_cv_stacking_comparison,
         paired_comparison_summary,
+        repeated_cv_stacking_comparison,
     )
     from cypmode.challenge.tdi_ablation import add_ablation_features
     from cypmode.challenge.tdi_baseline import (

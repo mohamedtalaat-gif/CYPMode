@@ -1,6 +1,6 @@
 """Part VI (third part): why the project stopped using Tukey's HSD (6.6), the pre-declared gates and what a design could detect (6.7), and the checks that the split and the pipeline do not leak (6.8)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 SCORES_COUNT = '''
 # What the saved tables hold: for each experiment, the MCC of every variant on every (repeat, fold) of a repeated cross-validation, for each enzyme. The first of them (the ChemBERTa experiment) is counted here.

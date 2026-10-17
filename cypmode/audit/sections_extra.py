@@ -5,7 +5,6 @@ import re
 import subprocess
 import sys
 import zipfile
-
 from pathlib import Path
 
 import numpy as np
@@ -15,8 +14,8 @@ from cypmode.audit.core import LOGS, ROOT, Context, Section, fmt, md_table, sha2
 
 FINAL_TDI = ROOT / "data/tdi_track/outputs/final"
 FINAL_STRUCTURE = ROOT / "data/structure_track/outputs/cyp3a4/final"
-TDI_GATE = re.compile(r"^(CYP\w+) GATE \(([^)]*)\): (MET|NOT MET)", re.M)
-STRUCTURE_GATE = re.compile(r"^STRUCTURE GATE (\w+)([^:\n]*): (MET|NOT MET)", re.M)
+TDI_GATE = re.compile(r"^(CYP\w+) GATE \(([^)]*)\): (MET|NOT MET)", re.MULTILINE)
+STRUCTURE_GATE = re.compile(r"^STRUCTURE GATE (\w+)([^:\n]*): (MET|NOT MET)", re.MULTILINE)
 PRIVATE_PATHS = (str(Path.home()), str(ROOT))
 
 
@@ -132,7 +131,10 @@ def enforced_rules(ctx: Context) -> Section:
 
 
 def final_candidates(ctx: Context) -> Section:
-    from cypmode.challenge.submission import portal_validate_classification, portal_validate_structure
+    from cypmode.challenge.submission import (
+        portal_validate_classification,
+        portal_validate_structure,
+    )
 
     s = Section("19. Final candidate files (hashes and the portal's own checks)")
     rows = []

@@ -13,8 +13,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parents[1]))
 
-from catalog import REGISTRY, caption_text  # noqa: E402
-from style import save  # noqa: E402
+from catalog import REGISTRY, caption_text
+from style import save
 
 
 def load_generators() -> None:
@@ -41,7 +41,7 @@ def build() -> int:
             if fig.animation is not None:
                 fig.files += [fig.animation(theme) for theme in ("light", "dark")]
             print(f"ok   {fig.figure_id}")
-        except Exception:  # noqa: BLE001 - every failure is reported, the build fails at the end
+        except Exception:
             failures.append(fig.figure_id)
             print(f"FAIL {fig.figure_id}\n{traceback.format_exc()}")
     produced = {figure_id_of(p) for g in {f.group for f in REGISTRY.values()} for p in (HERE / g).glob("*") if p.suffix in (".svg", ".png", ".gif")}

@@ -1,6 +1,6 @@
 """Part V (first half): the Type II motif screen. The idea and the patterns that encode it (5.1), the trialkylamine alert (5.2), the panel data (5.3), the test against potency (5.4)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 PATTERNS = '''
 # The six patterns of the motif screen, read back from the project's own table (cypmode/metrics/motifs.py): what each pattern is made of, and on how many compounds of the challenge it matches.

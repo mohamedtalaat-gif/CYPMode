@@ -1,6 +1,6 @@
 """Part VII (fifth part): learned representations, ChemBERTa and the shared-trunk network (7.9); structural evidence from Boltz-2 (7.10); the first assembled models (7.11)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 CHEMBERTA_FACTS = '''
 # The ChemBERTa embedding of every labelled compound, as cached by cypmode/challenge/chemberta_features.py (the model seyonec/ChemBERTa-zinc-base-v1 reads the SMILES token by token and the project keeps the mean of the

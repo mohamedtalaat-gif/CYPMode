@@ -4,16 +4,14 @@ import math
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch
-
-import numpy as np
-from rdkit import Chem
-
 from catalog import figure
+from matplotlib.patches import FancyBboxPatch
+from rdkit import Chem
+from style import apply
+
 from gen._draw import arrow, box, canvas
 from gen.molecules import draw
 from gen.pymol_scene import autocrop, heme_closeup, overview
-from style import apply
 
 GROUP = "biology"
 ROOT = Path(__file__).resolve().parents[3]
@@ -96,8 +94,11 @@ def adme_route(theme_name):
     for a, b in zip(xs, xs[1:], strict=False):
         arrow(ax, (a + 1.3, 1.1), (b - 1.3, 1.1), th["text"])
     ax.text(7.5, 0.18, "what CYPMode predicts", ha="center", fontsize=10, color=th["orange"], fontweight="bold")
-    from gen.molecules import draw as draw_molecule  # the compound is drawn like every other molecule of the figures
     import pandas as pd
+
+    from gen.molecules import (
+        draw as draw_molecule,  # the compound is drawn like every other molecule of the figures
+    )
 
     smiles = pd.read_csv(ROOT / "data/structure_track/inputs/structure_track_test_blinded.csv").set_index("Molecule_Name").loc[EXAMPLE, "SMILES"]
     ax.imshow(draw_molecule(Chem.MolFromSmiles(smiles), theme_name, size=(780, 560), line_width=6), extent=(0.15, 2.85, 2.5, 4.1), aspect="auto", zorder=1)

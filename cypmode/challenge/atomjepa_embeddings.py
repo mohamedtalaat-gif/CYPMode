@@ -76,12 +76,12 @@ def extract(smiles: list[str], device: str = "cpu", batch_size: int = 4, cache: 
             try:
                 pooled, per_atom, nums = run_batch(group)
                 values[i : i + len(group)], atoms[i : i + len(group)], numbers[i : i + len(group)] = pooled, per_atom, nums
-            except Exception:  # noqa: BLE001 - a molecule without a conformer must not stop the run: try them one by one, keep NaN for the failures
+            except Exception:
                 for j, smi in enumerate(group):
                     try:
                         pooled, per_atom, nums = run_batch([smi])
                         values[i + j], atoms[i + j], numbers[i + j] = pooled[0], per_atom[0], nums[0]
-                    except Exception:  # noqa: BLE001
+                    except Exception:
                         failed.append(smi)
         offsets = np.concatenate([[0], np.cumsum([len(a) for a in atoms])]).astype(np.int64)
         np.savez_compressed(path, smiles=np.array(part, dtype=object), values=values, failed=np.array(failed, dtype=object), atoms=np.concatenate(atoms), numbers=np.concatenate(numbers), offsets=offsets)

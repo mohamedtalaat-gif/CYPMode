@@ -1,6 +1,6 @@
 """Part VII (second part): nearest-neighbour read-across features (7.3), the direct-inhibition bridge and its retraction (7.4)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 KNN_DEMO = '''
 # The four read-across features for one compound. A labelled CYP3A4 compound that is a time-dependent inhibitor and whose ten nearest neighbours (Tanimoto similarity on the Morgan bits, section 3.2) include three

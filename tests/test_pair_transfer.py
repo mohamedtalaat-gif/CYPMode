@@ -3,7 +3,11 @@ import pytest
 
 pytest.importorskip("lightgbm")
 
-from cypmode.challenge.pair_transfer import fit_predict_pairs, neighbour_table, pair_matrix
+from cypmode.challenge.pair_transfer import (
+    fit_predict_pairs,
+    neighbour_table,
+    pair_matrix,
+)
 
 
 def planted(n=240, seed=0):

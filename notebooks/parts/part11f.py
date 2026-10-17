@@ -1,6 +1,6 @@
 """Part XI (sixth part): choosing among poses (11.8)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 MBR_TOY = '''
 # Minimum Bayes risk selection, on the toy complex of 11.4. A pool of poses is given; each pose in turn is treated as the truth, and every other pose is scored against it with LDDT-PLI; the expected score of a pose is the mean over

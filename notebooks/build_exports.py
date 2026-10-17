@@ -90,8 +90,8 @@ AUTORENDER = """
 renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false, strict: 'ignore'});
 """
 
-CODE = re.compile(r"```.*?```|`[^`\n]+`", re.S)
-DISPLAY = re.compile(r"\$\$(.+?)\$\$", re.S)
+CODE = re.compile(r"```.*?```|`[^`\n]+`", re.DOTALL)
+DISPLAY = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
 INLINE = re.compile(r"(?<![\\$])\$(?![\s$])((?:[^$\n\\]|\\.)+?)(?<![\s\\])\$(?![\w$])")
 
 

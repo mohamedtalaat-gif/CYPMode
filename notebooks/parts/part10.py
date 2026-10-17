@@ -1,6 +1,6 @@
 """Part X (first part): the ladder of quantum chemistry, from the Schroedinger equation to Hartree-Fock (10.1, 10.2)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 QC_TOOLS = '''
 # Quantum-chemistry programs are run in a fresh interpreter of their own, as the project's extraction jobs are: a library for electronic structure (PySCF or tblite) and LightGBM must not meet in one process, because the

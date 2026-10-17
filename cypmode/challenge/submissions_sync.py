@@ -19,7 +19,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from cypmode.challenge.submission import portal_validate_classification, portal_validate_structure, validate_submission
+from cypmode.challenge.submission import (
+    portal_validate_classification,
+    portal_validate_structure,
+    validate_submission,
+)
 
 SUBMISSIONS = Path("submissions")
 FINAL_TDI = Path("data/tdi_track/outputs/final")

@@ -10,7 +10,6 @@ import argparse
 import io
 import sys
 import time
-import urllib.request
 import uuid
 from pathlib import Path
 
@@ -19,8 +18,8 @@ import requests
 from PIL import Image, ImageFilter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import bible  # noqa: E402
-import generate  # noqa: E402
+import bible
+import generate
 
 CROP = 512
 # positions in the 768 x 1024 calm portraits, read off a gridded view of each face: (left eye x, y), (right eye x, y), (mouth x, y)

@@ -111,7 +111,7 @@ def portal_validate_classification(path: str | Path) -> tuple[bool, str]:
     suffix = path.suffix.lower()
     try:
         df = pd.read_parquet(path) if suffix == ".parquet" else pd.read_csv(path) if suffix == ".csv" else None
-    except Exception as exc:  # noqa: BLE001 - the portal reports any read failure the same way
+    except Exception as exc:
         return False, f"Could not read {suffix} file: {exc}"
     if df is None:
         return False, "Classification submissions must be a .parquet or .csv file."
@@ -139,7 +139,7 @@ def portal_validate_structure(path: str | Path) -> tuple[bool, str]:
     try:
         with zipfile.ZipFile(path) as zf:
             n_files = len(zf.namelist())
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         return False, f"Could not read zip file: {exc}"
     if n_files != PORTAL_STRUCTURE_FILES:
         return False, f"Expected {PORTAL_STRUCTURE_FILES} files in zip, got {n_files}."

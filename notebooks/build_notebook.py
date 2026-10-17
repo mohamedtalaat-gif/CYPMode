@@ -9,7 +9,18 @@ import argparse
 import sys
 from pathlib import Path
 
-from notebooks.notebook_builder import build, contents_cell, coverage, coverage_cell, failures, field_problems, glossary_problems, headings, symbol_problems, unwritten_parts
+from notebooks.notebook_builder import (
+    build,
+    contents_cell,
+    coverage,
+    coverage_cell,
+    failures,
+    field_problems,
+    glossary_problems,
+    headings,
+    symbol_problems,
+    unwritten_parts,
+)
 from notebooks.notebook_cells import ALL_CELLS, TERMS
 
 OUT = Path(__file__).resolve().parent / "cypmode_notebook.ipynb"

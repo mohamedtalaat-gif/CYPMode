@@ -149,7 +149,7 @@ def main() -> None:
     args = parser.parse_args()
     from rdkit import Chem
 
-    from cypmode.validation.pose_pools import mbr_pick, pairwise_lddt, pool_paths
+    from cypmode.validation.pose_pools import pairwise_lddt, pool_paths
     from cypmode.validation.reference_ligands import load_reference_set
     from cypmode.validation.selection_validation import DEFAULT_TABLES
     from cypmode.validation.structures import load_structure

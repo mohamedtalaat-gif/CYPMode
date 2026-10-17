@@ -51,7 +51,7 @@ def main() -> None:
             continue
         five = read_stacked(logs / f"{five_name}_{args.isoform}.log")
         ten = read_stacked(logs / f"{ten_name}_{args.isoform}.log")
-        fmt = lambda d: "; ".join(f"z0={z}: {diff:+.4f} (p={p:.3f})" for z, (diff, p) in sorted(d.items())) or "no result"  # noqa: E731
+        fmt = lambda d: "; ".join(f"z0={z}: {diff:+.4f} (p={p:.3f})" for z, (diff, p) in sorted(d.items())) or "no result"
         print(f"{group}: 5-fold stacked {fmt(five)} | 10-fold stacked {fmt(ten)}")
         met = verdict(five, ten)
         print(f"{args.isoform} GATE (replicate {group}, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design): {'MET' if met else 'NOT MET'}")

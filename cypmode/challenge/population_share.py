@@ -31,9 +31,8 @@ def baseline_oof(n_jobs: int = 3) -> pd.DataFrame:
     from lightgbm import LGBMClassifier
     from sklearn.model_selection import StratifiedKFold
 
-    from cypmode.challenge.tdi_baseline import compute_descriptors
-
     from cypmode.challenge.feature_store import FeatureStore
+    from cypmode.challenge.tdi_baseline import compute_descriptors
     from cypmode.challenge.validation_matching import SimilarityMatcher
 
     raw = pd.read_csv(TRAIN)

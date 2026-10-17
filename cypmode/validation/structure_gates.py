@@ -74,7 +74,7 @@ def _validity_fn(smiles: dict[str, str]):
             return False
         try:
             return bool(check_pose_validity(load_structure(paths[0]), smiles[compound])["all_passed"])
-        except Exception:  # noqa: BLE001 - a structure PoseBusters cannot process counts as invalid
+        except Exception:
             return False
 
     return check

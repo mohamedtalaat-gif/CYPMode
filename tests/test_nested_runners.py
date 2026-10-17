@@ -469,7 +469,11 @@ def test_compact_selection_uses_only_training_rows_to_choose_columns(store, monk
 
 
 def test_new_candidate_groups_are_complete_and_named_consistently():
-    from cypmode.challenge.nested_runners import compact_physics_candidates, physics_b_candidates, population_physics_candidates
+    from cypmode.challenge.nested_runners import (
+        compact_physics_candidates,
+        physics_b_candidates,
+        population_physics_candidates,
+    )
 
     compact = compact_physics_candidates()
     assert [c.name for c in compact] == ["lgbm_A+physk20_deep", "lgbm_A+fps+physk20_deep"] and all("physics" in c.blocks for c in compact)

@@ -1,6 +1,10 @@
 import re
 
-from cypmode.validation.constants import COORDINATION_DISTANCE_CUTOFF_A, CYP2D6_SEQUENCE, CYP3A4_SEQUENCE
+from cypmode.validation.constants import (
+    COORDINATION_DISTANCE_CUTOFF_A,
+    CYP2D6_SEQUENCE,
+    CYP3A4_SEQUENCE,
+)
 
 AMINO_ACIDS = set("ACDEFGHIKLMNPQRSTVWY")
 

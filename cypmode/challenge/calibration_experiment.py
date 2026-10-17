@@ -24,7 +24,14 @@ from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import LogisticRegression
 
 from cypmode.challenge.leaderboard_prior import estimate_from_csv
-from cypmode.challenge.nested import OUTER_REFIT, NestedPlan, PredictionCache, StackedLogit, _weights, inner_oof
+from cypmode.challenge.nested import (
+    OUTER_REFIT,
+    NestedPlan,
+    PredictionCache,
+    StackedLogit,
+    _weights,
+    inner_oof,
+)
 from cypmode.challenge.nested_runners import build_context_and_plan, default_candidates
 from cypmode.challenge.validation_matching import SimilarityMatcher
 

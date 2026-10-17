@@ -1,8 +1,12 @@
 import pytest
-
 import yaml
 
-from cypmode.validation.build_input import boltz_atom_name, build_boltz_yaml, find_coordinating_cysteine, heme_donor_atom
+from cypmode.validation.build_input import (
+    boltz_atom_name,
+    build_boltz_yaml,
+    find_coordinating_cysteine,
+    heme_donor_atom,
+)
 
 # Real UniProt P08684 (human CYP3A4) sequence.
 CYP3A4_SEQUENCE = (
@@ -122,7 +126,10 @@ def test_protein_msa_is_written_under_the_protein_chain_only_when_given(tmp_path
 
 
 def test_template_entry_may_name_the_chain_of_a_multi_chain_file(tmp_path):
-    from cypmode.validation.build_input import build_boltz_yaml, find_coordinating_cysteine
+    from cypmode.validation.build_input import (
+        build_boltz_yaml,
+        find_coordinating_cysteine,
+    )
     from cypmode.validation.constants import CYP3A4_SEQUENCE
 
     plain, trimer = tmp_path / "1ABC.cif", tmp_path / "38FU.cif"

@@ -1,6 +1,6 @@
 """Part VII (first part): the challenge's own baseline reproduced (7.1), the staircase of feature blocks M0 to M3 (7.2) and nearest-neighbour read-across features (7.3)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 BASELINE_DATA = '''
 # What the challenge tutorial's baseline is given. It reads the training file, keeps every compound that has a label for at least one of the two enzymes (load_tdi_training_data), and trains one LightGBM

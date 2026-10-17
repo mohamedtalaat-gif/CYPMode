@@ -17,7 +17,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT / "docs/figures/gen"))
 
-import pymol_scene as ps  # noqa: E402
+import pymol_scene as ps
 
 ASSETS = HERE / "anime" / "assets"
 OUT = ROOT / "data/structure_track/outputs/out/cyp3a4"

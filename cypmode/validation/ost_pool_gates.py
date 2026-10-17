@@ -29,7 +29,7 @@ from cypmode.validation import ost_pools
 OUT = ost_pools.OUT
 LOGS = OUT / "logs"
 OST_LOG_NAMES = ("selection_validation.log", "heme_frame_prior.log", "ei_sampling.log", "structure_gates.log", "pose_awareness.log", "series_consensus.log", "mbr_lddt_reevaluation.log")
-GATE_LINE = re.compile(r"^STRUCTURE GATE (\w+)[^:\n]*: (MET|NOT MET)", re.M)
+GATE_LINE = re.compile(r"^STRUCTURE GATE (\w+)[^:\n]*: (MET|NOT MET)", re.MULTILINE)
 RESTRAINED_SUFFIX = "-febond"
 
 

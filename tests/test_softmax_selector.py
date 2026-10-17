@@ -1,6 +1,11 @@
 import numpy as np
 
-from cypmode.challenge.softmax_selector import FixedTemperature, SoftmaxBlend, blend, softmax_weights
+from cypmode.challenge.softmax_selector import (
+    FixedTemperature,
+    SoftmaxBlend,
+    blend,
+    softmax_weights,
+)
 
 
 def test_the_temperature_runs_from_the_best_model_to_the_equal_committee():

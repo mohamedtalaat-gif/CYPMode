@@ -1,6 +1,6 @@
 """Part IX (second part): frozen foundation-model embeddings (9.4), test-likeness weighting (9.5), floor-clipped arms (9.6), cross-isoform transfer of the arms (9.7), confidence-weighted training (9.8)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 CHEMELEON_FACTS = '''
 # The frozen CheMeleon block (cypmode/challenge/frozen_embeddings.py). CheMeleon is a Chemprop message-passing network pretrained to predict a large set of computed molecular descriptors; here it is used frozen: every molecule

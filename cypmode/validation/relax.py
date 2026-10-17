@@ -65,7 +65,7 @@ class RelaxResult:
 
 def heme_parameters() -> dict[str, tuple[float, float, float]]:
     """Heavy atom name -> (charge with the charges of its hydrogens folded in, sigma in nm, epsilon in kJ/mol) from the CHARMM36 ``HEME`` residue shipped with OpenMM."""
-    import openmm.app as app
+    from openmm import app
 
     root = ET.parse(Path(app.__file__).parent / "data" / "charmm36.xml").getroot()
     template = next(r for r in root.iter("Residue") if r.get("name") == "HEME")
@@ -89,8 +89,7 @@ def protein_environment(pdb: Path, iron_position_nm: np.ndarray):
     The prediction holds heavy atoms only and no terminal oxygen, so PDBFixer adds the missing heavy atoms of the termini before Modeller adds the hydrogens.
     """
     import openmm as mm
-    import openmm.app as app
-    from openmm import unit
+    from openmm import app, unit
     from pdbfixer import PDBFixer
 
     fixer = PDBFixer(filename=str(pdb))
@@ -152,8 +151,7 @@ def ligand_system(with_hydrogens):
 def relax_pose(pdb: Path, smiles: str, out: Path, threads: int = 2) -> RelaxResult:
     """Relax the ligand of ``pdb`` in its frozen pocket and write ``out`` (the same file with the new ligand coordinates)."""
     import openmm as mm
-    import openmm.app as app
-    from openmm import unit
+    from openmm import app, unit
 
     structure = app.PDBFile(str(pdb))
     topology, positions = structure.topology, structure.positions
@@ -277,7 +275,7 @@ def main() -> int:
             result = relax_pose(Path(job["pdb"]), job["smiles"], out, args.threads)
             record.write_text(json.dumps(result.summary()))
             print(f"{out.name}: energy {result.energy_before:.0f} -> {result.energy_after:.0f} kJ/mol, ligand moved {result.rmsd:.2f} A", flush=True)
-        except Exception as exc:  # noqa: BLE001 - one pose that cannot be set up must not stop the batch
+        except Exception as exc:
             failures += 1
             record.write_text(json.dumps({"error": f"{type(exc).__name__}: {exc}"}))
             print(f"{out.name}: FAILED {type(exc).__name__}: {exc}", flush=True)

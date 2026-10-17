@@ -118,7 +118,7 @@ def bond_orders_from_template(template: Chem.Mol, mol: Chem.Mol) -> Chem.Mol:
             candidate = rw.GetMol()
             try:
                 Chem.SanitizeMol(candidate)
-            except Exception as exc:  # noqa: BLE001 - the next match may sanitise
+            except Exception as exc:
                 errors.append(str(exc))
                 continue
             built = candidate
@@ -165,7 +165,7 @@ def ligand_copies(pdb_path: str | Path, smiles: str, resname: str = "LIG") -> li
     for part in Chem.GetMolFrags(residue, asMols=True, sanitizeFrags=False):
         try:
             copies.append(bond_orders_from_template(template, part))
-        except Exception:  # noqa: BLE001 - one copy that does not match is skipped, as in the scorer
+        except Exception:
             continue
     return copies
 
@@ -211,7 +211,7 @@ def check_pdb(pdb_path: str | Path, smiles: str) -> OfficialReport:
         if not copies or context is None or template is None:
             return OfficialReport(passed=False, error="no ligand copy could be built from the SMILES, or no receptor")
         reports = [_report_for(copy, template, context) for copy in copies]
-    except Exception as exc:  # noqa: BLE001 - an unprocessable pose counts as failed
+    except Exception as exc:
         return OfficialReport(passed=False, error=f"{type(exc).__name__}: {exc}")
     worst = min(reports, key=lambda r: (r.passed, r.distance_margin if np.isfinite(r.distance_margin) else -1.0))
     worst.n_copies = len(reports)
@@ -226,7 +226,7 @@ def check_cif(cif_path: str | Path, smiles: str) -> OfficialReport:
         pdb = Path(tmp) / "pose.pdb"
         try:
             convert_cif_to_pdb(Path(cif_path), pdb)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             return OfficialReport(passed=False, error=f"conversion failed: {type(exc).__name__}: {exc}")
         return check_pdb(pdb, smiles)
 

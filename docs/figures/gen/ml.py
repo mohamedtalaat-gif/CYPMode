@@ -7,11 +7,16 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import average_precision_score, precision_recall_curve, roc_auc_score, roc_curve
-
 from catalog import figure
-from gen._stack import evaluation
+from sklearn.metrics import (
+    average_precision_score,
+    precision_recall_curve,
+    roc_auc_score,
+    roc_curve,
+)
 from style import apply, tidy
+
+from gen._stack import evaluation
 
 GROUP = "ml"
 ROOT = Path(__file__).resolve().parents[3]
@@ -84,7 +89,7 @@ def stacked_comparisons(names=LOG_NAMES) -> pd.DataFrame:
 
 def forest_caption() -> str:
     five, ten = stacked_comparisons(), stacked_comparisons(REPLICATE_LOG_NAMES)
-    both = lambda f: sum(1 for (_, _), g in f.groupby(["idea", "isoform"]) if len(g) == 2 and (g["p"] < 0.05).all() and (g["auc_difference"] > 0).all())  # noqa: E731
+    both = lambda f: sum(1 for (_, _), g in f.groupby(["idea", "isoform"]) if len(g) == 2 and (g["p"] < 0.05).all() and (g["auc_difference"] > 0).all())
     return (f"Every stacked comparison logged by the experiments: the change in outer AUC when an idea's candidates are added to the default stack, for each isoform and each "
             f"confidence cut z0 (circle 1.0, square 1.96), with the p value printed in the experiment's log beside each marker. Top row: the 5-fold design, {len(five)} comparisons from "
             f"{five['idea'].nunique()} ideas; bottom row: the 10-fold replicate of the physics ideas, {len(ten)} comparisons. An idea passes its pre-declared gate only when both z0 "

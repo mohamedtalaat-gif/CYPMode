@@ -1,6 +1,6 @@
 """Part V (third part): the iron-nitrogen distance in predicted structures (5.5) and the pocket geometry (5.6)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 STRUCTURE_FILE = '''
 # What a predicted structure file contains, read from the real file of the ketoconazole prediction (Boltz-2, cypmode/validation): the names of the columns of the atom table, three of its lines, and the

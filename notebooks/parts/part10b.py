@@ -1,6 +1,6 @@
 """Part X (second part): density functional theory (10.3) and the semi-empirical and tight-binding methods, GFN2-xTB (10.4)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 DFT_WATER = '''
 # Density functional theory against Hartree-Fock on the water molecule, with the program PySCF in an isolated interpreter (10.1): the geometry is the experimental one (O-H 0.957 angstrom, angle 104.5 degrees), the basis def2-SVP

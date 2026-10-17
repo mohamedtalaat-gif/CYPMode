@@ -72,7 +72,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         out = score(args.model, args.reference, args.smiles)
-    except Exception as exc:  # noqa: BLE001 - the caller records the failure
+    except Exception as exc:
         out = {"error": f"{type(exc).__name__}: {exc}"}
     print("OST_RESULT " + json.dumps(out))
     return 0

@@ -9,7 +9,7 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.pyplot as plt
 
 THEMES = {
     "light": {"background": "#FFFFFF", "text": "#1A1A1A", "muted": "#4D4D4D", "grid": "#D9D9D9", "blue": "#0F4D92", "red": "#B64342", "green": "#1B7F3A",

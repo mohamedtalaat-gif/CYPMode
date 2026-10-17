@@ -6,8 +6,8 @@ pytest.importorskip("lightgbm")
 pytest.importorskip("statsmodels")
 
 from cypmode.challenge.stacking_significance import (
-    repeated_cv_stacking_comparison,
     paired_comparison_summary,
+    repeated_cv_stacking_comparison,
 )
 
 KETOCONAZOLE = "CC(=O)N1CCN(c2ccc(OCC3COC(Cn4ccnc4)(c4ccc(Cl)cc4Cl)O3)cc2)CC1"

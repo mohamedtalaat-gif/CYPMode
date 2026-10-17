@@ -5,7 +5,7 @@ returns the same nested evaluation as the report (inner and outer scores of thre
 build wrote to ``<isoform>_stack_choice.csv``; a figure is never drawn from a rebuild that disagrees with it.
 """
 
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 import numpy as np
@@ -40,7 +40,7 @@ Z0 = 1.0
 TOLERANCE = 1e-6
 
 
-@lru_cache(maxsize=None)
+@cache
 def evaluation(isoform: str):
     """(candidate names, selector table, stack folds [(y, scores, weights, weights without the prevalence shift)])."""
     from cypmode.challenge.label_confidence import confidence_z

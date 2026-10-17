@@ -14,7 +14,7 @@ import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import bible  # noqa: E402
+import bible
 
 SERVER = "http://127.0.0.1:8188"
 OUT = Path(__file__).resolve().parents[1] / "anime" / "characters"

@@ -1,6 +1,6 @@
 """Part VIII (first part): the final TDI model. The candidate grid (8.1), the stack (8.2), the reproducibility bug in the stack (8.3)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 SETUP8 = '''
 # The objects every section of this part reads, for CYP3A4: the nested plan of 6.3 and its cache of predictions, the similarity matcher and the confidence z of 6.4, and the positive rate of the scored set (2.10). The names carry a

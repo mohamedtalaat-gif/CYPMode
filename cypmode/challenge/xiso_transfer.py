@@ -30,7 +30,13 @@ import pandas as pd
 
 from cypmode.challenge.addition_experiment import evaluate_addition, parse_args
 from cypmode.challenge.nested import Task
-from cypmode.challenge.nested_runners import ISOFORM_ORDER, Context, _design, _labels_for, xiso_candidates
+from cypmode.challenge.nested_runners import (
+    ISOFORM_ORDER,
+    Context,
+    _design,
+    _labels_for,
+    xiso_candidates,
+)
 from cypmode.challenge.tdi_targets import ASSAY_FLOOR
 
 ARMS = ("tdi", "direct")

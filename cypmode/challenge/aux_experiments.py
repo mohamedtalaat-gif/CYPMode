@@ -24,9 +24,20 @@ p < 0.05 and a positive mean AUC difference at both z0. A group that fails is re
 import argparse
 
 from cypmode.challenge.addition_experiment import evaluate_addition
-from cypmode.challenge.aux_blocks import aux_candidates, gate_shift_candidates, nodirect_candidates
+from cypmode.challenge.aux_blocks import (
+    aux_candidates,
+    gate_shift_candidates,
+    nodirect_candidates,
+)
 from cypmode.challenge.cached_candidates import GROUPS as CACHED
-from cypmode.challenge.nested_runners import Candidate, atomjepa_candidates, basic_centre_candidates, ext_cont_candidates, ext_adme_candidates, ext_tox_candidates
+from cypmode.challenge.nested_runners import (
+    Candidate,
+    atomjepa_candidates,
+    basic_centre_candidates,
+    ext_adme_candidates,
+    ext_cont_candidates,
+    ext_tox_candidates,
+)
 
 NESTED_ROOT = "data/tdi_track/outputs/nested"
 ALONE = {

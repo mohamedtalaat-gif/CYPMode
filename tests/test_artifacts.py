@@ -6,7 +6,7 @@ import pytest
 from cypmode.audit import artifacts
 
 sys.path[:0] = ["docs/video", "docs/video/anime"]
-from chrome import CHROME  # noqa: E402
+from chrome import CHROME
 
 needs_chrome = pytest.mark.skipif(not Path(CHROME).exists(), reason="Google Chrome is not installed")
 

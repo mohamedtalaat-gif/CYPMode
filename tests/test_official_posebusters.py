@@ -7,7 +7,11 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 from cypmode.validation import final_recipe as fr
-from cypmode.validation.official_posebusters import MARGIN_FLOOR, OfficialReport, bond_orders_from_template
+from cypmode.validation.official_posebusters import (
+    MARGIN_FLOOR,
+    OfficialReport,
+    bond_orders_from_template,
+)
 
 ZIP = Path("data/structure_track/outputs/cyp3a4/final/structures_final.zip")
 

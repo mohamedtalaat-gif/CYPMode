@@ -83,7 +83,7 @@ def run_checks() -> list[tuple[str, str, str]]:
         counts_line = re.search(r"Counts: PASS = (\d+), FAIL = (\d+)", report)
         fails = int(counts_line.group(2)) if counts_line else -1
         add("the automated audit has no failed check", fails == 0, f"{counts_line.group(0) if counts_line else 'no counts found'}")
-        failing = re.findall(r"^\| (.+?) \| FAIL \|", report, re.M)
+        failing = re.findall(r"^\| (.+?) \| FAIL \|", report, re.MULTILINE)
         if failing:
             rows.append(("   failed checks of the audit", WARN, "; ".join(f[:70] for f in failing[:4])))
         add("the audit is newer than every final output and every source file", AUDIT.stat().st_mtime >= max(newest(final_outputs()), newest(source_files())), f"audit {stamp(AUDIT)}")
@@ -93,7 +93,10 @@ def run_checks() -> list[tuple[str, str, str]]:
         add("the automated audit exists", False, "audit/AUDIT_REPORT.md is missing")
 
     # -- deliverables -----------------------------------------------------------------------------------------------------------------------------------
-    from cypmode.challenge.submission import portal_validate_classification, portal_validate_structure
+    from cypmode.challenge.submission import (
+        portal_validate_classification,
+        portal_validate_structure,
+    )
 
     manifest = json.loads((FINAL_TDI / "manifest.json").read_text()) if (FINAL_TDI / "manifest.json").exists() else {}
     for candidate in sorted(FINAL_TDI.glob("candidate_*.csv")):

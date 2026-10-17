@@ -1,7 +1,5 @@
 import numpy as np
 import pytest
-from rdkit import Chem
-from rdkit.Chem import AllChem
 
 from cypmode.validation import series as sr
 from cypmode.validation import series_consensus as sc

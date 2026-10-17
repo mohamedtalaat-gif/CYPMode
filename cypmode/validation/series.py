@@ -67,9 +67,10 @@ def common_core(smiles_a: str, smiles_b: str, timeout: int = 10) -> list[tuple[i
 
 def core_rmsd(structure_a, smiles_a: str, structure_b, smiles_b: str, core: list[tuple[int, int]], pocket_radius: float = 12.0) -> float:
     """RMSD over the common core between a pose of ligand A and a pose of ligand B, the two complexes superposed on pocket C-alpha atoms."""
+    from rdkit import Chem
+
     from cypmode.validation.pose_rescoring import structure_arrays
     from cypmode.validation.structures import _ligand_mol_3d
-    from rdkit import Chem
 
     _, fe_a, ca_a = structure_arrays(structure_a)
     _, fe_b, ca_b = structure_arrays(structure_b)

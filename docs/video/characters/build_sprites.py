@@ -14,9 +14,9 @@ from PIL import Image
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-import bible  # noqa: E402
-import cutout  # noqa: E402
-import generate  # noqa: E402
+import bible
+import cutout
+import generate
 
 CUT = generate.OUT / "cut"
 INDEX = HERE.parent / "anime" / "assets_characters.js"

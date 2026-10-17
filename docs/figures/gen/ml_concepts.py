@@ -1,20 +1,19 @@
 """Concept figures of machine learning: a decision tree fitted to real compounds and gradient boosting stage by stage on a toy regression."""
 
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from catalog import figure
 from matplotlib.colors import LinearSegmentedColormap
 from PIL import Image
 from rdkit import Chem
 from rdkit.Chem import Descriptors
-from sklearn.model_selection import StratifiedKFold, cross_val_predict
 from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import StratifiedKFold, cross_val_predict
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, plot_tree
-
-from catalog import figure
 from style import apply, tidy
 
 GROUP = "ml"
@@ -25,7 +24,7 @@ DEPTH = 3
 LEAF = 40
 
 
-@lru_cache(maxsize=None)
+@cache
 def descriptor_table() -> pd.DataFrame:
     train = pd.read_csv(ROOT / TRAIN)
     keep = train["CYP3A4_is_TDI"].notna() & train["CYP3A4_pIC50_TDI_condition"].notna() & train["CYP3A4_pIC50_direct_inhibition"].notna()
@@ -77,7 +76,7 @@ NU = 0.3  # learning rate: the share of each new stump that is added
 STAGES = (0, 1, 3, 10, 40)
 
 
-@lru_cache(maxsize=None)
+@cache
 def boosting_run():
     rng = np.random.default_rng(3)
     x = np.sort(rng.uniform(0, 6, 120))
@@ -131,7 +130,7 @@ def boosting_animation(theme_name: str) -> Path:
     x, y, grid, history = boosting_run()
     out = ROOT / "docs/figures" / GROUP / f"ml_boosting_stages-anim-{theme_name}.gif"
     frames = []
-    for stage in range(0, max(STAGES) + 1):
+    for stage in range(max(STAGES) + 1):
         prediction, grid_prediction, residual, grid_step = history[stage]
         fig, (a, b) = plt.subplots(2, 1, figsize=(5.8, 5.2), dpi=110, sharex=True, gridspec_kw={"height_ratios": [2, 1]})
         a.plot(x, y, "o", color=th["muted"], ms=3, alpha=0.7)

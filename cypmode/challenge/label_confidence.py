@@ -23,7 +23,12 @@ from collections.abc import Callable
 import numpy as np
 import pandas as pd
 
-from cypmode.challenge.tdi_targets import ASSAY_FLOOR, SHIFT_THRESHOLD, direct_column, tdi_column
+from cypmode.challenge.tdi_targets import (
+    ASSAY_FLOOR,
+    SHIFT_THRESHOLD,
+    direct_column,
+    tdi_column,
+)
 
 STD_SUFFIX = "_std"
 

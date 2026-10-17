@@ -43,7 +43,7 @@ LOG = Path("data/structure_track/outputs/cyp3a4/logs/chemprop_CYP3A4.log")
 
 def processor_seconds_per_task(log: Path = LOG) -> float:
     """The median time between two consecutive finished tasks of the same chunk in the log of the processor runs (gaps of more than two hours separate chunks and are left out)."""
-    stamps = [datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S") for m in re.finditer(rf"^(\d{{4}}-\d\d-\d\d \d\d:\d\d:\d\d),\d+ {VARIANT}: \d+/\d+ tasks", log.read_text(), re.M)]
+    stamps = [datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S") for m in re.finditer(rf"^(\d{{4}}-\d\d-\d\d \d\d:\d\d:\d\d),\d+ {VARIANT}: \d+/\d+ tasks", log.read_text(), re.MULTILINE)]
     gaps = [(b - a).total_seconds() for a, b in zip(stamps, stamps[1:]) if 0 < (b - a).total_seconds() < 7200]
     return float(statistics.median(gaps))
 

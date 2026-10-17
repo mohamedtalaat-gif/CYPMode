@@ -1,6 +1,6 @@
 """Part V (last part): the six-drug panel of time-dependent shifts (5.7) and the Streamlit application (5.8)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 PANEL6 = '''
 # The reference panel: six named drugs whose potency was measured with and without a pre-incubation (cypmode/validation/tdi_reference.py). For each drug: the shift (pIC50 with pre-incubation minus pIC50 without), its

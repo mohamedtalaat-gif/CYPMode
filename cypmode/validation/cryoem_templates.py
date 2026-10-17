@@ -21,7 +21,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from cypmode.validation.conformers import CRYOEM_DIR, CRYOEM_TEMPLATE_CHAIN, excluded_entries, pick_conformers
+from cypmode.validation.conformers import (
+    CRYOEM_DIR,
+    CRYOEM_TEMPLATE_CHAIN,
+    excluded_entries,
+    pick_conformers,
+)
 from cypmode.validation.pose_rescoring_validation import NOVEL_SIMILARITY
 from cypmode.validation.reference_ligands import POCKET_CA_RADIUS_A
 
@@ -49,7 +54,10 @@ def build_records(directory: Path = CRYOEM_DIR, out: Path = RECORDS) -> dict:
     """Ligand records (same fields as the crystal reference set) and the chain-A pocket of every entry; writes the compact JSON."""
     from Bio.PDB.MMCIFParser import MMCIFParser
 
-    from cypmode.validation.reference_ligands import extract_active_site_ligands, fetch_ligand_inventory
+    from cypmode.validation.reference_ligands import (
+        extract_active_site_ligands,
+        fetch_ligand_inventory,
+    )
 
     inventory = fetch_ligand_inventory(list(ENTRIES))
     parser = MMCIFParser(QUIET=True)

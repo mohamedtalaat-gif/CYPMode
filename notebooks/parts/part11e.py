@@ -1,6 +1,6 @@
 """Part XI (fifth part): the diversity levers that did not pass (11.7)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 POCKET_RIGIDITY = '''
 # How different are the pockets of the crystal structures? If the C-alpha atoms of the pocket sit nearly in the same place in every structure, a different crystal template cannot change the prediction much. For each pair of the

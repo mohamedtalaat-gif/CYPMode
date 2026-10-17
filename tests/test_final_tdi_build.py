@@ -54,7 +54,10 @@ def test_markdown_table_has_header_rule_and_rows():
 
 
 def test_portal_checks_match_the_published_rules(tmp_path):
-    from cypmode.challenge.submission import portal_validate_classification, portal_validate_structure
+    from cypmode.challenge.submission import (
+        portal_validate_classification,
+        portal_validate_structure,
+    )
 
     test = pd.read_csv(fb.TEST_CSV)
     rng = np.random.default_rng(1)

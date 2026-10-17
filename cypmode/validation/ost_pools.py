@@ -76,7 +76,7 @@ def score_copies(model_pdb: Path, smiles: str, records: list[dict], workdir: Pat
         reference = workdir / f"ref_{k}.pdb"
         try:
             write_reference_pdb(record, reference)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             error = error or f"reference {record['pdb_id']}: {exc}"
             continue
         result = ost_score(model_pdb, reference, smiles)

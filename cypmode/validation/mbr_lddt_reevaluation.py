@@ -28,7 +28,10 @@ ENGINES = ("boltz", "openfold3")
 
 def pose_table(compounds: list[str], smiles_of: dict[str, str]) -> pd.DataFrame:
     """LDDT-PLI to the crystal of every pose in the pools of the given compounds (run names; the SMILES is that of the compound the run belongs to)."""
-    from cypmode.validation.lddt_to_crystal import crystal_references, pose_lddt_to_crystal
+    from cypmode.validation.lddt_to_crystal import (
+        crystal_references,
+        pose_lddt_to_crystal,
+    )
     from cypmode.validation.pose_pools import pool_paths, template_automorphisms
     from cypmode.validation.structures import load_structure
 

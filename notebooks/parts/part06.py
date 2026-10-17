@@ -1,6 +1,6 @@
 """Part VI (first part): why a score on the training data lies (6.1), what choosing does to a cross-validated score (6.2), and the nested construction that removes it (6.3)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 TRAINING_SCORE = '''
 # The data of this part: the CYP3A4 compounds with both arms measured (section 2.3), and the feature set "A" of section 4.1 (Morgan counts and RDKit descriptors). A model is fitted on all of them and scored

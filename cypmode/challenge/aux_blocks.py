@@ -32,7 +32,14 @@ from __future__ import annotations
 import numpy as np
 
 from cypmode.challenge.nested import Task
-from cypmode.challenge.nested_runners import FEATURE_SETS, LGBM_PRESETS, Candidate, Context, _design, _labels_for
+from cypmode.challenge.nested_runners import (
+    FEATURE_SETS,
+    LGBM_PRESETS,
+    Candidate,
+    Context,
+    _design,
+    _labels_for,
+)
 from cypmode.challenge.official_extra import ENZYMES
 from cypmode.challenge.tdi_targets import ASSAY_FLOOR, SHIFT_THRESHOLD
 

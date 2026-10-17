@@ -8,9 +8,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy import stats
-
 from catalog import figure
+from scipy import stats
 from style import apply, tidy
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -73,7 +72,10 @@ def leak_guard(theme_name):
 # -- the test prevalence recovered from the public boards ---------------------------------------------------------------------------------------
 
 def board_prevalence(iso: str) -> tuple[np.ndarray, dict]:
-    from cypmode.challenge.leaderboard_prior import estimate_from_csv, implied_prevalence
+    from cypmode.challenge.leaderboard_prior import (
+        estimate_from_csv,
+        implied_prevalence,
+    )
 
     board = pd.read_csv(ROOT / BOARDS / f"interim_{iso}_2026-10-04.csv").dropna(subset=["Username"])
     values = implied_prevalence(board["Accuracy"], board["Precision"], board["Recall"])

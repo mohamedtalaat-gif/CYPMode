@@ -1,6 +1,6 @@
 """Part XI (first part): the structure track, what a structure is (11.1), how a co-folding model predicts one (11.2) and how its input is built (11.3)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 STRUCTURE_FILE = '''
 # What a predicted complex file holds. The file is one of the 20 structures of the final submission (the ligand OCNT-2312554 in CYP3A4), in the layout the challenge asks for: the protein as chain A, the ligand as the residue

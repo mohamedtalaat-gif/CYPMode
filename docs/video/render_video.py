@@ -19,8 +19,8 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "anime"))
 sys.path.insert(0, str(HERE.parents[1]))
 
-import facts as facts_module  # noqa: E402
-from chrome import Chrome  # noqa: E402
+import facts as facts_module
+from chrome import Chrome
 
 PAGE = HERE / "anime" / "index.html"
 FACTS_JS = HERE / "anime" / "facts.js"

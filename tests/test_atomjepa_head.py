@@ -5,8 +5,11 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from cypmode.challenge.nested import Task  # noqa: E402
-from cypmode.challenge.nested_runners_torch import TorchContext, fit_predict_atomjepa_head  # noqa: E402
+from cypmode.challenge.nested import Task
+from cypmode.challenge.nested_runners_torch import (
+    TorchContext,
+    fit_predict_atomjepa_head,
+)
 
 
 def planted_context(n=900, seed=0):

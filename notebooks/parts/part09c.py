@@ -1,6 +1,6 @@
 """Part IX (third part): the neural pair (9.9), the other additions of the last days (9.10) and the ledger of Part IX (9.11)."""
 
-from notebooks.notebook_builder import code, figure, md
+from notebooks.notebook_builder import code, md
 
 NEURAL_MEMBERS = '''
 # The members of the neural pair as the nested design holds them. The multitask network (cypmode/challenge/nested_runners_torch.py, fit_predict_multitask) reads the logarithm of the Morgan counts and the quantile-normalised

@@ -111,7 +111,7 @@ def conformer_terms(pose_mol, ensemble, relative_energies: np.ndarray) -> dict:
         probe.AddConformer(Chem.Conformer(conf), assignId=True)
         try:
             rmsd = float(rdMolAlign.GetBestRMS(probe, Chem.Mol(pose)))
-        except Exception:  # noqa: BLE001 - a conformer that cannot be matched is skipped
+        except Exception:
             continue
         if rmsd < best[0]:
             best = (rmsd, float(energy))
@@ -155,7 +155,13 @@ def ligand_context(smiles: str) -> dict:
 def pose_terms(cif: Path, smiles: str, context: dict) -> dict | None:
     """The term columns of one predicted pose, or None when its ligand bond orders cannot be assigned (a distorted pose)."""
     from cypmode.validation.pocket_geometry import ligand_burial_sasa
-    from cypmode.validation.structures import _STANDARD_RESIDUES, _ligand_atoms, _ligand_mol_3d, find_heme_iron, load_structure
+    from cypmode.validation.structures import (
+        _STANDARD_RESIDUES,
+        _ligand_atoms,
+        _ligand_mol_3d,
+        find_heme_iron,
+        load_structure,
+    )
 
     structure = load_structure(cif)
     try:

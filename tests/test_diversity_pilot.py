@@ -1,7 +1,15 @@
 import numpy as np
 import pandas as pd
 
-from cypmode.validation.diversity_pilot import GAIN_A, SAMPLES, STEP_SCALE, build_pilot_table, lever_of, ligand_of, verdicts
+from cypmode.validation.diversity_pilot import (
+    GAIN_A,
+    SAMPLES,
+    STEP_SCALE,
+    build_pilot_table,
+    lever_of,
+    ligand_of,
+    verdicts,
+)
 
 LIGANDS = pd.DataFrame({"Molecule_Name": ["bench-AAA"], "SMILES": ["c1ccncc1C"]})
 

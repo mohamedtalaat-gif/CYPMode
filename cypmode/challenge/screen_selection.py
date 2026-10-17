@@ -24,12 +24,31 @@ import pandas as pd
 
 from cypmode.challenge.aux_blocks import screen_selection_candidates
 from cypmode.challenge.feature_store import FeatureStore
-from cypmode.challenge.hedged_blend import BAND, GRID, SubsetStack, evaluate_across_regimes
+from cypmode.challenge.hedged_blend import (
+    BAND,
+    GRID,
+    SubsetStack,
+    evaluate_across_regimes,
+)
 from cypmode.challenge.label_confidence import confident_weights
 from cypmode.challenge.leaderboard_prior import estimate_from_csv
-from cypmode.challenge.model_comparison import compare_candidate_sets, corrected_resampled_t, plan_sizes
-from cypmode.challenge.nested import BestSingle, NestedPlan, PredictionCache, StackedLogit, nested_evaluate
-from cypmode.challenge.nested_runners import build_context_and_plan, population_candidates, run
+from cypmode.challenge.model_comparison import (
+    compare_candidate_sets,
+    corrected_resampled_t,
+    plan_sizes,
+)
+from cypmode.challenge.nested import (
+    BestSingle,
+    NestedPlan,
+    PredictionCache,
+    StackedLogit,
+    nested_evaluate,
+)
+from cypmode.challenge.nested_runners import (
+    build_context_and_plan,
+    population_candidates,
+    run,
+)
 from cypmode.challenge.population_experiment import SETS
 from cypmode.challenge.validation_matching import SimilarityMatcher
 
