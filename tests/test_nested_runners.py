@@ -156,7 +156,7 @@ def test_feature_store_rejects_unparseable_smiles_and_a_stale_cache_is_rebuilt(t
 
 def test_every_registered_block_computes_on_a_small_molecule_set():
     store = FeatureStore.build(_smiles(5))
-    assert set(store.blocks) == set(BLOCKS) - {"ext_activity", "physics", "chemeleon", "physics_b", "basic_centre", "monroe"}  # opt-in blocks need external panels, the xTB cache or an embedding cache; tested separately
+    assert set(store.blocks) == set(BLOCKS) - {"ext_activity", "physics", "chemeleon", "physics_b", "basic_centre", "monroe", "ext_cont", "ext_tox", "ext_adme", "atomjepa"}  # opt-in blocks need external panels, the xTB cache or an embedding cache; tested separately
     assert all(np.isfinite(v).all() for v in store.blocks.values())
 
 
