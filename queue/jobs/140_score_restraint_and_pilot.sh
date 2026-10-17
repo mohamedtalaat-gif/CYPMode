@@ -1,5 +1,6 @@
 #!/bin/bash
 source queue/lib.sh
+# Scores the poses of the unrestrained, bond-restraint, contact-restraint and diversity-pilot runs on the crystal-anchored benchmark and writes the comparison of the restraints and the pilot report.
 FE_B=$(python3 -c "import pandas as pd;print(' '.join(pd.read_csv('$IN/structure_benchmark_febond.csv').Molecule_Name))")
 FE_C=$(python3 -c "import pandas as pd;print(' '.join(pd.read_csv('$IN/structure_benchmark_fecontact.csv').Molecule_Name))")
 PN=$(python3 -c "import pandas as pd;print(' '.join(pd.read_csv('$IN/structure_benchmark_diversity_pilot.csv').Molecule_Name))")
