@@ -67,8 +67,11 @@ def sha256(path: Path, n: int = 12) -> str:
     return h.hexdigest()[:n]
 
 
-def run(cmd: list[str], cwd: Path = ROOT) -> str:
-    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True).stdout
+def run(cmd: list[str], cwd: Path = ROOT, timeout: float | None = None) -> str:
+    try:
+        return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=False, timeout=timeout).stdout
+    except subprocess.TimeoutExpired:
+        return f"timed out after {timeout:.0f} seconds"
 
 
 class Context:

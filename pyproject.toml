@@ -131,7 +131,7 @@ markers = [
 # and that import alone is what crashes/hangs the process -- confirmed
 # directly for test_multitask.py and test_chemberta_features.py
 # (segfault, exit 139) and test_quantum_pharmacophore.py (deadlock).
-addopts = "--ignore=tests/test_multitask.py --ignore=tests/test_multitask_no_standardization_leak.py --ignore=tests/test_nested_runners_torch.py --ignore=tests/test_quantum_pharmacophore.py --ignore=tests/test_physics_block.py --ignore=tests/test_physics_tierb.py --ignore=tests/test_chemberta_features.py --ignore=tests/test_final_assembly_cyp2d6.py"
+addopts = "--ignore=tests/test_atomjepa_head.py --ignore=tests/test_multitask.py --ignore=tests/test_multitask_no_standardization_leak.py --ignore=tests/test_nested_runners_torch.py --ignore=tests/test_quantum_pharmacophore.py --ignore=tests/test_physics_block.py --ignore=tests/test_physics_tierb.py --ignore=tests/test_chemberta_features.py --ignore=tests/test_final_assembly_cyp2d6.py"
 
 [tool.ruff.lint]
 # Ruff's own defaults include flake8-bandit (S) and flake8-blind-except

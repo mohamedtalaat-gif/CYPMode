@@ -73,7 +73,7 @@ def tests(ctx: Context, enabled: bool = True) -> Section:
         s.add("test suite executed", None, "skipped")
         ctx.metrics.update(tests_passed="not run", tests_failed="not run")
         return s
-    out = run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--no-header", "tests"])
+    out = run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--no-header", "tests"], timeout=3600)  # a hung test is a failed check, not a stalled audit
     last = [line for line in out.strip().splitlines() if re.search(r"\d+ (passed|failed|error)", line)]
     counts = {k: int(v) for v, k in re.findall(r"(\d+) (passed|failed|skipped|deselected|errors?)", last[-1] if last else "")}
     failed = counts.get("failed", 0) + counts.get("error", 0) + counts.get("errors", 0)
