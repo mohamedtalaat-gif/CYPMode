@@ -473,7 +473,10 @@ def fit_predict(candidate: Candidate, ctx: Context, task: Task) -> np.ndarray:
             return gate_eval
         hit = hits[:, target].astype(bool)
         if family == "sel2_heckman":
-            mills = lambda p: (lambda z: np.column_stack([z, norm.pdf(z) / np.clip(norm.cdf(z), 1e-6, None)]))(norm.ppf(np.clip(p, 0.01, 0.99)))
+            def mills(p):
+                z = norm.ppf(np.clip(p, 0.01, 0.99))
+                return np.column_stack([z, norm.pdf(z) / np.clip(norm.cdf(z), 1e-6, None)])
+
             train_x, eval_x = np.hstack([train_x, mills(gate_train)]), np.hstack([eval_x, mills(gate_eval)])
         tdi = LGBMClassifier(verbose=-1, n_jobs=ctx.n_jobs, random_state=seed % 2**31, **candidate.params).fit(train_x[hit], y[hit]).predict_proba(eval_x)[:, 1]
         return gate_eval * tdi

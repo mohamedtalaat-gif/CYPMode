@@ -57,7 +57,6 @@ def harvest() -> int:
         for second in range(duration):
             chrome.evaluate(f"render({second + 0.5})")
         log = chrome.evaluate("SPEECH_LOG")
-    gate = next(s for s in scenes if s["id"] == "gate")
     scene_at = lambda t: next(s for s in scenes if s["start"] <= t < s["end"])
     for item in log:
         if item["kind"] == "card":

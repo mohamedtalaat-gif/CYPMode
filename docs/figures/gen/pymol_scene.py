@@ -113,7 +113,7 @@ def render(key: str, body: str, size=(1800, 1100), theme: str = "dark", anchors:
     png, meta, script = CACHE / f"{key}-{theme}-{digest}.png", CACHE / f"{key}-{theme}-{digest}.json", CACHE / f"{key}-{theme}-{digest}.py"
     if not png.exists() or not meta.exists():
         script.write_text(HEADER.format(pal=PALETTE[theme], root=str(ROOT)) + body + FOOTER.format(width=size[0], height=size[1], anchors=anchors, json_path=str(meta), png_path=str(png)))
-        result = subprocess.run([pymol_executable(), "-cq", str(script)], capture_output=True, text=True, timeout=1800)
+        result = subprocess.run([pymol_executable(), "-cq", str(script)], capture_output=True, text=True, timeout=1800, check=False)
         if not png.exists():
             raise RuntimeError(f"PyMOL did not write {png.name}:\n{result.stdout[-1500:]}\n{result.stderr[-1500:]}")
     return Scene(png, json.loads(meta.read_text()))

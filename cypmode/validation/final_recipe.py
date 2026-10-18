@@ -378,7 +378,7 @@ def main() -> None:
 
         prior = (lambda p: float(prior_model.log_density(structure_descriptor(load_structure(p)))[0])) if prior_model else None
         extras = pose_extras(ligand, smiles[ligand], pool, recipe.terms, partner_pools) if recipe.selection == "rank_terms" else None
-        best, ok, mbr = select_pose(pool, recipe.selection, valid, prior, extras, smiles[ligand], margin)
+        best, ok, _mbr = select_pose(pool, recipe.selection, valid, prior, extras, smiles[ligand], margin)
         run, engine, cif = pool[best]
         rows.append({"compound": ligand, "engine": engine, "chosen_cif": str(cif), "boltz_posebusters_ok": ok if engine == "boltz" else False, "of3_posebusters_ok": ok if engine == "openfold3" else False})
         details.append({"compound": ligand, "pool": len(pool), "valid_in_pool": sum(valid(p) for _, _, p in pool), "run": run, "engine": engine, "chosen_cif": str(cif), "valid": ok, "distance_margin": round(margin(cif), 4)})

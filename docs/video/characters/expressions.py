@@ -114,7 +114,7 @@ def main() -> int:
     parser.add_argument("--expression", required=True, choices=[e for e in bible.EXPRESSIONS if e != "calm"])
     parser.add_argument("--seed", type=int)
     args = parser.parse_args()
-    source = sorted(generate.OUT.glob(f"{args.member}_calm_s*.png"))[0]
+    source = min(generate.OUT.glob(f"{args.member}_calm_s*.png"))
     started = time.time()
     result = repaint(args.member, args.expression, source, args.seed)
     target = generate.OUT / f"{args.member}_{args.expression}.png"

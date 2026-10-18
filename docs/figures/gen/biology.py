@@ -1,6 +1,7 @@
 """The biology: the catalytic cycle of a cytochrome P450 around its real heme, and the route of a drug through the body with the real enzyme and a real compound."""
 
 import math
+from itertools import pairwise
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -91,7 +92,7 @@ def adme_route(theme_name):
     xs = [1.5, 4.5, 7.5, 10.5]
     for x, (name, text), highlight in zip(xs, STAGES, (False, False, True, False), strict=True):
         box(ax, x, 1.1, 2.5, 1.5, text, th["orange"] if highlight else th["panel"], th["text"], "#1A1A1A" if highlight else th["text"], size=8.4, wrap=26, title=name)
-    for a, b in zip(xs, xs[1:], strict=False):
+    for a, b in pairwise(xs):
         arrow(ax, (a + 1.3, 1.1), (b - 1.3, 1.1), th["text"])
     ax.text(7.5, 0.18, "what CYPMode predicts", ha="center", fontsize=10, color=th["orange"], fontweight="bold")
     import pandas as pd

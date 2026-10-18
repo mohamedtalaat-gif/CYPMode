@@ -73,7 +73,7 @@ def core_rmsd(structure_a, smiles_a: str, structure_b, smiles_b: str, core: list
     from cypmode.validation.structures import _ligand_mol_3d
 
     _, fe_a, ca_a = structure_arrays(structure_a)
-    _, fe_b, ca_b = structure_arrays(structure_b)
+    _, _fe_b, ca_b = structure_arrays(structure_b)
     shared = sorted(set(ca_a) & set(ca_b))
     near = [r for r in shared if np.linalg.norm(ca_a[r] - fe_a) <= pocket_radius]
     if len(near) < 8 or not core:

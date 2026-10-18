@@ -293,7 +293,7 @@ def build_isoform(iso: str, gates: dict, test: pd.DataFrame, store: FeatureStore
     prevalence = float(estimate_from_csv(BOARDS[iso])["prevalence"])
 
     if fill_deploy:  # the experiments cached cross-validation tasks only; the winners also need their deployment fits
-        for g, cs in candidates_by_group.items():
+        for cs in candidates_by_group.values():
             run(cs, ctx, plan, cache, include_deploy=True)
     default_names = [c.name for c in default_candidates() if not cache.missing(c.name)]
     groups = {g: [c.name for c in cs if not cache.missing(c.name)] for g, cs in candidates_by_group.items()}
@@ -398,7 +398,7 @@ def main() -> None:
     if selection_aware is not None:
         files.append(write_validated(test, selection_aware["calls"], results["CYP3A4"]["calls"], out_dir / "candidate_B_selection_aware.csv"))
     blend_log = LOGS / "hedged_blend_CYP2D6.log"
-    blend_met = blend_log.exists() and "GATE (hedged blend adopted by the minimax rule, fit weight %s): MET" % args.fit_weight in blend_log.read_text()
+    blend_met = blend_log.exists() and f"GATE (hedged blend adopted by the minimax rule, fit weight {args.fit_weight}): MET" in blend_log.read_text()
     if blend_met and selection_aware is not None:
         from cypmode.challenge.nested import call_top_fraction
 

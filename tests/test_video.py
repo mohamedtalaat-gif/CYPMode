@@ -1,5 +1,6 @@
 import json
 import sys
+from itertools import pairwise
 from pathlib import Path
 
 import pytest
@@ -84,7 +85,7 @@ def page():
 @needs_chrome
 def test_the_scenes_cover_the_film_without_gaps(page):
     scenes = page.evaluate("SCENES")
-    assert scenes[0]["start"] == 0 and all(a["end"] == b["start"] for a, b in zip(scenes, scenes[1:], strict=False))
+    assert scenes[0]["start"] == 0 and all(a["end"] == b["start"] for a, b in pairwise(scenes))
     assert page.evaluate("DURATION") == scenes[-1]["end"] > 200
 
 

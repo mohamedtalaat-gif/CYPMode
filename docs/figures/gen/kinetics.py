@@ -76,7 +76,7 @@ def inhibition_types(theme_name):
 
 def integrate(inhibitor_um: float, t_max: float = 12.0, n: int = 240):
     def rhs(_, y):
-        e, ei, dead = y
+        e, ei, _dead = y
         bind = K_ON * inhibitor_um * e - K_OFF * ei
         return [-bind, bind - K_INACT * ei, K_INACT * ei]
 

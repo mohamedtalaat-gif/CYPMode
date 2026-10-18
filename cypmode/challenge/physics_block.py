@@ -177,7 +177,7 @@ def _hydrogens(mol_h: Chem.Mol, atom: int) -> list[int]:
 
 def pharmacophore_geometry(mol_h: Chem.Mol, conf_ids: list[int], energies: np.ndarray, roles: tuple[list[str], list[str]], hat: dict[int, float], best_conf: int) -> dict:
     """L4: binder-to-oxidation-site distances over the conformer ensemble and the exposure of both."""
-    ch_role, binder_role = roles
+    _, binder_role = roles
     binders = [i for i, r in enumerate(binder_role) if r in NITROGEN_BINDERS + ("thioether_S", "thiophene_S")]
     out = {n: np.nan for n in PHARMACOPHORE_FEATURES}
     out["n_binders"] = float(len(binders))

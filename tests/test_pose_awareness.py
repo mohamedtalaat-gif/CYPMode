@@ -29,7 +29,7 @@ def test_pharmacophore_terms_use_the_donor_for_type_ii_ligands_and_the_site_othe
     AllChem.EmbedMolecule(mol, randomSeed=3)
     pose = Chem.RemoveHs(mol)
     xyz = pose.GetConformer().GetPositions()
-    donor = [a.GetIdx() for a in pose.GetAtoms() if a.GetSymbol() == "N" and a.GetDegree() == 2][0]
+    donor = next(a.GetIdx() for a in pose.GetAtoms() if a.GetSymbol() == "N" and a.GetDegree() == 2)
     iron = xyz[donor] + np.array([0.0, 0.0, 2.2])
     out = pa.pharmacophore_terms(pose, "Cn1ccnc1", iron, (donor, "N1"), None)
     assert out["donor_error"] == pytest.approx(0.0, abs=1e-6) and np.isnan(out["site_error"])

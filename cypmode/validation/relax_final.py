@@ -65,9 +65,8 @@ def adopt(before: dict, after: dict, info: dict) -> tuple[bool, str]:
     if not info.get("rmsd", math.inf) <= MAX_MOVEMENT_A:
         return False, "the ligand moved too far"
     fe_before, fe_after = info.get("fe_n_before"), info.get("fe_n_after")
-    if fe_before is not None and math.isfinite(fe_before):
-        if fe_after is None or not math.isfinite(fe_after) or abs(fe_after - fe_before) > MAX_FE_N_CHANGE_A:
-            return False, "the iron-nitrogen coordination changed"
+    if fe_before is not None and math.isfinite(fe_before) and (fe_after is None or not math.isfinite(fe_after) or abs(fe_after - fe_before) > MAX_FE_N_CHANGE_A):
+        return False, "the iron-nitrogen coordination changed"
     return True, "adopted"
 
 

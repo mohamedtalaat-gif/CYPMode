@@ -2,6 +2,7 @@
 that knows two poses, driven by the real forward and reverse equations)."""
 
 from functools import cache
+from itertools import pairwise
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -49,8 +50,7 @@ def pool_picture(pick: int, theme_name: str):
 
 
 def mbr_caption() -> str:
-    samples, matrix, rmsd, pick = pool_matrix()
-    expected = (matrix.sum(axis=1) - 1) / (len(samples) - 1)
+    samples, _matrix, rmsd, pick = pool_matrix()
     return (f"Minimum Bayes risk on a real pool: the {len(samples)} Boltz samples of {POOL_LIGAND.removeprefix('bench-')}, a crystal-structure ligand. First panel: the pool in the pocket (rendered from the predicted coordinates, aligned on the crystal structure {CRYSTAL[0]}). Then: how much each pair of poses agrees (LDDT-PLI: the share of "
             f"ligand-protein distances the two poses reproduce, 1 = identical). Middle: each pose's mean agreement with the others, its expected quality if the others were the truth; the highest is picked "
             f"(sample {samples[pick]}). Right: the distance of each pose to the crystal pose, which the rule never sees: the pick is at {rmsd[pick]:.2f} A against {rmsd[0]:.2f} A for the first sample "
@@ -135,7 +135,7 @@ def denoise(seed: int, steps: int = STEPS):
     x = rng.standard_normal(pose_a.shape) * 4.0
     path = [(1.0, x.copy(), np.array([0.5, 0.5]))]
     times = np.linspace(1.0, 0.0, steps + 1)
-    for s, s_next in zip(times[:-1], times[1:], strict=True):
+    for s, s_next in pairwise(times):
         a, a_next = alpha_bar(s), alpha_bar(s_next)
         distance = ((x[None] - np.sqrt(a) * poses) ** 2).sum(axis=(1, 2)) / (2 * (1 - a + 1e-9))
         weights = np.exp(-(distance - distance.min()))
@@ -158,8 +158,7 @@ def seeds_by_pose() -> tuple[int, int]:
 
 
 def diffusion_caption() -> str:
-    outcomes = [denoise(seed)[-1][2].argmax() for seed in range(8)]
-    pose_a, pose_b, bonds = real_poses()
+    pose_a, pose_b, _bonds = real_poses()
     moved = float(np.linalg.norm(pose_a - pose_b, axis=1).mean())
     return (f"Diffusion on a real ligand: the {len(pose_a)} heavy atoms of {REAL_LIGAND}, a donor ligand of the official set, projected on the plane of their two principal axes. The denoiser knows two ways it "
             f"can sit: Boltz-2's first sample with the iron-nitrogen restraint (pose A, blue) and without it (pose B, red), which differ by {moved:.1f} A per atom on average after superposing the proteins. Forward, "
@@ -205,7 +204,7 @@ def diffusion_denoising(theme_name):
     for row, seed in enumerate(seeds_by_pose()):
         path = denoise(seed)
         for col, step in enumerate((0, 12, 20, 28, STEPS)):
-            s, x, weights = path[step]
+            s, x, _weights = path[step]
             snapshot(axes[row][col], x, th)
             axes[row][col].set_title(f"step {step}  (a = {alpha_bar(s):.2f})", fontsize=8.5)
     fig.tight_layout()

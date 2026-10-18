@@ -1,6 +1,7 @@
 """Block diagrams of the two tracks and the nested cross-validation grid; every count in them is read from the project's files."""
 
 from collections import Counter
+from itertools import pairwise
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -112,7 +113,7 @@ def structure_pipeline(theme_name):
     xs = [1.1 + 2.04 * i for i in range(6)]
     for x, (title, text, fill) in zip(xs, steps, strict=True):
         box(ax, x, 2.8, 1.9, 2.1, text, fill, th["text"], "#FFFFFF" if fill == th["blue"] else ("#1A1A1A" if fill in (th["orange"], th["green"]) else th["text"]), size=7.8, wrap=20, title=title)
-    for a, b in zip(xs, xs[1:], strict=False):
+    for a, b in pairwise(xs):
         arrow(ax, (a + 0.98, 2.8), (b - 0.98, 2.8), th["text"])
     box(ax, xs[2], 0.75, 2.4, 0.9, "OpenFold3: benchmarked, did not help", th["panel"], th["muted"], th["muted"], size=8, wrap=26)
     arrow(ax, (xs[2], 1.76), (xs[2], 1.22), th["muted"], ls="--")

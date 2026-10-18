@@ -98,7 +98,7 @@ def main() -> None:
             if metric == "auc":
                 stacked_ok &= c.p_value < 0.05 and c.mean_difference > 0
         print(line)
-        for plain in [n for n in base if n.endswith("_A_deep") or n.endswith("_A+fps_deep")]:
+        for plain in [n for n in base if n.endswith(("_A_deep", "_A+fps_deep"))]:
             with_phys = plain.replace("_A_deep", "_A+phys_deep").replace("_A+fps_deep", "_A+fps+phys_deep")
             if cache.missing(with_phys, False):
                 continue

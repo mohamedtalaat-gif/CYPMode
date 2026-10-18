@@ -7,7 +7,7 @@ SERIES = ["Cc1ccccc1", "Clc1ccccc1", "Brc1ccccc1", "Fc1ccccc1", "CCCCO"]
 
 
 def test_matched_pairs_share_the_constant_part_and_are_directed():
-    a, b, t, names = mt.build_pairs(SERIES)
+    a, b, _t, names = mt.build_pairs(SERIES)
     benzene_series = set(range(4))
     assert {int(x) for x in a} | {int(x) for x in b} <= benzene_series  # the unrelated alcohol has no partner
     pair_set = {(int(x), int(y)) for x, y in zip(a, b, strict=True)}
@@ -40,5 +40,5 @@ def test_transformation_delta_is_shrunk_and_signed():
     pairs = mt.build_pairs(SERIES)
     rows = mt.transformation_report(pairs, np.array([0, 1, 2, 3]), np.array([0, 1, 1, 0]), top=20, min_support=1)
     deltas = {n: d for n, _, d in rows}
-    h_to_cl = [d for n, d in deltas.items() if n.endswith(">>Cl[*:1]") or n.endswith(">>[*:1]Cl") or "Cl" in n.split(">>")[1]]
+    h_to_cl = [d for n, d in deltas.items() if n.endswith((">>Cl[*:1]", ">>[*:1]Cl")) or "Cl" in n.split(">>")[1]]
     assert h_to_cl and max(abs(d) for d in h_to_cl) <= 1.0 / (1 + mt.SHRINK) + 1e-9  # one supporting pair: delta = 1 / (1 + shrink)

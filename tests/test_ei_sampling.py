@@ -4,7 +4,6 @@ from cypmode.validation import ei_sampling as ei
 
 
 def pools():
-    rng = np.random.default_rng(0)
     matrices, rmsd = {}, {}
     for name, bad in (("a", 0), ("b", 1)):
         n = 5
@@ -29,7 +28,6 @@ def test_ei_gives_extra_samples_to_the_pool_that_disagrees():
     matrices = {"tight": np.full((5, 5), 0.95), "loose": np.full((5, 5), 0.2)}
     for m in matrices.values():
         np.fill_diagonal(m, 1.0)
-    rmsd = {k: np.arange(5, dtype=float) for k in matrices}
     rng = np.random.default_rng(0)
     revealed = {"tight": 0, "loose": 0}
     original = ei.pool_disagreement

@@ -43,7 +43,7 @@ def test_pair_model_learns_series_sar_and_beats_plain_neighbour_voting():
     x, y, sim = planted()
     train, test = np.arange(0, 180), np.arange(180, 240)
     p = fit_predict_pairs(x[train], y[train], x[test], sim[np.ix_(train, train)], sim[np.ix_(test, train)], 5, {"n_estimators": 80, "num_leaves": 7, "min_child_samples": 5, "learning_rate": 0.1}, 1, 0)
-    knn_top, knn_sim = neighbour_table(sim, test, train, 5, False)
+    knn_top, _knn_sim = neighbour_table(sim, test, train, 5, False)
     knn = y[train][knn_top].mean(axis=1)
     from sklearn.metrics import roc_auc_score
 

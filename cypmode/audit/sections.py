@@ -118,7 +118,7 @@ def determinism(ctx: Context) -> Section:
     pool = plan.pool[:1500]
     x = rctx.store.matrix(("morgan_c2", "rdkit_desc"), pool)
     y = rctx.labels[pool]
-    params = dict(n_estimators=80, learning_rate=0.05, num_leaves=15, subsample=0.8, subsample_freq=1, colsample_bytree=0.3, random_state=0, verbose=-1)
+    params = {"n_estimators": 80, "learning_rate": 0.05, "num_leaves": 15, "subsample": 0.8, "subsample_freq": 1, "colsample_bytree": 0.3, "random_state": 0, "verbose": -1}
     p1 = LGBMClassifier(n_jobs=1, **params).fit(x, y).predict_proba(x)[:, 1]
     p1b = LGBMClassifier(n_jobs=1, **params).fit(x, y).predict_proba(x)[:, 1]
     p4 = LGBMClassifier(n_jobs=4, **params).fit(x, y).predict_proba(x)[:, 1]
@@ -158,7 +158,9 @@ def data_integrity(ctx: Context) -> Section:
     RDLogger.DisableLog("rdApp.*")
     s = Section("4. Data integrity")
     tr, te = ctx.train, ctx.test
-    canon = lambda smi: (lambda m: Chem.MolToSmiles(m) if m is not None else None)(Chem.MolFromSmiles(smi))
+    def canon(smi: str):
+        mol = Chem.MolFromSmiles(smi)
+        return Chem.MolToSmiles(mol) if mol is not None else None
     ctr, cte = [canon(x) for x in tr["SMILES"]], [canon(x) for x in te["SMILES"]]
     rows = [
         ("training rows", len(tr)),
@@ -297,7 +299,7 @@ def committee(ctx: Context) -> Section:
     s = Section("6. Committee (query-by-committee) backtest against the margin baseline")
     s.body.append("Question: does committee disagreement tell us where the stack is wrong beyond what the stack's own decision margin already says? Judged by a permutation null with Bonferroni correction, never by bootstrapping fixed predictions.")
     for iso in ISOFORMS:
-        plan, cache = ctx.cache(iso)
+        _, cache = ctx.cache(iso)
         rctx, _ = ctx.runner(iso)
         order = [c.name for c in default_candidates()]
         names = [n for n in order if not cache.missing(n)] + [n for n in cache.candidates() if n not in order and not cache.missing(n)]

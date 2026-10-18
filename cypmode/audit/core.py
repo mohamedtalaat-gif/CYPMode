@@ -113,7 +113,7 @@ class Context:
     def lgbm_family(self, iso: str) -> list[str]:
         from cypmode.challenge.nested_runners import default_candidates
 
-        plan, cache = self.cache(iso)
+        _, cache = self.cache(iso)
         return [c.name for c in default_candidates() if not cache.missing(c.name, False)]
 
     def weight_fn(self, iso: str, z0: float | None = None):

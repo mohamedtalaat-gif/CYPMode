@@ -60,7 +60,7 @@ def score(model_path: str, reference_path: str, smiles: str) -> dict:
         results.append({"lddt_pli": float(lddt_pli.score_matrix[i, j]), "bisyrmsd": float(scrmsd.score_matrix[a, b]) if ok else float("nan"), "lddt_lp": float(scrmsd.aux_matrix[a, b]["lddt_lp"]) if ok else float("nan")})
     if not results:
         return {"error": "no ligand assignment"}
-    best = sorted(results, key=lambda r: (-r["lddt_pli"], r["bisyrmsd"] if np.isfinite(r["bisyrmsd"]) else 1e9))[0]
+    best = min(results, key=lambda r: (-r["lddt_pli"], r["bisyrmsd"] if np.isfinite(r["bisyrmsd"]) else 1e9))
     return best
 
 

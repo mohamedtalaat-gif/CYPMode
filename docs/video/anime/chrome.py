@@ -7,6 +7,7 @@ import tempfile
 import time
 import urllib.request
 from pathlib import Path
+from typing import Self
 
 from websockets.sync.client import connect
 
@@ -22,7 +23,7 @@ class Chrome:
         self._process = None
         self._socket = None
 
-    def __enter__(self) -> "Chrome":
+    def __enter__(self) -> Self:
         flags = ["--headless=new", f"--remote-debugging-port={self.port}", f"--user-data-dir={self._profile.name}", "--hide-scrollbars", f"--window-size={WIDTH},{HEIGHT}",
                  "--force-device-scale-factor=1", "--allow-file-access-from-files", "--disable-background-timer-throttling", "about:blank"]
         self._process = subprocess.Popen([CHROME, *flags], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

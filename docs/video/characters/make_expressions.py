@@ -19,7 +19,7 @@ def main() -> int:
     parser.add_argument("--members", nargs="*", default=list(bible.STAFF), choices=list(bible.STAFF))
     args = parser.parse_args()
     for member in args.members:
-        source = sorted(generate.OUT.glob(f"{member}_calm_s*.png"))[0]
+        source = min(generate.OUT.glob(f"{member}_calm_s*.png"))
         for expression in (e for e in bible.EXPRESSIONS if e != "calm"):
             target = generate.OUT / f"{member}_{expression}.png"
             if target.exists():

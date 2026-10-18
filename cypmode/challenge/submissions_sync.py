@@ -97,27 +97,35 @@ def render_structure_readme(zip_hash: str, members: list[str], failures: int, re
     if relaxation:
         rule = relaxation["rule"]
         lines += ["", "## Relaxation of the chosen poses", "",
-                  f"The ligand of each chosen pose was relaxed in its frozen pocket with a force field (`cypmode.validation.relax`), after a gate on 30 ligands with public crystal poses had found it to raise validity and margin without moving the poses away from the crystal. "
-                  f"A relaxed pose replaced the original only when both pass the 22 checks, the smallest relative distance to the receptor rises and stays at or above {rule['margin_floor']}, the ligand moved by at most {rule['max_movement_A']} A and a coordinated iron-nitrogen distance changed by at most {rule['max_fe_n_change_A']} A. "
-                  f"{relaxation['adopted']} of {relaxation['of']} poses were replaced; the smallest relative distance in the zip went from {relaxation['smallest_margin_before']:.3f} to {relaxation['smallest_margin_after']:.3f}. "
-                  f"The zip of the unrelaxed poses has sha256 `{relaxation['unrelaxed_sha256']}`."]
+                  (
+                      f"The ligand of each chosen pose was relaxed in its frozen pocket with a force field (`cypmode.validation.relax`), after a gate on 30 ligands with public crystal poses had found it to raise validity and margin without moving the poses away from the crystal. "
+                      f"A relaxed pose replaced the original only when both pass the 22 checks, the smallest relative distance to the receptor rises and stays at or above {rule['margin_floor']}, the ligand moved by at most {rule['max_movement_A']} A and a coordinated iron-nitrogen distance changed by at most {rule['max_fe_n_change_A']} A. "
+                      f"{relaxation['adopted']} of {relaxation['of']} poses were replaced; the smallest relative distance in the zip went from {relaxation['smallest_margin_before']:.3f} to {relaxation['smallest_margin_after']:.3f}. "
+                      f"The zip of the unrelaxed poses has sha256 `{relaxation['unrelaxed_sha256']}`."
+                  )]
     lines += ["", "## Contents", "", *[f"- `{name}`" for name in sorted(members)], ""]
     return "\n".join(lines)
 
 
 def render_top_readme() -> str:
-    return "\n".join([
-        "# Submissions", "",
-        "The files that would be uploaded to the [OpenADMET CYP Inhibition Blind Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge), kept apart from `data/*/outputs/`, which holds the project's",
-        "own experiments. Each track folder has its own README with the required format, the checks every file passed and the file hashes, and is rewritten by `cypmode.challenge.submissions_sync`",
-        "from the final results. **No file here has been uploaded to the portal.**", "",
-        "- [`tdi_track/`](tdi_track/README.md): time-dependent inhibition (classification), CYP3A4 and CYP2D6.",
-        "- [`structure_track/`](structure_track/README.md): structure prediction, 20 CYP3A4 complexes.", "",
-        "## Mechanics that apply to both tracks (read from the portal's `submission.py`, 2026-09-26)", "",
-        "- One submission per track every 12 hours; only the latest valid submission of a track counts for the leaderboard.",
-        "- Required at submission: the Hugging Face `username`, a `user_alias`, an `anonymous` flag and the track.",
-        "- Optional: `model_report_link` (a reachable HTTPS URL, required when `open_source_code` is ticked), `include_in_publication`, `used_proprietary_data`, `open_source_code` and contact fields.",
-        "- The upload itself is a manual action on the portal.", "", "`_superseded/` (when present) holds files that earlier versions of these folders contained and that are not part of the final set.", ""])
+    return """# Submissions
+
+The files that would be uploaded to the [OpenADMET CYP Inhibition Blind Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge), kept apart from `data/*/outputs/`, which holds the project's
+own experiments. Each track folder has its own README with the required format, the checks every file passed and the file hashes, and is rewritten by `cypmode.challenge.submissions_sync`
+from the final results. **No file here has been uploaded to the portal.**
+
+- [`tdi_track/`](tdi_track/README.md): time-dependent inhibition (classification), CYP3A4 and CYP2D6.
+- [`structure_track/`](structure_track/README.md): structure prediction, 20 CYP3A4 complexes.
+
+## Mechanics that apply to both tracks (read from the portal's `submission.py`, 2026-09-26)
+
+- One submission per track every 12 hours; only the latest valid submission of a track counts for the leaderboard.
+- Required at submission: the Hugging Face `username`, a `user_alias`, an `anonymous` flag and the track.
+- Optional: `model_report_link` (a reachable HTTPS URL, required when `open_source_code` is ticked), `include_in_publication`, `used_proprietary_data`, `open_source_code` and contact fields.
+- The upload itself is a manual action on the portal.
+
+`_superseded/` (when present) holds files that earlier versions of these folders contained and that are not part of the final set.
+"""
 
 
 def archive_stale(folder: Path, keep: set[str]) -> list[str]:

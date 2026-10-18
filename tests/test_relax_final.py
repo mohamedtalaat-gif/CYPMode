@@ -53,7 +53,8 @@ def workspace(tmp_path, monkeypatch):
             Path(job["out"] + ".json").write_text(json.dumps({"rmsd": movement[out], "fe_n_before": 2.2, "fe_n_after": 2.25}))
 
     def check_pdb(path, smiles):
-        text = open(path).read()
+        with open(path) as handle:
+            text = handle.read()
         margin = 0.90 if text.startswith("RELAXED") else 0.85
         return SimpleNamespace(passed=True, distance_margin=margin, failed=[], error="")
 

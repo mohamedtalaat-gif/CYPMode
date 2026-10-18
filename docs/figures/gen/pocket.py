@@ -88,7 +88,7 @@ def pocket_caption() -> str:
     parts = []
     for pdb_id, comp_id, kind in EXAMPLES:
         ligand, heme, pocket, waters, resolution = pocket_atoms(pdb_id, comp_id)
-        coordination, hbonds, hydrophobic = interactions(ligand, heme, pocket, waters)
+        coordination, hbonds, _hydrophobic = interactions(ligand, heme, pocket, waters)
         fe = next(a.xyz for a in heme if a.element == "FE")
         closest = min(float(np.linalg.norm(l.xyz - fe)) for l in ligand)
         iron = (f"a nitrogen of the ligand sits {coordination[0][2]:.2f} A from the iron" if coordination

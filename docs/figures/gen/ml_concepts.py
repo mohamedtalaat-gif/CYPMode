@@ -46,7 +46,7 @@ def fitted_tree():
 
 
 def tree_caption() -> str:
-    tree, x, y, auc = fitted_tree()
+    tree, _x, y, auc = fitted_tree()
     return (f"A decision tree of depth {DEPTH} (at least {LEAF} compounds in a leaf) fitted to the {len(y)} labelled CYP3A4 compounds using only two descriptors, the octanol-water partition coefficient "
             f"(MolLogP) and the polar surface area (TPSA). Left: the plane cut into the {tree.get_n_leaves()} rectangles the tree defines; a rectangle is shaded from blue (few time-dependent inhibitors in its leaf) to red (many) by the share of positives in its leaf, which is the probability the tree gives to every compound that falls in it; no leaf has a majority of positives, so a hard yes/no tree would answer no everywhere. "
             f"Right: the same tree as questions: each box asks whether one descriptor is below a threshold. Five-fold cross-validated AUC of this tree: {auc:.3f}. "
@@ -95,7 +95,7 @@ def boosting_run():
 
 
 def boosting_caption() -> str:
-    x, y, _, history = boosting_run()
+    _x, _y, _, history = boosting_run()
     errors = [float(np.mean(h[2] ** 2)) for h in history]
     return (f"Gradient boosting on a toy regression (120 noisy points of sin x, drawn with a fixed seed; not project data). Stage 0 is the mean. Each stage fits a one-split tree (a stump) to the "
             f"residuals r_i = y_i - F(x_i), which are the negative gradient of the squared error, and adds a fraction nu = {NU} of it: F_m = F_(m-1) + nu h_m. Top row: the model after "
@@ -109,7 +109,7 @@ def boosting_stages(theme_name):
     x, y, grid, history = boosting_run()
     fig, axes = plt.subplots(2, len(STAGES), figsize=(13, 5.4), sharex=True)
     for col, stage in enumerate(STAGES):
-        prediction, grid_prediction, residual, _ = history[stage]
+        _prediction, grid_prediction, residual, _ = history[stage]
         axes[0][col].plot(x, y, "o", color=th["muted"], ms=3, alpha=0.7)
         axes[0][col].plot(grid, grid_prediction, color=th["red"], lw=2.2)
         axes[0][col].set_title(f"after {stage} stump{'s' if stage != 1 else ''}", fontsize=10)
@@ -131,7 +131,7 @@ def boosting_animation(theme_name: str) -> Path:
     out = ROOT / "docs/figures" / GROUP / f"ml_boosting_stages-anim-{theme_name}.gif"
     frames = []
     for stage in range(max(STAGES) + 1):
-        prediction, grid_prediction, residual, grid_step = history[stage]
+        _prediction, grid_prediction, residual, grid_step = history[stage]
         fig, (a, b) = plt.subplots(2, 1, figsize=(5.8, 5.2), dpi=110, sharex=True, gridspec_kw={"height_ratios": [2, 1]})
         a.plot(x, y, "o", color=th["muted"], ms=3, alpha=0.7)
         a.plot(grid, grid_prediction, color=th["red"], lw=2.2)

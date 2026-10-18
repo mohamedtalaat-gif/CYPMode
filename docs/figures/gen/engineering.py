@@ -2,7 +2,7 @@
 
 import re
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import matplotlib.dates as mdates
@@ -23,7 +23,7 @@ SWAP = re.compile(r"^(\d\d-\d\d \d\d:\d\d:\d\d) .*\| swap used ([\d.]+)([MG])")
 
 
 def stamp(text: str) -> datetime:
-    return datetime.strptime(f"{YEAR}-{text}", "%Y-%m-%d %H:%M:%S")
+    return datetime.strptime(f"{YEAR}-{text}", "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
 
 
 def queue_events():
@@ -94,9 +94,9 @@ def power_log_start(text: str) -> str:
 
 def power_events(since: str = "2026-10-08") -> pd.DataFrame:
     text = power_log()
-    rows = [(datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S"), m.group(2)) for m in map(SLEEP.match, text.splitlines()) if m]
+    rows = [(datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc), m.group(2)) for m in map(SLEEP.match, text.splitlines()) if m]
     frame = pd.DataFrame(rows, columns=["time", "cause"])
-    return frame[frame["time"] >= pd.Timestamp(since)].reset_index(drop=True)
+    return frame[frame["time"] >= pd.Timestamp(since, tz="UTC")].reset_index(drop=True)
 
 
 def power_caption() -> str:

@@ -35,6 +35,8 @@ from cypmode.challenge.nested_runners import (
     default_candidates,
     fit_predict,
 )
+
+logger = logging.getLogger(__name__)
 from cypmode.challenge.validation_matching import weighted_mcc
 
 ISO = "CYP3A4"
@@ -74,7 +76,7 @@ def main() -> None:
     ctx, plan = build_context_and_plan(TRAIN_CSV, TEST_CSV, ISO, STORE, 3, 5, 4, 0, args.n_jobs, blocks)
     train_rows, hold_rows = holdout_split(ctx, plan, train_frame)
     y_hold = ctx.labels[hold_rows]
-    logging.info("train rows %d, held-out block rows %d (positive rate %.3f)", len(train_rows), len(hold_rows), y_hold.mean())
+    logger.info("train rows %d, held-out block rows %d (positive rate %.3f)", len(train_rows), len(hold_rows), y_hold.mean())
 
     saved = NestedPlan.load(f"data/tdi_track/outputs/nested/{ISO}/plan.npz")
     cache = PredictionCache(f"data/tdi_track/outputs/nested/{ISO}/cache", saved)
@@ -89,7 +91,7 @@ def main() -> None:
         called = call_top_fraction(s, float(y_hold.mean())).astype(int)
         lo, hi = auc_interval(y_hold, s)
         rows.append({"candidate": c.name, "cv_auc_unweighted": cv, "block_auc": roc_auc_score(y_hold, s), "block_auc_lo": lo, "block_auc_hi": hi, "block_ap": average_precision_score(y_hold, s), "block_mcc_at_prevalence": weighted_mcc(y_hold, called)})
-        logging.info("%s: block AUC %.3f", c.name, rows[-1]["block_auc"])
+        logger.info("%s: block AUC %.3f", c.name, rows[-1]["block_auc"])
     table = pd.DataFrame(rows).sort_values("cv_auc_unweighted", ascending=False)
     ranks = pd.DataFrame({k: pd.Series(v).rank(pct=True) for k, v in scores.items()})
     committee = ranks.mean(axis=1).to_numpy()

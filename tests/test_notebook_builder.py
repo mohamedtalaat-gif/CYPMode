@@ -78,7 +78,7 @@ def test_every_numbered_section_must_name_its_field_under_its_heading():
 def test_a_symbol_of_an_equation_must_be_named_in_the_text_of_its_section():
     from notebooks.notebook_builder import md, symbol_problems
 
-    named = md("## 1.1 Decay\n\nWrite $C$ for the concentration and $t$ for the time.\n\n$$C(t) = C_0 e^{-k t}$$\n\nwhere $k$ and $C_0$ are constants.")
+    md("## 1.1 Decay\n\nWrite $C$ for the concentration and $t$ for the time.\n\n$$C(t) = C_0 e^{-k t}$$\n\nwhere $k$ and $C_0$ are constants.")
     named_after = md("## 1.1 Decay\n\nThe concentration $C$ at the time $t$ falls with the rate constant $k$, starting from $C_0$.\n\n$$C(t) = C_0 e^{-k t}$$")
     unnamed = md("## 1.1 Decay\n\nThe concentration falls.\n\n$$C(t) = C_0 e^{-k t}$$")
     assert symbol_problems([named_after]) == []

@@ -144,9 +144,11 @@ def gate_verdicts_block() -> str:
         groups = {r[0]: r[3] for r in stack}
         added = "none was" if all(g == "none" for g in groups.values()) else "; ".join(f"{iso}: {g}" for iso, g in groups.items())
     return "\n".join([
-        f"Every addition was judged by a rule fixed before its result. {len(gates)} gate verdicts from {len(rows)} experiments: {len(met)} MET and {len(gates) - len(met)} NOT MET. "
-        f"The gates that were met: {', '.join(sorted(set(names)))}. A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. "
-        f"An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: {added}.",
+        (
+            f"Every addition was judged by a rule fixed before its result. {len(gates)} gate verdicts from {len(rows)} experiments: {len(met)} MET and {len(gates) - len(met)} NOT MET. "
+            f"The gates that were met: {', '.join(sorted(set(names)))}. A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. "
+            f"An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: {added}."
+        ),
         "",
         "<details><summary>All verdicts</summary>",
         "",

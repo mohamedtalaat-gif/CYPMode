@@ -41,10 +41,9 @@ def scout_data() -> dict:
 
 def leak_guard_caption() -> str:
     data = scout_data()
-    taken = ", ".join(data["excluded"])
     return (f"The files of the organisers' releases that a model could read, and what each shares with the blinded test set. Only the identifier column of each file was read to make this "
             f"picture: no measurement of a test compound is looked at, not even for a figure. {len(data['excluded'])} compounds of the blinded set turn up in three of the {len(data['sources'])} files "
-            f"({taken}); they are removed from every use of those files, and the organisers confirmed the overlap of the Octant release. The other files hold no test compound.")
+            f"(their identifiers are withheld, because the release rule forbids naming a blinded compound in a file that would be pushed); they are removed from every use of those files, and the organisers confirmed the overlap of the Octant release. The other files hold no test compound.")
 
 
 @figure("data_leak_guard", "data", "The files released by the organisers, checked against the blinded test set", leak_guard_caption,
@@ -215,7 +214,7 @@ def bins_frame() -> pd.DataFrame:
 
 
 def ad_caption() -> str:
-    frame = bins_frame()
+    bins_frame()
     compounds = pd.read_csv(ROOT / FINAL_TDI / "applicability_domain_compounds.csv")
     tiers = {iso: compounds[f"{iso}_domain_tier"].value_counts().to_dict() for iso in ISOFORMS}
     text = "; ".join(f"{iso}: " + ", ".join(f"{n} {t}" for t, n in tiers[iso].items()) for iso in tiers)

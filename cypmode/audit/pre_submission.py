@@ -48,7 +48,7 @@ def final_outputs() -> list[Path]:
 
 
 def stamp(path: Path) -> str:
-    return datetime.fromtimestamp(path.stat().st_mtime).strftime("%m-%d %H:%M")
+    return datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc).strftime("%m-%d %H:%M")
 
 
 def run_checks() -> list[tuple[str, str, str]]:
@@ -127,7 +127,7 @@ def run_checks() -> list[tuple[str, str, str]]:
     last = newest(final_outputs())
     for label, path in (("METHOD_REPORT.md", ROOT / "METHOD_REPORT.md"), ("README.md", ROOT / "README.md"), ("CYPMode_Architecture_Specification.md", ROOT / "CYPMode_Architecture_Specification.md"),
                         ("docs/video/STORYBOARD.md", ROOT / "docs/video/STORYBOARD.md"), ("docs/figures/CATALOG.md", ROOT / "docs/figures/CATALOG.md")):
-        add(f"{label} is newer than the last final output", path.exists() and path.stat().st_mtime >= last, f"{stamp(path)} against {datetime.fromtimestamp(last).strftime('%m-%d %H:%M')}" if path.exists() else "missing")
+        add(f"{label} is newer than the last final output", path.exists() and path.stat().st_mtime >= last, f"{stamp(path)} against {datetime.fromtimestamp(last, tz=timezone.utc).strftime('%m-%d %H:%M')}" if path.exists() else "missing")
     notebook = ROOT / "notebooks"
     exports = [notebook / "cypmode_notebook.ipynb", notebook / "cypmode_notebook.html", notebook / "cypmode_notebook.pdf"]
     add("the notebook and its HTML and PDF exports exist and are newer than the last final output and the last source change", all(p.exists() for p in exports) and min(p.stat().st_mtime for p in exports) >= max(last, newest(source_files())), ", ".join(f"{p.suffix} {stamp(p)}" for p in exports if p.exists()))
