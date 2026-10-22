@@ -321,28 +321,10 @@ def all20_gallery(theme_name):
 
 # -- the ledger as a map of what was explored ------------------------------------------------------------------------------------------------------
 
-KINDS = {  # the family of a ledger row (the stem of its log) -> the kind of idea it tested
-    "data usage": ("aux_screen", "aux_emax", "aux_pxr", "aux_ext_cont", "aux_ext_tox", "aux_ext_adme", "aux_nodirect", "test_likeness"),
-    "representation and physics": ("embeddings", "monroe_embeddings", "physics_experiment", "physics_compact", "physics_tierb", "population_physics", "aux_basic_centre", "aux_atomjepa", "aux_atomjepa_head"),
-    "learners and stacking": ("aux_tabicl", "aux_tabpfn", "aux_tabicl_monroe", "aux_tabicl_chemeleon", "aux_tabpfn_chemeleon", "aux_mlp", "aux_mlp_aux", "aux_chemprop", "aux_chemeleon", "aux_neural", "nonneg_stack"),
-    "label process and selection": ("selection_aware_v2", "hedged_blend", "population_screen", "arms_experiment", "committee_label_model", "aux_gate_shift", "xiso_transfer", "pair_transfer",
-                                    "pair_transfer_physics", "mmp_transfer"),
-    "structure levers": ("structure_gates", "selection_validation", "pose_awareness", "series_consensus", "heme_frame_prior", "ei_sampling", "restraint_expansion"),
-    "replicates": ("replicate_verdict",),
-}
-
-
-def ledger_by_kind() -> pd.DataFrame:
-    from cypmode.audit.method_report import gate_rows
-
-    kind_of = {stem: kind for kind, stems in KINDS.items() for stem in stems}
-    rows = []
-    for log, name, verdict in gate_rows():
-        if "exploratory" in name or log.startswith("permutation_control"):
-            continue
-        stem = re.sub(r"(_f10)?\.log$", "", re.sub(r"_(CYP3A4|CYP2D6)(?=(_f10)?\.log)", "", log))
-        rows.append({"stem": stem, "kind": kind_of.get(stem, "other"), "verdict": verdict})
-    return pd.DataFrame(rows)
+from cypmode.audit.ledger_kinds import (
+    KINDS,
+    ledger_by_kind,
+)
 
 
 def map_caption() -> str:

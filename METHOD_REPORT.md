@@ -45,7 +45,93 @@ Nested plan integrity:
 | CYP3A4 | 2334 | 15 | True | True | True | True |
 | CYP2D6 | 1493 | 15 | True | True | True | True |
 
-## 3. Scoring-set-aware yardstick
+## 3. Architecture of the two tracks
+
+This section says what the submitted models are, step by step. Every number is read from the code or from the final manifests when the report is generated. The notebook teaches each step from first principles; the section
+that does is named at the end of the step.
+
+### 3.1 TDI track (CYP3A4 and CYP2D6)
+
+1. **Label.** A compound is positive when `s = t - max(d, 4) > log10 2`; the rule reproduces every training label (section 2; notebook 2.3). The confidence of a label is `z = |s - log10 2| / sd(s)` from the posterior standard
+   deviations of the two arms, and only confidently labelled compounds are scored (notebook 2.5).
+2. **Features, label-free.** The feature store holds 12,412 columns in 24 blocks (morgan_bits, morgan_c2, morgan_c3, fmorgan_c2, atompair_c, torsion_c, maccs, avalon, erg, rdkit_desc, motif, amine, ext_activity, tdi_alerts, tdi_alert_context, chemeleon, physics, physics_b, basic_centre, monroe, ext_cont, ext_tox, ext_adme, atomjepa). No block reads a label of a test compound; the leakage audit checks
+   it (audit section 17; notebook Part III and Part X).
+3. **The default stack: 23 candidates** of 7 families (1 extratrees, 3 knn_tanimoto, 11 lgbm_clf, 2 lgbm_reg_arms, 2 lgbm_reg_shift, 1 rf, 3 svm_tanimoto), each a model of the shift or of the label on one set of blocks (notebook 8.1).
+4. **Validation.** Nested cross-validation: 3 repeats of 5 outer folds with 4 inner folds, seed 0, the plan saved with an identifier computed from the raw files. Every selection step (the blend, its penalty, the threshold) happens inside
+   the inner folds, and the outer folds are weighted to resemble the scored population: similarity to the blinded structures, the estimated prevalence, only confident labels at two cut-offs (notebook 6.3 and 6.4).
+5. **The blend.** A logistic regression on the ranks of the members, with the penalty (L1 or L2) and its strength (C in {0.003, 0.01, 0.03, 0.1, 0.3, 1.0}) chosen on the inner folds; a deterministic solver (notebook 8.2 and 8.3).
+6. **Which groups join.** A group of added candidates joins a stack only through a pre-registered gate (corrected resampled t, p < 0.05 at both confidence cuts, alone and inside the stack); a group found after looking also needs a
+   replicate on ten outer folds (notebook 6.7 and 9.9). The final build reads the verdict lines of the logs and nothing else decides.
+   - CYP3A4: final stack `default+neural` of 26 candidates; groups that joined: neural.
+   - CYP2D6: final stack `default` of 23 candidates; groups that joined: none.
+7. **Calibration and calls.** Probabilities by isotonic regression on the inner out-of-fold scores (notebook 8.5). The number of positive calls is a multiple of the estimated prevalence of the scored population, the multiple in
+   {1.0, 1.1, 1.2, 1.3} chosen by the highest mean outer-fold MCC (notebook 8.4): CYP3A4 1.2; CYP2D6 1.0.
+8. **Two files.** A (hits-only CYP2D6 model) and B (the selection-aware CYP2D6 model, which multiplies P(label | hit) by a gate P(hit)); CYP3A4 is identical in both. The entry that is final is chosen by a rule declared in advance (notebook 9.1).
+
+Figures: `docs/figures/architecture/arch_tdi_pipeline-light.png` and `arch_nested_cv-light.png` (dark versions beside them).
+
+### 3.2 Structure track (CYP3A4, 20 ligands)
+
+1. **Input.** The CYP3A4 sequence with its alignment, the heme with its covalent bond to the proximal cysteine, and the ligand, written as a Boltz-2 input (notebook 11.3).
+2. **Donor restraint.** For a ligand with a Type II donor nitrogen the input carries a restraint of the iron-nitrogen bond; the gate that decided it is MET on the crystal-anchored benchmark (notebook 11.6).
+3. **The pool.** Boltz-2 samples per ligand (the unguided and the restrained runs and 2 extra samples), 20 ligands, 200 poses in all; no second engine (engine consensus is NOT MET).
+4. **Validity and margin.** Every pose is checked by the scorer's own PoseBusters call (22 checks); among the valid poses only those whose smallest relative distance to the receptor is at least 0.8 are eligible (notebook 11.4 and 11.10).
+5. **The pick.** `first_valid`: the model's own ranking among the eligible poses; for a ligand with a Type II donor the restrained run is read first. Every rule for choosing a pose that was tested is NOT MET.
+6. **Relaxation under a registered rule.** A force-field relaxation of the ligand in the fixed pocket replaces a pose only if both pass the 22 checks, the margin rises and is at least the floor, the ligand moves at most 1.0 A and the iron-nitrogen distance changes at most 0.2 A; adopted for 20 of 20 (notebook 11.10).
+7. **The archive.** A deterministic zip of 20 complexes (the time of every entry fixed), SHA-256 `28f40e84d4734207...`.
+
+Figures: `docs/figures/architecture/arch_structure_pipeline-light.png` (dark version beside it).
+
+
+## 4. Exploration: what was tried, and how honestly
+
+The project explored widely and decided narrowly. Every idea was a candidate or a block with a rule written before its result; the ledger below is generated from the logs of those rules, and the ones that failed stay in it as
+results (`NEGATIVE_RESULTS.md`). No search procedure chose among them: the programme was designed, and the final build applies the verdicts mechanically.
+
+### 4.1 The map of what was explored
+
+| kind of idea | families | verdicts | met | not met | what it tried |
+| --- | --- | --- | --- | --- | --- |
+| data usage | 8 | 30 | 0 | 30 | the organisers' single-concentration screen and Emax, the PXR induction readings, the NCATS and Tox21 panels, predicted logD and protein binding, the compounds without a direct curve, the unlabeled test structures as weights |
+| representation and physics | 9 | 44 | 0 | 44 | frozen embeddings of pretrained networks (CheMeleon, Monroe, Atom-JEPA), semi-empirical quantum chemistry at four levels, the basic-centre block for CYP2D6 |
+| learners and stacking | 11 | 23 | 2 | 21 | tabular foundation models (TabICL, TabPFN, alone and on the embeddings), a multitask network, plain and fine-tuned Chemprop, the OpenADMET pretraining weights, a non-negative and a softmax blend |
+| label process and selection | 10 | 31 | 0 | 31 | a model of how the labels came to be (the arms, the gate, the selection-aware CYP2D6 model and its blends), matched molecular pairs, cross-isoform transfer, committees of label models |
+| structure levers | 11 | 32 | 5 | 27 | restraint of the iron-nitrogen contact, conformer, seed, template and step-scale levers, minimum-Bayes-risk and other rules for choosing a pose, a second co-folding engine, expected-improvement sampling, the heme-frame prior |
+| replicates | 1 | 7 | 1 | 6 | the same comparison on ten outer folds for the physics additions and for the neural pair |
+
+In all 167 pre-registered verdicts in 50 families, 8 of them MET (figure `docs/figures/ml/ml_exploration_map-light.png`; notebook Part IX).
+
+### 4.2 The accounting of the number of attempts
+
+A gate controls the risk of admitting one idea that does not help; it does not control the risk that one of many ideas passes by chance. The 45 stacked comparisons of the batch are therefore also reported with the Holm
+step-down adjustment (`cypmode/challenge/multiplicity.py`): 2 have a raw p-value below 0.05 (aux_neural_CYP3A4.log, aux_neural_f10_CYP3A4.log), and the smallest adjusted p-value of the family is 1.00. A pass of a
+pre-registered gate is therefore reported as a pass of the registered rule and not as an effect that survives the correction (notebook 9.11).
+
+### 4.3 The controls
+
+- **Negative control.** The labels of the pool are permuted and the whole nested procedure is repeated; the outer AUC must be 0.5 (notebook 9.10). Log: `permutation_control_*.log`.
+- **Replicates.** A group found after looking at the 15-fold results (neural) joins only if the same comparison on ten outer folds is MET as well; the replicate was declared before any ten-fold number existed (notebook 9.9).
+- **Design floor.** The least difference in AUC that the main design recognises 8 times in 10 is 0.0099, so a near miss below it is reported as inconclusive and not as a negative (notebook 6.7).
+- **One ligand.** The two selection gates of the structure track recomputed with each ligand left out in turn, as a description (`NEGATIVE_RESULTS.md`).
+- **Second looks.** A near miss may be looked at again, but only in a log that no gate parser reads (`exploratory_*`), so that it cannot change a model; the all-in-one stack of every cached candidate against the final stack is one of them.
+
+### 4.4 The selection-honest design and its audit
+
+The label rule reproduces every training label (0 and 0 mismatches); the plans are rebuilt from the raw files and compared; every feature block is checked for leakage; the audit
+is generated twice and compared byte for byte; the test suite has 745 passing tests; the summary of the audit is 69 PASS and 2 FAIL (notebook Part XII).
+
+### 4.5 What the project built, and what it borrowed
+
+Built here, each with its evidence in the section or the notebook part named: the label rule recovered from the data and the contamination fix of the CYP3A4 pool (section 2); the scoring-set-aware yardstick (section 5); the
+selection-aware CYP2D6 model (section 7); the committee test and its measured negative result (limitations); the margin rule and the force-field relaxation under a registered rule (section 11). Borrowed and credited, with the
+publication of each: the co-folding engines, PoseBusters, the corrected resampled t, Holm's adjustment, the pretrained models that were tested and refused (section 14; notebook Appendix C).
+
+### 4.6 The rule
+
+A gate that fails is a result. It is written down with its numbers, it is not tuned until it passes, and an idea that is found after looking is a discovery that needs a replicate, not a verdict.
+
+
+## 5. Scoring-set-aware yardstick
 
 Only confidently labeled compounds are scored. The confidence z = |s - log10 2| / sd(s) from the arms' posterior standard
 deviations is used to restrict evaluation at two cut-offs (1.0 and 1.96), and evaluation weights follow similarity to the
@@ -86,7 +172,7 @@ AUC and MCC are not comparable across rows with different evaluation populations
 | CYP2D6 | our nested best single candidate | similarity x prevalence x confident (z0 = 1.96) | 1493 | 0.7255 | 0.1834 |
 | CYP2D6 | our nested stack (StackedLogit) | similarity x prevalence x confident (z0 = 1.96) | 1493 | 0.7536 | 0.2036 |
 
-## 4. Final TDI stack (chosen by the pre-registered gate rule)
+## 6. Final TDI stack (chosen by the pre-registered gate rule)
 
 # Final TDI build (generated; every number is computed by `final_tdi_build.py`)
 
@@ -113,7 +199,7 @@ Final stack: **default** (23 candidates); surviving groups: none; called rate 0.
 | candidate_B_selection_aware.csv | 613777ed38d5c0ac75dcccb8f07c70e4d2105ba1204ced8defd8b431ad7ba492 | 750 | 0.372 | 0.058666666666666666 |
 
 
-## 5. Selection-aware CYP2D6 model
+## 7. Selection-aware CYP2D6 model
 
 Training labels exist only for compounds promoted to dose-response on the isoform; the scored set may contain compounds that
 would never have been promoted. The model multiplies P(label | hit) by a gate P(hit), fitted on the all-isoform panel block
@@ -178,7 +264,7 @@ CYP2D6 GATE (selection-aware replaces hits-only: higher mean AUC and corrected p
 CYP2D6 fit weight with the best worst-case selection-aware AUC over the band: 1.0 (worst case 0.681)
 ```
 
-## 6. Physics-, SAR-, committee-, embedding-, cross-isoform and weighting-based additions
+## 8. Physics-, SAR-, committee-, embedding-, cross-isoform and weighting-based additions
 
 Each addition is a block or candidate group tested alone and inside the assembled stack; the rule is corrected p < 0.05 at both
 confidence cut-offs. Verdicts:
@@ -267,7 +353,7 @@ physics_b: 5-fold stacked z0=1.0: +0.0015 (p=0.643); z0=1.96: +0.0028 (p=0.492) 
 CYP2D6 GATE (replicate physics_b, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design): NOT MET
 ```
 
-## 7. Calibration
+## 9. Calibration
 
 ```
 isoform   method    ece  brier   slope  intercept  mean_pred  mean_obs  gate_met
@@ -281,7 +367,7 @@ CYP3A4: gate (ECE <= 0.05, slope in [0.8, 1.2]) met by: raw, platt, isotonic
 CYP2D6: gate (ECE <= 0.05, slope in [0.8, 1.2]) met by: isotonic
 ```
 
-## 8. Test-like holdout
+## 10. Test-like holdout
 
 ```
 2026-10-12 13:41:34,989 train rows 1851, held-out block rows 483 (positive rate 0.298)
@@ -298,7 +384,7 @@ CYP2D6: gate (ECE <= 0.05, slope in [0.8, 1.2]) met by: isotonic
 2026-10-12 13:41:42,729 lgbm_A+fps_deep: block AUC 0.793
 ```
 
-## 9. Structure track
+## 11. Structure track
 
 Gate verdicts of the structure levers (restraint, diversity, selection, engines, expected-improvement sampling, heme-frame prior):
 
@@ -399,11 +485,11 @@ STRUCTURE GATE force_field_relaxation (validity, margin and fidelity at p < 0.05
 STRUCTURE RELAXATION applied to 20 of 20 poses (rule of relax_final.py); smallest relative distance 0.801 -> 0.850; mean movement of the adopted poses 0.48 A; zip sha256 28f40e84d4734207
 ```
 
-## 10. Negative results
+## 12. Negative results
 
 See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tabulates how far the two structure selection gates depend on a single ligand; that table does not change a registered verdict.
 
-## 11. Limitations
+## 13. Limitations
 
 ### Audit extract: Limitations log
 
@@ -413,15 +499,15 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 - **L4** (uncertainty): Committee disagreement adds information beyond the decision margin for 1 components on CYP3A4 and 2 on CYP2D6 under the permutation test; where the count is zero the committee is reported as a measured negative result and does not alter predictions.
 - **L5** (calibration): The probabilities the final build publishes (isotonic-calibrated) have calibration slopes of 0.9252 (CYP3A4) and 0.8249 (CYP2D6) on held-out folds. The sigmoid of the regularised blend as it comes out is a ranking score and not a probability (slopes 1.1813 and -0.0164); it is never published as one. Probabilities are calibrated to the weighted validation population, not to the unknown scored test population.
 - **L6** (structure): On the diverse crystal benchmark the model's first-pick pose is 4.1929 A from the crystal pose on average; the structure score depends on a handful of compounds and is noisy. The benchmark ligands come from the PDB, which co-folding models may have seen, so absolute accuracy is optimistic.
-- **L7** (reproducibility): The test suite has 744 passing and 1 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
-- **L8** (repository): The working tree has 13 modified and 69 untracked entries: results in this report come from uncommitted code until the work is committed.
+- **L7** (reproducibility): The test suite has 745 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
+- **L8** (repository): The working tree has 27 modified and 71 untracked entries: results in this report come from uncommitted code until the work is committed.
 - **L9** (population): The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). A selection-aware model gains a large amount of AUC when they are numerous and loses a little when they are rare (see the sensitivity table), and the baseline's public metrics do not identify their share (538 grid points are consistent with them). Only a submission can settle this.
 - **L10** (calibration): The CYP2D6 blend as it comes out is close to a constant (weighted expected calibration error 0.3592 against 0.0431 for CYP3A4): it ranks and transfers a call rate but is not a probability. The probabilities that are published pass through an isotonic step fitted on inner out-of-fold scores, which brings the error to 0.0054 (CYP2D6) and 0.0189 (CYP3A4); a monotone step restores calibration and adds no discrimination.
-- **L11** (data): The CYP3A4 reaction-phenotyping and inhibition release of the laboratory that measured the challenge (Octant, same compound library) contains one compound that is also in the blinded test set (OCNT-0493952). Its measurements are excluded from every use of that release and are never read by a model or a validation; the other rows of the release are used only for an independent check of the motif screen and never enter a prediction.
+- **L11** (data): The CYP3A4 reaction-phenotyping and inhibition release of the laboratory that measured the challenge (Octant, same compound library) contains one compound that is also in the blinded test set (its identifier is withheld here, because the release rule forbids naming a blinded compound in a file that would be pushed). Its measurements are excluded from every use of that release and are never read by a model or a validation; the other rows of the release are used only for an independent check of the motif screen and never enter a prediction.
 - **L12** (candidates): Two families of Chemprop candidates were not run to the full design for a reason of compute: the two OpenADMET pretraining weights (MiniMol targets and the Novartis ADMET surrogate; 80 tasks per variant and enzyme at about 37 minutes per task) were not run at all, and CheMeleon runs as a staged design (repeat 0 first, the other repeats only if a rule written beforehand asks for it). A candidate that was screened on 5 folds and not continued, or not run, has no verdict: the report does not call it NOT MET, and the smallest gain that a 5-fold screen can certify is about one and a half times the smallest gain of the 15-fold design (see the design-floor figure). The code and the weight files are in the repository.
 - **L13** (data): The positive rate of the scored test set was recovered from the public leaderboards, which publish accuracy, precision and recall for every prediction file; the three numbers fix the rate (the implied rate agrees across all entries). It is aggregate information about the hidden labels that was available because the boards publish it: it weights the evaluation yardstick (the test prevalence) and sets the call rate (a multiple of the prevalence). No label of any compound and no per-compound information from a board was used, and no submission was made to probe a label. A model without this step would call the positive rate of the training data (about one fifth for both enzymes) instead of about one third (CYP3A4) and one in seventeen (CYP2D6), which costs MCC mostly on CYP2D6.
 
-## 12. Reproduction, credits and prior art
+## 14. Reproduction, credits and prior art
 
 Reproduce the TDI candidates with `bash scripts/reproduce_tdi.sh`; the audit with `bash scripts/run_audit.sh` (two runs, byte-identical);
 the environment is pinned in `environment/`. The structure recipe runs through `python -m cypmode.validation.final_recipe`.

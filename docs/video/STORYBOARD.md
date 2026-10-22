@@ -72,7 +72,7 @@ Each introduction card lasts 14 seconds so that the lines on it can be read alou
 | 106 - 144 | Bits | card; Cap's flat structure scanned; the 2,048 yes/no questions with the real answers lit; the descriptors; the 18 feature blocks and the count of numbers |
 | 144 - 182 | Stacker | card; the 23 models by kind; the real ROC curves of the two enzymes; the blend |
 | 182 - 242 | Gatekeeper and Quanta | card; the rule written first; the ledger of every idea and its verdict; Quanta's card; the physics columns and the NOT MET stamp |
-| 242 - 282 | Foundry | card; the pretrained models, the change in AUC each brought to the stack for both enzymes, and its verdict (running while a job is not finished) |
+| 242 - 282 | Foundry | card; the pretrained models, the change in AUC each brought to the stack for both enzymes, and its verdict (NOT MET or MET by the registered gate; SCREENED when only the first stage of a staged design was run; NOT RUN when the model was dropped, and for an enzyme that is not part of its design; RUNNING only while a stage is still being computed, which the final render never shows) |
 | 282 - 334 | Dock | card; the real enzyme; the real Type II pocket with the iron and the nitrogen marked; a donor ligand without and with the restraint; the PoseBusters checks |
 | 334 - 366 | Auditor | card; two audit runs side by side, the same hash, the IDENTICAL stamp; the counts of tests, modules, jobs and the zip hash |
 | 366 - 394 | Finale | the results board, the whole team, confetti, the credits |

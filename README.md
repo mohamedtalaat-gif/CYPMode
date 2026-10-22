@@ -310,7 +310,7 @@ LightGBM; `CONTRIBUTING.md` explains why and how each is run.
 
 ## Credits and sources
 
-Published sources are listed in [CITATION.cff](CITATION.cff) and in section 12 of [METHOD_REPORT.md](METHOD_REPORT.md).
+Published sources are listed in [CITATION.cff](CITATION.cff) and in section 14 of [METHOD_REPORT.md](METHOD_REPORT.md).
 
 ---
 

@@ -85,6 +85,152 @@ def selection_sensitivity() -> str:
     return table(rows, ["gate", "registered verdict (all ligands)", "ligand whose removal would change the verdict"])
 
 
+def npz_shapes(path: Path) -> dict[str, tuple[int, ...]]:
+    """The shape of every array of an .npz file, read from the array headers without loading the arrays."""
+    import numpy as np
+
+    shapes = {}
+    with np.load(path, allow_pickle=True) as store:
+        for name in store.files:
+            with store.zip.open(name + ".npy") as handle:
+                version = np.lib.format.read_magic(handle)
+                reader = np.lib.format.read_array_header_1_0 if version == (1, 0) else np.lib.format.read_array_header_2_0
+                shapes[name] = tuple(reader(handle)[0])
+    return shapes
+
+
+def architecture_section() -> str:
+    """The path of each track in the report itself: what the model is, step by step, with the numbers read from the code and the final manifests."""
+    import collections
+    import inspect
+    import json
+
+    from cypmode.challenge import final_tdi_build as build
+    from cypmode.challenge.nested import StackedLogit
+    from cypmode.challenge.nested_runners import default_candidates
+    from cypmode.validation.official_posebusters import MARGIN_FLOOR
+
+    manifest = json.loads((FINAL_TDI / "manifest.json").read_text()) if (FINAL_TDI / "manifest.json").exists() else None
+    recipe_path, structure_path = FINAL_STRUCTURE / "recipe.json", FINAL_STRUCTURE / "manifest.json"
+    recipe = json.loads(recipe_path.read_text()) if recipe_path.exists() else None
+    structure = json.loads(structure_path.read_text()) if structure_path.exists() else None
+    store_path = ROOT / build.STORE
+    shapes = npz_shapes(store_path) if store_path.exists() else {}
+    blocks = {k: v for k, v in shapes.items() if k != "smiles" and len(v) == 2}
+    families = collections.Counter(c.family for c in default_candidates())
+    grid = inspect.signature(StackedLogit.__init__).parameters["c_grid"].default
+    lines = [
+        "## 3. Architecture of the two tracks",
+        "",
+        "This section says what the submitted models are, step by step. Every number is read from the code or from the final manifests when the report is generated. The notebook teaches each step from first principles; the section",
+        "that does is named at the end of the step.",
+        "",
+        "### 3.1 TDI track (CYP3A4 and CYP2D6)",
+        "",
+        "1. **Label.** A compound is positive when `s = t - max(d, 4) > log10 2`; the rule reproduces every training label (section 2; notebook 2.3). The confidence of a label is `z = |s - log10 2| / sd(s)` from the posterior standard",
+        "   deviations of the two arms, and only confidently labelled compounds are scored (notebook 2.5).",
+        f"2. **Features, label-free.** The feature store holds {sum(v[1] for v in blocks.values()):,} columns in {len(blocks)} blocks ({', '.join(blocks)}). No block reads a label of a test compound; the leakage audit checks",
+        "   it (audit section 17; notebook Part III and Part X).",
+        f"3. **The default stack: {sum(families.values())} candidates** of {len(families)} families (" + ", ".join(f"{n} {f}" for f, n in sorted(families.items())) + "), each a model of the shift or of the label on one set of blocks (notebook 8.1).",
+        f"4. **Validation.** Nested cross-validation: {build.REPEATS} repeats of {build.DESIGN['outer']} outer folds with 4 inner folds, seed 0, the plan saved with an identifier computed from the raw files. Every selection step (the blend, its penalty, the threshold) happens inside",
+        "   the inner folds, and the outer folds are weighted to resemble the scored population: similarity to the blinded structures, the estimated prevalence, only confident labels at two cut-offs (notebook 6.3 and 6.4).",
+        f"5. **The blend.** A logistic regression on the ranks of the members, with the penalty (L1 or L2) and its strength (C in {{{', '.join(str(c) for c in grid)}}}) chosen on the inner folds; a deterministic solver (notebook 8.2 and 8.3).",
+        "6. **Which groups join.** A group of added candidates joins a stack only through a pre-registered gate (corrected resampled t, p < 0.05 at both confidence cuts, alone and inside the stack); a group found after looking also needs a",
+        "   replicate on ten outer folds (notebook 6.7 and 9.9). The final build reads the verdict lines of the logs and nothing else decides.",
+    ]
+    if manifest:
+        for iso, r in manifest["isoforms"].items():
+            lines.append(f"   - {iso}: final stack `{r['stack']}` of {r['n_candidates']} candidates; groups that joined: {', '.join(r['surviving_groups']) or 'none'}.")
+    lines += [
+        "7. **Calibration and calls.** Probabilities by isotonic regression on the inner out-of-fold scores (notebook 8.5). The number of positive calls is a multiple of the estimated prevalence of the scored population, the multiple in",
+        f"   {{{', '.join(str(m) for m in build.RATE_MULTIPLIERS)}}} chosen by the highest mean outer-fold MCC (notebook 8.4)" + (": " + "; ".join(f"{iso} {r['call_rate_multiplier']}" for iso, r in manifest["isoforms"].items()) if manifest else "") + ".",
+        "8. **Two files.** A (hits-only CYP2D6 model) and B (the selection-aware CYP2D6 model, which multiplies P(label | hit) by a gate P(hit)); CYP3A4 is identical in both. The entry that is final is chosen by a rule declared in advance (notebook 9.1).",
+        "",
+        "Figures: `docs/figures/architecture/arch_tdi_pipeline-light.png` and `arch_nested_cv-light.png` (dark versions beside them).",
+        "",
+        "### 3.2 Structure track (CYP3A4, 20 ligands)",
+        "",
+        "1. **Input.** The CYP3A4 sequence with its alignment, the heme with its covalent bond to the proximal cysteine, and the ligand, written as a Boltz-2 input (notebook 11.3).",
+        "2. **Donor restraint.** For a ligand with a Type II donor nitrogen the input carries a restraint of the iron-nitrogen bond; the gate that decided it is MET on the crystal-anchored benchmark (notebook 11.6).",
+    ]
+    if recipe and structure:
+        lines += [
+            f"3. **The pool.** Boltz-2 samples per ligand (the unguided and the restrained runs and {recipe['recipe']['extra_per_ligand']} extra samples), {len(structure['ligands'])} ligands, {sum(x['pool'] for x in structure['ligands'])} poses in all; no second engine (engine consensus is NOT MET).",
+            f"4. **Validity and margin.** Every pose is checked by the scorer's own PoseBusters call (22 checks); among the valid poses only those whose smallest relative distance to the receptor is at least {MARGIN_FLOOR} are eligible (notebook 11.4 and 11.10).",
+            f"5. **The pick.** `{recipe['recipe']['selection']}`: the model's own ranking among the eligible poses; for a ligand with a Type II donor the restrained run is read first. Every rule for choosing a pose that was tested is NOT MET.",
+            f"6. **Relaxation under a registered rule.** A force-field relaxation of the ligand in the fixed pocket replaces a pose only if both pass the 22 checks, the margin rises and is at least the floor, the ligand moves at most {structure['relaxation']['rule']['max_movement_A']} A and the iron-nitrogen distance changes at most {structure['relaxation']['rule']['max_fe_n_change_A']} A; adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']} (notebook 11.10).",
+            f"7. **The archive.** A deterministic zip of {len(structure['ligands'])} complexes (the time of every entry fixed), SHA-256 `{structure['sha256'][:16]}...`.",
+        ]
+    else:
+        lines.append(pending("job 180"))
+    lines += ["", "Figures: `docs/figures/architecture/arch_structure_pipeline-light.png` (dark version beside it).", ""]
+    return "\n".join(lines)
+
+
+def exploration_section() -> str:
+    """How much was tried and how honestly, all of it counted from the ledger and the logs."""
+    from cypmode.audit.ledger_kinds import KINDS, TRIED, ledger_by_kind
+    from cypmode.challenge.final_tdi_build import CONFIRMED_GROUPS
+    from cypmode.challenge.multiplicity import collect
+
+    frame = ledger_by_kind()
+    rows = []
+    for kind in [*KINDS, "other"]:
+        part = frame[frame["kind"] == kind]
+        if part.empty:
+            continue
+        rows.append((kind, int(part["stem"].nunique()), len(part), int((part["verdict"] == "MET").sum()), int((part["verdict"] != "MET").sum()), TRIED.get(kind, "")))
+    family = collect(LOGS)
+    raw = family[family["p_both"] < 0.05]
+    audit_text = AUDIT.read_text() if AUDIT.exists() else ""
+    tests = re.search(r"pytest summary counts: passed = (\d+)", audit_text)
+    counts = re.search(r"Counts: PASS = (\d+), FAIL = (\d+)", audit_text)
+    mismatches = re.findall(r"label rule reproduces every both-arms label \| PASS \| (\d+) mismatches", audit_text)
+    lines = [
+        "## 4. Exploration: what was tried, and how honestly",
+        "",
+        "The project explored widely and decided narrowly. Every idea was a candidate or a block with a rule written before its result; the ledger below is generated from the logs of those rules, and the ones that failed stay in it as",
+        "results (`NEGATIVE_RESULTS.md`). No search procedure chose among them: the programme was designed, and the final build applies the verdicts mechanically.",
+        "",
+        "### 4.1 The map of what was explored",
+        "",
+        table(rows, ["kind of idea", "families", "verdicts", "met", "not met", "what it tried"]),
+        "",
+        f"In all {len(frame)} pre-registered verdicts in {frame['stem'].nunique()} families, {int((frame['verdict'] == 'MET').sum())} of them MET (figure `docs/figures/ml/ml_exploration_map-light.png`; notebook Part IX).",
+        "",
+        "### 4.2 The accounting of the number of attempts",
+        "",
+        f"A gate controls the risk of admitting one idea that does not help; it does not control the risk that one of many ideas passes by chance. The {len(family)} stacked comparisons of the batch are therefore also reported with the Holm",
+        f"step-down adjustment (`cypmode/challenge/multiplicity.py`): {len(raw)} have a raw p-value below 0.05 ({', '.join(raw['log']) or 'none'}), and the smallest adjusted p-value of the family is {family['holm_adjusted'].min():.2f}. A pass of a",
+        "pre-registered gate is therefore reported as a pass of the registered rule and not as an effect that survives the correction (notebook 9.11).",
+        "",
+        "### 4.3 The controls",
+        "",
+        "- **Negative control.** The labels of the pool are permuted and the whole nested procedure is repeated; the outer AUC must be 0.5 (notebook 9.10). Log: `permutation_control_*.log`.",
+        f"- **Replicates.** A group found after looking at the 15-fold results ({', '.join(CONFIRMED_GROUPS)}) joins only if the same comparison on ten outer folds is MET as well; the replicate was declared before any ten-fold number existed (notebook 9.9).",
+        "- **Design floor.** The least difference in AUC that the main design recognises 8 times in 10 is 0.0099, so a near miss below it is reported as inconclusive and not as a negative (notebook 6.7).",
+        "- **One ligand.** The two selection gates of the structure track recomputed with each ligand left out in turn, as a description (`NEGATIVE_RESULTS.md`).",
+        "- **Second looks.** A near miss may be looked at again, but only in a log that no gate parser reads (`exploratory_*`), so that it cannot change a model; the all-in-one stack of every cached candidate against the final stack is one of them.",
+        "",
+        "### 4.4 The selection-honest design and its audit",
+        "",
+        f"The label rule reproduces every training label ({' and '.join(mismatches) if mismatches else 'see audit section 4'} mismatches); the plans are rebuilt from the raw files and compared; every feature block is checked for leakage; the audit",
+        f"is generated twice and compared byte for byte; the test suite has {tests.group(1) if tests else '(pending: job 900)'} passing tests; the summary of the audit is {counts.group(1) + ' PASS and ' + counts.group(2) + ' FAIL' if counts else '(pending: job 900)'} (notebook Part XII).",
+        "",
+        "### 4.5 What the project built, and what it borrowed",
+        "",
+        "Built here, each with its evidence in the section or the notebook part named: the label rule recovered from the data and the contamination fix of the CYP3A4 pool (section 2); the scoring-set-aware yardstick (section 5); the",
+        "selection-aware CYP2D6 model (section 7); the committee test and its measured negative result (limitations); the margin rule and the force-field relaxation under a registered rule (section 11). Borrowed and credited, with the",
+        "publication of each: the co-folding engines, PoseBusters, the corrected resampled t, Holm's adjustment, the pretrained models that were tested and refused (section 14; notebook Appendix C).",
+        "",
+        "### 4.6 The rule",
+        "",
+        "A gate that fails is a result. It is written down with its numbers, it is not tuned until it passes, and an idea that is found after looking is a discovery that needs a replicate, not a verdict.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
 def negative_results() -> str:
     gate = [(f, g, v) for f, g, v in gate_rows() if v == "NOT MET"]
     nulls = []
@@ -147,7 +293,11 @@ def build_method_report() -> str:
         "",
         audit_section("4."),
         "",
-        "## 3. Scoring-set-aware yardstick",
+        architecture_section(),
+        "",
+        exploration_section(),
+        "",
+        "## 5. Scoring-set-aware yardstick",
         "",
         "Only confidently labeled compounds are scored. The confidence z = |s - log10 2| / sd(s) from the arms' posterior standard",
         "deviations is used to restrict evaluation at two cut-offs (1.0 and 1.96), and evaluation weights follow similarity to the",
@@ -159,11 +309,11 @@ def build_method_report() -> str:
         "",
         audit_section("5."),
         "",
-        "## 4. Final TDI stack (chosen by the pre-registered gate rule)",
+        "## 6. Final TDI stack (chosen by the pre-registered gate rule)",
         "",
         final.read_text() if final.exists() else pending("job 090"),
         "",
-        "## 5. Selection-aware CYP2D6 model",
+        "## 7. Selection-aware CYP2D6 model",
         "",
         "Training labels exist only for compounds promoted to dose-response on the isoform; the scored set may contain compounds that",
         "would never have been promoted. The model multiplies P(label | hit) by a gate P(hit), fitted on the all-isoform panel block",
@@ -181,7 +331,7 @@ def build_method_report() -> str:
         "",
         log_lines("hedged_blend_CYP2D6.log", r"GATE|best worst|worst-case|fitted under", "job 014", 24),
         "",
-        "## 6. Physics-, SAR-, committee-, embedding-, cross-isoform and weighting-based additions",
+        "## 8. Physics-, SAR-, committee-, embedding-, cross-isoform and weighting-based additions",
         "",
         "Each addition is a block or candidate group tested alone and inside the assembled stack; the rule is corrected p < 0.05 at both",
         "confidence cut-offs. Verdicts:",
@@ -196,15 +346,15 @@ def build_method_report() -> str:
         "",
         log_lines("replicate_verdict_CYP2D6.log", r"stacked|GATE", "job 083", 8),
         "",
-        "## 7. Calibration",
+        "## 9. Calibration",
         "",
         log_lines("calibration.log", r"CYP|gate|ece|isotonic|platt|raw", "job 030", 20),
         "",
-        "## 8. Test-like holdout",
+        "## 10. Test-like holdout",
         "",
         log_lines("block_holdout.log", r"block|agreement|committee|best candidate", "job 045", 12),
         "",
-        "## 9. Structure track",
+        "## 11. Structure track",
         "",
         "Gate verdicts of the structure levers (restraint, diversity, selection, engines, expected-improvement sampling, heme-frame prior):",
         "",
@@ -218,15 +368,15 @@ def build_method_report() -> str:
         "",
         log_lines("relax_final.log", r"STRUCTURE RELAXATION|not adopted", "job 243", 8),
         "",
-        "## 10. Negative results",
+        "## 12. Negative results",
         "",
         "See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tabulates how far the two structure selection gates depend on a single ligand; that table does not change a registered verdict.",
         "",
-        "## 11. Limitations",
+        "## 13. Limitations",
         "",
         audit_section("13."),
         "",
-        "## 12. Reproduction, credits and prior art",
+        "## 14. Reproduction, credits and prior art",
         "",
         "Reproduce the TDI candidates with `bash scripts/reproduce_tdi.sh`; the audit with `bash scripts/run_audit.sh` (two runs, byte-identical);",
         "the environment is pinned in `environment/`. The structure recipe runs through `python -m cypmode.validation.final_recipe`.",
