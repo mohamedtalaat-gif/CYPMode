@@ -4,7 +4,7 @@
 
 """Transformer-based SMILES embeddings via ChemBERTa
 (seyonec/ChemBERTa-zinc-base-v1, a real, published RoBERTa model
-pretrained by masked-language-modeling on ~77M ZINC SMILES strings, via
+pretrained by masked-language-modeling on 100k ZINC SMILES strings according to its model card, via
 HuggingFace transformers) -- a third molecular representation alongside
 M3's existing two (RDKit descriptors, Morgan fingerprint), the real
 extension the MTMM-CYP paper's own multi-representation multi-task

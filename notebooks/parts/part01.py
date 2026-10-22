@@ -263,8 +263,8 @@ other route caps the effect at a factor of two however strong the inhibitor is. 
     code(AUC_RATIO),
     md("""
 Regulators have made this reasoning routine: drug developers are expected to measure the inhibition of the main CYP enzymes in vitro and to compare the concentration of the inhibitor that reaches the liver with
-its $K_i$ or its **IC50**, the concentration that halves the enzyme's activity (section 1.5), as the FDA's 2020 guidance on in vitro interaction studies and the European Medicines Agency's 2012 guideline on drug interactions ask. Ketoconazole, a strong inhibitor of CYP3A4, and ritonavir, which
-is given in small doses with other HIV drugs precisely because it inhibits CYP3A4 and so raises their levels, are standard examples.
+its $K_i$ or its **IC50**, the concentration that halves the enzyme's activity (section 1.5), as the 2020 guidance of the US Food and Drug Administration (FDA) on in vitro interaction studies and the European Medicines Agency's 2012 guideline on drug interactions ask. Ketoconazole, a strong inhibitor of CYP3A4, and ritonavir, which
+is given in small doses with other drugs against HIV (the virus behind AIDS) precisely because it inhibits CYP3A4 and so raises their levels, are standard examples.
 
 For a time-dependent inhibitor the argument changes in a way that explains why the interaction can last for days. The body makes new enzyme at a constant rate $k_{\\mathrm{syn}}$ and breaks it down at a
 rate $k_{\\mathrm{deg}}\\,E$, which gives a steady-state enzyme amount $E_0 = k_{\\mathrm{syn}}/k_{\\mathrm{deg}}$. An inhibitor that inactivates the enzyme at the rate $k_{\\mathrm{obs}}\\,E$ (section 1.6 derives

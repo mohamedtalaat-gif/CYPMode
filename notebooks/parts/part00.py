@@ -238,7 +238,7 @@ challenge states is ported from its scoring backend.
 | --- | --- | --- | --- |
 | Direct inhibition | predict how strongly a molecule inhibits each of four enzymes, as a number (regression) | a soft-threshold relative error | no |
 | Time-dependent inhibition (TDI) | say yes or no for CYP3A4 and for CYP2D6 | the Matthews correlation coefficient (MCC), averaged over the two enzymes | yes |
-| Structure | predict the pose of 20 ligands bound to CYP3A4 | LDDT-PLI, with the ligand RMSD after pocket superposition as a secondary score | yes |
+| Structure | predict the pose of 20 ligands bound to CYP3A4 | LDDT-PLI, with the ligand RMSD (root-mean-square deviation: the typical distance between the predicted and the true position of the ligand's atoms) after pocket superposition as a secondary score | yes |
 
 The **Matthews correlation coefficient** (**MCC**) is a score for yes/no predictions that is 0 for guessing and 1 for perfect answers, and that stays honest when "yes" is rare
 (section 4.10 derives it). **LDDT-PLI** is a score from 0 to 1 for how well the distances between a ligand's atoms and the protein atoms near it are reproduced (section 11.4). A
