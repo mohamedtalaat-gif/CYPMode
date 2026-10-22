@@ -11,6 +11,11 @@ stack on CYP3A4, a gain below the least difference of 0.0099 that the main desig
   3. Stage 1 for CYP3A4 runs only if the tasks that are still missing fit in ``STAGE_ONE_HOURS_LIMIT`` hours: on the GPU if the GPU result is equivalent, otherwise on the processor. If they do not,
      the fine-tuned CheMeleon is NOT RUN, for cost; that is recorded in the ledger as "not run: cost" and is not a verdict.
 
+Amendment of 2026-10-22, before any GPU measurement exists: the first run of the speed test (2026-10-17) stopped on a determinism error of the MPS backend and measured no GPU time, so its decision "not run: cost" rests on the
+processor's estimate alone. The owner asked on 2026-10-22 to run what was dropped for cost. The GPU run now goes through ``scripts/chemprop_mps.sh`` (Chemprop with PyTorch's deterministic algorithms in warn-only mode: the seed
+stays fixed, only the order of the additions of one scatter operation may vary). The rule is unchanged (equivalence by rank correlation and AUC, at most ``STAGE_ONE_HOURS_LIMIT`` hours for the missing tasks), and the decision
+of 2026-10-17 is kept beside the new one in ``data/tdi_track/outputs/comparisons/``.
+
 ``python -m cypmode.challenge.chemeleon_speed`` writes ``data/tdi_track/outputs/comparisons/chemeleon_speed_CYP3A4.json`` and the one-line decision
 ``data/tdi_track/outputs/comparisons/chemeleon_speed_decision.txt`` (``mps``, ``cpu`` or ``not run: cost``), which the jobs 203, 236 and 237 read.
 """
@@ -91,7 +96,7 @@ def measure() -> dict:
     chemprop_runner._run = _timed_run
     started = time.time()
     try:
-        scores = chemprop_runner.fit_predict(task, smiles, targets, outside, ISOFORM, chemprop_runner.VARIANTS[VARIANT], 30, ".venv-ml/bin/chemprop", accelerator="mps")
+        scores = chemprop_runner.fit_predict(task, smiles, targets, outside, ISOFORM, chemprop_runner.VARIANTS[VARIANT], 30, "scripts/chemprop_mps.sh", accelerator="mps")
         gpu_seconds = time.time() - started
         failure = None
     except (RuntimeError, subprocess.TimeoutExpired) as error:

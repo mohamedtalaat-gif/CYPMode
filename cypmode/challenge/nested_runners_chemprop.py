@@ -116,7 +116,8 @@ def _main() -> None:
     targets = np.full((len(smiles), len(TARGETS)), np.nan, dtype=np.float32)
     targets[: len(train)] = train[TARGETS].to_numpy(dtype=np.float32)
     deadline = None if args.max_minutes is None else time.time() + 60 * args.max_minutes
-    remaining = run(plan, PredictionCache(root / "cache", plan), smiles, targets, args.isoform, args.variants, args.epochs, args.binary, args.accelerator, deadline, args.max_repeat)
+    binary = "scripts/chemprop_mps.sh" if args.accelerator == "mps" and args.binary == ".venv-ml/bin/chemprop" else args.binary  # the GPU has no deterministic scatter: see scripts/chemprop_warn_only.py
+    remaining = run(plan, PredictionCache(root / "cache", plan), smiles, targets, args.isoform, args.variants, args.epochs, binary, args.accelerator, deadline, args.max_repeat)
     print(f"TASKS_REMAINING {remaining}")
 
 
