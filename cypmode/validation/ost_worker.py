@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """One OpenStructure scoring of a predicted complex against a reference complex, run inside the ``ost`` conda environment.
 
 ``mamba run -n ost python cypmode/validation/ost_worker.py --model model.pdb --reference reference.pdb --smiles SMILES`` prints one JSON object with the LDDT-PLI,

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part X (third part): the quantities of the physics block (10.5) and the experiments with them (10.6)."""
 
 from notebooks.notebook_builder import code, md

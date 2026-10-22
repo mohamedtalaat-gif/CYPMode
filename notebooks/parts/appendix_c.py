@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Appendix C: the references. C.1 is every work the text cites by author and year, each one resolved to a fetched record before it was written; C.2 is the software, models and data the text names, each with the source the repository itself records (METHOD_REPORT.md section 12, README.md, the pin files in environment/, docs/video/voices.py and the data loading modules of cypmode/)."""
 
 from notebooks.notebook_builder import code, md

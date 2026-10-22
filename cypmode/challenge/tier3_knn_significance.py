@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Tests whether Tier 3 structural features and KNN read-across, combined,
 move classification performance -- specifically for CYP2D6, where each
 was already validated SEPARATELY and each came back null-to-negative on

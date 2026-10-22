@@ -1,0 +1,5 @@
+Third-party material
+
+Some files of this repository were not written by the author of CYPMode: the files of the challenge and of public data sets that the project reads, and the notices and texts of components that it adapts or ships. They keep the licence and
+the terms of their source, which are named in the repository where the file is described (CYPMode_DATA_AUDIT.md, Appendix C of the notebook, section 14 of METHOD_REPORT.md) and in the folder of the component (for example
+notebooks/_vendor/katex/LICENSE). The licences of CYPMode do not apply to them, and a use of them has to respect their own terms.

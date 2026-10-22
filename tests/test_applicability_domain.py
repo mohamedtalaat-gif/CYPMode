@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Applicability-domain bins and tiers, and the diagnostics of why an idea added nothing (the arithmetic only; both modules read the nested caches in the queue)."""
 
 import numpy as np

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Auxiliary direct-CYP-binding signal from BindingDB (bindingdb.org) --
 targeted REST pulls for CYP3A4 (UniProt P08684) and CYP2D6 (UniProt
 P10635) specifically, not a bulk database download (same narrowly-scoped

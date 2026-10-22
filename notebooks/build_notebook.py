@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Build the notebook: ``python -m notebooks.build_notebook [--draft] [--no-export]``.
 
 The cells of ``notebook_cells.py`` get their generated contents table and coverage appendix, run against the repository (a failing cell fails the build), pass the glossary check (every defined term

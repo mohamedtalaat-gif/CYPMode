@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Paint the staff of the film with the Anima model through a local ComfyUI server: ``python docs/video/characters/generate.py --member kai [--expression calm] [--seed N]``.
 
 ComfyUI (https://github.com/comfyanonymous/ComfyUI, GPL-3.0) runs outside the repository (in the folder that ``COMFYUI_HOME`` names) on the Apple GPU; start it with

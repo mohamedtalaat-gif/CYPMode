@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Render the cinematic molecule clips of the film with Blender: ``python docs/video/blender_clips.py [--only enzyme] [--frames 8]``.
 
 Each clip is drawn from real coordinates by ``blender/scene.py`` (Blender with the Molecular Nodes add-on): a translucent enzyme, the heme and the ligand glowing, a camera orbit with depth of

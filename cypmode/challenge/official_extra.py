@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The official files of the challenge dataset that the first release of this project did not read, audited before anything uses them.
 
 ``openadmet/cyp-challenge-train-test`` holds more than the TDI file: the single-concentration screen (log2 fold change at 49.5 uM, four enzymes), the Emax

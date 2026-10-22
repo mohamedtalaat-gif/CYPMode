@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """How many never-measured compounds does the scored CYP2D6 test set contain? Inferred from public baselines.
 
 The selection-aware model only helps if the scored set holds many compounds that the screen would never have

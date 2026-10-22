@@ -81,4 +81,4 @@ what you expected.
 
 ## License
 
-The project is licensed under either the MIT license or the Apache License 2.0, at your option (`LICENSE-MIT`, `LICENSE-APACHE`). Unless stated otherwise, a contribution submitted for inclusion is licensed under the same terms, without additional conditions.
+The code is licensed under the GNU Affero General Public License, version 3 or later, with the additional terms of `NOTICE`; the documents under CC BY-NC-SA 4.0 and the generated data under CC BY 4.0 (`LICENSES/`, `REUSE.toml`). Unless stated otherwise, a contribution submitted for inclusion is licensed under the licence of the part of the repository that it changes, without additional conditions.

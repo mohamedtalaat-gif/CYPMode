@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Appendix B: symbols, abbreviations and the glossary, all generated from the notebook itself (its text and notebooks/parts/glossary.py), so that the appendix cannot disagree with the text."""
 
 from notebooks.notebook_builder import code, md

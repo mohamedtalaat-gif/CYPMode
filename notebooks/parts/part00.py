@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part 0: orientation. The problem, how the project grew, the challenge, the whole system, the ledger of everything tried, how the notebook is built."""
 
 from notebooks.notebook_builder import code, figure, md

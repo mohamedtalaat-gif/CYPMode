@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Cut a painted portrait out of its plain white background: ``python docs/video/characters/cutout.py <portrait.png> [<out.png>]``.
 
 The portraits are painted on flat white. The background is the white region connected to the border of the picture (a flood fill with a small tolerance); white that lies inside the figure, such as a

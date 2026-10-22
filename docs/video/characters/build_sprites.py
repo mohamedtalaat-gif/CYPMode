@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Cut out every painted portrait and tell the film where they are: ``python docs/video/characters/build_sprites.py``.
 
 For each member and expression found in ``docs/video/anime/characters/`` (``generate.py`` makes ``<member>_calm_s<seed>.png``, ``expressions.py`` the others) this writes the cut-out

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Run the Chemprop command line with PyTorch's deterministic algorithms in warn-only mode (used for the runs on the Apple GPU only).
 
 Chemprop's training asks PyTorch for deterministic algorithms whenever it is given a seed. On the Apple GPU (MPS) the scatter reduction of the message passing has no deterministic implementation, so PyTorch stops

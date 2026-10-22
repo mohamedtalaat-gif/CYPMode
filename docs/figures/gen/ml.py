@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Figures about measuring honestly and about the final stack: nested-selection optimism, every stacked comparison, and the stack's
 out-of-fold ROC, precision-recall and reliability curves rebuilt from the cached predictions."""
 

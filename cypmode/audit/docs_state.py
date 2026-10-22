@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The generated blocks of README.md and CYPMode_Architecture_Specification.md: the final stack, the verdicts of the gates and the structure recipe.
 
 The text around the blocks is written by hand. Between a pair of markers

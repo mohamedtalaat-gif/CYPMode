@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Pilot: which lever makes Boltz-2's pose pool differ, and does the difference reach the right pose?
 
 Unguided Boltz-2 returns five samples from one trunk pass and they agree with each other (on the diverse

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Every fingerprint/descriptor block, computed once for all compounds (training
 and blinded test) and cached, so any candidate model can assemble its inputs by
 block name instead of re-deriving features per experiment.

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Predicted inhibition of the five major CYP isoforms by models trained ONLY on external data.
 
 The TDC/Veith qHTS panel (~12-13k compounds per isoform, binary inhibitor labels) knows far more

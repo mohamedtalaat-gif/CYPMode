@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The card at the top of the README: ``python docs/card/build_card.py`` writes ``cypmode_card-dark.png`` and ``cypmode_card-light.png`` next to this file.
 
 Everything on the card is read from the repository's own files when it is built: the pictures of the enzyme are PyMOL renders of the submitted structures (``final/_pdb_files``), the compounds are

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Confirm the iron-nitrogen bond restraint on crystal ligands that were not used to decide it (the plan is ``restraint_expansion_plan.json``, registered before any run).
 
 ``prepare`` lists every eligible crystal ligand by the plan's rule and writes the batch inputs of the two conditions; ``score`` scores the runs and prints the verdict lines.

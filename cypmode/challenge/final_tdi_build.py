@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Gate-driven final TDI build: from the experiment verdicts to validated candidate submission files.
 
 Nothing here decides by hand which model joins the final stack. Every experiment group (physics block, SAR pair

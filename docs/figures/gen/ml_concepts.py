@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Concept figures of machine learning: a decision tree fitted to real compounds and gradient boosting stage by stage on a toy regression."""
 
 from functools import cache

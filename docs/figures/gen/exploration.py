@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Figures added when the project grew past the first plan: what the leak guard checked, how the test prevalence was recovered from the public boards, why a small gain cannot be certified,
 the neural pair from discovery to replicate, the reliability of the final stack by similarity, the choice of the call rate, and the whole set of submitted structures."""
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part XI (eighth part): the final recipe, the pools, the margin, the relaxation and the archive (11.10)."""
 
 from notebooks.notebook_builder import code, md

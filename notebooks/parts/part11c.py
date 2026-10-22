@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part XI (third part): the reference ligands and the crystal-anchored benchmark (11.5)."""
 
 from notebooks.notebook_builder import code, md

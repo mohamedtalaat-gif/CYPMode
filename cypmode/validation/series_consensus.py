@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """SAR-aware pose selection: choose the pose that agrees with the poses of the ligand's analogs (job 169).
 
 For two analogs A and B with a common core, the core RMSD ``C[i, j]`` between pose i of A and pose j of B (complexes superposed on pocket

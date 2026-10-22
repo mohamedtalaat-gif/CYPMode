@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Regression guard for the standardization leak found in the 2026-09-26 audit.
 
 cross_validate_shared_trunk and its siblings once computed the feature mean/std

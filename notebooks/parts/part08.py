@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part VIII (first part): the final TDI model. The candidate grid (8.1), the stack (8.2), the reproducibility bug in the stack (8.3)."""
 
 from notebooks.notebook_builder import code, md

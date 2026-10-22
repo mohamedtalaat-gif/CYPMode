@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Resumable OpenFold3 batch runner -- an ADDED second structure engine
 next to Boltz-2 (cypmode.validation.pipeline), never a replacement.
 

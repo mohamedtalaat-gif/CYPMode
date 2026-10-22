@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Minimum-Bayes-risk pose selection and the iron-nitrogen restraint, re-scored with LDDT-PLI against the crystal (exploratory).
 
 The Structure Track is scored by LDDT-PLI, and minimum Bayes risk optimises it by construction: it picks the pose with the highest mean LDDT-PLI against the other poses of the

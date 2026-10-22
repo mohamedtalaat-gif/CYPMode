@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """How hit-like is the blinded test set? A label-shift estimate from structures alone (support for the CYP2D6 A/B decision).
 
 The selection-aware model beats the hits-only one only when the scored set holds enough compounds that the screen would

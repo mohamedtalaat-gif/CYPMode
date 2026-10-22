@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part II (second half): how the compounds were measured, how the test set differs from the training set, the other data sources, matching structures across sources, the leaderboard as data."""
 
 from notebooks.notebook_builder import code, md

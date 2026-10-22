@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Leakage guards for the torch-side nested runners. Torch-marked: run in its own pytest
 invocation, never alongside LightGBM tests (see the `torch` marker in pyproject.toml)."""
 

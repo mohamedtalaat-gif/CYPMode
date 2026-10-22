@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Heme-frame pose prior from crystal ligands (checklist item S1, job 175).
 
 Where does a ligand sit relative to the heme? Every pose is described in the heme's own frame, with the iron as origin and

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Brings ``submissions/`` to the state of the final results: the files that would be uploaded to the challenge portal, each checked with the portal's own rules, with checksums
 and a README per track. Nothing is uploaded; the choice of which file to upload, and the upload, stay manual.
 

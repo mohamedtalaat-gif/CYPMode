@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Auxiliary direct-CYP-activity signal from PubChem AID 1851 ("Cytochrome
 panel assay with activity outcomes", NCATS) -- a real, verified qHTS assay
 of 17,143 diverse NCATS screening-library compounds against five CYP

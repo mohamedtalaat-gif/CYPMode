@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The training set is not one library: find the block whose compounds went through the all-isoform panel.
 
 Compound ids fall into blocks that were screened differently. Two small blocks (the lowest ids and the top of the

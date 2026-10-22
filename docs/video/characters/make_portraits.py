@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Paint the calm portrait of every member that has none yet, then every missing expression: ``python docs/video/characters/make_portraits.py [--members stacker dock ...]``.
 
 A finished file is kept, so the script can be stopped and started again. The calm portrait comes from ``generate.py``, the other expressions from ``expressions.py``.

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Does cypmode.validation.pose_rescoring actually discriminate a
 near-native pose from a wrong one? Measured, not assumed -- using the
 experimental structures themselves as ground truth.

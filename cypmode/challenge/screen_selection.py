@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The real single-concentration screen inside the selection-aware CYP2D6 model (job 196).
 
 The selection-aware model splits P(label) into P(hit) x P(label | hit). Its gate has so far been learned from "has a dose-response curve on CYP2D6", the only

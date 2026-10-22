@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Tests three untried levers for CYP2D6's deployed shared-trunk model --
 hyperparameter tuning, class-weighted loss, and seed ensembling -- after
 8 independent feature additions (KNN, Tier3 structural, ChemBERTa,

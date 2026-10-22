@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Which engine and which pose-selection rule to trust, judged on the crystal-anchored benchmark.
 
 Input is the table written by ``pose_rescoring_validation --engine-poses`` (one row per predicted

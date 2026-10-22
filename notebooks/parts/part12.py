@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part XII (first part): engineering for trust. Reproducibility (12.1), the audit (12.2) and the test suite with its continuous-integration workflow (12.3)."""
 
 from notebooks.notebook_builder import code, md

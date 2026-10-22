@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Expression variants of a painted portrait by repainting only the face: ``python docs/video/characters/expressions.py --member kai --expression blink``.
 
 The calm portrait of a member (``generate.py``) stays the body, the hair and the clothes of every variant. A square crop around the face is cut from it, soft elliptical masks mark only the parts

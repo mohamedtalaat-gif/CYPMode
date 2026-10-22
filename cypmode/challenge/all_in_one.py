@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The all-in-one comparison: the final stack against one stack that holds every candidate that was ever cached (declared 2026-10-22, before any result).
 
 The final stack of each isoform is the default stack plus the groups whose registered gate is MET (``final_tdi_build.choose_stack``). A gate asks that an idea helps on its own and inside the default stack, so an

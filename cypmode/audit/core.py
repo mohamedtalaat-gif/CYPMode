@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Shared pieces of the audit: check/section containers, deterministic Markdown helpers, shared context.
 
 Everything an audit section prints is computed when the audit runs; the only prose is wording around the

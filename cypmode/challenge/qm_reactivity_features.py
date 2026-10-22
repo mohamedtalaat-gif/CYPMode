@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Continuous QM-surrogate reactivity features via qmdesc (a real,
 published graph neural network -- Guan et al., "Regio-Selectivity
 Prediction with a Machine-Learned Reaction Representation and On-the-Fly

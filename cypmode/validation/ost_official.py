@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Does our LDDT-PLI agree with the one the challenge computes with OpenStructure?
 
 Every structure gate of the project (the restraint, the selection rules, the series and pose-awareness terms) rests on ``lddt_to_crystal``, a re-implementation of the

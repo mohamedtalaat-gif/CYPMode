@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Transformer-based SMILES embeddings via ChemBERTa
 (seyonec/ChemBERTa-zinc-base-v1, a real, published RoBERTa model
 pretrained by masked-language-modeling on ~77M ZINC SMILES strings, via

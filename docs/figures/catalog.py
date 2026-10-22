@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The catalog of figures: every figure is registered with its title, caption, data files and the notebook section that uses it.
 
 ``build_all.py`` runs the registered functions and fails when a catalogued figure is not produced; ``CATALOG.md`` is generated from here.

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Figures of the engineering behind the results: the job queue as a timeline, what the machine did while it ran, and the size of the test suite."""
 
 import re

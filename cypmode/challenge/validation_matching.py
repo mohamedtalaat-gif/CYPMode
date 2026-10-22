@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Make cross-validation resemble the blinded test set.
 
 Random CV is optimistic-in-the-wrong-way for this challenge: the 750 test

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Concept figures of the structure track: how the minimum-Bayes-risk rule picks a pose from a pool (on a real pool), and how a diffusion model turns noise into a pose (a toy denoiser
 that knows two poses, driven by the real forward and reverse equations)."""
 

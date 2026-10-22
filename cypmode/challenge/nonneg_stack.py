@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """A non-negative stacking selector, and the pre-registered test of whether it should replace the logistic blend.
 
 ``StackedLogit`` blends the empirical-CDF logit of every candidate with a logistic regression whose penalty (L1 or L2) and strength are chosen by an inner

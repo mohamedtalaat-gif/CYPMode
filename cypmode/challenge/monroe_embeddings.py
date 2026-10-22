@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Frozen Monroe embeddings as a feature block and as the input of TabICL (job 209).
 
 Monroe (Banaszewski, arXiv 2608.18982; MIT licence, ``third_party/monroe``) is a GRIT graph transformer pretrained on the semi-empirical quantum-chemical properties of

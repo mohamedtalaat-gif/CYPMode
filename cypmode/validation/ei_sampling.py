@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Expected-improvement sampling: spend extra poses where the pool disagrees most (checklist item S2, job 172).
 
 Boltz-2 samples of one ligand come from one trunk pass and mostly agree; the pose that minimum-Bayes-risk selection picks is

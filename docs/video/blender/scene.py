@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # This file drives Blender's Python interface (and, with the Molecular Nodes backend, the Molecular Nodes add-on, GPL-3.0-or-later); like Blender's own scripts it is offered under the
-# GPL. The rest of the repository is MIT OR Apache-2.0; nothing of Blender or Molecular Nodes is copied into it.
+# GPL. The rest of the code of the repository is AGPL-3.0-or-later (compatible with the GPL through section 13 of the AGPL); nothing of Blender or Molecular Nodes is copied into it.
 """One cinematic molecular scene rendered with Blender from real coordinates: ``Blender -b -P scene.py -- --config scene.json``.
 
 Two backends draw the enzyme. ``molecularnodes`` (the default of the film) loads the structure file itself with the Molecular Nodes add-on and styles it through geometry nodes: a

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The TDI label is a deterministic function of two measured pIC50 values, and
 the training file carries both of them -- this module makes that explicit so
 models can learn the continuous quantity instead of its thresholded shadow.

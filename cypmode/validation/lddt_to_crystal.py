@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """LDDT-PLI of a predicted pose against the experimental pose of the same ligand, the metric the Structure Track is scored by.
 
 The official score is computed with OpenStructure. This is the same measure as ``pose_selection.lddt_pli_arrays`` made symmetry-aware (the ligand atoms are mapped

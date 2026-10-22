@@ -841,28 +841,26 @@ elsewhere in this README:
 
 ## Citation
 
-If you use CYPMode, please cite it as software, and disclose which part
-you relied on — the motif screen is a heuristic substructure alert, not a
-validated mechanism predictor, and the structural validation covers four
-compounds by design, not the whole CYP panel (see Scope and limitations,
-above). The same information, plus APA/BibTeX export, is also available
-via GitHub's "Cite this repository" button ([CITATION.cff](CITATION.cff)):
+If you use CYPMode, please cite it as software, and say which part you relied on. The machine-readable form is [CITATION.cff](CITATION.cff) (GitHub shows it as "Cite this repository"); how to cite, what counts as using the work and
+what the licence asks are in [USE_AND_CITATION.md](USE_AND_CITATION.md). A ready entry:
 
 ```bibtex
 @software{talaat_cypmode_2026,
   author  = {Talaat, Muhammad},
-  title   = {CYPMode: Mode-Aware Reinterpretation of TDC's Binary CYP450
-              Inhibition Benchmarks},
+  title   = {CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge},
   year    = {2026},
   version = {0.1.0},
   url     = {https://github.com/mohamedtalaat-gif/CYPMode},
-  license = {MIT OR Apache-2.0}
+  license = {AGPL-3.0-or-later}
 }
 ```
 
-A Zenodo-archived, DOI-bearing release will replace this once one exists —
-the GitHub release alone isn't a persistent identifier.
+The DOI of the archived release, when `CITATION.cff` lists one, is the identifier to cite.
 
 ## License
 
-Licensed under either of [MIT](LICENSE-MIT) or [Apache License 2.0](LICENSE-APACHE), at your option. Contributions are accepted under the same terms.
+The code is licensed under the [GNU Affero General Public License, version 3 or later](LICENSE) with an additional term, under section 7(b), that the attribution and the citation notice stay with every copy and every
+generated output (see [NOTICE](NOTICE)). The documents (the notebook, the method report, the figures, the film, the card and the texts) are licensed under
+[CC BY-NC-SA 4.0](LICENSES/CC-BY-NC-SA-4.0.txt), and the data that the code generates under [CC BY 4.0](LICENSES/CC-BY-4.0.txt); third-party material keeps its own licence. [REUSE.toml](REUSE.toml) says which licence applies to
+which files. A use of the code in a product that cannot be released under these terms needs a separate written licence from the author. The versions published up to the first 27 commits were published under MIT OR Apache-2.0 and remain
+available under those terms. Contributions are accepted under the licence of the part of the repository that they change.

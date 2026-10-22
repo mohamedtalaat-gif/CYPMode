@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """TabPFN is registered like TabICL (a cached candidate group) and its jobs wait for the licence acceptance instead of failing."""
 
 from pathlib import Path

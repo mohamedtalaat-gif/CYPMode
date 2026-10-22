@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part IX (second part): frozen foundation-model embeddings (9.4), test-likeness weighting (9.5), floor-clipped arms (9.6), cross-isoform transfer of the arms (9.7), confidence-weighted training (9.8)."""
 
 from notebooks.notebook_builder import code, md

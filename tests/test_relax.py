@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The relaxation module's file handling and the arithmetic of its gate (the force-field part needs the conda environment ``openmm`` and is exercised by queue job 218)."""
 
 import numpy as np

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Tests the orchestration logic in isolation -- mocks the boltz subprocess
 call itself (a real run takes tens of minutes and needs a GPU + the
 separate .venv-boltz environment; see README.md), so these only check that

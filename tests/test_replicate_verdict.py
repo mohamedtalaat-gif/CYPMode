@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 from cypmode.challenge import replicate_verdict as rv
 
 LINE = "  z0={z} stacked base+added vs base: AUC {d} (p={p}, better 13/15) AP +0.0052 (p=0.569, better 10/15)\n"

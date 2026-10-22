@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Audit sections added with the gate-driven build: gate ledger, checklist consistency, environment and seeds, feature-block
 leakage, enforced rules, and the final candidate files. Same contract as ``sections``: everything is computed at run time."""
 
@@ -198,6 +202,13 @@ def citation_consistency(ctx: Context) -> Section:
         s.add("the DOI of the citation file is written in the README", ids["doi"] in readme, ids["doi"])
     else:
         s.add("the DOI of the citation file is written in the README", None, "the citation file has no DOI yet")
+    licence_text = (ROOT / "LICENSE").read_text(errors="ignore")[:120] if (ROOT / "LICENSE").exists() else ""
+    s.add("the licence of the code is the same in the citation file, LICENSE, pyproject.toml and the headers", "AFFERO" in licence_text and cff.get("license") == "AGPL-3.0-or-later" and "AGPL-3.0-or-later" in (ROOT / "pyproject.toml").read_text(), f"citation file: {cff.get('license')}")
+    missing_texts = [t for t in ("AGPL-3.0-or-later", "CC-BY-NC-SA-4.0", "CC-BY-4.0", "LicenseRef-third-party") if not (ROOT / "LICENSES" / f"{t}.txt").exists()]
+    s.add("the texts of the licences are in LICENSES/", not missing_texts, ", ".join(missing_texts) or "4 found")
+    listed = subprocess.run(["git", "ls-files", "--cached", "--others", "--exclude-standard", "*.py"], cwd=ROOT, capture_output=True, text=True, check=False).stdout.split()
+    headerless = [f for f in listed if not f.startswith("third_party/") and "SPDX-License-Identifier" not in (ROOT / f).read_text(errors="ignore")]
+    s.add("every Python file of the repository carries its SPDX licence header", not headerless, ", ".join(headerless[:4]) or "all have one")
     s.add("the declaration of use and citation exists", (ROOT / "USE_AND_CITATION.md").exists(), "USE_AND_CITATION.md" if (ROOT / "USE_AND_CITATION.md").exists() else "missing")
     entry_points = ("challenge/nested_runners", "challenge/aux_experiments", "challenge/final_tdi_build", "challenge/physics_block", "challenge/frozen_embeddings", "validation/batch", "validation/final_recipe", "validation/relax_final")
     silent = [name for name in entry_points if "provenance.announce()" not in (ROOT / "cypmode" / f"{name}.py").read_text()]

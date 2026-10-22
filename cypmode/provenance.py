@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Who made the data and the software, written next to everything the code generates.
 
 ``CITATION.cff`` is the single source of the author, the affiliation, the ORCID, the repository, the identifiers (the DOI once it exists) and the licence. This module reads it and writes the same facts

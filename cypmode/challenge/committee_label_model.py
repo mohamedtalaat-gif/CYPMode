@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Probabilistic label-process model: a committee of two-arm regressors that outputs P(label) and expected improvement.
 
 The label is a deterministic threshold of two noisy measurements, positive <=> s = t - max(d, 4) > log10 2 (t: TDI

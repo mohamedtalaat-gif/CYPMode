@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The numbers the notebook quotes in its running text, read from the project's own files when the notebook is built.
 
 ``load()`` returns one ``Facts`` object; Markdown cells refer to its fields as ``{{=F.n_train:,}}``, so a number in a sentence is never typed by hand.

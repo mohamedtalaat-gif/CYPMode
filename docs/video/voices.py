@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The voices of the film: ``python docs/video/voices.py harvest`` reads every spoken line and its time from the film itself, ``python docs/video/voices.py speak`` (in ``.venv-voice``) speaks them.
 
 The lines are the ones the film already shows: the three lines of every introduction card and every subtitle. ``harvest`` draws the film once a second in headless Chrome and collects them (the page

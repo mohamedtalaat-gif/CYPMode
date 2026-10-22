@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Independent, large-N check of the Type II motif screen against real inhibition potency.
 
 cypmode.data.panel checks the motif screen against TDC's Veith labels -- a

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The kind of idea each row of the gate ledger tested, shared by the exploration figure and by the exploration section of the method report.
 
 A ledger row is a pre-registered verdict found in a run log (``method_report.gate_rows``); its family is the stem of the log, and the kind groups the families by what they tried.

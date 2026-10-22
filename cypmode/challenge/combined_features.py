@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Combines the three real, independently-validated feature additions --
 KNN read-across (cypmode.challenge.knn_features), PubChem AID 1851
 auxiliary activity (cypmode.challenge.pubchem_auxiliary), and BindingDB

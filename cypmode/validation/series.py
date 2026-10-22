@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Analog series for structure prediction: SAR-aware pose consistency (jobs 133, 142, 169).
 
 Compounds of one chemical series bind the same pocket in related ways: the shared core (maximum common substructure) sits in nearly the

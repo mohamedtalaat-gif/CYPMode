@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Candidates that use the official auxiliary readings (single-concentration screen, Emax) and the two-part form of the TDI label.
 
 The blinded test compounds have no screen or Emax reading, so a reading can never be an input of the final model. It can still teach the model what

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """TabICL and TabPFN on the frozen CheMeleon embedding are registered like the other cached candidates, wait for their inputs instead of failing, and are waited for by the long Chemprop family."""
 
 from pathlib import Path

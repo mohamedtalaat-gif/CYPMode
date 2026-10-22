@@ -1,4 +1,32 @@
 CYPMode
-Copyright 2026 Muhammad Talaat
+Copyright 2026 Muhammad Talaat, Faculty of Pharmacy, Ain Shams University (ORCID 0000-0002-9171-437X)
+https://github.com/mohamedtalaat-gif/CYPMode
 
-Licensed under either the MIT license (LICENSE-MIT) or the Apache License, Version 2.0 (LICENSE-APACHE), at your option.
+Licences
+--------
+The source code is licensed under the GNU Affero General Public License, version 3, or (at your option) any later version (SPDX: AGPL-3.0-or-later; the text is in LICENSE and LICENSES/AGPL-3.0-or-later.txt), with
+the additional terms stated below under section 7(b) of that licence.
+
+The documents (the notebook, the method report, the negative-results ledger, the README and the other texts, the figures, the film, the card and the poster) are licensed under the Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International licence (CC-BY-NC-SA-4.0; LICENSES/CC-BY-NC-SA-4.0.txt).
+
+The data that the code generates (predictions, caches, tables and outputs) and the deposited data record are licensed under the Creative Commons Attribution 4.0 International licence (CC-BY-4.0;
+LICENSES/CC-BY-4.0.txt): they may be used freely, provided that the use credits the author and gives the citation of the work (USE_AND_CITATION.md).
+
+Third-party material keeps its own licence (LICENSES/LicenseRef-third-party.txt). REUSE.toml states which licence applies to which files.
+
+Additional terms under section 7(b) of the GNU AGPL (preservation of attribution)
+-------------------------------------------------------------------------------
+Every copy and every modified version of the code, and every program or service that contains a substantial part of it, must preserve: (1) this NOTICE file; (2) the copyright and licence lines at the start of the source files;
+and (3) the citation notice that the scripts print when they start (cypmode/provenance.py) and the provenance records that they write beside the data that they generate (the PROVENANCE.json files and the files named
+<name>.provenance.json). A program that has an interface that shows legal notices may show the citation notice there, as section 5(d) of the licence provides; it may not remove the notice, shorten it so that the
+author or the repository is no longer named, or replace it.
+
+Other uses
+----------
+A use of the code in a product or a service that cannot be released under these terms needs a separate written licence from the author (contact: the e-mail address in CITATION.cff).
+
+History
+-------
+The versions of the code published up to the commit 66f5def (the first 27 commits of the repository) were published under the MIT licence or the Apache License 2.0, at the choice of the user, and remain available under
+those terms. The script docs/video/blender/scene.py is licensed under the GPL, version 3 or later, because it drives Blender and its add-on (compatible with the AGPL through its section 13). Components that were adapted from Apache-2.0 sources (for example the validity call of the organisers' scorer in cypmode/validation/official_posebusters.py) keep their notices.

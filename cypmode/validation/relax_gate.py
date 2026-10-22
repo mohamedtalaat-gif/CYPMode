@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Gate of the force-field relaxation: does it help on poses whose answer is known?
 
 ``relax`` repairs a pose in a frozen pocket. The challenge scorer gives a pose that fails its PoseBusters checks an LDDT-PLI of 0, so a relaxation that turns invalid poses into valid

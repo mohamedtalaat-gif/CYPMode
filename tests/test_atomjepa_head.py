@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The attention readout on cached per-atom features trains, separates a planted signal and ignores padding (it needs torch, so it is skipped in the lightweight environment)."""
 
 import numpy as np

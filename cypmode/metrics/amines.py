@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Trialkylamine detector -- a second, independent structural-alert screen
 alongside cypmode.metrics.motifs, for the mechanism-based (time-dependent)
 inactivation route that screen was never built to catch.

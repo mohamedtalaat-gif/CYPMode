@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Cross-isoform transfer of the assay arms (checklist item I3, job 076).
 
 The label of a compound on isoform k is a function of two assay arms, t (TDI condition) and d (direct inhibition). Earlier work looked

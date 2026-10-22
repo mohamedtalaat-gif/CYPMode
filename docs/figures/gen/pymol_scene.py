@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Real structures rendered with PyMOL (headless, ray traced) for the figures and the film.
 
 ``render(key, body, ...)`` writes a PyMOL script (the shared set-up, the caller's ``body`` that selects, colours and sets the view, then a footer that projects chosen atoms to image

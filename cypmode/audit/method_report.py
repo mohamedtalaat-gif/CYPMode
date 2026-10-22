@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Generate METHOD_REPORT.md and NEGATIVE_RESULTS.md from the repository's own logs, tables and audit.
 
 Every number in these two files is copied by code from a log, a result table or the audit report; the prose around them is

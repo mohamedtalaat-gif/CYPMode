@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Gate-driven final structure recipe: decide from the verdicts, run on the 20 official ligands, select, validate, zip.
 
 Nothing is chosen by hand. The gates of the structure track (jobs 110-175) write ``STRUCTURE GATE <name>: MET|NOT MET``

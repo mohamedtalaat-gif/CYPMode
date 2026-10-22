@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Label-permutation control of the whole nested pipeline (a randomisation test: Leach, Molecular Modelling, 2nd ed., section 12.13.1).
 
 A regression or a classifier can look predictive by chance, above all when many descriptors are tried on few compounds; the standard check is to reassign the activities at random

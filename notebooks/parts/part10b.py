@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part X (second part): density functional theory (10.3) and the semi-empirical and tight-binding methods, GFN2-xTB (10.4)."""
 
 from notebooks.notebook_builder import code, md

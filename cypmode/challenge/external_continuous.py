@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Continuous readings of the NCATS qHTS cytochrome panel (PubChem AID 1851) as a label-free feature block.
 
 ``external_activity`` already feeds the stack five inhibitor probabilities per compound, trained on the binary active/inactive calls of the same panel (the TDC version). A binary call throws

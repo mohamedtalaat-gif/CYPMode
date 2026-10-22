@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Builds Boltz-2 YAML inputs (protein + heme, covalently bonded) for any ligand.
 
 The four data/structure_track/inputs/cyp3a4_*.yaml files were originally hand-written,

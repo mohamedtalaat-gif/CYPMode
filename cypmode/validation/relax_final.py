@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Force-field relaxation of the 20 submitted poses, under a rule that was registered before any official pose was relaxed.
 
 ``relax_gate`` tested the relaxation of ``relax`` on 90 poses of 30 ligands whose crystal pose is public and found it MET (validity, margin and fidelity). This module applies it to the 20 poses

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The final assembled TDI model: combines the settled, evidence-based
 per-isoform architecture choice into one pipeline that produces real
 predictions on the real 750-row blinded test set and writes a validated

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Physics tier B: Boltzmann-weighted conformers and relaxed hydrogen abstraction (job 074).
 
 Tier B (``physics_tierb``) replaces the frozen-geometry hydrogen-abstraction energy by a locally relaxed one for the two best sites and

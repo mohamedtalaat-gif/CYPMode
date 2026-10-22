@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Repeated-CV + Tukey HSD significance test for the ChemBERTa feature
 (cypmode.challenge.chemberta_features) against M3 -- kept as a fully
 separate module/process from chemberta_features.py on purpose: this

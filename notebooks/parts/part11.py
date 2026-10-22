@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part XI (first part): the structure track, what a structure is (11.1), how a co-folding model predicts one (11.2) and how its input is built (11.3)."""
 
 from notebooks.notebook_builder import code, md

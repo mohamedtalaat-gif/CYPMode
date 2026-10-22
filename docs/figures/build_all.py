@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Build every illustration: ``python docs/figures/build_all.py``.
 
 Imports the generator modules in ``docs/figures/gen/``, draws each catalogued figure (light and dark SVG and PNG, and the light and dark animation of a

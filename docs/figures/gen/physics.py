@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Figures of the quantum-chemistry features: the self-consistent field iterations of GFN2-xTB, Koopmans' relation on the real compounds, Boltzmann weights of conformers,
 hydrogen-abstraction energies by site type, and the signal each physics column carries on its own."""
 

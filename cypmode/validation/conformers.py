@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Distinct crystal conformations of the CYP3A4 pocket, to condition co-folding on more than one of them.
 
 Unguided Boltz-2 returns five near-identical poses per ligand (on the diverse crystal benchmark the best

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Joins a Tier 3 (real Boltz-2 structural evidence) batch into the TDI
 feature matrix, and tests whether it moves that isoform's classification
 performance. Originally built for CYP3A4 only, per

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part IX (first part): additions that were tested. The tools for reading a gate (9.0), the selection-aware CYP2D6 model (9.1), SAR pair models and matched pairs (9.2), the label-process committee (9.3)."""
 
 from notebooks.notebook_builder import code, md

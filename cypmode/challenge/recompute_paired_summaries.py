@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Re-analyse the saved per-fold tables of the older significance experiments with the paired corrected t (Holm).
 
 Each ``*_significance_raw.csv`` holds the per-(repeat, fold) MCC of every variant. The earlier summaries compared the variants with

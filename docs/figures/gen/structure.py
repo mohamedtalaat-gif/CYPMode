@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Figures of the structure track: the effect of the iron-nitrogen restraint ligand by ligand, the pose-selection rules, the OpenFold3 memory arithmetic and the PoseBusters checks."""
 
 import re

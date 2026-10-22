@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Drives a headless Chrome over the DevTools protocol: load a page, evaluate a JavaScript expression, take a screenshot. Used to draw the frames of the animation and to preview single frames."""
 
 import base64

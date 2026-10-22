@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Selection-aware TDI modelling: is the model for the SCORED population better than the model for the hits?
 
 Pre-registered before any population candidate was run. Observation (a cheap probe, not a result): TDI

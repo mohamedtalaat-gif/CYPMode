@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Verdict of the 10-outer-fold replicate for the physics additions and for the neural pair (the multitask network with plain Chemprop).
 
 The 5-fold design (5 outer folds, 3 repeats) judges an addition by the corrected resampled t of Nadeau and Bengio, whose variance

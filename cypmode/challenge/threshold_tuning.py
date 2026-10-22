@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """CV-fold-internal, MCC-optimized decision thresholds -- per isoform, not
 a single threshold shared across CYP3A4 and CYP2D6, and never touching a
 validation/test fold's own labels to pick the threshold used on it.

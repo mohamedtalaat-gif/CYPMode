@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Does minimum-Bayes-risk pose selection beat the model's own first pick, and does a second engine help? (jobs 170 / 150)
 
 Every rule answers one question per ligand, "which single pose do we submit?", and is scored by that pose's true ligand

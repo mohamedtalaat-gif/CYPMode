@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """OpenStructure's LDDT-PLI and BiSyRMSD for every pose that a pool gate was judged on.
 
 ``ost_official`` found that our LDDT-PLI does not agree with the organisers' scorer closely enough (mean absolute difference 0.066 against the registered 0.05, pose ordering 77.3% against 90%) and

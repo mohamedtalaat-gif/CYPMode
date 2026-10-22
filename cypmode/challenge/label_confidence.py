@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """How confidently is a compound's TDI label assigned? -- the scored set only contains confident labels.
 
 The challenge FAQ says predictions are requested for every test compound, "but only compounds whose label

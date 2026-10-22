@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The gates of the pools repeated with OpenStructure's yardstick (the registered consequence of the verdict of ``ost_official``).
 
 The gates of the structure pools are judged by ``true_rmsd``, our pocket-aligned symmetry-aware RMSD to the crystal pose, and three exploratory gates by our LDDT-PLI. ``ost_pools`` scored every pose

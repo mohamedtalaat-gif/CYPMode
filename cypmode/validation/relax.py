@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Force-field relaxation of a predicted ligand pose in its frozen pocket.
 
 The PoseBusters paper reports that a short minimisation with a force field repairs most of the poses that a deep-learning docking model leaves invalid (clashes, strained

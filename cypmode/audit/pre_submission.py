@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The last gate before a submission: one command that says whether everything is finished, consistent and fresh.
 
 ``python -m cypmode.audit.pre_submission`` runs after the whole queue, including the final chain (audit, method report, figures, notebook, film, ``submissions/`` sync), and answers

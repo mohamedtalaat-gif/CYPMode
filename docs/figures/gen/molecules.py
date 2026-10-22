@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Figures about turning a molecule into numbers: the Morgan algorithm step by step on a real compound, Tanimoto similarity between real compounds, and the size of every feature block."""
 
 import io

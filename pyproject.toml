@@ -5,10 +5,10 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "cypmode"
 version = "0.1.0"
-description = "Mode-aware (Type I / Type II) reinterpretation of TDC's binary CYP450 inhibition benchmarks"
+description = "Time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge"
 authors = [{name = "Muhammad Talaat"}]
 readme = "README.md"
-license = {text = "MIT OR Apache-2.0"}
+license = {text = "AGPL-3.0-or-later"}
 requires-python = ">=3.10"
 # Floors match what this project is actually tested against (see
 # requirements.txt's exact pins for the hosted-deployment target). rdkit is

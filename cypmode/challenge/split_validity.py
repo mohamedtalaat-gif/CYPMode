@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Checks whether a train/test split is actually informative before trusting
 any MCC computed on it -- a validation set that's chemically close to
 training (near-duplicates/analogs) can make a CV split look far more

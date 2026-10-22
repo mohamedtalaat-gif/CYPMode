@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Render the real-structure pictures of the film with PyMOL: ``python docs/video/pymol_clips.py``.
 
 The pictures are drawn from coordinates: the enzyme with its heme and a bound ligand, the heme pocket of a Type II and of a Type I crystal structure, and the pose of a donor ligand

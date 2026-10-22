@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Does training on label confidence help when the evaluation matches the scoring rule?
 
 Pre-registered (before any weighted candidate had been run). The official score only counts compounds

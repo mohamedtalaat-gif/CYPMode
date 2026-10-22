@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Physics block, tier B: Boltzmann-weighted conformers and relaxed hydrogen-abstraction energies for the two best sites.
 
 Tier A (``physics_block``) uses one MMFF conformer and vertical energies: removing a hydrogen from a frozen geometry leaves the

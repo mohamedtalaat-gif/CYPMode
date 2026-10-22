@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part VII (fifth part): learned representations, ChemBERTa and the shared-trunk network (7.9); structural evidence from Boltz-2 (7.10); the first assembled models (7.11)."""
 
 from notebooks.notebook_builder import code, md

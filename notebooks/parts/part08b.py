@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part VIII (second part): turning scores into calls (8.4), calibration (8.5), the candidate files and their checks (8.6), the results with their uncertainty (8.7)."""
 
 from notebooks.notebook_builder import code, md

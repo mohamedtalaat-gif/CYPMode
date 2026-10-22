@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Pocket-geometry features from an already-predicted Boltz-2 structure --
 a genuinely different signal from the Fe-N coordination distance
 (cypmode.validation.structures): how much of the ligand is buried inside

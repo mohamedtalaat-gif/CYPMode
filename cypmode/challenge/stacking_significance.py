@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Statistical significance testing for feature-stacking comparisons --
 repeated CV with the corrected resampled t of Nadeau and Bengio (Holm-adjusted over the pairs),
 not a single point-estimate MCC delta and not an unpaired test on correlated folds.

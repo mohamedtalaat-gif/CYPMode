@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Make the OpenADMET Chemprop pretraining weights loadable by ``chemprop train --from-foundation``.
 
 The files of ``openadmet/chemprop-foundation-pretraining-weights`` (Apache-2.0) are in the format of CheMeleon's ``chemeleon_mp.pt``: a dictionary with the hyper-parameters and the state of the

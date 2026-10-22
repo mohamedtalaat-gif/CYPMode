@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Appendix A: the practical walkthrough. The environments, the map of the repository, every stage as a runnable path, the list of the queue jobs (generated from the jobs themselves and repeated job by job in the text), how a candidate is reproduced, and how a model or a structure lever is added through a gate."""
 
 from notebooks.notebook_builder import code, md

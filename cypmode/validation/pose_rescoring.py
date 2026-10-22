@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Experimental-prior rescoring of a predicted inhibitor pose in CYP3A4.
 
 The Structure Track's accuracy metrics are scored against sequestered

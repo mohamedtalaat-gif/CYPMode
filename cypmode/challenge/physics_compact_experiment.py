@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Compact physics: only the physics columns that matter, chosen inside every task (job 072).
 
 The tier-A block has 133 columns and about a third of them are mostly missing (a role that a compound does not have). Boosting with

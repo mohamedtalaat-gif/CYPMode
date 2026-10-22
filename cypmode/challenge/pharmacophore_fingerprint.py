@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """3-point pharmacophore fingerprints via pmapper
 (github.com/DrrDom/pmapper) -- real, actively maintained, and lightweight
 (only rdkit + networkx, no heavy compiled backend, unlike tblite --

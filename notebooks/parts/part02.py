@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part II (first half): the data. A molecule as text and as a graph, the two challenge files, the label rule, the contaminated rows, measurement noise."""
 
 from notebooks.notebook_builder import code, figure, md

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Fold-local Tier 3 selection mask: decides which TDI compounds are worth
 the expense of a real Boltz-2 structural run, without ever letting a
 validation fold's own labels influence that decision.

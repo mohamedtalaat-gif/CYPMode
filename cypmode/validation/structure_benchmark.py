@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """A crystal-anchored benchmark for tuning the structure engine.
 
 Five panel compounds are too few to learn which engine, sampling setup or selection rule to

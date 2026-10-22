@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part V (last part): the six-drug panel of time-dependent shifts (5.7) and the Streamlit application (5.8)."""
 
 from notebooks.notebook_builder import code, md

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part V (first half): the Type II motif screen. The idea and the patterns that encode it (5.1), the trialkylamine alert (5.2), the panel data (5.3), the test against potency (5.4)."""
 
 from notebooks.notebook_builder import code, md

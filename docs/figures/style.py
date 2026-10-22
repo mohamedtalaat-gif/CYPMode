@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Shared style of the project's figures: palette, fonts, and the writer that saves a figure as light and dark SVG plus a 2x PNG.
 
 The palette extends the one of the earlier figures (generate_tdi_figures.py): blue, red and green keep their roles, and a few more

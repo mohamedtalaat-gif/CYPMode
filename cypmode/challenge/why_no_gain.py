@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Why an idea that did not join the final stack added nothing: diagnostics generated from the cached predictions.
 
 A verdict "NOT MET" says that an idea did not beat the final stack under the pre-registered rule; it does not say why. For every candidate group of ``final_tdi_build.GROUPS`` and each isoform this

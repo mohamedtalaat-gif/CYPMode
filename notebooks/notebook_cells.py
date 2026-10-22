@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """All the cells of the notebook in reading order, and the terms that must be defined where they are first used.
 
 The content lives in ``notebooks/parts/``: ``front.py`` (title, abstract, how to read, contents), ``part00.py`` to ``part13.py`` (the parts) and the appendices. A part that does not exist

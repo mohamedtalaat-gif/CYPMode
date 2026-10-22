@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Physics-, molecule- and pharmacophore-aware terms for choosing among predicted poses (jobs 168 / 169).
 
 Boltz-2 reports a confidence of 0.91-0.96 even for poses 5-6 A from the crystal pose, so its own score cannot rank a pool. The terms below

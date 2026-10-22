@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Symmetry-corrected ligand-pose RMSD between two structure predictions
 of the same compound -- e.g. two independent Boltz-2 runs (different
 seeds) for a consistency check, or a prediction against a real deposited

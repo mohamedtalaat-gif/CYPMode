@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Pose pools of one ligand and the pairwise LDDT-PLI matrix inside them (shared by the structure-track gates).
 
 ``pairwise_lddt`` returns M with M[i, j] = approximate LDDT-PLI of pose i when pose j is taken as the truth

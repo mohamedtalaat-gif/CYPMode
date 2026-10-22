@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The all-in-one comparison: how the two stacks are named and when the registered outcome is MET."""
 
 from cypmode.challenge import all_in_one as module

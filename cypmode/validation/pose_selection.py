@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Choose one pose from a pool by the metric the challenge scores, instead of the model's own confidence.
 
 The structure track is scored by LDDT-PLI: for the protein atoms within 6 A of the ligand in the true

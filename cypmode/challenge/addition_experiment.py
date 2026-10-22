@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Shared pre-registered test for "does adding this candidate group improve the assembled model?".
 
 Used by physics_experiment (xTB block) and pair_transfer (SAR-aware pair model). Everything is on the nested

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Does the atom-, site- and pharmacophore-aware GFN2-xTB block improve the TDI model? (checklist item I6)
 
 Pre-registered before any physics candidate was run. The block (physics_block.py) describes the heme-binding atoms,

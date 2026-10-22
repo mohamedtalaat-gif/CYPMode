@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Floor-clipped two-arm regression (checklist item I10).
 
 The label is a function of the two assay arms, t (TDI condition) and d (direct inhibition): positive <=>

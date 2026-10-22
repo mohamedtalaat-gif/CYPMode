@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The confirmatory restraint gates of ``restraint_expansion`` repeated with OpenStructure's LDDT-PLI.
 
 ``ost_official`` registered that, if our LDDT-PLI did not agree with the organisers' scorer, the gates that rest on it are repeated with OpenStructure's value. This module repeats the two

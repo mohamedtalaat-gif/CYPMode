@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Draw single frames of the animation (or any page function) to PNG files: ``python docs/video/anime/preview.py <out dir> <expression> [<expression> ...]``.
 
 An expression is JavaScript evaluated in ``index.html`` before the screenshot, for example ``render(12.5)``.

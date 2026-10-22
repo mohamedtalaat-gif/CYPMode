@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Properties predicted by OpenADMET's surrogate models (logD and mouse brain protein binding) as label-free feature columns.
 
 Two Chemprop directed message-passing networks of the OpenADMET project (Apache-2.0), each started from the ``surrogate_adme`` pretraining weights and fine-tuned on one endpoint of the OpenADMET

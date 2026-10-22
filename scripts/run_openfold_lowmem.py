@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Run OpenFold3 with the memory-light chunking path (same arithmetic, much smaller peak memory).
 
 OpenFold3's ``chunk_layer`` first expands every input to the full batch shape and flattens it, which materialises the whole

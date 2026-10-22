@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Test-likeness-weighted training (checklist item I8, job 060).
 
 The blinded test set is analog-heavy: its median nearest-neighbour similarity to the training set is 0.58-0.59 while the

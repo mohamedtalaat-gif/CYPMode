@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """KNN-label (read-across) features: for each compound, the known TDI
 status of its K nearest chemical neighbors (by Tanimoto similarity on
 ECFP4), aggregated into a small feature set. Captures local

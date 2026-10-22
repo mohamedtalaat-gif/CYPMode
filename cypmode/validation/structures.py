@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Check the motif screen against Boltz-2 structure predictions.
 
 cypmode/metrics/motifs.py flags a compound as a candidate Type II inhibitor

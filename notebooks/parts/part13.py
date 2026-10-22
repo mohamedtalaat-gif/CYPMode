@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part XIII: closing. What the project shows and does not show (13.1), its limitations (13.2), its open questions (13.3) and the final results with the state of the submission files (13.4). Every number is read from the repository's files when the cell runs."""
 
 from notebooks.notebook_builder import code, md

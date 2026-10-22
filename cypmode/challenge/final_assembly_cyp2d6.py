@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """CYP2D6's deployed model: the shared trunk, m3_no_amine_features only.
 
 Real evidence behind this exact configuration (data/tdi_track/outputs/):

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """A softmax-temperature selector between exploiting the best model and exploring a committee, and the pre-registered test of whether it should replace the logistic blend.
 
 Every selector of the nested harness turns the inner out-of-fold scores of the candidates into one score. Two of them sit at the ends of a line: ``BestSingle`` puts all the weight on

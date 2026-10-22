@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Margin audit of every pose in the pools of the official ligands, under the challenge scorer's own PoseBusters call.
 
 ``python -m cypmode.validation.pose_margins`` checks every predicted pose of every official ligand (all runs: the base run, the restrained run, the

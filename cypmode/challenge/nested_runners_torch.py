@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Torch-side candidates (TabICL, multitask MLP over all potency columns) for a
 NestedPlan. Runs in the isolated torch environment (.venv-ml) and writes to the
 same PredictionCache the LightGBM runners fill -- the plan is an npz and the

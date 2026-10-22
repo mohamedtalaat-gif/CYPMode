@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Independent, repeatable code audit -- the on-demand, comprehensive
 counterpart to .git/hooks/pre-commit's fast per-commit checks.
 

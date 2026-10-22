@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Auxiliary direct-CYP-activity signal from ChEMBL (ebi.ac.uk/chembl) --
 targeted REST pulls for CYP3A4 (target CHEMBL340) and CYP2D6 (target
 CHEMBL289) specifically, not a bulk database download (same narrowly-

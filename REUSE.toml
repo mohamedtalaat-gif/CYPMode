@@ -1,0 +1,32 @@
+version = 1
+SPDX-PackageName = "CYPMode"
+SPDX-PackageSupplier = "Muhammad Talaat"
+SPDX-PackageDownloadLocation = "https://github.com/mohamedtalaat-gif/CYPMode"
+
+# The code: AGPL-3.0-or-later with the additional terms of NOTICE. The source files that carry a header say so themselves.
+[[annotations]]
+path = ["cypmode/**", "scripts/**", "queue/**", "tests/**", "notebooks/*.py", "notebooks/parts/**", "app.py", "docs/**/*.py", "docs/**/*.js", "docs/**/*.html", "docs/**/*.swift", "environment/**", "pyproject.toml", ".github/**", ".gitignore", "run_cypmode.bat", "run_cypmode.command", "requirements.txt"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Muhammad Talaat"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# The documents: the texts, the figures, the film, the card, the poster and the notebook.
+[[annotations]]
+path = ["README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "USE_AND_CITATION.md", "METHOD_REPORT.md", "NEGATIVE_RESULTS.md", "CYPMode_*.md", "SUBMISSION_CHECKLIST.md", "audit/**", "notebooks/PLAN.md", "notebooks/cypmode_notebook.*", "docs/**/*.md", "docs/figures/**/*.png", "docs/figures/**/*.svg", "docs/figures/**/*.gif", "docs/card/**/*.png", "docs/video/**/*.png", "docs/video/**/*.mp4", "docs/video/**/*.gif", "docs/video/**/*.json", "submissions/**/README.md"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Muhammad Talaat"
+SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
+
+# The data that the code generated, and the text files that say where they came from.
+[[annotations]]
+path = ["data/*/outputs/**", "submissions/**/*.csv", "submissions/**/*.json", "submissions/**/*.zip", "submissions/**/*.pdb", "CITATION.cff", "NOTICE", ".zenodo.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Muhammad Talaat"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+# What the project reads and did not write: the files of the challenge and of public data sets, and the shipped components.
+[[annotations]]
+path = ["data/*/inputs/**", "notebooks/_vendor/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "the providers of the data and the authors of the components"
+SPDX-License-Identifier = "LicenseRef-third-party"

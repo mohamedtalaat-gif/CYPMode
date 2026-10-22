@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Candidates whose predictions are produced outside the LightGBM environment and only read here (TabICL, the multitask network, Chemprop and CheMeleon).
 
 Their predictions live in the shared prediction cache (``nested_runners_torch`` and ``nested_runners_chemprop`` fill it from ``.venv-ml``). A candidate of family

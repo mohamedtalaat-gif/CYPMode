@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part XII (second part): the job queue and what the hardware taught (12.4), the generated documents and the checks on them (12.5), and the rules that never change with their enforcement (12.6)."""
 
 from notebooks.notebook_builder import code, md

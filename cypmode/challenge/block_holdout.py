@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Test-like holdout: the ids 2,395,316-2,395,799 block of the training file.
 
 Why this block. The training ids fall into blocks that were screened differently (see ``library_blocks``). The highest

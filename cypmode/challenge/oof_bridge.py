@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Out-of-fold direct-inhibition pIC50 bridge for the TDI model.
 
 The blind test set has no direct-inhibition pIC50 exposed (see

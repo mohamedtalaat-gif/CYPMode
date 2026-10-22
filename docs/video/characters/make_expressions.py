@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Paint every expression variant that does not exist yet, one after another: ``python docs/video/characters/make_expressions.py [--members kai bits ...]``.
 
 A variant is written to ``docs/video/anime/characters/<member>_<expression>.png`` by ``expressions.py``; a finished file is kept, so the script can be stopped and started again.

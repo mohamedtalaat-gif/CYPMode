@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Panel-wide CYP450 inhibition data, annotated with Type II mechanism motifs.
 
 TDC's Veith-derived binary inhibition labels (CYP1A2/2C9/2C19/2D6/3A4) say

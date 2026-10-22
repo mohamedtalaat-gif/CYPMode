@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Block diagrams of the two tracks and the nested cross-validation grid; every count in them is read from the project's files."""
 
 from collections import Counter

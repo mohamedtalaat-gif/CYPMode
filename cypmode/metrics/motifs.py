@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Structural-alert screen for CYP450 Type II (heme-coordinating) inhibition.
 
 Type II CYP inhibition occurs when a ligand nitrogen lone pair coordinates

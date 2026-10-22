@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The eight members of staff as prompts for the Anima text-to-image model (CircleStone Labs, https://huggingface.co/circlestone-labs/Anima).
 
 Anima reads lowercase Danbooru-style tags: quality and safety tags first, then the subject (``1boy``), then the traits that identify the character, then the picture (pose, framing,

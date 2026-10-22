@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Provenance of the files that present the results: the README card, the poster, the film and the figures.
 
 A number printed on a card or drawn in a frame of the film is only as good as the build that put it there. Each of these artifacts is written by a builder that records, in

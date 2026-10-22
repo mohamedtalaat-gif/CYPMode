@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part III (second half): the three-point pharmacophore fingerprint, chemical series, and the feature store."""
 
 from notebooks.notebook_builder import code, figure, md

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part VI (first part): why a score on the training data lies (6.1), what choosing does to a cross-validated score (6.2), and the nested construction that removes it (6.3)."""
 
 from notebooks.notebook_builder import code, md

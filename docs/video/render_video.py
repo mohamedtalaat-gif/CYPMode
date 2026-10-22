@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Render the animation: ``python docs/video/render_video.py``.
 
 The film is an SVG page (``anime/index.html``) that draws the whole scene as a function of the time t. This script writes the numbers it shows (``anime/facts.js``, read from the

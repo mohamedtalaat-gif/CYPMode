@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Export the executed notebook to a single HTML file and a PDF: ``python -m notebooks.build_exports``.
 
 The HTML is written here rather than by nbconvert so that it needs nothing from the network: the equations are typeset in the page by the vendored KaTeX (scripts, stylesheet and

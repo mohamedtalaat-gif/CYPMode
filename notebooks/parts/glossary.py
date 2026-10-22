@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The terms of the notebook that are defined where they first appear (the builder checks it) and the one-line definitions of Appendix B."""
 
 GLOSSARY = {

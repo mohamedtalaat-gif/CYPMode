@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """A local approximation of BiSyRMSD, the Structure Track's own secondary
 metric (see CYPMode_Architecture_Specification.md's "Official
 challenge update" section) -- for internal self-consistency checks, NOT

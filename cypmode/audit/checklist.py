@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Does the checklist match the repository? Every promise must point at something that exists.
 
 The checklist (SUBMISSION_CHECKLIST.md) is executed by the queue (queue/jobs/NNN_*.sh). This module makes the three ways it can

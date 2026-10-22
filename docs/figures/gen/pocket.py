@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The heme pocket of CYP3A4 rendered from real crystal structures: a Type II inhibitor with its nitrogen on the iron, and a ligand that fills the pocket without touching the iron.
 
 The pictures are ray-traced by PyMOL (``gen/pymol_scene.py``) from the deposited coordinates (``data/structure_track/inputs/pdb_cache``) and cut open through the heme plane; the labels are drawn on top

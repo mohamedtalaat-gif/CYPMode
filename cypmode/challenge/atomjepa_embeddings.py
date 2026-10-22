@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Frozen Atom-JEPA embeddings as a label-free feature block.
 
 Atom-JEPA (Hordahl Jordahn and co-workers; code MIT, ``github.com/khelverskovp/atom-jepa``, weights CC BY 4.0, ``huggingface.co/atom-jepa/atom-jepa``) is an equivariant graph network

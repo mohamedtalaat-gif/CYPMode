@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The Chemprop command runs the same two variants as before when no variant is named; the foundation-weight variants are reached only by name (jobs 224 and 225)."""
 
 from cypmode.challenge.nested_runners_chemprop import DEFAULT_VARIANTS, VARIANTS

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Multiplicity of the additions tested together: Holm-adjusted p-values next to the pre-registered gates.
 
 Every addition is judged by its own pre-registered gate (corrected resampled t, p < 0.05 at both confidence cut-offs, inside the assembled stack). Testing many additions raises the

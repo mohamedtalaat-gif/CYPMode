@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part IX (third part): the neural pair (9.9), the other additions of the last days (9.10) and the ledger of Part IX (9.11)."""
 
 from notebooks.notebook_builder import code, md

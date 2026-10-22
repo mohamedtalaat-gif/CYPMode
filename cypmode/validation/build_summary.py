@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Regenerates data/structure_track/outputs/validation_summary.json from local Boltz-2 runs.
 
 Discovers compounds from data/structure_track/outputs/out/ itself rather than a fixed

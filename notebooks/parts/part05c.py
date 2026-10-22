@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part V (third part): the iron-nitrogen distance in predicted structures (5.5) and the pocket geometry (5.6)."""
 
 from notebooks.notebook_builder import code, md

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The default stack rebuilt from the cached nested predictions, with the weights and the prevalence the final build uses.
 
 ``outer_folds(isoform)`` returns, per outer fold of the 5-fold design, the labels, the stack's scores and the evaluation weights; ``selector_table(isoform)``

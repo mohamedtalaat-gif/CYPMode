@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The rule that decides whether the second stage of the CheMeleon design runs.
 
 CheMeleon (about 38 minutes per task on the processor, 80 tasks per enzyme in the full design, 25 of them in stage 1) is run in two stages. Stage 1 fits repeat 0 only (5 outer folds) and compares the stack with and without it

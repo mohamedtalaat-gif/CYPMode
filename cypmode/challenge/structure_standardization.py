@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Structure standardization for cross-dataset compound matching, via
 ChEMBL's own structure pipeline (chembl_structure_pipeline, pip-installable,
 rdkit-only dependency -- the same tool ChEMBL uses internally to curate its

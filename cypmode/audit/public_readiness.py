@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Scan the repository for content that should not be published.
 
 Checks, over the files git tracks or would add (third-party clones and virtual environments excluded):

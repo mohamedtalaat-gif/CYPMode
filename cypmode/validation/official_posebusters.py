@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """PoseBusters exactly as the challenge's structure scorer applies it, with the numeric margin of every check.
 
 The organisers' scorer (the evaluation code published in OpenADMET/CYP-Challenge-Tutorial, Apache-2.0) validates a submitted complex like this:

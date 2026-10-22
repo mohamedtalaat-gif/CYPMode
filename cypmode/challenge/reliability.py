@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Cross-cutting reliability score: ensemble disagreement + chemical OOD
 distance (+ Boltz-2 structural confidence, wired in once Tier 3 results
 exist) and, from the nested harness, the query-by-committee signals and the

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Applicability domain of the 750 blinded compounds, generated from the final build.
 
 A model is most reliable where it interpolates between compounds it has seen (Leach 2001, section 12.12.4). This module measures that for the final TDI stack of each isoform and writes the

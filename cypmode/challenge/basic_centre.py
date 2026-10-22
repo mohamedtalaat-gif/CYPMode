@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Basic-centre block: where the molecule carries its positive charge at physiological pH, and how far that charge sits from the aromatic rings.
 
 CYP2D6 binds substrates and inhibitors that carry a protonated basic nitrogen a few angstrom from a flat aromatic ring: the cation meets Asp301 and Glu216 while the ring

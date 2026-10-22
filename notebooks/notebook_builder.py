@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Build, execute and check the notebook without a Jupyter kernel.
 
 ``build(cells, path)`` runs every code cell in one shared namespace (standard output, matplotlib figures, tables and project figures are captured as cell outputs) and

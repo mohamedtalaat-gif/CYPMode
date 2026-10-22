@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The speed test and the rule of the decision on the fine-tuned CheMeleon (queue job 202_chemeleon_speed).
 
 The fine-tuned CheMeleon (``chemeleon_mt_shift``, the network of plain Chemprop started from the CheMeleon weights) took 36 to 48 minutes per task on the processor, and stage 1 of its staged design

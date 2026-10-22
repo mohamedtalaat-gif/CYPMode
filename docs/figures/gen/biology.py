@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """The biology: the catalytic cycle of a cytochrome P450 around its real heme, and the route of a drug through the body with the real enzyme and a real compound."""
 
 import math

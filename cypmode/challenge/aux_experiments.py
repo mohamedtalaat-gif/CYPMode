@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Pre-registered tests of the candidates that use the official auxiliary readings and the two-part form of the label (see ``aux_blocks``), and of the candidates
 whose predictions come from the torch environment (TabICL, the multitask network, Chemprop and CheMeleon).
 

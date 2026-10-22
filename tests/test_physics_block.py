@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """GFN2-xTB part of the physics block. Own pytest invocation (tblite and LightGBM deadlock in one process):
     pytest tests/test_physics_block.py
 """

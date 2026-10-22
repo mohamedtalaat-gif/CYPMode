@@ -8,6 +8,17 @@ this page does not replace them. It adds the form of the citation, and it states
 Muhammad Talaat, Faculty of Pharmacy, Ain Shams University (ORCID [0000-0002-9171-437X](https://orcid.org/0000-0002-9171-437X)). Repository: <https://github.com/mohamedtalaat-gif/CYPMode>. The machine-readable form is
 [`CITATION.cff`](CITATION.cff), which is also what GitHub reads for its "Cite this repository" button.
 
+## Licences
+
+| what | licence | what it asks |
+| --- | --- | --- |
+| the source code | GNU AGPL, version 3 or later, with an additional term under section 7(b) | share alike (the source of a modified version, also when it is run as a service) and keep the attribution and the citation notice (`NOTICE`) |
+| the documents: the notebook, the method report, the figures, the film, the card, the texts | CC BY-NC-SA 4.0 | credit the author, no commercial use, share alike |
+| the data that the code generates and the deposited data record | CC BY 4.0 | use freely, and credit the author with the citation of the work |
+| third-party material | its own licence | see Appendix C of the notebook and section 14 of the method report |
+
+A use of the code in a product or a service that cannot be released under these terms needs a separate written licence from the author. `REUSE.toml` lists which licence applies to which files.
+
 ## How to cite
 
 Cite the archived release, with its DOI once `CITATION.cff` lists one (the DOI of the software record on Zenodo; the version of the record that was made after the challenge closed holds the full set of results, figures
@@ -40,6 +51,7 @@ this code generated and that were deposited in a separate record have a DOI of t
 
 ## What a licence can and cannot do
 
-A licence is a permission with conditions. It can require that the notice and the attribution stay with the work, and that changes are marked; it cannot make anyone read this page, and a program cannot enforce it: nothing in
+A licence is a permission with conditions. The AGPL lets anyone use, change and share the code, also commercially, on the condition that the source of what they share or run for others stays open and that the notice and the attribution
+stay with it (the additional term of `NOTICE`); the Creative Commons licences of the documents add that the use is not commercial. A licence cannot make anyone read this page, and a program cannot enforce it: nothing in
 this repository refuses to run, because a program that refuses is not open source. The record in the generated data is there so that the origin of a file can always be found, and so that a use without attribution is
 recognisable as one. Anyone who wants to use the work in a way that the licence does not permit should ask the author.

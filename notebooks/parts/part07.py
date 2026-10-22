@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Muhammad Talaat
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Additional terms under section 7(b) of the licence: see NOTICE.
+
 """Part VII (first part): the challenge's own baseline reproduced (7.1), the staircase of feature blocks M0 to M3 (7.2) and nearest-neighbour read-across features (7.3)."""
 
 from notebooks.notebook_builder import code, md
