@@ -54,3 +54,18 @@ def test_sample_cifs_are_listed_in_sample_order(tmp_path):
     names = [p.name for p in bioemu2.sample_cifs("bench-X", out_root=tmp_path)]
     assert names == ["sample_1.cif", "sample_2.cif", "sample_10.cif"]
     assert bioemu2.sample_cifs("missing", out_root=tmp_path) == []
+
+
+def test_projection_uses_one_trunk_per_ligand_and_the_median_sample():
+    timings = {"trunk_s": 600.0, "sample_s": [900.0, 1100.0, 1000.0]}
+    ligands = bioemu2.BENCHMARK_LIGANDS + bioemu2.OFFICIAL_LIGANDS
+    expected = (ligands * 600.0 + ligands * bioemu2.SAMPLES_PER_LIGAND * 1000.0) / 3600
+    assert bioemu2.projected_hours(timings) == pytest.approx(expected)
+
+
+def test_the_feasibility_rule_allows_only_within_the_limit_and_refuses_without_a_probe():
+    quick = {"trunk_s": 60.0, "sample_s": [60.0, 60.0]}
+    slow = {"trunk_s": 3600.0, "sample_s": [3600.0, 3600.0]}
+    assert bioemu2.feasibility_line(quick).endswith(": ALLOWED")
+    assert bioemu2.feasibility_line(slow).endswith(": NOT ALLOWED")
+    assert "did not complete" in bioemu2.feasibility_line(None)

@@ -1,0 +1,15 @@
+BioEmu2 on this machine, first attempts of 2026-10-22 (copied from the logs of the attempts; the lines after each description are the output of the program or of the memory watchdog)
+1. CPU, checkpoint configuration as released (the cuEquivariance triangle-multiplication kernel, which exists only for NVIDIA GPUs), a 20-residue peptide:
+NameError: name 'cueq_torch' is not defined
+2. Pure-PyTorch kernel, the same peptide, two samples, 32-bit, single-sequence alignment, on the CPU while a GPU job of the queue was running:
+sampled 2 frames, 153 atoms in 122 s
+3. The same on the Apple GPU (MPS):
+sampled 2 frames, 153 atoms in 88 s
+4. CYP3A4 with the ligand bench-MWS and the heme (about 570 tokens), the first 256 rows of the alignment of Boltz-2, on the Apple GPU, while a GPU job of the queue was running; a watchdog stops the run when free memory stays under 12% for 20 s or the swap in use passes 10000 MB:
+model 12 s
+WATCHDOG: free 7% swap 9028M, probe stopped
+EXIT 143
+5. The same with chunked layers (chunk size 64) and a swap limit of 8500 MB:
+model 9 s
+WATCHDOG: free 10% swap 8848M, probe stopped
+EXIT 143

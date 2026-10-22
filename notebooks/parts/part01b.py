@@ -162,7 +162,7 @@ the challenge reports for every compound (section 0.3).
     figure("kin_dose_response"),
     md("""
 The IC50 is not read off the data but fitted: the parameters of the Hill equation are chosen to minimise the squared distance to the measurements (nonlinear least squares), and the uncertainty of the fit gives a
-standard error of the pIC50. The next cell simulates one such experiment 500 times, with measurement noise, and shows that the spread of the fitted values is what the standard error of a single fit predicts. That is
+**standard error** of the pIC50: the typical size of the error of that one fitted value, computed from how closely the curve follows the measurements. The next cell simulates one such experiment 500 times, with measurement noise, and shows that the spread of the fitted values is what the standard error of a single fit predicts. That is
 why the data files carry a **standard deviation** for every pIC50, the typical size of the error of that estimate (section 2.5).
 """),
     code(DOSE_RESPONSE),

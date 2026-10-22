@@ -47,6 +47,8 @@ OUT_ROOT = Path("data/structure_track/outputs/bioemu2")
 PROBE_NAME = "bench-MWS"
 DEFAULT_ROWS = 256
 CHUNK_SIZE = 64  # transition and pair-weighted-averaging chunk (rows); smaller saves memory and costs time
+BENCHMARK_LIGANDS, OFFICIAL_LIGANDS, SAMPLES_PER_LIGAND = 10, 20, 3  # the crystal-anchored benchmark and the official structure ligands
+MAX_EXCLUSIVE_HOURS = 48.0  # registered before the probe was read: more exclusive machine time than this, and the benchmark is not run
 
 
 def pure_torch_config(text: str, chunk_size: int = CHUNK_SIZE) -> str:
@@ -155,6 +157,26 @@ def run(names: list[str], samples: int, rows: int, device: str, seed: int, targe
     return summary
 
 
+def projected_hours(timings: dict) -> float:
+    """Exclusive hours for every ligand of the benchmark and of the official set: one trunk per ligand and the samples at the median speed of the probe."""
+    ligands = BENCHMARK_LIGANDS + OFFICIAL_LIGANDS
+    samples = ligands * SAMPLES_PER_LIGAND
+    speeds = sorted(timings["sample_s"])
+    median = speeds[len(speeds) // 2] if len(speeds) % 2 else (speeds[len(speeds) // 2 - 1] + speeds[len(speeds) // 2]) / 2
+    return (ligands * timings["trunk_s"] + samples * median) / 3600
+
+
+def feasibility_line(timings: dict | None, max_hours: float = MAX_EXCLUSIVE_HOURS) -> str:
+    """The registered feasibility rule applied to the probe: the benchmark is run only when the projected exclusive time stays within the limit."""
+    if timings is None:
+        return "BIOEMU2 FEASIBILITY: NOT ALLOWED (the probe did not complete)"
+    hours = projected_hours(timings)
+    verdict = "ALLOWED" if hours <= max_hours else "NOT ALLOWED"
+    ligands = BENCHMARK_LIGANDS + OFFICIAL_LIGANDS
+    return (f"BIOEMU2 FEASIBILITY: {hours:.1f} h of exclusive machine time projected for {ligands} ligands with {SAMPLES_PER_LIGAND} samples each "
+            f"(limit {max_hours:.0f} h): {verdict}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--names", nargs="*", help="Molecule_Names to run (the benchmark ligands, or official ligands later)")
@@ -162,10 +184,15 @@ def main() -> None:
     parser.add_argument("--rows", type=int, default=DEFAULT_ROWS, help="alignment rows taken from the Boltz-2 alignment")
     parser.add_argument("--device", default="mps", choices=("mps", "cpu"))
     parser.add_argument("--seed", type=int, default=0, help="seed of the first sample; sample i uses seed + i")
+    parser.add_argument("--verdict", action="store_true", help="print the feasibility rule applied to the timings of the probe and exit")
     parser.add_argument("--probe", action="store_true", help=f"timings on one benchmark system ({PROBE_NAME}), two samples, written under <out>/probe")
     parser.add_argument("--target", default="cyp3a4")
     args = parser.parse_args()
     out_root = OUT_ROOT / "probe" if args.probe else OUT_ROOT
+    if args.verdict:
+        path = OUT_ROOT / "probe" / args.target / PROBE_NAME / "timings.json"
+        print(feasibility_line(json.loads(path.read_text()) if path.exists() else None))
+        return
     names = [PROBE_NAME] if args.probe else (args.names or [])
     samples = 2 if args.probe else args.samples
     if not names:

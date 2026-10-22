@@ -219,6 +219,36 @@ of3_extra_hours = n_test_ligands * final_recipe_module.OPENFOLD3_SAMPLES * final
 final_recipe_openfold = bool(json.loads((ROOT / "data/structure_track/outputs/cyp3a4/final/recipe.json").read_text())["recipe"]["openfold3"])
 '''
 
+BIOEMU = '''
+# BioEmu2, examined as a third structure engine: the record of the first attempts and, once job 259 has run, the timings of the probe and the registered feasibility rule applied to them. Every number is read from the files that the attempts left.
+import json
+import re
+
+import yaml
+
+import cypmode.validation.bioemu2 as bioemu_module
+
+bioemu_logs = ROOT / "data/structure_track/outputs/cyp3a4/logs"
+bioemu_first = (bioemu_logs / "exploratory_bioemu2_first_attempts.log").read_text()
+bioemu_cpu_s, bioemu_gpu_s = (int(v) for v in re.findall(r"in (\\d+) s", bioemu_first))
+bioemu_peptide_atoms = int(re.search(r"(\\d+) atoms", bioemu_first).group(1))
+bioemu_stops = [(int(a), int(b) / 1000) for a, b in re.findall(r"WATCHDOG: free (\\d+)% swap (\\d+)M", bioemu_first)]
+bioemu_system = yaml.safe_load((ROOT / "data/structure_track/inputs/cyp3a4_bench-MWS.yaml").read_text())
+bioemu_residues = len(next(e["protein"]["sequence"] for e in bioemu_system["sequences"] if "protein" in e))
+bioemu_probe_log = (bioemu_logs / "exploratory_bioemu2_probe.log").read_text().strip().splitlines()
+bioemu_rule_line = bioemu_probe_log[-1]
+bioemu_limit_h = bioemu_module.MAX_EXCLUSIVE_HOURS
+bioemu_benchmark, bioemu_official, bioemu_samples = bioemu_module.BENCHMARK_LIGANDS, bioemu_module.OFFICIAL_LIGANDS, bioemu_module.SAMPLES_PER_LIGAND
+bioemu_timings_file = ROOT / "data/structure_track/outputs/bioemu2/probe/cyp3a4" / bioemu_module.PROBE_NAME / "timings.json"
+if bioemu_timings_file.exists():
+    bioemu_t = json.loads(bioemu_timings_file.read_text())
+    bioemu_sentence = (f"The probe completed: the trunk took {bioemu_t['trunk_s']:.0f} s, the two samples {bioemu_t['sample_s'][0]:.0f} s and {bioemu_t['sample_s'][1]:.0f} s, "
+                       f"and the process held at most {bioemu_t['peak_rss_mb'] / 1000:.1f} GB of memory.")
+else:
+    bioemu_sentence = "The probe did not complete; its log records how far it came."
+print(bioemu_rule_line)
+'''
+
 CELLS = [
     md("""
 ## 11.9 OpenFold3: the second engine, the memory failure and what the second engine bought
@@ -278,5 +308,15 @@ Two things are visible in the tables. Minimum Bayes risk chooses the pose that a
 **What limits the verdict.** Ten ligands, so a gate that can certify only a large difference (11.8 gives its size); a Wilcoxon threshold of 0.10 that was stated openly because 0.05 would have needed nearly every ligand to improve; one seed, the weights as released, no templates and no restraint, and alignments requested from a public server; and a yardstick, the RMSD to the crystal pose, that is not the organisers' score (the repetition with OpenStructure's scorer gave the same verdict). A different set of ligands, a restraint expressed in OpenFold3's own terms, or a selection rule that used something other than agreement could change the picture; none was tried.
 
 *On what actually ran.* `cypmode/validation/openfold3.py` (`build_query`, `read_boltz_inputs`, `run_openfold3`, `run_openfold3_batch`, `default_memory_mode`, `failure_reason`, and the guard `_another_prediction_running`), `scripts/run_openfold_lowmem.py` (`patch_chunk_layer`, `self_check`), the runner file `data/structure_track/inputs/openfold3_runner.yml`, `cypmode/validation/selection_validation.py` (`gates`, `paired_gate`), `cypmode/validation/pose_consensus.py` (the rule that would have combined the engines), `cypmode/validation/final_recipe.py` (the constants of cost and the decision), the tests `tests/test_openfold3.py` and `tests/test_openfold3_lowmem.py`, and the queue jobs `149_openfold3_memory_probe`, `150_openfold3_benchmark`, `170_mbr_selection_validation`, `180_structure_final_recipe_run` and `245_ost_pool_gates`. The cells of this section read the files those runs left; the arrays of the two toys are written for the notebook. OpenFold3 is distributed under the Apache licence 2.0, and its weights under the terms stated with the checkpoint; the repository contains neither the package nor the weights.
+"""),
+    code(BIOEMU),
+    md("""
+**A third engine that was examined: BioEmu2.** After the benchmark of the second engine a third model was looked at, BioEmu2: a diffusion model of the kind described in 11.2 (from Microsoft Research, under the MIT licence, with about five hundred million parameters according to its model card) that builds an all-atom structure of a protein with ligands from the sequence, an alignment of related sequences and optional contacts. It is meant for Linux and an NVIDIA graphics card, and the configuration of its public checkpoint names one layer routine that exists only for those cards. Its code has a plain PyTorch version of the same layer, so a local copy of the configuration that names it, with the layers cut into chunks that lower the peak memory without changing the arithmetic, lets the model run on this machine; the weights are untouched (`cypmode/validation/bioemu2.py`, tested by `tests/test_bioemu2.py`). The inputs are those of Boltz-2: the sequence, the SMILES of the ligand, the heme and the bond of Cys442 to the iron, all read from the same input file and converted by the program's own converter, and the first rows of the alignment that Boltz-2 used, so that the engines differ in the model and not in what they are given. Contacts to the atoms of a ligand that is given as a SMILES string are not supported by the program, so none are passed.
+
+**What the machine allows.** On a peptide of twenty residues ({{=bioemu_peptide_atoms}} atoms) two samples took {{=bioemu_cpu_s}} s on the processor and {{=bioemu_gpu_s}} s on the graphics chip. A benchmark system is much larger: the protein alone has {{=bioemu_residues}} residues, and with the ligand and the heme the model works on several hundred tokens. Two timing probes of that system were stopped by a memory watchdog while a graphics job of the queue was running beside them, at {{=bioemu_stops[0][0]}}% and {{=bioemu_stops[1][0]}}% free memory with {{=bioemu_stops[0][1]:.1f}} GB and {{=bioemu_stops[1][1]:.1f}} GB of swap in use (swap is the disk space that the operating system falls back on when memory is full, and it is slow); the second probe used the chunked layers and stopped all the same. Beside the queue the system does not fit, so the probe became a queue job, `259_bioemu2_probe`, that waits until the long graphics jobs have settled and then runs alone. {{=bioemu_sentence}}
+
+**The rule that was written before the probe was read.** The benchmark of the engine is run only if its projected cost is within a limit: one trunk per ligand and the samples at the median speed of the probe, for the {{=bioemu_benchmark}} benchmark ligands and the {{=bioemu_official}} official ligands with {{=bioemu_samples}} samples each, at most {{=bioemu_limit_h:.0f}} hours of exclusive machine time. The log of the probe ends with the rule applied: {{=bioemu_rule_line}}. If it says NOT ALLOWED, the engine is recorded as not run, with the measurements above, and nothing else changes. If it says ALLOWED, the benchmark is declared in the checklist before any ligand is predicted, and its gate is the engine-consensus gate of this section with BioEmu2 as the added engine; the second engine did not pass that gate, so the prior for a third is not high.
+
+*On what actually ran.* `cypmode/validation/bioemu2.py` (`prepare_checkpoint`, `pure_torch_config`, `msa_a3m`, `run`, `projected_hours`, `feasibility_line`) ran for the attempts and for the probe, and `259_bioemu2_probe` is the job that applies the rule. The file `exploratory_bioemu2_first_attempts.log` was assembled by hand from the logs of the five first attempts and its lines are the programs' own output; `exploratory_bioemu2_probe.log` is written by the job.
 """),
 ]
