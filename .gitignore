@@ -4,6 +4,7 @@
 .venv-audit/
 .venv-atomjepa/
 .venv-bioemu2/
+.venv-marimo/
 .bioemu2-cache/
 .conda-openadmet-models/
 __pycache__/
@@ -163,3 +164,4 @@ data/structure_track/inputs/cyp3a4_exp-*.yaml
 data/tdi_track/inputs/openadmet_surrogate/
 data/tdi_track/inputs/tabpfn_licence_accepted.txt
 .venv-checker/
+explorer/__marimo__/

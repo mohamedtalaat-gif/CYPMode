@@ -1,0 +1,168 @@
+log,name,stem,kind,verdict
+arms_experiment_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",arms_experiment,label process and selection,NOT MET
+arms_experiment_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",arms_experiment,label process and selection,NOT MET
+arms_experiment_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",arms_experiment,label process and selection,NOT MET
+arms_experiment_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",arms_experiment,label process and selection,NOT MET
+aux_atomjepa_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",aux_atomjepa,representation and physics,NOT MET
+aux_atomjepa_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_atomjepa,representation and physics,NOT MET
+aux_atomjepa_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_atomjepa,representation and physics,NOT MET
+aux_atomjepa_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_atomjepa,representation and physics,NOT MET
+aux_atomjepa_head_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_atomjepa_head,representation and physics,NOT MET
+aux_atomjepa_head_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_atomjepa_head,representation and physics,NOT MET
+aux_basic_centre_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",aux_basic_centre,representation and physics,NOT MET
+aux_basic_centre_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_basic_centre,representation and physics,NOT MET
+aux_basic_centre_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_basic_centre,representation and physics,NOT MET
+aux_basic_centre_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_basic_centre,representation and physics,NOT MET
+aux_chemprop_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_chemprop,learners and stacking,NOT MET
+aux_chemprop_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_chemprop,learners and stacking,NOT MET
+aux_emax_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",aux_emax,data usage,NOT MET
+aux_emax_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_emax,data usage,NOT MET
+aux_emax_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_emax,data usage,NOT MET
+aux_emax_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_emax,data usage,NOT MET
+aux_ext_adme_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",aux_ext_adme,data usage,NOT MET
+aux_ext_adme_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_ext_adme,data usage,NOT MET
+aux_ext_adme_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_ext_adme,data usage,NOT MET
+aux_ext_adme_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_ext_adme,data usage,NOT MET
+aux_ext_cont_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",aux_ext_cont,data usage,NOT MET
+aux_ext_cont_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_ext_cont,data usage,NOT MET
+aux_ext_cont_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_ext_cont,data usage,NOT MET
+aux_ext_cont_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_ext_cont,data usage,NOT MET
+aux_ext_tox_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",aux_ext_tox,data usage,NOT MET
+aux_ext_tox_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_ext_tox,data usage,NOT MET
+aux_ext_tox_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_ext_tox,data usage,NOT MET
+aux_ext_tox_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_ext_tox,data usage,NOT MET
+aux_gate_shift_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",aux_gate_shift,label process and selection,NOT MET
+aux_gate_shift_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_gate_shift,label process and selection,NOT MET
+aux_gate_shift_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_gate_shift,label process and selection,NOT MET
+aux_gate_shift_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_gate_shift,label process and selection,NOT MET
+aux_mlp_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_mlp,learners and stacking,NOT MET
+aux_mlp_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_mlp,learners and stacking,NOT MET
+aux_mlp_aux_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_mlp_aux,learners and stacking,NOT MET
+aux_mlp_aux_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_mlp_aux,learners and stacking,NOT MET
+aux_neural_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_neural,learners and stacking,NOT MET
+aux_neural_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_neural,learners and stacking,MET
+aux_neural_f10_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_neural,learners and stacking,MET
+aux_nodirect_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_nodirect,data usage,NOT MET
+aux_nodirect_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_nodirect,data usage,NOT MET
+aux_pxr_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",aux_pxr,data usage,NOT MET
+aux_pxr_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_pxr,data usage,NOT MET
+aux_pxr_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_pxr,data usage,NOT MET
+aux_pxr_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_pxr,data usage,NOT MET
+aux_screen_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",aux_screen,data usage,NOT MET
+aux_screen_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_screen,data usage,NOT MET
+aux_screen_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",aux_screen,data usage,NOT MET
+aux_screen_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_screen,data usage,NOT MET
+aux_tabicl_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_tabicl,learners and stacking,NOT MET
+aux_tabicl_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_tabicl,learners and stacking,NOT MET
+aux_tabicl_chemeleon_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_tabicl_chemeleon,learners and stacking,NOT MET
+aux_tabicl_chemeleon_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_tabicl_chemeleon,learners and stacking,NOT MET
+aux_tabicl_monroe_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_tabicl_monroe,learners and stacking,NOT MET
+aux_tabicl_monroe_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_tabicl_monroe,learners and stacking,NOT MET
+aux_tabpfn_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_tabpfn,learners and stacking,NOT MET
+aux_tabpfn_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_tabpfn,learners and stacking,NOT MET
+aux_tabpfn_chemeleon_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",aux_tabpfn_chemeleon,learners and stacking,NOT MET
+aux_tabpfn_chemeleon_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",aux_tabpfn_chemeleon,learners and stacking,NOT MET
+committee_label_model_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",committee_label_model,label process and selection,NOT MET
+committee_label_model_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",committee_label_model,label process and selection,NOT MET
+ei_sampling.log,ei_sampling,ei_sampling,structure levers,NOT MET
+embeddings_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",embeddings,representation and physics,NOT MET
+embeddings_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",embeddings,representation and physics,NOT MET
+embeddings_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",embeddings,representation and physics,NOT MET
+embeddings_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",embeddings,representation and physics,NOT MET
+hedged_blend_CYP2D6.log,"CYP2D6: hedged blend adopted by the minimax rule, fit weight 0.25",hedged_blend,label process and selection,NOT MET
+hedged_blend_CYP2D6.log,"CYP2D6: selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 0.25",hedged_blend,label process and selection,NOT MET
+hedged_blend_CYP2D6.log,"CYP2D6: hedged blend adopted by the minimax rule, fit weight 0.5",hedged_blend,label process and selection,NOT MET
+hedged_blend_CYP2D6.log,"CYP2D6: selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 0.5",hedged_blend,label process and selection,NOT MET
+hedged_blend_CYP2D6.log,"CYP2D6: hedged blend adopted by the minimax rule, fit weight 1.0",hedged_blend,label process and selection,NOT MET
+hedged_blend_CYP2D6.log,"CYP2D6: selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 1.0",hedged_blend,label process and selection,NOT MET
+heme_frame_prior.log,heme_frame_prior,heme_frame_prior,structure levers,NOT MET
+mmp_transfer_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",mmp_transfer,label process and selection,NOT MET
+mmp_transfer_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",mmp_transfer,label process and selection,NOT MET
+mmp_transfer_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",mmp_transfer,label process and selection,NOT MET
+mmp_transfer_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",mmp_transfer,label process and selection,NOT MET
+monroe_embeddings_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",monroe_embeddings,representation and physics,NOT MET
+monroe_embeddings_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",monroe_embeddings,representation and physics,NOT MET
+monroe_embeddings_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",monroe_embeddings,representation and physics,NOT MET
+monroe_embeddings_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",monroe_embeddings,representation and physics,NOT MET
+nonneg_stack_CYP2D6.log,"CYP2D6: selector, corrected p < 0.05 at both z0",nonneg_stack,learners and stacking,NOT MET
+nonneg_stack_CYP3A4.log,"CYP3A4: selector, corrected p < 0.05 at both z0",nonneg_stack,learners and stacking,NOT MET
+ost_pool_gates.log,mbr_selection_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,engine_consensus_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,ei_sampling_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,heme_frame_prior_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,pose_physics_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,pose_pharmacophore_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,pose_combined_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,series_consensus_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,restraint_bond_ost,ost_pool_gates,structure levers,MET
+ost_pool_gates.log,restraint_contact_ost,ost_pool_gates,structure levers,MET
+ost_pool_gates.log,pilot_conformers_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,pilot_cryoem_ost,ost_pool_gates,structure levers,NOT MET
+ost_pool_gates.log,pilot_seeds_ost,ost_pool_gates,structure levers,NOT MET
+ost_regate.log,restraint_bond_expansion_ost,ost_regate,structure levers,NOT MET
+ost_regate.log,restraint_bond_harm_ost,ost_regate,structure levers,NOT MET
+ost_vs_ours.log,lddt_pli_agrees_with_openstructure,ost_vs_ours,structure levers,NOT MET
+pair_transfer_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",pair_transfer,label process and selection,NOT MET
+pair_transfer_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",pair_transfer,label process and selection,NOT MET
+pair_transfer_physics_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",pair_transfer_physics,label process and selection,NOT MET
+pair_transfer_physics_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",pair_transfer_physics,label process and selection,NOT MET
+physics_compact_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",physics_compact,representation and physics,NOT MET
+physics_compact_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",physics_compact,representation and physics,NOT MET
+physics_compact_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",physics_compact,representation and physics,NOT MET
+physics_compact_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",physics_compact,representation and physics,NOT MET
+physics_compact_f10_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",physics_compact,representation and physics,NOT MET
+physics_compact_f10_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",physics_compact,representation and physics,NOT MET
+physics_compact_f10_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",physics_compact,representation and physics,NOT MET
+physics_compact_f10_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",physics_compact,representation and physics,NOT MET
+physics_experiment_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",physics_experiment,representation and physics,NOT MET
+physics_experiment_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",physics_experiment,representation and physics,NOT MET
+physics_experiment_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",physics_experiment,representation and physics,NOT MET
+physics_experiment_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",physics_experiment,representation and physics,NOT MET
+physics_experiment_f10_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",physics_experiment,representation and physics,NOT MET
+physics_experiment_f10_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",physics_experiment,representation and physics,NOT MET
+physics_experiment_f10_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",physics_experiment,representation and physics,NOT MET
+physics_experiment_f10_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",physics_experiment,representation and physics,NOT MET
+physics_tierb_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",physics_tierb,representation and physics,NOT MET
+physics_tierb_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",physics_tierb,representation and physics,NOT MET
+physics_tierb_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",physics_tierb,representation and physics,NOT MET
+physics_tierb_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",physics_tierb,representation and physics,NOT MET
+physics_tierb_f10_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",physics_tierb,representation and physics,NOT MET
+physics_tierb_f10_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",physics_tierb,representation and physics,NOT MET
+physics_tierb_f10_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",physics_tierb,representation and physics,NOT MET
+physics_tierb_f10_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",physics_tierb,representation and physics,NOT MET
+population_physics_CYP2D6.log,"CYP2D6: population physics stacked, corrected p < 0.05 at both z0",population_physics,representation and physics,NOT MET
+population_physics_CYP2D6.log,"CYP2D6: population physics over the band, corrected p < 0.05 at every band weight at both z0, fit weight 1.0",population_physics,representation and physics,NOT MET
+population_screen_CYP2D6.log,"CYP2D6: population screen stacked, corrected p < 0.05 at both z0",population_screen,label process and selection,NOT MET
+population_screen_CYP2D6.log,"CYP2D6: population screen over the band, corrected p < 0.05 at every band weight at both z0, fit weight 1.0",population_screen,label process and selection,NOT MET
+pose_awareness.log,pose_physics,pose_awareness,structure levers,NOT MET
+pose_awareness.log,pose_pharmacophore,pose_awareness,structure levers,NOT MET
+pose_awareness.log,pose_combined,pose_awareness,structure levers,NOT MET
+relaxation_gate.log,force_field_relaxation,relaxation_gate,structure levers,MET
+replicate_verdict_CYP2D6.log,"CYP2D6: replicate physics, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design",replicate_verdict,replicates,NOT MET
+replicate_verdict_CYP2D6.log,"CYP2D6: replicate physics_compact, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design",replicate_verdict,replicates,NOT MET
+replicate_verdict_CYP2D6.log,"CYP2D6: replicate physics_b, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design",replicate_verdict,replicates,NOT MET
+replicate_verdict_CYP3A4.log,"CYP3A4: replicate physics, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design",replicate_verdict,replicates,NOT MET
+replicate_verdict_CYP3A4.log,"CYP3A4: replicate physics_compact, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design",replicate_verdict,replicates,NOT MET
+replicate_verdict_CYP3A4.log,"CYP3A4: replicate physics_b, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design",replicate_verdict,replicates,NOT MET
+replicate_verdict_CYP3A4.log,"CYP3A4: replicate neural, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design",replicate_verdict,replicates,MET
+restraint_expansion.log,restraint_bond_expansion,restraint_expansion,structure levers,NOT MET
+restraint_expansion.log,restraint_bond_harm,restraint_expansion,structure levers,NOT MET
+selection_aware_v2_CYP2D6.log,"CYP2D6: V2 beats V1, corrected p < 0.05 at both z0, AUC",selection_aware_v2,label process and selection,NOT MET
+selection_validation.log,mbr_selection,selection_validation,structure levers,NOT MET
+selection_validation.log,engine_consensus,selection_validation,structure levers,NOT MET
+series_consensus.log,series_consensus,series_consensus,structure levers,NOT MET
+softmax_selector_CYP2D6.log,"CYP2D6: selector, corrected p < 0.05 at both z0",softmax_selector,learners and stacking,NOT MET
+softmax_selector_CYP3A4.log,"CYP3A4: selector, corrected p < 0.05 at both z0",softmax_selector,learners and stacking,NOT MET
+structure_gates.log,restraint_bond,structure_gates,structure levers,MET
+structure_gates.log,restraint_contact,structure_gates,structure levers,MET
+structure_gates.log,pilot_conformers,structure_gates,structure levers,NOT MET
+structure_gates.log,pilot_cryoem,structure_gates,structure levers,NOT MET
+structure_gates.log,pilot_seeds,structure_gates,structure levers,NOT MET
+test_likeness_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",test_likeness,data usage,NOT MET
+test_likeness_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",test_likeness,data usage,NOT MET
+test_likeness_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",test_likeness,data usage,NOT MET
+test_likeness_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",test_likeness,data usage,NOT MET
+xiso_transfer_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",xiso_transfer,label process and selection,NOT MET
+xiso_transfer_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",xiso_transfer,label process and selection,NOT MET
+xiso_transfer_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",xiso_transfer,label process and selection,NOT MET
+xiso_transfer_CYP3A4.log,"CYP3A4: stacked, corrected p < 0.05 at both z0",xiso_transfer,label process and selection,NOT MET

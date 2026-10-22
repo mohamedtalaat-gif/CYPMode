@@ -5,7 +5,7 @@ SPDX-PackageDownloadLocation = "https://github.com/mohamedtalaat-gif/CYPMode"
 
 # The code: AGPL-3.0-or-later with the additional terms of NOTICE. The source files that carry a header say so themselves.
 [[annotations]]
-path = ["cypmode/**", "scripts/**", "queue/**", "tests/**", "notebooks/*.py", "notebooks/parts/**", "app.py", "docs/**/*.py", "docs/**/*.js", "docs/**/*.html", "docs/**/*.swift", "environment/**", "pyproject.toml", ".github/**", ".gitignore", "run_cypmode.bat", "run_cypmode.command", "requirements.txt"]
+path = ["cypmode/**", "explorer/*.py", "scripts/**", "queue/**", "tests/**", "notebooks/*.py", "notebooks/parts/**", "app.py", "docs/**/*.py", "docs/**/*.js", "docs/**/*.html", "docs/**/*.swift", "environment/**", "pyproject.toml", ".github/**", ".gitignore", "run_cypmode.bat", "run_cypmode.command", "requirements.txt"]
 precedence = "closest"
 SPDX-FileCopyrightText = "2026 Muhammad Talaat"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
@@ -19,7 +19,7 @@ SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
 
 # The data that the code generated, and the text files that say where they came from.
 [[annotations]]
-path = ["data/*/outputs/**", "submissions/**/*.csv", "submissions/**/*.json", "submissions/**/*.zip", "submissions/**/*.pdb", "CITATION.cff", "NOTICE", ".zenodo.json"]
+path = ["explorer/public/**", "data/*/outputs/**", "submissions/**/*.csv", "submissions/**/*.json", "submissions/**/*.zip", "submissions/**/*.pdb", "CITATION.cff", "NOTICE", ".zenodo.json"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Muhammad Talaat"
 SPDX-License-Identifier = "CC-BY-4.0"

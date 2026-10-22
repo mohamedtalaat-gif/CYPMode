@@ -34,8 +34,8 @@ TRIED = {  # one line on what each kind tried (the numbers of the table next to 
 }
 
 
-def ledger_by_kind() -> pd.DataFrame:
-    """One row per pre-registered verdict: the family (stem of the log), its kind and the verdict."""
+def ledger_rows() -> pd.DataFrame:
+    """One row per pre-registered verdict: the log it was found in, the name of the gate, the family (stem of the log), its kind and the verdict."""
     from cypmode.audit.method_report import gate_rows
 
     kind_of = {stem: kind for kind, stems in KINDS.items() for stem in stems}
@@ -44,5 +44,10 @@ def ledger_by_kind() -> pd.DataFrame:
         if "exploratory" in name or log.startswith(("permutation_control", "exploratory")):
             continue
         stem = re.sub(r"(_f10)?\.log$", "", re.sub(r"_(CYP3A4|CYP2D6)(?=(_f10)?\.log)", "", log))
-        rows.append({"stem": stem, "kind": kind_of.get(stem, "other"), "verdict": verdict})
-    return pd.DataFrame(rows)
+        rows.append({"log": log, "name": name, "stem": stem, "kind": kind_of.get(stem, "other"), "verdict": verdict})
+    return pd.DataFrame(rows, columns=["log", "name", "stem", "kind", "verdict"])
+
+
+def ledger_by_kind() -> pd.DataFrame:
+    """One row per pre-registered verdict: the family (stem of the log), its kind and the verdict."""
+    return ledger_rows()[["stem", "kind", "verdict"]]

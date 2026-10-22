@@ -1,0 +1,22 @@
+{
+  "ledger.csv": {
+    "rows": 167,
+    "sha256": "1e75d1203197320a24efaf7ca562f0802881264f2ffc2561fb92e611a13b77b3"
+  },
+  "paired.csv": {
+    "rows": 154,
+    "sha256": "debf3406075484d10686ed1897271cc2deda47d4cc38bc1687bdee4eeb64b829"
+  },
+  "selectors.csv": {
+    "rows": 150,
+    "sha256": "9c6483d28f08dd4e6cfea9b2a7041c8b90ca647b495d42896dd93dc6621c2e92"
+  },
+  "poses.csv": {
+    "rows": 80,
+    "sha256": "ef5a83189f55ed319a42f842d44e92f7f719a8f9c16ad04e75e5715000194dba"
+  },
+  "rules.csv": {
+    "rows": 80,
+    "sha256": "f8cfe8eceb3bef3d3ea5b6f60a5b0f6cd43ff16fa492754ac38603279a23d33d"
+  }
+}
