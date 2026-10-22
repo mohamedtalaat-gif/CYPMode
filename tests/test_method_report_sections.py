@@ -30,6 +30,18 @@ def test_the_report_holds_the_architecture_and_the_exploration_before_the_result
 
 
 @needs_outputs
+def test_the_summary_holds_the_hashes_and_the_disclosures_before_section_one():
+    text = report.build_method_report()
+    assert text.index("## Summary and disclosures") < text.index("## 1. Scope and what is not claimed")
+    manifest = report.FINAL_TDI / "manifest.json"
+    import json
+
+    for entry in json.loads(manifest.read_text())["files"]:
+        assert entry["sha256"] in text
+    assert "**Proprietary data.** None" in text and "**Open source.**" in text
+
+
+@needs_outputs
 def test_the_map_counts_every_verdict_of_the_ledger():
     frame = ledger_by_kind()
     section = report.exploration_section()
