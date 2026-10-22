@@ -105,4 +105,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    from cypmode import provenance
+
+    provenance.announce()
     raise SystemExit(main())

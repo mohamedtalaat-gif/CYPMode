@@ -23,6 +23,7 @@ from rdkit.Chem import (
     rdReducedGraphs,
 )
 
+from cypmode import provenance
 from cypmode.metrics.amines import has_trialkylamine
 from cypmode.metrics.motifs import TYPE_II_MOTIFS
 
@@ -278,6 +279,7 @@ class FeatureStore:
             cached.update(cls.build(smiles, missing).blocks)
             path.parent.mkdir(parents=True, exist_ok=True)
             np.savez_compressed(path, smiles=np.array(list(smiles)), **cached)
+            provenance.stamp(path)
         return cls(smiles, {n: cached[n] for n in wanted})
 
     def matrix(self, block_names: Sequence[str], rows: np.ndarray | None = None) -> np.ndarray:

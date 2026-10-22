@@ -43,6 +43,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, roc_auc_score
 from sklearn.model_selection import StratifiedGroupKFold, StratifiedKFold
 
+from cypmode import provenance
 from cypmode.challenge.validation_matching import prior_weights, weighted_mcc
 
 OUTER_REFIT = -1  # fit on the whole outer-training set, predict the outer-validation set
@@ -216,6 +217,7 @@ class PredictionCache:
         path = self.path(candidate, task)
         path.parent.mkdir(parents=True, exist_ok=True)
         np.save(path, scores)
+        provenance.stamp(self.root)  # the author, the repository and the licence beside the predictions (written once, nothing is rewritten)
 
     def get(self, candidate: str, task: Task) -> np.ndarray:
         return np.load(self.path(candidate, task))

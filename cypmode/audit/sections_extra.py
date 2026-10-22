@@ -170,7 +170,42 @@ def final_candidates(ctx: Context) -> Section:
     return s
 
 
-EXTRA = [gate_ledger, checklist, environment_and_seeds, block_leakage, enforced_rules, final_candidates]
+
+def citation_consistency(ctx: Context) -> Section:
+    """The name, the repository and the identifiers of the work must be the same wherever the repository states them: the citation file is the source, the other places are compared with it."""
+    import json
+
+    from cypmode import provenance
+
+    s = Section("20. Attribution and citation consistency")
+    cff = provenance.load()
+    family = cff["authors"][0]["family-names"]
+    url = cff["repository-code"]
+    ids = provenance.identifiers(cff)
+    readme = (ROOT / "README.md").read_text(errors="ignore")
+    notice = (ROOT / "NOTICE").read_text(errors="ignore") if (ROOT / "NOTICE").exists() else ""
+    zenodo_path = ROOT / ".zenodo.json"
+    zenodo = json.loads(zenodo_path.read_text()) if zenodo_path.exists() else None
+    s.add("the citation file names an author, a repository, a licence and a version", all(cff.get(k) for k in ("authors", "repository-code", "license", "version")), f"{provenance.authors(cff)}; {url}; version {cff.get('version')}")
+    s.add("the README names the author and the repository", family in readme and url in readme, "found" if family in readme and url in readme else "missing")
+    s.add("NOTICE names the author", family in notice, "found" if family in notice else "missing")
+    if zenodo is not None:
+        names = {c["name"].split(",")[0].strip() for c in zenodo.get("creators", [])}
+        s.add("the archive metadata (.zenodo.json) names the same author", family in names, ", ".join(sorted(names)))
+    else:
+        s.add("the archive metadata (.zenodo.json) names the same author", None, "no .zenodo.json yet")
+    if ids.get("doi"):
+        s.add("the DOI of the citation file is written in the README", ids["doi"] in readme, ids["doi"])
+    else:
+        s.add("the DOI of the citation file is written in the README", None, "the citation file has no DOI yet")
+    s.add("the declaration of use and citation exists", (ROOT / "USE_AND_CITATION.md").exists(), "USE_AND_CITATION.md" if (ROOT / "USE_AND_CITATION.md").exists() else "missing")
+    entry_points = ("challenge/nested_runners", "challenge/aux_experiments", "challenge/final_tdi_build", "challenge/physics_block", "challenge/frozen_embeddings", "validation/batch", "validation/final_recipe", "validation/relax_final")
+    silent = [name for name in entry_points if "provenance.announce()" not in (ROOT / "cypmode" / f"{name}.py").read_text()]
+    s.add("the scripts that generate data announce their origin", not silent, ", ".join(silent) or f"{len(entry_points)} checked")
+    s.body.append("Rules checked: the author, the repository and the DOI are the same in the citation file, the README, NOTICE and the archive metadata; every script that generates data prints the citation and the generated directories carry their origin (`cypmode/provenance.py`).")
+    return s
+
+EXTRA = [gate_ledger, checklist, environment_and_seeds, block_leakage, enforced_rules, final_candidates, citation_consistency]
 _ = sys
 
 

@@ -38,6 +38,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from cypmode import provenance
 from cypmode.challenge.aux_blocks import (
     aux_candidates,
     gate_shift_candidates,
@@ -386,6 +387,7 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+    provenance.stamp(out_dir)
     train, test = pd.read_csv(TRAIN_CSV), load_test_set(TEST_CSV)
     store = FeatureStore.load_or_build(STORE, list(train["SMILES"]) + list(test["SMILES"]))
     if args.design == 10:
@@ -426,4 +428,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    from cypmode import provenance
+
+    provenance.announce()
     main()

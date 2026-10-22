@@ -402,4 +402,7 @@ def _has_poses(run: str) -> bool:
 
 
 if __name__ == "__main__":
+    from cypmode import provenance
+
+    provenance.announce()
     main()
