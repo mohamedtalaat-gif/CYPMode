@@ -1,4 +1,4 @@
-CYP2D6: final stack of 23 candidates (groups that passed: none); all-in-one stack of 34 candidates from 10 groups with complete predictions
-z0=1.0  outer AUC final 0.7312  all-in-one 0.7256  all-in-one vs final: AUC -0.0055 (p=0.785)
-z0=1.96  outer AUC final 0.7536  all-in-one 0.7579  all-in-one vs final: AUC +0.0043 (p=0.684)
+CYP2D6: final stack of 23 candidates (groups that passed: none); all-in-one stack of 87 candidates from 31 groups with complete predictions
+z0=1.0  outer AUC final 0.7312  all-in-one 0.7291  all-in-one vs final: AUC -0.0021 (p=0.866)
+z0=1.96  outer AUC final 0.7536  all-in-one 0.7572  all-in-one vs final: AUC +0.0036 (p=0.813)
 CYP2D6 ALL-IN-ONE (stack of every cached candidate against the final stack, corrected p < 0.05 at both z0 and a gain of at least 0.0099): NOT MET
