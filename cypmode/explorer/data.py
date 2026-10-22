@@ -13,6 +13,8 @@ computed again, no model is fitted and no queue job is started.
   selectors.csv   the nested cross-validation of the selection rules, one row per repeat and outer fold, for each enzyme
   poses.csv       the poses of the crystal-anchored benchmark, one row per ligand, engine and sample, with the RMSD to the crystal pose
   rules.csv       the RMSD of the pose that each choosing rule submits, per benchmark ligand
+  excerpts.csv    the lines of every run log that carry a registered verdict or a paired comparison, so that a gate can be read with its numbers
+  oof_<enzyme>.csv.gz  the outer-fold predictions of every complete candidate for the training compounds: one row per compound of the pool, the label and one column per candidate and repeat; the rows of the blinded test set are never in it
 
 Nothing here names a blinded compound: the sources are the logs and the tables of the training compounds and of the public crystal ligands, and ``check_public`` refuses a bundle that holds a
 name of the blinded test sets, a file the HELD BACK block of ``.gitignore`` lists, or a table of 750 or 20 rows (the sizes of the two blinded sets).
@@ -26,6 +28,7 @@ import json
 import re
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 LOGS = Path("data/structure_track/outputs/cyp3a4/logs")
@@ -67,18 +70,56 @@ def pose_rows(structure: Path = STRUCTURE) -> tuple[pd.DataFrame, pd.DataFrame]:
     return poses, rules
 
 
+def excerpt_rows(logs: Path = LOGS) -> pd.DataFrame:
+    """The lines of every run log that hold a registered verdict or a paired comparison, with the line number."""
+    from cypmode.audit.method_report import GATE
+
+    rows = []
+    for path in sorted(Path(logs).glob("*.log")):
+        for number, line in enumerate(path.read_text(errors="ignore").splitlines(), start=1):
+            if GATE.match(line) or PAIRED.match(line):
+                rows.append({"log": path.name, "line": number, "text": line.strip()})
+    return pd.DataFrame(rows, columns=["log", "line", "text"])
+
+
+def outer_predictions(enzyme: str, nested: Path = NESTED) -> tuple[list[str], np.ndarray, np.ndarray]:
+    """(candidate names, labels of the pool, scores of shape candidates x repeats x pool) from the prediction cache of the nested plan.
+
+    Only the outer-validation tasks are read, so every compound of the pool is scored once per repeat by models that never saw it; the deployment rows of the blinded test set are not read.
+    A candidate that lacks one of those tasks is left out.
+    """
+    from cypmode.challenge.nested import OUTER_REFIT, NestedPlan, PredictionCache
+
+    root = Path(nested) / enzyme
+    plan = NestedPlan.load(root / "plan.npz")
+    cache = PredictionCache(root / "cache", plan)
+    position = {int(row): i for i, row in enumerate(plan.pool)}
+    folds = [plan.task(r, k, OUTER_REFIT) for r, k in plan.outer_folds()]
+    names, matrices = [], []
+    for name in cache.candidates():
+        if not all(cache.has(name, task) for task in folds):
+            continue
+        scores = np.full((plan.repeats, len(plan.pool)), np.nan, dtype=np.float32)
+        for task in folds:
+            scores[task.repeat, [position[int(row)] for row in task.evaluate]] = cache.get(name, task)
+        if np.isfinite(scores).all():
+            names.append(name)
+            matrices.append(scores)
+    return names, plan.y.astype(np.int8), np.stack(matrices) if matrices else np.zeros((0, plan.repeats, len(plan.pool)), dtype=np.float32)
+
+
 def tables(logs: Path = LOGS, nested: Path = NESTED, structure: Path = STRUCTURE) -> dict[str, pd.DataFrame]:
     from cypmode.audit.ledger_kinds import ledger_rows
 
     poses, rules = pose_rows(structure)
-    return {"ledger": ledger_rows(), "paired": paired_rows(logs), "selectors": selector_rows(nested), "poses": poses, "rules": rules}
+    return {"ledger": ledger_rows(), "paired": paired_rows(logs), "selectors": selector_rows(nested), "poses": poses, "rules": rules, "excerpts": excerpt_rows(logs)}
 
 
 def held_back_patterns(gitignore: Path = Path(".gitignore")) -> list[str]:
     """The patterns of the HELD BACK block of ``.gitignore``."""
     text = Path(gitignore).read_text()
     block = text[text.index(">>> HELD BACK"):text.index("<<< HELD BACK")]
-    return [line.strip() for line in block.splitlines() if line.strip() and not line.startswith("#")]
+    return [line.strip() for line in block.splitlines()[1:] if line.strip() and not line.startswith("#")]  # the first line of the slice is the rest of the opening marker
 
 
 def check_public(folder: Path = OUT) -> list[str]:
@@ -96,6 +137,12 @@ def check_public(folder: Path = OUT) -> list[str]:
         rows = len(text.strip().splitlines()) - 1
         if rows in BLINDED_SIZES:
             problems.append(f"{path.name} has {rows} rows, the size of a blinded set")
+    for path in sorted(Path(folder).glob("oof_*.csv.gz")):
+        frame = pd.read_csv(path)
+        if len(frame) in BLINDED_SIZES:
+            problems.append(f"{path.name} has {len(frame)} rows, the size of a blinded set")
+        if frame.columns[0] != "y" or not all(re.fullmatch(r".+\|\d+", column) for column in frame.columns[1:]):
+            problems.append(f"{path.name} holds columns beyond the label and the candidate and repeat predictions")
     return problems
 
 
@@ -108,6 +155,16 @@ def build(out: Path = OUT) -> dict:
         path = out / f"{name}.csv"
         frame.to_csv(path, index=False)
         manifest[path.name] = {"rows": len(frame), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    for enzyme in ENZYMES:
+        if (NESTED / enzyme / "plan.npz").exists():
+            names, y, scores = outer_predictions(enzyme)
+            path = out / f"oof_{enzyme}.csv.gz"
+            wide = {"y": y.astype(int)}
+            for i, name in enumerate(names):
+                for repeat in range(scores.shape[1]):
+                    wide[f"{name}|{repeat}"] = scores[i, repeat].round(4)
+            pd.DataFrame(wide).to_csv(path, index=False, compression={"method": "gzip", "mtime": 0})
+            manifest[path.name] = {"candidates": len(names), "repeats": int(scores.shape[1]), "compounds": int(scores.shape[2]), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest
 
@@ -119,7 +176,7 @@ def main() -> None:
     manifest = build(Path(args.out))
     problems = check_public(Path(args.out))
     for name, entry in manifest.items():
-        print(f"  {name}: {entry['rows']} rows")
+        print(f"  {name}: " + (f"{entry['rows']} rows" if "rows" in entry else f"{entry['candidates']} candidates x {entry['repeats']} repeats x {entry['compounds']} compounds"))
     if problems:
         raise SystemExit("the bundle is not public: " + "; ".join(problems))
     print("the bundle names no blinded compound and no held-back path")

@@ -283,7 +283,8 @@ How the 20 poses of the submitted zip were chosen, from the verdicts of the gate
 | `cypmode/metrics/`, `cypmode/data/` | the original motif screen and panel loaders |
 | `queue/`, `scripts/` | the permanent job queue (`queue/jobs/NNN_*.sh`, helpers in `queue/lib.sh`), runner, memory / battery guards (`scripts/guards.sh`), reproduction and audit scripts, the low-memory OpenFold3 launcher (`scripts/run_openfold_lowmem.py`) |
 | `notebooks/` | the notebook `cypmode_notebook`: the teaching text and the laboratory notebook of the project, built from `notebooks/parts/` by `python -m notebooks.build_notebook` (ipynb, html, pdf) |
-| `environment/` | pinned package lists for the two Python environments with checksums |
+| `environment/` | pinned package lists for the Python environments (main, torch and explorer) with checksums |
+| `explorer/`, `cypmode/explorer/` | the interactive explorer of the finished results, a reactive marimo notebook that reads only a small public data bundle (`explorer/public`, built by `cypmode/explorer/data.py`): the gate ledger, what a different threshold would have let through, the selection rules fold by fold, the benchmark poses and the stored out-of-fold predictions |
 | `tests/` | test suite (the torch and tblite files run in their own processes, see below) |
 | `data/` | inputs, caches and outputs of both tracks |
 | `app.py` | Streamlit app: the original screen and a TDI results tab that reads the generated final report and gate ledger |
@@ -303,6 +304,7 @@ python -m cypmode.audit.method_report           # regenerate METHOD_REPORT.md an
 python -m cypmode.audit.public_readiness        # scan for private paths, credentials, large files, third-party text
 bash scripts/mirror_check.sh                      # after a push: remote branch, HEAD and working tree are identical
 python -m notebooks.build_notebook              # rebuild the notebook (ipynb, html, pdf)
+bash scripts/explorer.sh run                    # the interactive explorer (needs .venv-marimo, see the header of the script); also edit, html, ipynb and wasm
 ```
 
 Torch-based tests (`tests/test_multitask.py`, `tests/test_chemberta_features.py`) and the tblite tests must not share a process with

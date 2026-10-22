@@ -226,6 +226,43 @@ The test file has passed and the dry run reports what the release script would c
 *On what actually ran.* The first cell reads the checklist and the existence of the files it names; the hooks are looked for in the local copy of the repository. The second runs the test file of the hold-back and the release script with `--dry-run` as child processes.
 """
 
+EXPLORER_FACTS = r"""
+# The explorer of 12.7: what its data bundle holds, the version of the notebook program that is pinned, how many cells the app has. Every number is read from the files.
+import json
+import re
+
+explorer_manifest = json.loads((ROOT / "explorer/public/manifest.json").read_text())
+explorer_tables = {name: entry["rows"] for name, entry in explorer_manifest.items() if "rows" in entry}
+explorer_oof = {name: entry for name, entry in explorer_manifest.items() if "candidates" in entry}
+explorer_lock = (ROOT / "environment/requirements-lock-marimo.txt").read_text().splitlines()
+explorer_version = next(line.split("==")[1] for line in explorer_lock if line.startswith("marimo=="))
+explorer_n_pins = len(explorer_lock)
+explorer_cells = len(re.findall(r"^@app\.cell", (ROOT / "explorer/cypmode_explorer.py").read_text(), re.M))
+explorer_sizes = {name: round((ROOT / "explorer/public" / name).stat().st_size / 1e6, 1) for name in explorer_manifest}
+print(explorer_tables, {name: (entry["candidates"], entry["compounds"]) for name, entry in explorer_oof.items()}, explorer_version, explorer_n_pins, explorer_cells)
+"""
+
+MD_12_7 = """
+## 12.7 An explorer for the finished results
+
+> **Field:** Software engineering · Data science
+
+*Where this section sits:* the notebook that you are reading is built once, from the repository, and every number in it is fixed at build time. A reader who wants to ask a question that the notebook did not answer, such as what would have passed if a threshold had been different, or how one candidate does on one enzyme, has to run code. This section describes the small program that lets them do it without running anything expensive, and the rules that keep it from doing more than that.
+
+**The problem with notebooks, and a reactive one.** In an ordinary notebook, the cells keep their results in a shared memory and can be run in any order. If a cell is changed and a later cell is not run again, or if a cell is deleted but the variable that it made is still in memory, the page shows numbers that no longer follow from the code on it: a stale state, which is a well-known source of wrong results. A **reactive notebook** removes the cause. The program reads every cell, builds the graph of which cell uses which variable, runs a cell again whenever a variable it uses changes, and refuses a notebook in which two cells define the same variable. The one used here is marimo (the marimo team, Apache licence 2.0, version {{=explorer_version}} in the pinned environment `environment/requirements-lock-marimo.txt`, {{=explorer_n_pins}} pinned packages); the charts are Altair, a Python interface to the Vega-Lite grammar of graphics.
+
+**What the explorer shows.** `explorer/cypmode_explorer.py` has {{=explorer_cells}} cells and five views, each driven by a few controls. The ledger of gates (every verdict registered before its result existed, {{=explorer_tables['ledger.csv']}} of them) can be filtered by the kind of idea and by the verdict, and one experiment can be opened to read its verdicts, every paired comparison that its log printed and the lines themselves. The second view moves the two thresholds of the registered rule, the smallest gain and the corrected p, over the {{=explorer_tables['paired.csv']}} paired comparisons, and shows what a different rule would have let through; the registered values are the starting position and moving a slider never changes a verdict. The third shows the selection rules of the nested cross-validation fold by fold, the fourth the poses of the crystal-anchored benchmark by engine and by rule, and the fifth the stored out-of-fold predictions: every complete candidate of each enzyme ({{=explorer_oof['oof_CYP3A4.csv.gz']['candidates']}} for CYP3A4 and {{=explorer_oof['oof_CYP2D6.csv.gz']['candidates']}} for CYP2D6) on the {{=explorer_oof['oof_CYP3A4.csv.gz']['compounds']}} and {{=explorer_oof['oof_CYP2D6.csv.gz']['compounds']}} training compounds, ranked by AUC, with the ROC curve of the chosen candidate and the confusion matrix and the Matthews correlation coefficient at the chosen call rate.
+"""
+
+MD_12_7_B = """
+**What it is not allowed to do.** The explorer holds no model and starts no run. It reads the bundle in `explorer/public` and nothing else: a nested cross-validation, a co-folding run or a queue job started by a reactive cell would be an enormous computation begun by a mistake, and caching does not remove that risk, so none of them is reachable from it. The bundle is built by `cypmode/explorer/data.py` (the queue job `906_explorer_bundle` rebuilds it after the last verdict, and `tests/test_explorer_data.py` tests it): it copies the verdicts and the paired comparisons out of the run logs, the nested tables, the benchmark of the public crystal ligands and the stored outer-fold predictions of the training compounds, and then checks itself. The check refuses a table that names a blinded compound, that mentions a path of the HELD BACK block of `.gitignore` or that has the number of rows of one of the two blinded sets, and the predictions are read only from the outer-validation tasks, so that no row of the blinded test set can enter. The tables add up to {{=sum(explorer_sizes.values()):.1f}} MB, which is what the repository publishes of the results and what a browser has to fetch.
+
+**Forms.** `bash scripts/explorer.sh` runs the notebook as an application or in the editor, and exports it as a static HTML page, as a Jupyter notebook with its outputs, or as a **WebAssembly** page: the Python runs inside the reader's browser (Pyodide, loaded from a content-delivery network) with the data files bundled next to the page, so that no server is needed, at the price of the browser's memory limit of two gigabytes. The export places a markdown file of the program's own instructions beside the page, which the script removes so that the published folder holds only the page and its data.
+
+
+*On what actually ran.* The cell of this section read the manifest of the bundle and the pinned versions. The app was started as an application and as a WebAssembly page and its controls were moved in a browser; the bundle builder and its tests ran as described. The explorer is a reader of finished results, nothing in it computes a result that the repository does not already hold, and no statement of this notebook depends on it.
+"""
+
 CELLS = [
     md(MD_12_4),
     code(QUEUE_HELPERS),
@@ -242,4 +279,7 @@ CELLS = [
     md(MD_12_6_B),
     code(RELEASE_TEST),
     md(MD_12_6_C),
+    code(EXPLORER_FACTS),
+    md(MD_12_7),
+    md(MD_12_7_B),
 ]

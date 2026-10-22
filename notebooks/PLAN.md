@@ -185,6 +185,7 @@ it did or did not help.
 - 12.4 The job queue, the runner and the guards; what the hardware taught (memory, swap, battery, sleep).
 - 12.5 The method report, the negative-results ledger, the checklist consistency check, the public-readiness scan.
 - 12.6 The rules that never change and how they are enforced.
+- 12.7 An explorer for the finished results: a reactive notebook that reads a public bundle, and what it may not do.
 
 ## Part XIII. Closing
 

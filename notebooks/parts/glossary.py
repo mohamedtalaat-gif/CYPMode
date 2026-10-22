@@ -62,6 +62,7 @@ GLOSSARY = {
     "enantiomer": "one of two mirror-image forms of a molecule that cannot be turned into each other without breaking bonds",
     "inferred positive": "a compound labelled positive because it was inactive without pre-incubation (pIC50 below 4) and active with it (pIC50 above 4.301)",
     "standard deviation": "the typical size of the error of an estimate: the spread of the estimates if the experiment were repeated",
+    "reactive notebook": "a notebook that knows which cell uses which variable and runs a cell again whenever something it uses changes, so that the page never shows a stale result",
     "standard error": "the typical size of the error of one estimate, computed from the data of that estimate (for a fitted curve, from how closely it follows the measurements); it predicts the spread the estimate would show if the experiment were repeated",
     "confidence interval": "a range around an estimate that holds the true value with a stated probability; for a normal error the 95 % interval is the estimate plus and minus 1.96 standard deviations",
     "gradient-boosted trees": "a model made of many small decision trees fitted one after another, each correcting the mistakes of those before it",

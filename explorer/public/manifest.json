@@ -18,5 +18,21 @@
   "rules.csv": {
     "rows": 80,
     "sha256": "f8cfe8eceb3bef3d3ea5b6f60a5b0f6cd43ff16fa492754ac38603279a23d33d"
+  },
+  "excerpts.csv": {
+    "rows": 330,
+    "sha256": "a83d5e9032bb1f12bbcc9365ea6c3a326f60a77045ffb85ca38522201f86914d"
+  },
+  "oof_CYP3A4.csv.gz": {
+    "candidates": 99,
+    "repeats": 3,
+    "compounds": 2334,
+    "sha256": "fa863b811cce11ccff04fe558e350c9bbe8df1ca984c45aa985060b934814b10"
+  },
+  "oof_CYP2D6.csv.gz": {
+    "candidates": 95,
+    "repeats": 3,
+    "compounds": 1493,
+    "sha256": "265fcfbd49e53960cfc815dd2df8806cb25ff3eb0488a7626d6a2db61fcd2b52"
   }
 }

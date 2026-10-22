@@ -31,7 +31,9 @@ def _(mo, pd):
     selectors = _read("selectors")
     poses = _read("poses")
     rules = _read("rules")
-    return ledger, paired, poses, rules, selectors
+    excerpts = _read("excerpts")
+    oof = {enzyme: pd.read_csv(str(_root / f"oof_{enzyme}.csv.gz")) for enzyme in ("CYP3A4", "CYP2D6")}
+    return excerpts, ledger, oof, paired, poses, rules, selectors
 
 
 @app.cell(hide_code=True)
@@ -87,6 +89,29 @@ def _(kind_filter, ledger, mo, verdict_filter):
         [
             mo.md(f"{len(_rows)} of {len(ledger)} verdicts. The log of a verdict holds its numbers: the paired difference, the corrected p and the rule that was registered."),
             mo.ui.table(_rows[["kind", "name", "verdict", "log"]].reset_index(drop=True), selection=None, page_size=12),
+        ]
+    )
+
+
+@app.cell(hide_code=True)
+def _(ledger, mo):
+    log_pick = mo.ui.dropdown(options=sorted(ledger["log"].unique()), value=min(ledger["log"].unique()), label="Experiment (log)")
+    mo.vstack([mo.md("**Read one experiment.** Pick the log of an experiment to see its verdicts, every paired comparison it printed and the lines that carry them."), log_pick])
+    return (log_pick,)
+
+
+@app.cell(hide_code=True)
+def _(excerpts, ledger, log_pick, mo, paired):
+    _verdicts = ledger[ledger["log"] == log_pick.value][["name", "verdict"]].reset_index(drop=True)
+    _pairs = paired[paired["log"] == log_pick.value][["enzyme", "z0", "comparison", "auc_gain", "p", "better", "folds"]].reset_index(drop=True)
+    _lines = excerpts[excerpts["log"] == log_pick.value]["text"].tolist()
+    mo.vstack(
+        [
+            mo.md("**Verdicts**"),
+            mo.ui.table(_verdicts, selection=None),
+            mo.md("**Paired comparisons** (gain in AUC over the base, corrected p, folds in which the addition was better)"),
+            mo.ui.table(_pairs, selection=None),
+            mo.md("**Lines of the log**\n\n```\n" + "\n".join(_lines) + "\n```"),
         ]
     )
 
@@ -205,6 +230,130 @@ def _(alt, ligand, line, mo, poses, rules):
     _share = _poses.assign(good=_poses["true_rmsd"] <= line.value).groupby("engine")["good"].agg(["mean", "count"]).rename(columns={"mean": "share of poses within the line", "count": "poses"}).round(3).reset_index()
     _by_rule = _rules.groupby("rule")["rmsd"].agg(["mean", "median", "count"]).round(3).reset_index()
     mo.vstack([_strip + _rule, mo.md("**Poses within the line, by engine**"), mo.ui.table(_share, selection=None), mo.md("**RMSD of the pose each rule submits**"), mo.ui.table(_by_rule, selection=None)])
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## 5. The out-of-fold predictions
+
+    Every candidate of the nested plan, scored on compounds it never saw: each compound of the training pool is predicted once per repeat by a model fitted without it. The predictions
+    are the stored ones; nothing is refitted here. Pick an enzyme and a candidate, call the top share of compounds positive, and read the confusion matrix and the Matthews correlation
+    coefficient at that call rate.
+    """)
+
+
+@app.cell(hide_code=True)
+def _(np, oof, pd):
+    def auc_of(y, scores):
+        """Area under the ROC curve as the probability that a positive outranks a negative (ties count one half)."""
+        ranks = pd.Series(scores).rank().to_numpy()
+        positives = int(y.sum())
+        negatives = len(y) - positives
+        return float((ranks[y == 1].sum() - positives * (positives + 1) / 2) / (positives * negatives))
+
+    def candidate_table(enzyme):
+        frame = oof[enzyme]
+        y = frame["y"].to_numpy()
+        rows = []
+        for column in frame.columns[1:]:
+            name, repeat = column.rsplit("|", 1)
+            rows.append({"candidate": name, "repeat": int(repeat), "auc": auc_of(y, frame[column].to_numpy())})
+        long = pd.DataFrame(rows)
+        return long.groupby("candidate")["auc"].agg(mean="mean", low="min", high="max").reset_index().sort_values("mean", ascending=False).reset_index(drop=True)
+
+    def roc_points(y, scores):
+        order = np.argsort(-scores, kind="stable")
+        hits = y[order]
+        tpr = np.concatenate([[0.0], np.cumsum(hits) / hits.sum()])
+        fpr = np.concatenate([[0.0], np.cumsum(1 - hits) / (len(hits) - hits.sum())])
+        return fpr, tpr
+
+    def confusion(y, scores, share):
+        cut = np.quantile(scores, 1 - share)
+        called = scores >= cut
+        tp = int((called & (y == 1)).sum())
+        fp = int((called & (y == 0)).sum())
+        fn = int((~called & (y == 1)).sum())
+        tn = int((~called & (y == 0)).sum())
+        denominator = np.sqrt(float(tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+        return {"called positive": tp + fp, "TP": tp, "FP": fp, "FN": fn, "TN": tn, "MCC": round((tp * tn - fp * fn) / denominator, 4) if denominator else 0.0}
+
+    return auc_of, candidate_table, confusion, roc_points
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    oof_enzyme = mo.ui.dropdown(options=["CYP3A4", "CYP2D6"], value="CYP3A4", label="Enzyme")
+    oof_top = mo.ui.slider(start=5, stop=60, step=5, value=20, label="Candidates shown", show_value=True)
+    mo.hstack([oof_enzyme, oof_top], justify="start", gap=2)
+    return oof_enzyme, oof_top
+
+
+@app.cell(hide_code=True)
+def _(alt, candidate_table, mo, oof_enzyme, oof_top):
+    ranking = candidate_table(oof_enzyme.value)
+    _shown = ranking.head(oof_top.value)
+    _bars = alt.Chart(_shown).mark_circle(size=70, color="#0e9f8a").encode(x=alt.X("mean:Q", title="mean AUC over the repeats", scale=alt.Scale(zero=False)), y=alt.Y("candidate:N", sort=None, title=None), tooltip=["candidate", "mean", "low", "high"])
+    _range = alt.Chart(_shown).mark_rule(color="#12203a").encode(x="low:Q", x2="high:Q", y=alt.Y("candidate:N", sort=None))
+    mo.vstack(
+        [
+            mo.md(f"{len(ranking)} candidates have an outer-fold prediction for every compound of {oof_enzyme.value}. The dot is the mean AUC over the three repeats and the line its range."),
+            (_bars + _range).properties(width=560, height=18 * len(_shown) + 30),
+        ]
+    )
+    return (ranking,)
+
+
+@app.cell(hide_code=True)
+def _(mo, oof_enzyme, ranking):
+    cand_pick = mo.ui.dropdown(options=ranking["candidate"].tolist(), value=ranking["candidate"].iloc[0], label="Candidate")
+    rep_pick = mo.ui.dropdown(options=[0, 1, 2], value=0, label="Repeat")
+    share = mo.ui.slider(start=0.02, stop=0.8, step=0.01, value=0.3, label="Call the top share positive", show_value=True)
+    mo.vstack([mo.md(f"**One candidate on {oof_enzyme.value}**"), mo.hstack([cand_pick, rep_pick, share], justify="start", gap=2)])
+    return cand_pick, rep_pick, share
+
+
+@app.cell(hide_code=True)
+def _(
+    alt,
+    auc_of,
+    cand_pick,
+    confusion,
+    mo,
+    np,
+    oof,
+    oof_enzyme,
+    pd,
+    rep_pick,
+    roc_points,
+    share,
+):
+    _frame = oof[oof_enzyme.value]
+    _y = _frame["y"].to_numpy()
+    _scores = _frame[f"{cand_pick.value}|{rep_pick.value}"].to_numpy()
+    _fpr, _tpr = roc_points(_y, _scores)
+    _at = confusion(_y, _scores, share.value)
+    _curve = pd.DataFrame({"false positive rate": _fpr, "true positive rate": _tpr})
+    _point = pd.DataFrame({"false positive rate": [_at["FP"] / (_at["FP"] + _at["TN"])], "true positive rate": [_at["TP"] / (_at["TP"] + _at["FN"])]})
+    _roc = alt.Chart(_curve).mark_line(color="#0e9f8a").encode(x="false positive rate:Q", y="true positive rate:Q")
+    _diagonal = alt.Chart(pd.DataFrame({"x": [0, 1], "y": [0, 1]})).mark_line(color="#9aa5b8", strokeDash=[4, 4]).encode(x="x:Q", y="y:Q")
+    _dot = alt.Chart(_point).mark_circle(size=120, color="#c44").encode(x="false positive rate:Q", y="true positive rate:Q")
+    mo.hstack(
+        [
+            (_roc + _diagonal + _dot).properties(width=300, height=300),
+            mo.vstack(
+                [
+                    mo.md(f"AUC **{auc_of(_y, _scores):.4f}** on {len(_y)} compounds, {int(_y.sum())} positive ({np.mean(_y):.1%})."),
+                    mo.ui.table(pd.DataFrame([_at]), selection=None),
+                    mo.md("The red point is the chosen call rate on the ROC curve."),
+                ]
+            ),
+        ],
+        justify="start",
+        gap=2,
+        align="start",
+    )
 
 
 @app.cell(hide_code=True)
