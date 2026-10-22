@@ -16,7 +16,7 @@ BATTERY_LOW_PCT=10
 stage() { echo "$(date '+%m-%d %H:%M:%S') $1 | swap used $(sysctl -n vm.swapusage | awk '{print $6}')" >> "$LOGS/queue_stage.txt"; }
 on_ac() { pmset -g batt | head -1 | grep -q "AC Power"; }
 battery_pct() { pmset -g batt | grep -o '[0-9]*%' | head -1 | tr -d '%'; }
-engines() { pkill "$1" -f "boltz predict"; pkill "$1" -f "run_openfold"; pkill "$1" -f "cypmode.validation"; }
+engines() { pkill "$1" -f "boltz predict"; pkill "$1" -f "run_openfold"; pkill "$1" -f "cypmode.validation"; pkill "$1" -f "bioemu2"; }
 
 wait_for_ac() { :; }  # kept so the runner and old jobs still call it; battery power is allowed
 
@@ -30,7 +30,7 @@ guard_loop() {
     if [ -n "$free" ] && [ "$free" -lt "$MIN_FREE_PCT" ]; then low=$((low + 1)); else low=0; fi
     if [ "$low" -ge "$MIN_FREE_CHECKS" ]; then
       stage "GUARD: free memory ${free}% for 60 s -- killing the running engine to protect the machine"
-      pkill -f "boltz predict"; pkill -f "run_openfold"; low=0; sleep 20
+      pkill -f "boltz predict"; pkill -f "run_openfold"; pkill -f "bioemu2"; low=0; sleep 20
     fi
     pct=$(battery_pct)
     if ! on_ac && [ -n "$pct" ]; then

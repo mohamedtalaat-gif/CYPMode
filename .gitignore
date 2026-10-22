@@ -3,6 +3,8 @@
 .venv-openfold3/
 .venv-audit/
 .venv-atomjepa/
+.venv-bioemu2/
+.bioemu2-cache/
 .conda-openadmet-models/
 __pycache__/
 *.pyc
