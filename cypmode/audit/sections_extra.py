@@ -158,8 +158,8 @@ def final_candidates(ctx: Context) -> Section:
             reports = check_zip(z, dict(zip(official.Molecule_Name, official.SMILES, strict=True)))
             passes = sum(r.passed for r in reports.values())
             smallest = min((r.distance_margin for r in reports.values() if np.isfinite(r.distance_margin)), default=float("nan"))
-            s.body.append("\nThe zip checked the way the organisers' scorer checks it (22 PoseBusters checks, dock configuration, bond orders from the SMILES, receptor = the complex minus the ligand):\n")
-            s.body.append(md_table(pd.DataFrame([(k, r.passed, r.n_checks, fmt(r.distance_margin, 3), ",".join(r.failed) or r.error or "-") for k, r in reports.items()], columns=["compound", "passes", "checks", "smallest relative distance", "failed"])))
+            s.body.append("\nThe zip checked the way the organisers' scorer checks it (22 PoseBusters checks, dock configuration, bond orders from the SMILES, receptor = the complex minus the ligand). The blinded compound identifiers are withheld here, in the order of the submission file, because the repository's release rule forbids naming a blinded compound in a file that would be pushed:\n")
+            s.body.append(md_table(pd.DataFrame([(f"compound {i:02d}", r.passed, r.n_checks, fmt(r.distance_margin, 3), ",".join(r.failed) or r.error or "-") for i, (_, r) in enumerate(reports.items(), start=1)], columns=["compound", "passes", "checks", "smallest relative distance", "failed"])))
             s.add(f"{z.name}: every structure passes the scorer's own PoseBusters call", passes == len(reports) == 20, f"{passes} of {len(reports)} pass")
             s.add(f"{z.name}: every structure clears a relative distance of {MARGIN_FLOOR} to the receptor (the scorer's threshold is 0.75)", bool(smallest >= MARGIN_FLOOR), f"smallest {fmt(smallest, 3)}")
         except ImportError:

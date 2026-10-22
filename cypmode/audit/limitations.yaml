@@ -78,7 +78,7 @@
   uses: []
   text: >-
     The CYP3A4 reaction-phenotyping and inhibition release of the laboratory that measured the challenge (Octant, same compound library) contains one compound that is
-    also in the blinded test set (OCNT-0493952). Its measurements are excluded from every use of that release and are never read by a model or a validation; the
+    also in the blinded test set (its identifier is withheld here, because the release rule forbids naming a blinded compound in a file that would be pushed). Its measurements are excluded from every use of that release and are never read by a model or a validation; the
     other rows of the release are used only for an independent check of the motif screen and never enter a prediction.
 - id: L12
   area: candidates

@@ -1,7 +1,7 @@
 """Paint the staff of the film with the Anima model through a local ComfyUI server: ``python docs/video/characters/generate.py --member kai [--expression calm] [--seed N]``.
 
-ComfyUI (https://github.com/comfyanonymous/ComfyUI, GPL-3.0) runs outside the repository (``/Volumes/Data/ComfyUI``) on the Apple GPU; start it with
-``cd /Volumes/Data/ComfyUI && ./venv/bin/python main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch``. The model is Anima (CircleStone Labs, non-commercial licence for the model; the pictures it
+ComfyUI (https://github.com/comfyanonymous/ComfyUI, GPL-3.0) runs outside the repository (in the folder that ``COMFYUI_HOME`` names) on the Apple GPU; start it with
+``cd $COMFYUI_HOME && ./venv/bin/python main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch``. The model is Anima (CircleStone Labs, non-commercial licence for the model; the pictures it
 makes may be used commercially), which needs ``anima-aesthetic-v1.1.safetensors``, ``qwen_3_06b_base.safetensors`` and ``qwen_image_vae.safetensors`` in ComfyUI's ``models`` folders. The prompts come from
 ``bible.py``; the pictures go to ``docs/video/anime/characters/``. The workflow is the one the model card publishes (er_sde sampler, 30 steps, CFG 4) with the Aesthetic checkpoint.
 """

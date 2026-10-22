@@ -406,7 +406,7 @@ Final stack per isoform, from the nested cross-validation on the population the 
 
 | isoform | stack | members | groups added by a met gate | AUC (z0 1.0) | AUC (z0 1.96) | MCC (z0 1.0 / 1.96) |
 | --- | --- | --- | --- | --- | --- | --- |
-| CYP3A4 | default | 23 | none | 0.817 | 0.844 | 0.442 / 0.487 |
+| CYP3A4 | default+neural | 26 | ['neural'] | 0.828 | 0.855 | 0.461 / 0.513 |
 | CYP2D6 | default | 23 | none | 0.731 | 0.754 | 0.167 / 0.204 |
 
 Members of the default stack: k-nearest neighbours (Tanimoto) (3), support vector machine (Tanimoto kernel) (3), LightGBM classifier (11), extremely randomised trees (1), random forest (1), LightGBM regressor of the arm shift (2), LightGBM regressors of the two arms (2); 23 members in all.
@@ -423,5 +423,5 @@ How the 20 poses of the submitted zip were chosen, from the verdicts of the gate
 - selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)
 - extra samples allocated uniformly: ei_sampling not MET
 - margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)
-- force-field relaxation of the chosen poses: (pending: job 243)
+- force-field relaxation of the chosen poses in the frozen pocket (gate met on 30 crystal-anchored ligands): 20 of 20 poses replaced under a rule fixed before the use (both poses pass the 22 checks, the smallest relative distance to the receptor rises and stays at or above 0.8, the ligand moves by at most 1.0 A, a coordinated iron-nitrogen distance changes by at most 0.2 A); smallest relative distance 0.801 to 0.850
 <!-- generated:structure-recipe end -->

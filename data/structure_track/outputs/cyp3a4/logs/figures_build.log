@@ -12,6 +12,15 @@ ok   data_coverage
 ok   eng_queue_timeline
 ok   eng_power_events
 ok   eng_tests_by_module
+ok   data_leak_guard
+ok   data_prevalence_recovery
+ok   ml_design_floor
+ok   ml_neural_pair
+ok   ml_applicability_domain
+ok   ml_call_rate
+ok   struct_all20_gallery
+ok   ml_exploration_map
+ok   ml_exploration_exploitation
 ok   kin_michaelis_menten
 ok   kin_inhibition_types
 ok   kin_tdi_progress

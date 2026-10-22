@@ -76,7 +76,7 @@ def morgan_caption() -> str:
     compound = example_compound()
     fp, info = morgan(compound["mol"])
     by_radius = [sum(1 for envs in info.values() for _, r in envs if r == k) for k in range(RADIUS + 1)]
-    return (f"The Morgan algorithm on one real training compound ({compound['Molecule_Name']}, {compound['heavy']} heavy atoms). Radius 0 looks at each atom alone, radius 1 adds its bonded neighbours, "
+    return (f"The Morgan algorithm on one real training compound ({compound['heavy']} heavy atoms; its identifier is withheld because the compound is in the blinded set). Radius 0 looks at each atom alone, radius 1 adds its bonded neighbours, "
             f"radius 2 the neighbours of the neighbours; the highlighted atoms are the environment of one atom at each radius. Every environment is hashed to a number between 0 and {BITS - 1} and "
             f"that position of the fingerprint is switched on. This compound has {by_radius[0]} environments of radius 0, {by_radius[1]} of radius 1 and {by_radius[2]} of radius 2, "
             f"which switch on {fp.GetNumOnBits()} of the {BITS} bits (two environments that hash to the same position share a bit).")

@@ -91,11 +91,12 @@ AUC and MCC are not comparable across rows with different evaluation populations
 # Final TDI build (generated; every number is computed by `final_tdi_build.py`)
 
 ## CYP3A4
-Final stack: **default** (23 candidates); surviving groups: none; called rate 0.372 against target prevalence 0.310.
+Final stack: **default+neural** (26 candidates); surviving groups: ['neural']; called rate 0.372 against target prevalence 0.310.
 
-| stack | n_candidates | auc_z1.0 | mcc_z1.0 | auc_z1.96 | mcc_z1.96 | eligible |
-| --- | --- | --- | --- | --- | --- | --- |
-| default | 23 | 0.817 | 0.4415 | 0.8443 | 0.4867 | True |
+| stack | n_candidates | auc_z1.0 | mcc_z1.0 | auc_z1.96 | mcc_z1.96 | eligible | diff_z1.0 | p_z1.0 | diff_z1.96 | p_z1.96 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| default | 23 | 0.817 | 0.4415 | 0.8443 | 0.4867 | True | nan | nan | nan | nan |
+| default+neural | 26 | 0.8276 | 0.4609 | 0.855 | 0.5131 | True | 0.0106 | 0.0142 | 0.0106 | 0.0294 |
 
 ## CYP2D6
 Final stack: **default** (23 candidates); surviving groups: none; called rate 0.059 against target prevalence 0.059.
@@ -108,8 +109,8 @@ Final stack: **default** (23 candidates); surviving groups: none; called rate 0.
 
 | file | sha256 | rows | CYP3A4_positive_rate | CYP2D6_positive_rate |
 | --- | --- | --- | --- | --- |
-| candidate_A_hits_only.csv | 546ee71e6381ab3e50f85069f48fb31d78854e3cb4ccc931453feae18355a45b | 750 | 0.372 | 0.058666666666666666 |
-| candidate_B_selection_aware.csv | 701c4e80b71023e207fe518090b2fe68551e263ed9c0afe2c264158ba3a74e7c | 750 | 0.372 | 0.058666666666666666 |
+| candidate_A_hits_only.csv | d043c471e739d64a1bb93aa380ee7a4116328abda3f86fec8614117352d8174e | 750 | 0.372 | 0.058666666666666666 |
+| candidate_B_selection_aware.csv | 613777ed38d5c0ac75dcccb8f07c70e4d2105ba1204ced8defd8b431ad7ba492 | 750 | 0.372 | 0.058666666666666666 |
 
 
 ## 5. Selection-aware CYP2D6 model
@@ -409,13 +410,16 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 - **L1** (evaluation): All performance figures are cross-validated estimates on the training data. Nothing has been measured on the hidden test labels. The stack AUC changes with the scored population: CYP3A4 0.7836 on all rows vs 0.8443 on confident rows, CYP2D6 0.6749 vs 0.7536. The step from these estimates to the leaderboard is unmeasured until a submission exists.
 - **L2** (evaluation): The official baseline scores 0.3816 (CYP3A4) and 0.1761 (CYP2D6) on the live board, well above its cross-validated score on the same data, so cross-validation under-states leaderboard performance by an amount that depends on the model; the live board scores only part of the test set.
 - **L3** (labels): The label rule was recovered from the data (mismatches: CYP3A4 0, CYP2D6 0). The rule that decides which compounds count as confidently labeled in the official score is not published; the confidence cut-off used here is a proxy and every analysis is repeated at two cut-offs.
-- **L4** (uncertainty): Committee disagreement adds information beyond the decision margin for 0 components on CYP3A4 and 3 on CYP2D6 under the permutation test; where the count is zero the committee is reported as a measured negative result and does not alter predictions.
-- **L5** (calibration): Calibration slopes on held-out folds are 1.1813 (CYP3A4) and -0.0164 (CYP2D6); a slope below one means the stack is over-confident. Probabilities are calibrated to the weighted validation population, not to the unknown scored test population.
+- **L4** (uncertainty): Committee disagreement adds information beyond the decision margin for 1 components on CYP3A4 and 2 on CYP2D6 under the permutation test; where the count is zero the committee is reported as a measured negative result and does not alter predictions.
+- **L5** (calibration): The probabilities the final build publishes (isotonic-calibrated) have calibration slopes of 0.9252 (CYP3A4) and 0.8249 (CYP2D6) on held-out folds. The sigmoid of the regularised blend as it comes out is a ranking score and not a probability (slopes 1.1813 and -0.0164); it is never published as one. Probabilities are calibrated to the weighted validation population, not to the unknown scored test population.
 - **L6** (structure): On the diverse crystal benchmark the model's first-pick pose is 4.1929 A from the crystal pose on average; the structure score depends on a handful of compounds and is noisy. The benchmark ligands come from the PDB, which co-folding models may have seen, so absolute accuracy is optimistic.
-- **L7** (reproducibility): The test suite has 624 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
-- **L8** (repository): The working tree has 57 modified and 292 untracked entries: results in this report come from uncommitted code until the work is committed.
+- **L7** (reproducibility): The test suite has 744 passing and 1 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
+- **L8** (repository): The working tree has 13 modified and 69 untracked entries: results in this report come from uncommitted code until the work is committed.
 - **L9** (population): The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). A selection-aware model gains a large amount of AUC when they are numerous and loses a little when they are rare (see the sensitivity table), and the baseline's public metrics do not identify their share (538 grid points are consistent with them). Only a submission can settle this.
-- **L10** (calibration): The CYP2D6 stack's weighted expected calibration error is 0.3592 against 0.0431 for CYP3A4. Its probabilities are close to a constant, so it ranks and transfers a call rate but does not produce usable probabilities until a post-hoc calibration step exists; any uncertainty-driven decision must wait for it.
+- **L10** (calibration): The CYP2D6 blend as it comes out is close to a constant (weighted expected calibration error 0.3592 against 0.0431 for CYP3A4): it ranks and transfers a call rate but is not a probability. The probabilities that are published pass through an isotonic step fitted on inner out-of-fold scores, which brings the error to 0.0054 (CYP2D6) and 0.0189 (CYP3A4); a monotone step restores calibration and adds no discrimination.
+- **L11** (data): The CYP3A4 reaction-phenotyping and inhibition release of the laboratory that measured the challenge (Octant, same compound library) contains one compound that is also in the blinded test set (OCNT-0493952). Its measurements are excluded from every use of that release and are never read by a model or a validation; the other rows of the release are used only for an independent check of the motif screen and never enter a prediction.
+- **L12** (candidates): Two families of Chemprop candidates were not run to the full design for a reason of compute: the two OpenADMET pretraining weights (MiniMol targets and the Novartis ADMET surrogate; 80 tasks per variant and enzyme at about 37 minutes per task) were not run at all, and CheMeleon runs as a staged design (repeat 0 first, the other repeats only if a rule written beforehand asks for it). A candidate that was screened on 5 folds and not continued, or not run, has no verdict: the report does not call it NOT MET, and the smallest gain that a 5-fold screen can certify is about one and a half times the smallest gain of the 15-fold design (see the design-floor figure). The code and the weight files are in the repository.
+- **L13** (data): The positive rate of the scored test set was recovered from the public leaderboards, which publish accuracy, precision and recall for every prediction file; the three numbers fix the rate (the implied rate agrees across all entries). It is aggregate information about the hidden labels that was available because the boards publish it: it weights the evaluation yardstick (the test prevalence) and sets the call rate (a multiple of the prevalence). No label of any compound and no per-compound information from a board was used, and no submission was made to probe a label. A model without this step would call the positive rate of the training data (about one fifth for both enzymes) instead of about one third (CYP3A4) and one in seventeen (CYP2D6), which costs MCC mostly on CYP2D6.
 
 ## 12. Reproduction, credits and prior art
 

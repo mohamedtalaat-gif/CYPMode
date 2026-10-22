@@ -235,6 +235,38 @@ final_stack_names = {iso: manifest["isoforms"][iso]["stack"] for iso in TDI_ISOF
 n_members_final = {iso: int(manifest["isoforms"][iso]["n_candidates"]) for iso in TDI_ISOFORMS}
 '''
 
+APPLICABILITY = r"""
+# The applicability domain of the final stack (cypmode/challenge/applicability_domain.py, queue job 096): where the model interpolates, measured on the outer folds of the nested validation. Each held-out compound
+# gets its nearest-training similarity (ECFP4 Tanimoto) to the rows its fold was trained on; the held-out compounds are cut into similarity bins, each bin gets an AUC with a 95 percent interval whose bootstrap
+# resamples whole chemical series (Butina clusters, so that series are not counted as independent observations), and each of the 750 blinded compounds is given the tier of the bin it falls in. No model is refitted.
+# The cell reads the two tables the module wrote and counts the tiers of the blinded compounds.
+applicability_compounds = pd.read_csv(ROOT / "data/tdi_track/outputs/final/applicability_domain_compounds.csv")
+applicability_bins = pd.read_csv(ROOT / "data/tdi_track/outputs/final/applicability_domain_bins.csv")
+applicability_rows = []
+for iso in TDI_ISOFORMS:
+    applicability_tiers = applicability_compounds[f"{iso}_domain_tier"].value_counts()
+    applicability_similarity = applicability_compounds[f"{iso}_nearest_training_similarity"]
+    applicability_bin_rows = applicability_bins[(applicability_bins["isoform"] == iso) & (applicability_bins["z0"] == 1.0)].dropna(subset=["auc"])
+    applicability_rows.append({"enzyme": iso, "supported": int(applicability_tiers.get("supported", 0)), "weak": int(applicability_tiers.get("weak", 0)), "unsupported": int(applicability_tiers.get("unsupported", 0)),
+                               "median nearest-training similarity": float(applicability_similarity.median()), "share at or above 0.5": float((applicability_similarity >= 0.5).mean()),
+                               "lowest bin AUC": float(applicability_bin_rows["auc"].min()), "highest bin AUC": float(applicability_bin_rows["auc"].max()),
+                               "lowest bin interval, lower end": float(applicability_bin_rows["auc_low"].min())})
+applicability_table = pd.DataFrame(applicability_rows)
+show_table(applicability_table, floatfmt=".3f")
+n_blinded_compounds = len(applicability_compounds)
+n_supported = {row["enzyme"]: row["supported"] for row in applicability_rows}
+n_weak = {row["enzyme"]: row["weak"] for row in applicability_rows}
+n_unsupported = {row["enzyme"]: row["unsupported"] for row in applicability_rows}
+median_similarity = {row["enzyme"]: row["median nearest-training similarity"] for row in applicability_rows}
+share_above_half = {row["enzyme"]: row["share at or above 0.5"] for row in applicability_rows}
+lowest_auc = {row["enzyme"]: row["lowest bin AUC"] for row in applicability_rows}
+highest_auc = {row["enzyme"]: row["highest bin AUC"] for row in applicability_rows}
+n_bins = {iso: int(len(applicability_bins[(applicability_bins["isoform"] == iso) & (applicability_bins["z0"] == 1.0)])) for iso in TDI_ISOFORMS}
+n_supported_bins = {iso: int((applicability_bins[(applicability_bins["isoform"] == iso) & (applicability_bins["z0"] == 1.0)]["tier"] == "supported").sum()) for iso in TDI_ISOFORMS}
+assert not applicability_table.isna().any().any()
+assert sum(n_supported.values()) + sum(n_weak.values()) + sum(n_unsupported.values()) == 2 * n_blinded_compounds
+"""
+
 CELLS = [
     md("""
 ## 8.4 Turning scores into calls: a smoothed threshold, a share of calls, and a multiple
@@ -317,6 +349,7 @@ The hashes of the {{=len(file_table)}} files match the manifest ({{=all_hashes_m
 *Where this section sits:* this is the number the project can honestly give for its model before the challenge closes. It is an estimate made on the training data, with the nested procedure of Part VI, under the yardstick of 6.4. It is not a forecast of the score on the board. The cell computes, for each enzyme and each confidence cut-off, the AUC and the MCC of the stack on the 15 outer folds, with their spread and the 95 percent interval from the corrected resampled t of 6.5, whose standard error $s\\sqrt{1/J + n_{\\text{test}}/n_{\\text{train}}}$ is wider than the naive one, and then asks whether the stack is better than two simpler alternatives in the same folds: the member that a user would have picked on the inner scores, and the plain LightGBM on the descriptors, the member closest to the organisers' baseline.
 """),
     code(RESULTS8),
+    code(APPLICABILITY),
     md("""
 For CYP3A4 the stack earns an AUC of {{=result_value('CYP3A4', 1.0, 'AUC'):.3f}} at $z_0 = 1.0$ (95 percent interval {{=result_table[(result_table['enzyme'] == 'CYP3A4') & (result_table['z0'] == 1.0) & (result_table['score'] == 'AUC')]['95 % interval'].iloc[0]}}) and {{=result_value('CYP3A4', 1.96, 'AUC'):.3f}} at $z_0 = 1.96$, and an MCC of {{=result_value('CYP3A4', 1.0, 'MCC at the transferred rate'):.3f}} and {{=result_value('CYP3A4', 1.96, 'MCC at the transferred rate'):.3f}} (intervals {{=result_table[(result_table['enzyme'] == 'CYP3A4') & (result_table['z0'] == 1.0) & (result_table['score'] == 'MCC at the transferred rate')]['95 % interval'].iloc[0]}} and {{=result_table[(result_table['enzyme'] == 'CYP3A4') & (result_table['z0'] == 1.96) & (result_table['score'] == 'MCC at the transferred rate')]['95 % interval'].iloc[0]}}). For CYP2D6 the AUC is {{=result_value('CYP2D6', 1.0, 'AUC'):.3f}} and {{=result_value('CYP2D6', 1.96, 'AUC'):.3f}} and the MCC {{=result_value('CYP2D6', 1.0, 'MCC at the transferred rate'):.3f}} and {{=result_value('CYP2D6', 1.96, 'MCC at the transferred rate'):.3f}}, with intervals ({{=result_table[(result_table['enzyme'] == 'CYP2D6') & (result_table['z0'] == 1.0) & (result_table['score'] == 'MCC at the transferred rate')]['95 % interval'].iloc[0]}} for the first) that are as wide as the effect: the standard deviation of the CYP2D6 MCC over the folds is {{=result_value('CYP2D6', 1.0, 'MCC at the transferred rate', 'sd over the folds'):.2f}}, {{=result_value('CYP2D6', 1.0, 'MCC at the transferred rate', 'sd over the folds') / result_value('CYP3A4', 1.0, 'MCC at the transferred rate', 'sd over the folds'):.1f}} times that of CYP3A4. The enzyme remains the hard one of the challenge; the model separates its time-dependent inhibitors from the rest by an AUC of about 0.73 to 0.75, and a call rate of {{=called_final['CYP2D6']:.1%}} of the compounds turns that into an MCC whose interval comes close to zero. The two cut-offs differ in the way 6.4 predicted: the stricter one removes the compounds whose label is a coin flip and every number rises, because the yardstick is cleaner and not because the model is better.
 
@@ -324,6 +357,8 @@ Is the blend better than the simpler things? The second table answers, fold by f
 
 What the number is, and is not. It is the expected quality of the procedure on compounds like the pool, weighted to look like the blinded set and scored where the labels are not coin flips. It is not the board: the baseline of 7.1 earned 0.065 and 0.097 MCC more on the board than the cross-validation said, for reasons that Part VI listed and that this yardstick narrows and does not close. The final stack of the build named in the manifest is `{{=final_stack_names['CYP3A4']}}` for CYP3A4 and `{{=final_stack_names['CYP2D6']}}` for CYP2D6, with {{=n_members_final['CYP3A4']}} and {{=n_members_final['CYP2D6']}} members; if a group of Part IX or X passes its gate, the build says so here, and the numbers above move to those of the new stack. At the time the notebook was built they are the numbers of the default stack evaluated in the cell, which are also the numbers of the build's own report.
 
-*On what actually ran.* `nested_evaluate` with `StackedLogit` and `BestSingle` (`cypmode/challenge/nested.py`), the weights of `confident_weights` and `SimilarityMatcher`, `corrected_resampled_t` and `plan_sizes` (`model_comparison.py`); the report of the build, `final_report.md`, holds the same AUC and MCC.
+**Where the number can be trusted.** An average over the pool is not a promise for every compound: a model is most reliable where it interpolates between compounds it has seen. The final build is therefore accompanied by a measurement of that, `cypmode/challenge/applicability_domain.py` (queue job 096), which refits nothing: it rebuilds the final stack of each enzyme from the cached predictions exactly as the build does, applies it to the held-out rows of every outer fold, gives each held-out compound its nearest-training similarity to the rows its fold was trained on (ECFP4 **Tanimoto similarity**), cuts the held-out compounds into similarity bins and gives each bin an AUC with a 95 percent interval whose bootstrap resamples whole Butina clusters rather than single compounds, because the compounds of one chemical series are not independent observations. The bin that a blinded compound falls in gives it a tier: supported when the lower end of the bin's interval reaches the threshold the module declares, weak when the bin holds enough compounds but a lower end below it, and unsupported when the bin holds too few held-out compounds to be trusted. Of the {{=n_bins['CYP3A4']}} similarity bins at the first confidence cut-off {{=n_supported_bins['CYP3A4']}} are supported for CYP3A4 and {{=n_supported_bins['CYP2D6']}} for CYP2D6; of the {{=n_blinded_compounds}} blinded compounds, {{=n_supported['CYP3A4']}} fall in a supported bin for CYP3A4 and {{=n_supported['CYP2D6']}} for CYP2D6 ({{=n_weak['CYP2D6']}} weak and {{=n_unsupported['CYP2D6']}} unsupported). The median nearest-training similarity of the blinded compounds is {{=median_similarity['CYP3A4']:.2f}} for CYP3A4 and {{=median_similarity['CYP2D6']:.2f}} for CYP2D6, and {{=share_above_half['CYP3A4']:.0%}} and {{=share_above_half['CYP2D6']:.0%}} of them are at a similarity of 0.5 or more. The AUC of a held-out bin at the first cut-off runs from {{=lowest_auc['CYP3A4']:.2f}} to {{=highest_auc['CYP3A4']:.2f}} over the bins of CYP3A4 and from {{=lowest_auc['CYP2D6']:.2f}} to {{=highest_auc['CYP2D6']:.2f}} over those of CYP2D6. The module's own reading, in its docstring, is that absolute cross-validation numbers are not forecasts of the leaderboard and the table is read by its shape across bins; the shape here is that the final CYP3A4 stack is supported on every bin and every blinded compound, and that the final CYP2D6 stack, the weaker ranker, is useful where the nearest training compound is at least moderately similar and is not supported anywhere at the first cut-off.
+
+*On what actually ran.* `nested_evaluate` with `StackedLogit` and `BestSingle` (`cypmode/challenge/nested.py`), the weights of `confident_weights` and `SimilarityMatcher`, `corrected_resampled_t` and `plan_sizes` (`model_comparison.py`); the report of the build, `final_report.md`, holds the same AUC and MCC. The last cell reads `applicability_domain_compounds.csv` and `applicability_domain_bins.csv` from `data/tdi_track/outputs/final/`, written by `cypmode/challenge/applicability_domain.py` in queue job 096.
 """),
 ]

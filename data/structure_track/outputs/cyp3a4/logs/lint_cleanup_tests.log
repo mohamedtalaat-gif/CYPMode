@@ -1,0 +1,96 @@
+..                                                                       [100%]
+2 passed in 2.29s
+..............                                                           [100%]
+14 passed in 2.24s
+....                                                                     [100%]
+4 passed in 1.73s
+....                                                                     [100%]
+=============================== warnings summary ===============================
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[label]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[label]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[shift]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[shift]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[None]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[None]
+  /Volumes/Data/CYPMode/.venv/lib/python3.13/site-packages/sklearn/preprocessing/_data.py:2912: UserWarning: n_quantiles (200) is greater than the total number of samples (70). n_quantiles is set to n_samples.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+4 passed, 6 warnings in 1.77s
+...                                                                      [100%]
+3 passed in 2.31s
+.............                                                            [100%]
+13 passed in 1.31s
+.......                                                                  [100%]
+7 passed in 1.82s
+...                                                                      [100%]
+3 passed in 5.03s
+....                                                                     [100%]
+=============================== warnings summary ===============================
+tests/test_chemberta_features.py::test_compute_chemberta_embeddings_batch_caches_to_disk_and_resumes
+tests/test_chemberta_features.py::test_compute_chemberta_embeddings_batch_caches_to_disk_and_resumes
+tests/test_chemberta_features.py::test_add_chemberta_features_adds_one_fixed_size_array_per_row
+  /Volumes/Data/CYPMode/cypmode/challenge/chemberta_features.py:121: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+    return lookup.loc[smiles_list].reset_index()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+4 passed, 3 warnings in 9.44s
+........................................................................ [  9%]
+........................................................................ [ 19%]
+........................................................................ [ 28%]
+........................................................................ [ 38%]
+........................................................................ [ 48%]
+........................................................................ [ 57%]
+........................................................................ [ 67%]
+.....................................................s.................. [ 77%]
+........................................................................ [ 86%]
+........................................................................ [ 96%]
+..........................                                               [100%]
+=============================== warnings summary ===============================
+tests/test_pharmacophore_fingerprint.py::test_compute_pharmacophore_fingerprints_batch_caches_to_disk_and_resumes
+tests/test_pharmacophore_fingerprint.py::test_compute_pharmacophore_fingerprints_batch_caches_to_disk_and_resumes
+tests/test_pharmacophore_fingerprint.py::test_compute_pharmacophore_fingerprints_batch_works_with_multiple_workers
+tests/test_pharmacophore_fingerprint.py::test_compute_pharmacophore_fingerprints_batch_checkpoints_mid_run
+tests/test_pharmacophore_fingerprint.py::test_add_pharmacophore_fingerprints_adds_one_fixed_size_array_per_row
+  /Volumes/Data/CYPMode/cypmode/challenge/pharmacophore_fingerprint.py:156: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+    return lookup.loc[smiles_list].reset_index()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+745 passed, 1 skipped, 5 warnings in 89.93s (0:01:29)
+..                                                                       [100%]
+2 passed in 2.60s
+..............                                                           [100%]
+14 passed in 2.21s
+....                                                                     [100%]
+4 passed in 1.73s
+....                                                                     [100%]
+=============================== warnings summary ===============================
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[label]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[label]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[shift]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[shift]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[None]
+tests/test_nested_runners_torch.py::test_multitask_predictions_do_not_depend_on_evaluation_or_outer_validation_rows[None]
+  /Volumes/Data/CYPMode/.venv/lib/python3.13/site-packages/sklearn/preprocessing/_data.py:2912: UserWarning: n_quantiles (200) is greater than the total number of samples (70). n_quantiles is set to n_samples.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+4 passed, 6 warnings in 1.73s
+...                                                                      [100%]
+3 passed in 2.36s
+.............                                                            [100%]
+13 passed in 1.26s
+.......                                                                  [100%]
+7 passed in 1.81s
+...                                                                      [100%]
+3 passed in 4.95s
+....                                                                     [100%]
+=============================== warnings summary ===============================
+tests/test_chemberta_features.py::test_compute_chemberta_embeddings_batch_caches_to_disk_and_resumes
+tests/test_chemberta_features.py::test_compute_chemberta_embeddings_batch_caches_to_disk_and_resumes
+tests/test_chemberta_features.py::test_add_chemberta_features_adds_one_fixed_size_array_per_row
+  /Volumes/Data/CYPMode/cypmode/challenge/chemberta_features.py:121: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+    return lookup.loc[smiles_list].reset_index()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+4 passed, 3 warnings in 9.30s

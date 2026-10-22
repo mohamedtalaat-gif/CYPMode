@@ -1,0 +1,61 @@
+cypmode/audit/core.py:116:9: RUF059 Unpacked variable `plan` is never used
+cypmode/audit/docs_state.py:147:9: ISC004 Unparenthesized implicit string concatenation in collection
+cypmode/audit/pre_submission.py:51:12: DTZ006 `datetime.datetime.fromtimestamp()` called without a `tz` argument
+cypmode/audit/pre_submission.py:130:134: DTZ006 `datetime.datetime.fromtimestamp()` called without a `tz` argument
+cypmode/audit/sections.py:121:14: C408 Unnecessary `dict()` call (rewrite as a literal)
+cypmode/audit/sections.py:161:25: PLC3002 Lambda expression called directly. Execute the expression inline instead.
+cypmode/audit/sections.py:300:9: RUF059 Unpacked variable `plan` is never used
+cypmode/challenge/applicability_domain.py:162:14: ISC004 Unparenthesized implicit string concatenation in collection
+cypmode/challenge/applicability_domain.py:181:19: ISC004 Unparenthesized implicit string concatenation in collection
+cypmode/challenge/applicability_domain.py:204:9: LOG015 `info()` call on root logger
+cypmode/challenge/block_holdout.py:77:5: LOG015 `info()` call on root logger
+cypmode/challenge/block_holdout.py:92:9: LOG015 `info()` call on root logger
+cypmode/challenge/chemeleon_speed.py:46:15: DTZ007 Naive datetime constructed using `datetime.datetime.strptime()` without %z
+cypmode/challenge/chemeleon_speed.py:47:49: RUF007 Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
+cypmode/challenge/final_tdi_build.py:296:22: PERF102 When using only the values of a dict use the `values()` method
+cypmode/challenge/final_tdi_build.py:401:40: UP031 Use format specifiers instead of percent format
+cypmode/challenge/nested_runners.py:476:31: PLC3002 Lambda expression called directly. Execute the expression inline instead.
+cypmode/challenge/physics_block.py:180:5: RUF059 Unpacked variable `ch_role` is never used
+cypmode/challenge/population_physics.py:101:42: PIE810 Call `endswith` once with a `tuple`
+cypmode/challenge/submissions_sync.py:100:19: ISC004 Unparenthesized implicit string concatenation in collection
+cypmode/challenge/submissions_sync.py:109:12: FLY002 Consider f-string instead of string join
+cypmode/challenge/why_no_gain.py:182:13: LOG015 `info()` call on root logger
+cypmode/challenge/why_no_gain.py:200:9: LOG015 `info()` call on root logger
+cypmode/challenge/why_no_gain.py:219:14: ISC004 Unparenthesized implicit string concatenation in collection
+cypmode/validation/final_recipe.py:381:19: RUF059 Unpacked variable `mbr` is never used
+cypmode/validation/ost_worker.py:63:12: FURB192 Prefer `min` over `sorted()` to compute the minimum value in a sequence
+cypmode/validation/relax_final.py:68:5: SIM102 Use a single `if` statement instead of nested `if` statements
+cypmode/validation/series.py:76:8: RUF059 Unpacked variable `fe_b` is never used
+docs/figures/gen/architecture.py:115:17: RUF007 Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
+docs/figures/gen/biology.py:94:17: RUF007 Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
+docs/figures/gen/engineering.py:26:12: DTZ007 Naive datetime constructed using `datetime.datetime.strptime()` without %z
+docs/figures/gen/engineering.py:97:14: DTZ007 Naive datetime constructed using `datetime.datetime.strptime()` without %z
+docs/figures/gen/exploration.py:218:5: F841 Local variable `frame` is assigned to but never used
+docs/figures/gen/kinetics.py:79:16: RUF059 Unpacked variable `dead` is never used
+docs/figures/gen/ml_concepts.py:49:11: RUF059 Unpacked variable `x` is never used
+docs/figures/gen/ml_concepts.py:98:5: RUF059 Unpacked variable `x` is never used
+docs/figures/gen/ml_concepts.py:98:8: RUF059 Unpacked variable `y` is never used
+docs/figures/gen/ml_concepts.py:112:9: RUF059 Unpacked variable `prediction` is never used
+docs/figures/gen/ml_concepts.py:134:9: RUF059 Unpacked variable `prediction` is never used
+docs/figures/gen/pocket.py:91:31: RUF059 Unpacked variable `hydrophobic` is never used
+docs/figures/gen/pymol_scene.py:116:18: PLW1510 `subprocess.run` without explicit `check` argument
+docs/figures/gen/structure_concepts.py:53:5: F841 Local variable `expected` is assigned to but never used
+docs/figures/gen/structure_concepts.py:138:22: RUF007 Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
+docs/figures/gen/structure_concepts.py:161:5: F841 Local variable `outcomes` is assigned to but never used
+docs/figures/gen/structure_concepts.py:162:21: RUF059 Unpacked variable `bonds` is never used
+docs/figures/gen/structure_concepts.py:208:19: RUF059 Unpacked variable `weights` is never used
+docs/video/anime/chrome.py:25:9: PYI034 `__enter__` methods in classes like `Chrome` usually return `self` at runtime
+docs/video/characters/expressions.py:117:14: FURB192 Prefer `min` over `sorted()` to compute the minimum value in a sequence
+docs/video/characters/make_expressions.py:22:18: FURB192 Prefer `min` over `sorted()` to compute the minimum value in a sequence
+docs/video/voices.py:60:5: F841 Local variable `gate` is assigned to but never used
+tests/test_ei_sampling.py:7:5: F841 Local variable `rng` is assigned to but never used
+tests/test_ei_sampling.py:32:5: F841 Local variable `rmsd` is assigned to but never used
+tests/test_mmp_transfer.py:10:11: RUF059 Unpacked variable `t` is never used
+tests/test_mmp_transfer.py:43:48: PIE810 Call `endswith` once with a `tuple`
+tests/test_notebook_builder.py:81:5: F841 Local variable `named` is assigned to but never used
+tests/test_pair_transfer.py:46:14: RUF059 Unpacked variable `knn_sim` is never used
+tests/test_pose_awareness.py:32:13: RUF015 Prefer `next(...)` over single element slice
+tests/test_relax_final.py:56:16: SIM115 Use a context manager for opening files
+tests/test_video.py:87:79: RUF007 Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
+Found 59 errors.
+No fixes available (44 hidden fixes can be enabled with the `--unsafe-fixes` option).

@@ -1,0 +1,68 @@
+W1017 23:30:39.992000 54425 .venv-voice/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Volumes/Data/CYPMode/.venv-voice/lib/python3.12/site-packages/torch/nn/modules/rnn.py:1011: UserWarning: dropout option adds dropout after all but last recurrent layer, so non-zero dropout expects num_layers greater than 1, but got dropout=0.2 and num_layers=1
+  super().__init__("LSTM", *args, **kwargs)
+/Volumes/Data/CYPMode/.venv-voice/lib/python3.12/site-packages/torch/nn/utils/weight_norm.py:145: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/Volumes/Data/CYPMode/.venv-voice/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Narrator   due    3.15 ->    3.15-   5.60 (scene ends 30.00, speed 1.16) Meet Cap, a drug molecule.
+Narrator   due    8.65 ->    8.65-  13.78 (scene ends 30.00, speed 1.16) CYP3A4 is a liver enzyme that clears many medicines from
+Narrator   due   12.95 ->   14.08-  16.78 (scene ends 30.00, speed 1.16) Will Cap switch it off, and keep it off?
+Narrator   due   18.35 ->   18.35-  23.30 (scene ends 30.00, speed 1.16) CYPMode answers this for two real tasks of the OpenADMET
+Narrator   due   22.55 ->   23.60-  29.20 (scene ends 30.00, speed 1.16) 750 hidden molecules to classify, and 20 ligands to plac
+Kai        due   31.50 ->   31.50-  37.85 (scene ends 68.00, speed 1.08) I run the assay. Every compound is measured twice: at on
+Kai        due   32.50 ->   38.15-  40.50 (scene ends 68.00, speed 1.08) The shift between the two is the label.
+Kai        due   44.75 ->   44.75-  47.10 (scene ends 68.00, speed 1.08) Kai measures every compound twice.
+Kai        due   48.75 ->   48.75-  52.77 (scene ends 68.00, speed 1.08) Cap's two measurements agree: the compound is not time-d
+Kai        due   54.75 ->   54.75-  58.42 (scene ends 68.00, speed 1.08) Real data: every point is one compound of the challenge.
+Kai        due   61.15 ->   61.15-  66.38 (scene ends 68.00, speed 1.08) Above the line, the head start made the compound clearly
+Scout      due   69.50 ->   69.50-  75.72 (scene ends 106.00, speed 1.08) I go through every file the organisers released and comp
+Scout      due   70.50 ->   76.02-  80.22 (scene ends 106.00, speed 1.08) A compound of the test set is taken out before anything 
+Scout      due   82.75 ->   82.75-  86.22 (scene ends 106.00, speed 1.08) Scout goes through every file the organisers released.
+Scout      due   87.75 ->   87.75-  92.22 (scene ends 106.00, speed 1.08) Only names are compared: the measurement of a test compo
+Scout      due   93.75 ->   93.75-  98.53 (scene ends 106.00, speed 1.08) Three of the six files hold test compounds, five in all.
+Scout      due   99.75 ->   99.75- 103.60 (scene ends 106.00, speed 1.08) The organisers confirmed the overlap of the Octant relea
+Bits       due  107.50 ->  107.50- 114.58 (scene ends 144.00, speed 1.08) I turn molecules into numbers a model can read: which sm
+Bits       due  108.50 ->  114.88- 118.70 (scene ends 144.00, speed 1.08) 12,412 numbers for every compound.
+Bits       due  120.75 ->  120.75- 123.72 (scene ends 144.00, speed 1.08) Bits turns a real molecule into numbers.
+Bits       due  126.15 ->  126.15- 130.45 (scene ends 144.00, speed 1.08) A fingerprint records which small groups of atoms the mo
+Bits       due  132.15 ->  132.15- 135.78 (scene ends 144.00, speed 1.08) Descriptors record its size, its shape and how polar it 
+Bits       due  138.15 ->  138.15- 142.58 (scene ends 144.00, speed 1.08) Together: 12,412 numbers describe every compound.
+Stacker    due  145.50 ->  145.50- 152.50 (scene ends 182.00, speed 1.08) I train 23 different models. Each votes on whether a com
+Stacker    due  146.50 ->  152.80- 158.35 (scene ends 182.00, speed 1.08) Then a logistic stack learns whom to trust and blends th
+Stacker    due  158.75 ->  158.75- 162.07 (scene ends 182.00, speed 1.08) Stacker's 23 models each cast a vote.
+Stacker    due  166.15 ->  166.15- 169.08 (scene ends 182.00, speed 1.08) A logistic stack learns whom to trust.
+Stacker    due  172.15 ->  172.15- 175.97 (scene ends 182.00, speed 1.08) Its ranking is checked on folds that no choice has seen.
+Stacker    due  177.75 ->  177.75- 181.70 (scene ends 182.00, speed 1.14) One score per compound: the highest are called positive.
+Gatekeeper due  183.50 ->  183.50- 190.25 (scene ends 242.00, speed 1.08) Before an experiment runs, I write down the rule it must
+Gatekeeper due  184.50 ->  190.55- 195.00 (scene ends 242.00, speed 1.08) Every idea is judged alone and inside the final blend.
+Gatekeeper due  196.55 ->  196.55- 200.60 (scene ends 242.00, speed 1.08) Gatekeeper fixes the rule before the result exists.
+Gatekeeper due  200.35 ->  200.90- 204.45 (scene ends 242.00, speed 1.08) Every idea the project tried is in the ledger.
+Gatekeeper due  205.95 ->  205.95- 210.68 (scene ends 242.00, speed 1.08) Almost all of them ended "not met": the data did not sup
+Quanta     due  213.50 ->  213.50- 220.57 (scene ends 242.00, speed 1.14) I computed orbitals and reactive sites with GFN2-xTB, at
+Quanta     due  226.75 ->  226.75- 231.68 (scene ends 242.00, speed 1.14) Quanta computed physics for every compound with GFN2-xTB
+Quanta     due  231.55 ->  231.98- 236.73 (scene ends 242.00, speed 1.14) Some columns carry signal alone, but no physics idea pas
+Quanta     due  235.95 ->  237.03- 240.63 (scene ends 242.00, speed 1.14) Beautiful physics: honestly reported as not used.
+Foundry    due  243.50 ->  243.50- 249.90 (scene ends 282.00, speed 1.08) I start from models pretrained on millions of molecules 
+Foundry    due  244.50 ->  250.20- 253.60 (scene ends 282.00, speed 1.08) Each one is added to the stack and judged by the same ru
+Foundry    due  256.75 ->  256.75- 260.82 (scene ends 282.00, speed 1.08) Foundry starts from models pretrained on millions of mol
+Foundry    due  261.75 ->  261.75- 265.15 (scene ends 282.00, speed 1.08) Each one is added to the stack and judged by the same ru
+Foundry    due  267.75 ->  267.75- 270.82 (scene ends 282.00, speed 1.08) 7 of the 7 judged so far did not pass.
+Foundry    due  273.75 ->  273.75- 277.73 (scene ends 282.00, speed 1.08) A model that adds nothing to the blend is reported as no
+Dock       due  283.50 ->  283.50- 290.45 (scene ends 334.00, speed 1.08) I fold each ligand into the enzyme with Boltz-2, restrai
+Dock       due  284.50 ->  290.75- 293.82 (scene ends 334.00, speed 1.08) Two co-folding models work with me.
+Dock       due  296.75 ->  296.75- 300.60 (scene ends 334.00, speed 1.08) Dock folds the molecule into the enzyme with Boltz-2.
+Dock       due  304.15 ->  304.15- 309.45 (scene ends 334.00, speed 1.08) Some molecules bind the heme iron through a nitrogen: a 
+Dock       due  312.15 ->  312.15- 317.17 (scene ends 334.00, speed 1.08) For some ligands the nitrogen is placed far from the iro
+Dock       due  318.75 ->  318.75- 323.05 (scene ends 334.00, speed 1.08) On the crystal benchmark the restraint passed its pre-de
+Dock       due  324.15 ->  324.15- 328.40 (scene ends 334.00, speed 1.08) Every pose is checked with PoseBusters before it is hand
+Auditor    due  335.50 ->  335.50- 339.90 (scene ends 366.00, speed 1.08) I run the whole project twice and compare the two report
+Auditor    due  336.50 ->  340.20- 344.55 (scene ends 366.00, speed 1.08) If one byte differs, the work is not reproducible and I 
+Auditor    due  348.75 ->  348.75- 351.57 (scene ends 366.00, speed 1.08) The Auditor runs everything twice.
+Auditor    due  354.75 ->  354.75- 358.20 (scene ends 366.00, speed 1.08) The two audit reports are identical, byte for byte.
+Auditor    due  359.95 ->  359.95- 363.70 (scene ends 366.00, speed 1.08) Tests, queue jobs and the final zip are all accounted fo
+Narrator   due  368.65 ->  368.65- 373.30 (scene ends 394.00, speed 1.16) The results, estimated on the training data with nested 
+Narrator   due  374.55 ->  374.55- 379.57 (scene ends 394.00, speed 1.16) Nine specialists, one molecule, and every number read fr
+Narrator   due  380.55 ->  380.55- 384.47 (scene ends 394.00, speed 1.16) The challenge closes on 3 November 2026.
+59 clips, 92 speech intervals, track 385 s; 0 clips run past the end of their scene

@@ -82,6 +82,8 @@ The determinism section of the audit has {{=n_determinism_checks}} lines and {{=
 
 *Where determinism could not be had.* One of the experiments of Part IX asked for the strongest form of it, and the machine could not give it. The speed test of the CheMeleon fine-tuning (9.10) trains with deterministic algorithms required, which makes the library refuse any operation that has no deterministic implementation; on the Apple GPU the operation `{{=gpu_operation}}` has none, and the run stopped at once. No GPU time was measured. The decision that followed was about cost on the processor, recorded in the checklist, and not a claim about the method; the log is the evidence that the stop was about the operation and not about speed.
 
+**The record of the push.** A number is reproducible only if the repository that reaches a reader is the one the author had. `scripts/mirror_check.sh` checks that after a push: it fetches the remote branch and fails when the working tree differs from HEAD in any way (a modified, an untracked or a missing file), or when `origin/<branch>` is not at HEAD, and it prints the files that stay local on purpose, those listed in `.gitignore`. It is the other end of the chain that the pinned environments and the fixed seeds begin: the numbers can be produced again from the files, and the files are the ones that were pushed. The script is not run by the notebook, which is built before the push; its check is described here from the script itself.
+
 *On what actually ran.* The first cell is a toy made for the lesson. The second reads the checklist, the audit report and the log of the speed test.
 """
 
@@ -201,6 +203,127 @@ The summary above is the line a developer reads. The suite is the cheapest of th
 *On what actually ran.* The first cell counts the test functions by reading the files with Python's parser, reads the ignore list from `pyproject.toml` and the steps from the workflow file. The second cell runs `tests/test_constants.py` as a child process. The workflow itself runs on the hosting service, not in the notebook.
 """
 
+TESTS_TABLE = """
+The table below names every file of the suite and gives a line on what each checks, taken from the file's own docstring or from the names of the tests it defines. It is the complete list and not a sample: a reader can find any file of the suite here without running the builder, and the builder's coverage check keeps the list in step with the files, failing the build when a file of the tests is named nowhere (Appendix D).
+
+| test file | what it checks |
+| --- | --- |
+| `test_alert_context.py` | the alert–lipophilicity interaction block: a molecule without an alert keeps its plain descriptors and gains no interaction feature, a blocking fluorine counts only when it sits next to the alert, and the block stacks one row per molecule |
+| `test_amines.py` | the trialkylamine screen: the known TDI drugs match, ketoconazole's N-aryl piperazine and non-amine and delocalised nitrogens do not, and an unparseable or empty SMILES raises |
+| `test_app.py` | the pure logic of the Streamlit app — validating SMILES, screening compounds, loading the real blinded test set, merging challenge results — and that every tab renders without an exception |
+| `test_applicability_domain.py` | the arithmetic of the applicability domain (the bin edges, the interval of a bin, the tier that follows from it) and of the diagnostics of 9.12, on inputs made for the purpose |
+| `test_artifacts.py` | the provenance record of the card, poster, film and figures: an untouched artifact built from the current numbers passes, one built before a number changed is stale, one edited after its build fails, and a missing record is reported as a failure |
+| `test_atomjepa_embeddings.py` | the Atom-JEPA block reads its cache without importing torch: label-free principal components of all cached compounds, rows in the order asked for, and a missing embedding replaced by the mean |
+| `test_atomjepa_head.py` | the attention readout on the cached per-atom features: it trains, finds a planted signal wherever it sits, and reports a missing cache instead of a silent zero (needs torch, so it is skipped in the lightweight environment) |
+| `test_aux_blocks.py` | the predicted blocks: one finite score per evaluation row, one column per predicted reading, and never a reading or a target of an evaluation or held-out row reaching its own prediction |
+| `test_basic_centre.py` | the basic-centre block: one value per column for every kind of molecule, a tertiary amine near a ring counted as a centre, the cation classes told apart, no centre for nitro or neutral molecules, and the cache keyed by canonical SMILES |
+| `test_batch.py` | the batch runner: a checkpoint after each compound, a failure recorded without stopping the batch, a restart skipping what is done, and both a successful and a failed result flattened to a table |
+| `test_bindingdb_auxiliary.py` | the BindingDB auxiliary data: censoring prefixes, unparseable values and extended SMILES dropped, repeated measurements collapsed to the median, and an exact overlap with the challenge removed |
+| `test_bisy_rmsd.py` | BiSyRMSD on a structure pair: zero for identical structures, invariant to a rigid transform, sensitive to a ligand-only difference, and the binding-site residues found from the real pocket |
+| `test_build_input.py` | the Boltz-2 input builder: the coordinating cysteine found where the sequence puts it (absence and ambiguity raise), and the YAML matching the hand-written reference while rejecting a wrong residue or an out-of-range value |
+| `test_build_summary.py` | the structure summary: the ligand SMILES read from the real input file, and compound discovery run without a local Boltz run |
+| `test_card.py` | the README card: the iron–nitrogen distance from the ligand's own coordinates, the donor nitrogen marked and the one nearest the iron in the submitted pose circled, and the README pointing to the card and the film |
+| `test_chemberta_features.py` | ChemBERTa embeddings: a real finite vector that tells two molecules apart, the batch cache written to disk and resumed, and one fixed-size array per row added as a block |
+| `test_chemberta_significance.py` | loading of the ChemBERTa cache: a missing cache or a missing compound raises rather than passing silently, and the join to the feature table is correct |
+| `test_chemeleon_embedding_tabular.py` | TabICL and TabPFN on the frozen CheMeleon embedding are registered like the other cached candidates, wait for their inputs instead of failing, and are waited for by the long Chemprop family |
+| `test_chemeleon_stage.py` | the stage rule of the fine-tuned CheMeleon: stage 2 runs only above the gain floor in enough folds, and a missing or unreadable stage-1 result stops the design |
+| `test_chemprop_variants.py` | the Chemprop command runs the same two variants as before when no variant is named, and the foundation-weight variants are reached only by name (jobs 224 and 225) |
+| `test_combined_features.py` | the combined-feature cross-validation: every compound covered once and the expected auxiliary columns required |
+| `test_committee_uncertainty.py` | the committee's uncertainty: vote entropy zero for unanimity and maximal for a split, the spread as the per-row standard deviation, and the verdict that separates new information from redundancy and from noise |
+| `test_conformers.py` | conformer pools: the pocket distance ignoring rigid motion, one record per entry, poorly resolved structures and close analogs of the compound excluded, and the conformers starting at the medoid and spreading out |
+| `test_constants.py` | the sequence constants: the amino-acid strings of the published length, the known residues at the published numbering, and a coordination cutoff just above the dative-bond range |
+| `test_cryoem_templates.py` | the cryo-EM templates: pockets becoming arrays, one row per run, and an entry whose ligand is the compound never serving as its own template |
+| `test_diversity_pilot.py` | the diversity pilot: one row per run with the options each lever needs, names mapping back to ligand and lever, and a verdict that needs a wider pool and a closer best pose for enough ligands |
+| `test_docs_state.py` | the generated blocks of the README and the specification: a block rewritten between its markers and nothing else changed, a missing marker pair reported as an error, and every marker the generator writes present |
+| `test_ei_sampling.py` | the expected-improvement sampling: every policy spending the same budget and picking one per ligand, extra samples given to the pool that disagrees, and the result deterministic for a seed |
+| `test_external_continuous.py` | the continuous external block: how the panel's rows become targets, that challenge compounds never reach the training table, and the Tox21 table flooring inactives, averaging replicates and removing luciferase inhibitors |
+| `test_figures.py` | the figure registry: an identifier registered once, a caption computed from the data, the files attributed to their figure, and the label rule and the memory formula drawn in a figure recomputed from their closed forms |
+| `test_final_assembly.py` | the CYP3A4 assembly: one row per test compound, real booleans from a valid threshold, the call matching the reported threshold, and no training label reaching a prediction |
+| `test_final_assembly_cyp2d6.py` | the CYP2D6 assembly: one row per test compound, booleans matching the threshold, and missing CYP3A4 labels tolerated through masking |
+| `test_final_recipe.py` | the structure recipe: the gate lines of every log read, the recipe following the verdicts, the sample estimate, the run groups, and the choice of a valid consensus pose |
+| `test_final_tdi_build.py` | the final TDI build: gate lines parsed per group and isoform, every group naming real candidates and a log pattern, the written files validated, reloaded and hashed, the leakage audit, and the portal's rules |
+| `test_frozen_embeddings.py` | frozen-embedding blocks: the principal components of the requested width and order, a missing cache or compound reported as an error, and the reduction label-free and deterministic |
+| `test_grouping.py` | the grouping: Butina puts near duplicates together and distant compounds apart, a stricter cutoff gives more and smaller clusters, and scaffolds share an identifier across substituents |
+| `test_hedged_blend.py` | the hedged blend: a subset stack using only its columns, the blend as a rank average of its two parts, and the minimax rule adopting it only when its worst case is at least as good |
+| `test_heme_frame_prior.py` | the heme-frame prior: the axis as the heme normal, the descriptor reading height and radius and ignoring rigid motion and the side of the porphyrin, and the prior preferring typical poses and excluding the scored compound |
+| `test_knn_features.py` | the read-across features: a clean majority vote recovered, an empty reference pool handled, the fold-internal construction excluding a training row's own label and giving a validation row the full training pool, and every compound covered once |
+| `test_label_confidence.py` | label confidence: the z of a shift against the threshold, the assay floor clipping the direct value, a label on the threshold carrying no confidence, and the training weights that zero the uncertain rows |
+| `test_lddt_to_crystal.py` | the distance to a crystal pose: one for an identical pose, low for a pose moved away from the pocket, symmetric atoms mapped to their best permutation, the best crystal copy counted, and nothing compared without a reference |
+| `test_library_blocks.py` | the library blocks: the compound number from its trailing digits, the panel block as the range screened on the other isoforms whatever the row order, and no panel when nothing was measured outside CYP3A4 |
+| `test_mmp_transfer.py` | matched molecular pairs: the shared constant part and the direction, the features using training labels only and never the query's own row, a compound without partners, and the shrunk and signed transformation delta |
+| `test_model_comparison.py` | the corrected resampled t: the Nadeau–Bengio variance, the correction making the test conservative, the degenerate inputs, and the demonstration that a naive t over repeated cross-validation manufactures significance between identical models |
+| `test_motifs.py` | the motif screen: the known azole TDI drugs matched, and the mechanism classified |
+| `test_multiplicity.py` | the Holm adjustment against the textbook step-down, and the parsing of the logs of the added tests |
+| `test_multitask.py` | the shared-trunk network: one logit per isoform, the masked loss ignoring unlabelled examples, training producing finite predictions, cross-validation covering both isoforms, and the threshold that maximises the MCC |
+| `test_multitask_no_standardization_leak.py` | a regression guard for the standardisation leak found in an audit: the detector that flags statistics computed over the full data, and each cross-validation scaling a fold with its own training statistics |
+| `test_nested.py` | the nested plan: inner folds entirely inside the outer training rows and partitioning them exactly once, the outer folds partitioning the pool once per repeat, stratified and reproducible splits, a plan identity that changes with any ingredient, and deployment tasks that never leak external rows |
+| `test_nested_runners.py` | the nested runners: one finite score per evaluation row, no candidate reading the labels of the rows it scores, deterministic predictions per task, the cache filled and resumed, and an end-to-end evaluation on real runner output |
+| `test_nested_runners_torch.py` | the leakage guards of the torch-side nested runners: a task trains only on its own rows plus compounds outside the pool, and the predictions do not depend on evaluation or outer-validation rows |
+| `test_nonneg_stack.py` | the non-negative blend: every coefficient at least zero, the fit matching the unconstrained one when that is already non-negative, the penalty switching candidates off, and the blend ranking like the logistic one |
+| `test_notebook_builder.py` | the builder itself: cells in a shared namespace with their outputs recorded, a failing cell reported, the glossary rule, numbers in markdown filled from the namespace, and the contents following the headings |
+| `test_octant_benchmark.py` | the Octant benchmark: the motif columns added, the potency compared by motif, a missing pIC50 excluded, and the inhibition data read from the checked-in cache without downloading again |
+| `test_official_extra.py` | the organisers' extra files: the batch identifier resolved to its compound, the guard removing only blinded rows, the arrays aligned to the requested names, no blinded compound holding a reading in any official file, the audit passing on the downloaded files, and the PXR loader dropping blinded compounds |
+| `test_official_posebusters.py` | the official PoseBusters call: bond orders from the template, a mismatched template refused, a pose safe only when it passes and clears the margin, the safe poses preferred, and the scorer's exact call passing a submitted pose with all its checks |
+| `test_oof_bridge.py` | the out-of-fold bridge: the real inhibition file loaded, every compound predicted by a model that never saw it, the final model fitted and applied round-trip, inverse-variance weighting, and no information from a compound's own label |
+| `test_openfold3.py` | the OpenFold3 runner: the Boltz input read with its ligand and not the heme, the same chain layout, the model paths in sample order, the ranking scores read, and a prediction that refuses to overlap another |
+| `test_openfold3_lowmem.py` | the low-memory chunking: it matches the original chunking and the unchunked layer, and the broadcast bias is free for one sample and a full copy for more |
+| `test_ost_official.py` | the OpenStructure scoring: the poses already scored read by column name even when the table is empty, and the restraint effect read with each measure |
+| `test_ost_pool_gates.py` | the OpenStructure pool gates: the verdicts read from the gate lines with the last line winning, the tables getting the OpenStructure RMSD, the choice of poses to score, and the capture of what a gate prints |
+| `test_pair_transfer.py` | the pair model: the neighbour table without the compound itself, the pair-matrix layout, series SAR learned and better than plain neighbour voting, and no evaluation label reaching its own prediction |
+| `test_panel.py` | the cytochrome panel: its shape, the mechanism columns, an unknown isoform raising, and the summary |
+| `test_pharmacophore_fingerprint.py` | the pharmacophore fingerprint: a real three-dimensional conformer, a sparse binary vector, an all-zero vector for an unembeddable SMILES, two molecules told apart, and the batch cache written and resumed |
+| `test_physics_block.py` | the GFN2-xTB part of the physics block: a complete feature vector, the chemistry of the hydrogen abstraction, ionisation potentials and proton affinities in the expected order, the Fukui function on an amine, and a resumable extraction |
+| `test_physics_sites.py` | the bookkeeping of the physics block that needs no quantum calculation: the carbon–hydrogen roles, the binder roles, the protonated site at the right distance, and the pharmacophore geometry |
+| `test_physics_tierb.py` | the GFN2-xTB part of physics tier B: the relaxation lowering the abstraction energy while keeping the site order, complete and deterministic features, a failure giving a NaN row, and a resumable extraction |
+| `test_physics_tierb_pure.py` | the pure bookkeeping of physics tier B: Boltzmann weights summing to one, the mobile region, the top sites by vertical energy, a loader refusing a missing cache, and unique feature names |
+| `test_pipeline.py` | the Boltz-2 pipeline with the subprocess mocked: the correct YAML written, the output streamed, the failure paths carrying Boltz's own output, and the affinity flag passed through |
+| `test_pocket_geometry.py` | pocket geometry: the ligand burial matching a known deeply buried compound, the pocket volume positive, and neither function mutating the input structure |
+| `test_pose_awareness.py` | the pose-awareness terms: the substrate-window penalty, packing and clash contacts, the pharmacophore terms for Type II ligands, the within-pool ranking, and the gate needing three ligands |
+| `test_pose_comparison.py` | pose comparison: an RMSD of zero for an identical pose, invariance to a rigid translation, sensitivity to a real conformational difference, and agreement with the direct call |
+| `test_pose_consensus.py` | the engine consensus: OpenFold3 playing only where Boltz-2 has nothing or fails PoseBusters, the PoseBusters gate outranking agreement, and a tie going to Boltz-2 |
+| `test_pose_pools_cross_engine.py` | the cross-engine pose pools: the symmetry permutations of a tert-butyl group with the identity first, a swap of equivalent atoms costing nothing, the atoms reordered to the template, and a pool mixing two atom namings compared through the SMILES |
+| `test_pose_rescoring.py` | pose rescoring: the overlap one for identical point sets and symmetric, falling as a pose is translated away, penalising a size mismatch, invariant to atom order, and an unparseable SMILES giving nothing |
+| `test_pose_rescoring_validation.py` | the rescoring validation: the RMSD as the root mean square of per-atom displacements, decoys as rigid motions within the shift bound covering near-native and clearly wrong poses, one copy per compound, and the crystal pose ranked above the decoys |
+| `test_pose_selection.py` | pose selection: identical complexes scoring one, atoms missing from either complex ignored, the expected LDDT favouring the pose most of the pool agrees with, and a single-pose pool returned as it is |
+| `test_pose_validity.py` | pose validity: a known good structure passing, the input not mutated, a bond-length check reported, and the first valid model chosen or none returned |
+| `test_pubchem_auxiliary.py` | the PubChem auxiliary data: replicate rows collapsed instead of multiplied, one row per compound after the pivot, a real single-panel schema parsed, and an exact overlap including a salt form removed |
+| `test_public_readiness.py` | the readiness scan: private paths, credentials and foreign e-mail addresses found, clean text giving no finding, and copied runs detected by their shingles |
+| `test_quantum_pharmacophore.py` | the quantum-pharmacophore features: a real three-dimensional conformer, electronic-structure data from GFN2-xTB, finite and sane values for ethanol, two molecules told apart, and a NaN row for an unembeddable SMILES |
+| `test_queue_lib.py` | the queue helpers: the cheap jobs do not wait for the long family and the final chain does, and the requeue does not wait for the jobs it re-queues |
+| `test_recompute_paired_summaries.py` | the recomputation of the paired summaries: one paired table per raw table, written without refitting |
+| `test_reference_ligands.py` | the reference ligands: an active-site ligand extracted with its coordinates, iron and pocket residues, a peripheral ligand refused, fragments skipped, and a structure without a heme yielding nothing |
+| `test_relax.py` | the relaxation module's file handling and the arithmetic of its gate (the force-field part needs the conda environment of openmm and is exercised by a queue job) |
+| `test_relax_final.py` | the relax rule at the end: a relaxed pose adopted only when every criterion holds, the zip taking the adopted poses, a second run giving the same zip, an unexpected zip never overwritten, and nothing used when the gate is not met |
+| `test_release_after_deadline.py` | the hold-back: the HELD BACK block removed and everything else left, the commented film section switched on, and nothing that names blinded results would be pushed |
+| `test_reliability.py` | the reliability score: zero ensemble disagreement for a deterministic signal, the Tanimoto out-of-distribution distance, and a one-class SVM score higher for a clear outlier |
+| `test_replicate_verdict.py` | the replicate rule: MET only with significance in the ten-fold design and the same sign in the five-fold, and a missing log never a pass |
+| `test_restraint_expansion.py` | the restraint expansion: its plan and decision rules registered, eligibility by donor distance, size and resolution, benchmark and multi-fragment ligands excluded, one row per ligand, and the test confirming a gain and detecting a loss |
+| `test_selection_validation.py` | the selection validation: minimum Bayes risk picking the consensus pose, the paired gate requiring consistent improvement, the picked pose scored by its true RMSD, and the engine gate needing different errors |
+| `test_series.py` | the series benchmark: the common core of two analogs, the rigid rotation, the combined pick, pairs of distinct compounds above a similarity threshold, and the official pairs symmetric and free |
+| `test_softmax_selector.py` | the softmax blend: the temperature running from the best model to the equal committee, exploiting with one informative candidate and exploring with equally informative ones, and a fixed temperature as a selector of its own |
+| `test_split_validity.py` | the similarity summary of a split: high when the apply set equals the training set, low for distant compounds, and the fraction above a threshold reported correctly |
+| `test_stacking_significance.py` | the stacking significance: the repeated cross-validation comparison covering every repeat and fold with and without auxiliary features, the paired summary detecting a real difference, and the corrected variance with the Holm adjustment |
+| `test_structure_benchmark.py` | the structure benchmark: the drug-likeness and quality criteria applied with the best copy kept, and a diverse pick that is deterministic and never returns the seed or a duplicate |
+| `test_structure_benchmark_report.py` | the benchmark report: every rule reporting the true RMSD of the pose it would submit, a rule needing an engine the compound never ran on left out rather than zero-filled, the summary counting only what a rule could score, and the variants compared across suffixes and budgets |
+| `test_structure_gates.py` | the structure gates: the restraint gate needing a lower first-pick RMSD and not worse validity, and the pilot gate needing both wider pools and a closer best pose |
+| `test_structure_standardization.py` | structure standardisation: a salt form matching its free base, the plain canonical SMILES that would have missed the match, and no match for an unparseable SMILES |
+| `test_structure_submission.py` | the structure submission: the CIF converted to PDB with the ligand residue renamed and the source not mutated, exactly twenty PDB files and a zip, no ligand residue left in an entry, and the same bytes when rebuilt |
+| `test_structures.py` | the structure parsing: a molecule built from a direct atom correspondence when the order matches and refused when it does not, the ketoconazole coordinates summarised, and the motif distance ignoring a closer non-motif nitrogen |
+| `test_submission.py` | the submission file: the real blinded test set loaded, the columns and their order assembled, a length mismatch rejected, and the validator accepting a correct file and rejecting a wrong row count or a missing column |
+| `test_submissions_sync.py` | the submissions record: the TDI README naming its file and its hash and saying that nothing was uploaded, a failed check shown instead of hidden, the structure README listing every member, stale files moved aside and never deleted, and the differing calls counted |
+| `test_tabpfn_registration.py` | TabPFN registered like TabICL as a cached candidate group, and its jobs deferring until the licence acceptance exists instead of failing |
+| `test_tdi_ablation.py` | the M0 to M3 staircase: the feature vector growing with each tier, the no-amine set never containing the amine flag, the ablation over four models and both isoforms, and the paired folds |
+| `test_tdi_baseline.py` | the challenge's own baseline reproduced: the real training file loaded, metrics per isoform, the summary, and a fixed seed that is reproducible and covers every compound once |
+| `test_tdi_reference.py` | the reference TDI drugs: six named drugs loaded, the challenge threshold applied, the motif screen missing the non-azole inhibitors, and structural coordination filling only the known two |
+| `test_tdi_targets.py` | the label rule: the shift against the floor-clipped direct value, the two formulations of the threshold agreeing, missing values kept missing, the populations tagged without mixing imputed and measured shifts, and the single threshold reproducing every given label |
+| `test_threshold_tuning.py` | threshold tuning: the MCC-maximising threshold, the inner out-of-fold threshold as a training-only property, the cross-validation covering every labelled compound once, and the confusion arithmetic |
+| `test_tier3_features.py` | the Tier 3 structural features: the real schema parsed, uncovered rows left as real missing rather than zero, and the comparison scored only on the covered validation rows |
+| `test_tier3_selection.py` | the budgeted selection: the motif flag added, the uncertainty threshold as a training-fold property, the combination of motif and uncertainty, the validation labels never touching the policy, and exactly the budget returned |
+| `test_validation_matching.py` | the validation matching: the Tanimoto matrix against its definition, the nearest neighbour ignoring the row itself, similarity weights reshaping the validation set to the test set, prior weights moving the positive rate, and the weighted MCC |
+| `test_video.py` | the film: the facts reaching the page as valid JavaScript, the gates on screen excluding the exploratory rescorings, a refusal to say the audit reproduced when it did not, the scenes covering the film without gaps, and a full-HD frame |
+| `test_xiso_transfer.py` | the cross-isoform transfer block: one finite score per evaluation row, other-isoform measurements of evaluation and held-out rows never read, a training compound never predicted by a model that saw its own measurement, and the correlation table |
+"""
+
 CELLS = [
     md("""
 # Part XII. Engineering for trust
@@ -220,6 +343,7 @@ The reason for all of it is the one thing the project cannot do: it cannot see t
     md(MD_12_3),
     code(TEST_COUNTS),
     md(MD_12_3_B),
+    md(TESTS_TABLE),
     code(LIVE_TEST),
     md(MD_12_3_C),
 ]

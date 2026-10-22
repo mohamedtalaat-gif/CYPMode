@@ -1,4 +1,4 @@
-"""Appendix A: the practical walkthrough. The environments, the map of the repository, every stage as a runnable path, the list of the queue jobs (generated from the jobs themselves), how a candidate is reproduced, and how a model or a structure lever is added through a gate."""
+"""Appendix A: the practical walkthrough. The environments, the map of the repository, every stage as a runnable path, the list of the queue jobs (generated from the jobs themselves and repeated job by job in the text), how a candidate is reproduced, and how a model or a structure lever is added through a gate."""
 
 from notebooks.notebook_builder import code, md
 
@@ -116,6 +116,146 @@ n_structure_gates = len(structure_gate_names)
 structure_gate_text = ", ".join(structure_gate_names)
 '''
 
+JOB_TABLE = r"""
+The same list again, written into the text rather than generated when the page is built: one row per job, its number and name, and the first comment line of its script. By the rules of the repository that comment says what the job does and why, so the description is the job's own (a line cut short is marked with " ... "); the table is the same order as the one above, and it is written into the text so that every job of the queue is named in the notebook and the generated table can be checked against the scripts.
+
+| job | the first comment line of its script |
+| --- | --- |
+| `010_pop_2d6_15fold` | Selection-aware CYP2D6 (panel-block pool): 3 repeats x 5 folds, the gate for the pre-registered decision. |
+| `012_pop_2d6_sensitivity` | Same caches: sensitivity to the share of non-hits in the scored set. |
+| `013_test_nonhit_share` | Label-shift estimate of how hit-like the blinded test structures are (input to the CYP2D6 A/B decision). |
+| `014_hedged_blend` | Rank blend of hits-only and selection-aware CYP2D6 stacks, judged by the worst case across regimes (cache-only, fast). |
+| `015_pop_3a4_control` | CYP3A4 control: the test is analogs of 3A4 hits, so no selection-aware gain is expected here. |
+| `030_calibration` | Runs the calibration experiment (calibration_experiment.py); the log is calibration.log. |
+| `040_selection_aware_v2` | Stronger selection-aware model: cross-isoform hit-profile gate, Heckman-style correction term, gated vs the v1 sets. |
+| `045_block_holdout` | Most test-like validation available: hold out the analog-expansion block of the training ids and score the stack on it. |
+| `046_pair_conditional_transfer` | SAR-aware pair-conditional label transfer (descriptor deltas); the physics-delta variant runs in job 075. |
+| `047_mmp_transfer` | SAR made explicit: matched-molecular-pair transformation features, gated against the base stack. |
+| `050_frozen_embeddings` | Frozen CheMeleon embeddings: chemprop extraction in .venv-ml (no LightGBM), evaluation in .venv (no torch). |
+| `060_test_likeness_training` | Importance-weighted training from the unlabeled test structures; gated alone and stacked. |
+| `070_physics_xtb_block` | GFN2-xTB atom/site/pharmacophore physics block: tblite-only extraction first, then the LightGBM evaluation in |
+| `071_population_physics` | Physics block inside the selection-aware CYP2D6 model (P(hit) and P(label \| hit)), panel-block pool. |
+| `072_physics_compact` | Compact physics: the 20 most useful physics columns chosen inside every task. |
+| `073_physics_tierb_extract` | Tier-B physics extraction (tblite only, own process): Boltzmann conformers and relaxed hydrogen abstraction. |
+| `074_physics_tierb_experiment` | The tier-B physics block for both isoforms, alone and added to the stack (3 repeats); the gate lines are in physics_tierb_&lt;isoform&gt;.log. |
+| `075_pair_transfer_physics` | Physics-aware SAR: the pair model whose deltas include the xTB block (needs job 070's cache). |
+| `076_xiso_arm_transfer` | I3: arms of the other isoforms, predicted from structure (cross-fitted), as features of the target-isoform classifier; alone and stacked. |
+| `078_arm_variants` | Floor-clipped two-arm regressors vs the raw-arm ones, alone and stacked. |
+| `080_committee_ei_model` | Probabilistic label-process model: noise-aware committee of two-arm regressors -> P(label) and expected improvement. |
+| `081_replicate_grid_f10` | 10-outer-fold replicate: the default candidate grid on its own plan (outer 10, inner 4, 3 repeats), deployment fits included. |
+| `082_replicate_physics_f10` | The physics comparisons again on the 10-outer-fold plan (tier A, compact, tier B). |
+| `083_replicate_verdict` | The verdict of the 10-outer-fold replicate for both isoforms (replicate_verdict.py), written to replicate_verdict_&lt;isoform&gt;.log. |
+| `084_tdi_stack_reevaluation` | Every comparison that goes through the stack (StackedLogit) again, after its logistic meta-learner was made deterministic |
+| `090_final_tdi_build` | Gate-driven TDI candidate files, once per design (5 outer folds, then the 10-fold replicate). Never submits. |
+| `096_applicability_domain` | The applicability domain of the 750 blinded compounds, generated from the final build: the reliability of the final stack by nearest-training similarity (held-out outer folds of the nested validation) |
+| `097_why_no_gain` | Diagnostics of why each idea that did not join the final stack added nothing: paired change with its corrected p value, redundancy with the final stack, the weight the stack gave it and the |
+| `100_boltz_unguided_resume` | Boltz-2 on the ligands of the crystal-anchored benchmark without a restraint (5 diffusion samples each, one sample at a time), resuming after the failed entries are cleared. |
+| `110_boltz_restraint_bond` | Boltz-2 on the benchmark ligands with the iron-nitrogen bond restraint (3 samples each); exits non-zero when a ligand failed, so that the runner tries again. |
+| `120_boltz_restraint_contact` | Boltz-2 on the benchmark ligands with the iron-nitrogen contact restraint (3 samples each); exits non-zero when a ligand failed, so that the runner tries again. |
+| `130_boltz_diversity_pilot` | Boltz-2 on the ligands of the diversity pilot, one sample at a time; exits non-zero when a ligand failed, so that the runner tries again. |
+| `133_series_benchmark_runs` | Boltz-2 on three crystal-anchored analog pairs (6 ligands, 4 samples each): the benchmark of the series-consensus rule. |
+| `135_boltz_cryoem_pilot` | S3: Boltz-2 with the cryo-EM CYP3A4 entries as protein templates, on the three pilot ligands (3 templates each, 1 sample each). |
+| `140_score_restraint_and_pilot` | Scores the poses of the unrestrained, bond-restraint, contact-restraint and diversity-pilot runs on the crystal-anchored benchmark and writes the comparison of the restraints and the pilot report. |
+| `142_series_scoring` | True ligand RMSD of every series pose against its crystal pose. |
+| `144_score_cryoem_pilot` | S3: true ligand RMSD of the cryo-EM template runs, then the pool comparison against the unguided pools (same thresholds as the other pilot levers). |
+| `149_openfold3_memory_probe` | OpenFold3 memory probe. The largest benchmark ligand (bench-YNV, 46 heavy atoms; its first run stopped with "Invalid buffer size: 9.27 GiB") |
+| `150_openfold3_benchmark` | OpenFold3 on the 10 benchmark ligands, 3 samples each, in the memory mode the probe (job 149) found. Ligands that already have structures are |
+| `160_score_all_and_report` | Scores every pose of the crystal-anchored benchmark and writes the table of selection outcomes. |
+| `165_structure_gate_verdicts` | Machine-readable restraint and pilot verdicts (STRUCTURE GATE lines) from the scored pose tables of job 140. |
+| `168_pose_awareness` | Physics, molecule and pharmacophore terms of the pose pools, judged on the pooled crystal-anchored benchmark. |
+| `169_series_consensus` | SAR-aware selection: poses that agree with the poses of the ligand's analogs. |
+| `170_mbr_selection_validation` | Validation of the minimum-Bayes-risk selection on the scored benchmark poses (selection_validation.py). |
+| `172_ei_sampling` | Expected-improvement sampling: extra Boltz samples go to the ligands whose pose pool disagrees most (needs the pooled benchmark poses). |
+| `173_mbr_lddt_reevaluation` | Minimum Bayes risk and the restraint re-scored with LDDT-PLI against the crystal (exploratory: the registered gate used RMSD). No compute beyond scoring. |
+| `175_heme_frame_prior` | The heme-frame prior on the scored benchmark poses (heme_frame_prior.py). |
+| `176_restraint_expansion_prepare` | The confirmation of the restraint on crystal ligands that were not used to decide it (plan registered in data/structure_track/inputs/restraint_expansion_plan.json). |
+| `177_boltz_restraint_expansion_primary` | Boltz-2 on the primary stratum of the confirmation ligands, both conditions, two samples each (about 13 minutes per sample on this Mac). |
+| `178_score_restraint_expansion` | Scores the confirmation runs (RMSD with the existing rescoring harness, LDDT-PLI with lddt_to_crystal) and writes the registered verdicts the final recipe reads. |
+| `179_requeue_final_recipe` | Once the restraint confirmation is scored (178), the final recipe and its update (180, 185) must run again so that the structures follow the confirmed (or withdrawn) restraint: |
+| `180_structure_final_recipe_run` | Run the frozen recipe on the 20 official ligands and validate every structure. Needs the recipe module. |
+| `185_structure_recipe_update` | The final recipe once more after the engine-consensus and selection verdicts exist (jobs 149-170): it reads the verdicts again, adds what they call |
+| `186_boltz_restraint_expansion_secondary` | The secondary stratum of the confirmation ligands (31 to 34 heavy atoms): reported next to the primary one, never used for the decision, so it runs after the final recipe. |
+| `187_score_restraint_expansion_secondary` | The scoring again with the secondary stratum included (the verdicts of the primary stratum do not change). |
+| `188_requeue_final_chain` | After the confirmation, the final recipe and the secondary stratum are finished (180 to 187): the chain that describes and packages the final state runs again, in order, on a quiet repository |
+| `189_nodirect_labels` | The 1,249 CYP3A4 compounds without a direct curve, used through what their TDI-arm pIC50 implies (194 certain negatives; soft labels for the rest from a first-stage model on the pool rows of each task), alone and inside the stack. |
+| `190_official_extra_audit` | The official files the first release did not read (single-concentration screen, Emax, direct inhibition, reaction phenotyping): identifiers, overlap with the |
+| `191_basic_centre_extract` | Basic-centre block (Dimorphite-DL protonation states, centre classes, charge-to-ring geometry) for the training and blinded test compounds. |
+| `192_structure_margin_aware_zip` | Margin-aware pose choice: every pool pose is checked with the organisers' own PoseBusters call, the final recipe keeps only valid poses whose relative |
+| `193_nonneg_stack` | Non-negative stacking as an alternative selector, from the cached predictions of the default stack (same folds, same yardstick). |
+| `194_gate_shift` | The two-part form of the label, P(t > 4.301) x P(t - d > log10 2): the gate reads every compound with a TDI-arm curve. Validated alone and inside the stack. |
+| `195_screen_block` | The official single-concentration screen as a predicted block (cross-fitted inside every task); validated alone and inside the stack, both isoforms. |
+| `196_screen_selection_2d6` | The real screen inside the selection-aware CYP2D6 model (gate learned from the screen; predicted screen in the end-to-end classifier), on the panel-block pool. |
+| `197_emax_block` | The official Emax readings of both arms as a predicted block, validated alone and inside the stack. |
+| `198_mlp_addition` | The multitask network (cache complete) added to the default stack, both isoforms. |
+| `199_basic_centre_experiment` | The basic-centre block added to feature sets A and A+fps, validated alone and inside the stack (it matters most for CYP2D6), both isoforms. |
+| `200_permutation_control` | Negative control of the whole nested pipeline: the pool labels are permuted at random and the procedure is repeated; the outer AUC must be 0.5. |
+| `201_tabicl_CYP3A4` | TabICL candidate completed for every task of the nested plan (time-boxed chunks, resumable; the memory guard stays on). |
+| `202_chemeleon_speed` | The speed test and the decision on the fine-tuned CheMeleon (cypmode/challenge/chemeleon_speed.py, decided 2026-10-16 before any measurement): one task that is already in the cache from the processor is trained again |
+| `202_tabicl_CYP2D6` | TabICL candidate completed for every task of the nested plan (time-boxed chunks, resumable; the memory guard stays on). |
+| `203_chemprop_CYP3A4` | CheMeleon, stage 1 of its staged design (cypmode/challenge/chemeleon_stage.py): the 25 cross-validation tasks of repeat 0 for CYP3A4, time-boxed chunks, resumable. The plain Chemprop cache is complete. Whether it runs, and on |
+| `204_chemprop_CYP2D6` | CheMeleon stage 1 for CYP2D6 is not run: the enzyme was dropped from the CheMeleon design on 2026-10-16 (plain Chemprop is at chance on CYP2D6, outer AUC 0.54 and 0.53; the frozen CheMeleon block reaches 0.63; see |
+| `205_tabicl_addition` | TabICL added to the default stack once its cache is complete (jobs 201 and 202). |
+| `206_chemprop_addition` | Plain Chemprop (cache complete on the nested plan) added to the default stack, both enzymes; CheMeleon has its own staged jobs (203, 204, 236 to 239). |
+| `207_ost_vs_ours` | OpenStructure's own LDDT-PLI (the organisers' scorer, in the conda environment `ost`) against ours, pose by pose, on the confirmation ligands. |
+| `208_mlp_aux_CYP3A4` | Multitask network with the official screen and Emax readings as auxiliary heads, completed for every task of the nested plan (time-boxed chunks, resumable). |
+| `209_mlp_aux_CYP2D6` | Multitask network with the official screen and Emax readings as auxiliary heads, completed for every task of the nested plan (time-boxed chunks, resumable). |
+| `210_mlp_aux_addition` | The multitask network with auxiliary heads added to the default stack once its cache is complete (jobs 208 and 209). |
+| `211_monroe_extract` | Frozen Monroe (GRIT) embeddings of the training and blinded test compounds, in the isolated environment .venv-monroe (weights read as plain tensors). |
+| `212_monroe_block_experiment` | The Monroe embedding block added to feature sets A and A+fps (and alone), validated alone and inside the stack, both isoforms. |
+| `213_tabicl_monroe_CYP3A4` | TabICL on the frozen Monroe embedding, completed for every task of the nested plan (time-boxed chunks, resumable). |
+| `214_tabicl_monroe_CYP2D6` | TabICL on the frozen Monroe embedding, completed for every task of the nested plan (time-boxed chunks, resumable). |
+| `215_tabicl_monroe_addition` | TabICL on Monroe embeddings added to the default stack once its cache is complete (jobs 213 and 214). |
+| `217_pxr_block` | The PXR-induction readings of the same compound library (pEC50 and Emax; training set and the two unblinded test phases of the PXR challenge) as a predicted block, alone and inside the stack. |
+| `218_relaxation_gate` | Force-field relaxation of predicted ligand poses in the frozen pocket (OpenMM, in the conda environment openmm), tested on the poses of the crystal-anchored ligands before any use on the official ones: |
+| `219_ext_cont_extract` | The continuous responses and potencies of the NCATS qHTS panel (PubChem AID 1851) and of the Tox21 CYP screen as label-free blocks: models trained on external compounds only predict them for every challenge compound. |
+| `220_ext_cont_experiment` | The continuous external block, and then the Tox21 block as a separate test, added to the feature sets that carry the binary external block, alone and inside the stack (pre-registered gate of addition_experiment), both isoforms. |
+| `221_tabpfn_CYP3A4` | TabPFN (Prior Labs) completed for every task of the nested plan (time-boxed chunks, resumable; the memory guard stays on). The weights are under Prior Labs' non-commercial licence and are fetched by the |
+| `222_tabpfn_CYP2D6` | TabPFN (Prior Labs) completed for every task of the nested plan (time-boxed chunks, resumable; the memory guard stays on). The weights are under Prior Labs' non-commercial licence and are fetched by the |
+| `223_tabpfn_addition` | TabPFN added to the default stack once its cache is complete (jobs 221 and 222); the pre-registered gate of addition_experiment decides. |
+| `227_openadmet_surrogates` | logD and mouse brain protein binding predicted for every challenge compound by OpenADMET's surrogate Chemprop models (two label-free columns), then the gated test of adding them to feature sets A and A+fps, both isoforms. |
+| `228_atomjepa_extract` | Frozen Atom-JEPA embeddings (all 8 blocks, mean over atoms) of every challenge compound, in chunks that are saved as they finish (an interrupted run resumes), then the gated test of adding them to feature sets |
+| `229_atomjepa_head_CYP3A4` | A small attention readout trained on the cached per-atom features of the frozen Atom-JEPA encoder, completed for every task of the nested plan (time-boxed chunks, resumable). The encoder does not run again. |
+| `230_atomjepa_head_CYP2D6` | A small attention readout trained on the cached per-atom features of the frozen Atom-JEPA encoder, completed for every task of the nested plan (time-boxed chunks, resumable). The encoder does not run again. |
+| `231_atomjepa_head_addition` | The Atom-JEPA attention readout added to the default stack once its cache is complete (jobs 229 and 230); the pre-registered gate decides. |
+| `232_neural_f10_fill_CYP3A4` | Confirmatory replicate of the neural pair on CYP3A4 (checklist, group neural): plain Chemprop and the multitask network on the 10-outer-fold plan (155 tasks each, deployment fits included), |
+| `233_neural_addition` | The neural pair (multitask network and plain Chemprop, caches complete) added to the default stack on the nested plan, both enzymes; the ledger rows of the 15-fold design. |
+| `234_neural_addition_f10` | The neural pair on the 10-outer-fold plan (CYP3A4): the confirmatory comparison against the default stack, declared before any 10-fold result existed. |
+| `235_neural_replicate_verdict` | The replicate verdicts again, now with the neural pair (CYP3A4 only; the physics lines are recomputed from the same logs). |
+| `236_chemeleon_stage1_screen` | Stage 1 of CheMeleon: the stacked comparison on repeat 0 (5 outer folds) for CYP3A4. Written to a .txt file on purpose: a stage 1 screen is not a pre-registered gate and must not enter the ledger. |
+| `237_chemeleon_stage2_CYP3A4` | Stage 2 of CheMeleon (CYP3A4): repeats 1 and 2 and the deployment fits, only if the rule of cypmode/challenge/chemeleon_stage.py asks for it after stage 1; otherwise nothing is run. |
+| `238_chemeleon_stage2_CYP2D6` | Stage 2 of CheMeleon (CYP2D6; the enzyme was dropped from the design on 2026-10-16, so no stage 1 file exists and the rule below always says stop): repeats 1 and 2 and the deployment fits, only if the rule of cypmode/challenge/che ... |
+| `239_chemeleon_addition` | CheMeleon added to the default stack (15 folds, the ordinary gate) for each enzyme whose stage 2 ran; the others stay "screened on 5 folds, not continued". |
+| `240_softmax_selector` | The softmax-temperature selector (T small: the best model, T large: an equal-weight committee) against the logistic blend, from the cached predictions of the default stack; also the exploration-exploitation curve. |
+| `241_ost_regate` | The registered consequence of job 207's verdict: the confirmatory restraint gates repeated with OpenStructure's LDDT-PLI (a few seconds, no model run). |
+| `242_data_checker` | The organisers' data checker (OpenADMET/challenge-data-checker, Apache-2.0, in its own environment .venv-checker with Python 3.12): the official training, Emax and direct-inhibition files against the blinded test file. |
+| `243_structure_relaxation_final` | The force-field relaxation (gate of job 218, MET) applied to the 20 poses of the final recipe under the rule registered in cypmode/validation/relax_final.py, and the final zip rebuilt from the poses that |
+| `244_ost_pools_score` | OpenStructure's LDDT-PLI and BiSyRMSD for the 167 poses that the gates of the pools were judged on (about 4 s per pose, measured on three poses), in time-boxed chunks, resumable. The registered consequence of the verdict of job 20 ... |
+| `245_ost_pool_gates` | The gates of the pools repeated on OpenStructure's yardstick (after a check that the same code reproduces every original verdict on unchanged tables); nothing the gates wrote before is touched. |
+| `246_tabicl_chemeleon_CYP3A4` | TabICL on the frozen CheMeleon embedding (128 label-free principal components next to the quantile-transformed descriptors), completed for every task of the nested plan (time-boxed chunks, resumable). |
+| `247_tabicl_chemeleon_CYP2D6` | TabICL on the frozen CheMeleon embedding (128 label-free principal components next to the quantile-transformed descriptors), completed for every task of the nested plan (time-boxed chunks, resumable). |
+| `248_tabicl_chemeleon_addition` | TabICL on the frozen CheMeleon embedding added to the default stack once its cache is complete (jobs 246 and 247); the pre-registered gate of addition_experiment decides. |
+| `249_tabpfn_chemeleon_CYP3A4` | TabPFN on the same frozen CheMeleon representation as job 246/247, completed for every task of the nested plan (time-boxed chunks, resumable; the licence marker of job 221 is needed, see there). |
+| `250_tabpfn_chemeleon_CYP2D6` | TabPFN on the same frozen CheMeleon representation as job 246/247, completed for every task of the nested plan (time-boxed chunks, resumable; the licence marker of job 221 is needed, see there). |
+| `251_tabpfn_chemeleon_addition` | TabPFN on the frozen CheMeleon embedding added to the default stack once its cache is complete (jobs 249 and 250); the pre-registered gate of addition_experiment decides. |
+| `252_atomjepa_head_f10_fill_CYP3A4` | Exploratory replicate of the Atom-JEPA readout on CYP3A4 (checklist, Atom-JEPA item; declared 2026-10-17, after the registered 5-fold gate was NOT MET): the cached readout completed for every task of the 10-outer-fold plan |
+| `253_atomjepa_head_f10_exploratory` | The exploratory comparison of the Atom-JEPA readout with the default stack on the 10-outer-fold plan (CYP3A4 only), declared before any 10-fold number of the readout existed. It cannot bring the group into the stack: |
+| `295_lint_cleanup` | Lint cleanup of the Python modules (decided 2026-10-17). It runs after every experiment job and before the final chain (job 299), so that the audit and the test suite of the chain run on the cleaned code. |
+| `299_requeue_final_chain` | After the experiments of jobs 190 to 206: the final TDI build reads every gate verdict again (a group whose gate is MET joins the stack), then the chain that |
+| `900_tests_and_audit` | The full audit with the test suite, twice, byte-for-byte; only when every earlier job is finished (a frozen state) and the notebook is written. |
+| `905_recompute_paired_summaries` | Older significance tables re-analysed from their saved per-fold scores with the paired corrected t (no refits). |
+| `910_method_report` | Method report and negative-results ledger regenerated from the final logs and audit (job 900 runs first). |
+| `921_docs_state` | The generated blocks of README.md and CYPMode_Architecture_Specification.md (the final stack per isoform, the verdicts of the gates, the structure recipe): rewritten from the final build, the logs of the |
+| `930_public_readiness` | Scan for private paths, credentials, foreign e-mail addresses, oversized files; findings go to the log. |
+| `940_figures_build` | The illustrations (docs/figures/PLAN.md): every generator, the catalog check, light and dark SVG and PNG, the animations. Runs after every |
+| `941_card_build` | The README card, built after the figures from the final numbers and recorded in audit/artifacts.json (the pre-submission gate checks the record against the numbers). |
+| `942_build_notebook` | The notebook (notebooks/PLAN.md): execute every cell against the final files, run the checks (cells, glossary, coverage), write the .ipynb, then the HTML and PDF exports (the build writes them itself when every check passes, so a ... |
+| `943_blender_clips` | The cinematic molecule clips of the film (docs/video/STORYBOARD.md): the CYP3A4 enzyme with its heme and a Type II ligand drawn by Blender with the Molecular Nodes add-on from the real |
+| `944_pymol_clips` | The real-structure stills and turntables of the film (docs/video/STORYBOARD.md): the heme pocket of CYP3A4 and the pose pools of the official ligands, rendered with PyMOL from the coordinates. |
+| `945_video_render` | The animation (docs/video/STORYBOARD.md): every frame drawn by code, encoded to mp4, plus a gif preview and a poster frame. |
+| `950_submissions_final_sync` | The very last job: submissions/ is rewritten from the final TDI candidates and the final structure zip, each checked with the portal's own rules (it never uploads anything). |
+| `960_pre_submission_gate` | The last gate: whether the queue, the checklist, the audit, the submission files, the documents, the notebook and the film are finished, consistent and fresh. |
+"""
+
 CELLS = [
     md("""
 # Appendix A. Practical walkthrough
@@ -175,6 +315,7 @@ Step 3 is the TDI path alone, from the raw files to the candidate files: it buil
 The table is generated from the jobs. A job is a shell script; it starts with `source queue/lib.sh`, which gives it the helpers described in 12.4, and its first comment line says what it does.
 """),
     code(JOB_LIST),
+    md(JOB_TABLE),
     md("""
 The queue holds {{=n_jobs}} jobs: {{=range_counts['000 to 099']}} numbered below 100 (the TDI experiments and the final TDI build), {{=range_counts['100 to 199']}} from 100 to 199 and {{=range_counts['200 to 299']}} from 200 to 299 (the structure track, the additions of 9.9 and 9.10, the housekeeping jobs), and {{=range_counts['900 to 999']}} from 900 (the final chain). A job that is finished leaves an empty file with its name in `queue/state/done`; a job that is not ready ends with the status 75 and is tried again in the next round; any other failure is tried once more and then recorded in `queue/state/failed`. 12.4 explains why the queue is built so.
 

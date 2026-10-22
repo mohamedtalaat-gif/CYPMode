@@ -1,0 +1,19 @@
+{
+ "task": [
+  0,
+  0,
+  0
+ ],
+ "tasks_left": 18,
+ "cpu_seconds_per_task": 2310.0,
+ "gpu_seconds": 781.0032179355621,
+ "failure": null,
+ "spearman": 0.825545541327953,
+ "auc_gpu": 0.7187669122850839,
+ "auc_cpu": 0.7201198935508728,
+ "equivalent": true,
+ "decision": "mps",
+ "hours_left_on_cpu": 11.55,
+ "hours_left_on_gpu": 3.9050160896778108,
+ "limit_hours": 8.0
+}

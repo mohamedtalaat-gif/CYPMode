@@ -7,6 +7,7 @@ picture: the prompt, the seed, the sampler settings, the SHA-256 of the model fi
 
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -21,7 +22,7 @@ import generate
 CUT = generate.OUT / "cut"
 INDEX = HERE.parent / "anime" / "assets_characters.js"
 MANIFEST = HERE / "manifest.json"
-MODELS = Path("/Volumes/Data/ComfyUI/models")
+MODELS = Path(os.environ.get("COMFYUI_HOME", "ComfyUI")) / "models"  # the ComfyUI folder lives outside the repository: set COMFYUI_HOME to it
 MODEL_FILES = {"diffusion": MODELS / "diffusion_models" / generate.UNET, "text_encoder": MODELS / "text_encoders" / "qwen_3_06b_base.safetensors", "vae": MODELS / "vae" / "qwen_image_vae.safetensors"}
 
 

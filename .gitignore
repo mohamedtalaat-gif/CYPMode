@@ -148,10 +148,16 @@ docs/figures/structure/struct_posebusters-*
 docs/card/cypmode_card-light.png
 docs/card/cypmode_card-dark.png
 docs/video/cypmode_overview_poster.png
+docs/figures/structure/struct_diffusion_denoising*
 docs/video/cypmode_overview_web.mp4
 docs/video/cypmode_overview_preview.gif
 notebooks/cypmode_notebook.ipynb
 notebooks/cypmode_notebook.html
 notebooks/cypmode_notebook.pdf
 # <<< HELD BACK
+# Boltz inputs of the experiment ligands: written by the batch runner from the benchmark tables (they carry the paths of the machine that ran them)
+data/structure_track/inputs/cyp3a4_exp-*.yaml
+# Downloads that are fetched by name and checksum (they carry third-party recipe files with the e-mail addresses of their authors) and a note of a licence acceptance on this machine
+data/tdi_track/inputs/openadmet_surrogate/
+data/tdi_track/inputs/tabpfn_licence_accepted.txt
 .venv-checker/

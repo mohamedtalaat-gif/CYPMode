@@ -68,6 +68,8 @@ uses the same corrected t.
 | aux_tabicl_monroe_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_tabpfn_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_tabpfn_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| aux_tabpfn_chemeleon_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| aux_tabpfn_chemeleon_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | committee_label_model_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | committee_label_model_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | ei_sampling.log | ei_sampling | NOT MET |
@@ -75,6 +77,7 @@ uses the same corrected t.
 | embeddings_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | embeddings_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
 | embeddings_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_atomjepa_head_f10_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | hedged_blend_CYP2D6.log | CYP2D6: hedged blend adopted by the minimax rule, fit weight 0.25 | NOT MET |
 | hedged_blend_CYP2D6.log | CYP2D6: selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 0.25 | NOT MET |
 | hedged_blend_CYP2D6.log | CYP2D6: hedged blend adopted by the minimax rule, fit weight 0.5 | NOT MET |

@@ -12,8 +12,8 @@ unchanged and checked again with the portal's own rules. **None of them has been
 
 | file | candidate | rows | CYP3A4 positive rate | CYP2D6 positive rate | schema check | portal check | sha256 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `tdi_track_candidate_A_hits_only.csv` | candidate_A_hits_only | 750 | 0.372 | 0.059 | valid | valid | `546ee71e6381ab3e50f85069f48fb31d78854e3cb4ccc931453feae18355a45b` |
-| `tdi_track_candidate_B_selection_aware.csv` | candidate_B_selection_aware | 750 | 0.372 | 0.059 | valid | valid | `701c4e80b71023e207fe518090b2fe68551e263ed9c0afe2c264158ba3a74e7c` |
+| `tdi_track_candidate_A_hits_only.csv` | candidate_A_hits_only | 750 | 0.372 | 0.059 | valid | valid | `d043c471e739d64a1bb93aa380ee7a4116328abda3f86fec8614117352d8174e` |
+| `tdi_track_candidate_B_selection_aware.csv` | candidate_B_selection_aware | 750 | 0.372 | 0.059 | valid | valid | `613777ed38d5c0ac75dcccb8f07c70e4d2105ba1204ced8defd8b431ad7ba492` |
 
 ## What the candidates are
 
@@ -24,7 +24,7 @@ The first two candidates differ in 0 CYP3A4 calls and 40 CYP2D6 calls.
 
 ## How they were made
 
-- CYP3A4: stack `default` of 23 candidate models; the top 37.2% of the test compounds are called (1.2 times the prevalence 0.310 that the public leaderboard implies).
+- CYP3A4: stack `default+neural` of 26 candidate models; the top 37.2% of the test compounds are called (1.2 times the prevalence 0.310 that the public leaderboard implies).
 - CYP2D6: stack `default` of 23 candidate models; the top 5.9% of the test compounds are called (1 times the prevalence 0.059 that the public leaderboard implies).
 
 The method, every experiment that was tried and the gate each one met or missed are in the project's method report and in `data/tdi_track/outputs/final/final_report.md`.

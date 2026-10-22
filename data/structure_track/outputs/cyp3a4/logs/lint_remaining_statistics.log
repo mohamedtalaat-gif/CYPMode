@@ -1,0 +1,21 @@
+16	RUF059 	unused-unpacked-variable
+ 7	F841   	unused-variable
+ 5	ISC004 	implicit-string-concatenation-in-collection-literal
+ 5	LOG015 	root-logger-call
+ 5	RUF007 	zip-instead-of-pairwise
+ 3	DTZ007 	call-datetime-strptime-without-zone
+ 3	FURB192	sorted-min-max
+ 2	DTZ006 	call-datetime-fromtimestamp
+ 2	PIE810 	multiple-starts-ends-with
+ 2	PLC3002	unnecessary-direct-lambda-call
+ 1	SIM102 	collapsible-if
+ 1	PERF102	incorrect-dict-iterator
+ 1	PYI034 	non-self-return-type
+ 1	SIM115 	open-file-with-context-handler
+ 1	UP031  	printf-string-formatting
+ 1	FLY002 	static-join-to-f-string
+ 1	PLW1510	subprocess-run-without-check
+ 1	C408   	unnecessary-collection-call
+ 1	RUF015 	unnecessary-iterable-allocation-for-first-element
+Found 59 errors.
+No fixes available (44 hidden fixes can be enabled with the `--unsafe-fixes` option).
