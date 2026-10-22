@@ -1,6 +1,7 @@
 """Every number shown in the animation, read from the project's own final files when the video is rendered."""
 
 import hashlib
+import importlib
 import json
 import re
 import sys
@@ -149,13 +150,13 @@ def _curves() -> dict:
     """The mean ROC curve of the default stack on the outer folds (rebuilt from the cached predictions by the figure code), per enzyme, and its mean AUC."""
     from sklearn.metrics import roc_auc_score, roc_curve
 
-    sys.path[:0] = [str(ROOT / "docs/figures"), str(ROOT / "docs/figures/gen")]
-    import ml as figure_ml
+    sys.path[:0] = [str(ROOT / "docs/figures")]
+    figure_stack = importlib.import_module("gen._stack")
 
     out = {}
     grid = np.linspace(0, 1, 61)
     for iso in ("CYP3A4", "CYP2D6"):
-        folds = figure_ml.evaluation(iso)[2]
+        folds = figure_stack.evaluation(iso)[2]
         tprs = [np.interp(grid, *roc_curve(y, score, sample_weight=w)[:2]) for y, score, w, _ in folds]
         out[iso] = {"fpr": [round(float(g), 4) for g in grid], "tpr": [round(float(t), 4) for t in np.mean(tprs, axis=0)],
                     "auc": round(float(np.mean([roc_auc_score(y, score, sample_weight=w) for y, score, w, _ in folds])), 4)}
@@ -163,8 +164,8 @@ def _curves() -> dict:
 
 
 def _physics() -> list[dict]:
-    sys.path[:0] = [str(ROOT / "docs/figures"), str(ROOT / "docs/figures/gen")]
-    import physics as figure_physics
+    sys.path[:0] = [str(ROOT / "docs/figures")]
+    figure_physics = importlib.import_module("gen.physics")
 
     auc = figure_physics.single_column_auc("CYP3A4")
     best = (auc - 0.5).abs().sort_values(ascending=False).head(7).index
@@ -218,9 +219,9 @@ def _scout() -> dict:
     return {"sources": [{**r, "in_test": len(r["in_test"])} for r in rows], "excluded": sorted({c for r in rows for c in r["in_test"]})}
 
 
-FOUNDATION = (  # (label of the pretrained model, stem of the log of its experiment; None = never run); the experiment logs are written by the queue as the jobs finish
-    ("CheMeleon embeddings", "embeddings"), ("TabICL", "aux_tabicl"), ("CheMeleon fine-tuned", "aux_chemeleon"), ("OpenADMET pretraining weights", None), ("TabPFN", "aux_tabpfn"),
-    ("Atom-JEPA", "aux_atomjepa_head"), ("Monroe embeddings", "monroe_embeddings"), ("Monroe in TabICL", "aux_tabicl_monroe"), ("OpenADMET surrogates", "aux_ext_adme"),
+FOUNDATION = (  # (label of the pretrained model, stem of the log of its experiment, enzymes that are not part of its design); the experiment logs are written by the queue as the jobs finish
+    ("CheMeleon embeddings", "embeddings", ()), ("TabICL", "aux_tabicl", ()), ("CheMeleon fine-tuned", "aux_chemeleon", ("CYP2D6",)), ("OpenADMET pretraining weights", "aux_chemprop_foundation", ("CYP2D6",)), ("TabPFN", "aux_tabpfn", ()),
+    ("Atom-JEPA", "aux_atomjepa_head", ()), ("Monroe embeddings", "monroe_embeddings", ()), ("Monroe in TabICL", "aux_tabicl_monroe", ()), ("OpenADMET surrogates", "aux_ext_adme", ()),
 )
 STACKED = re.compile(r"z0=1\.0\s+stacked[^:]*:\s+AUC ([+-]\d\.\d+) \(p=([\d.]+)")
 LOG_DIR = ROOT / "data/structure_track/outputs/cyp3a4/logs"
@@ -229,7 +230,8 @@ LOG_DIR = ROOT / "data/structure_track/outputs/cyp3a4/logs"
 def _foundry() -> list[dict]:
     """Each pretrained model that was added to the stack: the change in AUC it brought at the first confidence cut (both enzymes), its p value and the verdict.
 
-    "pending" while its job runs, "screened" when only the 5-fold first stage of a staged design exists (``stage1_<model>_<enzyme>.txt``), "not run" when the model was dropped for cost.
+    "pending" while its job runs, "screened" when only the 5-fold first stage of a staged design exists (``stage1_<model>_<enzyme>.txt``), "not run" when the model was dropped for cost (the first stage
+    wrote "not run" instead of a comparison) or when the enzyme is not part of the design of the model (CYP2D6 for the fine-tuned networks, dropped on 2026-10-16).
     """
     verdicts: dict[str, dict[str, str]] = {}
     for log, _, verdict in gate_rows():
@@ -237,10 +239,10 @@ def _foundry() -> list[dict]:
         if match:
             verdicts.setdefault(match.group(1), {})[match.group(2)] = verdict
     out = []
-    for label, stem in FOUNDATION:
+    for label, stem, dropped in FOUNDATION:
         row = {"label": label, "enzymes": {}}
         for iso in ("CYP3A4", "CYP2D6"):
-            if stem is None:
+            if iso in dropped:
                 row["enzymes"][iso] = {"verdict": "not run"}
                 continue
             path, stage = LOG_DIR / f"{stem}_{iso}.log", LOG_DIR / f"stage1_{stem.removeprefix('aux_')}_{iso}.txt"
@@ -249,8 +251,14 @@ def _foundry() -> list[dict]:
             if found and verdict:
                 row["enzymes"][iso] = {"delta_auc": float(found.group(1)), "p": float(found.group(2)), "verdict": verdict}
                 continue
-            staged = STACKED.search(stage.read_text(errors="ignore")) if stage.exists() else None
-            row["enzymes"][iso] = {"delta_auc": float(staged.group(1)), "p": float(staged.group(2)), "verdict": "screened"} if staged else {"verdict": "pending"}
+            stage_text = stage.read_text(errors="ignore") if stage.exists() else ""
+            staged = STACKED.search(stage_text)
+            if staged:
+                row["enzymes"][iso] = {"delta_auc": float(staged.group(1)), "p": float(staged.group(2)), "verdict": "screened"}
+            elif "not run" in stage_text:
+                row["enzymes"][iso] = {"verdict": "not run"}
+            else:
+                row["enzymes"][iso] = {"verdict": "pending"}
         out.append(row)
     return out
 

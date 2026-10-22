@@ -1,11 +1,13 @@
 # CYPMode
 
+<!-- held-back:card
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/card/cypmode_card-dark.png">
     <img src="docs/card/cypmode_card-light.png" alt="CYPMode: the CYP3A4 enzyme with its heme and a ligand, six complexes with their compounds and the headline numbers" width="100%">
   </picture>
 </p>
+held-back:card-end -->
 
 ## What CYPMode is
 
@@ -38,7 +40,7 @@ pose-validity and margin rules in which every lever was decided by a gate on cry
    committee, reported with every prediction.
 
 **What it does not claim.** Cross-validation estimates are not the challenge score: the challenge scores hidden labels, and its test set is closer to the training set than a cross-validation
-fold is. A predicted structure is a model, not a measurement. The numbers on the card above come from nested cross-validation on the training data and from checks of the predicted coordinates. One piece of aggregate information about the hidden labels is used: the positive rate of the scored set, which the public leaderboards make recoverable from the accuracy, precision and recall they publish (it weights the yardstick and sets the call rate); no label of any compound and no probing submission is used, and the method report lists it as a limitation.
+fold is. A predicted structure is a model, not a measurement. The numbers reported here come from nested cross-validation on the training data and from checks of the predicted coordinates. One piece of aggregate information about the hidden labels is used: the positive rate of the scored set, which the public leaderboards make recoverable from the accuracy, precision and recall they publish (it weights the yardstick and sets the call rate); no label of any compound and no probing submission is used, and the method report lists it as a limitation.
 
 **Where to look next.** [METHOD_REPORT.md](METHOD_REPORT.md) (what was done, with every gate and number), [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md) (what did not work), [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md)
 (what was checked), `notebooks/` (the teaching notebook, from first principles) and the architecture sections below.
@@ -147,14 +149,14 @@ Final stack per isoform, from the nested cross-validation on the population the 
 
 | isoform | stack | members | groups added by a met gate | AUC (z0 1.0) | AUC (z0 1.96) | MCC (z0 1.0 / 1.96) |
 | --- | --- | --- | --- | --- | --- | --- |
-| CYP3A4 | default | 23 | none | 0.817 | 0.844 | 0.442 / 0.487 |
+| CYP3A4 | default+neural | 26 | ['neural'] | 0.828 | 0.855 | 0.461 / 0.513 |
 | CYP2D6 | default | 23 | none | 0.731 | 0.754 | 0.167 / 0.204 |
 
 Members of the default stack: k-nearest neighbours (Tanimoto) (3), support vector machine (Tanimoto kernel) (3), LightGBM classifier (11), extremely randomised trees (1), random forest (1), LightGBM regressor of the arm shift (2), LightGBM regressors of the two arms (2); 23 members in all.
 <!-- generated:final-stack end -->
 
 <!-- generated:gate-verdicts begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
-Every addition was judged by a rule fixed before its result. 133 gate verdicts from 46 experiments: 5 MET and 128 NOT MET. The gates that were met: bond restraint, contact restraint, force-field relaxation of poses, negative control (permuted labels). A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: none was.
+Every addition was judged by a rule fixed before its result. 176 gate verdicts from 57 experiments: 10 MET and 166 NOT MET. The gates that were met: aux_neural, aux_neural_f10, bond restraint, contact restraint, force-field relaxation of poses, negative control (permuted labels), pool gates repeated with OpenStructure's yardstick, replicates with 10 outer folds. A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: CYP3A4: ['neural']; CYP2D6: none.
 
 <details><summary>All verdicts</summary>
 
@@ -167,7 +169,16 @@ Every addition was judged by a rule fixed before its result. 133 gate verdicts f
 | SAR pair transfer with physics | NOT MET | NOT MET | - |
 | TabICL in the stack | NOT MET | NOT MET | - |
 | TabICL on Monroe embeddings | NOT MET | NOT MET | - |
+| TabICL on frozen CheMeleon embeddings | NOT MET | NOT MET | - |
 | TabPFN in the stack | NOT MET | NOT MET | - |
+| TabPFN on frozen CheMeleon embeddings | NOT MET | NOT MET | - |
+| aux atomjepa | NOT MET | NOT MET | - |
+| aux atomjepa head | NOT MET | NOT MET | - |
+| aux ext adme | NOT MET | NOT MET | - |
+| aux ext cont | NOT MET | NOT MET | - |
+| aux ext tox | NOT MET | NOT MET | - |
+| aux neural | MET | NOT MET | - |
+| aux neural f10 | MET | - | - |
 | basic-centre block (protonation states, centre classes) | NOT MET | NOT MET | - |
 | bond restraint confirmed on new ligands | - | - | NOT MET |
 | committee label-process model | NOT MET | NOT MET | - |
@@ -177,6 +188,7 @@ Every addition was judged by a rule fixed before its result. 133 gate verdicts f
 | consensus of poses across a chemical series | - | - | NOT MET |
 | cross-isoform transfer of the assay arms | NOT MET | NOT MET | - |
 | expected-improvement sampling of poses | - | - | NOT MET |
+| exploratory atomjepa head f10 | NOT MET | - | - |
 | force-field relaxation of poses | - | - | MET |
 | frozen CheMeleon embeddings | NOT MET | NOT MET | - |
 | gate-shift features | NOT MET | NOT MET | - |
@@ -196,7 +208,8 @@ Every addition was judged by a rule fixed before its result. 133 gate verdicts f
 | physics block, tier B | NOT MET | NOT MET | - |
 | physics, pharmacophore and combined pose terms | - | - | NOT MET |
 | plain Chemprop in the stack | NOT MET | NOT MET | - |
-| replicates with 10 outer folds | NOT MET | NOT MET | - |
+| pool gates repeated with OpenStructure's yardstick | - | - | mbr_selection_ost NOT MET; engine_consensus_ost NOT MET; ei_sampling_ost NOT MET; heme_frame_prior_ost NOT MET; pose_physics_ost NOT MET; pose_pharmacophore_ost NOT MET; pose_combined_ost NOT MET; series_consensus_ost NOT MET; restraint_bond_ost MET; restraint_contact_ost MET; pilot_conformers_ost NOT MET; pilot_cryoem_ost NOT MET; pilot_seeds_ost NOT MET; mbr_lddt_exploratory_ost NOT MET; restraint_bond_lddt_exploratory_ost NOT MET; mbr_on_restrained_lddt_exploratory_ost NOT MET |
+| replicates with 10 outer folds | replicate physics NOT MET; replicate physics_compact NOT MET; replicate physics_b NOT MET; replicate neural MET | NOT MET | - |
 | restraint confirmation repeated with OpenStructure's LDDT-PLI | - | - | NOT MET |
 | restraints and pose-diversity pilots | - | - | restraint_bond MET; restraint_contact MET; pilot_conformers NOT MET; pilot_cryoem NOT MET; pilot_seeds NOT MET |
 | selection-aware CYP2D6 model with physics | - | NOT MET | - |
@@ -257,7 +270,7 @@ How the 20 poses of the submitted zip were chosen, from the verdicts of the gate
 - selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)
 - extra samples allocated uniformly: ei_sampling not MET
 - margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)
-- force-field relaxation of the chosen poses: (pending: job 243)
+- force-field relaxation of the chosen poses in the frozen pocket (gate met on 30 crystal-anchored ligands): 20 of 20 poses replaced under a rule fixed before the use (both poses pass the 22 checks, the smallest relative distance to the receptor rises and stays at or above 0.8, the ligand moves by at most 1.0 A, a coordinated iron-nitrogen distance changes by at most 0.2 A); smallest relative distance 0.801 to 0.850
 <!-- generated:structure-recipe end -->
 
 ## Repository map

@@ -67,7 +67,9 @@ def decision_tree(theme_name):
     a.set(xlabel="MolLogP", ylabel="TPSA (A^2)", xlim=(-2.5, 8), ylim=(0, 160))
     a.legend(frameon=False, fontsize=8, loc="upper right")
     tidy(a, th)
-    plot_tree(tree, feature_names=list(FEATURES), class_names=["no", "yes"], filled=True, rounded=True, impurity=False, proportion=False, fontsize=8, ax=b)
+    for box in plot_tree(tree, feature_names=list(FEATURES), class_names=["no", "yes"], filled=True, rounded=True, impurity=False, proportion=False, fontsize=8, ax=b):
+        if box.get_bbox_patch() is not None:  # the node boxes only; the True and False labels of the edges stay in the colour of the theme
+            box.set_color("#14181d")  # the boxes are filled with light pastel colours in both themes, so their text is dark in both (white text on them was unreadable in the dark theme)
     fig.tight_layout()
     return fig
 
