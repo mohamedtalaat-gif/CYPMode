@@ -13,7 +13,11 @@ passes of the ordinary 15-fold gate that follows stage 2.
 Amendment of 2026-10-16, also before any CheMeleon result: CYP2D6 is dropped from the design, and stage 1 for CYP3A4 runs only if the speed test of ``chemeleon_speed`` finds that the missing tasks fit in 8 hours (on the
 Apple GPU or on the processor); stage 1 is the 25 tasks of repeat 0 of an enzyme, stage 2 the other 55. A missing or unreadable stage-1 result is a stop, as above.
 
-Usage: python -m cypmode.challenge.chemeleon_stage --isoform CYP3A4   (prints CONTINUE or STOP)
+Amendment of 2026-10-22, before any result of the fine-tuned networks exists: the same two-stage rule is applied, unchanged, to the two OpenADMET pretraining weights (``chemeleon_minimol_mt_shift`` and
+``chemeleon_surrogate_mt_shift``, added to the stack together as the group ``chemprop_foundation``; ``--model chemprop_foundation`` reads ``stage1_chemprop_foundation_<isoform>.txt``), for CYP3A4 only. Stage 2 of
+either model runs only if its stage 1 asks for it and only if it can finish by 2026-10-29.
+
+Usage: python -m cypmode.challenge.chemeleon_stage --isoform CYP3A4 [--model chemprop_foundation]   (prints CONTINUE or STOP)
 """
 
 import argparse
@@ -39,9 +43,10 @@ def decide(path: Path) -> bool:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--isoform", required=True, choices=["CYP3A4", "CYP2D6"])
+    parser.add_argument("--model", default="chemeleon", choices=["chemeleon", "chemprop_foundation"], help="the stage 1 file to read: CheMeleon, or the two OpenADMET pretraining weights added together")
     parser.add_argument("--logs", default=str(LOGS))
     args = parser.parse_args()
-    print("CONTINUE" if decide(Path(args.logs) / f"stage1_chemeleon_{args.isoform}.txt") else "STOP")
+    print("CONTINUE" if decide(Path(args.logs) / f"stage1_{args.model}_{args.isoform}.txt") else "STOP")
     return 0
 
 
