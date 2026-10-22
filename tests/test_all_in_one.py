@@ -23,3 +23,20 @@ def test_the_log_is_named_so_that_no_gate_parser_reads_it():
 
     patterns = [pattern for _, pattern in build.GROUPS.values()]
     assert not any(pattern.format(iso="CYP3A4") == "exploratory_all_in_one_CYP3A4.log" for pattern in patterns)
+
+
+def test_a_candidate_without_a_deployment_fit_is_still_complete_for_the_comparison():
+    class Task:
+        def __init__(self, repeat):
+            self.repeat = repeat
+
+    class Cache:
+        def __init__(self, missing):
+            self._missing = missing
+
+        def missing(self, name):
+            return self._missing[name]
+
+    cache = Cache({"cross_validated_only": [Task(-1)], "complete": [], "lacks_a_fold": [Task(0), Task(-1)]})
+    assert module.cv_complete(cache, "cross_validated_only") and module.cv_complete(cache, "complete")
+    assert not module.cv_complete(cache, "lacks_a_fold")

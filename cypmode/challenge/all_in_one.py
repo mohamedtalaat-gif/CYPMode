@@ -5,7 +5,7 @@ idea that is weak alone and useful only together with others could be refused by
 5 outer folds), with every choice inside the loop:
 
   * the final stack: the default candidates plus the candidates of the groups that passed (``final_tdi_build.parse_gates``);
-  * the all-in-one stack: the default candidates plus every candidate of every group of the final build whose predictions are complete on the plan, whatever the verdict of its gate;
+  * the all-in-one stack: the default candidates plus every candidate of every group of the final build whose predictions are complete on the cross-validation tasks of the plan (the deployment fits are not needed for the comparison), whatever the verdict of its gate;
   * the comparison: the nested evaluation of both, one logistic blend each, penalty chosen on the inner folds (``StackedLogit``), at the two confidence cuts z0 = 1.0 and 1.96, with the paired corrected resampled t of
     Nadeau and Bengio (``model_comparison.compare_candidate_sets``).
 
@@ -52,6 +52,12 @@ def stack_names(default_names: list[str], groups: dict[str, list[str]], chosen: 
     return names
 
 
+def cv_complete(cache: PredictionCache, name: str) -> bool:
+    """True when the candidate has a prediction for every cross-validation task of the plan. The deployment task (repeat -1) is not needed to compare two stacks on the outer folds, and the experiments cached cross-validation
+    tasks only, so a candidate whose deployment fit was never made (every group that did not join a final stack) must not be left out for that reason."""
+    return not [task for task in cache.missing(name) if task.repeat >= 0]
+
+
 def verdict_line(isoform: str, rows: list[dict]) -> str:
     """The line of the log: MET only when both cuts show a gain with p < 0.05 and the smaller gain is at least FLOOR."""
     met = all(r["p"] < 0.05 and r["diff"] >= FLOOR for r in rows)
@@ -71,8 +77,8 @@ def run(isoform: str) -> list[str]:
     cache = PredictionCache(root / "cache", saved)
     matcher = SimilarityMatcher(store.blocks["morgan_bits"], plan.external)
     prevalence = float(estimate_from_csv(build.BOARDS[isoform])["prevalence"])
-    default_names = [c.name for c in default_candidates() if not cache.missing(c.name)]
-    groups = {g: [c.name for c in cs if not cache.missing(c.name)] for g, cs in candidates_by_group.items()}
+    default_names = [c.name for c in default_candidates() if cv_complete(cache, c.name)]
+    groups = {g: [c.name for c in cs if cv_complete(cache, c.name)] for g, cs in candidates_by_group.items()}
     groups = {g: names for g, names in groups.items() if names}
     final_names = stack_names(default_names, groups, passed)
     everything = stack_names(default_names, groups)
