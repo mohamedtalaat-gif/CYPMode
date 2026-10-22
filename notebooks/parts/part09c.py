@@ -124,6 +124,7 @@ ADDITION_LIST = [
     ("pretrained tables and representations", "Atom-JEPA embeddings as a block", "aux_atomjepa", "added"),
     ("pretrained tables and representations", "Atom-JEPA attention readout on the atoms", "aux_atomjepa_head", "added"),
     ("pretrained tables and representations", "CheMeleon, fine-tuned (staged)", "aux_chemeleon", "added"),
+    ("pretrained tables and representations", "OpenADMET pretraining weights, fine-tuned (staged)", "aux_chemprop_foundation", "added"),
     ("measurements from outside the challenge", "NCATS qHTS, continuous responses", "aux_ext_cont", "added"),
     ("measurements from outside the challenge", "Tox21 CYP screen", "aux_ext_tox", "added"),
     ("measurements from outside the challenge", "OpenADMET logD and protein-binding models", "aux_ext_adme", "added"),
@@ -215,6 +216,34 @@ else:
     outcome = "the fine-tuned CheMeleon was not run, for cost (the ledger says 'not run: cost', which is not a verdict)" if decision == "not run: cost" else f"stage 1 for CYP3A4 runs on the {'Apple GPU' if decision == 'mps' else 'processor'}"
     chemeleon_sentence = f"The speed test found that the {n_stage_one - done_3a4 if decision == 'not run: cost' else measured.get('tasks_left', n_stage_one - done_3a4)} missing tasks would need {measured.get('hours_left_on_cpu', float('nan')):.1f} hours on the processor{gpu_text}, so {outcome}.{stage_text}"
 print(chemeleon_sentence)
+
+# The two OpenADMET pretraining weights follow the same two stages for CYP3A4 (queue jobs 255 to 258); their stage-1 screen is a text file as well.
+cyp3a4_root = ROOT / "data/tdi_track/outputs/nested/CYP3A4"
+cyp3a4_plan = NestedPlan.load(cyp3a4_root / "plan.npz")
+cyp3a4_cache = PredictionCache(cyp3a4_root / "cache", cyp3a4_plan)
+cyp3a4_stage_one = [task for task in cyp3a4_plan.tasks() if task.repeat == 0]
+foundation_done = {name: sum(cyp3a4_cache.has(name, task) for task in cyp3a4_stage_one) for name in ("chemeleon_minimol_mt_shift", "chemeleon_surrogate_mt_shift")}
+foundation_file = ROOT / "data/structure_track/outputs/cyp3a4/logs/stage1_chemprop_foundation_CYP3A4.txt"
+foundation_pattern = re.compile(r"z0=1\\.0\\s+stacked base\\+added vs base: AUC ([+-]\\d\\.\\d+) \\(p=([\\d.]+), better (\\d+)/(\\d+)\\)")
+foundation_text = foundation_file.read_text() if foundation_file.exists() else ""
+foundation_found = foundation_pattern.search(foundation_text)
+if foundation_found:
+    foundation_sentence = (f"For the two OpenADMET weights together, stage 1 has finished: added to the default stack they change the outer AUC of CYP3A4 by {float(foundation_found.group(1)):+.4f} at the first cut-off (corrected p {foundation_found.group(2)}, better in {foundation_found.group(3)} of {foundation_found.group(4)} folds), "
+                           f"and the rule says {'CONTINUE' if chemeleon_decide(foundation_file) else 'STOP'}.")
+elif "not run" in foundation_text:
+    foundation_sentence = "The two OpenADMET weights were not run: " + foundation_text.strip().splitlines()[0] + "."
+else:
+    foundation_sentence = (f"Stage 1 of the two OpenADMET weights is under way: {foundation_done['chemeleon_minimol_mt_shift']} and {foundation_done['chemeleon_surrogate_mt_shift']} of its {len(cyp3a4_stage_one)} tasks per starting point were done when this page was built.")
+print(foundation_sentence)
+
+# The exploratory second look at the Atom-JEPA readout on the 10-outer-fold plan (queue jobs 252 and 253): written to a log that no gate parser reads, so it cannot change a model.
+atomjepa_log = ROOT / "data/structure_track/outputs/cyp3a4/logs/exploratory_atomjepa_head_f10_CYP3A4.log"
+second_look = re.findall(r"z0=(\\S+)\\s+stacked base\\+added vs base: AUC ([+-]\\d\\.\\d+) \\(p=([\\d.]+), better (\\d+)/(\\d+)\\)", atomjepa_log.read_text()) if atomjepa_log.exists() else []
+if second_look:
+    atomjepa_sentence = "; ".join(f"{float(d):+.4f} AUC at z0 = {z} (p {p}, better in {b} of {n} folds)" for z, d, p, b, n in second_look)
+else:
+    atomjepa_sentence = "the second look had not finished when this page was built"
+print(atomjepa_sentence)
 '''
 
 EXTRA_FACTS = '''
@@ -344,6 +373,39 @@ assert set(why_gain["equivalence"]) <= {"equivalent", "inconclusive", "worse"}
 assert (why_gain["detectable_effect"] > 0).all()
 """
 
+ALL_IN_ONE = '''
+# The all-in-one comparison (cypmode/challenge/all_in_one.py, queue job 254_all_in_one_comparison), read from its logs: the final stack of each enzyme against one stack of the default candidates and every candidate of every group
+# whose cross-validation predictions are complete, whatever the verdict of the group's gate, on the experiments' plan with the corrected resampled t. The logs are named so that no gate parser reads them.
+all_in_one = {}
+for iso in ("CYP3A4", "CYP2D6"):
+    log = ROOT / f"data/structure_track/outputs/cyp3a4/logs/exploratory_all_in_one_{iso}.log"
+    text = log.read_text() if log.exists() else ""
+    head = re.search(r"final stack of (\\d+) candidates.*?all-in-one stack of (\\d+) candidates from (\\d+) groups", text)
+    cuts = re.findall(r"z0=(\\S+)\\s+outer AUC final ([\\d.]+)\\s+all-in-one ([\\d.]+)\\s+all-in-one vs final: AUC ([+-][\\d.]+) \\(p=([\\d.]+)\\)", text)
+    verdict = re.search(r"ALL-IN-ONE .*: (MET|NOT MET)", text)
+    all_in_one[iso] = {"final": int(head.group(1)), "everything": int(head.group(2)), "groups": int(head.group(3)), "cuts": [(float(z), float(a), float(b), float(d), float(q)) for z, a, b, d, q in cuts], "verdict": verdict.group(1)} if head and cuts and verdict else None
+all_in_one_rows = [{"enzyme": iso, "z0": z, "final stack": a, "all-in-one": b, "change": d, "corrected p": q, "candidates (final, all-in-one)": f"{r['final']}, {r['everything']}"} for iso, r in all_in_one.items() if r for z, a, b, d, q in r["cuts"]]
+if all_in_one_rows:
+    all_in_one_table = pd.DataFrame(all_in_one_rows)
+    show_table(all_in_one_table, floatfmt=".4f")
+    all_in_one_verdicts = {iso: (r["verdict"] if r else "not run yet") for iso, r in all_in_one.items()}
+else:
+    all_in_one_verdicts = {"CYP3A4": "not run yet", "CYP2D6": "not run yet"}
+cuts_3a4 = all_in_one["CYP3A4"]["cuts"] if all_in_one["CYP3A4"] else []
+cuts_2d6 = all_in_one["CYP2D6"]["cuts"] if all_in_one["CYP2D6"] else []
+if len(cuts_3a4) == 2 and all(c[3] > 0 for c in cuts_3a4) and sum(c[4] < 0.05 for c in cuts_3a4) == 1:
+    reading_3a4 = "On CYP3A4 the larger stack is ahead at both cut-offs, by about a hundredth of an AUC, and the difference is significant at one cut-off and not at the other"
+else:
+    reading_3a4 = "The changes on CYP3A4 are in the table"
+if len(cuts_2d6) == 2 and all(abs(c[3]) < 0.01 for c in cuts_2d6) and len({c[3] > 0 for c in cuts_2d6}) == 2:
+    reading_2d6 = "with changes of a few thousandths in both directions"
+else:
+    reading_2d6 = "with the changes of the table"
+n_all_3a4 = all_in_one["CYP3A4"]["everything"] if all_in_one["CYP3A4"] else 0
+n_groups_3a4 = all_in_one["CYP3A4"]["groups"] if all_in_one["CYP3A4"] else 0
+'''
+
+
 CELLS = [
     md("""
 ## 9.9 The neural pair: a multitask network and plain Chemprop
@@ -403,7 +465,9 @@ The table below gives every verdict at once. It is built from the logs of the ex
     md("""
 *CheMeleon, fine-tuned.* 9.4 used CheMeleon frozen. The other way to use a pretrained network is to start from its weights and train the whole of it on the project's labels (fine-tuning). That is plain Chemprop of 9.9 with the CheMeleon weights as the starting point, and it costs about {{=cpu_minutes_per_task:.0f}} minutes per task on the processor. A rule fixed on 2026-10-16, before any CheMeleon result existed, spends that cost in two stages (`cypmode/challenge/chemeleon_stage.py`). Stage 1 fits repeat 0 only, which is {{=n_stage_one}} cross-validation tasks for an enzyme ({{=stage_one_cpu_hours:.0f}} hours on the processor), and compares the stack with and without the network. Stage 2, the other {{=n_full_design - n_stage_one}} tasks of the design (two more repeats and the deployment fits), runs for an enzyme only if stage 1 shows a mean AUC gain of at least {{=chemeleon_min_gain}} at the first cut-off and a gain in at least {{=chemeleon_min_folds}} of the 5 folds. The stage-1 comparison is written to a text file and not to a gate log on purpose: it is a screen, not a pre-declared test, and it must not enter the ledger. The rule can only lower the number of tests that are run, so it cannot raise the share of false passes of the ordinary 15-fold gate that follows stage 2.
 
-A second decision, also taken on 2026-10-16 before any CheMeleon measurement, was about cost and about what the network could add. CYP2D6 was dropped from the design: plain Chemprop is at chance there (an outer AUC of 0.54 and 0.53) and the frozen CheMeleon block reaches 0.63. For CYP3A4, the plain network added only +0.0048 AUC to the default stack (9.9), a gain below the least difference of about 0.01 that the design recognises, so that a fine-tuned network that adds a few thousandths on top of a stack that already holds the pair of 9.9 could not produce a decision-grade result; it is worth running only if it is cheap. A speed test decides (`cypmode/challenge/chemeleon_speed.py`, queue job `202_chemeleon_speed`): one task that is already in the cache from the processor is trained again on the Apple GPU, in a scratch directory, and the two results are compared; the GPU is accepted when the rank correlation of the scores is at least {{=chemeleon_speed.MIN_AGREEMENT}} and the AUC differs by at most {{=chemeleon_speed.MAX_AUC_DIFFERENCE}}; stage 1 then runs only if the missing tasks fit in {{=chemeleon_speed.STAGE_ONE_HOURS_LIMIT:.0f}} hours, on the GPU if it is accepted and otherwise on the processor; if they do not fit, the fine-tuned CheMeleon is not run and the ledger says \"not run: cost\", which is not a verdict. {{=chemeleon_sentence}} Two further variants start from other pretraining weights of the OpenADMET project (`chemeleon_minimol_mt_shift` and `chemeleon_surrogate_mt_shift` in `nested_runners_chemprop.py`; `cypmode/challenge/foundation_weights.py` wraps those weight files so that Chemprop accepts them); no queue job runs them, because the cost of the staged design applies to them first.
+A second decision, also taken on 2026-10-16 before any CheMeleon measurement, was about cost and about what the network could add. CYP2D6 was dropped from the design: plain Chemprop is at chance there (an outer AUC of 0.54 and 0.53) and the frozen CheMeleon block reaches 0.63. For CYP3A4, the plain network added only +0.0048 AUC to the default stack (9.9), a gain below the least difference of about 0.01 that the design recognises, so that a fine-tuned network that adds a few thousandths on top of a stack that already holds the pair of 9.9 could not produce a decision-grade result; it is worth running only if it is cheap. A speed test decides (`cypmode/challenge/chemeleon_speed.py`, queue job `202_chemeleon_speed`): one task that is already in the cache from the processor is trained again on the Apple GPU, in a scratch directory, and the two results are compared; the GPU is accepted when the rank correlation of the scores is at least {{=chemeleon_speed.MIN_AGREEMENT}} and the AUC differs by at most {{=chemeleon_speed.MAX_AUC_DIFFERENCE}}; stage 1 then runs only if the missing tasks fit in {{=chemeleon_speed.STAGE_ONE_HOURS_LIMIT:.0f}} hours, on the GPU if it is accepted and otherwise on the processor; if they do not fit, the fine-tuned CheMeleon is not run and the ledger says \"not run: cost\", which is not a verdict. {{=chemeleon_sentence}} Two further variants start from other pretraining weights of the OpenADMET project (`chemeleon_minimol_mt_shift` and `chemeleon_surrogate_mt_shift` in `nested_runners_chemprop.py`; `cypmode/challenge/foundation_weights.py` wraps those weight files so that Chemprop accepts them); The first speed test of 2026-10-17 ended on a determinism error of the GPU backend before any GPU time was measured; the second, on 2026-10-22, went through a launcher (`scripts/chemprop_mps.sh` and `scripts/chemprop_warn_only.py`) that lets PyTorch run the one operation of the message passing that has no deterministic implementation on the GPU, with the seed fixed, so that a GPU task is repeatable to a tolerance and not byte for byte; the rule was unchanged. The two OpenADMET weights follow the same two stages for CYP3A4 (queue jobs `255_openadmet_weights_stage1_CYP3A4`, `256_openadmet_weights_stage1_screen`, `257_openadmet_weights_stage2_CYP3A4` and `258_openadmet_weights_addition`), added to the stack together as the group `chemprop_foundation`, so that their screen and their gate are one comparison. {{=foundation_sentence}}
+
+*Atom-JEPA, a second look.* The readout on the atoms came closest to its gate on CYP3A4 (the numbers are in the table above and the reading of them is in 9.11). A near miss may be looked at again only in a way that cannot change a model, so a replicate of the readout on the 10-outer-fold plan (queue jobs `252_atomjepa_head_f10_fill_CYP3A4` and `253_atomjepa_head_f10_exploratory`) was declared before any ten-fold number of the readout existed and written to a log that no gate parser reads. It gives {{=atomjepa_sentence}}. The two plans use the same compounds, so this is the same estimate seen under another split and not independent evidence; the registered gate stays as it was.
 """),
     code(EXTRA_FACTS),
     md("""
@@ -450,7 +514,15 @@ Several readings of these numbers are possible, and the ledger cannot separate t
 
 **What Part IX showed.** Three things. First, an addition that holds information the stack lacks can be seen only if it adds about 0.01 AUC, and of the additions of 9.4 to 9.10 only the neural pair of 9.9 did; a foundation model, outside measurements, the organisers' own extra readings, a new block of chemistry and new blends did not, whatever their origin. The simplest reading, and a reading only, is that 23 members that look at descriptors, fingerprints, neighbours and several learned representations already span what those additions know. Second, the changes that came nearest to the gate were not features at all but models of a different kind, the neural networks of 9.9, which is the only place in the part where the stack gained members that see the molecule in a way the others do not. Third, the largest change in what the project asks of the model is not an addition: it is the selection-aware question of 9.1, which changes what is scored and not how well a score ranks. Part X turns to the quantum-chemical features, whose experiments belong to the same ledger and were designed with the same gates.
 
-*On what actually ran.* `cypmode/challenge/multiplicity.py` (`collect` reads the stacked lines of every log with a gate line, `holm` adjusts), the logs of `data/structure_track/outputs/cyp3a4/logs`, and the audit section that reports the same batch (`cypmode/audit/sections_extra.py`). The notebook reads and counts; it runs no experiment.
+"""),
+    code(ALL_IN_ONE),
+    md("""
+**The all-in-one stack.** A gate asks that an addition helps on its own and inside the default stack, and the stack of 8.2 holds only what the gates let in. An idea that is weak alone and useful only together with others could be refused by every gate and still help a stack that holds all of them, so the question whether the gated stack is also the strongest is a fair one, and it was asked once, with the rule written before the result (`cypmode/challenge/all_in_one.py`, queue job `254_all_in_one_comparison`, test `tests/test_all_in_one.py`). The final stack of each enzyme is compared, on the same outer folds, the same population and the same two confidence cut-offs, with one stack of the default candidates and every candidate of every group whose cross-validation predictions are complete ({{=n_all_3a4}} candidates from {{=n_groups_3a4}} groups for CYP3A4), whatever the verdict of the group's gate: one logistic blend each, the paired corrected resampled t. The registered outcome is that the larger stack is better when its mean outer AUC exceeds the final stack's with corrected p < 0.05 at both cut-offs and by at least the design floor; it does not replace the final stack by itself, because it has no replicate (the groups have no predictions on the ten-outer-fold plan), so that a replacement would be the owner's decision with the numbers in front of it.
+
+The result is in the table. {{=reading_3a4}}; the registered outcome is {{=all_in_one_verdicts['CYP3A4']}}. On CYP2D6 it is {{=all_in_one_verdicts['CYP2D6']}}, {{=reading_2d6}}. A gain of this size is what a stack of ninety candidates would show if each of them added a very little, and it is also what chance and the correlation of the folds would show; with no replicate the design cannot tell the two apart. The final stack is therefore kept, on the rule that was declared, and the larger one is reported as the most notable result of the second looks: it says that the gates were not hiding a large gain in combinations, and that a small one cannot be excluded. A first run of the comparison counted a candidate as complete only if its deployment fit existed too, which left out every group that never joined a final stack (it used 34 candidates from 10 groups, not about ninety); that was a defect of the implementation and not a change of the rule, it was found by reading the log before any decision rested on it, and the log of the first run is kept (`exploratory_all_in_one_first_run_<enzyme>.log`) with its numbers, all of them NOT MET.
+"""),
+    md("""
+*On what actually ran.* `cypmode/challenge/multiplicity.py` (`collect` reads the stacked lines of every log with a gate line, `holm` adjusts), `cypmode/challenge/all_in_one.py` (the second look at the stack), the logs of `data/structure_track/outputs/cyp3a4/logs`, and the audit section that reports the same batch (`cypmode/audit/sections_extra.py`). The notebook reads and counts; it runs no experiment.
 """),
     md("""
 ## 9.12 Why the ideas that did not join added nothing
