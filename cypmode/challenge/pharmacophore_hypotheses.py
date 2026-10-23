@@ -36,7 +36,7 @@ KEEP_PER_SIDE = 60
 TOP_POSITIVE = 5
 INNER_FOLDS = 5
 COLUMNS = ("hyp_score", "hyp_npos", "hyp_nneg", "hyp_max", "hyp_top5")
-LABEL_NAMES = {"a": "acceptor", "D": "donor", "A": "aromatic", "H": "hydrophobe", "P": "positive", "N": "negative"}
+LABEL_NAMES = {"a": "aromatic", "A": "acceptor", "D": "donor", "H": "hydrophobe", "P": "positive", "N": "negative"}  # the letters of pmapper: lower case a is the aromatic ring, upper case A the hydrogen-bond acceptor
 
 
 # -- the hypotheses a compound realises --------------------------------------------------------------------------------------------------------------------
@@ -94,6 +94,30 @@ def describe(smiles: str, signature: int) -> str | None:
                 points = np.array([xyz for _, xyz in features])
                 distances = [np.linalg.norm(points[i] - points[j]) for i in range(len(points)) for j in range(i + 1, len(points))]
                 return f"{' + '.join(names)} at {', '.join('the same site' if d < 0.5 else f'{d:.0f} A' for d in distances)}"
+    return None
+
+
+def locate(smiles: str, signature: int) -> dict | None:
+    """Where one hypothesis lies in a compound: for the first conformer that realises it, the names of its features, the atoms of each (heavy-atom indices of the compound as written by RDKit from its canonical SMILES),
+    their positions and the distances between them, with the heavy-atom positions, elements and bonds of that conformer (to draw it in 3D). None when no conformer realises it."""
+    from pmapper import pharmacophore as pmapper_module
+    from pmapper.pharmacophore import Pharmacophore
+
+    for conformer in _conformer_molecules(smiles):
+        pharmacophore = Pharmacophore()
+        pharmacophore.load_from_mol(conformer)
+        for md5_hex, ids in pharmacophore.iterate_pharm(MIN_FEATURES, MAX_FEATURES, 0, True):
+            if _signature(md5_hex) != signature:
+                continue
+            atom_groups = pharmacophore._get_features_atom_ids(conformer, pmapper_module._smarts_patterns)
+            ordered = [(label, group) for label, groups in atom_groups.items() for group in groups]  # the order in which pmapper numbers its features
+            heavy = conformer.GetNumHeavyAtoms()
+            positions = conformer.GetConformer().GetPositions()
+            features = [{"name": LABEL_NAMES.get(ordered[i][0], ordered[i][0]), "atoms": tuple(a for a in ordered[i][1] if a < heavy), "xyz": positions[list(ordered[i][1])].mean(axis=0)} for i in ids]
+            points = np.array([f["xyz"] for f in features])
+            return {"features": features, "distances": [float(np.linalg.norm(points[i] - points[j])) for i in range(len(points)) for j in range(i + 1, len(points))],
+                    "xyz": positions[:heavy], "elements": [a.GetSymbol() for a in conformer.GetAtoms()][:heavy],
+                    "bonds": [(b.GetBeginAtomIdx(), b.GetEndAtomIdx()) for b in conformer.GetBonds() if max(b.GetBeginAtomIdx(), b.GetEndAtomIdx()) < heavy]}
     return None
 
 

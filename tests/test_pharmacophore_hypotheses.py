@@ -116,3 +116,36 @@ def test_the_conformers_behind_the_hypotheses_are_distinct():
     conformers = ph._conformer_molecules("O=C(C1CCN(CC1)CCc1ccccc1)Nc1ccc(F)cc1")
     positions = [c.GetConformer().GetPositions() for c in conformers]
     assert len(conformers) >= 3 and sum(not np.allclose(positions[0], p, atol=0.05) for p in positions[1:]) >= 2
+
+
+def test_the_letters_of_pmapper_are_named_as_it_defines_them_aromatic_ring_in_lower_case_and_acceptor_in_upper_case():
+    pytest.importorskip("rdkit")
+    pytest.importorskip("pmapper")
+    from pmapper import pharmacophore as pmapper_module
+    from pmapper.pharmacophore import Pharmacophore
+    from rdkit import Chem
+    from rdkit.Chem import AllChem
+
+    mol = Chem.AddHs(Chem.MolFromSmiles("CC(=O)c1ccccc1"))  # acetophenone: one aromatic ring, one carbonyl oxygen
+    AllChem.EmbedMolecule(mol, randomSeed=42)
+    pharmacophore = Pharmacophore()
+    pharmacophore.load_from_mol(mol)
+    groups = pharmacophore._get_features_atom_ids(mol, pmapper_module._smarts_patterns)
+    assert len(groups["a"]) == 1 and len(groups["a"][0]) == 6  # the ring
+    assert any(len(g) == 1 and mol.GetAtomWithIdx(g[0]).GetSymbol() == "O" for g in groups["A"])  # the carbonyl oxygen
+    assert ph.LABEL_NAMES["a"] == "aromatic" and ph.LABEL_NAMES["A"] == "acceptor"
+
+
+def test_a_hypothesis_is_located_in_a_compound_with_its_features_atoms_and_distances():
+    pytest.importorskip("rdkit")
+    pytest.importorskip("pmapper")
+    smiles = "O=C(C1CCN(CC1)CCc1ccccc1)Nc1ccc(F)cc1"
+    signatures = ph.realised(smiles)
+    found = [ph.locate(smiles, int(s)) for s in signatures[:40]]
+    found = [f for f in found if f is not None]
+    assert found
+    first = found[0]
+    assert 2 <= len(first["features"]) <= 3 and len(first["distances"]) == len(first["features"]) * (len(first["features"]) - 1) // 2
+    assert all(f["atoms"] for f in first["features"]) and all(max(f["atoms"]) < len(first["xyz"]) for f in first["features"])
+    assert len(first["xyz"]) == len(first["elements"]) and all(a < len(first["xyz"]) and b < len(first["xyz"]) for a, b in first["bonds"])
+    assert ph.locate(smiles, 12345) is None
