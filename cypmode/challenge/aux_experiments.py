@@ -92,9 +92,10 @@ def main() -> None:
     parser.add_argument("--n-jobs", type=int, default=4)
     parser.add_argument("--outer", type=int, default=5)
     parser.add_argument("--root", default=NESTED_ROOT)
+    parser.add_argument("--screen", action="store_true", help="a one-repeat screen: a candidate counts as cached when its outer-fold tasks are complete, the tasks that select at deployment are not required")
     args = parser.parse_args()
     experiment = args.experiment
-    evaluate_addition(args.isoform, candidates_of(experiment), args.repeats, args.n_jobs, args.run and experiment not in CACHED, ALONE.get(experiment, ()), DIAGNOSTICS.get(experiment, ()), outer=args.outer, root=args.root)
+    evaluate_addition(args.isoform, candidates_of(experiment), args.repeats, args.n_jobs, args.run and experiment not in CACHED, ALONE.get(experiment, ()), DIAGNOSTICS.get(experiment, ()), outer=args.outer, root=args.root, deploy_tasks=not args.screen)
 
 
 if __name__ == "__main__":

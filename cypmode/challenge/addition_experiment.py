@@ -61,6 +61,11 @@ def parse_args(doc: str) -> argparse.Namespace:
     return parser.parse_args()
 
 
+def cached_candidates(cache: PredictionCache, names: list[str], deploy_tasks: bool = True) -> list[str]:
+    """The candidates whose predictions are complete. A full experiment also needs the tasks that select at deployment (repeat -1); a one-repeat screen reads only the outer-fold tasks."""
+    return [name for name in names if not [task for task in cache.missing(name, False) if deploy_tasks or task.repeat >= 0]]
+
+
 def evaluate_addition(
     isoform: str,
     candidates: list[Candidate],
@@ -71,6 +76,7 @@ def evaluate_addition(
     diagnostics: tuple[str, ...] = (),
     outer: int = 5,
     root: str = NESTED_ROOT,
+    deploy_tasks: bool = True,
 ) -> dict[str, bool]:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     root = f"{root}/{isoform}"
@@ -87,7 +93,7 @@ def evaluate_addition(
     prevalence = estimate_from_csv(f"data/tdi_track/inputs/leaderboard_snapshots/interim_{isoform}_2026-10-04.csv")["prevalence"]
     n_train, n_test = plan_sizes(plan)
     base = [c.name for c in default_candidates() if not cache.missing(c.name, False)]
-    added = [c.name for c in candidates if not cache.missing(c.name, False)]
+    added = cached_candidates(cache, [c.name for c in candidates], deploy_tasks)
     print(f"\n{isoform}: {len(plan.outer_folds())} outer folds; base stack {len(base)} candidates; added candidates cached: {added}")
     verdict: dict[str, dict[float, bool]] = {"alone": {}, "stacked": {}}
     for z0 in Z_CUTS:

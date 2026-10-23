@@ -9,4 +9,4 @@ case "$decision" in
   mps|cpu) ;;
   *) echo "CheMeleon stage 1 not run for CYP3A4: ${decision:-no decision}" > $L/stage1_chemeleon_CYP3A4.txt; exit 0 ;;
 esac
-python3 -m cypmode.challenge.aux_experiments --experiment chemeleon --isoform CYP3A4 --repeats 1 > $L/stage1_chemeleon_CYP3A4.txt 2>&1 || exit 1
+python3 -m cypmode.challenge.aux_experiments --experiment chemeleon --isoform CYP3A4 --repeats 1 --screen > $L/stage1_chemeleon_CYP3A4.txt 2>&1 || exit 1
