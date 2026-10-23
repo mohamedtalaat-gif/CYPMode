@@ -75,6 +75,7 @@ class Candidate:
     knn_label_features: bool = False
     params: dict = field(default_factory=dict, hash=False, compare=False)
     weighting: str = ""  # how training rows are weighted by label confidence, see label_confidence.training_weights
+    hyp: str = ""  # "model": the ligand-based pharmacophore hypothesis model of pharmacophore_hypotheses is fitted inside the task and its columns are added; "permuted": the same on permuted labels (the control)
 
 
 def default_candidates() -> list[Candidate]:
@@ -153,6 +154,27 @@ PP2D6_SETS: dict[str, tuple[str, ...]] = {"A+pp2d6": FEATURE_SETS["A"] + ("pp2d6
 def pocket_cyp3a4_candidates() -> list[Candidate]:
     """Deep LightGBM on feature sets A and A+fps plus the compound relative to the CYP3A4 pocket (``pocket_pharmacophore``)."""
     return [Candidate(f"lgbm_{fs}_deep", "lgbm_clf", blocks, params=LGBM_PRESETS["deep"]) for fs, blocks in PP3A4_SETS.items()]
+
+
+ST3A4_SETS: dict[str, tuple[str, ...]] = {"A+st3a4": FEATURE_SETS["A"] + ("st3a4",), "A+fps+st3a4": FEATURE_SETS["A+fps"] + ("st3a4",)}
+ST2D6_SETS: dict[str, tuple[str, ...]] = {"A+st2d6": FEATURE_SETS["A"] + ("st2d6",), "A+fps+st2d6": FEATURE_SETS["A+fps"] + ("st2d6",)}
+
+
+def site_cyp3a4_candidates() -> list[Candidate]:
+    """Deep LightGBM on feature sets A and A+fps plus the structure-based site model of the CYP3A4 pocket (``pocket_pharmacophore``, the six columns ``st_cyp3a4_*``)."""
+    return [Candidate(f"lgbm_{fs}_deep", "lgbm_clf", blocks, params=LGBM_PRESETS["deep"]) for fs, blocks in ST3A4_SETS.items()]
+
+
+def site_cyp2d6_candidates() -> list[Candidate]:
+    """The same with the CYP2D6 pocket; on CYP2D6 it is the addition, on CYP3A4 it is the control of the site model."""
+    return [Candidate(f"lgbm_{fs}_deep", "lgbm_clf", blocks, params=LGBM_PRESETS["deep"]) for fs, blocks in ST2D6_SETS.items()]
+
+
+def hypothesis_candidates(permuted: bool = False) -> list[Candidate]:
+    """Deep LightGBM on feature sets A and A+fps plus the five columns of the ligand-based hypothesis model (``pharmacophore_hypotheses``), fitted inside every task; ``permuted`` is the control whose
+    model is fitted on labels permuted within the training rows."""
+    tag = "hypperm" if permuted else "hyp"
+    return [Candidate(f"lgbm_{fs}+{tag}_deep", "lgbm_clf", FEATURE_SETS[fs], params=LGBM_PRESETS["deep"], hyp="permuted" if permuted else "model") for fs in ("A", "A+fps")]
 
 
 def pocket_cyp2d6_candidates() -> list[Candidate]:
@@ -376,6 +398,12 @@ def _design(candidate: Candidate, ctx: Context, task: Task, y_train: np.ndarray)
     if candidate.knn_label_features:
         train_x = np.hstack([train_x, _knn_label_features(ctx.similarity, task.train, y_train, task.train, KNN_FEATURE_K, True)])
         eval_x = np.hstack([eval_x, _knn_label_features(ctx.similarity, task.train, y_train, task.evaluate, KNN_FEATURE_K, False)])
+    if candidate.hyp:
+        from cypmode.challenge.pharmacophore_hypotheses import hypothesis_columns, load
+
+        hypotheses, _ = load(tuple(ctx.store.smiles))
+        train_h, eval_h = hypothesis_columns(hypotheses, task.train, y_train, task.evaluate, _seed(task), permute=candidate.hyp == "permuted")  # out of fold for the training rows, training labels only
+        train_x, eval_x = np.hstack([train_x, train_h]), np.hstack([eval_x, eval_h])
     return train_x, eval_x
 
 

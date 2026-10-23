@@ -17,6 +17,8 @@ Experiments
   ext_cont    the continuous responses and potencies of the NCATS qHTS panel (``external_continuous``) added to the feature sets that carry the binary external block
   atomjepa    the frozen Atom-JEPA embeddings (``atomjepa_embeddings``: 8 blocks, 64 principal components) alone and added to feature sets A and A+fps
   pocket_cyp3a4 / pocket_cyp2d6   the compound relative to the pocket of CYP3A4 or CYP2D6 (``pocket_pharmacophore``); the pocket of the other enzyme is the control
+  site_cyp3a4 / site_cyp2d6   the structure-based site model of the pocket of CYP3A4 or CYP2D6 (``pocket_pharmacophore``: recall, matched sites and precision); the site model of the other enzyme is the control
+  hypothesis  the ligand-based pharmacophore hypothesis model (``pharmacophore_hypotheses``), fitted inside every task and added out of fold; hypothesis_control is the same model fitted on permuted labels (no gate)
   ext_adme    the logD and mouse brain protein binding predicted by OpenADMET's surrogate Chemprop models (``openadmet_surrogates``) added to feature sets A and A+fps
   ext_tox     the Tox21 CYP-screen readings (luciferase inhibitors removed) added to the same sets, as a separate test with its own gate
   tabicl, tabpfn, atomjepa_head, tabicl_monroe, tabicl_chemeleon, tabpfn_chemeleon, mlp, mlp_aux, chemprop   the cached torch-side candidates added to the default stack
@@ -42,8 +44,11 @@ from cypmode.challenge.nested_runners import (
     ext_adme_candidates,
     ext_cont_candidates,
     ext_tox_candidates,
+    hypothesis_candidates,
     pocket_cyp2d6_candidates,
     pocket_cyp3a4_candidates,
+    site_cyp2d6_candidates,
+    site_cyp3a4_candidates,
 )
 
 NESTED_ROOT = "data/tdi_track/outputs/nested"
@@ -60,6 +65,10 @@ ALONE = {
     "atomjepa": [("lgbm_A_deep", "lgbm_A+aj_deep"), ("lgbm_A+fps_deep", "lgbm_A+fps+aj_deep")],
     "pocket_cyp3a4": [("lgbm_A_deep", "lgbm_A+pp3a4_deep"), ("lgbm_A+fps_deep", "lgbm_A+fps+pp3a4_deep")],
     "pocket_cyp2d6": [("lgbm_A_deep", "lgbm_A+pp2d6_deep"), ("lgbm_A+fps_deep", "lgbm_A+fps+pp2d6_deep")],
+    "site_cyp3a4": [("lgbm_A_deep", "lgbm_A+st3a4_deep"), ("lgbm_A+fps_deep", "lgbm_A+fps+st3a4_deep")],
+    "site_cyp2d6": [("lgbm_A_deep", "lgbm_A+st2d6_deep"), ("lgbm_A+fps_deep", "lgbm_A+fps+st2d6_deep")],
+    "hypothesis": [("lgbm_A_deep", "lgbm_A+hyp_deep"), ("lgbm_A+fps_deep", "lgbm_A+fps+hyp_deep")],
+    "hypothesis_control": [("lgbm_A_deep", "lgbm_A+hypperm_deep"), ("lgbm_A+fps_deep", "lgbm_A+fps+hypperm_deep")],
 }
 DIAGNOSTICS = {"atomjepa": ("lgbm_aj_deep",), "nodirect": ("ndneg_A_deep", "ndneg_A+fps_deep"), "gate_shift": ("tgate_A_deep", "tshift_A_deep", "tgate_A+fps_deep", "tshift_A+fps_deep"), "tabicl": ("tabicl_svd",), "tabpfn": ("tabpfn_svd",), "atomjepa_head": ("atomjepa_head",), "chemprop_foundation": ("chemeleon_minimol_mt_shift", "chemeleon_surrogate_mt_shift"), "tabicl_monroe": ("tabicl_monroe",), "tabicl_chemeleon": ("tabicl_chemeleon",), "tabpfn_chemeleon": ("tabpfn_chemeleon",), "mlp": ("mlp_multitask_label", "mlp_multitask_shift"), "mlp_aux": ("mlp_multitask_aux_label", "mlp_multitask_aux_shift"), "chemprop": ("chemprop_mt_shift", "chemeleon_mt_shift")}
 
@@ -89,12 +98,20 @@ def candidates_of(experiment: str) -> list[Candidate]:
         return pocket_cyp3a4_candidates()
     if experiment == "pocket_cyp2d6":
         return pocket_cyp2d6_candidates()
+    if experiment == "site_cyp3a4":
+        return site_cyp3a4_candidates()
+    if experiment == "site_cyp2d6":
+        return site_cyp2d6_candidates()
+    if experiment == "hypothesis":
+        return hypothesis_candidates()
+    if experiment == "hypothesis_control":
+        return hypothesis_candidates(permuted=True)
     return CACHED[experiment]()
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--experiment", required=True, choices=["screen", "emax", "pxr", "gate_shift", "basic_centre", "nodirect", "ext_cont", "ext_tox", "ext_adme", "atomjepa", "pocket_cyp3a4", "pocket_cyp2d6", *CACHED])
+    parser.add_argument("--experiment", required=True, choices=["screen", "emax", "pxr", "gate_shift", "basic_centre", "nodirect", "ext_cont", "ext_tox", "ext_adme", "atomjepa", "pocket_cyp3a4", "pocket_cyp2d6", "site_cyp3a4", "site_cyp2d6", "hypothesis", "hypothesis_control", *CACHED])
     parser.add_argument("--isoform", required=True, choices=["CYP3A4", "CYP2D6"])
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--run", action="store_true", help="fill the prediction cache for the added candidates first (not for the cached torch-side candidates)")

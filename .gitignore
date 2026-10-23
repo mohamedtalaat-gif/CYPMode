@@ -119,6 +119,7 @@ data/tdi_track/inputs/openadmet_foundation/
 data/tdi_track/inputs/chembl_cache/*.json
 data/tdi_track/outputs/caches/chemberta_embedding_cache.csv
 data/tdi_track/outputs/caches/pharmacophore_fingerprint_cache.csv
+data/tdi_track/outputs/caches/pharmacophore_hypotheses.npz
 
 # Third-party data that holds readings of blinded test compounds (excluded from every use and never read by a model, see limitation L11 and the official-extra audit): not redistributed here.
 # The files are downloaded from the organisers' public repositories; the names and SHA-256 sums are in data/tdi_track/inputs/official_extra/SHA256SUMS, which stays tracked.

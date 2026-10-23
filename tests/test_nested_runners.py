@@ -160,7 +160,7 @@ def test_feature_store_rejects_unparseable_smiles_and_a_stale_cache_is_rebuilt(t
 
 def test_every_registered_block_computes_on_a_small_molecule_set():
     store = FeatureStore.build(_smiles(5))
-    assert set(store.blocks) == set(BLOCKS) - {"ext_activity", "physics", "chemeleon", "physics_b", "basic_centre", "monroe", "ext_cont", "ext_tox", "ext_adme", "atomjepa", "pp3a4", "pp2d6"}  # opt-in blocks need external panels, the xTB cache or an embedding cache; tested separately
+    assert set(store.blocks) == set(BLOCKS) - {"ext_activity", "physics", "chemeleon", "physics_b", "basic_centre", "monroe", "ext_cont", "ext_tox", "ext_adme", "atomjepa", "pp3a4", "pp2d6", "st3a4", "st2d6"}  # opt-in blocks need external panels, the xTB cache or an embedding cache; tested separately
     assert all(np.isfinite(v).all() for v in store.blocks.values())
 
 
@@ -486,3 +486,38 @@ def test_new_candidate_groups_are_complete_and_named_consistently():
     pop = population_physics_candidates()
     assert len(pop) == 8 and {c.family for c in pop} == {"lgbm_gate", "lgbm_hits_only", "lgbm_two_part", "lgbm_clf"} and all("physics" in c.blocks for c in pop)
     assert "pophits_A+phys_deep" in {c.name for c in pop}
+
+
+def test_pharmacophore_model_candidates_are_named_after_their_experiments_and_the_control_is_the_permuted_model():
+    from cypmode.challenge.nested_runners import (
+        hypothesis_candidates,
+        site_cyp2d6_candidates,
+        site_cyp3a4_candidates,
+    )
+
+    assert [c.name for c in site_cyp3a4_candidates()] == ["lgbm_A+st3a4_deep", "lgbm_A+fps+st3a4_deep"] and all("st3a4" in c.blocks for c in site_cyp3a4_candidates())
+    assert [c.name for c in site_cyp2d6_candidates()] == ["lgbm_A+st2d6_deep", "lgbm_A+fps+st2d6_deep"] and all("st2d6" in c.blocks for c in site_cyp2d6_candidates())
+    assert [c.name for c in hypothesis_candidates()] == ["lgbm_A+hyp_deep", "lgbm_A+fps+hyp_deep"] and {c.hyp for c in hypothesis_candidates()} == {"model"}
+    assert [c.name for c in hypothesis_candidates(permuted=True)] == ["lgbm_A+hypperm_deep", "lgbm_A+fps+hypperm_deep"] and {c.hyp for c in hypothesis_candidates(permuted=True)} == {"permuted"}
+    assert not any(c.blocks and "hyp" in " ".join(c.blocks) for c in hypothesis_candidates())  # the model adds its columns inside the task, not through a block of the store
+
+
+@pytest.mark.parametrize("flag", ["model", "permuted"])
+def test_hypothesis_candidates_score_every_row_and_never_read_the_labels_of_the_rows_they_score(store, monkeypatch, flag):
+    from scipy.sparse import csr_matrix
+
+    from cypmode.challenge import pharmacophore_hypotheses as hypotheses
+
+    rng = np.random.default_rng(1)
+    realised = csr_matrix((rng.random((len(store.smiles), 80)) < 0.3).astype(np.uint8))
+    monkeypatch.setattr(hypotheses, "load", lambda smiles, cache=None: (realised, np.arange(80, dtype=np.uint64)))
+    ctx = _context(store)
+    task = _plan(ctx).task(0, 0, -1)
+    candidate = Candidate(f"lgbm_hyp_{flag}", "lgbm_clf", ("rdkit_desc",), params=SMALL, hyp=flag)
+    before = fit_predict(candidate, ctx, task)
+    assert before.shape == (len(task.evaluate),) and np.isfinite(before).all()
+    corrupted = Context(store, ctx.labels.copy(), {k: v.copy() for k, v in ctx.targets.items()}, ctx.similarity, ctx.n_jobs)
+    corrupted.labels[task.evaluate] = 1 - corrupted.labels[task.evaluate]
+    assert np.allclose(before, fit_predict(candidate, corrupted, task))
+    plain = fit_predict(Candidate("lgbm_plain", "lgbm_clf", ("rdkit_desc",), params=SMALL), ctx, task)
+    assert not np.allclose(before, plain)  # the five columns are in the design

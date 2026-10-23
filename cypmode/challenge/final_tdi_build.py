@@ -79,6 +79,7 @@ from cypmode.challenge.nested_runners import (
     ext_adme_candidates,
     ext_cont_candidates,
     ext_tox_candidates,
+    hypothesis_candidates,
     mmp_candidates,
     monroe_candidates,
     pair_candidates,
@@ -89,6 +90,8 @@ from cypmode.challenge.nested_runners import (
     population_candidates,
     population_physics_candidates,
     run,
+    site_cyp2d6_candidates,
+    site_cyp3a4_candidates,
     testlike_candidates,
     xiso_candidates,
 )
@@ -137,6 +140,9 @@ GROUPS = {
     "atomjepa": (atomjepa_candidates, "aux_atomjepa_{iso}.log"),
     "pocket_cyp3a4": (pocket_cyp3a4_candidates, "aux_pocket_cyp3a4_{iso}.log"),  # the log exists for CYP3A4 only: the pocket of an enzyme is the addition for that enzyme
     "pocket_cyp2d6": (pocket_cyp2d6_candidates, "aux_pocket_cyp2d6_{iso}.log"),
+    "site_cyp3a4": (site_cyp3a4_candidates, "aux_site_cyp3a4_{iso}.log"),  # as the pocket groups: the log exists for the enzyme whose pocket it is
+    "site_cyp2d6": (site_cyp2d6_candidates, "aux_site_cyp2d6_{iso}.log"),
+    "hypothesis": (hypothesis_candidates, "aux_hypothesis_{iso}.log"),  # learned inside every task from the enzyme's own training rows: both enzymes
     "monroe": (monroe_candidates, "monroe_embeddings_{iso}.log"),
     **{name: (builder, f"aux_{name}_{{iso}}.log") for name, builder in CACHED_GROUPS.items()},
 }
@@ -145,7 +151,7 @@ DESIGN = {"outer": 5, "root": NESTED}  # design 10 switches to the 10-outer-fold
 GATE_LINE = re.compile(r"^(CYP\w+) GATE \((alone|stacked)[^)]*\): (MET|NOT MET)", re.MULTILINE)
 
 
-CONFIRMED_GROUPS = ("neural", "pocket_cyp3a4", "pocket_cyp2d6")  # the pocket groups were declared with a replicate rule before any result: they pass only when the 10-outer-fold replicate is MET as well  # groups found after looking at the 15-fold results: their stacked pass counts only when the 10-outer-fold replicate (replicate_verdict.py) is MET as well
+CONFIRMED_GROUPS = ("neural", "pocket_cyp3a4", "pocket_cyp2d6", "site_cyp3a4", "site_cyp2d6", "hypothesis")  # the pocket groups were declared with a replicate rule before any result: they pass only when the 10-outer-fold replicate is MET as well  # groups found after looking at the 15-fold results: their stacked pass counts only when the 10-outer-fold replicate (replicate_verdict.py) is MET as well
 
 
 def parse_gates(logs: Path = LOGS) -> dict[tuple[str, str], dict[str, bool]]:

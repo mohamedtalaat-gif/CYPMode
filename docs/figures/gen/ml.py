@@ -71,7 +71,7 @@ LOG_NAMES = {
     "physics_compact": "physics_compact_{iso}.log", "physics_b": "physics_tierb_{iso}.log", "xiso": "xiso_transfer_{iso}.log",
     # the additions of the later rounds; a log that does not exist (yet) is skipped, so the plot grows as the queue finishes
     "screen": "aux_screen_{iso}.log", "emax": "aux_emax_{iso}.log", "pxr": "aux_pxr_{iso}.log", "gate_shift": "aux_gate_shift_{iso}.log", "no_direct": "aux_nodirect_{iso}.log",
-    "basic_centre": "aux_basic_centre_{iso}.log", "ext_cont": "aux_ext_cont_{iso}.log", "ext_tox": "aux_ext_tox_{iso}.log", "ext_adme": "aux_ext_adme_{iso}.log", "atomjepa": "aux_atomjepa_{iso}.log", "pocket_cyp3a4": "aux_pocket_cyp3a4_{iso}.log", "pocket_cyp2d6": "aux_pocket_cyp2d6_{iso}.log",
+    "basic_centre": "aux_basic_centre_{iso}.log", "ext_cont": "aux_ext_cont_{iso}.log", "ext_tox": "aux_ext_tox_{iso}.log", "ext_adme": "aux_ext_adme_{iso}.log", "atomjepa": "aux_atomjepa_{iso}.log", "pocket_cyp3a4": "aux_pocket_cyp3a4_{iso}.log", "pocket_cyp2d6": "aux_pocket_cyp2d6_{iso}.log", "site_cyp3a4": "aux_site_cyp3a4_{iso}.log", "site_cyp2d6": "aux_site_cyp2d6_{iso}.log", "hypothesis": "aux_hypothesis_{iso}.log",
     "tabicl": "aux_tabicl_{iso}.log", "tabpfn": "aux_tabpfn_{iso}.log", "tabicl_monroe": "aux_tabicl_monroe_{iso}.log", "tabicl_chemeleon": "aux_tabicl_chemeleon_{iso}.log", "tabpfn_chemeleon": "aux_tabpfn_chemeleon_{iso}.log", "multitask": "aux_mlp_{iso}.log", "multitask_aux": "aux_mlp_aux_{iso}.log",
     "chemprop": "aux_chemprop_{iso}.log", "chemeleon": "aux_chemeleon_{iso}.log", "neural_pair": "aux_neural_{iso}.log", "monroe": "monroe_embeddings_{iso}.log",
 }

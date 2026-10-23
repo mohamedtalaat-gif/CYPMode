@@ -17,7 +17,13 @@ turn, 4.5 A above it. A pose is refused when another heavy atom is lower than 1.
 atoms plus the mean, over the families that the compound has, of the mean field value at its features (read at the nearest grid point); no weight is fitted. For each mode that applies the block
 holds the best score, its occupancy part, its six family parts, the share of accepted poses, the height of the centroid and the distance of the nearest heavy atom at the best pose (11 columns).
 
-Usage: python -m cypmode.challenge.pocket_pharmacophore --extract      fields of both pockets, then the block for every compound of both files
+Site model (checklist item "Pharmacophore modelling", declared on 2026-10-23 before this code ran). The same fields give a discrete structure-based pharmacophore model per enzyme: in each of the six feature
+fields the local maxima of at least 0.35 (the maximum of a field is 1), taken in order of value and at least 2.5 A apart, at most 4 per family, are the sites of the model, each weighted by its field value
+and with a tolerance sphere of 1.5 A. A placed compound matches a site when a feature of that family lies in the sphere. The columns, for each mode that applies: the largest weight of matched sites over the
+weight of all sites (recall), the number of sites matched at that pose and the share of the compound's typed features that lie in a sphere of a site of their family (precision); the pose has the largest recall,
+the larger precision breaking a tie.
+
+Usage: python -m cypmode.challenge.pocket_pharmacophore --extract      fields of both pockets, then the block and the site model for every compound of both files
 """
 
 import argparse
@@ -41,6 +47,8 @@ ANCHOR_HEIGHT = {"donor": 2.2, "substrate": 4.5}
 MIN_HEIGHT, MIN_IRON_DISTANCE = 1.5, 2.0
 MODES = ("donor", "substrate")
 PART_COLUMNS = ("best", "occupancy", *(f.lower() for f in FAMILIES), "accepted", "z_centroid", "d_nearest")
+SITE_MIN_VALUE, SITE_SEPARATION, SITES_PER_FAMILY, SITE_RADIUS = 0.35, 2.5, 4, 1.5
+SITE_PARTS = ("recall", "matched", "precision")
 
 
 # -- the frame of a heme ------------------------------------------------------------------------------------------------------------------------------------
@@ -171,6 +179,56 @@ def lookup(field: np.ndarray, points: np.ndarray) -> np.ndarray:
     return out
 
 
+# -- the sites of the model -----------------------------------------------------------------------------------------------------------------------------------
+
+def sites_of(fields: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    """{family: (n, 4) array of x, y, z in the heme frame and the weight}: the sites of the structure-based model, see the module docstring. No label is read."""
+    out = {}
+    shape = np.array(GRID_SHAPE)
+    for family in FAMILIES:
+        field = fields[family]
+        padded = np.pad(field, 1, constant_values=-1.0)
+        neighbour_max = np.full(field.shape, -1.0)
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for dz in (-1, 0, 1):
+                    if dx or dy or dz:
+                        shifted = padded[1 + dx : 1 + dx + shape[0], 1 + dy : 1 + dy + shape[1], 1 + dz : 1 + dz + shape[2]]
+                        neighbour_max = np.maximum(neighbour_max, shifted)
+        points = np.argwhere((field >= neighbour_max) & (field >= SITE_MIN_VALUE))
+        values = field[tuple(points.T)] if len(points) else np.zeros(0)
+        kept: list[np.ndarray] = []
+        for i in np.argsort(-values, kind="stable"):
+            xyz = GRID_ORIGIN + points[i]
+            if all(np.linalg.norm(xyz - site[:3]) >= SITE_SEPARATION for site in kept):
+                kept.append(np.append(xyz, values[i]))
+            if len(kept) == SITES_PER_FAMILY:
+                break
+        out[family] = np.array(kept, dtype=float).reshape(-1, 4)
+    return out
+
+
+def site_match(moved: np.ndarray | None, owner: np.ndarray | None, present: list[int], sites: dict[str, np.ndarray], n_poses: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """(recall, matched, precision) of every pose: ``moved`` are the positions (poses, features, 3) of the compound's typed features, ``owner`` the family index of each feature (both None
+    when the compound has no typed feature, which then matches no site and has no precision)."""
+    recall, matched = np.zeros(n_poses), np.zeros(n_poses)
+    hits = []
+    for k in present:
+        family_sites = sites[FAMILIES[k]]
+        positions = moved[:, owner == k]
+        if not len(family_sites):
+            hits.append(np.zeros(positions.shape[:2], dtype=bool))
+            continue
+        near = np.linalg.norm(positions[:, :, None, :] - family_sites[None, None, :, :3], axis=3) <= SITE_RADIUS  # (poses, features, sites)
+        site_hit = near.any(axis=1)
+        recall += (site_hit * family_sites[:, 3]).sum(axis=1)
+        matched += site_hit.sum(axis=1)
+        hits.append(near.any(axis=2))
+    total = sum(float(s[:, 3].sum()) for s in sites.values())
+    precision = np.concatenate(hits, axis=1).mean(axis=1) if hits else np.full(n_poses, np.nan)
+    return (recall / total if total > 0 else np.full(n_poses, np.nan)), matched, precision
+
+
 # -- the placement of a compound -----------------------------------------------------------------------------------------------------------------------------
 
 def orientations() -> np.ndarray:
@@ -205,8 +263,9 @@ def rotation_between(a: np.ndarray, b: np.ndarray) -> np.ndarray:
 ROTATIONS = None
 
 
-def score_poses(heavy: np.ndarray, anchor: int, feats: dict[str, np.ndarray], mode: str, fields: dict[str, np.ndarray]) -> dict | None:
-    """Best pose of one conformer in one mode: the parts of its score, or None when no pose is accepted. ``heavy`` are the heavy-atom coordinates, ``feats`` the feature positions of the conformer."""
+def score_poses(heavy: np.ndarray, anchor: int, feats: dict[str, np.ndarray], mode: str, fields: dict[str, np.ndarray], sites: dict[str, np.ndarray] | None = None) -> dict | None:
+    """Best pose of one conformer in one mode: the parts of its score, or None when no pose is accepted. ``heavy`` are the heavy-atom coordinates, ``feats`` the feature positions of the conformer.
+    With ``sites`` the result also holds the site model at its own best pose: ``site_recall``, ``site_matched`` and ``site_precision``."""
     global ROTATIONS
     if ROTATIONS is None:
         ROTATIONS = orientations()
@@ -226,6 +285,7 @@ def score_poses(heavy: np.ndarray, anchor: int, feats: dict[str, np.ndarray], mo
     occupancy = lookup(fields["occupancy"], atoms).mean(axis=1)
     present = [k for k, family in enumerate(FAMILIES) if len(feats[family])]
     family_parts = np.zeros((len(atoms), len(FAMILIES)))
+    moved = owner = None
     if present:
         stacked = np.concatenate([feats[FAMILIES[k]] for k in present])
         owner = np.concatenate([np.full(len(feats[FAMILIES[k]]), k) for k in present])
@@ -239,6 +299,10 @@ def score_poses(heavy: np.ndarray, anchor: int, feats: dict[str, np.ndarray], mo
         parts[family.lower()] = float(family_parts[best, k]) if k in present else float("nan")
     parts["z_centroid"] = float(atoms[best].mean(axis=0)[2])
     parts["d_nearest"] = float(np.linalg.norm(atoms[best], axis=1).min())
+    if sites is not None:
+        recall, matched, precision = site_match(moved, owner, present, sites, len(atoms))
+        pick = int(np.lexsort((np.nan_to_num(precision, nan=-1.0), np.nan_to_num(recall, nan=-1.0)))[-1])
+        parts.update(site_recall=float(recall[pick]), site_matched=float(matched[pick]), site_precision=float(precision[pick]))
     return parts
 
 
@@ -257,13 +321,15 @@ def conformers(mol, seed: int = 0):
     return Chem.RemoveHs(mol), ids
 
 
-def compound_columns(smiles: str, fields: dict[str, np.ndarray], pocket: str) -> dict[str, float]:
-    """The 22 columns of one compound for one pocket: 11 per mode, NaN for a mode that does not apply or that accepts no pose."""
+def compound_columns(smiles: str, fields: dict[str, np.ndarray], pocket: str, sites: dict[str, np.ndarray] | None = None) -> dict[str, float]:
+    """The 22 columns of the pocket block of one compound for one pocket (11 per mode) and the 6 of the site model (3 per mode), NaN for a mode that does not apply or that accepts no pose."""
     from rdkit import Chem
 
     from cypmode.validation.build_input import heme_donor_atom
 
+    sites = sites_of(fields) if sites is None else sites
     columns = {f"pp_{pocket}_{mode}_{part}": float("nan") for mode in MODES for part in PART_COLUMNS}
+    columns.update({f"st_{pocket}_{mode}_{part}": float("nan") for mode in MODES for part in SITE_PARTS})
     template = Chem.MolFromSmiles(smiles)
     if template is None:
         return columns
@@ -273,18 +339,26 @@ def compound_columns(smiles: str, fields: dict[str, np.ndarray], pocket: str) ->
     factory = feature_factory()
     donor = heme_donor_atom(smiles)
     anchors = {"donor": [donor[0]] if donor else [], "substrate": [a.GetIdx() for a in mol.GetAtoms() if a.GetSymbol() == "C" and not a.GetIsAromatic() and a.GetTotalNumHs() > 0]}
-    best = {}
+    best, best_site = {}, {}
     for mode in MODES:
         for cid in ids:
             heavy = mol.GetConformer(cid).GetPositions()
             feats = features_of(mol, factory, cid)
             for anchor in anchors[mode]:
-                result = score_poses(heavy, anchor, feats, mode, fields)
-                if result is not None and (mode not in best or result["best"] > best[mode]["best"]):
+                result = score_poses(heavy, anchor, feats, mode, fields, sites)
+                if result is None:
+                    continue
+                if mode not in best or result["best"] > best[mode]["best"]:
                     best[mode] = result
+                key = (np.nan_to_num(result["site_recall"], nan=-1.0), np.nan_to_num(result["site_precision"], nan=-1.0))
+                if mode not in best_site or key > best_site[mode][0]:
+                    best_site[mode] = (key, result)
     for mode, result in best.items():
         for part in PART_COLUMNS:
             columns[f"pp_{pocket}_{mode}_{part}"] = result[part]
+    for mode, (_, result) in best_site.items():
+        for part in SITE_PARTS:
+            columns[f"st_{pocket}_{mode}_{part}"] = result[f"site_{part}"]
     return columns
 
 
@@ -299,6 +373,15 @@ def load_fields(pocket: str) -> dict[str, np.ndarray]:
         return {name: archive[name] for name in archive.files}
 
 
+def all_smiles() -> list[str]:
+    """The canonical SMILES of every compound of the training and the test file, in file order without repeats (the keys of the feature store)."""
+    import pandas as pd
+    from rdkit import Chem
+
+    smiles = list(pd.read_csv("data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv").SMILES) + list(pd.read_csv("data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv").SMILES)
+    return list(dict.fromkeys(Chem.MolToSmiles(m) for m in (Chem.MolFromSmiles(s) for s in smiles) if m is not None))
+
+
 def extract(workers: int = 4) -> None:
     import multiprocessing
 
@@ -310,10 +393,7 @@ def extract(workers: int = 4) -> None:
         fields = build_fields(records)
         np.savez_compressed(fields_path(pocket), **fields)
         print(f"{pocket}: {len(records)} ligand copies, fields {sorted(fields)}", flush=True)
-    from rdkit import Chem
-
-    smiles = list(pd.read_csv("data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv").SMILES) + list(pd.read_csv("data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv").SMILES)
-    unique = list(dict.fromkeys(Chem.MolToSmiles(m) for m in (Chem.MolFromSmiles(s) for s in smiles) if m is not None))  # the keys of the feature store: canonical SMILES
+    unique = all_smiles()
     with multiprocessing.Pool(workers, initializer=_init) as pool:
         rows = pool.map(_row, unique, chunksize=20)
     table = pd.DataFrame(rows, index=unique)
@@ -325,15 +405,19 @@ def extract(workers: int = 4) -> None:
 _FIELDS: dict[str, dict[str, np.ndarray]] = {}
 
 
+_SITES: dict[str, dict[str, np.ndarray]] = {}
+
+
 def _init() -> None:
     for pocket in POCKETS:
         _FIELDS[pocket] = load_fields(pocket)
+        _SITES[pocket] = sites_of(_FIELDS[pocket])
 
 
 def _row(smiles: str) -> dict[str, float]:
     row = {}
     for pocket in POCKETS:
-        row.update(compound_columns(smiles, _FIELDS[pocket], pocket))
+        row.update(compound_columns(smiles, _FIELDS[pocket], pocket, _SITES[pocket]))
     return row
 
 
@@ -341,15 +425,28 @@ def pocket_columns(pocket: str) -> list[str]:
     return [f"pp_{pocket}_{mode}_{part}" for mode in MODES for part in PART_COLUMNS]
 
 
-def load_pocket_pharmacophore(smiles: list[str], pocket: str, cache: Path = FIELDS_DIR / "pocket_pharmacophore_cache.csv") -> np.ndarray:
-    """The 22 columns of one pocket for the given canonical SMILES, read from the cache that ``--extract`` wrote; a compound that is not in it is an error, a missing value stays NaN."""
+def site_columns(pocket: str) -> list[str]:
+    return [f"st_{pocket}_{mode}_{part}" for mode in MODES for part in SITE_PARTS]
+
+
+def _read(smiles: list[str], columns: list[str], cache: Path) -> np.ndarray:
     import pandas as pd
 
     table = pd.read_csv(cache, index_col="SMILES")
     missing = [s for s in smiles if s not in table.index]
     if missing:
         raise KeyError(f"{len(missing)} compounds are not in {cache}; run `python -m cypmode.challenge.pocket_pharmacophore --extract`")
-    return table.loc[smiles, pocket_columns(pocket)].to_numpy(dtype=float)
+    return table.loc[smiles, columns].to_numpy(dtype=float)
+
+
+def load_pocket_pharmacophore(smiles: list[str], pocket: str, cache: Path = FIELDS_DIR / "pocket_pharmacophore_cache.csv") -> np.ndarray:
+    """The 22 columns of one pocket for the given canonical SMILES, read from the cache that ``--extract`` wrote; a compound that is not in it is an error, a missing value stays NaN."""
+    return _read(smiles, pocket_columns(pocket), cache)
+
+
+def load_site_model(smiles: list[str], pocket: str, cache: Path = FIELDS_DIR / "pocket_pharmacophore_cache.csv") -> np.ndarray:
+    """The 6 columns of the site model of one pocket, from the same cache."""
+    return _read(smiles, site_columns(pocket), cache)
 
 
 def main() -> None:

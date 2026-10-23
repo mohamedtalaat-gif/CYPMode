@@ -257,9 +257,25 @@ def _pp2d6(mols):
 
 BLOCKS["pp3a4"] = _pp3a4  # the compound relative to the CYP3A4 pocket (density fields of the public crystal ligands in the frame of the heme); needs `pocket_pharmacophore --extract`
 BLOCKS["pp2d6"] = _pp2d6  # the same for the CYP2D6 pocket
+
+
+def _st3a4(mols):
+    from cypmode.challenge.pocket_pharmacophore import load_site_model
+
+    return load_site_model([Chem.MolToSmiles(m) for m in mols], "cyp3a4")  # read-only cache lookup
+
+
+def _st2d6(mols):
+    from cypmode.challenge.pocket_pharmacophore import load_site_model
+
+    return load_site_model([Chem.MolToSmiles(m) for m in mols], "cyp2d6")  # read-only cache lookup
+
+
+BLOCKS["st3a4"] = _st3a4  # the structure-based site model of the CYP3A4 pocket (recall, matched sites and precision per mode); written by the same extraction as pp3a4
+BLOCKS["st2d6"] = _st2d6  # the same for the CYP2D6 pocket
 BLOCKS["ext_cont"] = _ext_cont  # continuous responses and potencies of the NCATS qHTS panel (AID 1851), predicted by models trained on external compounds only; needs `external_continuous --extract`
 BLOCKS["monroe"] = _monroe  # frozen Monroe (GRIT) embeddings, 64 principal components; needs `monroe_embeddings --extract`
-OPT_IN_BLOCKS = ("ext_activity", "physics", "chemeleon", "physics_b", "basic_centre", "monroe", "ext_cont", "ext_tox", "ext_adme", "atomjepa", "pp3a4", "pp2d6")
+OPT_IN_BLOCKS = ("ext_activity", "physics", "chemeleon", "physics_b", "basic_centre", "monroe", "ext_cont", "ext_tox", "ext_adme", "atomjepa", "pp3a4", "pp2d6", "st3a4", "st2d6")
 
 
 class FeatureStore:
