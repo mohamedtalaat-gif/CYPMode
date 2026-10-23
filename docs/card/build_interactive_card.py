@@ -124,14 +124,14 @@ PAGE = r"""<!doctype html>
 *{box-sizing:border-box}html,body{margin:0}body{background:var(--page);color:var(--ink);font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif}
 .card{max-width:1400px;margin:0 auto;padding:28px 24px 40px;display:grid;gap:18px;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-areas:"head view" "stats view" "strip strip" "note note"}
 @media(max-width:900px){.card{grid-template-columns:1fr;grid-template-areas:"head" "view" "stats" "strip" "note"}}
-header{grid-area:head}.eyebrow{font-size:13px;letter-spacing:4px;font-weight:700;color:var(--accent)}
-h1{margin:6px 0 0;font-size:clamp(46px,6.4vw,92px);line-height:1;font-weight:800;font-style:italic;letter-spacing:-3px}
+header{grid-area:head;container-type:inline-size;min-width:0}.eyebrow{font-size:13px;letter-spacing:4px;font-weight:700;color:var(--accent)}
+h1{margin:6px 0 0;font-size:min(19cqw,92px);line-height:1;font-weight:800;font-style:italic;letter-spacing:-3px}
 .lede{margin:12px 0 0;font-size:19px;line-height:1.4;color:var(--muted)}
 .chips{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}.chip{padding:7px 16px;border-radius:999px;background:var(--chip);border:1.5px solid var(--accent);font-size:15px;font-weight:700}
-.stats{grid-area:stats;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));align-content:start}
+.stats{grid-area:stats;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));align-content:start}
 .stat{all:unset;display:block;cursor:help;padding:10px 12px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel)}
 .stat:focus-visible,.tile:focus-visible,.bar button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.num{font-size:22px;font-weight:800;color:var(--accent);white-space:nowrap}.lab{font-size:13px;line-height:1.3;color:var(--muted);margin-top:2px}
+.num{font-size:clamp(17px,2.2vw,22px);font-weight:800;color:var(--accent);overflow-wrap:anywhere}.lab{font-size:13px;line-height:1.3;color:var(--muted);margin-top:2px}
 .view{grid-area:view;position:relative;border-radius:22px;overflow:hidden;border:1.5px solid var(--line);background:var(--panel);min-height:420px}
 #v{width:100%;height:min(62vh,560px);min-height:420px;position:relative}
 .bar{position:absolute;left:12px;top:12px;display:flex;flex-wrap:wrap;gap:6px;z-index:5}
