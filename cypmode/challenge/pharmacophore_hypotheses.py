@@ -230,9 +230,9 @@ def hypothesis_columns(x_all, train_rows: np.ndarray, y_train: np.ndarray, eval_
     return training, evaluation
 
 
-def summary(isoform: str, per_side: int = 8, cache: str = str(CACHE)) -> dict:
-    """The model fitted on all the training rows of one enzyme, described: the sizes of the two classes, and for the strongest ``per_side`` positive and exclusion hypotheses the ratio, the
-    number of positive (a) and negative (b) rows that realise it and a readable account taken from one compound that realises it. A description of the model, not a measure of performance."""
+def fitted(isoform: str, cache: str = str(CACHE)):
+    """The model fitted on all the training rows of one enzyme, with what is needed to read it: (model, vocabulary, the cache rows of the pool, the labels of the pool, the SMILES of the training file, the matrix
+    of the pool)."""
     import pandas as pd
 
     from cypmode.challenge.tdi_targets import BOTH_ARMS, training_view
@@ -243,16 +243,27 @@ def summary(isoform: str, per_side: int = 8, cache: str = str(CACHE)) -> dict:
     rows, y = np.flatnonzero(mask), view["label"][mask].astype(int).to_numpy()
     x, vocabulary = load(tuple(train["SMILES"]), cache)
     pool = x[rows]
-    model = fit_model(pool, y)
-    smiles = list(train["SMILES"])
+    return fit_model(pool, y), vocabulary, rows, y, list(train["SMILES"]), pool
+
+
+def summary(isoform: str, per_side: int = 8, cache: str = str(CACHE)) -> dict:
+    """The model fitted on all the training rows of one enzyme, described: the sizes of the two classes, and for the strongest ``per_side`` positive and exclusion hypotheses the ratio, the
+    number of positive (a) and negative (b) rows that realise it and a readable account taken from one compound that realises it (the realising compound of the class with the largest label confidence; its SMILES and row are returned with the signature). A description of the model, not a measure of performance."""
+    import pandas as pd
+
+    from cypmode.challenge.label_confidence import confidence_z
+
+    model, vocabulary, rows, y, smiles, pool = fitted(isoform, cache)
+    confidence = confidence_z(pd.read_csv("data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv"), isoform)
     out = {"isoform": isoform, "n_positive": int(y.sum()), "n_negative": int((1 - y).sum()), "vocabulary": len(vocabulary), "kept_positive": int(model.n_positive), "kept_exclusion": int(len(model.index) - model.n_positive), "hypotheses": []}
     chosen = list(range(min(per_side, model.n_positive))) + list(range(model.n_positive, min(model.n_positive + per_side, len(model.index))))
     for k in chosen:
         column = model.index[k]
         present = np.asarray(pool[:, column].todense()).ravel() > 0
-        example = rows[np.flatnonzero(present & (y == (1 if k < model.n_positive else 0)))[0]]
+        candidates = np.flatnonzero(present & (y == (1 if k < model.n_positive else 0)))
+        example = rows[candidates[np.nanargmax(np.nan_to_num(confidence[rows[candidates]], nan=-1.0))]]  # the realising compound of the class with the largest label confidence
         out["hypotheses"].append({"side": "positive" if k < model.n_positive else "exclusion", "ratio": float(model.ratio[k]), "a": int(present[y == 1].sum()), "b": int(present[y == 0].sum()),
-                                  "description": describe(smiles[example], int(vocabulary[column]))})
+                                  "description": describe(smiles[example], int(vocabulary[column])), "signature": int(vocabulary[column]), "smiles": smiles[example], "row": int(example)})
     return out
 
 

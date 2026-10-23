@@ -75,3 +75,21 @@ def test_the_rates_compare_the_carriers_with_the_rest_and_skip_rare_groups():
     assert acid.n == 20 and acid.positives == 15 and acid.rate == pytest.approx(0.75) and acid.rate > acid.base_rate and acid.low < 0.75 < acid.high
     assert "furan" not in set(rates.group)  # only three carry it
     assert acid.rate_without == pytest.approx(labels[20:].mean())
+
+
+def test_every_group_has_an_example_molecule_that_carries_it():
+    assert set(fg.EXAMPLES) == set(fg.GROUPS)
+    for name, smiles in fg.EXAMPLES.items():
+        assert name in fg.groups_of(Chem.MolFromSmiles(smiles)), name
+
+
+def test_a_pair_counts_for_the_group_it_gains_only_when_nothing_else_of_the_table_changes():
+    smiles = ["c1ccccc1C", "c1ccccc1C(=O)O", "Oc1ccccc1C(=O)O", "Clc1ccccc1C"]
+    pairs = (np.array([0, 0, 0]), np.array([1, 2, 3]), np.array([0, 1, 2]), ["a>>b", "c>>d", "e>>f"])
+    table, detail = fg.group_gain_pairs(smiles, pairs, np.arange(4), np.array([0, 1, 1, 0]), min_pairs=1)
+    columns = list(fg.group_matrix(smiles).columns)
+    assert {columns[k] for k in detail["gained"] if k >= 0} == {"carboxylic acid", "aryl halide"}  # the pair that adds a phenol and an acid at once gains two groups and counts for none
+    assert detail["gained"][1] == -1
+    acid = table[table.group == "carboxylic acid"].iloc[0]
+    assert acid.pairs == 1 and acid["mean"] == 1.0 and table[table.group == "aryl halide"].iloc[0]["mean"] == 0.0
+    assert detail["delta"][detail["gained"] >= 0].tolist() == [1.0, 0.0]

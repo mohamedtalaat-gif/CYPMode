@@ -40,6 +40,27 @@ GROUPS: dict[str, dict] = {
     "terminal alkyne": {"smarts": ("[CX2]#[CX2;H1]",), "families": ("Hydrophobe",), "note": "a known mechanism-based inactivator of P450s"},
 }
 
+EXAMPLES = {  # a small molecule that shows each group, for the drawings of the atlas
+    "azole or pyridine (heme binder)": "Cn1ccnc1",
+    "basic amine": "CCN(CC)CC",
+    "carboxylic acid": "CCC(=O)O",
+    "sulfonamide": "c1ccccc1S(=O)(=O)NC",
+    "amide": "c1ccccc1C(=O)NC",
+    "urea or carbamate": "c1ccccc1NC(=O)OC",
+    "ester": "c1ccccc1C(=O)OC",
+    "aryl halide": "Clc1ccccc1",
+    "phenol": "Oc1ccccc1",
+    "aliphatic hydroxyl": "CCCO",
+    "aryl ether": "COc1ccccc1",
+    "nitrile": "c1ccccc1C#N",
+    "nitro": "c1ccccc1[N+](=O)[O-]",
+    "tert-butyl": "CC(C)(C)c1ccccc1",
+    "methylenedioxyphenyl": "c1cc2OCOc2cc1",
+    "furan": "c1ccoc1",
+    "thiophene": "c1ccsc1",
+    "terminal alkyne": "C#Cc1ccccc1",
+}
+
 _PATTERNS = {name: [Chem.MolFromSmarts(s) for s in spec["smarts"]] for name, spec in GROUPS.items()}
 
 
@@ -95,3 +116,34 @@ def group_rates(flags: pd.DataFrame, labels: np.ndarray, min_compounds: int = 10
         rows.append({"group": name, "n": n, "positives": k, "rate": k / n, "low": lo, "high": hi, "rate_without": float(rest.mean()) if len(rest) else float("nan"), "base_rate": float(labels.mean()),
                      "families": "+".join(GROUPS[name]["families"])})
     return pd.DataFrame(rows).sort_values("rate", ascending=False).reset_index(drop=True) if rows else pd.DataFrame(columns=["group", "n", "positives", "rate", "low", "high", "rate_without", "base_rate", "families"])
+
+
+def group_gain_pairs(smiles: list[str], pairs: tuple, rows: np.ndarray, labels: np.ndarray, min_pairs: int = 5) -> tuple[pd.DataFrame, dict]:
+    """The SAR of a change at the level of the functional group. ``pairs`` are the directed matched pairs of ``mmp_transfer`` (source row, target row, transformation id, transformation strings) over the list
+    ``smiles``; ``rows`` and ``labels`` are the labelled compounds (row in the list, 0/1 label). A pair that has both compounds labelled counts for a group when the second compound has it, the first does not and no
+    other group of the table changes, so that the change of label (0 = not an inhibitor, 1 = inhibitor) can be put down to that group. Returned: the table of the groups carried by at least ``min_pairs`` such pairs
+    (group, index of the group, number of pairs, mean change of the label, its standard error) and the pairs themselves (arrays a, b, t, the group each gains or -1, the change of the label, the labels by row)."""
+    a, b, t, names = pairs
+    y = np.full(len(smiles), np.nan)
+    y[np.asarray(rows)] = np.asarray(labels)
+    keep = ~np.isnan(y[a]) & ~np.isnan(y[b])
+    a, b, t = a[keep], b[keep], t[keep]
+    involved = np.unique(np.concatenate([a, b]))
+    flags = group_matrix([smiles[i] for i in involved])
+    position = {int(r): k for k, r in enumerate(involved)}
+    matrix = flags.to_numpy()
+    gained_group = np.full(len(a), -1)
+    for i in range(len(a)):
+        before, after = matrix[position[int(a[i])]], matrix[position[int(b[i])]]
+        gained, lost = after & ~before, before & ~after
+        if gained.sum() == 1 and lost.sum() == 0:
+            gained_group[i] = int(np.flatnonzero(gained)[0])
+    delta = y[b] - y[a]
+    table = []
+    for k, name in enumerate(flags.columns):
+        selected = gained_group == k
+        n = int(selected.sum())
+        if n >= min_pairs:
+            table.append({"group": name, "k": k, "pairs": n, "mean": float(delta[selected].mean()), "se": float(delta[selected].std(ddof=1) / np.sqrt(n)) if n > 1 else float("nan")})
+    table = pd.DataFrame(table, columns=["group", "k", "pairs", "mean", "se"]).sort_values(["pairs", "mean"], ascending=[False, False]).reset_index(drop=True)
+    return table, {"a": a, "b": b, "t": t, "names": names, "gained": gained_group, "delta": delta, "y": y, "smiles": smiles}
