@@ -6,7 +6,7 @@
 
 Hypotheses. A hypothesis is a subset of two or three pharmacophore features of pmapper (github.com/DrrDom/pmapper, default feature definitions, bin step 1 A) with the binned distances
 between them, identified by the md5 signature that pmapper computes for the subset, so that nothing is hashed into a shared bit as in the fingerprint of ``pharmacophore_fingerprint``. A
-compound realises a hypothesis when any of its conformers does: the up to 12 ETKDG conformers within 5 kcal/mol of the lowest (MMFF, seed 0) of ``pocket_pharmacophore.conformers``.
+compound realises a hypothesis when any of its conformers does: the up to 12 ETKDG conformers within 5 kcal/mol of the lowest (MMFF, seed 42) of ``pocket_pharmacophore.conformers``.
 The vocabulary is every hypothesis that at least 10 of the compounds of the training and the test file realise (structures only, no label); it is cached once as a sparse matrix.
 
 Model. Inside a task the model is fitted on the training rows of the task only. For each hypothesis the number of positive rows a and of negative rows b that realise it must satisfy a + b >= 10;
@@ -46,13 +46,17 @@ def _conformer_molecules(smiles: str):
     from rdkit import Chem
     from rdkit.Chem import AllChem
 
-    from cypmode.challenge.pocket_pharmacophore import ENERGY_WINDOW, N_CONFORMERS
+    from cypmode.challenge.pocket_pharmacophore import (
+        CONFORMER_SEED,
+        ENERGY_WINDOW,
+        N_CONFORMERS,
+    )
 
     parsed = Chem.MolFromSmiles(smiles)
     if parsed is None:
         return []
     mol = Chem.AddHs(Chem.MolFromSmiles(Chem.MolToSmiles(parsed)))  # the atom order of the canonical SMILES, so that a conformer does not depend on how the compound was written
-    ids = list(AllChem.EmbedMultipleConfs(mol, N_CONFORMERS, randomSeed=0))
+    ids = list(AllChem.EmbedMultipleConfs(mol, N_CONFORMERS, randomSeed=CONFORMER_SEED))
     if not ids:
         return []
     results = AllChem.MMFFOptimizeMoleculeConfs(mol, maxIters=500)

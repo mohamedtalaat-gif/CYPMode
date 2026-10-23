@@ -11,7 +11,7 @@ their heme: the iron is the origin, z is the porphyrin normal pointing to the si
 the RDKit feature families (donor, acceptor, aromatic ring, hydrophobe, positive and negative ionisable) become Gaussian density fields (sigma 1.5 A, a grid of 1 A, maximum 1), a ligand
 counting 1 / (its number of copies) so that a ligand with many entries does not dominate; the heavy atoms give an occupancy field (sigma 1.2 A). No label is used.
 
-Compound. Up to 12 ETKDG conformers within 5 kcal/mol (MMFF, seed 0) are placed in the frame by an anchor atom and 1080 fixed orientations (60 directions in a cone of 70 degrees around z, 18
+Compound. Up to 12 ETKDG conformers within 5 kcal/mol (MMFF, seed 42) are placed in the frame by an anchor atom and 1080 fixed orientations (60 directions in a cone of 70 degrees around z, 18
 spins of 20 degrees). In the donor mode the Type II donor nitrogen is the anchor, 2.2 A above the iron; in the substrate mode each non-aromatic carbon that bears a hydrogen is the anchor in
 turn, 4.5 A above it. A pose is refused when another heavy atom is lower than 1.5 A above the porphyrin plane or closer than 2.0 A to the iron. A pose scores the mean occupancy of its heavy
 atoms plus the mean, over the families that the compound has, of the mean field value at its features (read at the nearest grid point); no weight is fitted. For each mode that applies the block
@@ -42,6 +42,7 @@ GRID_ORIGIN = np.array([-14.0, -14.0, -3.0])
 GRID_SHAPE = (29, 29, 20)  # 1 A spacing: x and y from -14 to 14 A, z from -3 to 16 A
 SIGMA_FEATURE, SIGMA_ATOM = 1.5, 1.2
 N_CONFORMERS, ENERGY_WINDOW = 12, 5.0
+CONFORMER_SEED = 42  # not 0: with this RDKit, EmbedMultipleConfs(..., randomSeed=0) returns the same conformer N times
 N_DIRECTIONS, CONE_DEGREES, N_SPINS = 60, 70.0, 18
 ANCHOR_HEIGHT = {"donor": 2.2, "substrate": 4.5}
 MIN_HEIGHT, MIN_IRON_DISTANCE = 1.5, 2.0
@@ -63,6 +64,11 @@ def heme_frame(structure, iron: np.ndarray, ligand_xyz: np.ndarray) -> np.ndarra
                     position = np.array(atom.pos.tolist())
                     if atom.name in ("NA", "NB", "NC", "ND") and np.linalg.norm(position - iron) < 3.0:
                         nitrogens[atom.name] = position
+    return frame_from_nitrogens(nitrogens, iron, ligand_xyz)
+
+
+def frame_from_nitrogens(nitrogens: dict[str, np.ndarray], iron: np.ndarray, ligand_xyz: np.ndarray) -> np.ndarray | None:
+    """The frame of a heme from the positions of its four pyrrole nitrogens (keys NA, NB, NC, ND), whatever structure reader found them; None when one is missing."""
     if len(nitrogens) < 4:
         return None
     ring = np.array([nitrogens[n] for n in ("NA", "NB", "NC", "ND")])
@@ -306,7 +312,7 @@ def score_poses(heavy: np.ndarray, anchor: int, feats: dict[str, np.ndarray], mo
     return parts
 
 
-def conformers(mol, seed: int = 0):
+def conformers(mol, seed: int = CONFORMER_SEED):
     """(molecule without hydrogens that carries the conformers, their ids): up to N_CONFORMERS within ENERGY_WINDOW kcal/mol of the lowest, MMFF-relaxed."""
     from rdkit import Chem
     from rdkit.Chem import AllChem

@@ -129,3 +129,13 @@ def test_the_site_model_of_a_compound_is_recall_one_when_its_features_sit_on_the
     miss = pp.score_poses(heavy, 0, feats, "donor", fields, pp.sites_of(fields))
     assert miss is not None and miss["site_recall"] == 0.0 and miss["site_matched"] == 0
     assert "site_recall" not in pp.score_poses(heavy, 0, feats, "donor", fields)  # without sites the result is the pocket block alone
+
+
+def test_the_ensemble_of_a_flexible_compound_holds_distinct_conformers():
+    """With this RDKit a seed of 0 gives the same conformer twelve times, which silently turns every ensemble into a single conformer."""
+    from rdkit import Chem
+
+    mol, ids = pp.conformers(Chem.MolFromSmiles("O=C(C1CCN(CC1)CCc1ccccc1)Nc1ccc(F)cc1"))
+    positions = [mol.GetConformer(cid).GetPositions() for cid in ids]
+    assert len(ids) >= 2 and sum(not np.allclose(positions[0], p, atol=0.05) for p in positions[1:]) >= 1  # the window of 5 kcal/mol keeps few conformers of this molecule, but not one geometry
+    assert pp.CONFORMER_SEED != 0

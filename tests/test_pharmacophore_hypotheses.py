@@ -109,3 +109,10 @@ def test_the_hypotheses_of_a_compound_do_not_depend_on_how_its_smiles_is_written
     pytest.importorskip("rdkit")
     pytest.importorskip("pmapper")
     assert np.array_equal(ph.realised("CC(C)Cc1ccc(cc1)C(C)C(=O)O"), ph.realised("OC(=O)C(C)c1ccc(CC(C)C)cc1"))
+
+
+def test_the_conformers_behind_the_hypotheses_are_distinct():
+    pytest.importorskip("rdkit")
+    conformers = ph._conformer_molecules("O=C(C1CCN(CC1)CCc1ccccc1)Nc1ccc(F)cc1")
+    positions = [c.GetConformer().GetPositions() for c in conformers]
+    assert len(conformers) >= 3 and sum(not np.allclose(positions[0], p, atol=0.05) for p in positions[1:]) >= 2
