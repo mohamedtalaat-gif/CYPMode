@@ -310,8 +310,10 @@ def extract(workers: int = 4) -> None:
         fields = build_fields(records)
         np.savez_compressed(fields_path(pocket), **fields)
         print(f"{pocket}: {len(records)} ligand copies, fields {sorted(fields)}", flush=True)
+    from rdkit import Chem
+
     smiles = list(pd.read_csv("data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv").SMILES) + list(pd.read_csv("data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv").SMILES)
-    unique = list(dict.fromkeys(smiles))
+    unique = list(dict.fromkeys(Chem.MolToSmiles(m) for m in (Chem.MolFromSmiles(s) for s in smiles) if m is not None))  # the keys of the feature store: canonical SMILES
     with multiprocessing.Pool(workers, initializer=_init) as pool:
         rows = pool.map(_row, unique, chunksize=20)
     table = pd.DataFrame(rows, index=unique)
@@ -333,6 +335,21 @@ def _row(smiles: str) -> dict[str, float]:
     for pocket in POCKETS:
         row.update(compound_columns(smiles, _FIELDS[pocket], pocket))
     return row
+
+
+def pocket_columns(pocket: str) -> list[str]:
+    return [f"pp_{pocket}_{mode}_{part}" for mode in MODES for part in PART_COLUMNS]
+
+
+def load_pocket_pharmacophore(smiles: list[str], pocket: str, cache: Path = FIELDS_DIR / "pocket_pharmacophore_cache.csv") -> np.ndarray:
+    """The 22 columns of one pocket for the given canonical SMILES, read from the cache that ``--extract`` wrote; a compound that is not in it is an error, a missing value stays NaN."""
+    import pandas as pd
+
+    table = pd.read_csv(cache, index_col="SMILES")
+    missing = [s for s in smiles if s not in table.index]
+    if missing:
+        raise KeyError(f"{len(missing)} compounds are not in {cache}; run `python -m cypmode.challenge.pocket_pharmacophore --extract`")
+    return table.loc[smiles, pocket_columns(pocket)].to_numpy(dtype=float)
 
 
 def main() -> None:

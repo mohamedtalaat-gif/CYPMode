@@ -243,9 +243,23 @@ def _atomjepa(mols):
 
 
 BLOCKS["atomjepa"] = _atomjepa  # frozen Atom-JEPA embeddings of all 8 blocks, 64 principal components; needs `atomjepa_embeddings --extract`
+def _pp3a4(mols):
+    from cypmode.challenge.pocket_pharmacophore import load_pocket_pharmacophore
+
+    return load_pocket_pharmacophore([Chem.MolToSmiles(m) for m in mols], "cyp3a4")  # read-only cache lookup
+
+
+def _pp2d6(mols):
+    from cypmode.challenge.pocket_pharmacophore import load_pocket_pharmacophore
+
+    return load_pocket_pharmacophore([Chem.MolToSmiles(m) for m in mols], "cyp2d6")  # read-only cache lookup
+
+
+BLOCKS["pp3a4"] = _pp3a4  # the compound relative to the CYP3A4 pocket (density fields of the public crystal ligands in the frame of the heme); needs `pocket_pharmacophore --extract`
+BLOCKS["pp2d6"] = _pp2d6  # the same for the CYP2D6 pocket
 BLOCKS["ext_cont"] = _ext_cont  # continuous responses and potencies of the NCATS qHTS panel (AID 1851), predicted by models trained on external compounds only; needs `external_continuous --extract`
 BLOCKS["monroe"] = _monroe  # frozen Monroe (GRIT) embeddings, 64 principal components; needs `monroe_embeddings --extract`
-OPT_IN_BLOCKS = ("ext_activity", "physics", "chemeleon", "physics_b", "basic_centre", "monroe", "ext_cont", "ext_tox", "ext_adme", "atomjepa")
+OPT_IN_BLOCKS = ("ext_activity", "physics", "chemeleon", "physics_b", "basic_centre", "monroe", "ext_cont", "ext_tox", "ext_adme", "atomjepa", "pp3a4", "pp2d6")
 
 
 class FeatureStore:

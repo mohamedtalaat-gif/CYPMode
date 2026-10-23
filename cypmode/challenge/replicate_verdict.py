@@ -27,9 +27,11 @@ GROUPS = {
     "physics": ("physics_experiment", "physics_experiment_f10"),
     "physics_compact": ("physics_compact", "physics_compact_f10"),
     "physics_b": ("physics_tierb", "physics_tierb_f10"),
-    "neural": ("aux_neural", "aux_neural_f10"),  # declared on 2026-10-16 after the 15-fold discovery, before any 10-fold result exists
+    "neural": ("aux_neural", "aux_neural_f10"),
+    "pocket_cyp3a4": ("aux_pocket_cyp3a4", "aux_pocket_cyp3a4_f10"),  # declared on 2026-10-23 with the replicate rule, before any result exists
+    "pocket_cyp2d6": ("aux_pocket_cyp2d6", "aux_pocket_cyp2d6_f10"),  # declared on 2026-10-16 after the 15-fold discovery, before any 10-fold result exists
 }
-SCOPE = {"neural": ("CYP3A4",)}  # a group is replicated only for the enzymes named here; the others print nothing (not tested is not NOT MET)
+SCOPE = {"neural": ("CYP3A4",), "pocket_cyp3a4": ("CYP3A4",), "pocket_cyp2d6": ("CYP2D6",)}  # a group is replicated only for the enzymes named here; the others print nothing (not tested is not NOT MET)
 STACKED = re.compile(r"z0=(\d\.\d+)\s+stacked base\+added vs base: AUC ([+-]\d\.\d+) \(p=(\d\.\d+)")
 
 

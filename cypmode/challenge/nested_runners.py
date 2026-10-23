@@ -146,6 +146,20 @@ def ext_adme_candidates() -> list[Candidate]:
     return [Candidate(f"lgbm_{fs}_deep", "lgbm_clf", blocks, params=LGBM_PRESETS["deep"]) for fs, blocks in ADME_SETS.items()]
 
 
+PP3A4_SETS: dict[str, tuple[str, ...]] = {"A+pp3a4": FEATURE_SETS["A"] + ("pp3a4",), "A+fps+pp3a4": FEATURE_SETS["A+fps"] + ("pp3a4",)}
+PP2D6_SETS: dict[str, tuple[str, ...]] = {"A+pp2d6": FEATURE_SETS["A"] + ("pp2d6",), "A+fps+pp2d6": FEATURE_SETS["A+fps"] + ("pp2d6",)}
+
+
+def pocket_cyp3a4_candidates() -> list[Candidate]:
+    """Deep LightGBM on feature sets A and A+fps plus the compound relative to the CYP3A4 pocket (``pocket_pharmacophore``)."""
+    return [Candidate(f"lgbm_{fs}_deep", "lgbm_clf", blocks, params=LGBM_PRESETS["deep"]) for fs, blocks in PP3A4_SETS.items()]
+
+
+def pocket_cyp2d6_candidates() -> list[Candidate]:
+    """The same with the CYP2D6 pocket; on CYP2D6 it is the addition, on CYP3A4 it is the control of the pocket block."""
+    return [Candidate(f"lgbm_{fs}_deep", "lgbm_clf", blocks, params=LGBM_PRESETS["deep"]) for fs, blocks in PP2D6_SETS.items()]
+
+
 EXTT_SETS: dict[str, tuple[str, ...]] = {"A+ext+xt": FEATURE_SETS["A+ext"] + ("ext_tox",), "A+fps+ext+xt": FEATURE_SETS["A+fps+ext"] + ("ext_tox",)}
 
 

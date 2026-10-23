@@ -70,6 +70,7 @@ figures feed the notebook (`notebooks/PLAN.md`) and the README.
 - P(label) = P(hit) x P(label | hit) as a diagram, and the AUC against the non-hit weight from the sensitivity runs; the hedged blend;
   the pair model and a matched molecular pair drawn on real molecules; the committee's Gaussian P(shift > log10 2) and expected
   improvement; the arm correlations between isoforms as a heat map; the embeddings projected with PCA.
+- The pharmacophore representations (9.13): the pockets of CYP3A4 and CYP2D6 as density fields in the frame of the heme, and one forest plot of every pharmacophore representation of the project with its gain, p and verdict.
 
 **Part X, quantum chemistry and physics**
 - The self-consistent field loop (animated convergence); the orbital energy diagram with HOMO, LUMO, IP, EA and Koopmans; Fukui functions
