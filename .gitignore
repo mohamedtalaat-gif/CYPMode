@@ -140,6 +140,7 @@ data/tdi_track/outputs/nested/superseded_candidates/
 data/tdi_track/outputs/nested/*/deploy_scores.csv
 data/tdi_track/outputs/nested/*/reliability_deploy.csv
 data/structure_track/outputs/cyp3a4/final/
+data/structure_track/outputs/bioemu2/cyp3a4/OCNT-*/
 data/structure_track/outputs/cyp3a4/engine_consensus.csv
 data/structure_track/outputs/cyp3a4/structure_track_results.*
 data/structure_track/outputs/cyp3a4/posebusters_validity.csv
