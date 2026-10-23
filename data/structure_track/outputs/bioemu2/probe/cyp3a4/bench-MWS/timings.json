@@ -1,0 +1,14 @@
+{
+  "trunk_s": 314.8,
+  "sample_s": [
+    269.8,
+    260.9
+  ],
+  "atoms": 4103,
+  "msa_rows": 256,
+  "device": "mps",
+  "chunk_size": 64,
+  "peak_rss_mb": 4860.2,
+  "seed": 0,
+  "mps_driver_mb": 9493.7
+}

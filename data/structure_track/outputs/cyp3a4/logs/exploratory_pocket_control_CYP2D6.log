@@ -1,0 +1,27 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+2026-10-23 18:14:05,565 lgbm_A+pp3a4_deep: 10/79 tasks
+2026-10-23 18:14:15,529 lgbm_A+pp3a4_deep: 20/79 tasks
+2026-10-23 18:14:25,457 lgbm_A+pp3a4_deep: 30/79 tasks
+2026-10-23 18:14:35,459 lgbm_A+pp3a4_deep: 40/79 tasks
+2026-10-23 18:14:45,390 lgbm_A+pp3a4_deep: 50/79 tasks
+2026-10-23 18:14:55,322 lgbm_A+pp3a4_deep: 60/79 tasks
+2026-10-23 18:15:05,400 lgbm_A+pp3a4_deep: 70/79 tasks
+2026-10-23 18:15:14,588 lgbm_A+pp3a4_deep: 79/79 tasks
+2026-10-23 18:15:33,445 lgbm_A+fps+pp3a4_deep: 10/79 tasks
+2026-10-23 18:15:52,363 lgbm_A+fps+pp3a4_deep: 20/79 tasks
+2026-10-23 18:16:11,234 lgbm_A+fps+pp3a4_deep: 30/79 tasks
+2026-10-23 18:16:30,872 lgbm_A+fps+pp3a4_deep: 40/79 tasks
+2026-10-23 18:16:49,886 lgbm_A+fps+pp3a4_deep: 50/79 tasks
+2026-10-23 18:17:08,678 lgbm_A+fps+pp3a4_deep: 60/79 tasks
+2026-10-23 18:17:27,615 lgbm_A+fps+pp3a4_deep: 70/79 tasks
+2026-10-23 18:17:44,105 lgbm_A+fps+pp3a4_deep: 79/79 tasks
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['lgbm_A+pp3a4_deep', 'lgbm_A+fps+pp3a4_deep']
+  z0=1.0  alone  lgbm_A+pp3a4_deep        vs lgbm_A_deep     : AUC 0.6964 -> 0.7080 (+0.0115, p=0.584, better 9/15) | AP +0.0138 (p=0.685)
+  z0=1.0  alone  lgbm_A+fps+pp3a4_deep    vs lgbm_A+fps_deep : AUC 0.7185 -> 0.7188 (+0.0003, p=0.985, better 7/15) | AP -0.0055 (p=0.889)
+  z0=1.0  stacked base+added vs base: AUC -0.0022 (p=0.710, better 8/15) AP -0.0010 (p=0.921, better 6/15)
+  z0=1.96 alone  lgbm_A+pp3a4_deep        vs lgbm_A_deep     : AUC 0.7267 -> 0.7247 (-0.0020, p=0.921, better 7/15) | AP +0.0105 (p=0.829)
+  z0=1.96 alone  lgbm_A+fps+pp3a4_deep    vs lgbm_A+fps_deep : AUC 0.7396 -> 0.7267 (-0.0129, p=0.579, better 7/15) | AP -0.0287 (p=0.568)
+  z0=1.96 stacked base+added vs base: AUC +0.0015 (p=0.647, better 8/15) AP +0.0054 (p=0.507, better 10/15)
+CYP2D6 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

@@ -17,6 +17,7 @@ programs never refuse to run, and a licence, not a program, is what asks that th
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -60,6 +61,12 @@ def commit() -> str | None:
     return result.stdout.strip() or None if result.returncode == 0 else None
 
 
+def _relative(argument: str) -> str:
+    """An argument that points inside the repository, written relative to it, so that a record does not carry the path of the machine that made it."""
+    prefix = str(ROOT) + os.sep
+    return argument.removeprefix(prefix)
+
+
 def record(command: list[str] | None = None) -> dict:
     """Everything the sidecar says, for the run that is happening now."""
     cff = load()
@@ -73,7 +80,7 @@ def record(command: list[str] | None = None) -> dict:
         "cite_as": citation_text(cff),
         "commit": commit(),
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "command": command if command is not None else sys.argv,
+        "command": [_relative(a) for a in (command if command is not None else sys.argv)],
     }
 
 

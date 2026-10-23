@@ -72,3 +72,10 @@ def test_the_prediction_cache_writes_its_sidecar_with_the_first_prediction(tmp_p
     first = sidecar.read_text()
     cache.put("model_b", task, np.array([0.3, 0.2, 0.1]))
     assert sidecar.read_text() == first
+
+
+def test_a_command_that_points_inside_the_repository_is_recorded_relative_to_it_and_other_arguments_are_kept():
+    inside = str(provenance.ROOT / "cypmode" / "challenge" / "aux_experiments.py")
+    rec = provenance.record([inside, "--isoform", "CYP3A4", "/somewhere/else/file.csv"])
+    assert rec["command"] == ["cypmode/challenge/aux_experiments.py", "--isoform", "CYP3A4", "/somewhere/else/file.csv"]
+    assert str(provenance.ROOT) not in json.dumps(rec)

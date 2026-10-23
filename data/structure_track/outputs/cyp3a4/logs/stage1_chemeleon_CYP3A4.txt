@@ -1,0 +1,6 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+
+CYP3A4: 5 outer folds; base stack 23 candidates; added candidates cached: ['chemeleon_mt_shift']
+  z0=1.0  stacked base+added vs base: AUC +0.0035 (p=0.640, better 4/5) AP +0.0006 (p=0.975, better 3/5)
+  z0=1.96 stacked base+added vs base: AUC +0.0032 (p=0.629, better 4/5) AP +0.0037 (p=0.290, better 3/5)
+CYP3A4 GATE (stacked, corrected p < 0.05 at both z0): NOT MET

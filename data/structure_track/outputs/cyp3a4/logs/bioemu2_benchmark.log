@@ -1,0 +1,70 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+W1023 06:59:33.161000 68602 .venv-bioemu2/lib/python3.13/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[06:59:38] WARNING: Omitted undefined stereo
+
+[07:03:47] WARNING: Omitted undefined stereo
+
+/Volumes/Data/CYPMode/third_party/bioemu2/src/bioemu2/denoising/rigid_align.py:167: UserWarning: The operator 'aten::linalg_svd' is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications. (Triggered internally at /Users/runner/work/pytorch/pytorch/aten/src/ATen/mps/MPSFallback.mm:34.)
+  U, S, Vh = torch.linalg.svd(cov_matrix, driver="gesvd" if cov_matrix.is_cuda else None)
+[07:07:58] WARNING: Omitted undefined stereo
+
+[07:12:13] WARNING: Omitted undefined stereo
+
+[07:17:05] WARNING: Omitted undefined stereo
+
+[07:23:44] WARNING: Omitted undefined stereo
+
+[07:28:29] WARNING: Omitted undefined stereo
+
+[07:32:39] WARNING: Omitted undefined stereo
+
+[07:37:05] WARNING: Omitted undefined stereo
+
+[07:43:29] WARNING: Omitted undefined stereo
+
+[07:48:19] WARNING: Omitted undefined stereo
+
+[07:53:18] WARNING: Omitted undefined stereo
+
+[07:57:41] WARNING: Omitted undefined stereo
+
+[08:03:38] WARNING: Omitted undefined stereo
+
+[08:07:54] WARNING: Omitted undefined stereo
+
+[08:12:46] WARNING: Omitted undefined stereo
+
+[08:17:11] WARNING: Omitted undefined stereo
+
+[08:25:53] WARNING: Omitted undefined stereo
+
+[08:30:25] WARNING: Omitted undefined stereo
+
+[08:34:33] WARNING: Omitted undefined stereo
+
+[09:31:13] WARNING: Omitted undefined stereo
+
+[09:41:26] WARNING: Omitted undefined stereo
+
+[09:46:06] WARNING: Omitted undefined stereo
+
+[09:50:37] WARNING: Omitted undefined stereo
+
+[10:14:59] WARNING: Omitted undefined stereo
+
+[10:22:36] WARNING: Omitted undefined stereo
+
+[10:27:22] WARNING: Omitted undefined stereo
+
+[10:32:08] WARNING: Omitted undefined stereo
+
+  bench-MWS: trunk 249.3 s, samples [250.9, 254.9, 292.6] s, 4103 atoms, peak 4500.6 MB resident
+  bench-TCI: trunk 398.4 s, samples [285.4, 249.3, 265.9] s, 4099 atoms, peak 4500.6 MB resident
+  bench-2QH: trunk 384.6 s, samples [289.8, 299.0, 262.6] s, 4110 atoms, peak 4500.6 MB resident
+  bench-A1CIW: trunk 356.9 s, samples [256.6, 292.0, 264.5] s, 4108 atoms, peak 4500.6 MB resident
+  bench-YNV: trunk 521.6 s, samples [272.0, 248.6, 281.6] s, 4122 atoms, peak 4500.6 MB resident
+  bench-PK9: trunk 723.5 s, samples [391.2, 570.7, 246.5] s, 4099 atoms, peak 4500.6 MB resident
+  bench-TPF: trunk 401.0 s, samples [274.0, 253.7, 255.9] s, 4098 atoms, peak 4500.6 MB resident
+  bench-MWV: trunk 612.9 s, samples [279.7, 270.9, 269.2] s, 4112 atoms, peak 4500.6 MB resident
+  bench-A1ASV: trunk 391.9 s, samples [267.5, 261.8, 271.3] s, 4098 atoms, peak 4500.6 MB resident
+  bench-A1A4S: trunk 456.9 s, samples [285.6, 286.4, 286.7] s, 4118 atoms, peak 4500.6 MB resident

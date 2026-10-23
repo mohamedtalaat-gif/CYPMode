@@ -1,0 +1,13 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+W1023 04:58:46.098000 23488 .venv-bioemu2/lib/python3.13/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[04:58:49] WARNING: Omitted undefined stereo
+
+[05:04:04] WARNING: Omitted undefined stereo
+
+/Volumes/Data/CYPMode/third_party/bioemu2/src/bioemu2/denoising/rigid_align.py:167: UserWarning: The operator 'aten::linalg_svd' is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications. (Triggered internally at /Users/runner/work/pytorch/pytorch/aten/src/ATen/mps/MPSFallback.mm:34.)
+  U, S, Vh = torch.linalg.svd(cov_matrix, driver="gesvd" if cov_matrix.is_cuda else None)
+[05:08:34] WARNING: Omitted undefined stereo
+
+  bench-MWS: trunk 314.8 s, samples [269.8, 260.9] s, 4103 atoms, peak 4860.2 MB resident
+BIOEMU2 PROBE: completed in 852 s
+BIOEMU2 FEASIBILITY: 9.3 h of exclusive machine time projected for 30 ligands with 3 samples each (limit 48 h): ALLOWED

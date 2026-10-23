@@ -1,0 +1,4 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+cyp3a4: 148 ligand copies, fields ['Acceptor', 'Aromatic', 'Donor', 'Hydrophobe', 'NegIonizable', 'PosIonizable', 'occupancy']
+cyp2d6: 51 ligand copies, fields ['Acceptor', 'Aromatic', 'Donor', 'Hydrophobe', 'NegIonizable', 'PosIonizable', 'occupancy']
+wrote 6895 compounds x 56 columns

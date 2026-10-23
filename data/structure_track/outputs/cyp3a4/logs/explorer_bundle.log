@@ -1,0 +1,10 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+  ledger.csv: 167 rows
+  paired.csv: 154 rows
+  selectors.csv: 150 rows
+  poses.csv: 80 rows
+  rules.csv: 80 rows
+  excerpts.csv: 330 rows
+  oof_CYP3A4.csv.gz: 99 candidates x 3 repeats x 2334 compounds
+  oof_CYP2D6.csv.gz: 95 candidates x 3 repeats x 1493 compounds
+the bundle names no blinded compound and no held-back path
