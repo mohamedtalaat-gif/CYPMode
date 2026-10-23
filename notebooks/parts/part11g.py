@@ -249,6 +249,25 @@ else:
 print(bioemu_rule_line)
 '''
 
+BIOEMU_BENCH = '''
+# The benchmark of BioEmu2 and its gate (11.9): the verdict line and the numbers of the log of job 261, and the time that job 260 took, read from the files.
+import json
+import re
+
+bioemu_gate_log = (bioemu_logs / "selection_validation_bioemu2.log").read_text()
+_stats = re.search(r"engine_consensus_bioemu2: mean improvement ([+-][\\d.]+) A over (\\d+) ligands, (\\d+) wins, Wilcoxon p ([\\d.]+), worst drop-one mean ([+-][\\d.]+), errors correlation rho ([-\\d.]+)", bioemu_gate_log)
+bioemu_gain, bioemu_n, bioemu_wins, bioemu_p, bioemu_drop, bioemu_rho = _stats.groups()
+bioemu_gate = re.search(r"STRUCTURE GATE engine_consensus_bioemu2 [^:]*: (MET|NOT MET)", bioemu_gate_log).group(1)
+_timings = [json.loads(path.read_text()) for path in sorted((ROOT / "data/structure_track/outputs/bioemu2/cyp3a4").glob("*/timings.json"))]
+bioemu_hours = sum(entry["trunk_s"] + sum(entry["sample_s"]) for entry in _timings) / 3600
+bioemu_consequence = (
+    "The final recipe therefore keeps Boltz-2 alone, and BioEmu2 is recorded as a measured negative result, as the second engine was."
+    if bioemu_gate == "NOT MET"
+    else "The gate being met, the engine is carried into the recipe; the checklist item S7 records how."
+)
+print(bioemu_gate, bioemu_gain, bioemu_n, bioemu_wins, bioemu_p, bioemu_drop, bioemu_rho, round(bioemu_hours, 1))
+'''
+
 CELLS = [
     md("""
 ## 11.9 OpenFold3: the second engine, the memory failure and what the second engine bought
@@ -318,5 +337,9 @@ Two things are visible in the tables. Minimum Bayes risk chooses the pose that a
 **The rule that was written before the probe was read.** The benchmark of the engine is run only if its projected cost is within a limit: one trunk per ligand and the samples at the median speed of the probe, for the {{=bioemu_benchmark}} benchmark ligands and the {{=bioemu_official}} official ligands with {{=bioemu_samples}} samples each, at most {{=bioemu_limit_h:.0f}} hours of exclusive machine time. The log of the probe ends with the rule applied: {{=bioemu_rule_line}}. If it says NOT ALLOWED, the engine is recorded as not run, with the measurements above, and nothing else changes. If it says ALLOWED, the benchmark is declared in the checklist before any ligand is predicted, and its gate is the engine-consensus gate of this section with BioEmu2 as the added engine; the second engine did not pass that gate, so the prior for a third is not high.
 
 *On what actually ran.* `cypmode/validation/bioemu2.py` (`prepare_checkpoint`, `pure_torch_config`, `msa_a3m`, `run`, `projected_hours`, `feasibility_line`) ran for the attempts and for the probe, and `259_bioemu2_probe` is the job that applies the rule. The file `exploratory_bioemu2_first_attempts.log` was assembled by hand from the logs of the five first attempts and its lines are the programs' own output; `exploratory_bioemu2_probe.log` is written by the job.
+"""),
+    code(BIOEMU_BENCH),
+    md("""
+**The benchmark and its verdict.** The probe allowed the benchmark, and it was declared before any ligand was predicted (the checklist item S7 holds the declaration, with the rule and the gate). Job `260_bioemu2_benchmark` predicted the {{=bioemu_n}} ligands of the benchmark of 11.5 with three samples each, which took {{=bioemu_hours:.1f}} hours of the machine, and job `261_bioemu2_gate` scored the poses against the crystal poses with the yardstick of the other engines and ran the gate of this section with BioEmu2 as the added engine. The rank correlation of the errors of the first samples of the two engines is {{=bioemu_rho}}; the pose of minimum Bayes risk over the samples of both engines improves on the one over the Boltz-2 samples alone by {{=bioemu_gain}} Å of mean RMSD over {{=bioemu_n}} ligands (a negative number means that adding the engine made the mean worse), better for {{=bioemu_wins}} of them (Wilcoxon p {{=bioemu_p}}, worst drop-one mean {{=bioemu_drop}} Å): the gate is **{{=bioemu_gate}}**. {{=bioemu_consequence}}
 """),
 ]
