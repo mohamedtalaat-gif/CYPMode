@@ -190,7 +190,7 @@ def extract_active_site_ligands(structure, pdb_id: str, entry_inventory: dict) -
     return records
 
 
-def build_reference_set(out_json: Path = REFERENCE_JSON, cache_dir: Path = CACHE_DIR, workers: int = 4) -> list[dict]:
+def build_reference_set(out_json: Path = REFERENCE_JSON, cache_dir: Path = CACHE_DIR, workers: int = 4, uniprot: str = UNIPROT) -> list[dict]:
     """End to end: list the CYP3A4 entries, fetch their ligand inventory,
     download the structures that have a qualifying ligand, extract the
     active-site ligands, write the compact JSON. Resumable at the download
@@ -198,7 +198,7 @@ def build_reference_set(out_json: Path = REFERENCE_JSON, cache_dir: Path = CACHE
     """
     from Bio.PDB.MMCIFParser import MMCIFParser
 
-    pdb_ids = fetch_entry_ids()
+    pdb_ids = fetch_entry_ids(uniprot)
     inventory = fetch_ligand_inventory(pdb_ids)
     todo = [pid for pid in pdb_ids if inventory.get(pid, {}).get("ligands")]
     with ThreadPoolExecutor(workers) as pool:
@@ -211,7 +211,7 @@ def build_reference_set(out_json: Path = REFERENCE_JSON, cache_dir: Path = CACHE
         records.extend(extract_active_site_ligands(structure, pdb_id, inventory[pdb_id]))
 
     out_json.parent.mkdir(parents=True, exist_ok=True)
-    out_json.write_text(json.dumps({"source": f"RCSB, UniProt {UNIPROT}", "n_entries": len(pdb_ids), "ligands": records}) + "\n")
+    out_json.write_text(json.dumps({"source": f"RCSB, UniProt {uniprot}", "n_entries": len(pdb_ids), "ligands": records}) + "\n")
     return records
 
 
@@ -220,11 +220,17 @@ def load_reference_set(path: Path = REFERENCE_JSON) -> list[dict]:
 
 
 def _main() -> None:
-    records = build_reference_set()
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--uniprot", default=UNIPROT, help="the enzyme whose crystal ligands are collected (P08684 CYP3A4, P10635 CYP2D6)")
+    parser.add_argument("--out", default=str(REFERENCE_JSON))
+    args = parser.parse_args()
+    records = build_reference_set(Path(args.out), uniprot=args.uniprot)
     distinct = {r["comp_id"] for r in records}
     entries = {r["pdb_id"] for r in records}
     print(f"{len(records)} active-site ligand copies | {len(distinct)} distinct ligands | {len(entries)} PDB entries")
-    print(f"wrote {REFERENCE_JSON}")
+    print(f"wrote {args.out}")
 
 
 if __name__ == "__main__":
