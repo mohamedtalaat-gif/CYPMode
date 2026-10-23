@@ -1,0 +1,58 @@
+name: Pages
+
+# Publishes the interactive explorer (a marimo notebook exported to a page that runs in the browser) and, once it is in the repository, the interactive card. GitHub removes scripts from a README,
+# so the interactive figures live on these pages. The workflow does nothing until the owner enables Pages with the source "GitHub Actions" in the settings of the repository.
+"on":
+  push:
+    branches: [main]
+    paths: ["explorer/**", "docs/card/interactive/**", "environment/requirements-lock-marimo.txt", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install the pinned explorer environment
+        run: pip install -r environment/requirements-lock-marimo.txt
+
+      - name: Export the explorer
+        run: |
+          mkdir -p site/explorer
+          marimo export html-wasm explorer/cypmode_explorer.py -o site/explorer --mode run
+          find site/explorer -maxdepth 1 -name '*.md' -delete
+
+      - name: Add the interactive card when it is in the repository
+        run: |
+          if [ -f docs/card/interactive/index.html ]; then mkdir -p site/card && cp docs/card/interactive/index.html site/card/index.html; fi
+
+      - name: Keep Jekyll away from the pages
+        run: touch site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

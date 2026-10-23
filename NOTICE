@@ -32,3 +32,5 @@ The versions of the code published up to the commit 66f5def (the first 27 commit
 those terms. The script docs/video/blender/scene.py is licensed under the GPL, version 3 or later, because it drives Blender and its add-on (compatible with the AGPL through its section 13). Components that were adapted from Apache-2.0 sources (for example the validity call of the organisers' scorer in cypmode/validation/official_posebusters.py) keep their notices.
 
 The interactive explorer exported by scripts/explorer.sh bundles the front end of marimo (the marimo team, Apache License 2.0) and the charting libraries that marimo ships; they keep their own notices. That front end contains marimo's own code for optional features of its editor, which is marimo's and not part of this project and is not shown on the exported page.
+
+The interactive card (docs/card/interactive, built by docs/card/build_interactive_card.py) embeds the viewer 3Dmol.js 2.5.5 (University of Pittsburgh and contributors, BSD 3-Clause License; the copy and its licence text are in docs/card/vendor) and structures of the Protein Data Bank (wwPDB, released into the public domain).

@@ -53,6 +53,7 @@ def main() -> int:
     readme.write_text(new_readme)
     if args.rebuild_card:
         subprocess.run([sys.executable, str(ROOT / "docs/card/build_card.py"), "--full"], cwd=ROOT, check=True)
+        subprocess.run([sys.executable, str(ROOT / "docs/card/build_interactive_card.py"), "--full"], cwd=ROOT, check=True)
     print("what the push would now add (review it before you commit; the readiness scan with --after-deadline checks the rest):")
     subprocess.run(["git", "status", "--short", "--untracked-files=all"], cwd=ROOT, check=False)
     return 0

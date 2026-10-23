@@ -28,7 +28,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "audit/artifacts.json"
-REQUIRED = ("readme_card", "poster", "film", "figures")  # the artifacts whose record the gate demands
+REQUIRED = ("readme_card", "interactive_card", "poster", "film", "figures")  # the artifacts whose record the gate demands
 PASS, FAIL = "PASS", "FAIL"
 
 
@@ -130,4 +130,13 @@ def deep_film(entry: dict) -> tuple[bool, str]:
     return same and assets, detail
 
 
-DEEP_CHECKS = {"readme_card": deep_card, "poster": deep_poster, "film": deep_film}
+def deep_interactive_card(entry: dict) -> tuple[bool, str]:
+    sys.path[:0] = [str(ROOT / "docs/card")]
+    import build_interactive_card
+
+    now = hashlib.sha256(build_interactive_card.page(entry["extra"].get("mode", "public")).encode()).hexdigest()
+    same = now == entry["extra"].get("html_sha256")
+    return same, "interactive card HTML identical" if same else "the HTML of the interactive card differs from the recorded one"
+
+
+DEEP_CHECKS = {"readme_card": deep_card, "interactive_card": deep_interactive_card, "poster": deep_poster, "film": deep_film}

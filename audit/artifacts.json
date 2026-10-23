@@ -213,6 +213,17 @@
    "docs/video/cypmode_overview_web.mp4": "f8a3c358d37960848d41005226af1f3f3a6130d25ad0a1f7e092eb22ed77b660"
   }
  },
+ "interactive_card": {
+  "built_utc": "2026-10-23 04:18:37",
+  "extra": {
+   "html_sha256": "61239b5eb40f4849db9260adbcc89da7653b0304922b7ca25ca7c5968731960d",
+   "mode": "public"
+  },
+  "fingerprint": "ba9df487be4180c35d23dc8333f7ee75360101b864e25db5a8bb990951ce51f4",
+  "outputs": {
+   "docs/card/interactive/index.html": "61239b5eb40f4849db9260adbcc89da7653b0304922b7ca25ca7c5968731960d"
+  }
+ },
  "poster": {
   "built_utc": "2026-10-17 21:29:36",
   "extra": {
