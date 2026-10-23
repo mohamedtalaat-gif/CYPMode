@@ -30,3 +30,5 @@ History
 -------
 The versions of the code published up to the commit 66f5def (the first 27 commits of the repository) were published under the MIT licence or the Apache License 2.0, at the choice of the user, and remain available under
 those terms. The script docs/video/blender/scene.py is licensed under the GPL, version 3 or later, because it drives Blender and its add-on (compatible with the AGPL through its section 13). Components that were adapted from Apache-2.0 sources (for example the validity call of the organisers' scorer in cypmode/validation/official_posebusters.py) keep their notices.
+
+The interactive explorer exported by scripts/explorer.sh bundles the front end of marimo (the marimo team, Apache License 2.0) and the charting libraries that marimo ships; they keep their own notices. That front end contains marimo's own code for optional features of its editor, which is marimo's and not part of this project and is not shown on the exported page.
