@@ -115,3 +115,4 @@ the stage-1 screen of CheMeleon against its rule, and the Foundry table of the f
 - `python docs/figures/build_all.py` runs every generator, writes the files, checks the catalog and regenerates `CATALOG.md`.
 - Queue job `940_figures_build` runs it after the other jobs have finished, so that the figures show the final results; the notebook
   build (job 942) then embeds them.
+- The pharmacophore model of the predicted poses (11.11): the energy window that the bound conformation needs and the coverage of it by the ensembles of 9.13 and 9.14 (`struct_conformer_window`), the pocket RMSD and the support of the fields of the predicted complexes against the crystal range (`struct_site_check`), and the expected pharmacophore of the 20 official ligands (`struct_pharm_official20`, held back).
