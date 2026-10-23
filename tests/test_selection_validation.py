@@ -49,3 +49,37 @@ def test_engine_gate_needs_different_errors_and_a_better_pick():
     assert g["met"] == (abs(g["errors_correlation"]) < 0.7 and g["mean_improvement"] > 0) or g["met"] is False
     correlated = outcomes.assign(first_openfold3=first + 0.01 * rng.normal(size=n))
     assert sv.gates(correlated)["engine_consensus"]["met"] is False  # identical errors: a second engine adds nothing
+
+
+def _two_engine_case(added: str):
+    """Boltz samples 0-1 are far from the crystal pose, the added engine's samples 2-3 are close and agree with each other."""
+    table = pd.DataFrame({"compound": ["a"] * 4, "engine": ["boltz", "boltz", added, added], "sample": [0, 1, 0, 1], "true_rmsd": [6.0, 5.0, 1.0, 1.5]})
+    m = np.full((4, 4), 0.2)
+    m[2:, 2:] = 0.9
+    np.fill_diagonal(m, 1.0)
+    return table, {"a": ([("boltz", 0), ("boltz", 1), (added, 0), (added, 1)], m)}
+
+
+def test_the_added_engine_columns_are_named_after_the_engine():
+    table, matrices = _two_engine_case("bioemu2")
+    out = sv.evaluate_rules(table, matrices, engine="bioemu2")
+    assert "first_bioemu2" in out and "first_openfold3" not in out
+    assert out.loc[0, "first_bioemu2"] == 1.0 and out.loc[0, "mbr_both"] in (1.0, 1.5)
+    default = sv.evaluate_rules(*_two_engine_case("openfold3"))  # the default engine keeps its old column
+    assert "first_openfold3" in default
+
+
+def test_the_gate_of_another_engine_has_its_own_name_and_keeps_the_openfold3_name_for_openfold3():
+    outcomes = pd.DataFrame({"first_boltz": [4.0, 5.0, 6.0, 3.0], "mbr_boltz": [4.0, 5.0, 6.0, 3.0], "first_bioemu2": [1.0, 2.0, 1.0, 2.0],
+                             "mbr_both": [3.0, 4.0, 5.0, 2.0]})
+    assert "engine_consensus_bioemu2" in sv.gates(outcomes, "bioemu2") and "engine_consensus" not in sv.gates(outcomes, "bioemu2")
+    renamed = outcomes.rename(columns={"first_bioemu2": "first_openfold3"})
+    assert "engine_consensus" in sv.gates(renamed)
+
+
+def test_pool_paths_lists_the_samples_of_the_bioemu2_engine(monkeypatch, tmp_path):
+    from cypmode.validation import bioemu2
+
+    monkeypatch.setattr(bioemu2, "sample_cifs", lambda name, target="cyp3a4": [tmp_path / "sample_0.cif", tmp_path / "sample_1.cif"])
+    listed = pp.pool_paths("bench-X", ("bioemu2",))
+    assert [(engine, index) for engine, index, _ in listed] == [("bioemu2", 0), ("bioemu2", 1)]

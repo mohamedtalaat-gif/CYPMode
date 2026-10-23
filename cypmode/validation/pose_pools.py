@@ -34,6 +34,10 @@ def pool_paths(name: str, engines: tuple[str, ...] = ("boltz",), target: str = "
         out += [("boltz", i, p) for i, p in enumerate(boltz_cif_paths(name, target))]
     if "openfold3" in engines:
         out += [("openfold3", i, p) for i, p in enumerate(model_cif_paths(name, target))]
+    if "bioemu2" in engines:
+        from cypmode.validation.bioemu2 import sample_cifs
+
+        out += [("bioemu2", i, p) for i, p in enumerate(sample_cifs(name, target))]
     return out
 
 

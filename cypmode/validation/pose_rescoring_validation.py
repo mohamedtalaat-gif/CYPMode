@@ -240,18 +240,11 @@ def true_ligand_rmsd(pose_structure, smiles: str, crystal_records: list[dict]) -
     return best
 
 
-def collect_poses(names: list[str], target: str = "cyp3a4") -> dict[str, list[tuple[str, int, Path]]]:
-    """{compound: [(engine, sample index, CIF path), ...]} for every
-    sampled structure either engine has produced for it.
-    """
-    from cypmode.validation.openfold3 import model_cif_paths
-    from cypmode.validation.pose_consensus import boltz_cif_paths
+def collect_poses(names: list[str], target: str = "cyp3a4", engines: tuple[str, ...] = ("boltz", "openfold3")) -> dict[str, list[tuple[str, int, Path]]]:
+    """{compound: [(engine, sample index, CIF path), ...]} for every sampled structure of the named engines (Boltz-2 and OpenFold3 by default)."""
+    from cypmode.validation.pose_pools import pool_paths
 
-    poses = {}
-    for name in names:
-        poses[name] = [("boltz", i, p) for i, p in enumerate(boltz_cif_paths(name, target))]
-        poses[name] += [("openfold3", i, p) for i, p in enumerate(model_cif_paths(name, target))]
-    return poses
+    return {name: pool_paths(name, engines, target) for name in names}
 
 
 def validate_engine_poses(
@@ -319,11 +312,12 @@ def _main() -> None:
     parser = argparse.ArgumentParser(description="Validate the pose rescoring scores against crystal structures.")
     parser.add_argument("--engine-poses", action="store_true", help="score real Boltz-2 / OpenFold3 poses against their crystal structures instead of running the decoy test")
     parser.add_argument("--names", nargs="+", default=list(PANEL_WITH_CRYSTALS), help="compounds for --engine-poses")
+    parser.add_argument("--engines", nargs="+", default=["boltz", "openfold3"], choices=("boltz", "openfold3", "bioemu2"), help="engines whose poses --engine-poses scores")
     parser.add_argument("--out", default=str(ENGINE_POSE_CSV), help="where --engine-poses writes its table")
     args = parser.parse_args()
 
     if args.engine_poses:
-        table = validate_engine_poses(collect_poses(args.names), out_csv=Path(args.out))
+        table = validate_engine_poses(collect_poses(args.names, engines=tuple(args.engines)), out_csv=Path(args.out))
         print(table.round(3).to_string(index=False))
         print(f"wrote {args.out}")
         return
