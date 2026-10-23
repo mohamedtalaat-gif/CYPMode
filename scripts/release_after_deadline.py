@@ -6,12 +6,13 @@
 
 Until the challenge closes (2026-11-03 23:59 UTC) the repository carries the code and the reports but no result for a blinded compound: the HELD BACK block of ``.gitignore`` keeps the
 predictions, the submitted structures, the pictures and the film that show them, and the notebook exports on the local machine, and the film section and the card of the README are commented out. This script,
-which refuses to run before the deadline, removes that block, restores the film section and the card and (with ``--rebuild-card``) rebuilds the README card with the submitted structures. It changes nothing
+which refuses to run before the deadline, removes that block, removes the public edition of the notebook (the complete one replaces it), restores the film section and the card and (with ``--rebuild-card``) rebuilds the README card with the submitted structures. It changes nothing
 else and never commits or pushes; it prints what becomes visible so that it can be reviewed first.
 """
 
 import argparse
 import re
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -35,6 +36,15 @@ def restore_film(readme: str) -> str:
     return readme
 
 
+def remove_public_edition(root: Path = ROOT) -> bool:
+    """Remove the public edition of the notebook, which the complete edition replaces; True when there was one."""
+    public = root / "notebooks/public"
+    if public.exists():
+        shutil.rmtree(public)
+        return True
+    return False
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true", help="show what would change and write nothing")
@@ -47,8 +57,10 @@ def main() -> int:
     gitignore, readme = (ROOT / ".gitignore"), (ROOT / "README.md")
     new_ignore, new_readme = strip_held_back(gitignore.read_text()), restore_film(readme.read_text())
     print(f"HELD BACK block {'found' if new_ignore != gitignore.read_text() else 'not found'}; held-back sections {'found' if new_readme != readme.read_text() else 'not found'}")
+    print(f"the public edition of the notebook {'is there and would be removed: the complete edition replaces it' if (ROOT / 'notebooks/public').exists() else 'is not there'}")
     if args.dry_run:
         return 0
+    remove_public_edition()
     gitignore.write_text(new_ignore)
     readme.write_text(new_readme)
     if args.rebuild_card:

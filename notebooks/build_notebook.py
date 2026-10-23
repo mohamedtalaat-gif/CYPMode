@@ -2,11 +2,15 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Build the notebook: ``python -m notebooks.build_notebook [--draft] [--no-export]``.
+"""Build the notebook: ``python -m notebooks.build_notebook [--draft] [--no-export] [--public]``.
 
 The cells of ``notebook_cells.py`` get their generated contents table and coverage appendix, run against the repository (a failing cell fails the build), pass the glossary check (every defined term
 is defined in bold where it is first used) and the coverage check (every module, script, queue job and test file is named in the text), and are written to ``cypmode_notebook.ipynb``; the HTML and the
 PDF follow from ``build_exports``. ``--draft`` builds the parts that exist and reports, instead of failing on, the files that are not explained yet and the terms not used yet.
+
+``--public`` builds the edition that is published before the challenge closes (``public/cypmode_notebook_public.*``): the same cells, run the same way, but the outputs and figures that cells marked
+``held_back`` show (results for the blinded compounds) are replaced by a note, a banner says so, and the build fails if any cell still names an official structure ligand or five or more blinded
+compounds. The complete edition replaces it after the challenge.
 """
 
 import argparse
@@ -14,6 +18,7 @@ import sys
 from pathlib import Path
 
 from notebooks.notebook_builder import (
+    PUBLIC_BANNER,
     build,
     contents_cell,
     coverage,
@@ -22,12 +27,15 @@ from notebooks.notebook_builder import (
     field_problems,
     glossary_problems,
     headings,
+    md,
+    public_problems,
     symbol_problems,
     unwritten_parts,
 )
 from notebooks.notebook_cells import ALL_CELLS, TERMS
 
 OUT = Path(__file__).resolve().parent / "cypmode_notebook.ipynb"
+PUBLIC_OUT = Path(__file__).resolve().parent / "public" / "cypmode_notebook_public.ipynb"
 
 
 def assemble(cells: list[dict]) -> tuple[list[dict], list[str]]:
@@ -42,6 +50,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--draft", action="store_true", help="build what exists; do not fail on unexplained files or terms not used yet")
     parser.add_argument("--no-export", action="store_true", help="stop after the .ipynb")
+    parser.add_argument("--public", action="store_true", help="the edition published before the challenge closes: the outputs marked held_back become a note (public/cypmode_notebook_public.*)")
     parser.add_argument("--written", action="store_true", help="only report the planned parts and appendices that have no text yet; exit status 1 when any is missing")
     args = parser.parse_args()
     if args.written:
@@ -54,9 +63,17 @@ def main() -> int:
     problems += field_problems(cells) + symbol_problems(cells, part_zero)  # every section names its field; every symbol of an equation is named in the text before it
     if args.draft:
         problems = [p for p in problems if "never used" not in p]
-    executed = build(cells, OUT)
+    if args.public:
+        cells = [cells[0], md(PUBLIC_BANNER), *cells[1:]]
+        PUBLIC_OUT.parent.mkdir(exist_ok=True)
+    target = PUBLIC_OUT if args.public else OUT
+    executed = build(cells, target, public=args.public)
     bad = failures(executed)
-    print(f"{OUT.name}: {len(executed)} cells, {len(bad)} failed cells {bad}, {len(problems)} problems (glossary, fields, symbols), {len(missing)} repository files not yet explained")
+    if args.public:
+        import pandas as pd
+
+        problems += public_problems(executed, pd.read_csv("data/structure_track/inputs/structure_track_test_blinded.csv")["Molecule_Name"].tolist())
+    print(f"{target.name}: {len(executed)} cells, {len(bad)} failed cells {bad}, {len(problems)} problems (glossary, fields, symbols), {len(missing)} repository files not yet explained")
     for line in problems:
         print("  problem:", line)
     if missing and not args.draft:
@@ -67,7 +84,7 @@ def main() -> int:
     if not args.no_export:
         from notebooks import build_exports
 
-        page = build_exports.build_html()
+        page = build_exports.build_html(target)
         print(f"{page.name}: {page.stat().st_size / 1e6:.1f} MB")
         if Path(build_exports.CHROME).exists():
             pdf = build_exports.build_pdf(page)

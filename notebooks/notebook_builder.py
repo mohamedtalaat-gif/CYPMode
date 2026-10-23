@@ -38,9 +38,14 @@ def code(text: str, **flags) -> dict:
     return {"cell_type": "code", "source": text.strip("\n"), **flags}
 
 
-def figure(figure_id: str) -> dict:
-    """A cell that shows a catalogued figure (dark variant) with its caption; the line of code that does so is not shown."""
-    return code(f'show_figure("{figure_id}")', hide_input=True)
+def figure(figure_id: str, **flags) -> dict:
+    """A cell that shows a catalogued figure (dark variant) with its caption; the line of code that does so is not shown. ``held_back=True`` marks a figure that shows results for the blinded compounds."""
+    return code(f'show_figure("{figure_id}")', hide_input=True, **flags)
+
+
+HELD_BACK_NOTE = "*This output shows results for the blinded compounds of the challenge. It appears in the complete edition of the notebook, which is published after the challenge closes on 3 November 2026.*"
+PUBLIC_BANNER = ("> **Public edition.** Everything of the notebook is here except the outputs and pictures that show results for the blinded compounds of the challenge: where one stood, a note stands instead. "
+                 "The complete edition replaces this one when the challenge has closed (3 November 2026, 23:59 UTC). The code, the method, every gate and every aggregate number are the same in both.")
 
 
 TEMPLATE = re.compile(r"\{\{=(.+?)\}\}")
@@ -146,8 +151,10 @@ def _matplotlib_figures() -> list[dict]:
     return out
 
 
-def execute(cells: list[dict]) -> list[dict]:
-    """Run the code cells in order in one namespace (with the repository root as the working directory); returns the cells with nbformat outputs attached."""
+def execute(cells: list[dict], public: bool = False) -> list[dict]:
+    """Run the code cells in order in one namespace (with the repository root as the working directory); returns the cells with nbformat outputs attached.
+
+    With ``public`` a cell marked ``held_back`` still runs (the variables that later cells use exist) but its outputs are replaced by one note, and a Markdown cell marked ``held_back`` becomes the note."""
     import matplotlib
 
     matplotlib.use("Agg")
@@ -159,6 +166,9 @@ def execute(cells: list[dict]) -> list[dict]:
     try:
         for cell in cells:
             if cell["cell_type"] != "code":
+                if public and cell.get("held_back"):
+                    done.append({**cell, "source": HELD_BACK_NOTE})
+                    continue
                 done.append({**cell, "source": fill(cell["source"], namespace)} if TEMPLATE.search(cell["source"]) else cell)
                 continue
             count += 1
@@ -173,6 +183,8 @@ def execute(cells: list[dict]) -> list[dict]:
                 produced.insert(0, {"output_type": "stream", "name": "stdout", "text": stdout.getvalue()})
             produced.extend(outputs.pending)
             produced.extend(_matplotlib_figures())
+            if public and cell.get("held_back") and not any(o["output_type"] == "error" for o in produced):
+                produced = [{"output_type": "display_data", "data": {"text/markdown": HELD_BACK_NOTE, "text/plain": HELD_BACK_NOTE}, "metadata": {"held_back": True}}]
             done.append({**cell, "execution_count": count, "outputs": produced})
     finally:
         outputs.capturing = False
@@ -439,7 +451,25 @@ def to_notebook(cells: list[dict]) -> dict:
     return {"cells": out, "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}, "language_info": {"name": "python"}}, "nbformat": 4, "nbformat_minor": 5}
 
 
-def build(cells: list[dict], path: str | Path) -> list[dict]:
-    executed = execute(cells)
+BLINDED_ID = re.compile(r"OCNT-\d{7}")
+MAX_IDS_PER_CELL = 5  # the rule of the public-readiness scan: five or more blinded compounds in one place is a result for them
+
+
+def public_problems(executed: list[dict], official: list[str]) -> list[str]:
+    """What keeps an executed edition from being public: a cell that names one of the official structure-track ligands (their poses are results) or five or more blinded compounds."""
+    problems = []
+    official = set(official)
+    for i, cell in enumerate(executed):
+        text = cell["source"] + json.dumps(cell.get("outputs", []), ensure_ascii=False)
+        ids = set(BLINDED_ID.findall(text))
+        if ids & official:
+            problems.append(f"cell {i} names {len(ids & official)} official structure ligand(s)")
+        elif len(ids) >= MAX_IDS_PER_CELL:
+            problems.append(f"cell {i} names {len(ids)} compounds of the blinded sets")
+    return problems
+
+
+def build(cells: list[dict], path: str | Path, public: bool = False) -> list[dict]:
+    executed = execute(cells, public=public)
     Path(path).write_text(json.dumps(to_notebook(executed), indent=1, ensure_ascii=False) + "\n")
     return executed

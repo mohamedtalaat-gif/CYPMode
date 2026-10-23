@@ -41,3 +41,12 @@ def test_nothing_that_names_blinded_results_would_be_pushed():
     if not names:
         return  # a checkout without the organisers' inputs has nothing to compare with
     assert pr.prediction_findings(pr.candidate_files(), names) == []
+
+
+def test_the_public_edition_of_the_notebook_is_removed_when_the_complete_one_is_released(tmp_path):
+    from scripts.release_after_deadline import remove_public_edition
+
+    assert remove_public_edition(tmp_path) is False
+    (tmp_path / "notebooks/public").mkdir(parents=True)
+    (tmp_path / "notebooks/public/cypmode_notebook_public.html").write_text("x")
+    assert remove_public_edition(tmp_path) is True and not (tmp_path / "notebooks/public").exists()

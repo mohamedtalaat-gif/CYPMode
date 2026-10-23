@@ -127,10 +127,14 @@ n_with_iron = int(decisions["fe_n_before"].notna().sum())
 assert n_adopted == manifest["relaxation"]["adopted"] and bool((rule_holds == decisions["adopted"]).all())  # the table and the rule agree ligand by ligand
 decision_table = decisions[["compound", "margin_before", "margin_after", "movement_A", "fe_n_before", "fe_n_after"]].rename(columns={"compound": "ligand", "margin_before": "relative distance before", "margin_after": "relative distance after", "movement_A": "moved (A)", "fe_n_before": "Fe-N before (A)", "fe_n_after": "Fe-N after (A)"})
 decision_table = decision_table.rename(columns={"relative distance before": "relative distance before", "margin_after": "relative distance after"})
-show_table(decision_table.astype(object).where(decision_table.notna(), "-"), floatfmt=".2f")
 move_median, move_max = float(decisions["movement_A"].median()), float(decisions["movement_A"].max())
 margin_min_before, margin_min_after = float(manifest["relaxation"]["smallest_margin_before"]), float(manifest["relaxation"]["smallest_margin_after"])
 fe_change_max = float(fe_change.max())
+'''
+
+DECISIONS_TABLE = '''
+# The decisions ligand by ligand (the table that the rule above is checked against): a result for the blinded ligands, held back from the public edition.
+show_table(decision_table.astype(object).where(decision_table.notna(), "-"), floatfmt=".2f")
 '''
 
 ZIP_TOY = '''
@@ -241,6 +245,7 @@ The relaxation was applied to {{=n_validation_poses}} poses of {{=n_validation_l
 **The rule applied to the twenty.** A gate that holds on average is not a guarantee for each pose, so the relaxation of the submitted poses was run under a rule of its own, registered on {{=registered_on}} before any of the twenty was relaxed. A relaxed pose replaces the original only when all four hold: both pass the 22 checks; the smallest relative distance rises and is at least the floor; the ligand moved by at most {{=manifest_rule['max_movement_A']}} Å (in the validation poses the median was {{=median_move:.2f}} Å and the largest {{=largest_validation_move:.2f}} Å, which is where the bound comes from); and, when a ligand nitrogen coordinates the iron in the original, it still does and the distance changed by at most {{=manifest_rule['max_fe_n_change_A']}} Å. Accuracy cannot be checked per pose, and the movement bound stands in for it. Otherwise the original pose stays. The cell evaluates the rule on the table of decisions.
 """),
     code(DECISIONS),
+    code(DECISIONS_TABLE, held_back=True),
     md("""
 The rule holds for {{=n_rule_holds}} of the 20 poses and {{=n_adopted}} were adopted (the table of decisions and the rule agree ligand by ligand). The ligands moved {{=move_median:.2f}} Å at the median and {{=move_max:.2f}} Å at most; the {{=n_with_iron}} ligands with a nitrogen at the iron changed that distance by at most {{=fe_change_max:.2f}} Å; and the smallest relative distance among the twenty rose from {{=margin_min_before:.3f}} to {{=margin_min_after:.3f}}. What the relaxation buys is safety against the checks, not accuracy; what it risks is a small displacement, which the rule bounds.
 
