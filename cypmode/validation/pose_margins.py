@@ -8,7 +8,8 @@
 seeds and conformer levers, the extra samples) with ``official_posebusters``, writes one row per pose to
 ``data/structure_track/outputs/cyp3a4/final/official_posebusters_pools.csv`` and prints, per ligand, how many poses pass, how many pass with a safe
 margin, and the margin of the pose the final recipe chose. The rows are cached by file path, size and modification time, so a second run only checks
-poses that changed.
+poses that changed. The column ``stereo_ok`` says whether the ligand of the pose reproduces the stereochemistry of the official SMILES (``pose_stereo``): the
+scorer's PoseBusters call has no chirality check, so this is the only place where the wrong enantiomer of a chiral ligand is noticed.
 """
 
 from __future__ import annotations
@@ -25,6 +26,7 @@ from cypmode.validation.official_posebusters import (
     check_cif,
 )
 from cypmode.validation.pose_pools import pool_paths
+from cypmode.validation.pose_stereo import cif_reproduces_stereo
 
 TABLE = FINAL / "official_posebusters_pools.csv"
 MAX_EXTRA_RUNS = 9
@@ -41,8 +43,8 @@ def pose_signature(path: Path) -> str:
     return f"{stat.st_size}:{int(stat.st_mtime)}"
 
 
-def row_of(ligand: str, run: str, engine: str, sample: int, path: Path, report: OfficialReport) -> dict:
-    return {"ligand": ligand, "run": run, "engine": engine, "sample": sample, "cif": str(path), "signature": pose_signature(path), "passed": report.passed, "failed": ";".join(report.failed),
+def row_of(ligand: str, run: str, engine: str, sample: int, path: Path, report: OfficialReport, stereo_ok: bool) -> dict:
+    return {"ligand": ligand, "run": run, "engine": engine, "sample": sample, "cif": str(path), "signature": pose_signature(path), "passed": report.passed, "stereo_ok": stereo_ok, "failed": ";".join(report.failed),
             "n_checks": report.n_checks, "distance_margin": report.distance_margin, **{f"dist_{k}": v for k, v in report.distances.items()}, **{f"slack_{k}": v for k, v in report.margins.items()},
             "error": report.error}
 
@@ -59,9 +61,12 @@ def audit(smiles_of: dict[str, str], engines: tuple[str, ...] = ("boltz",), tabl
                     continue
                 key = (str(path), pose_signature(path))
                 if key in known:
-                    rows.append(known[key])
+                    row = known[key]
+                    if row.get("stereo_ok") is None or pd.isna(row.get("stereo_ok")):  # a table written before the stereochemistry was checked
+                        row = {**row, "stereo_ok": cif_reproduces_stereo(path, smiles) is True}
+                    rows.append(row)
                     continue
-                rows.append(row_of(ligand, run, engine, sample, path, check_cif(path, smiles)))
+                rows.append(row_of(ligand, run, engine, sample, path, check_cif(path, smiles), cif_reproduces_stereo(path, smiles) is True))
     out = pd.DataFrame(rows)
     table.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(table, index=False)
@@ -74,7 +79,7 @@ def summary(pools: pd.DataFrame, chosen: dict[str, str]) -> pd.DataFrame:
         valid = group[group.passed]
         safe = valid[valid.distance_margin >= MARGIN_FLOOR]
         picked = group[group.cif == chosen.get(ligand, "")]
-        rows.append({"ligand": ligand, "poses": len(group), "pass": len(valid), "safe": len(safe), "chosen_margin": float(picked.distance_margin.iloc[0]) if len(picked) else float("nan"),
+        rows.append({"ligand": ligand, "poses": len(group), "pass": len(valid), "stereo": int(group.stereo_ok.astype(bool).sum()), "safe": len(safe), "chosen_margin": float(picked.distance_margin.iloc[0]) if len(picked) else float("nan"),
                      "best_margin": float(valid.distance_margin.max()) if len(valid) else float("nan")})
     return pd.DataFrame(rows)
 

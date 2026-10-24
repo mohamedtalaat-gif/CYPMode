@@ -180,6 +180,10 @@ meaning = {
     "ext_tox": ("real", "predicted response and potency of the Tox21 cytochrome screen, a pair for each of five enzymes (Part IX)"),
     "ext_adme": ("real", "two predicted properties, logD and mouse brain protein binding, from surrogate networks (Part IX)"),
     "atomjepa": ("real", "64 principal components of the frozen embeddings of a pretrained equivariant network (Part IX)"),
+    "pp3a4": ("real", "22 columns of the compound against the CYP3A4 pocket: density fields of the public crystal ligands in the frame of the heme (section 9.13)"),
+    "pp2d6": ("real", "the same 22 columns against the CYP2D6 pocket (section 9.13)"),
+    "st3a4": ("real", "6 columns of the structure-based site model of the CYP3A4 pocket: recall, matched sites and precision for two modes (section 9.14)"),
+    "st2d6": ("real", "the same 6 columns for the CYP2D6 pocket (section 9.14)"),
 }
 example_blocks = {name: np.asarray(BLOCK_FUNCTIONS[name]([mol])).ravel() for name in BLOCK_FUNCTIONS if name not in OPT_IN_BLOCKS}
 block_rows = []

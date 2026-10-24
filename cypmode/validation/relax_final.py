@@ -15,6 +15,9 @@ original only when all of these hold; otherwise the original stays:
   3. the ligand moved by at most ``MAX_MOVEMENT_A`` (validation poses: median 0.46 A, largest 0.95 A);
   4. when a ligand nitrogen coordinates the iron in the original (closer than 3.0 A), it still does and the distance changed by at most ``MAX_FE_N_CHANGE_A`` (validation poses: largest change 0.13 A).
 
+The candidate zip is also rejected when a pose of it does not reproduce the stereochemistry of the official SMILES (``pose_stereo``; added 2026-10-24, a relaxation cannot invert a centre, so this only
+guards the chain).
+
 The validation gate also required that the LDDT-PLI to the crystal does not fall by more than 0.01. That cannot be measured for a blinded ligand, which has no crystal. The gate
 established it on average (mean change +0.0035 over the validation poses, fifth percentile -0.017, worst -0.032), and criterion 3 is the per-pose guard that stands in for it here.
 
@@ -82,6 +85,7 @@ def main() -> int:
     from cypmode.challenge.submission import portal_validate_structure
     from cypmode.validation import relax_gate
     from cypmode.validation.official_posebusters import check_pdb, check_zip
+    from cypmode.validation.pose_stereo import zip_reproduces_stereo
 
     if not gate_met(GATE_LOG):
         print("STRUCTURE RELAXATION not used: the gate force_field_relaxation is not MET")
@@ -130,11 +134,12 @@ def main() -> int:
     candidate = write_deterministic_zip(chosen, WORK / "structures_candidate.zip", names=[f"{n}.pdb" for n in names])
     ok, message = portal_validate_structure(candidate)
     reports = check_zip(candidate, smiles)
+    stereo = zip_reproduces_stereo(candidate, smiles)
     before_reports = check_zip(unrelaxed, smiles)
     smallest = min(r.distance_margin for r in reports.values())
     smallest_before = min(r.distance_margin for r in before_reports.values())
-    if not (ok and len(reports) == len(names) and all(r.passed for r in reports.values()) and smallest >= smallest_before):
-        print(f"the candidate zip is rejected (portal: {ok} {message}; all pass: {all(r.passed for r in reports.values())}; smallest margin {smallest:.3f} against {smallest_before:.3f}); nothing was replaced")
+    if not (ok and len(reports) == len(names) and all(r.passed for r in reports.values()) and all(v is True for v in stereo.values()) and smallest >= smallest_before):
+        print(f"the candidate zip is rejected (portal: {ok} {message}; all pass: {all(r.passed for r in reports.values())}; official stereochemistry kept: {all(v is True for v in stereo.values())}; smallest margin {smallest:.3f} against {smallest_before:.3f}); nothing was replaced")
         return 1
     final = FINAL / "structures_final.zip"
     stamp_path = WORK / "stamp.json"

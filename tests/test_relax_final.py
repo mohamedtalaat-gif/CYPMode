@@ -66,6 +66,11 @@ def workspace(tmp_path, monkeypatch):
         with zipfile.ZipFile(path) as z:
             return {name[:-4]: SimpleNamespace(passed=True, distance_margin=0.90 if z.read(name).startswith(b"RELAXED") else 0.85) for name in z.namelist()}
 
+    def zip_reproduces_stereo(path, smiles_of):
+        with zipfile.ZipFile(path) as z:
+            return {name[:-4]: True for name in z.namelist()}
+
+    monkeypatch.setattr("cypmode.validation.pose_stereo.zip_reproduces_stereo", zip_reproduces_stereo)
     monkeypatch.setattr("cypmode.validation.relax_gate.relax_all", relax_all)
     monkeypatch.setattr("cypmode.validation.official_posebusters.check_pdb", check_pdb)
     monkeypatch.setattr("cypmode.validation.official_posebusters.check_zip", check_zip)
@@ -114,3 +119,10 @@ def test_nothing_is_used_when_the_gate_is_not_met(workspace, tmp_path):
     before = (workspace / "structures_final.zip").read_bytes()
     assert relax_final.main() == 0
     assert (workspace / "structures_final.zip").read_bytes() == before and not (workspace / "relaxation").exists()
+
+
+def test_a_candidate_zip_with_a_pose_of_the_other_enantiomer_replaces_nothing(workspace, monkeypatch):
+    monkeypatch.setattr("cypmode.validation.pose_stereo.zip_reproduces_stereo", lambda path, smiles_of: {"a": True, "b": False, "c": None})
+    before = (workspace / "structures_final.zip").read_bytes()
+    assert relax_final.main() == 1
+    assert (workspace / "structures_final.zip").read_bytes() == before

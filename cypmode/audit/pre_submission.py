@@ -122,6 +122,11 @@ def run_checks() -> list[tuple[str, str, str]]:
             reports = check_zip(zip_sub, dict(zip(official.Molecule_Name, official.SMILES, strict=True)))
             smallest = min((r.distance_margin for r in reports.values()), default=float("nan"))
             add("every submitted structure passes the scorer's own PoseBusters call with the margin floor", len(reports) == 20 and all(r.safe for r in reports.values()), f"{sum(r.passed for r in reports.values())} of {len(reports)} pass; smallest relative distance {smallest:.3f} (floor {MARGIN_FLOOR})")
+            from cypmode.validation.pose_stereo import zip_reproduces_stereo
+
+            stereo = zip_reproduces_stereo(zip_sub, dict(zip(official.Molecule_Name, official.SMILES, strict=True)))
+            add("every submitted structure carries the stereochemistry of the official SMILES", len(stereo) == 20 and all(v is True for v in stereo.values()),
+                f"{sum(v is True for v in stereo.values())} of {len(stereo)}" + ("" if all(v is True for v in stereo.values()) else f"; not: {sorted(n for n, v in stereo.items() if v is not True)}"))
         except ImportError:
             rows.append(("scorer-exact PoseBusters check", WARN, "posebusters is not installed"))
     else:

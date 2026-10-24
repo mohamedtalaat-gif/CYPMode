@@ -59,8 +59,10 @@ def final_structures(path: Path = FINAL / "structures_final.zip") -> dict[str, o
 
 
 def pool_poses(table: pd.DataFrame, ligand: str) -> list[Path]:
-    """The CIF files of the valid (PoseBusters) poses of the pool of one official ligand."""
+    """The CIF files of the valid (PoseBusters) poses of the pool of one official ligand that reproduce its official stereochemistry (when the table records it)."""
     rows = table[(table.ligand == ligand) & (table.passed.astype(str) == "True")]
+    if "stereo_ok" in rows:
+        rows = rows[rows.stereo_ok.astype(str) == "True"]
     return [Path(c) for c in rows.cif if Path(c).exists()]
 
 

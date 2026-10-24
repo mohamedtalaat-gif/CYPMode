@@ -60,6 +60,7 @@ GLOSSARY = {
     "aromatic": "of a ring: flat, with a p orbital on every atom and 4n + 2 pi electrons shared round it, which makes it unusually stable",
     "canonical SMILES": "the one SMILES string that a fixed rule picks among all the strings that describe a molecule",
     "enantiomer": "one of two mirror-image forms of a molecule that cannot be turned into each other without breaking bonds",
+    "racemate": "an equal mixture of the two enantiomers of a molecule; a SMILES without stereo marks describes it",
     "inferred positive": "a compound labelled positive because it was inactive without pre-incubation (pIC50 below 4) and active with it (pIC50 above 4.301)",
     "standard deviation": "the typical size of the error of an estimate: the spread of the estimates if the experiment were repeated",
     "reactive notebook": "a notebook that knows which cell uses which variable and runs a cell again whenever something it uses changes, so that the page never shows a stale result",

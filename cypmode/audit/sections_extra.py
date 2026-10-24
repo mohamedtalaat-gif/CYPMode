@@ -166,6 +166,11 @@ def final_candidates(ctx: Context) -> Section:
             s.body.append(md_table(pd.DataFrame([(f"compound {i:02d}", r.passed, r.n_checks, fmt(r.distance_margin, 3), ",".join(r.failed) or r.error or "-") for i, (_, r) in enumerate(reports.items(), start=1)], columns=["compound", "passes", "checks", "smallest relative distance", "failed"])))
             s.add(f"{z.name}: every structure passes the scorer's own PoseBusters call", passes == len(reports) == 20, f"{passes} of {len(reports)} pass")
             s.add(f"{z.name}: every structure clears a relative distance of {MARGIN_FLOOR} to the receptor (the scorer's threshold is 0.75)", bool(smallest >= MARGIN_FLOOR), f"smallest {fmt(smallest, 3)}")
+            from cypmode.validation.pose_stereo import zip_reproduces_stereo
+
+            stereo = zip_reproduces_stereo(z, dict(zip(official.Molecule_Name, official.SMILES, strict=True)))
+            s.add(f"{z.name}: every structure carries the stereochemistry of the official SMILES (the scorer's PoseBusters call does not check it)", len(stereo) == 20 and all(v is True for v in stereo.values()),
+                  f"{sum(v is True for v in stereo.values())} of {len(stereo)}")
         except ImportError:
             s.add(f"{z.name}: scorer-exact PoseBusters check", None, "posebusters not installed")
     s.body.insert(0, md_table(pd.DataFrame(rows, columns=["file", "sha256", "valid", "CYP3A4 rate", "CYP2D6 rate"])) if rows else "No final TDI candidate files yet (job 090).")

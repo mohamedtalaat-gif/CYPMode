@@ -715,7 +715,11 @@ for the 4 solved reference compounds above) but directly applicable to any
 CYP3A4-ligand SMILES pair without modification.
 
 `data/structure_track/inputs/structure_track_test_blinded.csv` is this track's
-public blinded test set, saved as-is. Running the Type II motif screen
+public blinded test set, saved as-is (as corrected by the organisers on
+2026-10-24: three ligands had first been published without their
+stereochemistry, and every run of them was made again from the corrected
+SMILES; a pose is eligible for the submission only when it carries the
+official stereochemistry, `cypmode/validation/pose_stereo.py`). Running the Type II motif screen
 against it: **12 of the 20 compounds (60%) carry a coordinating motif** —
 reproducible with `cypmode.metrics.motifs.detect_motifs`.
 `cypmode/validation/batch.py` is running `run_structural_validation`

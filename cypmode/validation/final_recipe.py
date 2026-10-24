@@ -18,7 +18,9 @@ lines to their logs; this module reads them and applies one fixed mapping from v
   selection       among PoseBusters-valid poses: MBR when mbr_selection is MET (MBR + heme prior when that gate is MET too),
                   else the first valid pose, taken from the restrained run for a ligand with a Type II donor when the restraint gate is MET
                   (the pick that gate measured) and from the base run otherwise (the Sep 27 behaviour); the physics, pharmacophore and series terms of
-                  ``pose_awareness`` / ``series_consensus`` join the mean rank (with MBR) for every gate that is MET.
+                  ``pose_awareness`` / ``series_consensus`` join the mean rank (with MBR) for every gate that is MET;
+  stereochemistry a pose is eligible only when its ligand reproduces the stereochemistry of the official SMILES (``pose_stereo``; the scorer's PoseBusters call has no chirality check);
+                  a ligand without an eligible valid pose stops the recipe with an error, it is never filled with a pose of the other enantiomer.
 
 ``--decide-only`` writes the decision and its reasons and stops. The run resumes from the batch checkpoints, uses one heavy
 process at a time, never uploads anything, and writes the candidate zip under ``data/structure_track/outputs/cyp3a4/final``
@@ -368,7 +370,7 @@ def main() -> None:
 
     # the scorer's own PoseBusters call on every pose of every pool: the verdict and the margin to its thresholds
     pools = audit(smiles, engines).set_index("cif")
-    verdict = {Path(c): (bool(r.passed), float(r.distance_margin)) for c, r in pools.iterrows()}
+    verdict = {Path(c): (bool(r.passed) and bool(r.stereo_ok), float(r.distance_margin)) for c, r in pools.iterrows()}  # eligible: valid under the scorer's call and of the official stereochemistry
 
     rows, details = [], []
     for ligand in names:
@@ -383,6 +385,8 @@ def main() -> None:
         prior = (lambda p: float(prior_model.log_density(structure_descriptor(load_structure(p)))[0])) if prior_model else None
         extras = pose_extras(ligand, smiles[ligand], pool, recipe.terms, partner_pools) if recipe.selection == "rank_terms" else None
         best, ok, _mbr = select_pose(pool, recipe.selection, valid, prior, extras, smiles[ligand], margin)
+        if not ok:
+            raise RuntimeError(f"{ligand}: none of the {len(pool)} poses of its pool passes the scorer's 22 checks and reproduces the official stereochemistry; more samples are needed, no other pose is submitted")
         run, engine, cif = pool[best]
         rows.append({"compound": ligand, "engine": engine, "chosen_cif": str(cif), "boltz_posebusters_ok": ok if engine == "boltz" else False, "of3_posebusters_ok": ok if engine == "openfold3" else False})
         details.append({"compound": ligand, "pool": len(pool), "valid_in_pool": sum(valid(p) for _, _, p in pool), "run": run, "engine": engine, "chosen_cif": str(cif), "valid": ok, "distance_margin": round(margin(cif), 4)})
