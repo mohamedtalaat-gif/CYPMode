@@ -51,6 +51,13 @@ TITLES = {
     "relaxation_gate": "force-field relaxation of poses", "replicate_verdict": "replicates with 10 outer folds", "restraint_expansion": "bond restraint confirmed on new ligands",
     "selection_aware_v2": "selection-aware model, second version", "selection_validation": "minimum Bayes risk selection and engine consensus", "series_consensus": "consensus of poses across a chemical series",
     "softmax_selector": "softmax-temperature selector", "structure_gates": "restraints and pose-diversity pilots", "test_likeness": "test-likeness weighting", "xiso_transfer": "cross-isoform transfer of the assay arms",
+    "aux_atomjepa": "frozen Atom-JEPA embeddings as a block", "aux_atomjepa_head": "Atom-JEPA readout in the stack", "aux_chemprop_foundation": "Chemprop from the two OpenADMET pretraining weights (staged)",
+    "aux_ext_adme": "logD and protein binding from the OpenADMET surrogate models", "aux_ext_cont": "continuous external-panel responses as a predicted block", "aux_ext_tox": "Tox21 CYP-screen readings as a predicted block",
+    "aux_hypothesis": "ligand-based pharmacophore hypothesis model", "aux_neural": "the neural pair (multitask network and its auxiliary-head version) in the stack",
+    "aux_pocket_cyp2d6": "compound relative to the CYP2D6 pocket", "aux_pocket_cyp3a4": "compound relative to the CYP3A4 pocket", "aux_site_cyp2d6": "structure-based site model of the CYP2D6 pocket", "aux_site_cyp3a4": "structure-based site model of the CYP3A4 pocket",
+    "exploratory_atomjepa_head": "Atom-JEPA readout, replicate with 10 outer folds (exploratory)", "exploratory_hypothesis_permuted": "hypothesis model with permuted labels (control)", "exploratory_pocket_control": "pocket block of the other enzyme (control)",
+    "exploratory_pocket_first_run_seed0_control": "first run of the pocket block, void: control pocket", "exploratory_pocket_first_run_seed0_own": "first run of the pocket block, void: own pocket", "exploratory_site_control": "site model of the other enzyme (control)",
+    "pose_pharmacophore_model": "pharmacophore model of the poses", "selection_validation_bioemu2": "pose choice with BioEmu2 ensembles",
 }
 
 

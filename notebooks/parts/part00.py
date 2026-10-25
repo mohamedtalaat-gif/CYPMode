@@ -107,14 +107,36 @@ DESCRIPTION = {
     "ei_sampling": ("extra poses allocated by pool disagreement", "11.8"),
     "mbr_lddt_reevaluation": ("minimum Bayes risk re-scored with LDDT-PLI (exploratory, not declared beforehand)", "11.8"),
 }
+# The section that explains each experiment that is not described above; its name comes from the titles of the README (cypmode/audit/docs_state.py).
+SECTIONS = {
+    "aux_chemprop": "9.9", "aux_mlp": "9.9", "aux_neural": "9.9", "permutation_control": "6.8, 9.10", "aux_atomjepa": "9.10", "aux_atomjepa_head": "9.10", "exploratory_atomjepa_head": "9.10", "aux_basic_centre": "9.10",
+    "aux_chemprop_foundation": "9.10", "aux_emax": "9.10", "aux_ext_adme": "9.10", "aux_ext_cont": "9.10", "aux_ext_tox": "9.10", "aux_gate_shift": "9.10", "aux_mlp_aux": "9.10", "aux_nodirect": "9.10", "aux_pxr": "9.10", "aux_screen": "9.10",
+    "aux_tabicl": "9.10", "aux_tabicl_chemeleon": "9.10", "aux_tabicl_monroe": "9.10", "aux_tabpfn": "9.10", "aux_tabpfn_chemeleon": "9.10", "monroe_embeddings": "9.10", "nonneg_stack": "9.10", "population_screen": "9.10",
+    "softmax_selector": "9.10", "aux_pocket_cyp2d6": "9.13", "aux_pocket_cyp3a4": "9.13", "exploratory_pocket_control": "9.13", "exploratory_pocket_first_run_seed0_control": "9.13", "exploratory_pocket_first_run_seed0_own": "9.13",
+    "aux_hypothesis": "9.14", "aux_site_cyp2d6": "9.14", "aux_site_cyp3a4": "9.14", "exploratory_hypothesis_permuted": "9.14", "exploratory_site_control": "9.14",
+    "ost_vs_ours": "11.4, 11.6", "ost_regate": "11.6", "ost_pool_gates": "11.8, 11.9", "selection_validation_bioemu2": "11.9", "relaxation_gate": "11.10", "pose_pharmacophore_model": "11.11",
+}
+from cypmode.audit.docs_state import TITLES
+
+
+def section_of(stem):
+    return DESCRIPTION[stem][1] if stem in DESCRIPTION else SECTIONS.get(stem, "?")
+
+
+def section_key(stem):
+    """The first section of a stem as numbers, so that 9.9 comes before 9.10."""
+    first = section_of(stem).split(",")[0].strip()
+    return tuple(int(part) for part in first.split(".")) if first[:1].isdigit() else (99,)
+
+
 rows = {}
 for log, gate, verdict in gate_rows():
     stem = re.sub(r"(_f10)?\\.log$", "", re.sub(r"_(CYP3A4|CYP2D6)(?=(_f10)?\\.log)", "", log))
     entry = rows.setdefault(stem, {"met": 0, "not met": 0})
     entry["met" if verdict == "MET" else "not met"] += 1
 ledger = pd.DataFrame([
-    {"idea": DESCRIPTION.get(stem, (stem, ""))[0], "section": DESCRIPTION.get(stem, ("", "?"))[1], "verdicts met": v["met"], "verdicts not met": v["not met"]}
-    for stem, v in sorted(rows.items(), key=lambda kv: (DESCRIPTION.get(kv[0], ("", "99"))[1], kv[0]))
+    {"idea": DESCRIPTION[stem][0] if stem in DESCRIPTION else TITLES.get(stem, stem), "section": section_of(stem), "verdicts met": v["met"], "verdicts not met": v["not met"]}
+    for stem, v in sorted(rows.items(), key=lambda kv: (section_key(kv[0]), kv[0]))
 ])
 show_table(ledger)
 met = [name for _, name, verdict in gate_rows() if verdict == "MET"]
