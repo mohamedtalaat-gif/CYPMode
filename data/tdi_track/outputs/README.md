@@ -14,9 +14,10 @@ would be uploaded are copied from `final/` into `submissions/tdi_track/`
 by `python -m cypmode.challenge.submissions_sync`. Everything else in this
 tree is the evidence behind that model or an earlier stage of it.
 
-For the short, human-readable version of what these numbers mean, see
-[`docs/figures/tdi_track/README.md`](../../../docs/figures/tdi_track/README.md)
-and `CYPMode_Architecture_Specification.md` at the repo root. This file
+The first stages of the model are drawn in
+[`docs/figures/tdi_track/README.md`](../../../docs/figures/tdi_track/README.md);
+the final model and its results are described in `README.md` and in
+`CYPMode_Architecture_Specification.md` at the repo root. This file
 is the reproducibility index: which file came from which command.
 
 ## Organized by what it actually is, not flat

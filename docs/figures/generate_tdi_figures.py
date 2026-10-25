@@ -5,6 +5,9 @@
 """Generates docs/figures/tdi_track/*.svg from the checked-in TDI-track
 result CSVs (data/tdi_track/outputs/).
 
+The figures draw the first three stages of the model (the baseline, M3 without the amine flag, M3 with a tuned threshold) and the first reliability check, as they were
+measured on the population as first built; the final results are in the README and in METHOD_REPORT.md.
+
 Not part of the cypmode package or its runtime dependencies -- a one-off
 script, run manually, matching docs/figures/generate_validation_figure.py's
 publication style (light/dark SVG pairs, GitHub's own #gh-light-mode-only
@@ -18,6 +21,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 TDI_DATA = ROOT / "data" / "tdi_track" / "outputs"
+COMPARISONS = TDI_DATA / "comparisons"
 OUT_DIR = Path(__file__).resolve().parent / "tdi_track"
 
 THEMES = {
@@ -40,17 +44,17 @@ def generate_mcc_progression(theme_name: str):
     theme = THEMES[theme_name]
     _style(theme)
 
-    baseline = pd.read_csv(TDI_DATA / "baseline_fixed_seed.csv")
-    ablation = pd.read_csv(TDI_DATA / "ablation_m0_m3.csv")
-    tuned = pd.read_csv(TDI_DATA / "threshold_tuning.csv")
+    baseline = pd.read_csv(COMPARISONS / "baseline_fixed_seed.csv")
+    # Stages 2 and 3 come from the runs of M3 without the amine flag (the feature set of the settled decision); the runs of 2026-09-25 that kept the flag by mistake are in comparisons/ and are not drawn.
+    without_flag = {cyp: pd.read_csv(TDI_DATA / cyp.lower() / f"threshold_tuning_{cyp.lower()}_no_amine.csv") for cyp in ("CYP3A4", "CYP2D6")}
 
     isoforms = ["CYP3A4", "CYP2D6"]
-    stages = ["Baseline\n(RDKit)", "M3\n(+motif+Morgan)", "M3 + tuned\nthreshold"]
+    stages = ["Baseline\n(RDKit)", "M3, no amine flag\n(+motif+Morgan)", "M3 + tuned\nthreshold"]
     values = {
         cyp: [
             baseline[baseline["isoform"] == cyp]["mcc"].mean(),
-            ablation[(ablation["isoform"] == cyp) & (ablation["model"] == "M3")]["mcc"].mean(),
-            tuned[tuned["isoform"] == cyp]["mcc_tuned"].mean(),
+            without_flag[cyp]["mcc_naive_0.5"].mean(),
+            without_flag[cyp]["mcc_tuned"].mean(),
         ]
         for cyp in isoforms
     }
@@ -70,13 +74,14 @@ def generate_mcc_progression(theme_name: str):
     ax.set_xticks(list(x))
     ax.set_xticklabels(stages)
     ax.set_ylabel("MCC (5-fold CV mean)")
-    ax.set_title("TDI classification: MCC by pipeline stage")
+    ax.set_title("TDI classification, first three stages: MCC by stage")
     ax.legend(frameon=False)
     ax.spines[["top", "right"]].set_visible(False)
     ax.axhline(0, color=theme["muted"], linewidth=0.6)
 
     fig.tight_layout()
-    fig.savefig(OUT_DIR / f"tdi_mcc_progression-{theme_name}.svg", transparent=False)
+    fig.text(0.5, -0.01, "Population as first built (every labelled row); superseded by the corrected population of the specification.", ha="center", va="top", fontsize=8, style="italic", color=theme["muted"])
+    fig.savefig(OUT_DIR / f"tdi_mcc_progression-{theme_name}.svg", transparent=False, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -84,7 +89,7 @@ def generate_reliability_correlation(theme_name: str):
     theme = THEMES[theme_name]
     _style(theme)
 
-    df = pd.read_csv(TDI_DATA / "reliability_correlation.csv")
+    df = pd.read_csv(COMPARISONS / "reliability_correlation.csv")
 
     fig, ax = plt.subplots(figsize=(6, 3.5), facecolor=theme["background"])
     ax.set_facecolor(theme["background"])
@@ -97,7 +102,7 @@ def generate_reliability_correlation(theme_name: str):
 
     ax.axvline(0, color=theme["muted"], linewidth=0.6)
     ax.set_xlabel("Point-biserial correlation with real held-out prediction error")
-    ax.set_title("Reliability score components vs. actual error (single fold, n=717)")
+    ax.set_title(f"Reliability score components vs. actual error\n(CYP3A4, descriptors, first fold, n={int(df['n'].iloc[0])})")
     ax.spines[["top", "right"]].set_visible(False)
 
     fig.tight_layout()

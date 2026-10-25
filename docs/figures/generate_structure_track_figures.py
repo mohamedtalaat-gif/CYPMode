@@ -3,7 +3,7 @@
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
 """Generates docs/figures/structure_track/posebusters_summary-{light,dark}.svg
-from the real, checked-in PoseBusters validity results.
+from the checked-in PoseBusters validity results of the first batch of structures (data/structure_track/outputs/cyp3a4/posebusters_validity.csv).
 
 Same one-off, manually-run pattern as generate_validation_figure.py and
 generate_tdi_figures.py (not part of the cypmode package/runtime deps):
@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-POSEBUSTERS_PATH = ROOT / "data" / "structure_track" / "outputs" / "posebusters_validity.csv"
+POSEBUSTERS_PATH = ROOT / "data" / "structure_track" / "outputs" / "cyp3a4" / "posebusters_validity.csv"
 OUT_DIR = Path(__file__).resolve().parent / "structure_track"
 
 THEMES = {
@@ -75,9 +75,7 @@ def render(theme_name: str, colors: dict, n_pass: int, n_total: int, check_failu
     ax_summary.set_ylim(0, n_total + 4)
     ax_summary.set_title(f"All checks\n{n_pass}/{n_total} pass ({n_pass / n_total * 100:.1f}%)", fontsize=13, color=colors["text"])
 
-    # Right panel: which individual checks fail, and how often -- the real
-    # point of this figure, per data/structure_track/outputs/README.md's
-    # own stated plan.
+    # Right panel: which individual checks fail, and how often.
     labels = [name for name, _ in check_failures]
     counts = [count for _, count in check_failures]
     y = range(len(labels))
@@ -91,11 +89,11 @@ def render(theme_name: str, colors: dict, n_pass: int, n_total: int, check_failu
     ax_checks.set_xlim(0, max(counts) + 2 if counts else 1)
     ax_checks.set_title("Which real checks fail, and how often", fontsize=13, color=colors["text"])
 
-    fig.suptitle("PoseBusters physical/chemical validity, every completed structure this project has", fontsize=14, color=colors["text"])
+    fig.suptitle(f"PoseBusters physical and chemical validity of the first batch of {n_total} structures", fontsize=14, color=colors["text"])
     fig.text(
         0.5,
         -0.02,
-        "Real steric clashes cluster entirely on one check (minimum_distance_to_protein), not scattered failures across many checks.",
+        f"{counts[0]} of the {n_fail} failures are on one check ({labels[0]})." if counts else "No structure fails a check.",
         ha="center",
         fontsize=10,
         style="italic",

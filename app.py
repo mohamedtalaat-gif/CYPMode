@@ -210,9 +210,11 @@ def _earlier_stage_figures() -> None:
         return
     st.subheader("Earlier stages: MCC by pipeline stage")
     st.markdown(
-        "Three stages under the same 5-fold cross-validation: a plain RDKit-descriptor baseline, the motif screen plus a Morgan "
-        "fingerprint (**M3**), and the same model with its decision threshold tuned for MCC inside each training fold. A trialkylamine "
-        "flag was tested at the M3 stage and dropped because it lowered CYP2D6 performance."
+        "Three stages under the same 5-fold cross-validation, on the population as first built (every labelled row): a plain "
+        "RDKit-descriptor baseline, the motif screen plus a Morgan fingerprint (**M3**, without the trialkylamine flag), and the same "
+        "model with its decision threshold tuned for MCC inside each training fold. These are the first stages, superseded by the "
+        "corrected population and the final stack; the trialkylamine flag stays out of the model, and its effect on CYP2D6 is "
+        "within noise in the later re-test."
     )
     st.image(str(mcc_path), width="stretch")
     st.subheader("Does the reliability score track real error?")

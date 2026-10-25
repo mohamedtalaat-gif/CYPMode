@@ -1,58 +1,31 @@
-# TDI Track, Results
+# TDI track: first stages
 
-Structural/mechanistic evidence and classical machine learning combined to
-predict time-dependent (mechanism-based) CYP3A4/CYP2D6 inhibition for the
-[OpenADMET CYP Inhibition Blind Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge).
-The full methodology and every intermediate finding, including those that
-did not work, are in
-[`CYPMode_Architecture_Specification.md`](../../../CYPMode_Architecture_Specification.md)
-and in the audit report (`audit/AUDIT_REPORT.md`).
-This page is the short version: what the numbers are, and what they mean.
+These figures show the first three stages of the TDI model and the first check of a reliability score, drawn from the result files of the first week of the project. They are kept as the record of how the model started. The final model differs from the one drawn here (a stack of many candidates replaced the single LightGBM, and the population and the evaluation were corrected); its results are in the README of the repository (section "Final stack and verdicts"), in `METHOD_REPORT.md` and in the notebook.
+The full methodology and every finding, including the ones that did not work, are in [`CYPMode_Architecture_Specification.md`](../../../CYPMode_Architecture_Specification.md) and in the audit report (`audit/AUDIT_REPORT.md`).
 
 ## MCC by pipeline stage
 
 ![TDI MCC progression](tdi_mcc_progression-light.svg#gh-light-mode-only)
 ![TDI MCC progression](tdi_mcc_progression-dark.svg#gh-dark-mode-only)
 
-Three real, independently measured stages, same 5-fold cross-validation
-protocol throughout (`StratifiedKFold(n_splits=5, random_state=42)`, so
-every bar is comparable to the others, no stage benefits from an easier
-split):
+Three stages, all under the same 5-fold cross-validation (`StratifiedKFold(n_splits=5, random_state=42)`, so every bar is comparable with the others), on the population as it was first built: every labelled row of the training file, with the labels as given.
 
-1. **Baseline**: RDKit descriptors only, reproducing the official
-   challenge tutorial's own approach.
-2. **M3**: adds CYPMode's Type II motif screen and a Morgan (ECFP4)
-   fingerprint. A second candidate feature (a trialkylamine flag,
-   motivated by a real 6-drug reference panel) was tested here too and
-   **dropped**, it measurably hurt CYP2D6 and did nothing for CYP3A4 in
-   this multivariate setting. That negative result is documented in the
-   data audit, not hidden.
-3. **M3 + tuned threshold**: same model, but the classification
-   threshold is optimized for MCC inside each training fold (never
-   touching validation labels) instead of left at the default 0.5. TDI is
-   a ~21%-positive, imbalanced label, so 0.5 was always too conservative.
+1. **Baseline**: RDKit descriptors only, the approach of the official tutorial (`data/tdi_track/outputs/comparisons/baseline_fixed_seed.csv`).
+2. **M3, no amine flag**: the descriptors, the Type II motif flag of CYPMode and a Morgan (ECFP4) fingerprint, with the threshold at 0.5.
+3. **M3 with a tuned threshold**: the same features, with the classification threshold chosen for MCC inside each training fold and never on the validation labels, because TDI is an imbalanced label (about 21% positive) and 0.5 is too conservative for it. Stages 2 and 3 are read from `data/tdi_track/outputs/cyp3a4/threshold_tuning_cyp3a4_no_amine.csv` and `data/tdi_track/outputs/cyp2d6/threshold_tuning_cyp2d6_no_amine.csv`.
 
-CYP2D6 starts and stays far weaker than CYP3A4 throughout, this is not a
-gap this project is hiding: CYP2D6's real baseline MCC is close to zero,
-and even the improvements here do not change that fundamental difficulty.
-It is the direct motivation for adding structural evidence (Tier 3) next.
+A trialkylamine flag (`cypmode.metrics.amines`) was left out of the model. The runs of 2026-09-25 that kept it by mistake (`threshold_tuning.csv` and `ablation_m0_m3.csv` in `data/tdi_track/outputs/comparisons/`) are not drawn; the notebook (Part VII) tables them next to the runs without the flag. A later re-test showed that the data neither support nor refute the flag (specification, Tier 2, correction of 2026-10-16); it stays out because no member of the final stack takes it as an input.
 
-## Does the reliability score actually track real error?
+CYP2D6 starts and stays far weaker than CYP3A4 in these stages: its baseline MCC is close to zero. The structural evidence of Tier 3, added next, gave no measurable gain (specification, Tier 3).
+
+Two later findings make these bars an early record and not a measure of the final model. The CYP3A4 population mixed two conventions of labelling (1,249 of 3,584 labelled rows have no direct measurement and are all negative), and random cross-validation does not resemble the scored test set (specification, "Corrected TDI population and selection-corrected evaluation", 2026-10-04).
+
+## Does the reliability score track real error?
 
 ![Reliability score correlation](tdi_reliability_correlation-light.svg#gh-light-mode-only)
 ![Reliability score correlation](tdi_reliability_correlation-dark.svg#gh-dark-mode-only)
 
-Two candidate reliability signals, computed from a held-out fold (5
-same-data, different-seed models' prediction variance; each compound's
-ECFP4 Tanimoto distance to the training set), correlated against whether
-that fold's prediction was actually wrong. **Neither component is called
-"validated uncertainty quantification" here**, that label is only used
-once a correlation is shown to be real and reasonably strong. As it
-stands: chemical distance-from-training (OOD) tracks error better
-(r≈0.20) than model-ensemble disagreement (r≈0.10), on a single fold.
-Both are weak-to-modest, not strong, reported rather than
-oversold, and due for a multi-fold re-check before any claim is built on
-them.
+Two candidate reliability signals were computed for the validation compounds of the first fold of the fixed-seed protocol (CYP3A4, descriptors only): the disagreement of five LightGBM models trained on the same compounds with different seeds, and the distance of each compound to the training set (1 minus the highest ECFP4 Tanimoto similarity). Each was correlated with whether the prediction at the threshold 0.5 was wrong (`data/tdi_track/outputs/comparisons/reliability_correlation.csv`). Neither is called validated uncertainty quantification: the chemical distance tracks error better than the disagreement, and both correlations are weak to modest, on one fold. A later test of query-by-committee uncertainty against the measured errors gave a negative result (specification, "Uncertainty: query by committee", 2026-10-05).
 
 ## Reproducing these figures
 
@@ -61,5 +34,4 @@ pip install matplotlib  # not a project runtime dependency, figures only
 python docs/figures/generate_tdi_figures.py
 ```
 
-Regenerates all four SVGs from the checked-in result CSVs in
-`data/tdi_track/outputs/`, nothing here is hand-edited.
+The command regenerates the four SVG files from the result files named above; nothing in them is edited by hand.
