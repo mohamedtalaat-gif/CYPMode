@@ -80,6 +80,11 @@ def provenance(ctx: Context) -> Section:
 # -- 2. tests ------------------------------------------------------------------------------------
 
 
+def failed_test_names(output: str) -> list[str]:
+    """The test ids on the FAILED and ERROR lines of the short summary of pytest (the part after the first ' - ' is a message and is left out)."""
+    return [line.split(" - ", 1)[0].strip() for line in output.splitlines() if line.startswith(("FAILED ", "ERROR "))]
+
+
 def tests(ctx: Context, enabled: bool = True) -> Section:
     s = Section("2. Test suite (executed now)")
     if not enabled:
@@ -87,11 +92,14 @@ def tests(ctx: Context, enabled: bool = True) -> Section:
         s.add("test suite executed", None, "skipped")
         ctx.metrics.update(tests_passed="not run", tests_failed="not run")
         return s
-    out = run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--no-header", "tests"], timeout=3600)  # a hung test is a failed check, not a stalled audit
+    out = run([sys.executable, "-m", "pytest", "-q", "-rfE", "-p", "no:cacheprovider", "--no-header", "tests"], timeout=3600)  # a hung test is a failed check, not a stalled audit; -rfE lists the name of every failed or errored test
     last = [line for line in out.strip().splitlines() if re.search(r"\d+ (passed|failed|error)", line)]
     counts = {k: int(v) for v, k in re.findall(r"(\d+) (passed|failed|skipped|deselected|errors?)", last[-1] if last else "")}
     failed = counts.get("failed", 0) + counts.get("error", 0) + counts.get("errors", 0)
     s.body.append("pytest summary counts: " + (", ".join(f"{k} = {v}" for k, v in sorted(counts.items())) or "no summary line found"))
+    names = failed_test_names(out)
+    if names:  # nothing is added to a green report, so that the two runs of a green audit stay byte-identical
+        s.body.append("tests that failed or errored (an error with all tests passed is a fault of a fixture teardown): " + "; ".join(names))
     s.add("all tests pass", failed == 0 and counts.get("passed", 0) > 0, f"{counts.get('passed', 0)} passed, {failed} failed")
     ctx.metrics.update(tests_passed=counts.get("passed", 0), tests_failed=failed)
     return s

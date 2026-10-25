@@ -95,6 +95,10 @@ that does is named at the end of the step.
    replicate on ten outer folds (notebook 6.7 and 9.9). The final build reads the verdict lines of the logs and nothing else decides.
    - CYP3A4: final stack `default+all_survivors` of 28 candidates; groups that joined: chemprop_foundation, neural.
    - CYP2D6: final stack `default` of 23 candidates; groups that joined: none.
+   - CYP3A4, `chemprop_foundation`: two Chemprop networks that start from the weights of pretrained OpenADMET models (one trained on MiniMol targets, one the Novartis ADMET surrogate) and are fine-tuned to the arm shift; run for CYP3A4 only, in two stages under a rule written before any result. Members: `chemeleon_minimol_mt_shift`, `chemeleon_surrogate_mt_shift`. Added to the default stack it raises the AUC by 0.0133 (corrected p = 0.0024) at the cut z0 = 1.0 and by 0.0144 (p = 0.0053) at z0 = 1.96.
+   - CYP3A4, `neural`: the multitask network (one network over the assay arms, fitted to the label and to the arm shift) and plain Chemprop (a message-passing network on the molecular graph, fitted to the shift); two near-misses that joined into one lead on CYP3A4 and were confirmed on a replicate with ten outer folds. Members: `mlp_multitask_label`, `mlp_multitask_shift`, `chemprop_mt_shift`. Added to the default stack it raises the AUC by 0.0106 (corrected p = 0.0142) at the cut z0 = 1.0 and by 0.0106 (p = 0.0294) at z0 = 1.96.
+   - CYP2D6: no group passed its gate, so the final stack is the default stack of its candidates.
+   - These are passes of the registered rule. After the Holm adjustment over all stacked comparisons the smallest adjusted p-value is 0.26 (section 4.2), so they are reported as passes of the rule and not as effects that survive the number of attempts.
 7. **Calibration and calls.** Probabilities by isotonic regression on the inner out-of-fold scores (notebook 8.5). The number of positive calls is a multiple of the estimated prevalence of the scored population, the multiple in
    {1.0, 1.1, 1.2, 1.3} chosen by the highest mean outer-fold MCC (notebook 8.4): CYP3A4 1.3; CYP2D6 1.0.
 8. **Two files.** A (hits-only CYP2D6 model) and B (the selection-aware CYP2D6 model, which multiplies P(label | hit) by a gate P(hit)); CYP3A4 is identical in both. The entry that is final is chosen by a rule declared in advance (`cypmode/challenge/selection_decision.py`, notebook 13.4); the rule gives file A, and file B is kept, with its SHA-256 in the manifest, to be scored on the test labels if the organisers publish them.
@@ -130,7 +134,7 @@ results (`NEGATIVE_RESULTS.md`). No search procedure chose among them: the progr
 | structure levers | 13 | 36 | 5 | 31 | restraint of the iron-nitrogen contact, conformer, seed, template and step-scale levers, minimum-Bayes-risk and other rules for choosing a pose, a second co-folding engine, expected-improvement sampling, the heme-frame prior |
 | replicates | 1 | 7 | 1 | 6 | the same comparison on ten outer folds for the physics additions and for the neural pair |
 
-In all 184 pre-registered verdicts in 58 families, 9 of them MET (figure `docs/figures/ml/ml_exploration_map-light.png`; notebook Part IX).
+In all 184 pre-registered verdicts in 58 families, 9 of them MET (figure `docs/figures/ml/ml_exploration_map-light.png`; notebook Part IX). This is the one count of what was tried that every document of the project quotes. The logs print 29 more gate lines, which are not in it: the negative control, where a MET verdict means that the pipeline gives chance on permuted labels, and the exploratory second looks, which no gate parser reads.
 
 ### 4.2 The accounting of the number of attempts
 
@@ -205,9 +209,11 @@ AUC and MCC are not comparable across rows with different evaluation populations
 
 ## 6. Final TDI stack (chosen by the pre-registered gate rule)
 
-# Final TDI build (generated; every number is computed by `final_tdi_build.py`)
+Each isoform has the stack that the pre-registered rule selects, from the nested cross-validation on the population the challenge scores. CYP3A4: the final stack has 28 candidates (AUC 0.8338 at z0 = 1.0 and 0.8622 at z0 = 1.96, MCC 0.476 and 0.5388), above the default stack of 23 candidates (AUC 0.817 and 0.8443) by 0.0168 (p = 0.0002) and 0.0179 (p = 0.0009). CYP2D6: the final stack is the default stack of 23 candidates (AUC 0.7312 at z0 = 1.0 and 0.7536 at z0 = 1.96, MCC 0.1672 and 0.2036); no added group passed its gate. The positive calls are the top 40.3% of the test compounds for CYP3A4 and the top 5.9% for CYP2D6.
 
-## CYP3A4
+### Final TDI build (generated; every number is computed by `final_tdi_build.py`)
+
+#### CYP3A4
 Final stack: **default+all_survivors** (28 candidates); surviving groups: ['chemprop_foundation', 'neural']; called rate 0.403 against target prevalence 0.310.
 
 | stack | n_candidates | auc_z1.0 | mcc_z1.0 | auc_z1.96 | mcc_z1.96 | eligible | diff_z1.0 | p_z1.0 | diff_z1.96 | p_z1.96 |
@@ -217,14 +223,14 @@ Final stack: **default+all_survivors** (28 candidates); surviving groups: ['chem
 | default+neural | 26 | 0.8276 | 0.4609 | 0.855 | 0.5131 | True | 0.0106 | 0.0142 | 0.0106 | 0.0294 |
 | default+all_survivors | 28 | 0.8338 | 0.476 | 0.8622 | 0.5388 | True | 0.0168 | 0.0002 | 0.0179 | 0.0009 |
 
-## CYP2D6
+#### CYP2D6
 Final stack: **default** (23 candidates); surviving groups: none; called rate 0.059 against target prevalence 0.059.
 
 | stack | n_candidates | auc_z1.0 | mcc_z1.0 | auc_z1.96 | mcc_z1.96 | eligible |
 | --- | --- | --- | --- | --- | --- | --- |
 | default | 23 | 0.7312 | 0.1672 | 0.7536 | 0.2036 | True |
 
-## Files
+#### Files
 
 | file | sha256 | rows | CYP3A4_positive_rate | CYP2D6_positive_rate |
 | --- | --- | --- | --- | --- |
@@ -234,9 +240,9 @@ Final stack: **default** (23 candidates); surviving groups: none; called rate 0.
 
 ## 7. Selection-aware CYP2D6 model
 
-Training labels exist only for compounds promoted to dose-response on the isoform; the scored set may contain compounds that
-would never have been promoted. The model multiplies P(label | hit) by a gate P(hit), fitted on the all-isoform panel block
-(found by `library_blocks.py`). Results (15 folds, nested):
+CYP2D6 compounds were measured on this enzyme only if an earlier screen promoted them, so the training labels come from a selected subset and the scored set may hold compounds that would never have been promoted. The selection-aware model multiplies P(label | hit) by a gate P(hit). Against the hits-only stack it raises the outer AUC from 0.5618 to 0.7278 (+0.1660, corrected p = 0.026) when the scored set looks like the training panel. The gain depends on how many never-promoted compounds the scored set holds: it disappears when there are none, and the loss at the call rate of the final build is larger than the gain where it wins. The choice between the two files was therefore made by a procedure written before any upload; it gives **file A** (the hits-only file), and the other file is kept with its SHA-256 to be scored on the test labels if the organisers publish them.
+
+The model is fitted on the all-isoform panel block (found by `library_blocks.py`). Results (15 folds, nested):
 
 ```
   evaluation: similarity x prevalence x confident rows (z0 = 1.0)
@@ -347,7 +353,9 @@ CYP2D6 A/B DETECTOR: NOT USABLE (both errors at most 0.25)
 ## 8. Physics-, SAR-, committee-, embedding-, cross-isoform and weighting-based additions
 
 Each addition is a block or candidate group tested alone and inside the assembled stack; the rule is corrected p < 0.05 at both
-confidence cut-offs. Verdicts:
+confidence cut-offs. The additions of the physics, SAR, committee, embedding, cross-isoform and weighting families gave 57 pre-registered verdicts in 14 families, 0 of them MET. A near miss is not tuned until it passes: the verdicts below are those of the first test, and the ones that were repeated on ten outer folds are listed after them.
+
+Verdicts:
 
 | log | gate | verdict |
 | --- | --- | --- |
@@ -435,6 +443,8 @@ CYP2D6 GATE (replicate physics_b, 10 outer folds corrected p < 0.05 at both z0 a
 
 ## 9. Calibration
 
+The published probabilities are calibrated by isotonic regression fitted on the inner out-of-fold scores. The expected calibration error is 0.0189 for CYP3A4 and 0.0054 for CYP2D6, against 0.0431 and 0.3592 for the raw output of the blend. The raw CYP2D6 blend ranks the compounds and transfers a call rate but is not a probability (limitation L10).
+
 ```
 isoform   method    ece  brier   slope  intercept  mean_pred  mean_obs  gate_met
  CYP3A4      raw 0.0431 0.1740  1.1813    -0.1630     0.3631    0.3200      True
@@ -448,6 +458,8 @@ CYP2D6: gate (ECE <= 0.05, slope in [0.8, 1.2]) met by: isotonic
 ```
 
 ## 10. Test-like holdout
+
+The highest block of identifiers of the training file is an analog-expansion round built like the blinded test set. Holding the whole block out (483 CYP3A4 compounds, positive rate 0.298) and training on the rest measures the candidates in a regime that matches the test better than a random or a similarity-weighted fold. It exists for CYP3A4 only, and the candidates and the best of them are chosen from cross-validation, never from the block. The AUC of each candidate on the block is listed next to its cross-validated AUC, so that the agreement of the two yardsticks is itself a result.
 
 ```
 2026-10-12 13:41:34,989 train rows 1851, held-out block rows 483 (positive rate 0.298)
@@ -465,6 +477,8 @@ CYP2D6: gate (ECE <= 0.05, slope in [0.8, 1.2]) met by: isotonic
 ```
 
 ## 11. Structure track
+
+The structure levers gave 36 pre-registered verdicts, 5 of them MET (bond restraint, contact restraint, force-field relaxation of poses, pool gates repeated with OpenStructure's yardstick). Every rule for choosing a pose among the predicted ones was NOT MET on the crystal-anchored benchmark, so the pick is the model's own ranking among the valid poses; what the recipe adds is a restraint of the iron-nitrogen contact, the scorer's own validity call with a margin rule, and a registered relaxation.
 
 Gate verdicts of the structure levers (restraint, diversity, selection, engines, expected-improvement sampling, heme-frame prior):
 
@@ -539,6 +553,25 @@ STRUCTURE RELAXATION applied to 20 of 20 poses (rule of relax_final.py); smalles
 ```
 
 ## 12. Negative results
+
+Of 184 pre-registered verdicts in 58 families of ideas, 175 are NOT MET. A failed gate is a result: it is written down with its numbers and it is not tuned until it passes.
+
+| kind of idea | families | verdicts | not met |
+| --- | --- | --- | --- |
+| data usage | 8 | 30 | 30 |
+| representation and physics | 14 | 56 | 56 |
+| learners and stacking | 12 | 24 | 21 |
+| label process and selection | 10 | 31 | 31 |
+| structure levers | 13 | 36 | 31 |
+| replicates | 1 | 7 | 6 |
+
+`NEGATIVE_RESULTS.md` lists every idea with its gain and its p-value next to the verdict. The failures that changed the project most are told in full in the notebook (Part IX) and in the specification:
+
+- *The direct-inhibition bridge.* A predicted direct-inhibition potency looked like the largest gain of the project and was retracted: it read the availability of a measurement, which the blinded test set never shows.
+- *The population of the CYP3A4 labels.* A third of the labelled rows follow a convention that the scored test set does not have; every earlier CYP3A4 number mixed the two populations, and the evaluation was rebuilt on the population the challenge scores.
+- *The amine flag and the structural features of Tier 3.* Two mechanistically motivated additions that the data neither supported nor refuted; one was left out and the other could never reach the test rows.
+- *Choosing a pose.* Every rule tried for choosing among predicted poses failed its gate, which is why the recipe keeps the model's own ranking and spends its effort on the restraint, the validity margin and the relaxation.
+- *Uncertainty by a committee of models.* It adds no information beyond the decision margin for the final stacks, so it is reported and never alters a prediction.
 
 See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tabulates how far the two structure selection gates depend on a single ligand; that table does not change a registered verdict.
 

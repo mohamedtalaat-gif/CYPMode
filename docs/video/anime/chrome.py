@@ -33,7 +33,7 @@ class Chrome:
         self.port = port  # None: a free port is taken for every start, so that no other browser on the machine shares it
         self._active_port = port
         self._id = 0
-        self._profile = tempfile.TemporaryDirectory()
+        self._profile = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)  # a helper process of the browser may still write into it while it is removed
         self._process = None
         self._socket = None
         self._page = None
@@ -67,7 +67,7 @@ class Chrome:
         self.restarts += 1
         for attempt in range(attempts):
             self._stop()
-            self._profile = tempfile.TemporaryDirectory()
+            self._profile = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
             try:
                 self._launch()
                 if self._page is not None:
@@ -79,10 +79,11 @@ class Chrome:
                 time.sleep(1)
 
     def _stop(self) -> None:
-        """Close the connection, end the process and remove the profile of the browser that is running, if any."""
+        """Close the connection, end the process and remove the profile of the browser that is running, if any.
+        A browser that does not end within ten seconds (a frozen or a loaded one) is killed, so that no step of the end can raise."""
         try:
             self._socket.close()
-        except (OSError, AttributeError):
+        except (OSError, AttributeError, ConnectionClosed):
             pass
         if self._process is not None:
             self._process.terminate()
@@ -90,6 +91,7 @@ class Chrome:
                 self._process.wait(timeout=10)
             except subprocess.TimeoutExpired:
                 self._process.kill()
+                self._process.wait()
             self._process = None
         self._profile.cleanup()
 
@@ -104,12 +106,7 @@ class Chrome:
                 self.restart()
 
     def __exit__(self, *exc) -> None:
-        if self._socket is not None:
-            self._socket.close()
-        if self._process is not None:
-            self._process.terminate()
-            self._process.wait(timeout=10)
-        self._profile.cleanup()
+        self._stop()
 
     def call(self, method: str, **params) -> dict:
         self._id += 1

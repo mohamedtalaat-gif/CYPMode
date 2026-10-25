@@ -67,9 +67,8 @@ def test_the_facts_reach_the_page_as_valid_javascript():
 
 
 def test_the_gates_on_screen_do_not_include_the_exploratory_rescorings(monkeypatch):
-    rows = [("a.log", "mbr_selection", "NOT MET"), ("a.log", "restraint_bond", "MET"), ("b.log", "mbr_lddt_exploratory", "NOT MET")]
-    monkeypatch.setattr(facts_module, "gate_rows", lambda: rows)
-    assert facts_module.gate_counts() == (2, 1)
+    monkeypatch.setattr(facts_module, "totals", lambda: (3, 2, 1))  # (verdicts, families, met) of the pre-registered ledger, which leaves out the controls and the exploratory second looks
+    assert facts_module.gate_counts() == (3, 2)
 
 
 def test_the_render_refuses_to_say_the_audit_reproduced_when_it_did_not(monkeypatch):
@@ -80,7 +79,7 @@ def test_the_render_refuses_to_say_the_audit_reproduced_when_it_did_not(monkeypa
 
 @pytest.fixture(scope="module")
 def page():
-    with Chrome(port=9411) as chrome:
+    with Chrome() as chrome:  # a free port for every start: another run of the tests, or a browser left over, never shares it
         chrome.open(VIDEO / "anime" / "index.html")
         chrome.evaluate(facts_module.to_javascript(FACTS, STUB) + f"window.ASSETS = {json.dumps(ASSET_STUB)};")  # the numbers of the test, whatever the real facts.js holds
         yield chrome

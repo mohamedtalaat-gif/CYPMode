@@ -3,9 +3,126 @@
 Every experiment whose pre-registered gate was not met, and every older pairwise comparison that was not significant under
 repeated 5x5 cross-validation. Nothing here was tuned until it passed. The older comparisons are re-analysed from their saved
 per-fold scores with the paired corrected resampled t of Nadeau and Bengio and a Holm adjustment over the pairs; the gate ledger
-uses the same corrected t.
+uses the same corrected t. The first two tables read idea by idea, with the numbers; the list of every verdict line follows.
 
-## Gates NOT MET
+## Ideas that were added to the TDI stack and not admitted
+
+Each row is one idea on one enzyme: the change in the AUC of the stack when the idea is added to it (positive is better), at the two confidence cuts of the labels, with the corrected resampled p-value of that change. The gate asks for p < 0.05 at both cuts, alone and inside the stack.
+
+| kind of idea | idea | enzyme | change in AUC at z0 = 1.0 | change in AUC at z0 = 1.96 | reading |
+| --- | --- | --- | --- | --- | --- |
+| data usage | single-concentration screen as a predicted block | CYP3A4 | +0.0001 (p = 0.916) | +0.0008 (p = 0.607) | a gain that is within noise |
+| data usage | single-concentration screen as a predicted block | CYP2D6 | -0.0045 (p = 0.533) | +0.0009 (p = 0.819) | a gain that is within noise |
+| data usage | Emax of both arms as a predicted block | CYP3A4 | +0.0002 (p = 0.908) | +0.0004 (p = 0.376) | a gain that is within noise |
+| data usage | Emax of both arms as a predicted block | CYP2D6 | -0.0021 (p = 0.690) | -0.0001 (p = 0.984) | no gain at either cut |
+| data usage | PXR-induction readings as a predicted block | CYP3A4 | +0.0006 (p = 0.690) | +0.0001 (p = 0.953) | a gain that is within noise |
+| data usage | PXR-induction readings as a predicted block | CYP2D6 | -0.0010 (p = 0.702) | +0.0006 (p = 0.883) | a gain that is within noise |
+| data usage | continuous external-panel responses as a predicted block | CYP3A4 | +0.0008 (p = 0.428) | +0.0004 (p = 0.725) | a gain that is within noise |
+| data usage | continuous external-panel responses as a predicted block | CYP2D6 | -0.0037 (p = 0.660) | -0.0007 (p = 0.619) | no gain at either cut |
+| data usage | Tox21 CYP-screen readings as a predicted block | CYP3A4 | -0.0003 (p = 0.714) | -0.0011 (p = 0.238) | no gain at either cut |
+| data usage | Tox21 CYP-screen readings as a predicted block | CYP2D6 | -0.0053 (p = 0.546) | +0.0023 (p = 0.456) | a gain that is within noise |
+| data usage | logD and protein binding from the OpenADMET surrogate models | CYP3A4 | +0.0012 (p = 0.571) | +0.0024 (p = 0.399) | a gain that is within noise |
+| data usage | logD and protein binding from the OpenADMET surrogate models | CYP2D6 | -0.0034 (p = 0.677) | +0.0026 (p = 0.474) | a gain that is within noise |
+| data usage | compounds without a direct curve | CYP3A4 | +0.0004 (p = 0.776) | +0.0005 (p = 0.655) | a gain that is within noise |
+| data usage | test-likeness weighting | CYP3A4 | +0.0001 (p = 0.868) | -0.0008 (p = 0.692) | a gain that is within noise |
+| data usage | test-likeness weighting | CYP2D6 | -0.0063 (p = 0.501) | -0.0011 (p = 0.796) | no gain at either cut |
+| representation and physics | compound relative to the CYP3A4 pocket | CYP3A4 | -0.0002 (p = 0.934) | +0.0017 (p = 0.480) | a gain that is within noise |
+| representation and physics | compound relative to the CYP2D6 pocket | CYP2D6 | -0.0039 (p = 0.516) | -0.0008 (p = 0.904) | no gain at either cut |
+| representation and physics | structure-based site model of the CYP3A4 pocket | CYP3A4 | +0.0003 (p = 0.856) | -0.0000 (p = 0.979) | a gain that is within noise |
+| representation and physics | structure-based site model of the CYP2D6 pocket | CYP2D6 | -0.0036 (p = 0.647) | -0.0019 (p = 0.677) | no gain at either cut |
+| representation and physics | ligand-based pharmacophore hypothesis model | CYP3A4 | -0.0003 (p = 0.810) | -0.0005 (p = 0.753) | no gain at either cut |
+| representation and physics | ligand-based pharmacophore hypothesis model | CYP2D6 | -0.0061 (p = 0.529) | -0.0000 (p = 0.987) | no gain at either cut |
+| representation and physics | frozen CheMeleon embeddings | CYP3A4 | +0.0001 (p = 0.967) | +0.0018 (p = 0.261) | a gain that is within noise |
+| representation and physics | frozen CheMeleon embeddings | CYP2D6 | -0.0062 (p = 0.474) | +0.0024 (p = 0.432) | a gain that is within noise |
+| representation and physics | Monroe (GRIT) embeddings | CYP3A4 | +0.0031 (p = 0.171) | +0.0041 (p = 0.123) | a gain that is within noise |
+| representation and physics | Monroe (GRIT) embeddings | CYP2D6 | -0.0034 (p = 0.719) | +0.0031 (p = 0.321) | a gain that is within noise |
+| representation and physics | physics block, tier A | CYP3A4 | +0.0037 (p = 0.298) | +0.0065 (p = 0.093) | a gain that is within noise |
+| representation and physics | physics block, tier A | CYP2D6 | +0.0034 (p = 0.494) | +0.0061 (p = 0.186) | a gain that is within noise |
+| representation and physics | compact physics block | CYP3A4 | +0.0037 (p = 0.054) | +0.0043 (p = 0.025) | significant at one cut only |
+| representation and physics | compact physics block | CYP2D6 | +0.0028 (p = 0.394) | +0.0014 (p = 0.687) | a gain that is within noise |
+| representation and physics | physics block, tier B | CYP3A4 | +0.0010 (p = 0.734) | +0.0014 (p = 0.563) | a gain that is within noise |
+| representation and physics | physics block, tier B | CYP2D6 | -0.0030 (p = 0.692) | +0.0037 (p = 0.564) | a gain that is within noise |
+| representation and physics | basic-centre block (protonation states, centre classes) | CYP3A4 | +0.0005 (p = 0.537) | +0.0013 (p = 0.368) | a gain that is within noise |
+| representation and physics | basic-centre block (protonation states, centre classes) | CYP2D6 | -0.0033 (p = 0.705) | +0.0007 (p = 0.831) | a gain that is within noise |
+| representation and physics | frozen Atom-JEPA embeddings as a block | CYP3A4 | +0.0012 (p = 0.541) | +0.0009 (p = 0.614) | a gain that is within noise |
+| representation and physics | frozen Atom-JEPA embeddings as a block | CYP2D6 | -0.0069 (p = 0.492) | -0.0051 (p = 0.407) | no gain at either cut |
+| representation and physics | Atom-JEPA readout in the stack | CYP3A4 | +0.0107 (p = 0.028) | +0.0081 (p = 0.059) | significant at one cut only |
+| representation and physics | Atom-JEPA readout in the stack | CYP2D6 | -0.0029 (p = 0.778) | +0.0015 (p = 0.912) | a gain that is within noise |
+| learners and stacking | TabICL in the stack | CYP3A4 | +0.0001 (p = 0.945) | +0.0003 (p = 0.779) | a gain that is within noise |
+| learners and stacking | TabICL in the stack | CYP2D6 | -0.0008 (p = 0.724) | +0.0018 (p = 0.484) | a gain that is within noise |
+| learners and stacking | TabPFN in the stack | CYP3A4 | +0.0012 (p = 0.388) | +0.0013 (p = 0.409) | a gain that is within noise |
+| learners and stacking | TabPFN in the stack | CYP2D6 | +0.0007 (p = 0.688) | +0.0024 (p = 0.617) | a gain that is within noise |
+| learners and stacking | TabICL on Monroe embeddings | CYP3A4 | +0.0018 (p = 0.331) | +0.0017 (p = 0.398) | a gain that is within noise |
+| learners and stacking | TabICL on Monroe embeddings | CYP2D6 | -0.0027 (p = 0.778) | +0.0010 (p = 0.791) | a gain that is within noise |
+| learners and stacking | TabICL on frozen CheMeleon embeddings | CYP3A4 | -0.0004 (p = 0.726) | +0.0001 (p = 0.931) | a gain that is within noise |
+| learners and stacking | TabICL on frozen CheMeleon embeddings | CYP2D6 | -0.0015 (p = 0.635) | +0.0004 (p = 0.914) | a gain that is within noise |
+| learners and stacking | TabPFN on frozen CheMeleon embeddings | CYP3A4 | +0.0024 (p = 0.264) | +0.0012 (p = 0.628) | a gain that is within noise |
+| learners and stacking | TabPFN on frozen CheMeleon embeddings | CYP2D6 | -0.0013 (p = 0.746) | +0.0014 (p = 0.737) | a gain that is within noise |
+| learners and stacking | multitask network in the stack | CYP3A4 | +0.0077 (p = 0.043) | +0.0072 (p = 0.080) | significant at one cut only |
+| learners and stacking | multitask network in the stack | CYP2D6 | +0.0043 (p = 0.361) | +0.0054 (p = 0.230) | a gain that is within noise |
+| learners and stacking | multitask network with the screen and Emax as auxiliary heads | CYP3A4 | +0.0067 (p = 0.076) | +0.0065 (p = 0.103) | a gain that is within noise |
+| learners and stacking | multitask network with the screen and Emax as auxiliary heads | CYP2D6 | +0.0030 (p = 0.543) | +0.0041 (p = 0.526) | a gain that is within noise |
+| learners and stacking | plain Chemprop in the stack | CYP3A4 | +0.0048 (p = 0.076) | +0.0050 (p = 0.131) | a gain that is within noise |
+| learners and stacking | plain Chemprop in the stack | CYP2D6 | +0.0016 (p = 0.811) | -0.0009 (p = 0.861) | a gain that is within noise |
+| learners and stacking | the neural pair (multitask network and plain Chemprop) in the stack | CYP2D6 | +0.0039 (p = 0.569) | +0.0047 (p = 0.415) | a gain that is within noise |
+| label process and selection | two-arm regressors, floor-clipped | CYP3A4 | +0.0006 (p = 0.748) | +0.0020 (p = 0.409) | a gain that is within noise |
+| label process and selection | two-arm regressors, floor-clipped | CYP2D6 | -0.0046 (p = 0.589) | -0.0069 (p = 0.635) | no gain at either cut |
+| label process and selection | committee label-process model | CYP3A4 | +0.0023 (p = 0.405) | +0.0033 (p = 0.394) | a gain that is within noise |
+| label process and selection | committee label-process model | CYP2D6 | -0.0070 (p = 0.615) | -0.0059 (p = 0.758) | no gain at either cut |
+| label process and selection | gate-shift features | CYP3A4 | +0.0015 (p = 0.535) | +0.0018 (p = 0.588) | a gain that is within noise |
+| label process and selection | gate-shift features | CYP2D6 | -0.0017 (p = 0.853) | +0.0013 (p = 0.850) | a gain that is within noise |
+| label process and selection | cross-isoform transfer of the assay arms | CYP3A4 | -0.0002 (p = 0.812) | -0.0009 (p = 0.195) | no gain at either cut |
+| label process and selection | cross-isoform transfer of the assay arms | CYP2D6 | -0.0032 (p = 0.719) | +0.0004 (p = 0.940) | a gain that is within noise |
+| label process and selection | SAR pair transfer | CYP3A4 | -0.0003 (p = 0.773) | -0.0001 (p = 0.773) | no gain at either cut |
+| label process and selection | SAR pair transfer | CYP2D6 | -0.0030 (p = 0.732) | +0.0011 (p = 0.620) | a gain that is within noise |
+| label process and selection | SAR pair transfer with physics | CYP3A4 | +0.0042 (p = 0.152) | +0.0042 (p = 0.304) | a gain that is within noise |
+| label process and selection | SAR pair transfer with physics | CYP2D6 | -0.0010 (p = 0.916) | +0.0019 (p = 0.630) | a gain that is within noise |
+| label process and selection | matched-molecular-pair transfer | CYP3A4 | -0.0001 (p = 0.920) | +0.0001 (p = 0.937) | a gain that is within noise |
+| label process and selection | matched-molecular-pair transfer | CYP2D6 | -0.0048 (p = 0.520) | +0.0010 (p = 0.774) | a gain that is within noise |
+
+## Structure-track levers that were not adopted
+
+Each lever was judged on the crystal-anchored benchmark by a rule written beforehand; none of the levers below met it.
+
+| family | gate |
+| --- | --- |
+| bond restraint confirmed on new ligands | restraint_bond_expansion |
+| bond restraint confirmed on new ligands | restraint_bond_harm |
+| consensus of poses across a chemical series | series_consensus |
+| expected-improvement sampling of poses | ei_sampling |
+| heme-frame prior over poses | heme_frame_prior |
+| minimum Bayes risk selection and engine consensus | engine_consensus |
+| minimum Bayes risk selection and engine consensus | mbr_selection |
+| pharmacophore model of the poses | pose_pharmacophore_model |
+| pharmacophore model of the poses | pose_pharmacophore_model_combined |
+| physics, pharmacophore and combined pose terms | pose_combined |
+| physics, pharmacophore and combined pose terms | pose_pharmacophore |
+| physics, pharmacophore and combined pose terms | pose_physics |
+| pool gates repeated with OpenStructure's yardstick | ei_sampling_ost |
+| pool gates repeated with OpenStructure's yardstick | engine_consensus_ost |
+| pool gates repeated with OpenStructure's yardstick | heme_frame_prior_ost |
+| pool gates repeated with OpenStructure's yardstick | mbr_selection_ost |
+| pool gates repeated with OpenStructure's yardstick | pilot_conformers_ost |
+| pool gates repeated with OpenStructure's yardstick | pilot_cryoem_ost |
+| pool gates repeated with OpenStructure's yardstick | pilot_seeds_ost |
+| pool gates repeated with OpenStructure's yardstick | pose_combined_ost |
+| pool gates repeated with OpenStructure's yardstick | pose_pharmacophore_ost |
+| pool gates repeated with OpenStructure's yardstick | pose_physics_ost |
+| pool gates repeated with OpenStructure's yardstick | series_consensus_ost |
+| pose choice with BioEmu2 ensembles | engine_consensus_bioemu2 |
+| pose choice with BioEmu2 ensembles | mbr_selection |
+| restraint confirmation repeated with OpenStructure's LDDT-PLI | restraint_bond_expansion_ost |
+| restraint confirmation repeated with OpenStructure's LDDT-PLI | restraint_bond_harm_ost |
+| restraints and pose-diversity pilots | pilot_conformers |
+| restraints and pose-diversity pilots | pilot_cryoem |
+| restraints and pose-diversity pilots | pilot_seeds |
+| the LDDT-PLI of the project against that of OpenStructure | lddt_pli_agrees_with_openstructure |
+
+The rows of the pocket block (`aux_pocket_*`, `exploratory_pocket_*`) and of the site model (`aux_site_*`, `exploratory_site_*`) are verdicts of models tested with an ensemble of 12 conformers that holds a member within 1.0 A of the crystal pose for 12% of 131 crystal ligand copies (`conformer_bias.log`), so that they missed the bound conformation of 88% of the crystal ligands; a wider ensemble was not tried.
+
+## Every gate that was not met (the verdict lines of the logs)
+
+<details><summary>All verdict lines, with the exploratory second looks and the controls that print the same lines</summary>
 
 | log | gate | verdict |
 | --- | --- | --- |
@@ -212,7 +329,7 @@ uses the same corrected t.
 | xiso_transfer_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
 | xiso_transfer_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 
-The rows of the pocket block (`aux_pocket_*`, `exploratory_pocket_*`) and of the site model (`aux_site_*`, `exploratory_site_*`) are verdicts of models tested with an ensemble of 12 conformers that holds a member within 1.0 A of the crystal pose for 12% of 131 crystal ligand copies (`conformer_bias.log`), so that they missed the bound conformation of 88% of the crystal ligands; a wider ensemble was not tried.
+</details>
 
 ## Older comparisons that were not significant (paired corrected t, Holm)
 

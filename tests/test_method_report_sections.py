@@ -73,3 +73,40 @@ def test_the_scores_of_the_uploads_are_printed_only_when_the_file_of_them_exists
     (tmp_path / "leaderboard_scores.csv").write_text("slot,file,uploaded_utc,cyp2d6_mcc\n1,candidate_A,2026-10-28 10:00,0.31\n")
     text = report.leaderboard_scores()
     assert "candidate_A" in text and "0.31" in text and "| slot | file |" in text
+
+
+@needs_outputs
+def test_the_report_says_what_each_group_that_joined_a_stack_is_and_what_it_added():
+    import json
+
+    manifest = json.loads((report.FINAL_TDI / "manifest.json").read_text())
+    text = report.architecture_section()
+    for iso, row in manifest["isoforms"].items():
+        for group in row["surviving_groups"]:
+            assert f"`{group}`" in text and report.GROUP_TEXT[group] in text, f"{iso}: the group {group} joined the stack and the report does not say what it is"
+            assert "raises the AUC by" in text
+    assert "Holm adjustment" in text
+
+
+@needs_outputs
+def test_the_ledger_of_negative_results_reads_idea_by_idea_with_the_numbers():
+    text = report.negative_results()
+    assert text.index("## Ideas that were added to the TDI stack and not admitted") < text.index("## Every gate that was not met")
+    table = text.split("## Ideas that were added to the TDI stack and not admitted")[1].split("## Structure-track levers")[0]
+    rows = [line for line in table.splitlines() if line.startswith("| ") and "---" not in line][1:]
+    assert len(rows) > 40 and all(re.search(r"[+-]\d\.\d{4} \(p = \d\.\d{3}\)", row) for row in rows)
+    admitted = {group for row in report.json.loads((report.FINAL_TDI / "manifest.json").read_text())["isoforms"].values() for group in row["surviving_groups"]}
+    assert not any(f"`{group}`" in table for group in admitted)
+
+
+@needs_outputs
+def test_every_document_quotes_the_one_count_of_what_was_tried():
+    from cypmode.audit import docs_state
+    from cypmode.audit.ledger_kinds import totals
+
+    verdicts, families, met = totals()
+    assert f"{verdicts} pre-registered verdicts from {families} families of ideas: {met} MET" in docs_state.gate_verdicts_block()
+    assert f"In all {verdicts} pre-registered verdicts in {families} families, {met} of them MET" in report.exploration_section()
+    from docs.video import facts
+
+    assert facts.gate_counts() == (verdicts, verdicts - met)

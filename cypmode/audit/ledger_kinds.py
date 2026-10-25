@@ -34,6 +34,17 @@ TRIED = {  # one line on what each kind tried (the numbers of the table next to 
 }
 
 
+def stem_of(log: str) -> str:
+    """The family of a log: its name without the isoform, the replicate suffix and the extension."""
+    return re.sub(r"(_f10)?\.log$", "", re.sub(r"_(CYP3A4|CYP2D6)(?=(_f10)?\.log)", "", log))
+
+
+def totals() -> tuple[int, int, int]:
+    """(verdicts, families, met) of the pre-registered ledger: the one count of what was tried that every document quotes. The negative control and the exploratory second looks print GATE lines too and are not in it."""
+    frame = ledger_rows()
+    return len(frame), int(frame["stem"].nunique()), int((frame["verdict"] == "MET").sum())
+
+
 def ledger_rows() -> pd.DataFrame:
     """One row per pre-registered verdict: the log it was found in, the name of the gate, the family (stem of the log), its kind and the verdict."""
     from cypmode.audit.method_report import gate_rows
@@ -43,7 +54,7 @@ def ledger_rows() -> pd.DataFrame:
     for log, name, verdict in gate_rows():
         if "exploratory" in name or log.startswith(("permutation_control", "exploratory")):
             continue
-        stem = re.sub(r"(_f10)?\.log$", "", re.sub(r"_(CYP3A4|CYP2D6)(?=(_f10)?\.log)", "", log))
+        stem = stem_of(log)
         rows.append({"log": log, "name": name, "stem": stem, "kind": kind_of.get(stem, "other"), "verdict": verdict})
     return pd.DataFrame(rows, columns=["log", "name", "stem", "kind", "verdict"])
 

@@ -100,3 +100,29 @@ def test_the_port_of_the_debugging_connection_is_free_and_not_the_same_for_two_s
     ports = {chrome_module.free_port() for _ in range(3)}
     assert all(1024 < port < 65536 for port in ports)
     assert chrome_module.Chrome().port is None
+
+
+class Frozen:
+    """A browser process that ignores the request to end: it has to be killed, and its end must not raise."""
+
+    def __init__(self):
+        self.signals, self.waits = [], []
+
+    def terminate(self):
+        self.signals.append("terminate")
+
+    def kill(self):
+        self.signals.append("kill")
+
+    def wait(self, timeout=None):
+        self.waits.append(timeout)
+        if timeout is not None:
+            raise chrome_module.subprocess.TimeoutExpired("chrome", timeout)
+
+
+def test_leaving_the_driver_kills_a_browser_that_does_not_end_and_does_not_raise():
+    # the end of the module fixture of tests/test_video.py raised TimeoutExpired when the browser took more than ten seconds to end, which pytest reports as an error of the last test of the module
+    browser = Browser()
+    browser._process = Frozen()
+    browser.__exit__(None, None, None)
+    assert browser._process is None

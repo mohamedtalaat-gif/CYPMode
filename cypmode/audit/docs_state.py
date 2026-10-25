@@ -53,7 +53,7 @@ TITLES = {
     "softmax_selector": "softmax-temperature selector", "structure_gates": "restraints and pose-diversity pilots", "test_likeness": "test-likeness weighting", "xiso_transfer": "cross-isoform transfer of the assay arms",
     "aux_atomjepa": "frozen Atom-JEPA embeddings as a block", "aux_atomjepa_head": "Atom-JEPA readout in the stack", "aux_chemprop_foundation": "Chemprop from the two OpenADMET pretraining weights (staged)",
     "aux_ext_adme": "logD and protein binding from the OpenADMET surrogate models", "aux_ext_cont": "continuous external-panel responses as a predicted block", "aux_ext_tox": "Tox21 CYP-screen readings as a predicted block",
-    "aux_hypothesis": "ligand-based pharmacophore hypothesis model", "aux_neural": "the neural pair (multitask network and its auxiliary-head version) in the stack",
+    "aux_hypothesis": "ligand-based pharmacophore hypothesis model", "aux_neural": "the neural pair (multitask network and plain Chemprop) in the stack",
     "aux_pocket_cyp2d6": "compound relative to the CYP2D6 pocket", "aux_pocket_cyp3a4": "compound relative to the CYP3A4 pocket", "aux_site_cyp2d6": "structure-based site model of the CYP2D6 pocket", "aux_site_cyp3a4": "structure-based site model of the CYP3A4 pocket",
     "exploratory_atomjepa_head": "Atom-JEPA readout, replicate with 10 outer folds (exploratory)", "exploratory_hypothesis_permuted": "hypothesis model with permuted labels (control)", "exploratory_pocket_control": "pocket block of the other enzyme (control)",
     "exploratory_pocket_first_run_seed0_control": "first run of the pocket block, void: control pocket", "exploratory_pocket_first_run_seed0_own": "first run of the pocket block, void: own pocket", "exploratory_site_control": "site model of the other enzyme (control)",
@@ -137,16 +137,17 @@ def verdict_rows() -> list[list]:
 
 
 def gate_verdicts_block() -> str:
+    from cypmode.audit.ledger_kinds import ledger_rows, totals
     from cypmode.audit.method_report import gate_rows
 
     gates = gate_rows()
     if not gates:
         return pending("the logs of the gates")
-    met = [(log, gate) for log, gate, verdict in gates if verdict == "MET"]
+    ledger = ledger_rows()
+    verdicts, families, met_count = totals()
     names = []
-    for log, gate in met:
-        stem = re.sub(r"(_CYP3A4|_CYP2D6|_addition)?\.log$", "", log)
-        names.append(TITLES.get(stem, stem) if stem not in ("structure_gates",) else STRUCTURE_GATES.get(gate.split(" ")[0], gate.split(" ")[0]))
+    for _, row in ledger[ledger["verdict"] == "MET"].iterrows():
+        names.append(TITLES.get(row["stem"], row["stem"]) if row["stem"] != "structure_gates" else STRUCTURE_GATES.get(row["name"].split(" ")[0], row["name"].split(" ")[0]))
     rows = verdict_rows()
     stack = final_stack_rows()
     if stack is None:
@@ -156,8 +157,9 @@ def gate_verdicts_block() -> str:
         added = "none was" if all(g == "none" for g in groups.values()) else "; ".join(f"{iso}: {g}" for iso, g in groups.items())
     return "\n".join([
         (
-            f"Every addition was judged by a rule fixed before its result. {len(gates)} gate verdicts from {len(rows)} experiments: {len(met)} MET and {len(gates) - len(met)} NOT MET. "
-            f"The gates that were met: {', '.join(sorted(set(names)))}. A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. "
+            f"Every addition was judged by a rule fixed before its result. {verdicts} pre-registered verdicts from {families} families of ideas: {met_count} MET and {verdicts - met_count} NOT MET. "
+            f"The logs print {len(gates) - verdicts} more gate lines, which are not in that count: the negative control (a MET verdict there means that the pipeline gives chance on permuted labels, as it must) and the exploratory second looks. "
+            f"The gates that were met: {', '.join(sorted(set(names)))}. "
             f"An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: {added}."
         ),
         "",

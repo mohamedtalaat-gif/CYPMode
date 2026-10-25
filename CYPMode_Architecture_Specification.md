@@ -2,6 +2,23 @@
 
 This document is the reference for the architecture of CYPMode. It covers the time-dependent inhibition (TDI) track, which was the original scope, and the structure prediction track, which entered the project on 2026-09-25 (see the section "Official challenge update"). The two tracks form one project. The inputs and outputs of each track are kept in separate folders: `data/tdi_track/outputs/` for TDI, and `data/structure_track/inputs/` and `data/structure_track/outputs/cyp3a4/structure_track_results.json` for structure prediction. The document supersedes the diagrams that were sketched during planning. The conclusions on which each TDI-track decision rests are stated here; the numbers are in the audit report (`audit/AUDIT_REPORT.md`, sections 4 and 9).
 
+## Final architecture
+
+This section describes the model that is submitted. The sections after it are the record of how the project arrived there: those up to the decision log describe the first architecture of 2026-09-27 and the tests that followed, and the section "Update: nested evaluation, gated additions and the assembled model" lists what was added since. Where an older section conflicts with this one, this one holds. The tables of the final stack and of the structure recipe are generated from the final build and stand at the end of the document; the same description, with every number read from the manifests, is in sections 3 and 6 of `METHOD_REPORT.md`.
+
+**TDI classification (CYP3A4 and CYP2D6).**
+
+1. *Label and population.* A compound is positive when `s = t - max(d, 4) > log10 2`, with `t` the pIC50 of the TDI arm and `d` that of the direct-inhibition arm; the rule reproduces every training label. The scored population is the one with both arms measured, and only confidently labelled compounds (`z = |s - log10 2| / sd(s)`) are scored; models are judged on that population, weighted by similarity to the blinded structures and by the estimated prevalence of the scored set.
+2. *Features.* Label-free blocks: Morgan counts and RDKit descriptors, MACCS, Avalon and ErG fingerprints, the Type II motif flag and structural alerts, GFN2-xTB physics at several levels, and frozen embeddings of pretrained networks as opt-in blocks. No block reads a label of a test compound.
+3. *The default stack.* For each isoform, a set of diverse candidates (boosted trees on several feature sets, forests, Tanimoto k-nearest-neighbour and SVM models, regressors of the two assay arms) is blended by a logistic regression on the ranks of the members, with the penalty chosen on the inner folds, and calibrated by isotonic regression.
+4. *Groups added through a gate.* Every further idea is a candidate group that enters a stack only when its pre-registered gate is met alone and inside the stack (corrected resampled t below 0.05 at both confidence cut-offs, and a replicate on ten outer folds for a group found after looking). For CYP3A4 two groups joined: the neural group (a multitask network over the assay arms and plain Chemprop) and the Chemprop group started from two pretrained OpenADMET models and fine-tuned. For CYP2D6 no group passed, and the final stack is the default stack.
+5. *Calls.* The positive calls are the top share of the test compounds given by a multiple of the estimated prevalence of the scored population, the multiple being chosen on the nested folds.
+6. *CYP2D6 has two files.* The hits-only file and the selection-aware file, which multiplies P(label | hit) by a gate P(hit); a rule written before any upload chooses the entry (the hits-only file) and the other file is kept to be scored on the test labels if the organisers publish them.
+
+**Structure prediction (CYP3A4, 20 ligands).** Boltz-2 co-folding with the heme and its covalent bond to the proximal cysteine; a restraint of the iron-nitrogen contact for a ligand with a Type II donor (its gate is met); a pool of samples per ligand; the scorer's own PoseBusters call on every pose, with eligibility by a margin rule; the model's own ranking among the eligible poses (every rule for choosing a pose failed its gate); a force-field relaxation of the chosen poses under a rule registered before its use; a check that every pose carries the official stereochemistry; a deterministic archive.
+
+**What is not in the final model.** The ideas that did not pass their gates (the direct-inhibition bridge, the structural features of Tier 3, the quantum-electronic and pharmacophore-fingerprint features, ChemBERTa embeddings, the shared-trunk network, the pocket and site blocks, a committee of models for uncertainty, and the rest) are recorded with their numbers in `NEGATIVE_RESULTS.md` where a gate or a paired comparison judged them and in the sections below for the earlier ones (the bridge, Tier 3, the shared trunk, the committee), and are taught in the notebook with the reasons that they added nothing.
+
 ## Official challenge update (2026-09-25, halfway-point blog post)
 
 OpenADMET published the following in the post "Halfway Through the OpenADMET CYP Challenge" and on the challenge Discord. The information bears on how the results of the project are interpreted and prioritized.
@@ -57,9 +74,11 @@ The OpenADMET blog post "Cofolding? I hardly know her! - Cofolding Methods on AD
 
 Citation: Huddleston, K. "Cofolding? I hardly know her! - Cofolding Methods on ADMET Targets." *OpenADMET Blog*, 2026-06-02. https://doi.org/10.5281/zenodo.21785463
 
-## Final architecture
+## Early architecture (2026-09-27, superseded)
 
-The diagram was corrected on 2026-09-27 to match the model that is deployed (`cypmode/challenge/final_assembly.py` and `final_assembly_cyp2d6.py`), in place of the more elaborate design that it had described. The model supported by the evidence is simpler than that design: most of the additions that the design named (Tier 3, the OOF bridge) were tested and did not survive checking. This is a result of the tests, and the second block of the diagram lists what was tried and rejected.
+This is the architecture of the first assembled model, kept as the record of the design and of what was tested against it; the model that is submitted is described in the section "Final architecture" at the beginning of this document.
+
+The diagram was corrected on 2026-09-27 to match the model that was deployed then (`cypmode/challenge/final_assembly.py` and `final_assembly_cyp2d6.py`), in place of the more elaborate design that it had described. The model supported by the evidence is simpler than that design: most of the additions that the design named (Tier 3, the OOF bridge) were tested and did not survive checking. This is a result of the tests, and the second block of the diagram lists what was tried and rejected.
 
 ```
                                     SMILES
@@ -327,8 +346,8 @@ tracks), in `METHOD_REPORT.md` and `NEGATIVE_RESULTS.md` (generated from the run
 
 - Evaluation is nested cross-validation (repeats x outer x inner folds) on the population the challenge scores: both arms measured,
   similarity to the test structures, estimated test prevalence and confident labels at two cut-offs (z0 = 1.0 and 1.96).
-- The model is a logistic stack of 23 members (boosted trees on several feature sets, forests, Tanimoto kNN/SVM, two-arm regressors),
-  calibrated per isoform, called by a pre-declared multiple of the scored prevalence.
+- The model is a logistic stack of the members of its isoform (boosted trees on several feature sets, forests, Tanimoto kNN/SVM, two-arm regressors,
+  and the groups that passed their gates; the counts are in the tables at the end), calibrated per isoform, called by a pre-declared multiple of the scored prevalence.
 - Every addition (physics blocks, SAR pair and matched-pair models, label-process committee, frozen embeddings, test-likeness weighting,
   floor-clipped arms, selection-aware CYP2D6 model) is a candidate group that enters the stack only when its pre-registered gate is met:
   corrected resampled t below 0.05 at both cut-offs, alone and inside the stack. `cypmode/challenge/final_tdi_build.py` applies the gates.

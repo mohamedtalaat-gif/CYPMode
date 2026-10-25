@@ -107,7 +107,7 @@ done, running and queued).
         |                                                |
         +-------------------+----------------------------+
                             v
-          MODEL MEMBERS  (nested CV; a member enters the stack only when its gate is met)
+          MODEL MEMBERS  (nested CV; A to D are candidates of the default stack, and an added group enters a stack only when its gate is met)
  +----------------------+---------------------+--------------------------+--------------------------+
  | A  Classifiers       | B  SAR-aware pairs  | C  Label-process model   | D  Selection-aware       |
  | LightGBM (A, A+fps,  | each compound vs    | committee of two-arm     | CYP2D6 only              |
@@ -120,6 +120,11 @@ done, running and queued).
  |                      |                     |                          | optional input of its    |
  |                      |                     |                          | gate and label models    |
  +----------+-----------+----------+----------+------------+-------------+------------+-------------+
+ +--------------------------------------------------------------------------------------------------+
+ | E  Learned representations: joined the CYP3A4 stack (for CYP2D6 no group passed its gate)        |
+ |    neural: multitask network over the assay arms + plain Chemprop (graph network, arm shift)     |
+ |    chemprop_foundation: Chemprop started from two pretrained OpenADMET models, fine-tuned        |
+ +--------------------------------------------------------------------------------------------------+
             +----------------------+-----------------------+--------------------------+
                                    |   optional training weights: similarity to the test structures
                                    |   (density ratio, tempered); measurement-variance weights in C
@@ -167,7 +172,7 @@ Members of the default stack: k-nearest neighbours (Tanimoto) (3), support vecto
 <!-- generated:final-stack end -->
 
 <!-- generated:gate-verdicts begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
-Every addition was judged by a rule fixed before its result. 213 gate verdicts from 70 experiments: 11 MET and 202 NOT MET. The gates that were met: Chemprop from the two OpenADMET pretraining weights (staged), aux_neural_f10, bond restraint, contact restraint, force-field relaxation of poses, negative control (permuted labels), pool gates repeated with OpenStructure's yardstick, replicates with 10 outer folds, the neural pair (multitask network and its auxiliary-head version) in the stack. A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: CYP3A4: ['chemprop_foundation', 'neural']; CYP2D6: none.
+Every addition was judged by a rule fixed before its result. 184 pre-registered verdicts from 58 families of ideas: 9 MET and 175 NOT MET. The logs print 29 more gate lines, which are not in that count: the negative control (a MET verdict there means that the pipeline gives chance on permuted labels, as it must) and the exploratory second looks. The gates that were met: Chemprop from the two OpenADMET pretraining weights (staged), bond restraint, contact restraint, force-field relaxation of poses, pool gates repeated with OpenStructure's yardstick, replicates with 10 outer folds, the neural pair (multitask network and plain Chemprop) in the stack. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: CYP3A4: ['chemprop_foundation', 'neural']; CYP2D6: none.
 
 <details><summary>All verdicts</summary>
 
@@ -241,7 +246,7 @@ Every addition was judged by a rule fixed before its result. 213 gate verdicts f
 | structure-based site model of the CYP3A4 pocket | NOT MET | - | - |
 | test-likeness weighting | NOT MET | NOT MET | - |
 | the LDDT-PLI of the project against that of OpenStructure | - | - | NOT MET |
-| the neural pair (multitask network and its auxiliary-head version) in the stack | MET | NOT MET | - |
+| the neural pair (multitask network and plain Chemprop) in the stack | MET | NOT MET | - |
 | two-arm regressors, floor-clipped | NOT MET | NOT MET | - |
 
 </details>

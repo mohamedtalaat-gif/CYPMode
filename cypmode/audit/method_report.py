@@ -194,6 +194,186 @@ def summary_section() -> str:
     return "\n".join(lines)
 
 
+GROUP_TEXT = {  # what each group that can join a stack is, in words; the members and every number next to it are read from the code and the logs
+    "neural": "the multitask network (one network over the assay arms, fitted to the label and to the arm shift) and plain Chemprop (a message-passing network on the molecular graph, fitted to the shift); two near-misses that joined into one lead on CYP3A4 and were confirmed on a replicate with ten outer folds",
+    "chemprop_foundation": "two Chemprop networks that start from the weights of pretrained OpenADMET models (one trained on MiniMol targets, one the Novartis ADMET surrogate) and are fine-tuned to the arm shift; run for CYP3A4 only, in two stages under a rule written before any result",
+}
+
+
+def stack_rows(final_text: str, iso: str) -> dict[str, list[str]]:
+    """The rows of the evidence table of one isoform in the final report, keyed by the name of the stack."""
+    block = re.search(rf"## {iso}\n(.*?)(?=\n## |\Z)", final_text, re.DOTALL)
+    rows = {}
+    for line in (block.group(1).splitlines() if block else []):
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if len(cells) >= 6 and cells[0] not in ("stack", "---"):
+            rows[cells[0]] = cells
+    return rows
+
+
+def what_joined(manifest: dict | None, final_text: str) -> list[str]:
+    """For every group that joined a final stack, as sub-items of the step that says which groups join: what it is, its members and the gain it gave when added to the default stack."""
+    from cypmode.challenge import final_tdi_build as build
+    from cypmode.challenge.multiplicity import collect
+
+    if not manifest:
+        return []
+    lines = []
+    for iso, r in manifest["isoforms"].items():
+        rows = stack_rows(final_text, iso)
+        if not r["surviving_groups"]:
+            lines.append(f"   - {iso}: no group passed its gate, so the final stack is the default stack of its candidates.")
+        for group in r["surviving_groups"]:
+            members = ", ".join(f"`{c.name}`" for c in build.GROUPS[group][0]())
+            row = rows.get(f"default+{group}")
+            gain = f" Added to the default stack it raises the AUC by {row[7]} (corrected p = {row[8]}) at the cut z0 = 1.0 and by {row[9]} (p = {row[10]}) at z0 = 1.96." if row and len(row) >= 11 else ""
+            lines.append(f"   - {iso}, `{group}`: {GROUP_TEXT.get(group, 'a group of added candidates')}. Members: {members}.{gain}")
+    smallest = float(collect(LOGS)["holm_adjusted"].min())
+    if any(r["surviving_groups"] for r in manifest["isoforms"].values()):
+        lines.append(f"   - These are passes of the registered rule. After the Holm adjustment over all stacked comparisons the smallest adjusted p-value is {smallest:.2f} (section 4.2), so they are reported as passes of the rule and " + ("not as effects that survive the number of attempts." if smallest >= 0.05 else "as effects that survive it."))
+    return lines
+
+
+def first_number(text: str, pattern: str, group: int = 1) -> str | None:
+    found = re.search(pattern, text, re.MULTILINE)
+    return found.group(group) if found else None
+
+
+def stack_lead(final_text: str, manifest: dict | None) -> str:
+    """Section 6 in words: what each final stack is and how far it stands above the default stack, from the table of the final build."""
+    if not manifest:
+        return pending("job 090")
+    parts = []
+    for iso, r in manifest["isoforms"].items():
+        rows = stack_rows(final_text, iso)
+        default, final = rows.get("default"), rows.get(r["stack"])
+        if not default or not final:
+            continue
+        if r["stack"] == "default":
+            parts.append(f"{iso}: the final stack is the default stack of {r['n_candidates']} candidates (AUC {default[2]} at z0 = 1.0 and {default[4]} at z0 = 1.96, MCC {default[3]} and {default[5]}); no added group passed its gate.")
+        else:
+            parts.append(f"{iso}: the final stack has {r['n_candidates']} candidates (AUC {final[2]} at z0 = 1.0 and {final[4]} at z0 = 1.96, MCC {final[3]} and {final[5]}), above the default stack of {default[1]} candidates (AUC {default[2]} and {default[4]}) by {final[7]} (p = {final[8]}) and {final[9]} (p = {final[10]}).")
+    return "Each isoform has the stack that the pre-registered rule selects, from the nested cross-validation on the population the challenge scores. " + " ".join(parts) + f" The positive calls are the top {manifest['isoforms']['CYP3A4']['called_rate']:.1%} of the test compounds for CYP3A4 and the top {manifest['isoforms']['CYP2D6']['called_rate']:.1%} for CYP2D6."
+
+
+def selection_lead() -> str:
+    """Section 7 in words, from the lines of the log of the selection-aware model and from the registered decision."""
+    panel = (LOGS / "population_panel_CYP2D6_r3.log").read_text(errors="ignore") if (LOGS / "population_panel_CYP2D6_r3.log").exists() else ""
+    decision = (LOGS / "selection_decision_CYP2D6.log").read_text(errors="ignore") if (LOGS / "selection_decision_CYP2D6.log").exists() else ""
+    z1 = panel.split("z0 = 1.96")[0]
+    s0, s3 = first_number(z1, r"S0 hits-only\s+outer AUC ([\d.]+)"), first_number(z1, r"S3 \+end-to-end\s+outer AUC ([\d.]+)")
+    gain, p = first_number(z1, r"S3 \+end-to-end.*?vs S0 AUC (\+[\d.]+) \(p=([\d.]+)"), first_number(z1, r"S3 \+end-to-end.*?vs S0 AUC \+[\d.]+ \(p=([\d.]+)")
+    entry = first_number(decision, r"FINAL ENTRY BY THE REGISTERED RULE: (file \w)")
+    if not (s0 and s3 and gain and p and entry):
+        return pending("jobs 010 and 016")
+    return (f"CYP2D6 compounds were measured on this enzyme only if an earlier screen promoted them, so the training labels come from a selected subset and the scored set may hold compounds that would never have been promoted. The selection-aware model multiplies P(label | hit) by a gate P(hit). "
+            f"Against the hits-only stack it raises the outer AUC from {s0} to {s3} ({gain}, corrected p = {p}) when the scored set looks like the training panel. The gain depends on how many never-promoted compounds the scored set holds: it disappears when there are none, and the loss at the call rate of the final build is larger than the gain where it wins. "
+            f"The choice between the two files was therefore made by a procedure written before any upload; it gives **{entry}** (the hits-only file), and the other file is kept with its SHA-256 to be scored on the test labels if the organisers publish them.")
+
+
+def calibration_lead() -> str:
+    text = (LOGS / "calibration.log").read_text(errors="ignore") if (LOGS / "calibration.log").exists() else ""
+    cells = {(iso, method): ece for iso, method, ece in re.findall(r"^\s*(CYP\w+)\s+(raw|platt|isotonic)\s+([\d.]+)", text, re.MULTILINE)}
+    if not cells:
+        return pending("job 030")
+    return (f"The published probabilities are calibrated by isotonic regression fitted on the inner out-of-fold scores. The expected calibration error is {cells.get(('CYP3A4', 'isotonic'), '?')} for CYP3A4 and {cells.get(('CYP2D6', 'isotonic'), '?')} for CYP2D6, against {cells.get(('CYP3A4', 'raw'), '?')} and {cells.get(('CYP2D6', 'raw'), '?')} for the raw output of the blend. "
+            "The raw CYP2D6 blend ranks the compounds and transfers a call rate but is not a probability (limitation L10).")
+
+
+def holdout_lead() -> str:
+    text = (LOGS / "block_holdout.log").read_text(errors="ignore") if (LOGS / "block_holdout.log").exists() else ""
+    rows, rate = first_number(text, r"held-out block rows (\d+)"), first_number(text, r"positive rate ([\d.]+)")
+    if not (rows and rate):
+        return pending("job 045")
+    return (f"The highest block of identifiers of the training file is an analog-expansion round built like the blinded test set. Holding the whole block out ({rows} CYP3A4 compounds, positive rate {rate}) and training on the rest measures the candidates in a regime that matches the test better than a random or a similarity-weighted fold. "
+            "It exists for CYP3A4 only, and the candidates and the best of them are chosen from cross-validation, never from the block. The AUC of each candidate on the block is listed next to its cross-validated AUC, so that the agreement of the two yardsticks is itself a result.")
+
+
+def additions_lead() -> str:
+    from cypmode.audit.ledger_kinds import ledger_rows
+
+    frame = ledger_rows()
+    part = frame[frame["log"].str.contains(r"physics|pair_transfer|mmp|committee|embeddings|test_likeness|arms|selection_aware_v2|xiso")]
+    return (f"The additions of the physics, SAR, committee, embedding, cross-isoform and weighting families gave {len(part)} pre-registered verdicts in {part['stem'].nunique()} families, {int((part['verdict'] == 'MET').sum())} of them MET. "
+            "A near miss is not tuned until it passes: the verdicts below are those of the first test, and the ones that were repeated on ten outer folds are listed after them.")
+
+
+def structure_lead() -> str:
+    from cypmode.audit.docs_state import STRUCTURE_GATES, TITLES
+    from cypmode.audit.ledger_kinds import ledger_rows
+
+    frame = ledger_rows()
+    part = frame[frame["kind"] == "structure levers"]
+    met = [STRUCTURE_GATES.get(n.split(" ")[0], TITLES.get(s, n)) for s, n, v in zip(part["stem"], part["name"], part["verdict"], strict=True) if v == "MET"]
+    return (f"The structure levers gave {len(part)} pre-registered verdicts, {len(met)} of them MET ({', '.join(sorted(set(met))) or 'none'}). Every rule for choosing a pose among the predicted ones was NOT MET on the crystal-anchored benchmark, so the pick is the model's own ranking among the valid poses; "
+            "what the recipe adds is a restraint of the iron-nitrogen contact, the scorer's own validity call with a margin rule, and a registered relaxation.")
+
+
+def lessons_lead() -> list[str]:
+    """Section 12: how many ideas of each kind failed, and the failures that taught the most (the story of each is in the notebook and the specification)."""
+    from cypmode.audit.ledger_kinds import KINDS, ledger_by_kind, totals
+
+    frame = ledger_by_kind()
+    verdicts, families, met = totals()
+    rows = [(kind, int(part["stem"].nunique()), len(part), int((part["verdict"] != "MET").sum())) for kind in KINDS if not (part := frame[frame["kind"] == kind]).empty]
+    return [
+        f"Of {verdicts} pre-registered verdicts in {families} families of ideas, {verdicts - met} are NOT MET. A failed gate is a result: it is written down with its numbers and it is not tuned until it passes.",
+        "",
+        table(rows, ["kind of idea", "families", "verdicts", "not met"]),
+        "",
+        "`NEGATIVE_RESULTS.md` lists every idea with its gain and its p-value next to the verdict. The failures that changed the project most are told in full in the notebook (Part IX) and in the specification:",
+        "",
+        "- *The direct-inhibition bridge.* A predicted direct-inhibition potency looked like the largest gain of the project and was retracted: it read the availability of a measurement, which the blinded test set never shows.",
+        "- *The population of the CYP3A4 labels.* A third of the labelled rows follow a convention that the scored test set does not have; every earlier CYP3A4 number mixed the two populations, and the evaluation was rebuilt on the population the challenge scores.",
+        "- *The amine flag and the structural features of Tier 3.* Two mechanistically motivated additions that the data neither supported nor refuted; one was left out and the other could never reach the test rows.",
+        "- *Choosing a pose.* Every rule tried for choosing among predicted poses failed its gate, which is why the recipe keeps the model's own ranking and spends its effort on the restraint, the validity margin and the relaxation.",
+        "- *Uncertainty by a committee of models.* It adds no information beyond the decision margin for the final stacks, so it is reported and never alters a prediction.",
+        "",
+    ]
+
+
+def idea_tables() -> list[str]:
+    """The ideas that were added to the TDI stack and not admitted, with the gain they gave when added and the p-value of that gain, and the structure levers that were not adopted."""
+    from cypmode.audit.docs_state import STRUCTURE_GATES, TITLES
+    from cypmode.audit.ledger_kinds import KINDS, ledger_rows, stem_of
+    from cypmode.explorer.data import paired_rows
+
+    ledger = ledger_rows()
+    tdi_kinds = [k for k in KINDS if k not in ("structure levers", "replicates")]
+    paired = paired_rows(LOGS)
+    paired = paired[paired["comparison"].str.startswith("stacked base+added")]
+    rows = []
+    for kind in tdi_kinds:
+        for stem in KINDS[kind]:
+            for iso in ("CYP3A4", "CYP2D6"):
+                part = paired[(paired["log"].map(stem_of) == stem) & (paired["enzyme"] == iso)]
+                verdicts = ledger[(ledger["stem"] == stem) & ledger["log"].str.contains(iso)]
+                if part.empty or (verdicts["verdict"] == "MET").any():
+                    continue
+                by = {z: r for z, r in zip(part["z0"], part.itertuples(), strict=True)}
+                low, high = by.get(1.0), by.get(1.96)
+                if not (low and high):
+                    continue
+                reading = "no gain at either cut" if low.auc_gain <= 0 and high.auc_gain <= 0 else "a gain that is within noise" if low.p >= 0.05 and high.p >= 0.05 else "significant at one cut only"
+                rows.append((kind, TITLES.get(stem, stem.replace("_", " ")), iso, f"{low.auc_gain:+.4f} (p = {low.p:.3f})", f"{high.auc_gain:+.4f} (p = {high.p:.3f})", reading))
+    structure = ledger[(ledger["kind"] == "structure levers") & (ledger["verdict"] != "MET")]
+    levers = sorted({(TITLES.get(s, s.replace("_", " ")), STRUCTURE_GATES.get(n.split(" ")[0], n)) for s, n in zip(structure["stem"], structure["name"], strict=True)})
+    return [
+        "## Ideas that were added to the TDI stack and not admitted",
+        "",
+        "Each row is one idea on one enzyme: the change in the AUC of the stack when the idea is added to it (positive is better), at the two confidence cuts of the labels, with the corrected resampled p-value of that change. The gate asks for p < 0.05 at both cuts, alone and inside the stack.",
+        "",
+        table(rows, ["kind of idea", "idea", "enzyme", "change in AUC at z0 = 1.0", "change in AUC at z0 = 1.96", "reading"]),
+        "",
+        "## Structure-track levers that were not adopted",
+        "",
+        "Each lever was judged on the crystal-anchored benchmark by a rule written beforehand; none of the levers below met it.",
+        "",
+        table(levers, ["family", "gate"]),
+        "",
+    ]
+
+
 def architecture_section() -> str:
     """The path of each track in the report itself: what the model is, step by step, with the numbers read from the code and the final manifests."""
     import collections
@@ -236,6 +416,7 @@ def architecture_section() -> str:
     if manifest:
         for iso, r in manifest["isoforms"].items():
             lines.append(f"   - {iso}: final stack `{r['stack']}` of {r['n_candidates']} candidates; groups that joined: {', '.join(r['surviving_groups']) or 'none'}.")
+        lines += what_joined(manifest, (FINAL_TDI / "final_report.md").read_text() if (FINAL_TDI / "final_report.md").exists() else "")
     lines += [
         "7. **Calibration and calls.** Probabilities by isotonic regression on the inner out-of-fold scores (notebook 8.5). The number of positive calls is a multiple of the estimated prevalence of the scored population, the multiple in",
         f"   {{{', '.join(str(m) for m in build.RATE_MULTIPLIERS)}}} chosen by the highest mean outer-fold MCC (notebook 8.4)" + (": " + "; ".join(f"{iso} {r['call_rate_multiplier']}" for iso, r in manifest["isoforms"].items()) if manifest else "") + ".",
@@ -291,7 +472,10 @@ def exploration_section() -> str:
         "",
         table(rows, ["kind of idea", "families", "verdicts", "met", "not met", "what it tried"]),
         "",
-        f"In all {len(frame)} pre-registered verdicts in {frame['stem'].nunique()} families, {int((frame['verdict'] == 'MET').sum())} of them MET (figure `docs/figures/ml/ml_exploration_map-light.png`; notebook Part IX).",
+        (
+            f"In all {len(frame)} pre-registered verdicts in {frame['stem'].nunique()} families, {int((frame['verdict'] == 'MET').sum())} of them MET (figure `docs/figures/ml/ml_exploration_map-light.png`; notebook Part IX). "
+            f"This is the one count of what was tried that every document of the project quotes. The logs print {len(gate_rows()) - len(frame)} more gate lines, which are not in it: the negative control, where a MET verdict means that the pipeline gives chance on permuted labels, and the exploratory second looks, which no gate parser reads."
+        ),
         "",
         "### 4.2 The accounting of the number of attempts",
         "",
@@ -356,13 +540,18 @@ def negative_results() -> str:
         "Every experiment whose pre-registered gate was not met, and every older pairwise comparison that was not significant under",
         "repeated 5x5 cross-validation. Nothing here was tuned until it passed. The older comparisons are re-analysed from their saved",
         "per-fold scores with the paired corrected resampled t of Nadeau and Bengio and a Holm adjustment over the pairs; the gate ledger",
-        "uses the same corrected t.",
+        "uses the same corrected t. The first two tables read idea by idea, with the numbers; the list of every verdict line follows.",
         "",
-        "## Gates NOT MET",
+        *idea_tables(),
+        ensemble_caveat(),
+        "",
+        "## Every gate that was not met (the verdict lines of the logs)",
+        "",
+        "<details><summary>All verdict lines, with the exploratory second looks and the controls that print the same lines</summary>",
         "",
         table(gate, ["log", "gate", "verdict"]),
         "",
-        ensemble_caveat(),
+        "</details>",
         "",
         "## Older comparisons that were not significant (paired corrected t, Holm)",
         "",
@@ -424,13 +613,15 @@ def build_method_report() -> str:
         "",
         "## 6. Final TDI stack (chosen by the pre-registered gate rule)",
         "",
-        final.read_text() if final.exists() else pending("job 090"),
+        stack_lead(final.read_text() if final.exists() else "", json.loads((FINAL_TDI / "manifest.json").read_text()) if (FINAL_TDI / "manifest.json").exists() else None),
+        "",
+        re.sub(r"^(#+) ", lambda m: "#" * (len(m.group(1)) + 2) + " ", final.read_text(), flags=re.MULTILINE) if final.exists() else pending("job 090"),
         "",
         "## 7. Selection-aware CYP2D6 model",
         "",
-        "Training labels exist only for compounds promoted to dose-response on the isoform; the scored set may contain compounds that",
-        "would never have been promoted. The model multiplies P(label | hit) by a gate P(hit), fitted on the all-isoform panel block",
-        "(found by `library_blocks.py`). Results (15 folds, nested):",
+        selection_lead(),
+        "",
+        "The model is fitted on the all-isoform panel block (found by `library_blocks.py`). Results (15 folds, nested):",
         "",
         log_lines("population_panel_CYP2D6_r3.log", r"z0 =|S[0-3] ", "job 010"),
         "",
@@ -452,7 +643,9 @@ def build_method_report() -> str:
         "## 8. Physics-, SAR-, committee-, embedding-, cross-isoform and weighting-based additions",
         "",
         "Each addition is a block or candidate group tested alone and inside the assembled stack; the rule is corrected p < 0.05 at both",
-        "confidence cut-offs. Verdicts:",
+        "confidence cut-offs. " + additions_lead(),
+        "",
+        "Verdicts:",
         "",
         table([r for r in gate_rows() if re.search(r"physics|pair_transfer|mmp|committee|embeddings|test_likeness|arms|selection_aware_v2|xiso", r[0])], ["log", "gate", "verdict"]),
         "",
@@ -466,13 +659,19 @@ def build_method_report() -> str:
         "",
         "## 9. Calibration",
         "",
+        calibration_lead(),
+        "",
         log_lines("calibration.log", r"CYP|gate|ece|isotonic|platt|raw", "job 030", 20),
         "",
         "## 10. Test-like holdout",
         "",
+        holdout_lead(),
+        "",
         log_lines("block_holdout.log", r"block|agreement|committee|best candidate", "job 045", 12),
         "",
         "## 11. Structure track",
+        "",
+        structure_lead(),
         "",
         "Gate verdicts of the structure levers (restraint, diversity, selection, engines, expected-improvement sampling, heme-frame prior):",
         "",
@@ -488,6 +687,7 @@ def build_method_report() -> str:
         "",
         "## 12. Negative results",
         "",
+        *lessons_lead(),
         "See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tabulates how far the two structure selection gates depend on a single ligand; that table does not change a registered verdict.",
         "",
         "## 13. Limitations",

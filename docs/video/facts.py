@@ -15,6 +15,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from cypmode.audit.ledger_kinds import totals
 from cypmode.audit.method_report import gate_rows
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -52,9 +53,9 @@ CONTROLS = ("permutation_control",)  # checks of the pipeline itself, not ideas:
 
 
 def gate_counts() -> tuple[int, int]:
-    """(gates judged, gates not met), from the same ledger the method report prints; the exploratory re-scorings were not declared beforehand and are not counted."""
-    verdicts = [verdict for log, name, verdict in gate_rows() if "exploratory" not in name and not log.startswith(CONTROLS)]  # a control checks the pipeline; it is not an idea
-    return len(verdicts), verdicts.count("NOT MET")
+    """(gates judged, gates not met): the one count of the pre-registered ledger that the method report, the README and the notebook quote; the controls and the exploratory second looks are not in it."""
+    verdicts, _, met = totals()
+    return verdicts, verdicts - met
 
 
 def feature_columns() -> int:
