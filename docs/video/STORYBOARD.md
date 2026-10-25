@@ -17,7 +17,7 @@ Every number on screen is read from the project's files when the film is rendere
 - the two cinematic clips (the whole CYP3A4 enzyme turning with its heme and ligand glowing inside, and the slow approach to the pocket with the ligand nitrogen over the heme iron) are drawn
   by Blender with the Molecular Nodes add-on from the coordinates of the crystal structure 6MA7 (`blender_clips.py`, `blender/scene.py`); the leader-line callouts follow the projected position of
   the iron and of the coordinating nitrogen frame by frame;
-- the audit hash, the counts of tests, modules and queue jobs and the hash of the final zip are computed from the repository.
+- the counts of tests, modules and queue jobs and the hash of the final zip are computed from the repository; the audit reproducibility is read from the log of the audit (the film names no hash of the audit report, because the report of the audit that closes the sequence differs from the one that precedes the film); the results of the last scene are those of the stack that is submitted (CYP3A4: the final stack of 28 candidates), while the committee that the Stacker scene describes is the default one of 23.
 
 ## Style
 
@@ -74,7 +74,7 @@ Each introduction card lasts 14 seconds so that the lines on it can be read alou
 | 182 - 242 | Gatekeeper and Quanta | card; the rule written first; the ledger of every idea and its verdict; Quanta's card; the physics columns and the NOT MET stamp |
 | 242 - 282 | Foundry | card; the pretrained models, the change in AUC each brought to the stack for both enzymes, and its verdict (NOT MET or MET by the registered gate; SCREENED when only the first stage of a staged design was run; NOT RUN when the model was dropped, and for an enzyme that is not part of its design; RUNNING only while a stage is still being computed, which the final render never shows) |
 | 282 - 334 | Dock | card; the real enzyme; the real Type II pocket with the iron and the nitrogen marked; a donor ligand without and with the restraint; the PoseBusters checks |
-| 334 - 366 | Auditor | card; two audit runs side by side, the same hash, the IDENTICAL stamp; the counts of tests, modules, jobs and the zip hash |
+| 334 - 366 | Auditor | card; two audit runs side by side, each marked as compared with the other, the IDENTICAL stamp; the counts of tests, modules, jobs and the zip hash |
 | 366 - 394 | Finale | the results board, the whole team, confetti, the credits |
 
 ## Voices

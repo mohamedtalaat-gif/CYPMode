@@ -134,7 +134,7 @@ Every row of the public interim board publishes the accuracy, the precision and 
 
 ### eng_queue_timeline: The job queue as a timeline
 
-Each bar is one run of one job of the queue, from the runner's own log (160 jobs, 262 runs: 231 finished, 20 stopped and retried, 11 failed after their attempts). The runs add up to 209 hours of wall-clock time between 08 Oct and 25 Oct (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
+Each bar is one run of one job of the queue, from the runner's own log (168 jobs, 336 runs: 293 finished, 27 stopped and retried, 16 failed after their attempts). The runs add up to 217 hours of wall-clock time between 08 Oct and 25 Oct (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
 
 - notebook section: 12.2
 - data: queue/logs/queue_stage.txt
@@ -142,7 +142,7 @@ Each bar is one run of one job of the queue, from the runner's own log (160 jobs
 
 ### eng_power_events: What the machine did while the queue ran
 
-Every time the machine entered sleep between 18 Oct and 23 Oct, by the cause its own power log gives: 410 x Maintenance Sleep, 189 x Sleep Service Back to Sleep, 6 x Software Sleep pid=611, 4 x Clamshell Sleep, 2 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-10-18, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
+Every time the machine entered sleep between 18 Oct and 25 Oct, by the cause its own power log gives: 372 x Maintenance Sleep, 166 x Sleep Service Back to Sleep, 5 x Clamshell Sleep, 5 x Software Sleep pid=611, 2 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-10-18, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
 
 - notebook section: 12.3
 - data: pmset -g log
@@ -150,7 +150,7 @@ Every time the machine entered sleep between 18 Oct and 23 Oct, by the cause its
 
 ### eng_tests_by_module: The test suite by module
 
-Test functions per test module of the repository: 911 test functions in 137 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
+Test functions per test module of the repository: 953 test functions in 143 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
 
 - notebook section: 12.5
 - data: tests/test_*.py
