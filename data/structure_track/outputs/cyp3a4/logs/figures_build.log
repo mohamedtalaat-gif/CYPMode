@@ -32,6 +32,16 @@ ok   ml_stack_curves
 ok   ml_decision_tree
 ok   ml_boosting_stages
 ok   bio_motif_screen
+ok   pharm_pocket_fields
+ok   pharm_site_model
+ok   pharm_hypotheses
+ok   pharm_forest
+ok   pharm_functional_groups
+ok   pharm_features_examples
+ok   pharm_mmp_sar
+ok   pharm_hypotheses_2d3d
+ok   pharm_pocket_3d
+ok   pharm_atlas
 ok   phys_scf_convergence
 ok   phys_koopmans
 ok   phys_boltzmann
@@ -44,3 +54,10 @@ ok   struct_openfold3_memory
 ok   struct_posebusters
 ok   struct_mbr_pool
 ok   struct_diffusion_denoising
+ok   struct_conformer_window
+ok   struct_site_check
+ok   struct_pharm_official20
+ok   struct_pharm_pose_3d
+ok   struct_pharm_series
+ok   struct_pharm_official20_2d
+ok   struct_pharm_official20_3d

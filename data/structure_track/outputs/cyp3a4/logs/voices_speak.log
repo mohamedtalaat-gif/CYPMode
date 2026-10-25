@@ -1,9 +1,9 @@
-W1017 23:30:39.992000 54425 .venv-voice/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+W1025 15:07:01.128000 98306 .venv-voice/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
 /Volumes/Data/CYPMode/.venv-voice/lib/python3.12/site-packages/torch/nn/modules/rnn.py:1011: UserWarning: dropout option adds dropout after all but last recurrent layer, so non-zero dropout expects num_layers greater than 1, but got dropout=0.2 and num_layers=1
   super().__init__("LSTM", *args, **kwargs)
 /Volumes/Data/CYPMode/.venv-voice/lib/python3.12/site-packages/torch/nn/utils/weight_norm.py:145: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
   WeightNorm.apply(module, name, dim)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 /Volumes/Data/CYPMode/.venv-voice/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
   warnings.warn(
 Narrator   due    3.15 ->    3.15-   5.60 (scene ends 30.00, speed 1.16) Meet Cap, a drug molecule.
@@ -24,11 +24,11 @@ Scout      due   87.75 ->   87.75-  92.22 (scene ends 106.00, speed 1.08) Only n
 Scout      due   93.75 ->   93.75-  98.53 (scene ends 106.00, speed 1.08) Three of the six files hold test compounds, five in all.
 Scout      due   99.75 ->   99.75- 103.60 (scene ends 106.00, speed 1.08) The organisers confirmed the overlap of the Octant relea
 Bits       due  107.50 ->  107.50- 114.58 (scene ends 144.00, speed 1.08) I turn molecules into numbers a model can read: which sm
-Bits       due  108.50 ->  114.88- 118.70 (scene ends 144.00, speed 1.08) 12,412 numbers for every compound.
+Bits       due  108.50 ->  114.88- 118.90 (scene ends 144.00, speed 1.08) 12,468 numbers for every compound.
 Bits       due  120.75 ->  120.75- 123.72 (scene ends 144.00, speed 1.08) Bits turns a real molecule into numbers.
 Bits       due  126.15 ->  126.15- 130.45 (scene ends 144.00, speed 1.08) A fingerprint records which small groups of atoms the mo
 Bits       due  132.15 ->  132.15- 135.78 (scene ends 144.00, speed 1.08) Descriptors record its size, its shape and how polar it 
-Bits       due  138.15 ->  138.15- 142.58 (scene ends 144.00, speed 1.08) Together: 12,412 numbers describe every compound.
+Bits       due  138.15 ->  138.15- 142.83 (scene ends 144.00, speed 1.08) Together: 12,468 numbers describe every compound.
 Stacker    due  145.50 ->  145.50- 152.50 (scene ends 182.00, speed 1.08) I train 23 different models. Each votes on whether a com
 Stacker    due  146.50 ->  152.80- 158.35 (scene ends 182.00, speed 1.08) Then a logistic stack learns whom to trust and blends th
 Stacker    due  158.75 ->  158.75- 162.07 (scene ends 182.00, speed 1.08) Stacker's 23 models each cast a vote.
@@ -43,12 +43,12 @@ Gatekeeper due  205.95 ->  205.95- 210.68 (scene ends 242.00, speed 1.08) Almost
 Quanta     due  213.50 ->  213.50- 220.57 (scene ends 242.00, speed 1.14) I computed orbitals and reactive sites with GFN2-xTB, at
 Quanta     due  226.75 ->  226.75- 231.68 (scene ends 242.00, speed 1.14) Quanta computed physics for every compound with GFN2-xTB
 Quanta     due  231.55 ->  231.98- 236.73 (scene ends 242.00, speed 1.14) Some columns carry signal alone, but no physics idea pas
-Quanta     due  235.95 ->  237.03- 240.63 (scene ends 242.00, speed 1.14) Beautiful physics: honestly reported as not used.
+Quanta     due  235.95 ->  237.03- 240.23 (scene ends 242.00, speed 1.14) Beautiful physics: reported as not used.
 Foundry    due  243.50 ->  243.50- 249.90 (scene ends 282.00, speed 1.08) I start from models pretrained on millions of molecules 
 Foundry    due  244.50 ->  250.20- 253.60 (scene ends 282.00, speed 1.08) Each one is added to the stack and judged by the same ru
 Foundry    due  256.75 ->  256.75- 260.82 (scene ends 282.00, speed 1.08) Foundry starts from models pretrained on millions of mol
 Foundry    due  261.75 ->  261.75- 265.15 (scene ends 282.00, speed 1.08) Each one is added to the stack and judged by the same ru
-Foundry    due  267.75 ->  267.75- 270.82 (scene ends 282.00, speed 1.08) 7 of the 7 judged so far did not pass.
+Foundry    due  267.75 ->  267.75- 270.60 (scene ends 282.00, speed 1.08) 7 of the 8 judged so far did not pass.
 Foundry    due  273.75 ->  273.75- 277.73 (scene ends 282.00, speed 1.08) A model that adds nothing to the blend is reported as no
 Dock       due  283.50 ->  283.50- 290.45 (scene ends 334.00, speed 1.08) I fold each ligand into the enzyme with Boltz-2, restrai
 Dock       due  284.50 ->  290.75- 293.82 (scene ends 334.00, speed 1.08) Two co-folding models work with me.

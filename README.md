@@ -223,7 +223,6 @@ Every addition was judged by a rule fixed before its result. 213 gate verdicts f
 | multitask network with the screen and Emax as auxiliary heads | NOT MET | NOT MET | - |
 | negative control (permuted labels) | MET | MET | - |
 | non-negative stacking | NOT MET | NOT MET | - |
-| our LDDT-PLI against OpenStructure's | - | - | NOT MET |
 | physics block tier A, replicate with 10 outer folds | NOT MET | NOT MET | - |
 | physics block tier B, replicate with 10 outer folds | NOT MET | NOT MET | - |
 | physics block, tier A | NOT MET | NOT MET | - |
@@ -242,6 +241,7 @@ Every addition was judged by a rule fixed before its result. 213 gate verdicts f
 | single-concentration screen as a predicted block | NOT MET | NOT MET | - |
 | softmax-temperature selector | NOT MET | NOT MET | - |
 | test-likeness weighting | NOT MET | NOT MET | - |
+| the LDDT-PLI of the project against that of OpenStructure | - | - | NOT MET |
 | two-arm regressors, floor-clipped | NOT MET | NOT MET | - |
 
 </details>

@@ -1,0 +1,35 @@
+{
+  "delta_high": 0.02490861094426222,
+  "delta_low": 0.12846259980358024,
+  "differing_calls_in_a_half": 32.496,
+  "error_high": 0.46274999999999994,
+  "error_low": 0.056,
+  "evidence": {
+    "band": {
+      "best_c": 0.3,
+      "best_w": 0.05,
+      "w_high": 1.5,
+      "w_low": 0.0
+    },
+    "pac": {
+      "high": 0.69,
+      "low": 0.39,
+      "w": 0.51
+    },
+    "rate": 0.059117573198105
+  },
+  "fallback": "A",
+  "fit_weight": 1.0,
+  "half": 375,
+  "regret": {
+    "blend_of_three": 0.04849882619654931,
+    "hits_only": 0.0514586440539426,
+    "hits_only_of_three": 0.0514586440539426,
+    "selection_aware": 0.12846259980358024,
+    "selection_aware_of_three": 0.12846259980358024
+  },
+  "resamples": 2000,
+  "risk": 0.011526459714457342,
+  "threshold": 0.03,
+  "usable": false
+}

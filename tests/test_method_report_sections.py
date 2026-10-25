@@ -60,3 +60,11 @@ def test_the_ledger_has_no_caveat_when_the_ensemble_covers_the_bound_state_or_th
     covered = tmp_path / "conformer_bias.log"
     covered.write_text("the ensemble of the block (12 conformers within 5 kcal/mol): a member within 1.0 A of the crystal pose for 83% of the 131 copies; median nearest RMSD 0.60 A\n")
     assert report.ensemble_caveat(covered) == "" and report.ensemble_caveat(tmp_path / "missing.log") == ""
+
+
+def test_the_scores_of_the_uploads_are_printed_only_when_the_file_of_them_exists(tmp_path, monkeypatch):
+    monkeypatch.setattr(report, "LEADERBOARD", tmp_path / "leaderboard_scores.csv")
+    assert report.leaderboard_scores() == ""
+    (tmp_path / "leaderboard_scores.csv").write_text("slot,file,uploaded_utc,cyp2d6_mcc\n1,candidate_A,2026-10-28 10:00,0.31\n")
+    text = report.leaderboard_scores()
+    assert "candidate_A" in text and "0.31" in text and "| slot | file |" in text

@@ -199,6 +199,30 @@ MD_13_3_B = """
 *On what actually ran.* The cell reads the registered log of the readout and, if the queue has produced it, the exploratory log.
 """
 
+DECISION_FACTS = r'''
+# The choice of the final CYP2D6 file of 13.4: the result of job 016 (cypmode/challenge/selection_decision.py), read from its record.
+import json
+
+decision = json.loads((ROOT / "data/tdi_track/outputs/comparisons/selection_decision.json").read_text())
+decision_pac, decision_band, decision_regret = decision["evidence"]["pac"], decision["evidence"]["band"], decision["regret"]
+decision_rate = decision["evidence"]["rate"]
+decision_sentence = (
+    f"The detector is usable, so the entry is decided by the two uploads: B if the CYP2D6 MCC of B exceeds that of A by at least {decision['threshold']:+.2f}, A otherwise."
+    if decision["usable"]
+    else f"The detector is not usable, so no upload of B is made to decide, and the entry is the file with the smaller largest regret over the whole grid, file {decision['fallback']} (largest regret {decision_regret['hits_only']:.3f} for the hits-only file against {decision_regret['selection_aware']:.3f} for the selection-aware file)."
+)
+'''
+
+MD_13_4_C = """
+**Which CYP2D6 file is the final entry.** The two files differ in 40 of the 750 CYP2D6 calls and nowhere else. Whether the selection-aware file B is better than the hits-only file A depends on a number that no label identifies: the weight $w$ of the compounds that the screen never promoted in the scored set, where 1 is their share in the all-isoform panel and 0 means that the scored set holds only compounds like those of the training file. Part IX shows that B wins when $w$ is large and loses when it is near zero. The label-shift estimate gives $w = {{=decision_pac['w']:.2f}}$ (95 percent interval {{=decision_pac['low']:.2f}} to {{=decision_pac['high']:.2f}}), under an assumption that analog expansion may violate, and the fit of the board scores of the official baseline does not identify it: the plausible region runs from $w = {{=decision_band['w_low']:.2f}}$ to ${{=decision_band['w_high']:.1f}}$, because $w$ and the rate of time-dependent inhibitors among the hits trade off.
+
+The choice is fixed by a procedure that was written before any file was uploaded (`cypmode/challenge/selection_decision.py`, job `016_selection_decision`). Each file calls the top {{=decision_rate:.3f}} of the scored population, as the final build does, and the weighted MCC is compared under $w$ from 0 to 1. (The first version of the procedure scored the calls at the rate of the experiments of Part IX, about a third of the pool, which is not what is submitted; it was corrected before its output was used, and the log prints both values.) At the rate of the final build B gains {{=decision['delta_high']:.3f}} of MCC on average where it wins ($w \\ge 0.25$) and loses {{=decision['delta_low']:.3f}} at $w = 0$. The live board scores half of the test set, and the difference of the two uploads on it has a spread of about 0.09 to 0.10 from the choice of compounds alone; the threshold that minimises the larger of the two risks is {{=decision['threshold']:+.2f}}, with an error of {{=decision['error_low']:.2f}} at $w = 0$ and {{=decision['error_high']:.2f}} on average for $w \\ge 0.25$, and the procedure requires both to be at most 0.25. {{=decision_sentence}}
+
+The rank blend of the two files has no file and its gate in Part IX is not met; its largest regret against the best of the three is {{=decision_regret['blend_of_three']:.3f}}, against {{=decision_regret['hits_only_of_three']:.3f}} for the hits-only file. The choice rests on cross-validation with a model of the scored population: it does not say which file scores higher on the hidden labels, and a difference of {{=decision['delta_high']:.2f}} of MCC where B wins is smaller than the interval of the bootstrap over the outer folds in most cells of the table in the log.
+
+*On what actually ran.* The cell reads `data/tdi_track/outputs/comparisons/selection_decision.json`, which job 016 wrote from the cached predictions of the nested cross-validation; the notebook does not run the procedure.
+"""
+
 MD_13_4 = """
 ## 13.4 Final results and the state of the submission files
 
@@ -235,4 +259,6 @@ CELLS = [
     md(MD_13_4),
     code(FINAL_FILES),
     md(MD_13_4_B),
+    code(DECISION_FACTS, hide_input=True),
+    md(MD_13_4_C),
 ]

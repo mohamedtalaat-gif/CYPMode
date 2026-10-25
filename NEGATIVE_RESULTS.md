@@ -45,6 +45,10 @@ uses the same corrected t.
 | aux_gate_shift_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_gate_shift_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
 | aux_gate_shift_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| aux_hypothesis_CYP2D6.log | CYP2D6: alone, corrected p < 0.05 at both z0 | NOT MET |
+| aux_hypothesis_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| aux_hypothesis_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
+| aux_hypothesis_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_mlp_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_mlp_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_mlp_aux_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
@@ -52,6 +56,10 @@ uses the same corrected t.
 | aux_neural_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_nodirect_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
 | aux_nodirect_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| aux_pocket_cyp2d6_CYP2D6.log | CYP2D6: alone, corrected p < 0.05 at both z0 | NOT MET |
+| aux_pocket_cyp2d6_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| aux_pocket_cyp3a4_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
+| aux_pocket_cyp3a4_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_pxr_CYP2D6.log | CYP2D6: alone, corrected p < 0.05 at both z0 | NOT MET |
 | aux_pxr_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_pxr_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
@@ -60,6 +68,10 @@ uses the same corrected t.
 | aux_screen_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_screen_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
 | aux_screen_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| aux_site_cyp2d6_CYP2D6.log | CYP2D6: alone, corrected p < 0.05 at both z0 | NOT MET |
+| aux_site_cyp2d6_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| aux_site_cyp3a4_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
+| aux_site_cyp3a4_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_tabicl_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_tabicl_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | aux_tabicl_chemeleon_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
@@ -78,6 +90,26 @@ uses the same corrected t.
 | embeddings_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
 | embeddings_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | exploratory_atomjepa_head_f10_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_hypothesis_permuted_CYP2D6.log | CYP2D6: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_hypothesis_permuted_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_hypothesis_permuted_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_hypothesis_permuted_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_control_CYP2D6.log | CYP2D6: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_control_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_control_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_control_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_first_run_seed0_control_CYP2D6.log | CYP2D6: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_first_run_seed0_control_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_first_run_seed0_control_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_first_run_seed0_control_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_first_run_seed0_own_CYP2D6.log | CYP2D6: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_first_run_seed0_own_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_first_run_seed0_own_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_pocket_first_run_seed0_own_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_site_control_CYP2D6.log | CYP2D6: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_site_control_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_site_control_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
+| exploratory_site_control_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | hedged_blend_CYP2D6.log | CYP2D6: hedged blend adopted by the minimax rule, fit weight 0.25 | NOT MET |
 | hedged_blend_CYP2D6.log | CYP2D6: selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 0.25 | NOT MET |
 | hedged_blend_CYP2D6.log | CYP2D6: hedged blend adopted by the minimax rule, fit weight 0.5 | NOT MET |
@@ -150,6 +182,8 @@ uses the same corrected t.
 | pose_awareness.log | pose_physics | NOT MET |
 | pose_awareness.log | pose_pharmacophore | NOT MET |
 | pose_awareness.log | pose_combined | NOT MET |
+| pose_pharmacophore_model.log | pose_pharmacophore_model | NOT MET |
+| pose_pharmacophore_model.log | pose_pharmacophore_model_combined | NOT MET |
 | replicate_verdict_CYP2D6.log | CYP2D6: replicate physics, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design | NOT MET |
 | replicate_verdict_CYP2D6.log | CYP2D6: replicate physics_compact, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design | NOT MET |
 | replicate_verdict_CYP2D6.log | CYP2D6: replicate physics_b, 10 outer folds corrected p < 0.05 at both z0 and the same sign in the 5-fold design | NOT MET |
@@ -161,6 +195,8 @@ uses the same corrected t.
 | selection_aware_v2_CYP2D6.log | CYP2D6: V2 beats V1, corrected p < 0.05 at both z0, AUC | NOT MET |
 | selection_validation.log | mbr_selection | NOT MET |
 | selection_validation.log | engine_consensus | NOT MET |
+| selection_validation_bioemu2.log | mbr_selection | NOT MET |
+| selection_validation_bioemu2.log | engine_consensus_bioemu2 | NOT MET |
 | series_consensus.log | series_consensus | NOT MET |
 | softmax_selector_CYP2D6.log | CYP2D6: selector, corrected p < 0.05 at both z0 | NOT MET |
 | softmax_selector_CYP3A4.log | CYP3A4: selector, corrected p < 0.05 at both z0 | NOT MET |
@@ -175,6 +211,8 @@ uses the same corrected t.
 | xiso_transfer_CYP2D6.log | CYP2D6: stacked, corrected p < 0.05 at both z0 | NOT MET |
 | xiso_transfer_CYP3A4.log | CYP3A4: alone, corrected p < 0.05 at both z0 | NOT MET |
 | xiso_transfer_CYP3A4.log | CYP3A4: stacked, corrected p < 0.05 at both z0 | NOT MET |
+
+The rows of the pocket block (`aux_pocket_*`, `exploratory_pocket_*`) and of the site model (`aux_site_*`, `exploratory_site_*`) are verdicts of models tested with an ensemble of 12 conformers that holds a member within 1.0 A of the crystal pose for 12% of 131 crystal ligand copies (`conformer_bias.log`), so that they missed the bound conformation of 88% of the crystal ligands; a wider ensemble was not tried.
 
 ## Older comparisons that were not significant (paired corrected t, Holm)
 

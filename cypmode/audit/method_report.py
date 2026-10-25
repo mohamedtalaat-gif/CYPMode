@@ -25,6 +25,7 @@ COMPARISONS = ROOT / "data/tdi_track/outputs/comparisons"
 FINAL_TDI = ROOT / "data/tdi_track/outputs/final"
 FINAL_STRUCTURE = ROOT / "data/structure_track/outputs/cyp3a4/final"
 AUDIT = ROOT / "audit/AUDIT_REPORT.md"
+LEADERBOARD = ROOT / "docs/leaderboard_scores.csv"
 GATE = re.compile(r"^(?:STRUCTURE GATE (\w+)[^:\n]*|(CYP\w+) GATE \(([^)]*)\)): (MET|NOT MET)", re.MULTILINE)
 
 
@@ -64,6 +65,20 @@ def table(rows: list[tuple], columns: list[str]) -> str:
         return "_(none yet)_"
     head = "| " + " | ".join(columns) + " |\n|" + "|".join(" --- " for _ in columns) + "|\n"
     return head + "\n".join("| " + " | ".join(str(c) for c in r) + " |" for r in rows)
+
+
+def leaderboard_scores() -> str:
+    """The scores that the portal gave the uploaded files, as recorded by hand in ``docs/leaderboard_scores.csv`` (one row per upload); nothing is printed while the file does not exist."""
+    if not LEADERBOARD.exists():
+        return ""
+    frame = pd.read_csv(LEADERBOARD)
+    rows = [tuple("" if pd.isna(v) else v for v in r) for r in frame.itertuples(index=False)]
+    return "\n".join([
+        "Scores that the portal gave the uploaded files (the live board scores a part of the test set; `docs/leaderboard_scores.csv`, copied from the board and the receipts of the portal):",
+        "",
+        table(rows, list(frame.columns)),
+        "",
+    ])
 
 
 def selection_sensitivity() -> str:
@@ -407,6 +422,11 @@ def build_method_report() -> str:
         "",
         log_lines("hedged_blend_CYP2D6.log", r"GATE|best worst|worst-case|fitted under", "job 014", 24),
         "",
+        "Choice of the final CYP2D6 file (job 016, `cypmode/challenge/selection_decision.py`, a procedure fixed before any upload): the deployment table when the top share of the scored population that the final build calls is called, the evidence on the share of never-promoted compounds, and the live board read as a detector of the regime:",
+        "",
+        log_lines("selection_decision_CYP2D6.log", r".", "job 016", 70),
+        "",
+        leaderboard_scores(),
         "## 8. Physics-, SAR-, committee-, embedding-, cross-isoform and weighting-based additions",
         "",
         "Each addition is a block or candidate group tested alone and inside the assembled stack; the rule is corrected p < 0.05 at both",

@@ -40,7 +40,7 @@ def test_the_requeue_does_not_wait_for_the_jobs_it_re_queues(tmp_path):
 def committed_state(tmp_path: Path, files: dict[str, str]) -> int:
     """The exit code of ``tree_committed`` in a git repository that holds ``files`` (committed first), with the package of this repository linked in and ignored."""
     root = LIB.parents[1]
-    git = ["git", "-c", "user.name=t", "-c", "user.email=t@example.org"]
+    git = ["git", "-c", "user.name=t", "-c", "user.email=none"]
     subprocess.run([*git, "init", "-q"], cwd=tmp_path, check=True)
     (tmp_path / "cypmode").symlink_to(root / "cypmode")
     (tmp_path / ".gitignore").write_text("cypmode\n.venv\n")
