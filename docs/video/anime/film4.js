@@ -17,7 +17,7 @@ function sceneAuditor(s, t) {
   const eq = seg(u, 7, 8);
   body += `<g opacity="${eq}"><rect x="595" y="400" width="150" height="26" rx="13" fill="${color}"/><rect x="595" y="452" width="150" height="26" rx="13" fill="${color}"/></g>`;
   const hashShown = seg(u, 5.5, 8);
-  body += `<g opacity="${hashShown}">` + pill(`sha256 ${R.audit_hash}...`, 365, 730, 28, color, { fill: '#fff', color: NAVY, fillOpacity: 0.97 }) + pill(`sha256 ${R.audit_hash}...`, 975, 730, 28, color, { fill: '#fff', color: NAVY, fillOpacity: 0.97 }) + '</g>';
+  body += `<g opacity="${hashShown}">` + pill('compared with run 2', 365, 730, 28, color, { fill: '#fff', color: NAVY, fillOpacity: 0.97 }) + pill('compared with run 1', 975, 730, 28, color, { fill: '#fff', color: NAVY, fillOpacity: 0.97 }) + '</g>';
   body += stamp(FACTS.audit_reproducible ? 'IDENTICAL' : 'DIFFERENT', 670, 560, FACTS.audit_reproducible ? '#1db954' : NOT_MET, seg(u, 8.4, 10.6), 66, -6, FACTS.audit_reproducible ? 'byte for byte' : '');
   let px = 150;
   [[`${R.test_functions} tests`, 11.2], [`${R.modules} modules`, 12], [`${R.jobs} queue jobs`, 12.8], [`final zip ${FACTS.zip_hash}...`, 13.6]].forEach(([l, a]) => { body += pill(l, px, 830, 30, color, { opacity: seg(u, a, a + 0.8), fill: '#fff', color: NAVY, fillOpacity: 0.97, anchor: 'start' }); px += measure(l, 30) + 36 + 24; });

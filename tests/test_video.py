@@ -28,7 +28,7 @@ STUB = {  # a small stand-in for the real data of facts.real_data(), so that the
     "physics": [{"column": "sasa total", "auc": 0.626}, {"column": "ip ev", "auc": 0.365}],
     "structure": {"checks": CHECKS, "passed": [20] * len(CHECKS), "n": 20, "donors": ["OCNT-0000002"]},
     "blocks": [{"name": "morgan", "columns": 2048}, {"name": "maccs", "columns": 167}], "families": {"lgbm": 15, "knn": 3, "svm": 3, "extratrees": 1, "rf": 1},
-    "repo": {"modules": 119, "test_files": 90, "test_functions": 641, "jobs": 63, "audit_hash": "abcdef123456"},
+    "repo": {"modules": 119, "test_files": 90, "test_functions": 641, "jobs": 63},
     "scout": {"sources": [{"label": "a release", "rows": 1340, "compounds": 1340, "in_training": 1250, "in_test": 1}, {"label": "a screen", "rows": 17504, "compounds": 4376, "in_training": 4375, "in_test": 0},
                           {"label": "another file", "rows": 6145, "compounds": 6145, "in_training": 6145, "in_test": 4}], "excluded": ["OCNT-0000001", "OCNT-0000002", "OCNT-0000003", "OCNT-0000004", "OCNT-0000005"]},
     "foundry": [{"label": "a pretrained model", "enzymes": {"CYP3A4": {"delta_auc": 0.0001, "p": 0.945, "verdict": "NOT MET"}, "CYP2D6": {"delta_auc": -0.0008, "p": 0.724, "verdict": "NOT MET"}}},

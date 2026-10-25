@@ -41,8 +41,11 @@ class Facts:
     zip_hash: str
 
 
-def stack_row(isoform: str) -> pd.Series:
-    return pd.read_csv(FINAL_TDI / f"{isoform}_stack_choice.csv").query("stack == 'default'").iloc[0]
+def stack_row(isoform: str, final: bool = False) -> pd.Series:
+    """A row of the stack table of the final build: the default committee, or with ``final`` the stack that the build chose for the isoform (``manifest.json``) and that is submitted."""
+    table = pd.read_csv(FINAL_TDI / f"{isoform}_stack_choice.csv")
+    chosen = json.loads((FINAL_TDI / "manifest.json").read_text())["isoforms"][isoform]["stack"] if final else "default"
+    return table[table["stack"] == chosen].iloc[0]
 
 
 CONTROLS = ("permutation_control",)  # checks of the pipeline itself, not ideas: they are not rows of the ledger
@@ -77,8 +80,8 @@ def load() -> Facts:
         n_models=int(stack_row("CYP3A4")["n_candidates"]),
         gates=gates,
         gates_not_met=not_met,
-        auc={iso: float(stack_row(iso)["auc_z1.0"]) for iso in ("CYP3A4", "CYP2D6")},
-        mcc={iso: float(stack_row(iso)["mcc_z1.0"]) for iso in ("CYP3A4", "CYP2D6")},
+        auc={iso: float(stack_row(iso, final=True)["auc_z1.0"]) for iso in ("CYP3A4", "CYP2D6")},  # the results are those of the submitted stack; the committee of the Stacker scene is the default one
+        mcc={iso: float(stack_row(iso, final=True)["mcc_z1.0"]) for iso in ("CYP3A4", "CYP2D6")},
         poses=len(poses),
         pose_failures=int((~poses["all_passed"].astype(bool)).sum()),
         audit_reproducible="NOT REPRODUCIBLE" not in audit_log and "REPRODUCIBLE" in audit_log,
@@ -193,9 +196,8 @@ def _families() -> dict:
 
 def _repo_and_audit() -> dict:
     tests = sorted((ROOT / "tests").glob("test_*.py"))
-    report = ROOT / "audit/AUDIT_REPORT.md"
     return {"modules": len([p for p in (ROOT / "cypmode").rglob("*.py") if p.name != "__init__.py"]), "test_files": len(tests), "test_functions": sum(len(re.findall(r"^def test_", p.read_text(), re.MULTILINE)) for p in tests),
-            "jobs": len(list((ROOT / "queue/jobs").glob("*.sh"))), "audit_hash": hashlib.sha256(report.read_bytes()).hexdigest()[:12]}
+            "jobs": len(list((ROOT / "queue/jobs").glob("*.sh")))}
 
 
 def _scout() -> dict:

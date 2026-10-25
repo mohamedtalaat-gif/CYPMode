@@ -76,5 +76,5 @@ def test_both_audits_of_the_final_sequence_wait_for_the_tree_and_the_second_for_
     assert "tree_committed" in first and "tree_committed" in second
     assert "need_done 950_submissions_final_sync" in second and "scripts/run_audit.sh" in second
     requeue = (root / "queue/jobs/283_requeue_final_sequence.sh").read_text()
-    for job in ("900_tests_and_audit", "945_video_render", "950_submissions_final_sync", "955_final_audit", "960_pre_submission_gate"):
+    for job in ("900_tests_and_audit", "941_card_build", "945_video_render", "946_interactive_card", "950_submissions_final_sync", "955_final_audit", "960_pre_submission_gate"):
         assert job in requeue
