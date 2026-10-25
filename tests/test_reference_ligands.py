@@ -254,7 +254,7 @@ def test_a_http_error_status_is_a_failure_not_cached_content(tmp_path, monkeypat
 def test_build_reference_set_downloads_only_entries_with_a_qualifying_ligand_and_writes_the_json(tmp_path, monkeypatch):
     inventory = {"1AAA": _inventory("DRG"), "1BBB": {"resolution": 2.0, "ligands": {}}}
     downloaded = []
-    monkeypatch.setattr(reference_ligands, "fetch_entry_ids", lambda: ["1AAA", "1BBB"])
+    monkeypatch.setattr(reference_ligands, "fetch_entry_ids", lambda uniprot: ["1AAA", "1BBB"])
     monkeypatch.setattr(reference_ligands, "fetch_ligand_inventory", lambda ids: inventory)
     monkeypatch.setattr(reference_ligands, "download_mmcif", lambda pid, cache_dir: downloaded.append(pid) or Path(f"{pid}.cif"))
 

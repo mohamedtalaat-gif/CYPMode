@@ -51,6 +51,7 @@ REVIEWED = {  # files that name blinded compounds without being a result for the
     "data/tdi_track/outputs/oof_direct_inhibition.csv": "the same file at its earlier path (history)",
     "data/structure_track/inputs/structure_track_retry.csv": "an input list of ligands to run",
     "data/structure_track/inputs/restraint_expansion_ligands.csv": "public crystal ligands of the PDB, not blinded compounds",
+    "data/structure_track/outputs/cyp3a4/pose_pharmacophore_crystal.csv": "the pose-pharmacophore measures on the 20 public crystal benchmark ligands (bench-* identifiers), not on blinded compounds",
     "data/tdi_track/outputs/comparisons/softmax_curve_CYP3A4.csv": "cross-validation summary: one row per selector and cut (20 rows), no compound",
     "data/tdi_track/outputs/comparisons/softmax_curve_CYP2D6.csv": "cross-validation summary: one row per selector and cut (20 rows), no compound",
     "data/tdi_track/outputs/comparisons/baseline_reproduction.csv": "the official baseline's scores in the project's cross-validation",

@@ -12,6 +12,10 @@ drawing is made by RDKit from a SMILES, every 3D picture from real coordinates (
 import functools
 import io
 import json
+import os
+import subprocess
+import sys
+import tempfile
 import textwrap
 from pathlib import Path
 
@@ -539,19 +543,42 @@ def pocket_3d(theme_name):
 
 ATLAS_LIGAND = ("cyp3a4", "2V0M", "KLN")  # ketoconazole in CYP3A4, the reference complex of 9.13 and 11.5
 
+XTB_SCRIPT = """
+import json
+import sys
+from cypmode.challenge import physics_block as pb
+from cypmode.challenge import quantum_pharmacophore as quantum
+
+smiles, out = sys.argv[1], sys.argv[2]
+features, atom_rows = pb.compute_molecule(smiles)
+payload = {"physics": features, "atoms": atom_rows, "quantum": quantum.extract_quantum_features(smiles)}
+with open(out, "w") as handle:
+    json.dump(payload, handle, default=lambda value: value.item() if hasattr(value, "item") else str(value))
+"""
+
+
+def xtb_in_a_process_of_its_own(smiles: str, timeout: int = 900) -> dict:
+    """The GFN2-xTB quantities of a compound ({physics, atoms, quantum}), computed by tblite in a fresh interpreter. tblite and LightGBM crash or deadlock when both are loaded in one process (the ``tblite`` marker of
+    ``pyproject.toml``), and the test suite, the figure build and the notebook build each load LightGBM somewhere, so the call is never made in the process that draws the figure."""
+    with tempfile.TemporaryDirectory() as folder:
+        out = Path(folder) / "xtb.json"
+        done = subprocess.run([sys.executable, "-B", "-c", XTB_SCRIPT, smiles, str(out)], capture_output=True, text=True, timeout=timeout, cwd=str(ROOT), env={**os.environ, "PYTHONPATH": str(ROOT)}, check=False)
+        if done.returncode != 0 or not out.exists():
+            raise RuntimeError(f"the xTB calculation of the atlas compound failed (exit {done.returncode}): {done.stderr[-800:]}")
+        return json.loads(out.read_text())
+
 
 @functools.cache
 def atlas_compound() -> dict:
     """Everything the atlas shows of the compound, computed once: its structure, its physics (per atom and per molecule), its quantum scalars and the hypothesis of the ligand-based model that it realises best."""
     from cypmode.challenge import pharmacophore_hypotheses as hypotheses
     from cypmode.challenge import physics_block as pb
-    from cypmode.challenge import quantum_pharmacophore as quantum
 
     record = reference_record("cyp3a4")
     smiles = record["smiles"]
     mol = pb.largest_fragment(smiles)
-    features, atom_rows = pb.compute_molecule(smiles)
-    scalars = quantum.extract_quantum_features(smiles)
+    xtb = xtb_in_a_process_of_its_own(smiles)
+    features, atom_rows, scalars = xtb["physics"], xtb["atoms"], xtb["quantum"]
     model, vocabulary, _, _, _, _ = hypotheses.fitted("CYP3A4")
     realised = {int(v) for v in hypotheses.realised(smiles)}
     located, ratio = None, float("nan")
