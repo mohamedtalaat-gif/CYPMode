@@ -40,6 +40,19 @@ Z_CUTS = (1.0, 1.96)
 
 # -- 1. provenance -------------------------------------------------------------------------------
 
+# The files that the audit writes itself; the first of the two runs of scripts/run_audit.sh writes the report, so counting them would give
+# the second run one more modified file than the first, and the two reports would differ.
+AUDIT_OWN_FILES = ("audit/AUDIT_REPORT.md", "audit/AUDIT_REPORT.run2.md", "data/structure_track/outputs/cyp3a4/logs/audit_run.log")
+
+
+def tree_state(porcelain: str) -> tuple[int, int, int]:
+    """Modified, untracked and deleted entries of ``git status --porcelain``, without the files of the audit itself."""
+    status = [line for line in porcelain.splitlines() if line and line[3:] not in AUDIT_OWN_FILES]
+    modified = sum(1 for line in status if line[:2].strip() in ("M", "MM", "AM", "RM"))
+    untracked = sum(1 for line in status if line.startswith("??"))
+    deleted = sum(1 for line in status if line[:2].strip() == "D")
+    return modified, untracked, deleted
+
 
 def provenance(ctx: Context) -> Section:
     s = Section("1. Provenance and environment")
@@ -53,10 +66,7 @@ def provenance(ctx: Context) -> Section:
     versions.insert(0, ("python", ".".join(map(str, sys.version_info[:3]))))
     s.body.append(md_table(pd.DataFrame(versions, columns=["package", "version"])))
     head = run(["git", "rev-parse", "--short", "HEAD"]).strip()
-    status = [line for line in run(["git", "status", "--porcelain"]).splitlines() if line]
-    modified = sum(1 for line in status if line[:2].strip() in ("M", "MM", "AM", "RM"))
-    untracked = sum(1 for line in status if line.startswith("??"))
-    deleted = sum(1 for line in status if line[:2].strip() == "D")
+    modified, untracked, deleted = tree_state(run(["git", "status", "--porcelain"]))
     s.body.append(f"\nGit HEAD `{head}`; working tree: {modified} modified, {deleted} deleted, {untracked} untracked entries.")
     ctx.metrics.update(git_modified=modified, git_untracked=untracked)
     files = [TRAIN_CSV, TEST_CSV, *sorted(SNAPSHOTS.glob("*.csv"))]
