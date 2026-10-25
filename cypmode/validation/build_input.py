@@ -14,6 +14,8 @@ This module makes both steps real, callable code.
 from collections.abc import Sequence
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[2]
+
 CYS_MOTIF_PATTERN = r"F..G...C.G"  # conserved P450 heme-binding signature (Leach, ch. 12)
 
 HEME_CCD_CODE = "HEM"
@@ -102,6 +104,17 @@ def _template_yaml(template: "str | Path | tuple[str | Path, str]", protein_chai
     return text + (f"    template_id: {template_chain}\n" if template_chain else "")
 
 
+
+def msa_reference(path: "str | Path") -> str:
+    """The MSA path as written into a Boltz input: relative to the repository root when the file is inside it, absolute otherwise. The inputs are kept in the repository and must not carry the path of the
+    machine that wrote them; every run starts from the repository root, where Boltz-2 resolves a relative path."""
+    resolved = Path(path).resolve()
+    try:
+        return str(resolved.relative_to(ROOT))
+    except ValueError:
+        return str(resolved)
+
+
 def build_boltz_yaml(
     protein_sequence: str,
     ligand_smiles: str,
@@ -160,7 +173,7 @@ def build_boltz_yaml(
         "  - protein:\n"
         f"      id: {protein_chain}\n"
         f"      sequence: {protein_sequence}\n"
-        + (f"      msa: {Path(protein_msa).resolve()}\n" if protein_msa else "")
+        + (f"      msa: {msa_reference(protein_msa)}\n" if protein_msa else "")
         + "  - ligand:\n"
         f"      id: {ligand_chain}\n"
         f"      smiles: '{ligand_smiles}'\n"

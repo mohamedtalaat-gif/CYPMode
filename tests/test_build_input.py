@@ -141,3 +141,11 @@ def test_template_entry_may_name_the_chain_of_a_multi_chain_file(tmp_path):
     text = build_boltz_yaml(CYP3A4_SEQUENCE, "CCO", cys, predict_affinity=False, templates=[plain, (trimer, "A")])
     block = text.split("templates:\n", 1)[1]
     assert f"  - cif: {plain.resolve()}\n    chain_id: A\n  - cif: {trimer.resolve()}\n    chain_id: A\n    template_id: A\n" in block
+
+
+def test_a_protein_msa_inside_the_repository_is_written_relative_to_it_and_one_outside_stays_absolute(tmp_path):
+    from cypmode.validation.build_input import ROOT, msa_reference
+
+    inside = ROOT / "data" / "structure_track" / "inputs" / "msa" / "cyp3a4_P08684.csv"
+    assert msa_reference(inside) == "data/structure_track/inputs/msa/cyp3a4_P08684.csv"
+    assert msa_reference(tmp_path / "p.csv") == str((tmp_path / "p.csv").resolve())
