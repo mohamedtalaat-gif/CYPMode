@@ -114,8 +114,8 @@ def score_pose(heavy: np.ndarray, features: dict[str, np.ndarray], fields: dict[
     parts = [float(pp.lookup(fields[pp.FAMILIES[k]], features[pp.FAMILIES[k]]).mean()) for k in present]
     if present:
         stacked = np.concatenate([features[pp.FAMILIES[k]] for k in present])
-        owner = np.concatenate([np.full(len(features[pp.FAMILIES[k]]), k) for k in present])
-        recall, matched, precision = pp.site_match(stacked[None], owner, present, sites, 1)
+        family_of = np.concatenate([np.full(len(features[pp.FAMILIES[k]]), k) for k in present])
+        recall, matched, precision = pp.site_match(stacked[None], family_of, present, sites, 1)
     else:
         recall, matched, precision = pp.site_match(None, None, [], sites, 1)
     return {"field": float(occupancy_at_atoms.mean()) + (float(np.mean(parts)) if parts else 0.0), "occupancy": float(occupancy_at_atoms.mean()), "recall": float(recall[0]), "matched": float(matched[0]),

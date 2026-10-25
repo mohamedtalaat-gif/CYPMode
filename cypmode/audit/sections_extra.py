@@ -130,7 +130,11 @@ def enforced_rules(ctx: Context) -> Section:
             private.append(name)
     s.add("source code comments are English only (no Arabic script in code)", not offenders, ", ".join(offenders[:5]) or "none found")
     s.add("public documents carry no private local paths", not private, ", ".join(private) or "none found")
-    s.body.append("Rules checked: code comments in English; no private paths in the documents meant to be public; attribution hygiene is section 12.")
+    from cypmode.audit.prose_rules import mentions_of_the_owner
+
+    owner = mentions_of_the_owner()
+    s.add("no text of the project refers to an owner (a decision or a step is written without a person named by a role)", not owner, ", ".join(owner[:5]) or "none found")
+    s.body.append("Rules checked: code comments in English; no private paths in the documents meant to be public; no text that refers to an owner; attribution hygiene is section 12.")
     return s
 
 

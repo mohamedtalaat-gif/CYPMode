@@ -10,7 +10,7 @@ one. For each crystal ligand copy of the CYP3A4 reference set (``reference_ligan
 and the same nearest RMSD for the ensemble that the block uses (``pocket_pharmacophore.conformers``: the coverage of the bound state by the registered ensemble).
 
 Consequence, fixed in advance: if fewer than ``COVERAGE_MIN`` of the copies are covered by the ensemble of the block, every place that reports the verdicts of the pocket block and of the site model says that
-they were tested with an ensemble that misses the bound conformation of that share of the crystal ligands; whether to repeat them with a wider ensemble is then a decision of the owner.
+they were tested with an ensemble that misses the bound conformation of that share of the crystal ligands.
 
 Usage: python -m cypmode.validation.conformer_bias      (job 273)
 """

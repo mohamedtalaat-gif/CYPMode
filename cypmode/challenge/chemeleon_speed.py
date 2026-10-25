@@ -16,7 +16,7 @@ stack on CYP3A4, a gain below the least difference of 0.0099 that the main desig
      the fine-tuned CheMeleon is NOT RUN, for cost; that is recorded in the ledger as "not run: cost" and is not a verdict.
 
 Amendment of 2026-10-22, before any GPU measurement exists: the first run of the speed test (2026-10-17) stopped on a determinism error of the MPS backend and measured no GPU time, so its decision "not run: cost" rests on the
-processor's estimate alone. The owner asked on 2026-10-22 to run what was dropped for cost. The GPU run now goes through ``scripts/chemprop_mps.sh`` (Chemprop with PyTorch's deterministic algorithms in warn-only mode: the seed
+processor's estimate alone. What was dropped for cost is run again on 2026-10-22. The GPU run now goes through ``scripts/chemprop_mps.sh`` (Chemprop with PyTorch's deterministic algorithms in warn-only mode: the seed
 stays fixed, only the order of the additions of one scatter operation may vary). The rule is unchanged (equivalence by rank correlation and AUC, at most ``STAGE_ONE_HOURS_LIMIT`` hours for the missing tasks), and the decision
 of 2026-10-17 is kept beside the new one in ``data/tdi_track/outputs/comparisons/``.
 

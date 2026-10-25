@@ -14,8 +14,8 @@ idea that is weak alone and useful only together with others could be refused by
     Nadeau and Bengio (``model_comparison.compare_candidate_sets``).
 
 Registered outcome: the all-in-one stack is better when its mean outer AUC exceeds the final stack's with corrected p < 0.05 at both cuts and by at least the least difference the design recognises
-(``FLOOR``, 0.0099). That is reported either way. It does not replace the final stack by itself: there is no replicate (the groups have no predictions on the 10-outer-fold plan), so a replacement is the owner's decision,
-taken with the numbers in front of it. The log is written under a name that no gate parser reads (``exploratory_all_in_one_<isoform>.log``) and is listed in the ledger under that name.
+(``FLOOR``, 0.0099). That is reported either way. It does not replace the final stack by itself: there is no replicate (the groups have no predictions on the 10-outer-fold plan), so a replacement would need that replicate.
+The log is written under a name that no gate parser reads (``exploratory_all_in_one_<isoform>.log``) and is listed in the ledger under that name.
 
 Usage: PYTHONPATH=. python -m cypmode.challenge.all_in_one --isoform CYP3A4
 """

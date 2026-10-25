@@ -106,10 +106,10 @@ def test_a_pose_matches_the_sites_that_have_a_feature_of_their_family_inside_the
     sites["Acceptor"] = np.array([[0.0, 0.0, 6.0, 1.0], [8.0, 0.0, 6.0, 0.5]])
     sites["Donor"] = np.array([[0.0, 5.0, 6.0, 0.5]])
     present = [pp.FAMILIES.index("Acceptor"), pp.FAMILIES.index("Donor")]
-    owner = np.array([present[0], present[0], present[1]])
+    family_of = np.array([present[0], present[0], present[1]])
     moved = np.array([[[0.5, 0.0, 6.0], [20.0, 0.0, 6.0], [0.0, 5.0, 6.0]],  # acceptor 1 and the donor matched, one feature elsewhere
                       [[20.0, 0.0, 6.0], [20.0, 5.0, 6.0], [0.0, 20.0, 6.0]]])  # nothing matched
-    recall, matched, precision = pp.site_match(moved, owner, present, sites, 2)
+    recall, matched, precision = pp.site_match(moved, family_of, present, sites, 2)
     assert recall.tolist() == pytest.approx([1.5 / 2.0, 0.0]) and matched.tolist() == [2, 0]
     assert precision.tolist() == pytest.approx([2 / 3, 0.0])
     none_recall, none_matched, none_precision = pp.site_match(None, None, [], sites, 2)

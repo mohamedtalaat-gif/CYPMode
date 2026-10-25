@@ -1,7 +1,7 @@
 name: Pages
 
 # Publishes the interactive explorer (a marimo notebook exported to a page that runs in the browser) and, once they are in the repository, the interactive card and the public edition of the notebook. GitHub removes scripts from a README,
-# so the interactive figures live on these pages. The workflow does nothing until the owner enables Pages with the source "GitHub Actions" in the settings of the repository.
+# so the interactive figures live on these pages. The workflow does nothing until Pages is enabled with the source "GitHub Actions" in the settings of the repository.
 "on":
   push:
     branches: [main]

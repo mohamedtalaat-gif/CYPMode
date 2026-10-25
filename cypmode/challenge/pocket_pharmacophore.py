@@ -214,14 +214,14 @@ def sites_of(fields: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
     return out
 
 
-def site_match(moved: np.ndarray | None, owner: np.ndarray | None, present: list[int], sites: dict[str, np.ndarray], n_poses: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """(recall, matched, precision) of every pose: ``moved`` are the positions (poses, features, 3) of the compound's typed features, ``owner`` the family index of each feature (both None
+def site_match(moved: np.ndarray | None, family_of: np.ndarray | None, present: list[int], sites: dict[str, np.ndarray], n_poses: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """(recall, matched, precision) of every pose: ``moved`` are the positions (poses, features, 3) of the compound's typed features, ``family_of`` the family index of each feature (both None
     when the compound has no typed feature, which then matches no site and has no precision)."""
     recall, matched = np.zeros(n_poses), np.zeros(n_poses)
     hits = []
     for k in present:
         family_sites = sites[FAMILIES[k]]
-        positions = moved[:, owner == k]
+        positions = moved[:, family_of == k]
         if not len(family_sites):
             hits.append(np.zeros(positions.shape[:2], dtype=bool))
             continue
@@ -291,13 +291,13 @@ def score_poses(heavy: np.ndarray, anchor: int, feats: dict[str, np.ndarray], mo
     occupancy = lookup(fields["occupancy"], atoms).mean(axis=1)
     present = [k for k, family in enumerate(FAMILIES) if len(feats[family])]
     family_parts = np.zeros((len(atoms), len(FAMILIES)))
-    moved = owner = None
+    moved = family_of = None
     if present:
         stacked = np.concatenate([feats[FAMILIES[k]] for k in present])
-        owner = np.concatenate([np.full(len(feats[FAMILIES[k]]), k) for k in present])
+        family_of = np.concatenate([np.full(len(feats[FAMILIES[k]]), k) for k in present])
         moved = np.einsum("kij,nj->kni", ROTATIONS[keep], (stacked - heavy[anchor]) @ to_z.T) + base
         for k in present:
-            family_parts[:, k] = lookup(fields[FAMILIES[k]], moved[:, owner == k]).mean(axis=1)
+            family_parts[:, k] = lookup(fields[FAMILIES[k]], moved[:, family_of == k]).mean(axis=1)
     total = occupancy + (family_parts[:, present].mean(axis=1) if present else 0.0)
     best = int(np.argmax(total))
     parts = {"best": float(total[best]), "occupancy": float(occupancy[best]), "accepted": float(keep.mean())}
@@ -306,7 +306,7 @@ def score_poses(heavy: np.ndarray, anchor: int, feats: dict[str, np.ndarray], mo
     parts["z_centroid"] = float(atoms[best].mean(axis=0)[2])
     parts["d_nearest"] = float(np.linalg.norm(atoms[best], axis=1).min())
     if sites is not None:
-        recall, matched, precision = site_match(moved, owner, present, sites, len(atoms))
+        recall, matched, precision = site_match(moved, family_of, present, sites, len(atoms))
         pick = int(np.lexsort((np.nan_to_num(precision, nan=-1.0), np.nan_to_num(recall, nan=-1.0)))[-1])
         parts.update(site_recall=float(recall[pick]), site_matched=float(matched[pick]), site_precision=float(precision[pick]))
     return parts
