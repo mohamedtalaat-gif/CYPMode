@@ -23,7 +23,7 @@ Veith-derived panel in cypmode.data.panel: confirmed directly by canonical
 SMILES comparison, only vardenafil (one of the 5 structural reference
 compounds) appears in this library at all.
 
-This screen is not a potency predictor and isn't claimed to be one --
+This screen is not a potency predictor and is not claimed to be one --
 cypmode/metrics/motifs.py's docstring is explicit that a motif match flags
 a compound as *capable* of heme coordination, not confirmed to coordinate.
 A real, positive, statistically significant correlation with potency here
@@ -31,7 +31,7 @@ is still a meaningful independent check: it means the structural feature
 the motif screen looks for tracks a real pharmacological property on data
 it never saw, not just the 5 compounds it was validated against
 structurally. See README.md's "Independent large-N potency check" section
-for the actual result and its honest limits.
+for the actual result and its limits.
 """
 
 import urllib.request
@@ -52,7 +52,7 @@ def load_inhibition_data(cache_path: str | Path = "data/tdi_track/inputs/octant_
     """Load Octant's CYP3A4 dose-response summary (one row per compound).
 
     Downloads and caches on first use; a copy is checked into the repo so
-    CI and offline use don't need network access.
+    CI and offline use do not need network access.
     """
     cache_path = Path(cache_path)
     if not cache_path.exists():
@@ -87,13 +87,13 @@ def compare_potency_by_motif(df: pd.DataFrame) -> dict:
     """Compare CYP3A4_pIC50 between motif-positive and motif-negative compounds.
 
     Restricted to QC-passed dose-response curves (drc_qc_status == 'PASS')
-    with a fitted pIC50 -- curves that failed QC, or didn't reach a
-    fittable endpoint, don't carry a reliable potency value to compare.
+    with a fitted pIC50 -- curves that failed QC, or did not reach a
+    fittable endpoint, do not carry a reliable potency value to compare.
 
     Uses a one-sided Mann-Whitney U test (motif-positive > motif-negative):
     the motif screen's mechanistic claim is that a coordinating nitrogen
     tightens binding, not that it produces any particular potency
-    distribution shape, so a rank-based test is the honest choice over
+    distribution shape, so a rank-based test is the right choice over
     assuming normality for a t-test.
     """
     qc_passed = df[df["drc_qc_status"] == "PASS"]

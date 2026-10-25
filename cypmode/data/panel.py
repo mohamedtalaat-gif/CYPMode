@@ -79,7 +79,7 @@ def load_panel(cache_path: str | Path = "data/tdi_track/inputs/tdc_cache") -> pd
 
 
 def summarize_panel(df: pd.DataFrame) -> pd.DataFrame:
-    """Per-isoform breakdown of labeled inhibitors that do/don't carry a Type II motif."""
+    """Per-isoform breakdown of labeled inhibitors that do/do not carry a Type II motif."""
     inhibitors = df[df["inhibitor"] == 1]
     rows = []
     for isoform, group in inhibitors.groupby("isoform"):
