@@ -27,14 +27,25 @@ def test_the_mcc_agrees_with_scikit_learn_along_the_last_axis():
     assert sd.mcc_of(np.zeros(10, dtype=bool), np.ones(10, dtype=bool)) == 0.0  # no positive: a zero denominator gives 0
 
 
-def test_two_files_with_the_same_calls_never_differ_and_different_calls_are_counted():
+def test_the_top_share_is_called_along_the_last_axis_and_by_weight():
+    scores = np.array([[0.1, 0.9, 0.5, 0.7], [0.4, 0.2, 0.8, 0.6]])
+    assert top_calls(scores, 0.5).tolist() == [[False, True, False, True], [False, False, True, True]]
+    s, w = np.array([0.9, 0.8, 0.7, 0.1]), np.array([1.0, 1.0, 2.0, 4.0])
+    assert sd.weighted_top_calls(s, w, 0.25).tolist() == [True, True, False, False]  # the second compound crosses a quarter of the weight and is called
+    assert sd.weighted_top_calls(s, w, 0.01).tolist() == [True, False, False, False]
+
+
+def top_calls(scores, rate):
+    return sd.top_share_calls(scores, rate)
+
+
+def test_two_files_with_the_same_scores_never_differ_and_opposite_scores_differ_in_every_call():
     rng = np.random.default_rng(1)
-    y, call = rng.random(500) < 0.1, rng.random(500) < 0.1
-    diff, n_diff = sd.live_differences(y, call, call, np.ones(500), 100, 50, rng)
+    y, scores = rng.random(500) < 0.1, rng.random(500)
+    diff, n_diff = sd.live_differences(y, scores, scores, np.ones(500), 100, 50, 0.1, rng)
     assert np.all(diff == 0) and n_diff == 0
-    other = ~call
-    _, n_diff = sd.live_differences(y, call, other, np.ones(500), 100, 50, rng)
-    assert n_diff == 100
+    _, n_diff = sd.live_differences(y, scores, -scores, np.ones(500), 100, 50, 0.1, rng)
+    assert n_diff == 20  # ten calls of each file, none in common
 
 
 def test_a_threshold_between_two_regimes_has_small_errors_and_the_rule_reads_it():

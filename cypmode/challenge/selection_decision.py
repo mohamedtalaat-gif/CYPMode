@@ -9,16 +9,20 @@ number that no label identifies: the weight w of the compounds that the screen n
 The deployment table of ``hedged_blend`` (the stacks fitted once under the weight of the final build, 1.0, and scored under every true w) says what each
 file is worth in each regime. The table that job 012 printed fits the stack under the weight it is scored under, which no deployment can do, and is not used here.
 
+The operating point matters. The experiments of jobs 010 to 014 call the compounds above the threshold that is best on the inner folds, which calls about a third of the pool;
+the final build calls the top share of the scored set that equals the estimated prevalence times a multiplier (5.9 percent for CYP2D6 in both files). A first version of this
+module scored the calls of the experiments; it was changed to the rule of the final build before any output of it was committed or used, and the log prints both MCC values.
 The evidence on w is of two kinds and neither settles it: the label-shift estimate of job 013 (w about 0.5, from structures alone, assuming that the structure
 distribution within each class is the same in the test set and the panel) and the board fit of ``population_share`` (w and the TDI rate among hits trade off, and the plausible
 region reaches from 0 to 1.5). This module therefore does three things.
 
-  1. The deployment table at fit weight 1.0 with percentile intervals from a bootstrap over the 15 outer units (3 repeats x 5 folds): mean MCC at the transferred call
-     rate and AUC of A, B and the rank blend of the two, under w in {0, 0.1, 0.25, 0.4, 0.5, 0.68, 1.0} and both confidence cut-offs z0.
+  1. The deployment table at fit weight 1.0 with percentile intervals from a bootstrap over the 15 outer units (3 repeats x 5 folds): the mean MCC when the top ``RATE``
+     share of the scored population is called (the weighted share, as the final build calls the top share of the test set), the MCC at the rate of the experiments, and the
+     AUC of A, B and the rank blend of the two, under w in {0, 0.1, 0.25, 0.4, 0.5, 0.68, 1.0} and both confidence cut-offs z0.
   2. The summary of the evidence on w, read from the stored outputs of jobs 013 and the board fit (nothing is recomputed).
   3. The operating characteristics of reading the live board as a detector of the regime. The live board scores half of the test set. For each w and z0, a half of
-     ``HALF`` compounds is drawn from the out-of-fold pool with probability proportional to the evaluation weight (the test-like population of that regime), the
-     calls of A and B are scored on it with the MCC, and the difference MCC(B) - MCC(A) is recorded, ``RESAMPLES`` times per repeat. The distribution of that
+     ``HALF`` compounds is drawn from the out-of-fold pool with probability proportional to the evaluation weight (the test-like population of that regime), each file calls
+     the top ``RATE`` share of that half by its own score, the calls are scored with the MCC, and the difference MCC(B) - MCC(A) is recorded, ``RESAMPLES`` times per repeat. The distribution of that
      difference under each w is what an upload of A and then B would show.
 
 Procedure, fixed in advance (written 2026-10-25 after the tables of jobs 012, 013 and 014 had been read; the bootstrap intervals, the distribution of the live
@@ -55,6 +59,7 @@ LOGS = Path("data/structure_track/outputs/cyp3a4/logs")
 RESULT = Path("data/tdi_track/outputs/comparisons/selection_decision.json")
 BOARD_BAND = Path("data/tdi_track/outputs/comparisons/population_share_band.csv")
 FIT_WEIGHT = 1.0  # the weight under which the selection-aware stack of the final build is fitted
+MULTIPLIER = 1.0  # the call-rate multiplier of CYP2D6 in both files of the final build (``manifest.json``: called rate 0.0587 against a prevalence of 0.0591)
 LOW, TIE, HIGH = (0.0,), (0.1,), (0.25, 0.4, 0.5, 0.68, 1.0)
 HALF = 375  # compounds in the half of the test set that the live board scores
 RESAMPLES = 2000  # per repeat, z0 and w
@@ -71,11 +76,31 @@ def mcc_of(y: np.ndarray, call: np.ndarray) -> np.ndarray:
     return np.divide(tp * tn - fp * fn, denominator, out=np.zeros_like(denominator), where=denominator > 0)
 
 
-def live_differences(y: np.ndarray, call_a: np.ndarray, call_b: np.ndarray, weights: np.ndarray, n: int, resamples: int, rng: np.random.Generator) -> tuple[np.ndarray, float]:
-    """MCC(B) - MCC(A) on ``resamples`` halves of ``n`` compounds drawn with probability proportional to ``weights``, and the mean number of calls that differ in a half."""
+def top_share_calls(scores: np.ndarray, rate: float) -> np.ndarray:
+    """Boolean calls of the ``round(rate * n)`` highest scores along the last axis of ``scores`` (at least one)."""
+    k = max(1, round(rate * scores.shape[-1]))
+    calls = np.zeros(scores.shape, dtype=bool)
+    top = np.argpartition(-scores, k - 1, axis=-1)[..., :k]
+    np.put_along_axis(calls, top, True, axis=-1)
+    return calls
+
+
+def weighted_top_calls(scores: np.ndarray, weights: np.ndarray, rate: float) -> np.ndarray:
+    """Calls of the highest scores until their weight reaches ``rate`` of the total weight: the call rule of the final build applied to a weighted population."""
+    order = np.argsort(-scores, kind="stable")
+    reached = np.cumsum(weights[order])
+    keep = reached - weights[order] < rate * weights.sum()  # the compound that crosses the share is called
+    calls = np.zeros(len(scores), dtype=bool)
+    calls[order[keep]] = True
+    return calls
+
+
+def live_differences(y: np.ndarray, scores_a: np.ndarray, scores_b: np.ndarray, weights: np.ndarray, n: int, resamples: int, rate: float, rng: np.random.Generator) -> tuple[np.ndarray, float]:
+    """MCC(B) - MCC(A) on ``resamples`` halves of ``n`` compounds drawn with probability proportional to ``weights``, each file calling the top ``rate`` share of the half by its own score,
+    and the mean number of calls that differ in a half."""
     index = rng.choice(len(y), size=(resamples, n), p=weights / weights.sum())
-    sampled = y[index]
-    return mcc_of(sampled, call_b[index]) - mcc_of(sampled, call_a[index]), float((call_a != call_b)[index].sum(-1).mean())
+    sampled, call_a, call_b = y[index], top_share_calls(scores_a[index], rate), top_share_calls(scores_b[index], rate)
+    return mcc_of(sampled, call_b) - mcc_of(sampled, call_a), float((call_a != call_b).sum(-1).mean())
 
 
 def choose_threshold(low: np.ndarray, high: list[np.ndarray], delta_low: float, delta_high: float, grid: np.ndarray = THRESHOLDS) -> dict:
@@ -150,13 +175,15 @@ def collect_outer(cache, ctx, matcher, prevalence, names, fit_weight, selectors)
     return units
 
 
-def unit_metrics(units: list[dict]) -> pd.DataFrame:
+def unit_metrics(units: list[dict], rate: float) -> pd.DataFrame:
+    """One row per unit, model, z0 and w: the AUC, the MCC when the top ``rate`` of the weighted population is called (``mcc``) and the MCC at the rate of the experiments (``mcc_cv``)."""
     rows = []
     for unit in units:
+        y = unit["y"].astype(int)
         for model, made in unit["models"].items():
             for (z0, factor), w in unit["weights"].items():
-                rows.append({"model": model, "repeat": unit["repeat"], "outer": unit["outer"], "z0": z0, "weight": factor,
-                             "auc": hb.score_metric(unit["y"].astype(int), made["scores"], w, "auc"), "mcc": hb.weighted_mcc(unit["y"].astype(int), made["called"].astype(int), w)})
+                rows.append({"model": model, "repeat": unit["repeat"], "outer": unit["outer"], "z0": z0, "weight": factor, "auc": hb.score_metric(y, made["scores"], w, "auc"),
+                             "mcc": hb.weighted_mcc(y, weighted_top_calls(made["scores"], w, rate).astype(int), w), "mcc_cv": hb.weighted_mcc(y, made["called"].astype(int), w)})
     return pd.DataFrame(rows)
 
 
@@ -166,20 +193,20 @@ def pooled_by_repeat(units: list[dict]) -> dict[int, dict]:
         part = [u for u in units if u["repeat"] == repeat]
         pooled[repeat] = {
             "y": np.concatenate([u["y"] for u in part]),
-            "called": {m: np.concatenate([u["models"][m]["called"] for u in part]) for m in MODELS},
+            "scores": {m: np.concatenate([u["models"][m]["scores"] for u in part]) for m in MODELS},
             "weights": {key: np.concatenate([u["weights"][key] for u in part]) for key in part[0]["weights"]},
         }
     return pooled
 
 
-def live_distributions(pooled: dict[int, dict], seed: int = 0) -> tuple[dict, float]:
+def live_distributions(pooled: dict[int, dict], rate: float, seed: int = 0) -> tuple[dict, float]:
     """``(z0, w) -> samples of MCC(B) - MCC(A)`` over all repeats, and the mean number of differing calls in a half."""
     rng = np.random.default_rng(seed)
     out, differing = {}, []
     for (z0, factor) in pooled[next(iter(pooled))]["weights"]:
         parts = []
         for p in pooled.values():
-            samples, n_diff = live_differences(p["y"], p["called"]["hits_only"], p["called"]["selection_aware"], p["weights"][(z0, factor)], HALF, RESAMPLES, rng)
+            samples, n_diff = live_differences(p["y"], p["scores"]["hits_only"], p["scores"]["selection_aware"], p["weights"][(z0, factor)], HALF, RESAMPLES, rate, rng)
             parts.append(samples)
             differing.append(n_diff)
         out[(z0, factor)] = np.concatenate(parts)
@@ -205,11 +232,15 @@ def unit_values(table: pd.DataFrame, model: str, z0: float, weight: float, name:
     return table[(table.model == model) & (table.z0 == z0) & (table.weight == weight)].sort_values(["repeat", "outer"])[name].to_numpy()
 
 
+def rate_of(evidence: dict) -> float:
+    return float(evidence["rate"])
+
+
 def print_tables(table: pd.DataFrame, evidence: dict, distributions: dict, n_diff: float, decision: dict) -> None:
     models = ("hits_only", "selection_aware", "blend")
     units = table[(table.model == "hits_only") & (table.z0 == hb.Z_CUTS[0]) & (table.weight == hb.GRID[0])].shape[0]
-    print(f"\nCYP2D6: deployment table, stacks fitted under non-hit weight {FIT_WEIGHT}, scored under each true weight w; {units} outer units; mean MCC at the transferred rate and AUC;")
-    print("difference to the hits-only file with the 95% interval of a bootstrap over the units")
+    print(f"\nCYP2D6: deployment table, stacks fitted under non-hit weight {FIT_WEIGHT}, scored under each true weight w; {units} outer units; mean AUC | MCC when the top {rate_of(evidence):.4f} of the scored population is called (the rule of the final build);")
+    print("difference of that MCC to the hits-only file with the 95% interval of a bootstrap over the units (the MCC at the rate of the experiments is given for comparison)")
     for z0 in hb.Z_CUTS:
         print(f"\n  z0 = {z0}")
         for w in hb.GRID:
@@ -218,11 +249,12 @@ def print_tables(table: pd.DataFrame, evidence: dict, distributions: dict, n_dif
             for model in ("selection_aware", "blend"):
                 mean, lo, hi = bootstrap_interval(unit_values(table, model, z0, w, "mcc"), unit_values(table, "hits_only", z0, w, "mcc"))
                 diffs.append(f"{model[:5]} - hits {mean:+.3f} [{lo:+.3f}, {hi:+.3f}]")
-            print(f"    w={w:<4} {cells}   MCC: {'; '.join(diffs)}")
+            cv = unit_values(table, "selection_aware", z0, w, "mcc_cv").mean() - unit_values(table, "hits_only", z0, w, "mcc_cv").mean()
+            print(f"    w={w:<4} {cells}   MCC: {'; '.join(diffs)}   (at the rate of the experiments: selec - hits {cv:+.3f})")
     pac, band = evidence["pac"], evidence["band"]
     print(f"\nCYP2D6: evidence on w. Label shift from structures (job 013): w = {pac['w']:.2f} (95% {pac['low']:.2f}-{pac['high']:.2f}), assuming the same structure distribution within each class in the test set and the panel.")
     print(f"Board fit of the official baseline (w and the TDI rate among hits trade off): best fit w = {band['best_w']:.2f} with c = {band['best_c']:.2f}; the plausible region reaches w = {band['w_low']:.2f} to {band['w_high']:.2f}, so the board does not identify w.")
-    print(f"\nCYP2D6: live board read as a detector of the regime ({HALF} compounds per half, {RESAMPLES} draws per repeat, z0 and w; {n_diff:.1f} calls differ in a half on average):")
+    print(f"\nCYP2D6: live board read as a detector of the regime ({HALF} compounds per half, each file calling its top {evidence['rate']:.4f}; {RESAMPLES} draws per repeat, z0 and w; {n_diff:.1f} calls differ in a half on average, about 20 are expected from the 40 of 750 that differ in the final files):")
     for z0 in hb.Z_CUTS:
         for w in hb.GRID:
             d = distributions[(z0, w)]
@@ -257,9 +289,10 @@ def main() -> None:
     prevalence = float(hb.estimate_from_csv(f"data/tdi_track/inputs/leaderboard_snapshots/interim_{iso}_2026-10-04.csv")["prevalence"])
     selectors = [hb.SubsetStack(hb.SETS["S0 hits-only"], "hits_only"), hb.SubsetStack(names, "selection_aware"), hb.BlendOfStacks(hb.SETS["S0 hits-only"], names)]
     units = collect_outer(cache, ctx, matcher, prevalence, names, FIT_WEIGHT, selectors)
-    table = unit_metrics(units)
-    distributions, n_diff = live_distributions(pooled_by_repeat(units))
-    evidence = {"pac": pac_estimate((LOGS / "test_nonhit_share_CYP2D6.log").read_text()), "band": board_band(pd.read_csv(BOARD_BAND))}
+    rate = prevalence * MULTIPLIER
+    table = unit_metrics(units, rate)
+    distributions, n_diff = live_distributions(pooled_by_repeat(units), rate)
+    evidence = {"pac": pac_estimate((LOGS / "test_nonhit_share_CYP2D6.log").read_text()), "band": board_band(pd.read_csv(BOARD_BAND)), "rate": rate}
     decision = decide(table, distributions)
     print_tables(table, evidence, distributions, n_diff, decision)
     RESULT.parent.mkdir(parents=True, exist_ok=True)
