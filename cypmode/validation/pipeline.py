@@ -21,6 +21,14 @@ from cypmode.validation.constants import CYP3A4_SEQUENCE
 from cypmode.validation.structures import summarize_compound
 
 ROOT = Path(__file__).resolve().parents[2]
+CPU_WRAPPER = Path(__file__).resolve().with_name("boltz_cpu_fp32.py")
+
+
+def boltz_command(boltz_bin: str | Path, accelerator: str) -> list[str]:
+    """The start of the Boltz command: its executable, or on the CPU the Python of its environment with the float32 wrapper."""
+    if accelerator == "cpu":
+        return [str(Path(boltz_bin).with_name("python")), "-P", str(CPU_WRAPPER)]
+    return [str(boltz_bin)]
 
 
 def run_structural_validation(
@@ -101,7 +109,7 @@ def run_structural_validation(
     target_out_dir = Path(out_dir) / target
 
     command = [
-        str(boltz_bin),
+        *boltz_command(boltz_bin, accelerator),
         "predict",
         str(yaml_path),
         "--out_dir",

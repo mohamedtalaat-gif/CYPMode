@@ -3,7 +3,7 @@ source queue/lib.sh
 # The affinity step of the three base runs made again from the corrected SMILES (job 275) hit the memory cap of the guards (PYTORCH_MPS_HIGH_WATERMARK_RATIO=1.3: "ran out of memory, skipping batch"), so no
 # affinity file was written and the batch runner recorded the whole row of each of the three ligands as an error (checklist item "Affinity step of the corrected base runs", registered 2026-10-25 before this job
 # ran). The structure of each run exists and is not predicted again: the entries leave the checkpoint after the SHA-256 of their structure files is recorded, Boltz-2 is run again with --no-override (it skips the
-# finished prediction and runs only the missing affinity step) on the CPU, which has no memory cap, and a run whose retry does not finish is completed from its structure without the affinity, and the structure files are compared with the recorded digests afterwards. HELD BACK: the logs are named
+# finished prediction and runs only the missing affinity step) on the CPU, which has no memory cap, in float32 (cypmode/validation/boltz_cpu_fp32.py: the bf16-mixed precision that Boltz-2 fixes runs on one thread on the CPU and did not finish in 2 h 29 min), and a run whose retry does not finish is completed from its structure without the affinity, and the structure files are compared with the recorded digests afterwards. HELD BACK: the logs are named
 # affinity_retry_*.log, the digests are under final/.
 need_file cypmode/validation/affinity_retry.py
 need_file $OUT/structure_track_results.json
