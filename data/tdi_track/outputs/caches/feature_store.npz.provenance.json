@@ -13,7 +13,7 @@
     "AGPL-3.0-or-later"
   ],
   "cite_as": "Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode",
-  "commit": "45e17e45b4141737aaafcfc6495989bcc9dfad87",
+  "commit": "6b0505967c38e53c71ae190fb4dbf75f7f02c738",
   "generated_at": "2026-10-23T13:18:03Z",
   "command": [
     "cypmode/challenge/aux_experiments.py",

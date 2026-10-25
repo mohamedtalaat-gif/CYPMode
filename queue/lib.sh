@@ -61,6 +61,13 @@ cheap_candidates_settled() {
   if [ -f data/tdi_track/inputs/tabpfn_licence_accepted.txt ]; then need_settled 221_tabpfn_CYP3A4 222_tabpfn_CYP2D6 223_tabpfn_addition 249_tabpfn_chemeleon_CYP3A4 250_tabpfn_chemeleon_CYP2D6 251_tabpfn_chemeleon_addition; fi
 }
 
+# tree_committed: defers (exit 75) until every file is committed, leaving out the files that the audit writes itself (the list of tree_state in cypmode/audit/sections.py). Both audits of the final sequence (jobs 900 and 955)
+# count the working tree, and a count taken on an uncommitted tree describes a state that is not the one submitted.
+tree_committed() {
+  [ -n "$REPRODUCE" ] && return 0
+  python -c "import subprocess, sys; from cypmode.audit.sections import tree_state; sys.exit(0 if sum(tree_state(subprocess.run(['git', 'status', '--porcelain'], capture_output=True, text=True).stdout)) == 0 else 1)" || defer "the working tree is not committed"
+}
+
 # notebook_written: defers (exit 75) until every part and appendix of notebooks/PLAN.md has text. The notebook is written after the experiments have finished and the final numbers exist,
 # so the final audit (job 900) waits for it; scripts/reproduce_tdi.sh does not need the notebook.
 notebook_written() {

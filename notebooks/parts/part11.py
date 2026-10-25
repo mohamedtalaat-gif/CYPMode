@@ -44,9 +44,11 @@ SEQUENCE_FACTS = '''
 import re
 import yaml
 
-from cypmode.validation.build_input import CYS_MOTIF_PATTERN, find_coordinating_cysteine
+from cypmode.validation.build_input import CYS_MOTIF_PATTERN, find_coordinating_cysteine, heme_donor_atom
 
-input_yaml = yaml.safe_load(sorted((ROOT / "data/structure_track/inputs").glob("cyp3a4_OCNT-*.yaml"))[0].read_text())
+# The example input is the first, in alphabetical order, of the inputs whose ligand has a nitrogen that can reach the heme iron (a Type II donor), so that the restraint cell below has an atom to name.
+inputs_in_order = (yaml.safe_load(path.read_text()) for path in sorted((ROOT / "data/structure_track/inputs").glob("cyp3a4_OCNT-*.yaml")))
+input_yaml = next(candidate for candidate in inputs_in_order if heme_donor_atom(candidate["sequences"][1]["ligand"]["smiles"]) is not None)
 cyp3a4_sequence = input_yaml["sequences"][0]["protein"]["sequence"]
 cysteine_position = find_coordinating_cysteine(cyp3a4_sequence)
 signature = re.search(CYS_MOTIF_PATTERN, cyp3a4_sequence)
