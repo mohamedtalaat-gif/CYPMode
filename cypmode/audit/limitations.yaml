@@ -84,10 +84,11 @@
   area: candidates
   uses: []
   text: >-
-    Two families of Chemprop candidates were not run to the full design for a reason of compute: the two OpenADMET pretraining weights (MiniMol targets and the Novartis ADMET
-    surrogate; 80 tasks per variant and enzyme at about 37 minutes per task) were not run at all, and CheMeleon runs as a staged design (repeat 0 first, the other repeats only if a rule
-    written beforehand asks for it). A candidate that was screened on 5 folds and not continued, or not run, has no verdict: the report does not call it NOT MET, and the smallest gain that a
-    5-fold screen can certify is about one and a half times the smallest gain of the 15-fold design (see the design-floor figure). The code and the weight files are in the repository.
+    Two families of Chemprop candidates were run as a staged design under a rule written beforehand, for CYP3A4 only: CheMeleon was screened on 5 folds and not continued, because
+    its gain (+0.0035 AUC) was below the bar of the stage rule, and the two OpenADMET pretraining weights (MiniMol targets and the Novartis ADMET surrogate) passed the screen and were
+    run to the 15-fold gate, which they met. A candidate that was screened on 5 folds and not continued, or not run (CYP2D6), has no verdict: the report does not call it NOT MET, and
+    the smallest gain that a 5-fold screen can certify is about one and a half times the smallest gain of the 15-fold design (see the design-floor figure). The code and the weight
+    files are in the repository.
 - id: L13
   area: data
   uses: []
@@ -97,4 +98,10 @@
     evaluation yardstick (the test prevalence) and sets the call rate (a multiple of the prevalence). No label of any compound and no per-compound information from a board was used,
     and no submission was made to probe a label. A model without this step would call the positive rate of the training data (about one fifth for both enzymes) instead of about
     one third (CYP3A4) and one in seventeen (CYP2D6), which costs MCC mostly on CYP2D6.
-
+- id: L14
+  area: candidates
+  uses: [block_ensemble_coverage_pct, block_ensemble_copies, wide_ensemble_coverage_pct]
+  text: >-
+    The pocket block and the site model were tested with a conformer ensemble of 12 conformers within 5 kcal/mol of the lowest, which holds a member within 1.0 A of the crystal pose
+    for only {block_ensemble_coverage_pct}% of {block_ensemble_copies} crystal ligand copies; 300 conformers do so for {wide_ensemble_coverage_pct}%. Their negative verdicts are those of
+    models that mostly did not see the bound conformation of the ligand. A wider ensemble was not tried; repeating the two gates with one is a decision of the owner.

@@ -86,3 +86,36 @@ def test_the_batch_runner_passes_no_override_and_the_accelerator_to_the_pipeline
     with patch.object(sys, "argv", argv[:3]), patch.object(batch, "run_batch", fake_run_batch):
         batch._main()
     assert seen["override"] is True and seen["accelerator"] == "gpu"  # the defaults are the ones of every earlier run
+
+
+def test_complete_writes_the_structure_summary_without_the_affinity_only_for_runs_that_are_still_in_error(tmp_path, monkeypatch):
+    pytest.importorskip("Bio")
+    paths = build(tmp_path)
+    ar.prepare(**paths)  # A leaves the checkpoint; B (another error) and C stay
+    def summary(**extra):
+        return {"motif_nitrogen_distances": [], "coordinated": False, "closest_motif_nitrogen_distance_angstrom": None, "confidence_score": 0.9, **extra}
+
+    results = json.loads(paths["results_path"].read_text())
+    results["C"] = summary(affinity_probability_binary=0.4, affinity_pred_value=-0.5)
+    results["A"] = summary(affinity_probability_binary=0.7, affinity_pred_value=-1.0)  # the retry of A finished
+    results["D"] = {"error": "boltz predict failed"}
+    paths["results_path"].write_text(json.dumps(results))
+    digests = json.loads(paths["digest_path"].read_text())
+    digests["D"] = {}
+    paths["digest_path"].write_text(json.dumps(digests))
+    official = tmp_path / "official.csv"
+    official.write_text("Molecule_Name,SMILES\nA,CCO\nD,CCN\n")
+    seen = []
+
+    def fake_summary(folder, smiles, expect_affinity=True):
+        seen.append((folder.name, smiles, expect_affinity))
+        return summary()
+
+    monkeypatch.setattr("cypmode.validation.structures.summarize_compound", fake_summary)
+    names = ar.complete(paths["results_path"], paths["boltz"], paths["digest_path"], official)
+    assert names == ["D"] and seen == [("boltz_results_cyp3a4_D", "CCN", False)]
+    written = json.loads(paths["results_path"].read_text())
+    assert written["A"]["affinity_probability_binary"] == 0.7  # untouched
+    assert "error" not in written["D"] and "not computed" in written["D"]["affinity_note"]
+    assert paths["results_path"].with_suffix(".csv").exists()
+    assert ar.complete(paths["results_path"], paths["boltz"], paths["digest_path"], official) == []  # nothing left to complete

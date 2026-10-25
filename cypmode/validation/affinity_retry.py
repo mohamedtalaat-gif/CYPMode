@@ -10,6 +10,7 @@ table holds no structure summary (coordination, iron-nitrogen distance, confiden
 corrected SMILES (job 275, 2026-10-24 and 25); the checkpoint then skips the ligand on every later run, so nothing retried it.
 
 ``--prepare`` records the SHA-256 of the structure files of every run that failed in this way and removes its entry from the checkpoint (the original is kept beside the checkpoint).
+``--complete`` runs when the retry did not finish for a run (an error entry or none is left): it writes the summary of the structure without the affinity and records why the affinity is absent.
 ``--verify`` runs after ``python -m cypmode.validation.batch ... --no-override --accelerator cpu`` has made the missing step: it checks that the structure files are byte-identical to the recorded ones,
 that no row of the table is left in error, and prints the affinity of each retried ligand next to the one of the racemic run that was set aside. The structure is never predicted again by this procedure
 (``--no-override`` makes Boltz-2 skip a finished prediction and run only the missing step), so the poses that the final recipe worked with stay as they are.
@@ -31,6 +32,7 @@ FINAL = OUT / "cyp3a4" / "final"
 DIGESTS = FINAL / "affinity_retry_digests.json"
 BEFORE = FINAL / "structure_track_results.before_affinity_retry.json"
 SET_ASIDE_CHECKPOINT = OUT / "out" / "superseded_racemic" / "checkpoints" / "structure_track_results.json"
+OFFICIAL = Path("data/structure_track/inputs/structure_track_test_blinded.csv")
 AFFINITY_ERROR = "no affinity_*.json"
 
 
@@ -81,15 +83,51 @@ def unchanged(digest_path: Path = DIGESTS, boltz: Path = BOLTZ) -> dict[str, boo
     return {name: now[name] == files for name, files in recorded.items()}
 
 
+def complete(results_path: Path = RESULTS, boltz: Path = BOLTZ, digest_path: Path = DIGESTS, official: Path = OFFICIAL) -> list[str]:
+    """For every run recorded by ``prepare`` whose entry is missing or still an error, write the summary of its structure without the affinity (the structure is intact, only the affinity file is missing) and say why
+    the affinity is absent; returns their names. Runs whose retry finished are left as they are."""
+    import pandas as pd
+
+    from cypmode.validation.batch import to_dataframe
+    from cypmode.validation.structures import summarize_compound
+
+    recorded = json.loads(Path(digest_path).read_text())
+    results = json.loads(Path(results_path).read_text())
+    table = pd.read_csv(official)
+    smiles = dict(zip(table.Molecule_Name, table.SMILES, strict=True))
+    completed = []
+    for name in recorded:
+        if name in results and "error" not in results[name]:
+            continue
+        entry = summarize_compound(boltz / f"boltz_results_cyp3a4_{name}", smiles[name], expect_affinity=False)
+        entry["affinity_note"] = "not computed: the affinity step ran out of memory on the GPU and the retry on the processor did not finish"
+        results[name] = entry
+        completed.append(name)
+    if completed:
+        Path(results_path).write_text(json.dumps(results, indent=2) + "\n")
+        frame = to_dataframe(results, dict(smiles))
+        frame.to_csv(Path(results_path).with_suffix(".csv"), index=False)
+        try:
+            frame.to_parquet(Path(results_path).with_suffix(".parquet"), index=False)
+        except ImportError:
+            pass
+    return completed
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--prepare", action="store_true")
+    group.add_argument("--complete", action="store_true")
     group.add_argument("--verify", action="store_true")
     args = parser.parse_args()
     if args.prepare:
         names = prepare()
         print(f"AFFINITY RETRY {len(names)} runs to complete: {', '.join(names) or 'none'}")
+        return 0
+    if args.complete:
+        names = complete()
+        print(f"AFFINITY RETRY {len(names)} rows completed without the affinity: {', '.join(names) or 'none'}")
         return 0
     same = unchanged()
     for name, ok in same.items():
@@ -99,8 +137,10 @@ def main() -> int:
     for name in same:
         entry = results.get(name, {})
         racemic = old.get(name, {}).get("affinity_probability_binary")
-        print(f"  {name}: affinity probability {entry.get('affinity_probability_binary', float('nan')):.3f}, value {entry.get('affinity_pred_value', float('nan')):.3f}"
-              + (f" (the racemic run: {racemic:.3f})" if racemic is not None else ""))
+        if entry.get("affinity_probability_binary") is None:
+            print(f"  {name}: affinity not computed ({entry.get('affinity_note', 'no entry')})")
+            continue
+        print(f"  {name}: affinity probability {entry['affinity_probability_binary']:.3f}, value {entry['affinity_pred_value']:.3f}" + (f" (the racemic run: {racemic:.3f})" if racemic is not None else ""))
     failed = failed_rows()
     print(f"AFFINITY RETRY base table: {len(results)} rows, {len(failed)} in error" + (f" ({', '.join(failed)})" if failed else ""))
     return 0 if all(same.values()) and not failed else 1

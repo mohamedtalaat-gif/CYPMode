@@ -517,6 +517,13 @@ def structure(ctx: Context) -> Section:
         if f.exists() and f.stat().st_size:
             s.body.append(f"\n`{log}`\n\n```\n{f.read_text(errors='ignore').strip()}\n```")
     s.add("structure benchmark scores present", found, "no scored benchmark table found" if not found else "")
+    bias = LOGS / "conformer_bias.log"  # the check of the conformational bias (S8 c): the coverage of the bound state by the ensemble of the pocket block
+    if bias.exists():
+        text = bias.read_text(errors="ignore")
+        block = re.search(r"the ensemble of the block \(.*?\): a member within ([\d.]+) A of the crystal pose for (\d+)% of the (\d+) copies", text)
+        wide = re.search(r"a conformer within ([\d.]+) A of the crystal pose for (\d+)% of the copies", text)
+        if block and wide:
+            ctx.metrics.update(block_ensemble_coverage_pct=int(block.group(2)), block_ensemble_copies=int(block.group(3)), wide_ensemble_coverage_pct=int(wide.group(2)))
     return s
 
 

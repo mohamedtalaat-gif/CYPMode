@@ -289,6 +289,21 @@ def exploration_section() -> str:
     return "\n".join(lines)
 
 
+def ensemble_caveat(log: Path | None = None) -> str:
+    """The registered consequence of the conformer check (S8 c): when the ensemble of the pocket block holds a member within 1.0 A of the crystal pose for fewer than 80% of the crystal ligand copies, the
+    gates of the pocket block and of the site model are listed with that sentence, computed from the log of the check (empty when the check is missing or passes)."""
+    log = LOGS / "conformer_bias.log" if log is None else log
+    if not log.exists():
+        return ""
+    text = log.read_text(errors="ignore")
+    block = re.search(r"the ensemble of the block \(.*?\): a member within ([\d.]+) A of the crystal pose for (\d+)% of the (\d+) copies", text)
+    if not block or int(block.group(2)) >= 80:
+        return ""
+    share, copies = int(block.group(2)), int(block.group(3))
+    return (f"The rows of the pocket block (`aux_pocket_*`, `exploratory_pocket_*`) and of the site model (`aux_site_*`, `exploratory_site_*`) are verdicts of models tested with an ensemble of 12 conformers that holds a member within "
+            f"{block.group(1)} A of the crystal pose for {share}% of {copies} crystal ligand copies (`conformer_bias.log`), so that they missed the bound conformation of {100 - share}% of the crystal ligands; a wider ensemble was not tried.")
+
+
 def negative_results() -> str:
     gate = [(f, g, v) for f, g, v in gate_rows() if v == "NOT MET"]
     nulls = []
@@ -309,6 +324,8 @@ def negative_results() -> str:
         "## Gates NOT MET",
         "",
         table(gate, ["log", "gate", "verdict"]),
+        "",
+        ensemble_caveat(),
         "",
         "## Older comparisons that were not significant (paired corrected t, Holm)",
         "",

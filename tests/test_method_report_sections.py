@@ -47,3 +47,16 @@ def test_the_map_counts_every_verdict_of_the_ledger():
     section = report.exploration_section()
     assert f"In all {len(frame)} pre-registered verdicts in {frame['stem'].nunique()} families" in section
     assert "other" not in set(frame["kind"]), "a ledger family that no kind claims: add it to cypmode/audit/ledger_kinds.py"
+
+
+def test_the_ledger_carries_the_registered_caveat_when_the_ensemble_misses_the_bound_state(tmp_path):
+    log = tmp_path / "conformer_bias.log"
+    log.write_text("the ensemble of the block (12 conformers within 5 kcal/mol): a member within 1.0 A of the crystal pose for 12% of the 131 copies; median nearest RMSD 2.45 A\n")
+    caveat = report.ensemble_caveat(log)
+    assert "12% of 131 crystal ligand copies" in caveat and "88% of the crystal ligands" in caveat and "aux_site_*" in caveat
+
+
+def test_the_ledger_has_no_caveat_when_the_ensemble_covers_the_bound_state_or_the_check_is_missing(tmp_path):
+    covered = tmp_path / "conformer_bias.log"
+    covered.write_text("the ensemble of the block (12 conformers within 5 kcal/mol): a member within 1.0 A of the crystal pose for 83% of the 131 copies; median nearest RMSD 0.60 A\n")
+    assert report.ensemble_caveat(covered) == "" and report.ensemble_caveat(tmp_path / "missing.log") == ""
