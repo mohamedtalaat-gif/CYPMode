@@ -4,6 +4,9 @@
 
 """The architecture and exploration sections of the method report: present, numbered, and built from the ledger and the manifests."""
 
+import re
+
+import pandas as pd
 import pytest
 
 from cypmode.audit import method_report as report
@@ -27,6 +30,8 @@ def test_the_report_holds_the_architecture_and_the_exploration_before_the_result
     order = [text.index(h) for h in ("## 2. Data and the label rule", "## 3. Architecture of the two tracks", "## 4. Exploration: what was tried and with what result", "## 5. Scoring-set-aware yardstick")]
     assert order == sorted(order)
     assert "### 3.1 TDI track" in text and "### 3.2 Structure track" in text and "### 4.2 The accounting of the number of attempts" in text
+    named = set(pd.read_csv("data/structure_track/inputs/structure_track_test_blinded.csv")["Molecule_Name"]) & set(re.findall(r"OCNT-\d+", text))
+    assert not named, f"the report names ligands of the structure set: {sorted(named)}"  # the recipe is summarised without an entry per ligand
 
 
 @needs_outputs

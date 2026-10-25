@@ -13,6 +13,7 @@ Usage: python -m cypmode.audit.method_report [--check]
 """
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -78,6 +79,27 @@ def leaderboard_scores() -> str:
         "",
         table(rows, list(frame.columns)),
         "",
+    ])
+
+
+def recipe_summary(manifest_path: Path) -> str:
+    """The final recipe of the structure track in numbers and words, without any entry per ligand: the report names no blinded compound."""
+    if not manifest_path.exists():
+        return pending("job 180")
+    data = json.loads(manifest_path.read_text())
+    decision = data["decision"]
+    recipe = decision["recipe"]
+    levers = ", ".join(recipe["levers"]) if recipe["levers"] else "none"
+    return "\n".join([
+        (
+            f"restraint `{recipe['restraint']}`, selection `{recipe['selection']}`, {recipe['extra_per_ligand']} extra samples per ligand, levers: {levers}, OpenFold3 {'used' if recipe['openfold3'] else 'not used'}, "
+            f"expected-improvement allocation {'used' if recipe['ei_allocation'] else 'not used'}; {decision['estimated_hours']:.1f} hours of engine time were estimated before the runs."
+        ),
+        f"The archive `{Path(data['zip']).name}` (SHA-256 `{data['sha256'][:12]}`) holds {len(data['ligands'])} complexes and {len(data['posebusters_failures'])} of them fail a PoseBusters check.",
+        "",
+        "The reasons recorded with the recipe:",
+        "",
+        *[f"- {reason}" for reason in recipe["reasons"]],
     ])
 
 
@@ -456,7 +478,7 @@ def build_method_report() -> str:
         "",
         table([r for r in gate_rows() if r[1] and not re.match(r"CYP", r[1])], ["log", "gate", "verdict"]),
         "",
-        "Final recipe and zip: " + (manifest.read_text()[:1500] if manifest.exists() else pending("job 180")),
+        "Final recipe and zip: " + recipe_summary(manifest),
         "",
         "Force-field relaxation of the chosen poses: the gate on the poses of ligands with public crystal poses, then its use on the 20 submitted poses under the rule registered in `relax_final.py`:",
         "",
