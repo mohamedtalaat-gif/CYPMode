@@ -104,4 +104,4 @@
   text: >-
     The pocket block and the site model were tested with a conformer ensemble of 12 conformers within 5 kcal/mol of the lowest, which holds a member within 1.0 A of the crystal pose
     for only {block_ensemble_coverage_pct}% of {block_ensemble_copies} crystal ligand copies; 300 conformers do so for {wide_ensemble_coverage_pct}%. Their negative verdicts are those of
-    models that mostly did not see the bound conformation of the ligand. A wider ensemble was not tried; repeating the two gates with one is a decision of the owner.
+    models that mostly did not see the bound conformation of the ligand. A wider ensemble was not tried: the owner decided on 2026-10-25 not to run further experiments.
