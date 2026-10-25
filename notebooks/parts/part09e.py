@@ -58,6 +58,9 @@ assert acid_3a4 < 0.1 and azole_3a4 < base_rates["CYP3A4"] + 0.03 and azole_2d6 
 assert gain_tbutyl > 0 > gain_acid, "the text reads the direction of these two changes"
 n_groups_3a4, n_groups_2d6 = len(pair_tables["CYP3A4"]), len(pair_tables["CYP2D6"])
 gain_summary = pair_tables["CYP3A4"].reset_index()[["group", "pairs", "mean", "se"]].head(8).round(2)
+'''
+
+ATLAS_TABLE = r'''
 gain_summary
 '''
 
@@ -76,6 +79,7 @@ recall_donors, recall_non_donors = float(atlas_donors.recall.median()), float(at
 '''
 
 CELLS = [
+    code(ATLAS_FACTS, hide_input=True),
     md("""
 ## 9.15 Reading the pharmacophore on molecules: functional groups, structure-activity relationships and the pocket, in 2D and in 3D
 
@@ -87,7 +91,7 @@ CELLS = [
 
 **The functional groups of the table.** The table was written before any rate was looked at and is not changed: eighteen groups, each a SMARTS pattern (the pattern language of 2.1) with the families of features that it carries and, where the literature names one, why it matters for a cytochrome P450. The first figure takes each group in turn and asks how often the compounds that carry it are time-dependent inhibitors. For CYP3A4, {{=n_pool['CYP3A4']}} labelled compounds, of which {{=base_rates['CYP3A4']:.0%}} are inhibitors, and for CYP2D6, {{=n_pool['CYP2D6']}} compounds with {{=base_rates['CYP2D6']:.0%}}; the interval drawn on each rate is the **Wilson interval**, the range of values of a proportion that the counts do not exclude, which unlike the interval of a mean plus or minus two standard errors cannot leave the range from 0 to 1 when a group is rare.
 """),
-    code(ATLAS_FACTS),
+    code(ATLAS_TABLE),
     figure("pharm_functional_groups"),
     md("""
 **What the figure says.** The group with the highest rate on CYP3A4 is the methylenedioxyphenyl ring, with {{=mdp_3a4:.0%}} of {{=mdp_3a4_n}} compounds inhibiting (the base rate is {{=base_rates['CYP3A4']:.0%}}), and on CYP2D6 it is again the group with the highest rate, {{=mdp_2d6:.0%}} of {{=mdp_2d6_n}}. This is the textbook case of a **mechanism-based inactivator**: the enzyme oxidises the ring, the product is a carbene that binds the heme iron, and the enzyme is lost for as long as the complex lives. Thiophenes ({{=thiophene_3a4:.0%}} of {{=thiophene_3a4_n}} on CYP3A4) and furans are other groups that P450s turn into reactive intermediates, and the figure shows both above the base rate (the furans only just); terminal alkynes, a third such group, are too rare in the data to appear. At the other end, carboxylic acids are almost never inhibitors of CYP3A4 ({{=acid_3a4:.0%}} of {{=acid_3a4_n}}): CYP3A4 prefers neutral and basic compounds and an acid is held outside the pocket. The groups that bind the heme, the azoles and the pyridines, are *not* enriched ({{=azole_3a4:.0%}} of {{=azole_3a4_n}} on CYP3A4, {{=azole_2d6:.0%}} of {{=azole_2d6_n}} on CYP2D6): they inhibit by binding the iron, and a compound that does so is a **reversible** inhibitor whose inhibition is already counted in the direct arm that the label subtracts (1.8). The label of this challenge asks for the loss of activity that grows with time, which needs a chemistry that the heme binder alone does not supply. This is the reason why the heme-binding pharmacophore of 9.13 and 9.14 is a weak predictor of the label, and why a pharmacophore model for this track has to be read as a model of *who is inhibited*, not of *who is inactivated*.

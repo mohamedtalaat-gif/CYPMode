@@ -41,6 +41,9 @@ pocket_cache = pd.read_csv(ROOT / "data/tdi_track/outputs/caches/pocket_pharmaco
 pocket_n = len(pocket_cache)
 pocket_share_donor = float(pocket_cache["pp_cyp3a4_donor_best"].notna().mean())
 pocket_share_substrate = float(pocket_cache["pp_cyp3a4_substrate_best"].notna().mean())
+'''
+
+POCKET_TABLE = r'''
 pocket_table.round(4)
 '''
 
@@ -83,10 +86,14 @@ model_met = {m: [e for e in ("CYP3A4", "CYP2D6") if len(model_table[is_addition 
 model_stack_met = {m: [e for e in ("CYP3A4", "CYP2D6") if len(model_table[is_addition & (model_table["model"] == m) & (model_table["enzyme"] == e) & (model_table["gate, stacked"] == "MET")])] for m in ("site model", "hypothesis model")}
 control_rows = model_table[~is_addition]
 control_shares = [f"{r.model} on {r.enzyme}" for r in control_rows.itertuples() if r[4] > 0 and r[6] > 0 and r[5] < 0.05 and r[7] < 0.05]
+'''
+
+MODEL_TABLE = r'''
 model_table.round(4)
 '''
 
 CELLS = [
+    code(POCKET_FACTS, hide_input=True),
     md("""
 ## 9.13 The compound relative to the pocket
 
@@ -106,13 +113,14 @@ where $F_{\\max}$ is the largest value of the sum on the grid, so that the field
 
 **The test, and the control.** The block is added to the two deep boosted-tree candidates on feature sets A and A+fps (7.2), and the gate is the one of every addition: alone and inside the stack, corrected resampled t below 0.05 at both confidence cuts with a positive mean AUC difference, 3 repeats of 5 outer folds, and a replicate on 10 outer folds that must be met as well before the group can join the stack. Because the pocket is the whole point, each enzyme is also given the pocket of the *other* enzyme as a control that enters no gate: a gain that the control shares is not about the pocket.
 """),
-    code(POCKET_FACTS),
+    code(POCKET_TABLE),
     md("""
 The table gives, for each enzyme, the change in AUC when the block of its own pocket is added to the default stack and when the block of the other pocket is. The gate of the own pocket is **{{=', '.join(pocket_met) if pocket_met else 'not met for either enzyme'}}** (alone and stacked at both cuts{{=''.join([' for ' + e for e in pocket_met]) if pocket_met else ''}}); the stacked comparison alone is met for {{=', '.join(pocket_stack_met) if pocket_stack_met else 'neither enzyme'}}. {{=('A group that is met on 15 folds still has to be met on 10, and the final build reads that verdict, not this one.' if pocket_met or pocket_stack_met else 'A group that fails its gate is written down as a negative result and is not tuned until it passes: the representation was not changed after the first run, and nothing of it enters the final stack.')}}
 """),
     md("""
 *On what actually ran.* `cypmode/challenge/pocket_pharmacophore.py` builds the fields (`build_fields`), places the conformers (`score_poses`, `compound_columns`) and caches the block for every compound of both files (job `262_pocket_pharmacophore_extract`); the reference set of CYP2D6 is collected by `cypmode/validation/reference_ligands.py` with the builder that made the one of CYP3A4. The gated runs are the jobs `263_pocket_pharmacophore_CYP3A4` and `264_pocket_pharmacophore_CYP2D6`, which also run the control, and `265_pocket_pharmacophore_replicate` runs the 10-fold comparison only for an enzyme whose own gate was met. The placement is rigid and sees no protein beyond two refusal rules, the field is read at the nearest grid point and there are at most twelve conformers, so the block is a cheap proxy for where a compound could sit in the pocket and not a docking score; its tests are in `tests/test_pocket_pharmacophore.py`. The same extraction (job 262) also writes the six columns of the site model of 9.14, which are computed from the same poses. The CYP2D6 reference set has few distinct ligands, and any result for that pocket carries that limit. The ensemble of up to twelve conformers is drawn with the seed 42 (a seed of 0 returns the same conformer every time in the installed RDKit, which turned a first run into a run with one conformer per compound; that run is kept in the logs and is not a verdict), and {{=('it contains a conformer within 1.0 Å of the bound pose for only ' + str(ensemble_share) + '% of the crystal ligand copies (11.11), so every verdict of this section and of 9.14 is a verdict for compounds placed in their low-energy conformers, which the bound state often is not.' if not ensemble_ok else 'it contains a conformer within 1.0 Å of the bound pose for ' + str(ensemble_share) + '% of the crystal ligand copies (11.11).')}}
 """),
+    code(MODEL_FACTS, hide_input=True),
     md("""
 ## 9.14 Pharmacophore models: sites from the pocket, hypotheses from the ligands
 
@@ -144,7 +152,7 @@ The model keeps the 60 hypotheses of largest $\\chi^2_h$ among those with $\\lam
 
 **The test, the controls and the rule.** Each model is added to the two deep boosted-tree candidates on feature sets A and A+fps, and the gate is the one of every addition: alone and inside the stack, corrected resampled t below 0.05 at both confidence cuts with a positive mean AUC difference, 3 repeats of 5 outer folds, then a replicate on 10 outer folds that must be met as well before a group can join the stack. The site model of an enzyme is tested on that enzyme only, with the site model of the *other* enzyme as the control: a gain that the other pocket shares is not about the pocket. The hypothesis model is tested on both enzymes, with the same model fitted on **permuted labels** (the labels shuffled within the training rows before any step) as the control: a gain that survives the permutation is not about the hypotheses. Neither control enters a gate.
 """),
-    code(MODEL_FACTS),
+    code(MODEL_TABLE),
     md("""
 The table gives, for each model and enzyme, the change in AUC when its columns are added to the default stack, at the two confidence cuts, and for the control. The gate (alone and stacked, both cuts) is met for **{{=', '.join(f'{m} on {e}' for m, es in model_met.items() for e in es) if any(model_met.values()) else 'no model on either enzyme'}}**; the stacked comparison alone is met for {{=', '.join(f'{m} on {e}' for m, es in model_stack_met.items() for e in es) if any(model_stack_met.values()) else 'none'}}. {{=('A control that shares the gain (' + ', '.join(control_shares) + ') says the gain is not about the model.' if control_shares else 'No control shares a gain that is significant at both cuts.')}} {{=('A group that is met on 15 folds still has to be met on 10, and the final build reads that verdict, not this one.' if any(model_stack_met.values()) else 'A group that fails its gate is written down as a negative result and is not tuned until it passes: neither model was changed after the first run, and nothing of them enters the final stack.')}}
 """),

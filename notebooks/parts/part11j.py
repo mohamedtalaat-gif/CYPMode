@@ -96,6 +96,9 @@ zip_pass, n_zip_ok, n_zip = zip_line.group(1) == "PASS", int(zip_line.group(2)),
 file_line = re.search(r"STEREO CHECK official file has no unspecified stereo element: (PASS|FAIL)", check_text)
 file_pass = file_line.group(1) == "PASS"
 assert n_open_now == 0 and file_pass and zip_pass and n_zip_ok == n_zip == n_official  # a failing cell fails the build
+'''
+
+FACTS_SUMMARY = r'''
 print(f"{n_specified} of {n_official} official ligands carry stereo marks, {n_open_now} leave a centre open; {n_corrected} ligands corrected, {n_runs_set_aside} runs set aside ({n_old} poses, {n_old_other} of the other enantiomer); "
       f"new pools {n_new} poses, {n_new_right} with the official stereochemistry, {n_pool_valid_eligible} eligible; final zip {n_zip_ok} of {n_zip}")
 '''
@@ -120,6 +123,9 @@ n_retried_changed = verify_text.count("CHANGED")
 table_line = re.search(r"base table: (\d+) rows, (\d+) in error", verify_text)
 n_table_rows, n_table_errors = int(table_line.group(1)), int(table_line.group(2))
 assert n_oom == n_retried_unchanged == n_corrected and n_retried_changed == 0 and n_table_errors == 0 and n_table_rows == n_official  # a failing cell fails the build
+'''
+
+AFFINITY_SUMMARY = r'''
 print(f"{n_oom} affinity steps skipped for memory; {n_retried_unchanged} structures byte-identical after the missing step was made; table {n_table_rows} rows, {n_table_errors} in error")
 '''
 
@@ -148,6 +154,7 @@ $$V = (\\mathbf{a}-\\mathbf{p}) \\cdot \\big[(\\mathbf{b}-\\mathbf{p}) \\times (
 is a number; $\\cdot$ is the dot product of two vectors (a number) and $\\times$ their cross product (a vector perpendicular to both). $V$ does not change when the molecule is moved or turned and changes sign when it is reflected, since a reflection turns a right-handed set of three vectors into a left-handed one. RDKit reads the chirality of a pose from this sign (`AssignStereochemistryFrom3D`), and the function `reproduces_stereo` of `cypmode/validation/pose_stereo.py` then asks whether the SMILES of the compound, with its marks, matches the pose as a substructure query with the chirality switched on; a SMILES without marks is matched by either arrangement. The cell shows it on a public drug that is not part of the challenge.
 """),
     code(DEMO),
+    code(FACTS, hide_input=True),
     md("""
 The table shows that the two enantiomers have volumes of opposite sign, that a mirrored pose carries the other one and not the written one, and that the SMILES without marks accepts both (`demo_flips`, `demo_mirror_is_other` and `demo_marks_accept_both` are checked by the build). A protein is made of one hand of amino acids and its pocket is itself chiral, so the two enantiomers of a ligand do not fit it in the same way, like a left and a right hand in the same glove; a pose of the wrong enantiomer is a pose of another molecule.
 
@@ -155,7 +162,7 @@ The table shows that the two enantiomers have volumes of opposite sign, that a m
 
 **What was registered before the rerun.** (a) Every run of the three ligands is made again from the corrected SMILES, and the earlier runs are set aside unchanged, with the entries that made the batch runner skip them, so that no sample of these ligands derives from a racemic input (`cypmode/validation/stereo_rerun.py`: a run is stale when the SMILES of its input file is not the official one, as a canonical isomeric SMILES). (b) A pose is eligible for the submission only when it carries the official stereochemistry; when a ligand has no eligible valid pose the recipe stops with an error and does not fill the place with a pose of the other enantiomer (`final_recipe`, through the column `stereo_ok` that `pose_margins` writes for every pose of every pool). (c) The rest of the recipe is unchanged: the gates are not run again, and the choice among eligible poses is the registered one. (d) The audit and the pre-submission gate check that all 20 submitted poses carry the official stereochemistry (`cypmode/audit/pre_submission.py`), the relaxation of the final poses is rejected when it would break it (`relax_final`), the pharmacophore of the official ligands is read from the eligible poses only (`official_pharmacophore`), and a test asserts that the official file leaves no stereocentre open.
 """),
-    code(FACTS),
+    code(FACTS_SUMMARY),
     md("""
 **What the rerun gave.** The file now leaves {{=n_open_now}} of {{=n_official}} ligands with a centre open ({{=n_specified}} carry marks); {{=n_corrected}} ligands were corrected and {{=n_runs_set_aside}} of their runs set aside. Of the {{=n_new}} poses of their new pools, {{=n_new_right}} carry the official stereochemistry and {{=n_pool_valid_eligible}} are also valid under the scorer's call, so that {{=('the model keeps to the stereochemistry that it is given: every sample is of the right enantiomer' if n_new_right == n_new else 'the model does not keep to the stereochemistry that it is given, and the eligibility rule is what keeps the poses of the other enantiomer out')}}. The check of the final zip finds {{=n_zip_ok}} of {{=n_zip}} poses of the official stereochemistry, and the check of the file finds no open centre.
 """ ),
@@ -163,6 +170,7 @@ The table shows that the two enantiomers have volumes of opposite sign, that a m
     md("""
 Of the 20 poses chosen by the unchanged rule, {{=n_picks_changed}} are not the poses that the racemic runs gave; for those the ligand moved by {{=median_pick_rmsd:.2f}} Å at the median between the two picks (pocket-aligned, symmetry-aware), and the largest change of the iron-nitrogen distance of a Type II ligand is {{=largest_fe_change:.2f}} Å. A new draw from a model gives a different pose even from the same input, so a change of pose is the expected result of the rerun and not a finding; it is reported so that nothing in the notebook, the figures or the film quotes a pose of the racemic runs.
 """, held_back=True),
+    code(AFFINITY, hide_input=True),
     md("""
 **A second finding of the rerun: the affinity step of the three base runs.** The base run of a ligand is Boltz-2 with its second network, the **affinity head**, which takes the structure that was just predicted and returns a number for how strongly the ligand binds and the probability that it binds at all. The head is not part of the choice of the pose: the recipe works with the structures, and the runs of the recipe do not ask for it. It is kept in the base run because the table of the 20 ligands has always had its values. After the correction, the affinity step of all {{=n_oom}} base runs that were made again stopped with the message "ran out of memory, skipping batch": the processor that the model runs on (the graphics unit of this machine, called **MPS**) may allocate only a fixed share of its memory, which the guards of the queue lowered to a **watermark** of 1.3 times the recommended working set after the machine had run out of memory and restarted on 2026-10-07, and the affinity head needs more than that for these three. No affinity step had been run since then (the last affinity file of the project is of 2026-09-27), so the base runs of the correction were the first to meet the cap. Boltz-2 does not fail on this: it skips the step and exits normally.
 
@@ -172,7 +180,7 @@ What was done, registered before the job ran (`cypmode/validation/affinity_retry
 
 **What the first attempt on the central processor showed.** The first attempt was started as Boltz-2 starts any run, and it did not finish: after 2 h 29 min it was still on the first ligand and used one core. A sample of its stack (the program `sample`, 4 s) held the main thread in `at::native::cpublas::cpublas_gemm_impl`, the generic matrix product of PyTorch. The reason is in `third_party/boltz-main/src/boltz/main.py`: the trainer of every `predict` call of Boltz-2 is built with `precision="bf16-mixed"`, that is, the products are made in the 16-bit format bfloat16, and on this processor that format has no multi-threaded kernel, so the product runs on a single thread. The run was stopped. `cypmode/validation/boltz_cpu_fp32.py` now builds the trainer in the ordinary 32-bit format (float32) whenever the accelerator is the central processor, and the runs on the graphics unit are started as before. On a copy of the first ligand in the scratchpad, the affinity step then finished in 11 min 20 s on about two cores, with the five structure files byte-identical to the originals. The affinity values of such a run are float32 on the processor, those of the racemic run bfloat16 on the graphics unit, which is one more reason not to read their difference.
 """),
-    code(AFFINITY),
+    code(AFFINITY_SUMMARY),
     md("""
 The log of the check shows {{=n_retried_unchanged}} of {{=n_corrected}} structures byte-identical to the recorded ones and a table of {{=n_table_rows}} rows with {{=n_table_errors}} in error (the build checks it). The values of the affinity head are not used by any later step; they are in the table only so that it is complete.
 """),
