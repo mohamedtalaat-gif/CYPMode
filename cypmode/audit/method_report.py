@@ -239,7 +239,7 @@ def architecture_section() -> str:
     lines += [
         "7. **Calibration and calls.** Probabilities by isotonic regression on the inner out-of-fold scores (notebook 8.5). The number of positive calls is a multiple of the estimated prevalence of the scored population, the multiple in",
         f"   {{{', '.join(str(m) for m in build.RATE_MULTIPLIERS)}}} chosen by the highest mean outer-fold MCC (notebook 8.4)" + (": " + "; ".join(f"{iso} {r['call_rate_multiplier']}" for iso, r in manifest["isoforms"].items()) if manifest else "") + ".",
-        "8. **Two files.** A (hits-only CYP2D6 model) and B (the selection-aware CYP2D6 model, which multiplies P(label | hit) by a gate P(hit)); CYP3A4 is identical in both. The entry that is final is chosen by a rule declared in advance (`cypmode/challenge/selection_decision.py`, notebook 13.4).",
+        "8. **Two files.** A (hits-only CYP2D6 model) and B (the selection-aware CYP2D6 model, which multiplies P(label | hit) by a gate P(hit)); CYP3A4 is identical in both. The entry that is final is chosen by a rule declared in advance (`cypmode/challenge/selection_decision.py`, notebook 13.4); the rule gives file A, and file B is kept, with its SHA-256 in the manifest, to be scored on the test labels if the organisers publish them.",
         "",
         "Figures: `docs/figures/architecture/arch_tdi_pipeline-light.png` and `arch_nested_cv-light.png` (dark versions beside them).",
         "",

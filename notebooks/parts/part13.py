@@ -136,6 +136,8 @@ MD_13_1_B = """
 
 *It does not show how well the entries score.* The score that the portal gives an entry is a separate measurement on the hidden labels, and the limitations of 13.2 say that the offset between a cross-validated estimate and that score depends on the model. A cross-validated AUC on the training data is not the challenge score.
 
+*It does not show whether the selection-aware idea works.* The cross-validation says that the selection-aware file gains when the scored CYP2D6 set holds many compounds that the screen would never have promoted and loses when it holds none, and nothing identifies which case the test set is in. The entry is the hits-only file, and the second file is kept to be scored on the labels if the organisers publish them (13.4).
+
 *It does not show that the gains it kept are real.* The family of {{=n_family}} tests of Part IX has {{=n_raw_below}} with a raw p-value below 0.05 ({{=raw_below_names}}), and {{=holm_sentence}} (the smallest adjusted p-value is {{=smallest_holm:.2f}}). The neural pair passes its registered gate, with a raw p-value of {{=neural_p:.3f}} on CYP3A4 and a replicate on the 10-outer-fold plan, but its adjusted p-value is {{=neural_holm:.2f}}. The reading is that its gain is plausible and modest and has not been shown beyond what the number of attempts could produce.
 
 *It does not show that a pose is right.* The poses are valid; nobody outside the organisers knows how close they are to the crystal. On the benchmark of ligands with deposited crystals the first pick of the model is far from the crystal on average, and the limitation on structure in 13.2 gives the figure.
@@ -223,6 +225,12 @@ The rank blend of the two files has no file and its gate in Part IX is not met; 
 *On what actually ran.* The cell reads `data/tdi_track/outputs/comparisons/selection_decision.json`, which job 016 wrote from the cached predictions of the nested cross-validation; the notebook does not run the procedure.
 """
 
+MD_13_4_D = """
+**What the second file is for.** File B is not uploaded. It is kept, with its SHA-256 in the manifest and in the reports, as the alternative that was declared before any result existed (the selection-aware model of 9.1). The text of the challenge says that no ground-truth test data are unblinded until the challenge concludes. If the labels of the test set are published, both files are scored on them with the metric of the challenge: the MCC of file A, of file B and of the rank blend of the two on CYP2D6, and the share of never-promoted compounds in the scored set (the weight $w$ above), which is then measured and no longer estimated. The comparison is written here before it can be made. It tests the hypothesis of 9.1 on data that no choice of this project touched, whichever way it falls: if file B scores higher, the selection-aware model improved on the entry that the rule left out, which is a result of the exploration that the final entry did not collect; if it scores lower, it is a recorded negative result, with the regime in which it fails.
+
+This is how exploration and exploitation are kept apart. The organisers reward exploration over mere exploitation in their award for innovation. This project explores in the open (every idea has its rule and its verdict, the ones that failed included) and exploits only what a rule written beforehand supports, which is file A. The idea that the rule left out is not dropped: it is kept as a file with a hash, to be tested. The result of that comparison is added to the method report and to the release.
+"""
+
 MD_13_4 = """
 ## 13.4 Final results and the state of the submission files
 
@@ -261,4 +269,5 @@ CELLS = [
     md(MD_13_4_B),
     code(DECISION_FACTS, hide_input=True),
     md(MD_13_4_C),
+    md(MD_13_4_D),
 ]

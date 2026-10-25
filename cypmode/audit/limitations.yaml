@@ -61,10 +61,14 @@
   area: population
   uses: [population_region_points]
   text: >-
-    The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). A
-    selection-aware model gains a large amount of AUC when they are numerous and loses a little when they are rare (see
-    the sensitivity table), and the baseline's public metrics do not identify their share ({population_region_points}
-    grid points are consistent with them). Only a submission can settle this.
+    The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). The
+    selection-aware file gains AUC when they are numerous and loses both AUC and MCC when there are none, by more than
+    it gains at the call rate of the final build (the table of job 016 in section 7), and neither the label-shift
+    estimate nor the public metrics of the baseline identify their share ({population_region_points} grid points are
+    consistent with the metrics). The live board scores half of the test set and cannot separate the two files (job 016),
+    so the entry is the hits-only file and the selection-aware file is kept, with its SHA-256, to be scored on the test
+    labels if the organisers publish them: that comparison measures the share and tests the hypothesis on data that no
+    choice of this project touched.
 - id: L10
   area: calibration
   uses: [CYP2D6_ece, CYP3A4_ece, CYP2D6_raw_ece, CYP3A4_raw_ece]
