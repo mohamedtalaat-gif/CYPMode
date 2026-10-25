@@ -4,7 +4,7 @@
 
 """Part XI (first part): the structure track, what a structure is (11.1), how a co-folding model predicts one (11.2) and how its input is built (11.3)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 STRUCTURE_FILE = '''
 # What a predicted complex file holds. The file is the first, in alphabetical order, of the 20 structures of the final submission (a ligand in CYP3A4), in the layout the challenge asks for: the protein as chain A, the ligand as the residue
@@ -249,6 +249,7 @@ Two things can be read. The share of points in the left cluster stays at one hal
 
 *On what actually ran.* The cells above are toys written for the notebook; none runs a real co-folding model, which takes tens of minutes for one prediction. The real models run through `cypmode/validation/batch.py` (Boltz-2, 11.3) and `cypmode/validation/openfold3.py` (OpenFold3, 11.9). Boltz-2 and Boltz-1 are released under the MIT licence; the documentation of the program is the source of the step-scale statement and its default.
 """),
+    figure("struct_pairformer_triangle"),
     md("""
 ## 11.3 Building the input of a prediction
 

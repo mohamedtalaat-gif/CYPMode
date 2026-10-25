@@ -107,8 +107,20 @@ are added; each is catalogued in `gen/exploration.py` and drawn from the reposit
 - **The exploration-exploitation dial** (`ml_exploration_exploitation`, section 8.2): the outer AUC of a softmax blend of the cached candidates as the temperature moves from the best model to an equal-weight committee, against the logistic blend; the pre-registered softmax selector is not met on either enzyme.
 - `ml_gate_forest` now reads the logs of every later addition (a log that does not exist yet is skipped) and the replicate of the neural pair.
 
-Still to add once the queue has finished (each reads logs that do not exist yet): the pretrained models as a forest plot (TabPFN, Atom-JEPA, Monroe, CheMeleon stage 1), the PXR and Tox21 coverage maps,
-the stage-1 screen of CheMeleon against its rule, and the Foundry table of the film as a figure.
+## Added on 2026-10-26: the figure groups that the plan still lacked
+
+Each is catalogued like the others and drawn from the repository's own files (the generators are `gen/ml_more.py`, `gen/structure_more.py` and `gen/data_more.py`; the computations behind them are tested in `tests/test_figures.py`).
+
+- **Machine-learning concepts on real compounds** (Part IV): `ml_bias_variance` (4.1, the depth of a tree), `ml_bagging_boosting` (4.4), `ml_tanimoto_kernel` (4.5, the kernel matrix of six chemical series and its eigenvalues), `ml_backprop` (4.7, a small network trained by backpropagation and checked against finite differences),
+  `ml_message_passing` (4.8, what an atom of fluconazole knows after k rounds), `ml_attention` (4.8, scaled dot-product attention over a SMILES string), `ml_pca` (4.9, the descriptors and the CheMeleon embedding) and `ml_confusion_mcc` (4.10, the confusion matrix and the MCC of the default stack).
+- **Structure-track mechanics** (Part XI): `struct_pairformer_triangle` (11.2), `struct_rmsd_lddt` (11.4, RMSD and LDDT-PLI on a real pose against its crystal pose), `struct_ost_vs_project` (11.4, the LDDT-PLI of the project against OpenStructure), `struct_pose_pools` (11.8, the pool of every benchmark ligand),
+  `struct_relaxation_margin` (11.10, the margin and the agreement with the crystal pose before and after the relaxation) and, held back, `struct_official20_pools` (11.10, the pools of the 20 official ligands and the margin of the chosen pose before and after the relaxation).
+- **Data and experiments** (Parts II and IX): `data_nodirect_coverage` (2.4), `data_screen_vs_pic50` and `data_external_coverage` (2.8, the PXR and Tox21 panels), `ml_hit_gate_vs_screen` (9.1, the screen as the gate of the CYP2D6 hits), `ml_pretrained_forest`, `ml_chemeleon_stage1` and `ml_foundry_table` (9.4),
+  and `ml_permuted_control` (9.10, the negative control).
+- **Overview figures** (`gen/overview_more.py`): `arch_ledger_heatmap` (9.11, every idea by place and verdict), `arch_final_results` (8.7, the results on one page), `eng_commit_timeline` (12.4), `mol_butina_clusters` (3.6), `ml_evaluation_weights` (6.4), `ml_gate_flow` (6.7, the rule of the gate as a flow chart),
+  `ml_m0_m3_ablation` (7.2), `ml_calibration_methods` (8.5), `ml_selection_sensitivity` (9.1), `data_label_gaussian` (9.3, the label as a Gaussian around a threshold), `data_arm_correlations` (9.7), `struct_engine_comparison` (11.9), `eng_repository_map` (12.5) and, held back, `struct_official20_recipe` (11.10, the run of each final pose).
+- **Every catalogued figure is in the notebook.** The builder (`notebooks/build_notebook.py`) puts a figure that no part shows at the end of the section that the catalog names (the end of its part when the section does not exist), with the held-back flag for the figures of the HELD BACK block, so that a drawn figure can never be missing from the notebook.
+- **The animated preview of the README** (`docs/card/build_preview.py`, job 946): the loop of the public interactive page, drawn from the page by the headless Chrome of the film.
 
 ## Build
 

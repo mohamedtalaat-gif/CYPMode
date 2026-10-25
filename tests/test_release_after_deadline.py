@@ -38,6 +38,8 @@ def test_the_readme_shows_the_public_card_and_holds_the_full_card_back():
     ignore = Path(".gitignore").read_text()
     assert "docs/card/cypmode_card_full-light.png" in ignore and "docs/card/interactive/full/" in ignore
     assert "docs/card/cypmode_card-light.png" not in ignore and "docs/card/interactive/\n" not in ignore
+    assert "docs/card/cypmode_interactive_preview.gif" in public and Path("docs/card/cypmode_interactive_preview.gif").exists()  # the loop of the public page is part of the public card
+    assert "cypmode_interactive_preview" not in ignore and "cypmode_interactive_preview" not in held
 
 
 def test_the_commented_film_section_is_switched_on():

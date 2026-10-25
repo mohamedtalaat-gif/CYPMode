@@ -4,7 +4,7 @@
 
 """Part VI (second part): making the validation resemble the test (6.4) and comparing two models (6.5)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 SIMILARITY = '''
 # How close a validation compound is to the training compounds, against how close a test compound is. For the first outer fold of the plan: the highest Tanimoto similarity (section 3.2) of every outer-validation
@@ -243,6 +243,7 @@ What the yardstick does *not* do is as important. It cannot turn a cross-validat
 
 *On what actually ran.* `similarity_weights` and `SimilarityMatcher` (in `cypmode/challenge/validation_matching.py`) bin the nearest-training similarity (the bins `DEFAULT_BINS`, eight of them, from 0 to 1) and give each validation compound the ratio of the test share to the validation share of its bin, a bin that the validation rows never populate carrying no weight; `prior_weights` and `weighted_mcc` do the class correction and the weighted metric; `confident_weights` in `label_confidence.py` multiplies a weight function by the indicator that $|z| \\ge z_0$. `nested_evaluate` applies the product to the outer-validation rows and, for the selectors' own inner scores, to the inner rows. No label and no hand-set number enters the similarity weights; the target positive rate comes from the leaderboard estimate of section 2.10.
 """),
+    figure("ml_evaluation_weights"),
     md("""
 ## 6.5 Comparing two models: why folds are correlated, and the corrected resampled t
 

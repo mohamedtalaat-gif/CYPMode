@@ -60,3 +60,17 @@ def test_the_readme_links_the_film_through_its_poster_and_the_small_copy():
     assert "<!-- held-back:film" in text and "## The film" in text  # commented out until the challenge closes: scripts/release_after_deadline.py switches it on and "docs/video/cypmode_overview_web.mp4" in text and "docs/video/cypmode_overview_poster.png" in text
     assert Path("docs/video/cypmode_overview_poster.png").exists()
     assert "docs/video/cypmode_overview.mp4" not in text  # the 1080p original is over GitHub's 100 MB limit and is not linked
+
+
+def test_the_preview_loop_is_assembled_from_frames_with_the_chosen_width_and_loops_forever(tmp_path):
+    import sys
+
+    from PIL import Image
+
+    sys.path.insert(0, "docs/card")
+    import build_preview
+
+    frames = [Image.new("RGB", (800, 600), (30 * i, 40, 90)) for i in range(5)]
+    path = build_preview.assemble(frames, tmp_path / "loop.gif", width=200, step_ms=70)
+    loop = Image.open(path)
+    assert loop.n_frames == 5 and loop.size == (200, 150) and loop.info["loop"] == 0 and loop.info["duration"] == 70

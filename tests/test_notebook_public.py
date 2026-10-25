@@ -53,4 +53,7 @@ def test_the_per_ligand_table_of_the_relaxation_is_held_back_in_the_notebook():
     from notebooks.parts import part11h
 
     marked = [c for c in part11h.CELLS if c.get("held_back")]
-    assert len(marked) == 1 and "decision_table" in marked[0]["source"] and "show_table" in marked[0]["source"]
+    tables = [c for c in marked if "decision_table" in c["source"]]
+    assert len(tables) == 1 and "show_table" in tables[0]["source"]
+    # the two figures that draw the pools and the final poses of the official ligands are held back as well, and nothing else is
+    assert sorted(c["source"] for c in marked if c not in tables) == ['show_figure("struct_official20_pools")', 'show_figure("struct_official20_recipe")']

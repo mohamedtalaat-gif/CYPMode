@@ -4,7 +4,7 @@
 
 """Part IX (second part): frozen foundation-model embeddings (9.4), test-likeness weighting (9.5), floor-clipped arms (9.6), cross-isoform transfer of the arms (9.7), confidence-weighted training (9.8)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 CHEMELEON_FACTS = '''
 # The frozen CheMeleon block (cypmode/challenge/frozen_embeddings.py). CheMeleon is a Chemprop message-passing network pretrained to predict a large set of computed molecular descriptors; here it is used frozen: every molecule
@@ -164,6 +164,9 @@ The 64 components keep {{=variance_64:.1%}} of the variance of the 2,048 numbers
 
 *On what actually ran.* `cypmode/challenge/frozen_embeddings.py` (`extract` under the neural-network environment, the 64-component reduction `N_COMPONENTS`, the candidates `lgbm_chem_deep`, `lgbm_A+chem_deep` and `lgbm_A+fps+chem_deep`, the gate through `addition_experiment.py`), the cache `chemeleon_embeddings.npz`, and the logs `frozen_embeddings_extract.log` and `embeddings_<enzyme>.log`. The queue job is `050_frozen_embeddings`; `084_tdi_stack_reevaluation` repeats the stacked comparisons of this section and of 9.5 to 9.7 on the final plan. The weights are those of the Zenodo record named above, loaded into Chemprop's message-passing encoder with the hyperparameters stored beside them.
 """),
+    figure("ml_pretrained_forest"),
+    figure("ml_chemeleon_stage1"),
+    figure("ml_foundry_table"),
     md("""
 ## 9.5 Test-likeness weighting: importance weights from structures alone
 
@@ -209,6 +212,7 @@ The arms correlate strongly between some enzymes and not at all between others. 
 
 *On what actually ran.* `cypmode/challenge/xiso_transfer.py` (`fit_predict_xiso`, the family `lgbm_xiso`, the cross-fitting and the allowed-rows rule), `ISOFORM_ORDER` and the candidates `xiso_{A,A+fps}_deep` in `nested_runners.py`, and the log `xiso_transfer_<enzyme>.log`. The queue job is `076_xiso_arm_transfer`.
 """),
+    figure("data_arm_correlations"),
     md("""
 ## 9.8 Training on label confidence
 

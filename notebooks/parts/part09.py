@@ -4,7 +4,7 @@
 
 """Part IX (first part): additions that were tested. The tools for reading a gate (9.0), the selection-aware CYP2D6 model (9.1), SAR pair models and matched pairs (9.2), the label-process committee (9.3)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 GATE_TOOLS = '''
 # Reading the verdicts. Every experiment of this part writes a log whose lines have the same form (cypmode/challenge/addition_experiment.py): for each confidence cut-off z0, the stacked comparison of the default stack plus the
@@ -374,6 +374,8 @@ What follows from a gate that is not met is exactly what the project's rule says
 
 *On what actually ran.* `cypmode/challenge/population_experiment.py` (v1; the sets S0 to S3), `selection_aware_v2.py` (the cross-fitted promotion-pattern gate and the Heckman candidate), `population_share.py` (the band from the public baseline), `test_nonhit_share.py` (the adjusted count and classify-and-count at three thresholds, with a nearest-neighbour hit fraction as a sanity check), `hedged_blend.py` (the grid of regimes, the blend and the two rules), `library_blocks.py` (the panel block, found from the data and not from hand-typed identifiers), and, for the same population with physics columns, `population_physics.py` (9.11 and Part X). The logs read above are `population_panel_CYP2D6_r3.log`, `selection_aware_v2_CYP2D6.log`, `test_nonhit_share_CYP2D6.log` and `hedged_blend_CYP2D6.log`.
 """),
+    figure("ml_hit_gate_vs_screen"),
+    figure("ml_selection_sensitivity"),
     md("""
 ## 9.2 Making SAR explicit: pair models and compounds that differ by one change
 
@@ -424,4 +426,5 @@ The committee, alone, ranks about as well as the single members of 8.1: the best
 
 *On what actually ran.* `cypmode/challenge/committee_label_model.py` (`measurement_variance`, `committee_predict` with its three outputs `m`, `p`, `ei`, and the calibration gate), run through `addition_experiment.py` for the stacked gate; the log `committee_label_model_<enzyme>.log`; the family `arm_committee` of `nested_runners.py`. The calibration bar is the one of `calibration_experiment.py` (8.5).
 """),
+    figure("data_label_gaussian"),
 ]

@@ -4,7 +4,7 @@
 
 """Part XI (sixth part): choosing among poses (11.8)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 MBR_TOY = '''
 # Minimum Bayes risk selection, on the toy complex of 11.4. A pool of poses is given; each pose in turn is treated as the truth, and every other pose is scored against it with LDDT-PLI; the expected score of a pose is the mean over
@@ -140,4 +140,5 @@ None passes. The heme-frame prior has a mean correlation of {{=pose_terms_table.
 
 *On what actually ran.* `cypmode/validation/selection_validation.py` (`paired_gate`, `gates`, `evaluate_rules`), `pose_selection.py` (`lddt_pli_arrays`, `expected_lddt`, `select_pose`), `pose_pools.py` (`pairwise_lddt`, `mbr_pick`, `pool_disagreement`, `symmetric_lddt_pli`), `pose_rescoring.py` and `pose_rescoring_validation.py` (the prior and its test against decoys; `reference_ligands.py` supplies the references), `heme_frame_prior.py`, `pose_awareness.py`, `series.py`, `series_consensus.py`, `ei_sampling.py`, `mbr_lddt_reevaluation.py`, `lddt_to_crystal.py`, `ost_pools.py`, `ost_pool_gates.py` and `structure_benchmark_report.py` (the comparison of all rules); queue jobs `160_score_all_and_report`, `165_structure_gate_verdicts`, `168_pose_awareness`, `169_series_consensus`, `170_mbr_selection_validation`, `172_ei_sampling`, `173_mbr_lddt_reevaluation`, `175_heme_frame_prior`, `133_series_benchmark_runs`, `142_series_scoring`, `244_ost_pools_score` and `245_ost_pool_gates`. The logs are `selection_validation.log`, `mbr_lddt_reevaluation.log`, `heme_frame_prior.log`, `pose_awareness.log`, `series_consensus.log`, `ei_sampling.log` and `ost_pool_gates.log`.
 """),
+    figure("struct_pose_pools"),
 ]

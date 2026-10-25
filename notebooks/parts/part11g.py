@@ -4,7 +4,7 @@
 
 """Part XI (seventh part): OpenFold3, the second engine, the memory failure and its fix (11.9)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 OF3_RUN = '''
 # OpenFold3 as it was run for the benchmark of 11.5: the query of one ligand, the package and the weights, the time of every run (the log of job 150_openfold3_benchmark) and the size of each problem in tokens. Everything is
@@ -342,4 +342,5 @@ Two things are visible in the tables. Minimum Bayes risk chooses the pose that a
     md("""
 **The benchmark and its verdict.** The probe allowed the benchmark, and it was declared before any ligand was predicted (the checklist item S7 holds the declaration, with the rule and the gate). Job `260_bioemu2_benchmark` predicted the {{=bioemu_n}} ligands of the benchmark of 11.5 with three samples each, which took {{=bioemu_hours:.1f}} hours of the machine, and job `261_bioemu2_gate` scored the poses against the crystal poses with the yardstick of the other engines and ran the gate of this section with BioEmu2 as the added engine. The rank correlation of the errors of the first samples of the two engines is {{=bioemu_rho}}; the pose of minimum Bayes risk over the samples of both engines improves on the one over the Boltz-2 samples alone by {{=bioemu_gain}} Å of mean RMSD over {{=bioemu_n}} ligands (a negative number means that adding the engine made the mean worse), better for {{=bioemu_wins}} of them (Wilcoxon p {{=bioemu_p}}, worst drop-one mean {{=bioemu_drop}} Å): the gate is **{{=bioemu_gate}}**. {{=bioemu_consequence}}
 """),
+    figure("struct_engine_comparison"),
 ]

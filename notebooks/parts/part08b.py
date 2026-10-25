@@ -4,7 +4,7 @@
 
 """Part VIII (second part): turning scores into calls (8.4), calibration (8.5), the candidate files and their checks (8.6), the results with their uncertainty (8.7)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 CALL_RULES = '''
 # Two ways of turning the stack's scores into calls. The stack gives every compound a score. The classical way freezes a score threshold on the training part (the one that maximises the weighted MCC of the inner
@@ -328,6 +328,7 @@ The algorithm written here and the library agree to {{=pav_difference:.0e}}. The
 
 *On what actually ran.* `fit_calibrator` and `calibration_metrics` in `cypmode/challenge/calibration_experiment.py` (the run of the module is stored in the log `calibration.log`, which the notebook does not read: the numbers above are recomputed), `calibrated_probabilities` in `final_tdi_build.py` (the isotonic map fitted on the inner out-of-fold stack scores of the whole pool, applied to the blinded compounds' scores), and `sklearn.isotonic.IsotonicRegression` for the library check.
 """),
+    figure("ml_calibration_methods"),
     md("""
 ## 8.6 The candidate files, the checks they pass, and the manifest
 
@@ -365,4 +366,5 @@ What the number is, and is not. It is the expected quality of the procedure on c
 
 *On what actually ran.* `nested_evaluate` with `StackedLogit` and `BestSingle` (`cypmode/challenge/nested.py`), the weights of `confident_weights` and `SimilarityMatcher`, `corrected_resampled_t` and `plan_sizes` (`model_comparison.py`); the report of the build, `final_report.md`, holds the same AUC and MCC. The last cell reads `applicability_domain_compounds.csv` and `applicability_domain_bins.csv` from `data/tdi_track/outputs/final/`, written by `cypmode/challenge/applicability_domain.py` in queue job 096.
 """),
+    figure("arch_final_results"),
 ]

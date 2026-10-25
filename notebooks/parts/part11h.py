@@ -4,7 +4,7 @@
 
 """Part XI (eighth part): the final recipe, the pools, the margin, the relaxation and the archive (11.10)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 RECIPE = '''
 # The decision of the final structure recipe, read from its record (final/recipe.json, written by cypmode/validation/final_recipe.py in job 180_structure_final_recipe_run): the verdict of every gate that the recipe reads and the
@@ -263,4 +263,7 @@ All {{=n_structures}} structures pass all {{=n_checks_final}} checks, {{=n_below
 
 *On what actually ran.* `cypmode/validation/final_recipe.py` (`read_gates`, `decide`, `margin_candidates`, `select_pose`, and the constants of cost), `cypmode/validation/pose_margins.py` (the audit of every pool pose under the scorer's call), `cypmode/validation/official_posebusters.py` (the scorer's 22 checks and `MARGIN_FLOOR`), `cypmode/validation/relax.py` (the relaxation), `cypmode/validation/relax_gate.py` (the gate of job 218) and `cypmode/validation/relax_final.py` (the rule and the rebuild of the archive), `cypmode/challenge/structure_submission.py` (`write_deterministic_zip` and the conversion of a prediction to the portal's format), the tests `tests/test_relax_final.py`, and the queue jobs `179_requeue_final_recipe`, `180_structure_final_recipe_run`, `185_structure_recipe_update`, `192_structure_margin_aware_zip`, `218_relaxation_gate` and `243_structure_relaxation_final`. The environment of the relaxation is described in `environment/openmm-environment.yml`. The cells of this section read the records those jobs left; the one-dimensional relaxation and the small archives are written for the notebook. The force-field parameters are those of the Amber ff14SB, CHARMM and OpenFF 2.2.1 distributions, which the repository does not redistribute.
 """),
+    figure("struct_relaxation_margin"),
+    figure("struct_official20_pools", held_back=True),
+    figure("struct_official20_recipe", held_back=True),
 ]

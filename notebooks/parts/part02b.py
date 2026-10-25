@@ -4,7 +4,7 @@
 
 """Part II (second half): how the compounds were measured, how the test set differs from the training set, the other data sources, matching structures across sources, the leaderboard as data."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 PANEL_BLOCK = '''
 # The training file is not one library. Compounds were measured on several enzymes, and which enzymes a compound was measured on depends on where its number lies. library_blocks finds the
@@ -383,6 +383,10 @@ hold? How different is it from the challenge compounds? Could it leak the answer
 None of these sources measures time-dependent inhibition as a pre-incubation shift, which is what the challenge's label is made of (section 1.8). They measure how strongly a compound inhibits (or whether it does), and are therefore, at best, correlates of the label. Their use as inputs is the subject of section 7.7, and the reading of the numbers there must keep in mind the shift between the compounds of
 the sources and the challenge compounds, which the table above gives for each source as the number of compounds they share. The rest of the table is left to the experiments.
 
+"""),
+    figure("data_screen_vs_pic50"),
+    figure("data_external_coverage"),
+    md("""
 ## 2.9 Standardising structures: when two strings are the same compound
 
 > **Field:** Cheminformatics

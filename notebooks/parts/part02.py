@@ -472,6 +472,9 @@ The model trained with the extra rows ranks the compounds with both arms **worse
 The harm is the one expected: the rows teach the model that a potent TDI arm without a direct arm means "negative", which is false for the compounds that will be scored. A model evaluated on the mixed population would also have reported a number that
 describes the mixture and not the problem. This is one of the findings of the project that is not about a model at all, and it is recorded in the checklist and in the method report as the contaminated no-direct rows.
 
+"""),
+    figure("data_nodirect_coverage"),
+    md("""
 ## 2.5 Measurement noise: the standard deviation, the confidence limits and the confidence $z$
 
 > **Field:** Statistics

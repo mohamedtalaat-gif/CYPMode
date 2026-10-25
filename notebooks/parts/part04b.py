@@ -4,7 +4,7 @@
 
 """Part IV (second part): neighbours and kernels, regression for the two arms, neural networks."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 KERNEL = '''
 # The Tanimoto kernel on the 2334 compounds, and the two models built on it. K[i, j] is the Tanimoto similarity of compounds i and j (section 3.2). A kernel must be positive semi-definite: a quadratic
@@ -242,6 +242,9 @@ with several values of $k$ and $C$, including the score of each on the compounds
 The kernel has no negative eigenvalue (the smallest on this block is {{=smallest_eigenvalue:.2f}}, so the block is even positive definite), which is what a kernel must satisfy. The nearest-neighbour model with $k = 1$ reaches an AUC of {{=knn_one['AUC on the compounds it was fitted on']:.2f}} on the compounds it was fitted on, each one being its own nearest neighbour, and {{=knn_one['mean AUC on held-out compounds']:.3f}} on held-out ones: the memorising student again. The best of the neighbour models is {{=knn_best['model']}} ({{=knn_best['mean AUC on held-out compounds']:.3f}}),
 the best SVM reaches {{=svm_best['mean AUC on held-out compounds']:.3f}}. Both work from the similarity alone and know nothing of descriptors, which is why they differ in kind from the tree models and are worth keeping in a collection of models that is blended at the end (section 8.2): when different models make different mistakes, their blend can be better than any of them. The project's candidates are `knn_tanimoto_k5`, `k15`, `k40` and `svm_tanimoto_C0.3`, `C1`, `C3`.
 
+"""),
+    figure("ml_tanimoto_kernel"),
+    md("""
 ## 4.6 Regression for the two assay arms, and floor-clipping
 
 > **Field:** Machine learning · Pharmacology
@@ -283,4 +286,5 @@ Masked, the loss over the {{=int(present.sum())}} labels that exist is {{=masked
 cross-entropy and Adam. The second, in `cypmode/challenge/nested_runners_torch.py`, is the one that enters the nested evaluation: the input is the logarithm of one plus the Morgan counts together with quantile-normalised descriptors, the trunk has two layers of 1024 and 512 units, each followed by **batch normalisation** (every unit's activation is shifted and scaled to mean 0 and variance 1 over a mini-batch of 128 compounds, $\\hat a = (a - \\mu_B)/\\sqrt{\\sigma_B^2 + \\varepsilon}$, followed by a learned scale and shift, which makes training faster and steadier), a ReLU
 and **dropout** of 0.35 (during training every unit is switched off with probability 0.35, so that no unit can be relied on and the network cannot memorise; at prediction time all units are on, scaled to match). One head regresses the eight standardised potency endpoints (direct and TDI-arm pIC50 of four enzymes, masked where unmeasured) and one head classifies the label of the task; the loss is the sum of the masked squared error and the masked cross-entropy; the optimiser is AdamW (Adam with the weight decay applied to the weights directly and not through the gradient; Loshchilov and Hutter, 2019) with a one-cycle schedule of the learning rate that rises to $2\\times10^{-3}$ and falls again over 60 epochs; the scores of three seeds are averaged, and the candidate's score is either the label head or the predicted shift $\\hat t - \\max(\\hat d, 4)$. The network may learn from the compounds outside the plan's pool as well, whose arm values give it far more supervision than the label of the pool alone; it never sees an outer-validation row (Part VI). Torch and LightGBM cannot be imported into one process on the machine of this project (a recorded segmentation fault), so the networks run in a separate environment and write their predictions to the cache that the rest reads.
 """),
+    figure("ml_backprop"),
 ]

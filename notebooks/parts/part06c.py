@@ -4,7 +4,7 @@
 
 """Part VI (third part): why the project stopped using Tukey's HSD (6.6), the pre-declared gates and what a design could detect (6.7), and the checks that the split and the pipeline do not leak (6.8)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 SCORES_COUNT = '''
 # What the saved tables hold: for each experiment, the MCC of every variant on every (repeat, fold) of a repeated cross-validation, for each enzyme. The first of them (the ChemBERTa experiment) is counted here.
@@ -401,6 +401,7 @@ The replicate covers {{=n_replicate_groups}} additions: {{=n_replicated}} replic
 
 *On what actually ran.* `cypmode/challenge/addition_experiment.py` runs one addition through the gate (it fills the cache for the candidates if asked, builds the stacked and the alone comparisons, prints one line per cut-off, and ends with the verdict line that the ledger above counts); `cypmode/challenge/cached_candidates.py` defines the groups of candidates an experiment adds (`GROUPS`); `cypmode/challenge/model_comparison.py` supplies `compare_candidate_sets`, which this notebook replaces with explicit `nested_evaluate` calls so that the fold differences can be seen; `cypmode/challenge/replicate_verdict.py` is the module whose `verdict` function decided the replicate above. The designs are the plans of 6.3, built with `--outer 5` for the main design and `--outer 10` and the root `nested_f10` for the replicate; the queue jobs that build and fill them are described in section 12.4.
 """),
+    figure("ml_gate_flow"),
     md("""
 ## 6.8 Checking that a split is informative, the test-like hold-out, and the leakage controls
 

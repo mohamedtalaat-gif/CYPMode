@@ -14,20 +14,25 @@ compounds. The complete edition replaces it after the challenge.
 """
 
 import argparse
+import fnmatch
 import sys
 from pathlib import Path
 
 from notebooks.notebook_builder import (
+    FIGURES,
     PUBLIC_BANNER,
+    ROOT,
     build,
     contents_cell,
     coverage,
     coverage_cell,
     failures,
     field_problems,
+    figure_sections,
     glossary_problems,
     headings,
     md,
+    place_unshown_figures,
     public_problems,
     symbol_problems,
     unwritten_parts,
@@ -40,6 +45,14 @@ PUBLIC_OUT = Path(__file__).resolve().parent / "public" / "cypmode_notebook_publ
 
 def assemble(cells: list[dict]) -> tuple[list[dict], list[str]]:
     """The cells with the coverage appendix appended and the contents table filled in; also the repository files no section names."""
+    catalog = FIGURES / "CATALOG.md"
+    if catalog.exists():  # a figure that is drawn and that no part shows is put at the end of the section that the catalog names
+        from cypmode.explorer.data import held_back_patterns
+
+        patterns = [pattern.rstrip("/") for pattern in held_back_patterns()]
+        paths = {fid: next(iter(sorted(FIGURES.glob(f"*/{fid}-dark.png"))), None) for fid in figure_sections(catalog.read_text())}
+        held = {fid for fid, path in paths.items() if path is not None and any(fnmatch.fnmatch(path.relative_to(ROOT).as_posix(), pattern + "*" if not pattern.endswith("*") else pattern) for pattern in patterns)}
+        cells, _added = place_unshown_figures(cells, figure_sections(catalog.read_text()), held)
     mapping, missing = coverage(cells)
     full = [*cells, coverage_cell(mapping)]
     contents = contents_cell(full)

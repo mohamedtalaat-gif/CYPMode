@@ -4,7 +4,7 @@
 
 """Part IV (third part): message passing and attention, principal components and tabular in-context learning, the metrics."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 MPNN = '''
 # A directed message-passing network (the form Chemprop uses), forward pass only, with random weights, for the example compound. An atom starts as a vector of nine numbers (which of five elements it is,
@@ -279,6 +279,10 @@ the network is trained to predict them, which forces it to learn the grammar and
     md("""
 The SMILES of the example is cut into {{=n_tokens}} tokens of {{=n_vocabulary}} kinds; the attention matrix has one row of weights per token and every row sums to 1. The table shows the reason for the division: the variance of the dot product grows with the key length and the largest attention weight of an unscaled softmax approaches 1 for long keys, while the scaled scores keep a variance of 1 and a softer pattern.
 
+"""),
+    figure("ml_message_passing"),
+    figure("ml_attention"),
+    md("""
 ## 4.9 Principal component analysis, and tabular in-context learning
 
 > **Field:** Machine learning · Mathematics (linear algebra)
@@ -299,6 +303,9 @@ both files, which needs no label), and, in the form called *truncated SVD* (the 
 for a language model, and no weight changes when a new table arrives: "training" is only the reading of the context, which is why the method is called *in-context learning*. Since the networks are pretrained on a wide range of tables, they are strong on small tables, such as the 2300 labelled compounds of one task. The project's candidate `tabicl_svd` (`cypmode/challenge/nested_runners_torch.py`) gives it 128 components of the truncated SVD of the logarithm of the Morgan counts together with the quantile-normalised descriptors, with two
 ensemble members on the CPU. It runs in the separate torch environment, so the cell does not execute it; its result is one of the candidates of the nested evaluation (section 8.1).
 
+"""),
+    figure("ml_pca"),
+    md("""
 ## 4.10 Metrics: how a model is judged
 
 > **Field:** Statistics · Machine learning
@@ -341,4 +348,5 @@ over-confident (its probabilities are too extreme) and above 1 under-confident. 
     md("""
 For these out-of-fold predictions the Brier score is {{=brier:.4f}} against {{=brier_reference:.4f}} for the constant prediction (a skill of {{=brier_skill:.1%}}), the ECE is {{=ece_value:.3f}} and the calibration slope is {{=slope_value:.2f}}, and the project's own function gives the same ECE as the hand calculation. The raw probabilities of the model {{=calibration_verdict}} the project's rule (an ECE of at most 0.05 and a slope between 0.8 and 1.2), which is why calibration is a separate step of the final model (section 8.5). These are the numbers by which every model in the rest of the notebook is judged, always on compounds that the model did not see.
 """),
+    figure("ml_confusion_mcc"),
 ]

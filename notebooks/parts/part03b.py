@@ -156,6 +156,9 @@ The {{=len(subset)}} compounds fall into {{=n_clusters}} clusters at the similar
 large effect on a validation: with a random split, {{=share_random_06:.1%}} of the held-out compounds have a training compound at a similarity of 0.6 or more; keeping each cluster together reduces it to {{=share_group_06:.1%}}, as it should, since the clusters were defined by exactly that cut-off. The project uses both kinds of split (Part VI): the random one measures what a model does on compounds
 like those it has seen, which is what the test set resembles (section 2.7), and the clustered one measures what it does on a new series. A number is only meaningful together with the kind of split that produced it.
 
+"""),
+    figure("mol_butina_clusters"),
+    md("""
 ## 3.7 The feature store: all the blocks, computed once
 
 > **Field:** Software engineering · Cheminformatics

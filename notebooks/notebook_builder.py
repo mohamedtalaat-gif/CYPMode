@@ -83,6 +83,54 @@ def figure_captions() -> dict[str, tuple[str, str]]:
     return out
 
 
+def figure_sections(catalog_text: str) -> dict[str, str]:
+    """The notebook section that the catalog names for every catalogued figure (``- notebook section: 6.2``), in catalog order."""
+    out: dict[str, str] = {}
+    for block in re.split(r"\n### ", catalog_text)[1:]:
+        found = re.search(r"- notebook section: (\S+)", block)
+        if found:
+            out[block.split(":", 1)[0].strip()] = found.group(1)
+    return out
+
+
+def shown_figures(cells: list[dict]) -> set[str]:
+    """The ids of the figures that a cell shows."""
+    return {m.group(1) for c in cells if c.get("cell_type") == "code" for m in [re.search(r'show_figure\("([a-z0-9_]+)"', c["source"])] if m}
+
+
+def place_unshown_figures(cells: list[dict], sections: dict[str, str], held_back: set[str] = frozenset()) -> tuple[list[dict], list[str]]:
+    """Add a cell for every catalogued figure that no part shows, at the end of the section that the catalog names (the end of its part when the section does not exist).
+    Returns the cells and the ids that were added, so that a figure that is drawn can never be missing from the notebook."""
+    found = headings(cells)
+    where: dict[int, list[str]] = {}
+    added = []
+    for figure_id, section in sections.items():
+        if figure_id in shown_figures(cells):
+            continue
+        position = None
+        starts = [(lv, text, i) for lv, text, i in found if text.split()[0] == section]
+        if starts:
+            level, _text, start = starts[0]
+            later = [i for lv, _t, i in found if i > start and lv <= level]
+            position = later[0] if later else len(cells)
+            position = max(position, start + 1) if later and later[0] <= start else position
+        else:
+            part = section.split(".")[0]
+            inside = [(lv, text, i) for lv, text, i in found if re.match(rf"{part}\.\d+ ", text)]
+            if inside:
+                last = inside[-1][2]
+                after = [i for lv, _t, i in found if i > last and lv == 1]
+                position = after[0] if after else len(cells)
+        if position is None:
+            continue
+        where.setdefault(position, []).append(figure_id)
+        added.append(figure_id)
+    out = list(cells)
+    for position in sorted(where, reverse=True):
+        out[position:position] = [figure(i, held_back=True) if i in held_back else figure(i) for i in where[position]]
+    return out, added
+
+
 class Outputs:
     """The functions a code cell calls to put something other than printed text into its output.
 

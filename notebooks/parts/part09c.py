@@ -4,7 +4,7 @@
 
 """Part IX (third part): the neural pair (9.9), the other additions of the last days (9.10) and the ledger of Part IX (9.11)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 NEURAL_MEMBERS = '''
 # The members of the neural pair as the nested design holds them. The multitask network (cypmode/challenge/nested_runners_torch.py, fit_predict_multitask) reads the logarithm of the Morgan counts and the quantile-normalised
@@ -499,6 +499,7 @@ Two more uses of the rows that the pool leaves out. For CYP3A4, 1,249 compounds 
 
 **The control.** One more experiment of the family is not an addition: the **negative control** (`cypmode/challenge/permutation_control.py`, queue job `200_permutation_control`). The labels of the pool are permuted at random and the whole nested procedure is repeated; the outer AUC must be 0.5 and the MCC 0, because a model that is shown labels unrelated to the structures cannot rank them. The control is MET on both enzymes: at $z_0 = 1.0$ the permuted labels give an AUC of {{=perm['CYP3A4']['perm_auc']:.3f}} for CYP3A4 (range {{=perm['CYP3A4']['perm_lo']:.3f}} to {{=perm['CYP3A4']['perm_hi']:.3f}} over three permutations) and an MCC of {{=perm['CYP3A4']['perm_mcc']:+.3f}}, against {{=perm['CYP3A4']['real_auc']:.3f}} and {{=perm['CYP3A4']['real_mcc']:+.3f}} with the real labels, and {{=perm['CYP2D6']['perm_auc']:.3f}} and {{=perm['CYP2D6']['perm_mcc']:+.3f}} for CYP2D6, against {{=perm['CYP2D6']['real_auc']:.3f}} and {{=perm['CYP2D6']['real_mcc']:+.3f}}. It is the evidence that the nested pipeline carries no leak that survives a permutation of the labels: a leak (6.8) would show as an AUC above 0.5 on labels that carry no information.
 """),
+    figure("ml_permuted_control"),
     md("""
 ## 9.11 The ledger of the gates, and what the correction for the number of attempts leaves
 
@@ -528,6 +529,7 @@ The result is in the table. {{=reading_3a4}}; the registered outcome is {{=all_i
     md("""
 *On what actually ran.* `cypmode/challenge/multiplicity.py` (`collect` reads the stacked lines of every log with a gate line, `holm` adjusts), `cypmode/challenge/all_in_one.py` (the second look at the stack), the logs of `data/structure_track/outputs/cyp3a4/logs`, and the audit section that reports the same batch (`cypmode/audit/sections_extra.py`). The notebook reads and counts; it runs no experiment.
 """),
+    figure("arch_ledger_heatmap"),
     md("""
 ## 9.12 Why the ideas that did not join added nothing
 

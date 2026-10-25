@@ -4,7 +4,7 @@
 
 """Part VII (first part): the challenge's own baseline reproduced (7.1), the staircase of feature blocks M0 to M3 (7.2) and nearest-neighbour read-across features (7.3)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 BASELINE_DATA = '''
 # What the challenge tutorial's baseline is given. It reads the training file, keeps every compound that has a label for at least one of the two enzymes (load_tdi_training_data), and trains one LightGBM
@@ -271,4 +271,5 @@ What the staircase established is therefore not what the project of the day reco
 
 *On what actually ran.* `cypmode/challenge/tdi_ablation.py` builds the four feature columns (`add_ablation_features`; it also builds `m3_no_amine_features`, the set that the downstream modules were later switched to, and the module's comments record that for a time they silently kept the amine flag after the decision to drop it) and runs the staircase (`run_ablation`, which calls `cross_validate_fixed_seed` for each model). `cypmode/metrics/motifs.py` and `cypmode/metrics/amines.py` hold the two flags. The stored table is `ablation_m0_m3.csv`. The re-run with the pattern of the stored run replaces the pattern in memory for the length of one cell and restores it; no file of the repository is changed. This section too is on the mixed population of section 2.4.
 """),
+    figure("ml_m0_m3_ablation"),
 ]

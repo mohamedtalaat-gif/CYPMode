@@ -4,7 +4,7 @@
 
 """Part XI (second part): how a pose is scored (11.4)."""
 
-from notebooks.notebook_builder import code, md
+from notebooks.notebook_builder import code, figure, md
 
 SCORING_TOYS = '''
 # The three ideas behind the scores, on small examples that can be checked by hand. (1) The Kabsch algorithm finds the rotation that best superposes two sets of points (the singular value decomposition of the matrix of their
@@ -150,4 +150,6 @@ There are {{=n_checks_pb}} checks, in three groups ({{=group_table.iloc[0, 1]}} 
 
 *On what actually ran.* The cells above are the notebook's own, with the project's `pose_selection.lddt_pli_arrays` in the third part of the first. The agreement table is read from `ost_vs_ours.csv`, written by `cypmode/validation/ost_official.py` with `ost_worker.py` in the conda environment `ost` (OpenStructure 2.12.0), as the organisers' scorer calls it (`LDDTPLIScorer` and `SCRMSDScorer` with substructure matching). `cypmode/validation/bisy_rmsd.py` is the local BiSyRMSD of the definition above, used before OpenStructure was installed; `cypmode/validation/pose_comparison.py` is the symmetry-corrected ligand RMSD between two predictions of the same compound; `cypmode/validation/pose_validity.py` runs PoseBusters on a Boltz-2 output and `cypmode/validation/official_posebusters.py` runs it exactly as the organisers' scorer does, with the numeric margin of each check; `cypmode/validation/pose_margins.py` writes the margin of every pose of the pools. The queue job that measured the agreement is `207_ost_vs_ours`.
 """),
+    figure("struct_rmsd_lddt"),
+    figure("struct_ost_vs_project"),
 ]

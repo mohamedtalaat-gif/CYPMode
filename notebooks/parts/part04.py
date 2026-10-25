@@ -376,6 +376,9 @@ the best model is in between: the **bias-variance trade-off**. The cell measures
 The error on the training points falls steadily with the degree of the polynomial, while the error on new points is lowest at degree {{=best_degree}} and rises again: low degrees are dominated by bias, high degrees by variance. The three parts add up to the measured error of new points to within {{=decomposition_gap:.3f}}, the sampling error of the simulation. The practical lesson is that the score of a model on the data it was fitted on is
 not a measure of anything, and every number in this notebook that is meant as an estimate of performance is computed on compounds that the model did not see (Part VI).
 
+"""),
+    figure("ml_bias_variance"),
+    md("""
 ## 4.2 Decision trees: impurity, and the search for the best question
 
 > **Field:** Machine learning
@@ -468,4 +471,5 @@ The simulated variances agree with the formula: independent trees ($\\rho = 0$) 
 One tree reaches {{=tree_auc:.3f}}; bagging 150 of them gives {{=bag_auc:.3f}}, the random forest {{=forest_auc:.3f}} and the extremely randomised trees {{=extra_auc:.3f}}. The mean correlation between the predictions of two trees is {{=bag_corr:.2f}} when every column may be used at every split and {{=forest_corr:.2f}} with a tenth of the columns: looking at fewer columns does make the trees less alike, as the
 formula asks. Random thresholds do not lower it further ({{=extra_corr:.2f}}), so whatever advantage the extremely randomised trees have on these data is not an advantage of lower correlation between trees; the project keeps both kinds as candidates and lets the validation decide. The first row of the table is a single tree on the descriptors only, as in section 4.2. The project's candidates `rf_A` and `extratrees_A` are of this kind (400 trees, a tenth of the columns at a split, at least two compounds in a leaf).
 """),
+    figure("ml_bagging_boosting"),
 ]

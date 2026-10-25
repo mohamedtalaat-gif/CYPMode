@@ -5,4 +5,6 @@ source queue/lib.sh
 need_file docs/card/build_interactive_card.py
 need_file docs/card/vendor/3Dmol-min.js
 all_lower_done 946_interactive_card || defer "earlier jobs not finished"
-python3 docs/card/build_interactive_card.py > $L/interactive_card_build.log 2>&1
+python3 docs/card/build_interactive_card.py > $L/interactive_card_build.log 2>&1 || exit 1
+# the loop of the page for the README (docs/card/build_preview.py): drawn from the page that was just built, by the headless Chrome of the film
+python3 docs/card/build_preview.py > $L/interactive_card_preview.log 2>&1

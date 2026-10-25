@@ -28,6 +28,22 @@ Nested cross-validation as a grid. The compounds are cut into 5 outer folds; eac
 - data: data/tdi_track/outputs/nested
 - files: arch_nested_cv-light.svg, arch_nested_cv-light.png, arch_nested_cv-dark.svg, arch_nested_cv-dark.png
 
+### arch_ledger_heatmap: Every idea by place and verdict
+
+Every idea that was put to a pre-registered gate, one row per family and one column per place it was tried (CYP3A4, CYP2D6, the structure track): green where a verdict was MET, grey where every verdict was NOT MET, empty where the idea was not tried. 58 families, 6 cells with a MET verdict and 87 with none, grouped by the kind of idea. A family that is MET in one cell and NOT MET in the other is a result for one enzyme only. The count of verdicts behind the cells is the one count that the method report, the README and the film quote.
+
+- notebook section: 9.11
+- data: data/structure_track/outputs/cyp3a4/logs/*.log
+- files: arch_ledger_heatmap-light.svg, arch_ledger_heatmap-light.png, arch_ledger_heatmap-dark.svg, arch_ledger_heatmap-dark.png
+
+### arch_final_results: The final results on one page
+
+The results of the project on one page, all of them estimates on the training data and none a score on the hidden labels. Left and middle: the nested cross-validated AUC and MCC of the final stack of each enzyme next to the default stack, at the two confidence cuts of the labels (the MCC is at the rate transferred from the scored prevalence). CYP3A4: AUC 0.834 and MCC 0.476 at z0 = 1.0 (0.862 and 0.539 at z0 = 1.96), against 0.817 and 0.442 for the default stack; CYP2D6: AUC 0.731 and MCC 0.167 at z0 = 1.0 (0.754 and 0.204 at z0 = 1.96), against 0.731 and 0.167 for the default stack. Right: the structure track in numbers, 20 ligands, 20 poses passing all 22 PoseBusters checks and 20 with a margin of 0.8 or more, the relaxation adopted for 20 of 20 poses.
+
+- notebook section: 8.7
+- data: data/tdi_track/outputs/final/*_stack_choice.csv, data/tdi_track/outputs/final/manifest.json, data/structure_track/outputs/cyp3a4/final/manifest.json
+- files: arch_final_results-light.svg, arch_final_results-light.png, arch_final_results-dark.svg, arch_final_results-dark.png
+
 ## molecules
 
 ### mol_morgan_steps: The Morgan algorithm, radius by radius
@@ -53,6 +69,14 @@ Width of every feature block of the feature store, in columns (log scale), for t
 - notebook section: 3.7
 - data: data/tdi_track/outputs/caches/feature_store.npz
 - files: mol_feature_blocks-light.svg, mol_feature_blocks-light.png, mol_feature_blocks-dark.svg, mol_feature_blocks-dark.png
+
+### mol_butina_clusters: Butina clusters of the training compounds
+
+Butina clustering of 1500 random training compounds: compounds closer than a Tanimoto distance of 0.65 (similarity above 0.35) to the centre of a cluster join it, the centres being chosen greedily by the number of neighbours. Left: the sizes of the 914 clusters; 656 are single compounds and the largest holds 12. Right: eight members of the largest cluster, the chemical series that a random split of the data would spread over training and test, which is why the project also evaluates by similarity to the test structures and not by random folds alone.
+
+- notebook section: 3.6
+- data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
+- files: mol_butina_clusters-light.svg, mol_butina_clusters-light.png, mol_butina_clusters-dark.svg, mol_butina_clusters-dark.png
 
 ## biology
 
@@ -114,6 +138,30 @@ Number of training compounds with each assay arm measured, per isoform, and the 
 - data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
 - files: data_coverage-light.svg, data_coverage-light.png, data_coverage-dark.svg, data_coverage-dark.png
 
+### data_screen_vs_pic50: The single-concentration screen against the direct pIC50
+
+The organisers' single-concentration screen (every compound at 50 micromolar, the log2 fold change of the signal against the control: more negative is more inhibition) against the direct-inhibition pIC50 of the same compound from its dose-response curve, for the compounds that have both. Every point is a compound; the colour counts the compounds in each cell. The dashed line is the floor of the assay at pIC50 = 4, below which a potency is not measured reliably. CYP3A4: 1805 compounds with both, Spearman -0.94; CYP2D6: 1493 compounds with both, Spearman -0.83. The screen reads the same biology as the curve, so a compound that inhibits strongly in the screen has a high pIC50; but the relation is loose below the floor, and the screen is available only for the training compounds, so it could be used to train a block of the model and never as an input at prediction time (section 9.10): predicted from structure, it did not pass its gate.
+
+- notebook section: 2.8
+- data: data/tdi_track/inputs/official_extra/cyp_challenge/cyp-challenge-single-concentration-TRAIN.csv, data/tdi_track/inputs/official_extra/cyp_challenge/cyp-challenge-TRAIN_inhibition.csv
+- files: data_screen_vs_pic50-light.svg, data_screen_vs_pic50-light.png, data_screen_vs_pic50-dark.svg, data_screen_vs_pic50-dark.png
+
+### data_nodirect_coverage: The labelled compounds without a direct curve
+
+The labelled compounds that have no direct-inhibition curve. For CYP3A4, 1249 of 3584 labelled compounds were measured only in the TDI arm, and all of them are labelled negative (0% positive, against 32.7% of the 2335 compounds that have both arms), although their TDI-arm potency is high (median pIC50 5.4, against 4.6 for the compounds with both arms): the label rule needs the direct value to compute a shift, and without it the convention assigns a negative. The blinded test set was measured in both arms, so it has no such compounds; training on them and scoring on them mixes two populations, which is why they are excluded from the pool of CYP3A4 (section 2.4). For CYP2D6 only 4 labelled compounds are in this group. Left: the counts and the share of positives in each group; right: the TDI-arm potency of the two groups of CYP3A4; the dashed line is 4.301, the potency above which the organisers infer a positive for a compound with a direct pIC50 of 4 or less.
+
+- notebook section: 2.4
+- data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
+- files: data_nodirect_coverage-light.svg, data_nodirect_coverage-light.png, data_nodirect_coverage-dark.svg, data_nodirect_coverage-dark.png
+
+### data_external_coverage: How far the PXR and Tox21 panels cover the chemistry of the challenge
+
+How much of the chemistry of the challenge the two external panels cover: for each test compound (and for a random 1,500 of the training compounds), the Tanimoto similarity of its Morgan fingerprint to the most similar compound of the panel. PXR challenge (training file) (4139 compounds): median nearest-neighbour similarity of a test compound 0.48, 44.4% of the test compounds with a neighbour at 0.5 or more, 0 identical; 20.6% of the training sample are identical to a compound of the panel; Tox21 CYP screen (7671 compounds): median nearest-neighbour similarity of a test compound 0.31, 4.4% of the test compounds with a neighbour at 0.5 or more, 1 identical; 3.4% of the training sample are identical to a compound of the panel. The spike at 1 is the compounds that the training set and the panel share (the same library was tested in both); the test set shares almost none. A block that is trained on a panel can only help where the panel has neighbours, and both panels cover the test chemistry thinly, which is consistent with the verdicts of these blocks (NOT MET alone and inside the stack, section 9.10). Only identifiers and structures of the panels are read here, never a measurement of a test compound.
+
+- notebook section: 2.8
+- data: data/tdi_track/inputs/official_extra/pxr_challenge/pxr-challenge_TRAIN.csv, data/tdi_track/inputs/tox21_cache/tox21_cyp_compact.csv.gz, data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv, data/tdi_track/inputs/cyp-challenge-TEST-BLINDED.csv
+- files: data_external_coverage-light.svg, data_external_coverage-light.png, data_external_coverage-dark.svg, data_external_coverage-dark.png
+
 ### data_leak_guard: The files released by the organisers, checked against the blinded test set
 
 The files of the organisers' releases that a model could read, and what each shares with the blinded test set. Only the identifier column of each file was read to make this picture: no measurement of a test compound is looked at, not even for a figure. 5 compounds of the blinded set turn up in three of the 6 files (their identifiers are withheld, because the release rule forbids naming a blinded compound in a file that would be pushed); they are removed from every use of those files, and the organisers confirmed the overlap of the Octant release. The other files hold no test compound.
@@ -130,33 +178,63 @@ Every row of the public interim board publishes the accuracy, the precision and 
 - data: data/tdi_track/inputs/leaderboard_snapshots/interim_<isoform>_2026-10-04.csv
 - files: data_prevalence_recovery-light.svg, data_prevalence_recovery-light.png, data_prevalence_recovery-dark.svg, data_prevalence_recovery-dark.png
 
-## engineering
+### data_arm_correlations: How the assay arms of the four enzymes correlate
 
-### eng_queue_timeline: The job queue as a timeline
+The correlation (Spearman) between the pIC50 of the assay arms of the four enzymes, over the training compounds that have both values. The two arms of one enzyme (ringed) correlate at 0.91 to 0.99: a compound that inhibits an enzyme directly almost always inhibits it after pre-incubation too, which is why the label is a small difference of two large and correlated numbers. CYP1A2, CYP2C9 and CYP3A4 share inhibitors (the direct arms correlate at 0.38 to 0.69), while CYP2D6 correlates with none of them (at most 0.12 in absolute value). That is the basis of the cross-isoform transfer of section 9.7, which did not pass its gate, and the reason the transfer could not help CYP2D6, the enzyme that needed it.
 
-Each bar is one run of one job of the queue, from the runner's own log (168 jobs, 336 runs: 293 finished, 27 stopped and retried, 16 failed after their attempts). The runs add up to 217 hours of wall-clock time between 08 Oct and 25 Oct (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
+- notebook section: 9.7
+- data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
+- files: data_arm_correlations-light.svg, data_arm_correlations-light.png, data_arm_correlations-dark.svg, data_arm_correlations-dark.png
 
-- notebook section: 12.2
-- data: queue/logs/queue_stage.txt
-- files: eng_queue_timeline-light.svg, eng_queue_timeline-light.png, eng_queue_timeline-dark.svg, eng_queue_timeline-dark.png
+### data_label_gaussian: The label as a Gaussian around a threshold
 
-### eng_power_events: What the machine did while the queue ran
+The label as a threshold of two noisy numbers, drawn for four real CYP3A4 training compounds chosen by how far their shift is from the threshold. Each curve is the distribution of the shift s = t - max(d, 4) of one compound (the Gaussian with the mean and the standard deviation that its two assay arms give), the dashed line is the threshold log10 2, and the shaded area to its right is the probability that the compound is a time-dependent inhibitor. |z| = 0.00: shift +0.30 with a standard deviation of 0.05, P(positive) = 0.50; |z| = 1.00: shift +0.10 with a standard deviation of 0.21, P(positive) = 0.16; |z| = 1.96: shift -0.51 with a standard deviation of 0.41, P(positive) = 0.02; |z| = 3.50: shift -1.93 with a standard deviation of 0.64, P(positive) = 0.00. A compound whose shift sits within a standard deviation of the threshold is nearly a coin flip, and the official score almost certainly leaves such compounds out; the confidence z = (s - log10 2) / sd(s) is how the project decides which compounds count.
 
-Every time the machine entered sleep between 18 Oct and 25 Oct, by the cause its own power log gives: 372 x Maintenance Sleep, 166 x Sleep Service Back to Sleep, 5 x Clamshell Sleep, 5 x Software Sleep pid=611, 2 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-10-18, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
-
-- notebook section: 12.3
-- data: pmset -g log
-- files: eng_power_events-light.svg, eng_power_events-light.png, eng_power_events-dark.svg, eng_power_events-dark.png
-
-### eng_tests_by_module: The test suite by module
-
-Test functions per test module of the repository: 953 test functions in 143 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
-
-- notebook section: 12.5
-- data: tests/test_*.py
-- files: eng_tests_by_module-light.svg, eng_tests_by_module-light.png, eng_tests_by_module-dark.svg, eng_tests_by_module-dark.png
+- notebook section: 9.3
+- data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
+- files: data_label_gaussian-light.svg, data_label_gaussian-light.png, data_label_gaussian-dark.svg, data_label_gaussian-dark.png
 
 ## ml
+
+### ml_hit_gate_vs_screen: The CYP2D6 hit gate against the real screen
+
+Which compounds reached the time-dependent-inhibition assay on an enzyme, against what the single-concentration screen showed on that enzyme, for the 4375 compounds of the all-isoform panel. Left (CYP2D6): the histogram of the screen reading of the compounds that were taken to the TDI assay (red) and of those that were not (grey). The two groups hardly overlap: every compound taken on has a reading of -0.59 or less, and the compounds above -0.76 were never taken on (34.2% of the panel reached the assay, rank correlation -0.82 with the reading). So for CYP2D6 the hit is almost a threshold on a number that the test compounds do not come with, and the selection-aware model learns that threshold from structure (its gate). Right (CYP3A4): the same share of compounds taken on in each tenth of the reading (41.5% overall, rank correlation +0.15): for CYP3A4 the choice did not follow the CYP3A4 reading, because the hit expansion that built the test set prioritised the hits of CYP3A4, CYP1A2 and CYP2C9, which is the reason that the selection model matters for CYP2D6 and not for CYP3A4.
+
+- notebook section: 9.1
+- data: data/tdi_track/inputs/official_extra/cyp_challenge/cyp-challenge-single-concentration-TRAIN.csv, data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
+- files: ml_hit_gate_vs_screen-light.svg, ml_hit_gate_vs_screen-light.png, ml_hit_gate_vs_screen-dark.svg, ml_hit_gate_vs_screen-dark.png
+
+### ml_permuted_control: The negative control with permuted labels
+
+The negative control: the labels of the pool are permuted at random and the whole nested procedure, with every selection step, is run again; 3 permutations per enzyme. A pipeline that leaks information from the labels into its selection would still score above chance on shuffled labels. Here the AUC on permuted labels is 0.499 to 0.510 (the bars show the range over the permutations) against 0.751 to 0.828 on the real labels, and the largest distance from 0.5 is 0.010 (CYP3A4, z0 = 1.0). The control passes: nothing in the procedure scores above chance without a signal in the labels.
+
+- notebook section: 9.10
+- data: data/structure_track/outputs/cyp3a4/logs/permutation_control_<isoform>.log
+- files: ml_permuted_control-light.svg, ml_permuted_control-light.png, ml_permuted_control-dark.svg, ml_permuted_control-dark.png
+
+### ml_pretrained_forest: The pretrained models as one forest plot
+
+The pretrained and learned-representation models that were added to the stack, as one forest plot: for each, the change in the outer AUC of the stack when it is added (positive is better), at the two confidence cuts of the labels, on each enzyme, with the corrected p-value beside the point; a filled green point has p < 0.05 and a gain, an open grey point does not. The gate asks for both cuts, alone and inside the stack. Passing at both cuts: Chemprop from the two OpenADMET pretraining weights (staged) (CYP3A4), the neural pair (multitask network and plain Chemprop) in the stack (CYP3A4). Passing at one cut only, which the gate does not accept: Atom-JEPA readout in the stack (CYP3A4), multitask network in the stack (CYP3A4). The tabular foundation models (TabICL, TabPFN), the frozen embeddings (CheMeleon, Monroe, Atom-JEPA) and the readouts on them gave gains that the design cannot tell from zero; the smallest gain that the design certifies is about 0.01 (section 6.7).
+
+- notebook section: 9.4
+- data: data/structure_track/outputs/cyp3a4/logs/aux_*.log
+- files: ml_pretrained_forest-light.svg, ml_pretrained_forest-light.png, ml_pretrained_forest-dark.svg, ml_pretrained_forest-dark.png
+
+### ml_chemeleon_stage1: The stage-1 screen of the fine-tuned networks against its rule
+
+The first stage of the staged design of the fine-tuned networks (CYP3A4, repeat 0, 5 outer folds, confidence cut z0 = 1.0). The rule was written before any result, for a reason of cost (about 38 minutes per task): the second stage runs only if the mean gain in AUC reaches 0.005 and the stack is better in at least 4 of the 5 folds. CheMeleon, fine-tuned: a gain of +0.0035 AUC, better in 4 of 5 folds, so STOP; Chemprop from the two OpenADMET pretraining weights: a gain of +0.0152 AUC, better in 5 of 5 folds, so CONTINUE to the full design. A screen is not a gate and is not in the ledger: the network that stopped has no verdict, and the one that continued went on to the full 15-fold gate, which it met. The smallest gain that a 5-fold screen can certify is about one and a half times that of the 15-fold design, so a stop at this stage is an economy and not a negative result.
+
+- notebook section: 9.4
+- data: data/structure_track/outputs/cyp3a4/logs/stage1_chemeleon_CYP3A4.txt, data/structure_track/outputs/cyp3a4/logs/stage1_chemprop_foundation_CYP3A4.txt
+- files: ml_chemeleon_stage1-light.svg, ml_chemeleon_stage1-light.png, ml_chemeleon_stage1-dark.svg, ml_chemeleon_stage1-dark.png
+
+### ml_foundry_table: The pretrained models and what each brought
+
+The pretrained models of the project and what each one brought, the table of the film's Foundry scene as a figure: one row per model, one column per enzyme, each cell the change in the AUC of the stack at z0 = 1.0 with the corrected p-value and the verdict of the registered gate. Of the 18 cells, 1 are MET, 14 NOT MET, 1 only screened in the first stage of a staged design and 2 not run (the fine-tuned networks were not run on CYP2D6, where plain Chemprop is at chance, and a model dropped for its cost has no verdict). The rows are read from the same logs as the ledger.
+
+- notebook section: 9.4
+- data: data/structure_track/outputs/cyp3a4/logs/aux_*.log, data/structure_track/outputs/cyp3a4/logs/stage1_*.txt
+- files: ml_foundry_table-light.svg, ml_foundry_table-light.png, ml_foundry_table-dark.svg, ml_foundry_table-dark.png
 
 ### ml_design_floor: The smallest gain a gate can certify
 
@@ -246,6 +324,152 @@ Gradient boosting on a toy regression (120 noisy points of sin x, drawn with a f
 - data: synthetic regression with a fixed seed
 - files: ml_boosting_stages-light.svg, ml_boosting_stages-light.png, ml_boosting_stages-dark.svg, ml_boosting_stages-dark.png, ml_boosting_stages-anim-light.gif, ml_boosting_stages-anim-dark.gif
 
+### ml_bias_variance: Bias and variance: the depth of a tree on real compounds
+
+A decision tree of growing depth on 2334 real CYP3A4 compounds described by eight descriptors. Left: the AUC on the compounds the tree was fitted to (it keeps rising towards 0.95) and the five-fold cross-validated AUC (it peaks at depth 4 with 0.643 and then falls to 0.596): the gap between the two is the optimism of a model that has memorised its data. Right: the variance, measured as the mean standard deviation of the predictions of 20 trees fitted to bootstrap resamples of the same training fold, for the same held-out compounds; it grows from 0.033 at depth 1 to 0.346 at depth 12. A shallow tree is stable and too simple (bias); a deep tree fits the training data and changes with every sample (variance). Forests average the variance away and boosting reduces the bias one small tree at a time, which is what the next two figures show.
+
+- notebook section: 4.1
+- data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
+- files: ml_bias_variance-light.svg, ml_bias_variance-light.png, ml_bias_variance-dark.svg, ml_bias_variance-dark.png
+
+### ml_bagging_boosting: Bagging against boosting on real compounds
+
+Two ways of combining many trees, on the same 2334 compounds and eight descriptors. Left: five-fold cross-validated AUC against the number of trees. Bagging (a random forest: each tree sees a bootstrap resample, the trees are averaged) starts from one noisy deep tree (0.582) and climbs to 0.678 with 200 trees; boosting (each shallow tree is fitted to what the trees before it got wrong) starts from 0.629 and reaches 0.664. Right: why averaging helps: each pale dot is the prediction of one of 100 bootstrap trees for one of 25 held-out compounds (the spread of a single tree is large, mean standard deviation 0.32); the bold dot is the average, which has no such spread. Bagging reduces variance and works with deep trees; boosting reduces bias and works with shallow ones.
+
+- notebook section: 4.4
+- data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
+- files: ml_bagging_boosting-light.svg, ml_bagging_boosting-light.png, ml_bagging_boosting-dark.svg, ml_bagging_boosting-dark.png
+
+### ml_tanimoto_kernel: The Tanimoto similarity as a kernel
+
+The Tanimoto similarity of Morgan fingerprints used as the kernel of a support vector machine. Left: the kernel matrix of 48 real CYP3A4 compounds (six compounds with their seven nearest neighbours each), ordered so that similar compounds sit together: the bright blocks on the diagonal are chemical series and the dark remainder is how little unrelated compounds share; the strip beside the matrix marks time-dependent inhibitors in red. Right: the eigenvalues of the kernel matrix of 400 other compounds; the smallest is 2.06e-01, so no eigenvalue is negative beyond rounding: the Tanimoto similarity is a valid positive semi-definite kernel, which is what a support vector machine needs. A support vector machine on this precomputed kernel, fitted and scored by five-fold cross-validation on 1200 compounds, reaches an AUC of 0.662.
+
+- notebook section: 4.5
+- data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
+- files: ml_tanimoto_kernel-light.svg, ml_tanimoto_kernel-light.png, ml_tanimoto_kernel-dark.svg, ml_tanimoto_kernel-dark.png
+
+### ml_backprop: A small neural network trained by backpropagation
+
+A neural network with two inputs (MolLogP and TPSA, standardised), 6 hidden units with tanh and one sigmoid output, trained on real CYP3A4 compounds by gradient descent for 400 steps; the code is written out in the figure's module with the backward pass by hand. Left: the network, each line drawn thicker where its trained weight is larger (blue positive, red negative). Middle: the cross-entropy loss falls from 0.725 to 0.594 on the training fold. Right: the probability of time-dependent inhibition over the plane of the two descriptors, with the compounds; the AUC on the held-out fold is 0.638, close to what the depth-3 tree of figure 4.2 reached, because two descriptors carry little more. The backward pass is checked against finite differences: the largest relative difference between the gradient of backpropagation and the numerical gradient of every one of the 25 parameters is 1.3e-09.
+
+- notebook section: 4.7
+- data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv
+- files: ml_backprop-light.svg, ml_backprop-light.png, ml_backprop-dark.svg, ml_backprop-dark.png
+
+### ml_message_passing: Message passing: what an atom knows after k rounds
+
+Message passing on the graph of fluconazole (22 heavy atoms). In each round every atom collects the messages of its bonded neighbours and updates its own vector; after k rounds an atom's vector depends on exactly the atoms within k bonds. The panels follow one atom, the ring nitrogen that binds the iron of the enzyme (ringed): after 0 rounds it knows only itself, after 1 round 3 atoms, after 2 rounds 5 and after 3 rounds 6 of the 22 atoms (shaded). A graph network of depth three therefore describes each atom by its three-bond environment, the learned counterpart of the circular Morgan environments of section 3.1, and the vector of the whole molecule is a pooled sum of the atom vectors.
+
+- notebook section: 4.8
+- data: the structure of fluconazole (the ligand of 6MA7)
+- files: ml_message_passing-light.svg, ml_message_passing-light.png, ml_message_passing-dark.svg, ml_message_passing-dark.png
+
+### ml_attention: Self-attention over the tokens of a SMILES string
+
+Scaled dot-product self-attention over the 34 tokens of the SMILES string of fluconazole. Every token is turned into a vector (an embedding plus a sinusoidal code of its position), projected into a query and a key, and the weight that token i gives to token j is the softmax over j of the dot product of its query with their keys divided by the square root of the dimension (16). The projections here are random with a fixed seed: the figure shows the computation, not what a trained model attends to (a trained model, ChemBERTa, is used in section 7.9). Every row sums to one (1.000 to 1.000). Left: with the division; right: without it, the dot products grow with the dimension, the softmax saturates and each token puts almost all of its weight on one other token (the largest weight in a row is 0.12 on average with the division and 0.43 without); each panel is shaded up to its own largest weight.
+
+- notebook section: 4.8
+- data: the SMILES of fluconazole
+- files: ml_attention-light.svg, ml_attention-light.png, ml_attention-dark.svg, ml_attention-dark.png
+
+### ml_pca: Principal components of the descriptors and of the CheMeleon embedding
+
+Principal component analysis of real CYP3A4 compounds. Left: the share of variance carried by each of the first 20 principal components of the 200 standardised RDKit descriptors of 2334 compounds (bars) and the running total (line): the first component carries 12% and ten components carry 49%, so a few directions summarise many correlated columns. Middle: the compounds on the first two components of the descriptors, time-dependent inhibitors in red; the two classes overlap almost completely, which is why no model of the descriptors alone is accurate. Right: the first two components of the frozen CheMeleon embedding of the same compounds (the block of the feature store keeps the embedding as 64 principal components); the same picture, a little more structured, which is the information the embedding adds. Principal components are fitted without any label.
+
+- notebook section: 4.9
+- data: data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv, data/tdi_track/outputs/caches/feature_store.npz
+- files: ml_pca-light.svg, ml_pca-light.png, ml_pca-dark.svg, ml_pca-dark.png
+
+### ml_confusion_mcc: The confusion matrix and the MCC of the default stack
+
+The confusion matrix of the default stack at the share of calls that the final build uses, from the held-out outer folds of the 5-fold design, as shares of the weighted scored population (the evaluation weights of the final build, confident labels at z0 = 1.0). Each cell is the mean over the outer folds of a share of all compounds, and the MCC in the title is the mean of the MCC of the folds (the way the final build reports it); the Matthews correlation coefficient of a fold is (TP x TN - FP x FN) divided by the square root of the product of the four marginal totals, so that it is zero for a model that predicts one class for everything and uses all four cells. CYP3A4: top 40.3% called, accuracy 0.74, MCC 0.440 (the table of section 6 gives 0.442, where the rate is transferred inside each fold and not fixed), and calling everything negative would give accuracy 0.70 and MCC 0; CYP2D6: top 5.9% called, accuracy 0.93, MCC 0.191 (the table of section 6 gives 0.167, where the rate is transferred inside each fold and not fixed), and calling everything negative would give accuracy 0.95 and MCC 0. Accuracy rewards the majority class on an imbalanced label; the MCC does not, which is why it is the metric of the challenge.
+
+- notebook section: 4.10
+- data: data/tdi_track/outputs/nested/<isoform>/plan.npz, data/tdi_track/outputs/nested/<isoform>/cache, data/tdi_track/outputs/final/manifest.json
+- files: ml_confusion_mcc-light.svg, ml_confusion_mcc-light.png, ml_confusion_mcc-dark.svg, ml_confusion_mcc-dark.png
+
+### ml_evaluation_weights: The weights that make a fold resemble the test
+
+The weights that make a held-out fold resemble the scored population: a compound counts in proportion to its similarity to the blinded test structures, to the prevalence of its class in the test set, and only if its label is confident. For every outer fold of the 5-fold design the weights are scaled to a mean of one, and the figure shows their distribution for the positives and the negatives, with and without the shift of the prevalence. CYP3A4: the top tenth of the compounds carries 21% of the weight (with the prevalence shift) and 21% without it; CYP2D6: the top tenth of the compounds carries 38% of the weight (with the prevalence shift) and 36% without it. A weighted score is therefore an estimate for the scored population and not for the training set, and its effective sample size is smaller than the number of rows.
+
+- notebook section: 6.4
+- data: data/tdi_track/outputs/nested/<isoform>/plan.npz, data/tdi_track/outputs/nested/<isoform>/cache
+- files: ml_evaluation_weights-light.svg, ml_evaluation_weights-light.png, ml_evaluation_weights-dark.svg, ml_evaluation_weights-dark.png
+
+### ml_gate_flow: The gate: how a group joins a stack
+
+The rule by which an added group joins a stack, as a flow chart; the final build reads the verdict lines of the logs and applies exactly this and nothing else. A group is tested alone and inside the stack at both confidence cuts (z0 = 1.0 and 1.96), each time with the corrected resampled t against the stack without it; it must have p < 0.05 and a positive difference at both cuts, both alone and inside the stack. A group that was found after looking at the 15-fold results (neural, pocket_cyp3a4, pocket_cyp2d6, site_cyp3a4, site_cyp2d6, hypothesis) must in addition be replicated on ten outer folds, a design declared before any ten-fold number existed. A group that fails is written down with its numbers and is not tuned until it passes; the stack is chosen among the groups that pass.
+
+- notebook section: 6.7
+- data: cypmode/challenge/final_tdi_build.py
+- files: ml_gate_flow-light.svg, ml_gate_flow-light.png, ml_gate_flow-dark.svg, ml_gate_flow-dark.png
+
+### ml_m0_m3_ablation: The staircase M0 to M3
+
+The first staircase of features, from the run of 2026-09-25 (5-fold cross-validation, threshold 0.5, the population as first built): M0 the RDKit descriptors, M1 with the Type II motif flag, M2 with the trialkylamine flag, M3 with a Morgan fingerprint. MCC by stage, mean over the five folds: CYP3A4 M0 0.294, M1 0.298, M2 0.298, M3 0.300; CYP2D6 M0 0.049, M1 0.069, M2 0.038, M3 0.043. The steps are inside the spread of the folds, so the staircase shows what was tried and not a ranking; the M2 and M3 stages of this run kept the amine flag, which the specification later corrected (Tier 2), and the final model rests on none of these stages.
+
+- notebook section: 7.2
+- data: data/tdi_track/outputs/comparisons/ablation_m0_m3.csv
+- files: ml_m0_m3_ablation-light.svg, ml_m0_m3_ablation-light.png, ml_m0_m3_ablation-dark.svg, ml_m0_m3_ablation-dark.png
+
+### ml_calibration_methods: Raw, Platt and isotonic calibration
+
+How well the output of the stack can be read as a probability, for the three ways of turning a score into one (the raw output, Platt scaling and isotonic regression), measured on held-out folds. Left: the expected calibration error (the gap between the predicted and the observed rate of positives, binned); right: the calibration slope, which is 1 when a predicted probability of 0.3 means that 30% are positive. The gate asks for an error of at most 0.05 and a slope in [0.8, 1.2]; a method that meets it is filled. CYP3A4: raw ECE 0.043 slope 1.18, platt ECE 0.026 slope 1.08, isotonic ECE 0.019 slope 0.93; CYP2D6: raw ECE 0.359 slope -0.02, platt ECE 0.004 slope 1.30, isotonic ECE 0.005 slope 0.82. The raw CYP2D6 output is not a probability at all, and isotonic regression is the method that meets the gate for both enzymes, which is why the published probabilities pass through it.
+
+- notebook section: 8.5
+- data: data/structure_track/outputs/cyp3a4/logs/calibration.log
+- files: ml_calibration_methods-light.svg, ml_calibration_methods-light.png, ml_calibration_methods-dark.svg, ml_calibration_methods-dark.png
+
+### ml_selection_sensitivity: The selection-aware model against the share of never-promoted compounds
+
+How much the selection-aware CYP2D6 model gains depends on how many never-promoted compounds the scored set holds, a share that nobody knows for the test set. The horizontal axis is the weight w of such compounds in the scored population (0: none, 1: as many as in the training panel). Left: the outer AUC of the hits-only stack (S0) and of the three versions of the selection-aware model (S1 to S3, fitted as the training panel is) against w at the confidence cut z0 = 1.0, from the sensitivity runs: the hits-only stack leads when w is small and is behind S3 by 0.166 AUC when w = 1. Right: the deployment table of the registered decision (stacks fitted under w = 1.0, the top share of the final build called): the hits-only file against the selection-aware file and the rank blend; at w = 0.0 the AUC is 0.661, 0.517 and 0.542, at w = 1.0 it is 0.562, 0.728 and 0.720. The two files each win in one regime; the registered rule, which looks at the loss in the regime where the selection-aware file loses, gives the hits-only file.
+
+- notebook section: 9.1
+- data: data/structure_track/outputs/cyp3a4/logs/population_sensitivity_panel_CYP2D6_r3.log, data/structure_track/outputs/cyp3a4/logs/selection_decision_CYP2D6.log
+- files: ml_selection_sensitivity-light.svg, ml_selection_sensitivity-light.png, ml_selection_sensitivity-dark.svg, ml_selection_sensitivity-dark.png
+
+## engineering
+
+### eng_queue_timeline: The job queue as a timeline
+
+Each bar is one run of one job of the queue, from the runner's own log (168 jobs, 338 runs: 295 finished, 27 stopped and retried, 16 failed after their attempts). The runs add up to 217 hours of wall-clock time between 08 Oct and 25 Oct (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
+
+- notebook section: 12.2
+- data: queue/logs/queue_stage.txt
+- files: eng_queue_timeline-light.svg, eng_queue_timeline-light.png, eng_queue_timeline-dark.svg, eng_queue_timeline-dark.png
+
+### eng_power_events: What the machine did while the queue ran
+
+Every time the machine entered sleep between 19 Oct and 25 Oct, by the cause its own power log gives: 371 x Maintenance Sleep, 158 x Sleep Service Back to Sleep, 5 x Clamshell Sleep, 5 x Software Sleep pid=611, 2 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-10-19, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
+
+- notebook section: 12.3
+- data: pmset -g log
+- files: eng_power_events-light.svg, eng_power_events-light.png, eng_power_events-dark.svg, eng_power_events-dark.png
+
+### eng_tests_by_module: The test suite by module
+
+Test functions per test module of the repository: 984 test functions in 143 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
+
+- notebook section: 12.5
+- data: tests/test_*.py
+- files: eng_tests_by_module-light.svg, eng_tests_by_module-light.png, eng_tests_by_module-dark.svg, eng_tests_by_module-dark.png
+
+### eng_commit_timeline: The history of the repository
+
+The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-10-25: 195 commits on 10 days, the busiest day with 41 (2026-10-25). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
+
+- notebook section: 12.4
+- data: git log
+- files: eng_commit_timeline-light.svg, eng_commit_timeline-light.png, eng_commit_timeline-dark.svg, eng_commit_timeline-dark.png
+
+### eng_repository_map: The repository by folder
+
+The repository by top-level folder: the number of files that git tracks (1946 in all, 287 MB) and their size. The three folders with the most files are data (973), docs (317), cypmode (177). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
+
+- notebook section: 12.5
+- data: git ls-files
+- files: eng_repository_map-light.svg, eng_repository_map-light.png, eng_repository_map-dark.svg, eng_repository_map-dark.png
+
 ## structure
 
 ### struct_all20_gallery: Every submitted structure
@@ -255,6 +479,22 @@ All 20 structures of the submitted zip, the pocket of each predicted complex wit
 - notebook section: 11.10
 - data: data/structure_track/outputs/cyp3a4/final/_pdb_files, data/structure_track/outputs/cyp3a4/final/recipe.json
 - files: struct_all20_gallery-light.svg, struct_all20_gallery-light.png, struct_all20_gallery-dark.svg, struct_all20_gallery-dark.png
+
+### struct_engine_comparison: The three structure engines on the benchmark ligands
+
+The three structure engines on the same crystal-anchored benchmark ligands: Boltz-2 (the engine of the recipe), OpenFold3 and BioEmu2 (a diffusion model of conformational ensembles that runs here with its pure-PyTorch kernel). One dot per sample of a pool, at its RMSD to the crystal pose; the filled marker is the first sample and the bar the best of the pool. boltz: 2 of 10 ligands with the first sample within 2 A, the best of the pool within 2 A for 3; openfold3: 0 of 10 ligands with the first sample within 2 A, the best of the pool within 2 A for 0; bioemu2: 2 of 10 ligands with the first sample within 2 A, the best of the pool within 2 A for 3. The engine-consensus gate asks whether a second engine helps to choose among the poses of the first; it is NOT MET, and the final recipe uses Boltz-2 only.
+
+- notebook section: 11.9
+- data: data/structure_track/outputs/cyp3a4/benchmark_engine_pose_validation.csv, data/structure_track/outputs/cyp3a4/benchmark_engine_pose_validation_bioemu2.csv
+- files: struct_engine_comparison-light.svg, struct_engine_comparison-light.png, struct_engine_comparison-dark.svg, struct_engine_comparison-dark.png
+
+### struct_official20_recipe: The pool of each official ligand and the run of its final pose (held back)
+
+What the pool of each of the 20 official ligands is made of (stacked bars: the base run, the unguided run, the restrained run that carries the iron-nitrogen restraint, and the extra samples) and which kind of run the final pose came from (the ringed segment). The poses are chosen by the recipe: among the valid poses with a margin of at least 0.8, the model's own ranking, the restrained run being read first for a ligand with a Type II donor. The final poses come from the restrained run for 12, base run for 7, unguided run for 1 ligands. This figure shows predictions for the blinded compounds and is held back until the challenge closes.
+
+- notebook section: 11.10
+- data: data/structure_track/outputs/cyp3a4/final/official_posebusters_pools.csv, data/structure_track/outputs/cyp3a4/final/manifest.json
+- files: struct_official20_recipe-light.svg, struct_official20_recipe-light.png, struct_official20_recipe-dark.svg, struct_official20_recipe-dark.png
 
 ### struct_restraint_effect: The iron-nitrogen restraint, ligand by ligand
 
@@ -303,6 +543,54 @@ Diffusion on a real ligand: the 24 heavy atoms of OCNT-2395712, a donor ligand o
 - notebook section: 11.4
 - data: data/structure_track/outputs/cyp3a4/<ligand>/predictions, two Boltz-2 samples of one donor ligand
 - files: struct_diffusion_denoising-light.svg, struct_diffusion_denoising-light.png, struct_diffusion_denoising-dark.svg, struct_diffusion_denoising-dark.png, struct_diffusion_denoising-anim-light.gif, struct_diffusion_denoising-anim-dark.gif
+
+### struct_rmsd_lddt: RMSD and LDDT-PLI drawn on a real pose
+
+RMSD and LDDT-PLI on a real prediction. The ligand is PK9, the benchmark ligand whose best Boltz-2 sample is a correct placement and whose worst sample is furthest from the crystal pose (crystal entries 4D75 and 4D6Z). Top: the heavy atoms of the crystal ligand (open circles) and of the predicted ligand (filled), both seen along the two principal axes of the crystal ligand after the pocket of the prediction has been superposed on the crystal pocket (the C-alpha atoms within 10 A of the ligand, the superposition of BiSyRMSD); each dotted line joins an atom to its crystal counterpart, and the RMSD is the root of the mean squared length of these lines, taken over the symmetry-equivalent mappings of the ligand: 1.82 A for sample 2 and 4.82 A for sample 1. Bottom: LDDT-PLI needs no superposition. Every protein atom within 6 A of the crystal ligand is paired with every ligand atom; a point is one pair, with its distance in the crystal on the horizontal axis and in the prediction on the vertical axis; the bands are the four tolerances 0.5, 1, 2 and 4 A, and the score is the mean over the tolerances of the share of pairs inside the band: 0.72 for the best sample and 0.39 for the worst. A pose that fails the PoseBusters checks scores zero whatever its geometry.
+
+- notebook section: 11.4
+- data: data/structure_track/outputs/cyp3a4/benchmark_engine_pose_validation_unguided_boltz.csv, data/structure_track/outputs/cyp3a4/pose_pool_cache, data/structure_track/inputs/pdb_cache
+- files: struct_rmsd_lddt-light.svg, struct_rmsd_lddt-light.png, struct_rmsd_lddt-dark.svg, struct_rmsd_lddt-dark.png
+
+### struct_pose_pools: The pose pools of the benchmark ligands
+
+The pool of poses that Boltz-2 gives for each of the 10 crystal-anchored benchmark ligands (5 samples each, unguided): one dot per sample, at its RMSD to the crystal pose (vertical axis), ligands ordered by the RMSD of their first sample. The first sample, the model's own top choice, is the filled circle; the best sample in the pool is ringed in green, which no rule can see without the crystal; the diamond is the pick of minimum Bayes risk. The dotted line is 2 A, the usual limit of a correct placement. The first sample is within 2 A for 2 of 10 ligands, the best sample of the pool for 3, and the minimum-Bayes-risk pick for 3: the pool often holds a good pose that nothing available at prediction time can single out, which is the whole difficulty of the structure track and the reason every selection rule was put to a gate.
+
+- notebook section: 11.8
+- data: data/structure_track/outputs/cyp3a4/benchmark_engine_pose_validation_unguided_boltz.csv, data/structure_track/outputs/cyp3a4/selection_validation_outcomes.csv
+- files: struct_pose_pools-light.svg, struct_pose_pools-light.png, struct_pose_pools-dark.svg, struct_pose_pools-dark.png
+
+### struct_ost_vs_project: The LDDT-PLI of the project against OpenStructure
+
+The LDDT-PLI of the project against the LDDT-PLI of OpenStructure, the scorer of the organisers, for 80 predicted poses of crystal-anchored ligands (one point per pose; the line is equality). The two rank the poses almost the same way overall (Spearman 0.987; registered bar 0.9) but the local value differs from the official one by 0.066 on average (bar 0.05), and of the pairs of poses of one ligand 77.3% are ordered the same way by both (bar 90%); the agreement gate is therefore not met, and the structure gates were repeated with the official yardstick (section 11.8). The local measure follows the definition of the official one but differs from it in details of the protein atoms and ligand atoms that enter the score, which is the likely source of the offset.
+
+- notebook section: 11.4
+- data: data/structure_track/outputs/cyp3a4/ost_vs_ours.csv
+- files: struct_ost_vs_project-light.svg, struct_ost_vs_project-light.png, struct_ost_vs_project-dark.svg, struct_ost_vs_project-dark.png
+
+### struct_relaxation_margin: Pose margins and agreement before and after the relaxation
+
+The force-field relaxation of the ligand in the frozen pocket, on 90 Boltz-2 poses of 30 crystal-anchored ligands. Left: the smallest relative distance between the ligand and the receptor (the margin of the scorer's PoseBusters call: the check fails below 0.75 and the project calls a pose safe from 0.8), before and after the relaxation, for the 73 poses that pass the checks both times; the share of poses passing all 22 checks rises from 81.1% to 98.9%, and the median margin from 0.847 to 0.893. Right: the LDDT-PLI against the crystal pose before and after, for the 73 poses that have both: the relaxation moves the ligand by 0.46 A at the median and leaves the agreement with the crystal pose unchanged on average (change +0.0035).
+
+- notebook section: 11.10
+- data: data/structure_track/outputs/cyp3a4/relaxation_gate_poses.csv
+- files: struct_relaxation_margin-light.svg, struct_relaxation_margin-light.png, struct_relaxation_margin-dark.svg, struct_relaxation_margin-dark.png
+
+### struct_pairformer_triangle: The triangle update of the pair representation
+
+The triangle update of the Pairformer, the step of a co-folding model that makes its picture of the distances between positions consistent. Left: three atoms of fluconazole and their real distances, d(i,j) = 1.42 A, d(i,k) = 2.34 A and d(k,j) = 1.48 A; the triangle inequality d(i,j) <= d(i,k) + d(k,j) holds (1.42 <= 3.82), so what is known about the pairs (i,k) and (k,j) limits the pair (i,j). Middle: the pair state of the first 7 atoms, the real distance of each pair spread over 8 channels (shown as the sum of the channels). Right: the same state after one outgoing triangle update, in which the entry (i,j) is rebuilt from the products of the entries (i,k) and (j,k) over every third position k, with gates and a normalisation; the weights are random with a fixed seed, because the figure shows the computation and not a trained model. Relabelling the positions changes the result by 4e-16, which is rounding: the update has no preferred order of positions.
+
+- notebook section: 11.2
+- data: the structure of fluconazole (the ligand of 6MA7)
+- files: struct_pairformer_triangle-light.svg, struct_pairformer_triangle-light.png, struct_pairformer_triangle-dark.svg, struct_pairformer_triangle-dark.png
+
+### struct_official20_pools: The pose pools of the official ligands (held back)
+
+The pools of poses of the 20 official ligands under the scorer's own PoseBusters call: 200 poses in all, 176 of them passing the 22 checks and 136 passing with a margin of at least 0.8. Left: for every ligand, how many poses of its pool fail a check (red), pass with a small margin (gold) and pass with a safe margin (green). Right: the margin of the pose that the recipe chose, before the force-field relaxation (open circle) and after it (filled), for the same ligands in the same order; the dotted lines are the limit of the check (0.75) and the floor of the project (0.8); the relaxation raises the margin for 20 of 20 ligands. This figure shows predictions for the blinded compounds and is held back until the challenge closes.
+
+- notebook section: 11.10
+- data: data/structure_track/outputs/cyp3a4/final/official_posebusters_pools.csv, data/structure_track/outputs/cyp3a4/final/relaxation/decisions.csv
+- files: struct_official20_pools-light.svg, struct_official20_pools-light.png, struct_official20_pools-dark.svg, struct_official20_pools-dark.png
 
 ### struct_conformer_window: Does a low-energy ensemble contain the bound conformation?
 
