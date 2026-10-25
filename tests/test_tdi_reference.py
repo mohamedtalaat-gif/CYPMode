@@ -25,7 +25,7 @@ def test_tdi_positive_uses_the_challenge_threshold():
 
 
 def test_motif_screen_misses_the_non_azole_tdi_inhibitors():
-    """Real, honest finding: 3 of the 6 real TDI-positive drugs here (via
+    """Finding: 3 of the 6 real TDI-positive drugs here (via
     tertiary-amine/macrolide mechanisms) carry no Type II motif at all --
     this screen was only ever built to catch azole/pyridine/thiazole heme
     coordination, not every MBI route. See README's Scope and limitations.

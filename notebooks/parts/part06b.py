@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Part VI (second part): making the validation resemble the test (6.4) and comparing two models honestly (6.5)."""
+"""Part VI (second part): making the validation resemble the test (6.4) and comparing two models (6.5)."""
 
 from notebooks.notebook_builder import code, md
 
@@ -206,7 +206,7 @@ CELLS = [
 
 > **Field:** Statistics · Cheminformatics
 
-*Where this section sits:* the nested construction of 6.3 is honest about *whether* a choice sees its test rows. It says nothing about *which* rows are the test. The score of the challenge is computed on 750 blinded compounds that are not a random sample of the training file: section 2.7 showed how they differ, and section 2.10 how many of them are positives. This section turns those differences into a **yardstick**, a way of weighting the outer-validation rows so that the score measures what the challenge will measure. Every outer score of Parts VII to XI is computed with it.
+*Where this section sits:* the nested construction of 6.3 keeps account of *whether* a choice sees its test rows. It says nothing about *which* rows are the test. The score of the challenge is computed on 750 blinded compounds that are not a random sample of the training file: section 2.7 showed how they differ, and section 2.10 how many of them are positives. This section turns those differences into a **yardstick**, a way of weighting the outer-validation rows so that the score measures what the challenge will measure. Every outer score of Parts VII to XI is computed with it.
 
 **Why the validation rows are weighted.** Suppose a model is better on compounds close to the training set and worse on compounds far from it, as read-across models are (section 7.3). A random validation fold has some mixture of close and far compounds, the blinded test set has another, and the score of the model on the fold is the wrong average for the test. The remedy is **importance weighting**: give every validation compound a weight $w$ so that the weighted validation set has the same mixture as the test set. For a single property that is split into bins, with $p_b$ the share of the validation compounds in bin $b$ and $q_b$ the share of the test compounds in it, the weight of a compound in bin $b$ is
 

@@ -57,7 +57,7 @@ def _morgan_fp(smiles: str, radius: int = 2, n_bits: int = 2048):
 def tanimoto_ood_distance(train_smiles: pd.Series, apply_smiles: pd.Series) -> np.ndarray:
     """1 - max(Tanimoto similarity to any training compound), per compound
     in apply_smiles -- 0 means chemically identical to something in
-    training, close to 1 means genuinely novel chemistry. Same ECFP4
+    training, close to 1 means novel chemistry. Same ECFP4
     (radius 2, 2048 bits) the official tutorial itself uses for its own
     train/test similarity check, so this is directly comparable to that,
     not a different, incompatible metric.
@@ -85,7 +85,7 @@ def one_class_svm_ood_score(
     A generic, textbook anomaly-detection pattern (scale features, fit a
     one-class SVM on the "normal" population, score new points by
     distance from the learned boundary) -- not from a specific tool, and
-    a genuinely different signal from tanimoto_ood_distance: this operates
+    a different signal from tanimoto_ood_distance: this operates
     in RDKit-descriptor space (continuous, correlated physicochemical
     properties), not ECFP4 fingerprint space (discrete substructure
     presence/absence), so the two can disagree on which compounds count

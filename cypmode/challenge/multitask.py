@@ -138,7 +138,7 @@ def cross_validate_shared_trunk(
     """Same spirit as tdi_baseline.cross_validate_fixed_seed, but ONE
     shared model per fold trained on both isoforms' (masked) labels
     jointly, then scored per isoform on that fold's own labeled
-    validation compounds -- a genuine M1 (shared trunk) number, directly
+    validation compounds -- an M1 (shared trunk) number, directly
     comparable to M0/M3's independent-per-isoform numbers since both use
     df's full row set and the same random_state.
     """

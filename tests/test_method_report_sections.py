@@ -24,7 +24,7 @@ def test_a_family_belongs_to_one_kind_only():
 @needs_outputs
 def test_the_report_holds_the_architecture_and_the_exploration_before_the_results():
     text = report.build_method_report()
-    order = [text.index(h) for h in ("## 2. Data and the label rule", "## 3. Architecture of the two tracks", "## 4. Exploration: what was tried, and how honestly", "## 5. Scoring-set-aware yardstick")]
+    order = [text.index(h) for h in ("## 2. Data and the label rule", "## 3. Architecture of the two tracks", "## 4. Exploration: what was tried and with what result", "## 5. Scoring-set-aware yardstick")]
     assert order == sorted(order)
     assert "### 3.1 TDI track" in text and "### 3.2 Structure track" in text and "### 4.2 The accounting of the number of attempts" in text
 

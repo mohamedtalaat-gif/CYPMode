@@ -3,7 +3,7 @@
 ## Testing
 
 - [ ] `pytest` passes locally
-- [ ] Added/updated tests for the change (if applicable — see CONTRIBUTING.md)
+- [ ] Added/updated tests for the change (if applicable: see CONTRIBUTING.md)
 
 ## Checklist
 

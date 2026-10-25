@@ -17,7 +17,7 @@ figures feed the notebook (`notebooks/PLAN.md`) and the README.
 4. **Dynamic processes also get an animation.** Where a process unfolds in time or in steps (enzyme kinetics, boosting, diffusion
    denoising, docking, the self-consistent field, the chunked attention), the static figure is accompanied by a short looping animation
    (GIF) drawn from the same code.
-5. **Honest figures.** Axes start where the data says, uncertainty is shown, and a result that failed its gate is drawn as clearly as one
+5. **Figures that keep to the data.** Axes start where the data says, uncertainty is shown, and a result that failed its gate is drawn as clearly as one
    that passed.
 
 ## Catalog by notebook part
@@ -52,7 +52,7 @@ figures feed the notebook (`notebooks/PLAN.md`) and the README.
 - The SMARTS patterns with example hits; the enrichment against potency; the iron-nitrogen distance distribution (updated version of the
   existing figure); the pocket geometry of a predicted complex.
 
-**Part VI, measuring honestly**
+**Part VI, measuring without selection bias**
 - Nested cross-validation as a picture (outer and inner folds); the optimism of in-sample, plain and nested scores on the real data; the
   evaluation weights; the corrected resampled t (the variance factor against the number of folds and the test fraction); the gate as a
   flow chart; every stacked comparison of the project as one forest plot with its corrected p, in the 5-fold and the 10-fold designs.

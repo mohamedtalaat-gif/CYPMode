@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Selection-honest evaluation: judge the whole *procedure* that picks a model,
+"""Selection-corrected evaluation: judge the whole *procedure* that picks a model,
 not the winner of a contest scored on the same folds that crowned it.
 
 The problem this removes. Choosing among many candidates (feature sets, model

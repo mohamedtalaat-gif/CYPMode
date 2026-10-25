@@ -275,7 +275,7 @@ The first part of the cell checks the two ways on a tiny example, and on a piece
 $$\\sigma_U^2 \\;=\\; \\frac{n_1 n_2}{12}\\left( N + 1 - \\frac{\\sum_k (t_k^3 - t_k)}{N\\,(N-1)} \\right),$$
 
 where $t_k$ is the number of values that share the $k$-th tied value. For groups of this size the distribution of $U$ is very close to the normal distribution, so the **z value** $z = (U - \\mu_U - \\tfrac12)/\\sigma_U$ (the half is a correction because $U$ moves in steps of one half) is looked up in the normal distribution and gives the one-sided p-value: the probability, if potency and group were unrelated, of a $U$ at least as large. The test is one-sided
-because the claim of the screen is directional (a nitrogen that coordinates the iron tightens binding), and the direction was fixed before the data were read; a two-sided p-value, twice as large, is printed as well. The cell computes all of this by hand, checks it against the library and the stored file, and then checks the spread formula the honest way, by shuffling the group labels thousands of times and measuring the spread of $U$.
+because the claim of the screen is directional (a nitrogen that coordinates the iron tightens binding), and the direction was fixed before the data were read; a two-sided p-value, twice as large, is printed as well. The cell computes all of this by hand, checks it against the library and the stored file, and then checks the spread formula the direct way, by shuffling the group labels thousands of times and measuring the spread of $U$.
 """),
     code(RANKS),
     md("""

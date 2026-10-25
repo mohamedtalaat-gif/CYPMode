@@ -91,11 +91,11 @@ def render(theme_name: str, colors: dict, n_pass: int, n_total: int, check_failu
     ax_checks.set_xlim(0, max(counts) + 2 if counts else 1)
     ax_checks.set_title("Which real checks fail, and how often", fontsize=13, color=colors["text"])
 
-    fig.suptitle("PoseBusters physical/chemical validity — every completed structure this project has", fontsize=14, color=colors["text"])
+    fig.suptitle("PoseBusters physical/chemical validity, every completed structure this project has", fontsize=14, color=colors["text"])
     fig.text(
         0.5,
         -0.02,
-        "Real steric clashes cluster entirely on one check (minimum_distance_to_protein) — not scattered failures across many checks.",
+        "Real steric clashes cluster entirely on one check (minimum_distance_to_protein), not scattered failures across many checks.",
         ha="center",
         fontsize=10,
         style="italic",

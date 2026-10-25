@@ -100,7 +100,7 @@ def test_inverse_variance_weighting_reduces_influence_of_noisy_points():
 
 def test_out_of_fold_predictions_carry_no_information_about_a_compounds_own_label():
     """With labels that are pure noise a model that has seen a compound cannot be told from one that has not unless the predictions
-    leak: a leaking implementation would fit each compound's own noise (high correlation), an honest out-of-fold one cannot."""
+    leak: a leaking implementation would fit each compound's own noise (high correlation), an out-of-fold one cannot."""
     rng = np.random.default_rng(1)
     df = _synthetic_regression_df(n=200, seed=1)
     for cyp in DIRECT_INHIBITION_ISOFORMS:

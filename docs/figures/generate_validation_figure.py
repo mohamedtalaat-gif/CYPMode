@@ -109,7 +109,7 @@ def render(theme_name: str, colors: dict, names: list, distances: list, coordina
 
     ax.set_xticks(list(x))
     ax.set_xticklabels([n.capitalize() for n in names])
-    ax.set_ylabel("Heme Fe – closest motif-matched ligand N (Å)")
+    ax.set_ylabel("Heme Fe to closest motif-matched ligand N (Å)")
     ax.set_ylim(0, max(distances) + 2)
     ax.set_title(
         "Boltz-2 structural check: heme explicitly modeled,\ncovalently bonded to Cys442, ligand position unconstrained",

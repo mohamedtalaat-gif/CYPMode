@@ -226,7 +226,7 @@ def architecture_section() -> str:
 
 
 def exploration_section() -> str:
-    """How much was tried and how honestly, all of it counted from the ledger and the logs."""
+    """How much was tried and with what result, all of it counted from the ledger and the logs."""
     from cypmode.audit.ledger_kinds import KINDS, TRIED, ledger_by_kind
     from cypmode.challenge.final_tdi_build import CONFIRMED_GROUPS
     from cypmode.challenge.multiplicity import collect
@@ -245,7 +245,7 @@ def exploration_section() -> str:
     counts = re.search(r"Counts: PASS = (\d+), FAIL = (\d+)", audit_text)
     mismatches = re.findall(r"label rule reproduces every both-arms label \| PASS \| (\d+) mismatches", audit_text)
     lines = [
-        "## 4. Exploration: what was tried, and how honestly",
+        "## 4. Exploration: what was tried and with what result",
         "",
         "The project explored widely and decided narrowly. Every idea was a candidate or a block with a rule written before its result; the ledger below is generated from the logs of those rules, and the ones that failed stay in it as",
         "results (`NEGATIVE_RESULTS.md`). No search procedure chose among them: the programme was designed, and the final build applies the verdicts mechanically.",
@@ -270,7 +270,7 @@ def exploration_section() -> str:
         "- **One ligand.** The two selection gates of the structure track recomputed with each ligand left out in turn, as a description (`NEGATIVE_RESULTS.md`).",
         "- **Second looks.** A near miss may be looked at again, but only in a log that no gate parser reads (`exploratory_*`), so that it cannot change a model; the all-in-one stack of every cached candidate against the final stack is one of them.",
         "",
-        "### 4.4 The selection-honest design and its audit",
+        "### 4.4 The selection-corrected design and its audit",
         "",
         f"The label rule reproduces every training label ({' and '.join(mismatches) if mismatches else 'see audit section 4'} mismatches); the plans are rebuilt from the raw files and compared; every feature block is checked for leakage; the audit",
         f"is generated twice and compared byte for byte; the test suite has {tests.group(1) if tests else '(pending: job 900)'} passing tests; the summary of the audit is {counts.group(1) + ' PASS and ' + counts.group(2) + ' FAIL' if counts else '(pending: job 900)'} (notebook Part XII).",

@@ -207,7 +207,7 @@ def base_rate_shift_stress_test(
     target_rates: np.ndarray = DEFAULT_BASE_RATE_GRID,
     random_state: int = 42,
 ) -> pd.DataFrame:
-    """The honest check that find_robust_threshold actually buys something:
+    """The check that find_robust_threshold actually buys something:
     resamples a REAL validation fold's (label, predicted-probability) pairs
     to a range of target base rates (see _resample_to_base_rate), and
     scores both the naive MCC-optimal threshold and the robust threshold

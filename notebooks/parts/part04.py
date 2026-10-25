@@ -334,7 +334,7 @@ CELLS = [
 
 Part III turned molecules into rows of numbers. This part explains what a computer does with such a table to learn a rule, and builds, from the equations up, every kind of model that the project uses or tested: trees (4.2), boosting (4.3), forests (4.4), similarity-based models (4.5),
 regression for the two assay arms (4.6), neural networks (4.7), networks on graphs and on text (4.8), a table-reading pretrained model and principal components (4.9), and the numbers by which models are judged (4.10). Every model is first written out on the project's data
-in a few lines, so that no part of it is a black box, and then compared with the library that the project actually runs. The data are those of a single task, CYP3A4 on the compounds with both arms; the results of the full nested evaluation, which is the honest one, are in Parts VI and VIII.
+in a few lines, so that no part of it is a black box, and then compared with the library that the project actually runs. The data are those of a single task, CYP3A4 on the compounds with both arms; the results of the full nested evaluation, which is the selection-corrected one, are in Parts VI and VIII.
 
 ## 4.1 Supervised learning, loss functions and the problem of generalisation
 

@@ -22,7 +22,7 @@ pipelines evaluated on the SAME nested outer folds (each fold's score comes from
 fold's rows), plus ``compare_candidate_sets`` which runs two candidate sets through the identical selection
 procedure. A permutation null (as in committee_uncertainty) is the other legitimate route when a quantity
 has to be re-estimated under shuffled inputs. With only a handful of folds the corrected test is
-conservative and often cannot reach significance for a small effect; that is the honest answer, not a
+conservative and often cannot reach significance for a small effect; that is the correct answer, not a
 defect, and the remedy is more repeats (which reduce partitioning noise) and a larger effect, not a looser
 test.
 """

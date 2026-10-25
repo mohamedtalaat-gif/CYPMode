@@ -15,7 +15,7 @@ with the largest statistic among those with a positive ratio (the pharmacophore 
 columns: the sum of the ratios of the kept hypotheses it realises (``hyp_score``), the number of positive (``hyp_npos``) and of negative (``hyp_nneg``) kept hypotheses it realises, the largest
 ratio it realises, 0 when none (``hyp_max``), and the share of the 5 strongest positive hypotheses that it realises (``hyp_top5``).
 
-Honest columns. The training rows get the columns out of fold (the model, including the choice of the hypotheses, refitted on the other 4 of 5 stratified folds of the training rows) and the
+Label-free columns. The training rows get the columns out of fold (the model, including the choice of the hypotheses, refitted on the other 4 of 5 stratified folds of the training rows) and the
 evaluation rows get them from the model fitted on all training rows, so that a training row never meets a hypothesis that was chosen with its own label. The control permutes the labels within
 the training rows before any step, so that no label information can reach the columns.
 

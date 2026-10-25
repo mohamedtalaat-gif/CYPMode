@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Tests whether CYP2D6 genuinely does better under an independent-head
+"""Tests whether CYP2D6 does better under an independent-head
 model (cypmode.challenge.tdi_baseline/threshold_tuning's own approach,
 same family as CYP3A4's deployed model -- a standalone LightGBM trained
 on CYP2D6 data alone) or the shared-trunk multitask model

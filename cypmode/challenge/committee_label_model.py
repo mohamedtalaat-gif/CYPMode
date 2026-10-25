@@ -12,7 +12,7 @@ sees only the thresholded shadow. This model keeps the structure of the process:
     unchanged), weighting each training row by the inverse of its own measurement variance (noise-aware);
   * a member's predicted shift is t_hat - max(d_hat, 4); the committee mean m is the point estimate and the spread of
     the members is the epistemic uncertainty sd_e (members differ in feature set, bagging subset and seed);
-  * the out-of-bag error of the members (each member is scored on the rows it never saw) gives an honest scale
+  * the out-of-bag error of the members (each member is scored on the rows it never saw) gives a fair scale
     sigma_base, so the predictive distribution of the shift is N(m, sigma_base^2 + sd_e^2) and
         P(label) = Phi((m - log10 2) / sigma),        EI = sigma * (phi(z) + z * Phi(z)),   z = (m - log10 2) / sigma
     where EI is the expected improvement of the shift over the threshold, the quantity used to decide where an extra

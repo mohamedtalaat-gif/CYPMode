@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from cypmode.audit.core import LOGS, ROOT, Context, Section, fmt, md_table, sha256
+from cypmode.audit.core import LOGS, ROOT, Context, Section, fmt, md_table, run, sha256
 
 FINAL_TDI = ROOT / "data/tdi_track/outputs/final"
 FINAL_STRUCTURE = ROOT / "data/structure_track/outputs/cyp3a4/final"
@@ -130,11 +130,7 @@ def enforced_rules(ctx: Context) -> Section:
             private.append(name)
     s.add("source code comments are English only (no Arabic script in code)", not offenders, ", ".join(offenders[:5]) or "none found")
     s.add("public documents carry no private local paths", not private, ", ".join(private) or "none found")
-    from cypmode.audit.prose_rules import mentions_of_the_owner
-
-    role = mentions_of_the_owner()
-    s.add("no text of the project attributes a decision or a step to a person named by a role", not role, ", ".join(role[:5]) or "none found")
-    s.body.append("Rules checked: code comments in English; no private paths in the documents meant to be public; no text that names a person by a role; attribution hygiene is section 12.")
+    s.body.append("Rules checked: code comments in English; no private paths in the documents meant to be public; the wording of the text files is section 21; attribution hygiene is section 12.")
     return s
 
 
@@ -231,7 +227,30 @@ def citation_consistency(ctx: Context) -> Section:
     s.body.append("Rules checked: the author, the repository and the DOI are the same in the citation file, the README, NOTICE and the archive metadata; every script that generates data prints the citation and the generated directories carry their origin (`cypmode/provenance.py`).")
     return s
 
-EXTRA = [gate_ledger, checklist, environment_and_seeds, block_leakage, enforced_rules, final_candidates, citation_consistency]
+
+def wording(ctx: Context) -> Section:
+    """Section 21: the wording rules of cypmode/audit/prose_rules.py over the text files and the commit messages."""
+    from cypmode.audit import prose_rules
+
+    s = Section("21. Wording of the text files")
+    files = [name for name in prose_rules.project_files() if prose_rules.scanned(name)]
+    found = prose_rules.violations()
+    has_remote = bool(run(["git", "branch", "-r", "--list", "origin/main"]).strip())
+    log = run(["git", "log", "origin/main..HEAD" if has_remote else "HEAD", "--format=%B"])  # the commits that are not published yet; the published ones cannot be changed
+    commits = {rule: sum(1 for line in log.splitlines() if pattern.search(line)) for rule, pattern in prose_rules.RULES.items()}
+    rows = [(rule, len(lines), len({line.rsplit(":", 1)[0] for line in lines}), commits[rule]) for rule, lines in found.items()]
+    s.body.append(
+        f"Every line of the {len(files)} text files that git tracks or would add (vendored libraries, licence texts and the generated audit report are left out) is matched against each rule, and so is every line of the messages "
+        "of the commits that are not published yet. A rule passes when no line matches."
+    )
+    s.body.append(md_table(pd.DataFrame(rows, columns=["rule", "lines in the files", "files", "lines in unpublished commit messages"])))
+    for rule, lines in found.items():
+        s.add(f"no line matches the rule: {rule}", not lines and not commits[rule], f"{len(lines)} lines" + (f", e.g. {lines[0]}" if lines else "") + (f"; {commits[rule]} in unpublished commit messages" if commits[rule] else ""))
+    ctx.metrics.update(wording_files=len(files), wording_lines=sum(len(lines) for lines in found.values()))
+    return s
+
+
+EXTRA = [gate_ledger, checklist, environment_and_seeds, block_leakage, enforced_rules, final_candidates, citation_consistency, wording]
 _ = sys
 
 

@@ -46,7 +46,7 @@ Two tasks are solved. The first is classification: for each of {{=F.n_test}} mol
 switches off the enzyme CYP2D6, in the slow and lasting way called time-dependent inhibition. The second is structure prediction: for 20 molecules, predict where every atom sits
 when the molecule is bound inside CYP3A4.
 
-Because the answers stay hidden until the challenge closes, the central difficulty is to judge honestly how good a model is. The project therefore evaluates every model by
+Because the answers stay hidden until the challenge closes, the central difficulty is to judge how good a model is without optimism. The project therefore evaluates every model by
 nested cross-validation, in which no choice the model makes (which members to trust, how to blend them, where to put the yes/no threshold) is tested on the data it was chosen on,
 and it judges every proposed improvement by a rule written down before its result existed. {{=F.gates}} such rules were judged: {{=F.gates_not_met}} ended "not met" and {{=F.gates_met}}
 ended "met". The final classification model blends {{=F.n_models}} models that read {{=F.n_columns:,}} numbers per molecule. In nested cross-validation it reaches an area under the ROC curve

@@ -3,7 +3,7 @@
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
 """Pocket-geometry features from an already-predicted Boltz-2 structure --
-a genuinely different signal from the Fe-N coordination distance
+a different signal from the Fe-N coordination distance
 (cypmode.validation.structures): how much of the ligand is buried inside
 the protein, and how big the cavity around it actually is. Both operate
 on the same static .cif output already sitting under data/structure_track/outputs/out/

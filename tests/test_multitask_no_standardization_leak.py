@@ -36,7 +36,7 @@ def _df(n: int = 180, seed: int = 0) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
     rows = []
     for i in range(n):
-        desc = rng.normal(size=6) * (1 + i / 60)  # drifting scale so fold means genuinely differ
+        desc = rng.normal(size=6) * (1 + i / 60)  # drifting scale so fold means differ
         rows.append(
             {
                 "m3_no_amine_features": desc,

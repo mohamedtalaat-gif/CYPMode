@@ -216,7 +216,7 @@ group sits inside a fused ring system and does not behave like a free ring nitro
 with CYP3A4 because the enzyme reshapes its pocket on binding, so a single predicted pose cannot settle the question. Section 5.5 returns to these four compounds in detail.
 
 **From a screen to a challenge.** In 2026 the OpenADMET project ran a public challenge on exactly this subject (section 0.3). It offered what the screen had lacked: a large,
-consistent set of time-dependent inhibition measurements, a hidden test set that makes honest evaluation possible, and a structure-prediction task for CYP3A4. The motif screen became
+consistent set of time-dependent inhibition measurements, a hidden test set that makes evaluation without leakage possible, and a structure-prediction task for CYP3A4. The motif screen became
 one block of features for the classification model (sections 3.4 and 7.2); the structure tools built for the four-compound check, which write Boltz-2 inputs with the heme attached,
 became the base of the structure entry (Part XI).
 
@@ -240,7 +240,7 @@ challenge states is ported from its scoring backend.
 | Time-dependent inhibition (TDI) | say yes or no for CYP3A4 and for CYP2D6 | the Matthews correlation coefficient (MCC), averaged over the two enzymes | yes |
 | Structure | predict the pose of 20 ligands bound to CYP3A4 | LDDT-PLI, with the ligand RMSD (root-mean-square deviation: the typical distance between the predicted and the true position of the ligand's atoms) after pocket superposition as a secondary score | yes |
 
-The **Matthews correlation coefficient** (**MCC**) is a score for yes/no predictions that is 0 for guessing and 1 for perfect answers, and that stays honest when "yes" is rare
+The **Matthews correlation coefficient** (**MCC**) is a score for yes/no predictions that is 0 for guessing and 1 for perfect answers, and that stays informative when "yes" is rare
 (section 4.10 derives it). **LDDT-PLI** is a score from 0 to 1 for how well the distances between a ligand's atoms and the protein atoms near it are reproduced (section 11.4). A
 submitted structure that fails any of the physical-validity checks of the **PoseBusters** program is given the worst possible scores, however close it is to the truth; the program
 checks, for example, that no two atoms overlap and that bond lengths are sensible (section 11.4).

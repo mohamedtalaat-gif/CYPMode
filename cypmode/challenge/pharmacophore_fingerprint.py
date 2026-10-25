@@ -33,7 +33,7 @@ A compound whose 3D embedding fails gets an all-zero fingerprint (not a
 crash) -- a real, if uninformative, representation for a binary bit
 vector, unlike quantum_pharmacophore.py's NaN-filled fallback for
 scalar QM properties, where zero would be a misleading fake value
-rather than an honest "no bits set."
+rather than a true "no bits set."
 """
 
 import functools

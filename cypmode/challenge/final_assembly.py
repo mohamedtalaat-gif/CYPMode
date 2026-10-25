@@ -19,7 +19,7 @@ A real retraction belongs here: an earlier version of this module also
 added the OOF Direct-Inhibition Bridge as a CYP3A4 feature, based on a
 single-split naive-threshold read that looked like the single largest
 feature effect found in this whole project (tuned MCC 0.387 -> 0.470).
-That result did not survive honest re-checking. Root cause: ~34.8% of
+That result did not survive re-checking. Root cause: ~34.8% of
 CYP3A4-labeled training compounds have NO real direct-inhibition
 measurement at all, and those compounds are TDI-negative essentially by
 construction (the label formula needs a direct-inhibition baseline to
@@ -31,7 +31,7 @@ blind test set NEVER exposes whether a compound has real
 direct-inhibition data (SMILES + Molecule_Name only, for every row),
 so every test row got missing_flag=0 and the shortcut simply didn't
 fire, pushing predictions to 60.9% positive against a real 21.3%
-training base rate. Re-verified honestly via CV that actually simulates
+training base rate. Re-verified via CV that actually simulates
 deployment (validation-fold compounds scored with zero awareness of
 their own real missingness status, using only a fold-trained
 regressor's plain prediction): OOF-bridge's tuned MCC drops to 0.378 --

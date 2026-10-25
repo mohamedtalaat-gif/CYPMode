@@ -57,7 +57,7 @@ function sceneQuanta(u, t) {
   const nm = REAL.gates.filter((g) => /physics/.test(g.label)).reduce((a, g) => a + g.not_met, 0), st = stamp('NOT MET', 1380, 520, NOT_MET, seg(u, 5.4, 7.6), 60, -7, `${nm} physics verdicts`);
   body += st;
   body += quanta({ x: 1380, y: 300 + 14 * Math.sin(t * 2), scale: 0.9, t, mood: u > 5.4 ? 'worry' : 'happy', mouth: u > 5.4 ? 'worry' : 'grin' });
-  body += subs(u, [[0.6, 5.2, 'Quanta computed physics for every compound with GFN2-xTB.'], [5.4, 9.6, 'Some columns carry signal alone, but no physics idea passed its gate.'], [9.8, 13.6, 'Beautiful physics: honestly reported as not used.']]);
+  body += subs(u, [[0.6, 5.2, 'Quanta computed physics for every compound with GFN2-xTB.'], [5.4, 9.6, 'Some columns carry signal alone, but no physics idea passed its gate.'], [9.8, 13.6, 'Beautiful physics: reported as not used.']]);
   return body;
 }
 

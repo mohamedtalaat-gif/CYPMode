@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Honest comparison of every cached candidate and every selection procedure for one isoform.
+"""Comparison of every cached candidate and every selection procedure for one isoform.
 
     python -m cypmode.challenge.nested_report --isoform CYP3A4 --board <per-isoform leaderboard csv>
 
@@ -72,7 +72,7 @@ def _main() -> None:
     print(candidate_table(cache, names, weight_fn, prevalence, args.metric).round(4).to_string(index=False))
     selectors = [BestSingle(), OneStandardError(), MeanOfTop(3), MeanOfTop(5), StackedLogit()]
     table = nested_evaluate(cache, names, selectors, weight_fn, prevalence, args.metric)
-    print("\nselectors (inner = contest score, outer = honest score):")
+    print("\nselectors (inner = contest score, outer = score on the outer folds):")
     print(summarize(table).round(4).to_string())
     table.to_csv(root / f"nested_{args.metric}.csv", index=False)
 

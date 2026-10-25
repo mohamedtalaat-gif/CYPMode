@@ -15,8 +15,8 @@ Motivation: a real competitor's public lab notebook (leaderboard
 research, 2026-10-01) identified a continuous QM-reactivity readout at
 the same basic-nitrogen atoms this project's own binary amine_flag
 already targets (cypmode.metrics.amines.has_trialkylamine) as their
-single best CYP2D6 signal -- a genuinely different KIND of feature than
-anything else tried for CYP2D6 this session (not another external
+single best CYP2D6 signal -- a different KIND of feature than
+anything else tried for CYP2D6 (not another external
 bioactivity dataset, not another architecture change): real quantum-
 chemical reactivity instead of a yes/no structural flag.
 
@@ -28,14 +28,14 @@ original heavy atoms, preserving their indices), so a SMARTS match's
 atom index on the plain (no-Hs) mol indexes correctly into qmdesc's
 output without any remapping -- confirmed: atom 28/7 (the two real
 basic nitrogens) came back as real Nitrogen with real, chemically
-sensible values (fukui_neu notably exceeding fukui_elec, consistent
+sensible values (fukui_neu clearly exceeding fukui_elec, consistent
 with a lone-pair-bearing nucleophilic tertiary amine).
 
 Real, two-part install fix needed, both patched directly in the
 installed package (not vendored/gitignored like third_party/TDC-main,
 but the same kind of real third-party incompatibility, not a bug in our
 own code): (1) qmdesc/handler.py's own `import pkg_resources` -- removed
-by modern setuptools, same issue fixed earlier this session for
+by modern setuptools, same issue fixed earlier for
 third_party/TDC-main -- replaced with importlib.resources. (2) PyTorch
 2.6+ changed torch.load's default weights_only to True, and qmdesc's own
 checkpoint stores its model args as a pickled argparse.Namespace, not on

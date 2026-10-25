@@ -25,7 +25,7 @@ repeated-CV comparison here measures (matching this project's own
 stated "stratified evaluation by chemical familiarity" design intent in
 CYPMode_Architecture_Specification.md's Final architecture diagram).
 
-Real, honest caveat stated up front, not buried: 50 compounds is a small
+Caveat stated up front, not buried: 50 compounds is a small
 evaluation population (each fold's validation split covers roughly 10 of
 them). The repeated 5x5 CV + Tukey HSD rigor already standard in this
 project is applied here for exactly that reason -- a promising-looking
@@ -111,7 +111,7 @@ def repeated_cv_tier3_comparison(
     compounds the feature actually covers, matching how every other
     feature addition in this project is trained (on everything
     available) but this one specifically needs its evaluation
-    restricted to stay honest about where it can plausibly help.
+    restricted to the places where it can plausibly help.
 
     Long-format output (one row per repeat x fold x variant) -- directly
     usable by cypmode.challenge.stacking_significance.paired_comparison_summary.

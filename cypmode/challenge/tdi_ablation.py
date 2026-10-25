@@ -14,7 +14,7 @@ reference panel suggested. That result doesn't settle the question on its
 own: a marginal cross-tab can miss a real effect a multivariate model
 picks up (e.g. the amine flag might matter only in combination with
 specific descriptor ranges), and it can also just confirm the null. This
-module runs the actual, honest test -- four models, same CV folds
+module runs the actual test -- four models, same CV folds
 (cypmode.challenge.tdi_baseline.cross_validate_fixed_seed's feature_col
 pairing), same everything else, one feature block added at a time:
 

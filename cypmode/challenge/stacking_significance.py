@@ -9,12 +9,12 @@ not a single point-estimate MCC delta and not an unpaired test on correlated fol
 Motivated directly by a real methodology from Pat Walters'
 model-validation-central (patwalters.github.io/model-validation-central):
 comparing several methods on one split risks reading real fold-to-fold
-noise as a genuine effect ("pooling more methods turns outright wins into
+noise as an effect ("pooling more methods turns outright wins into
 ties" without correction). Applied here to CYPMode's own real,
 surprising finding: combining KNN + BindingDB auxiliary features together
 scored WORSE for CYP2D6 (single-split MCC 0.054) than either alone (KNN
 0.075, BindingDB 0.089) -- a real result that needed to survive repeated,
-corrected testing before being trusted as a genuine negative interaction
+corrected testing before being trusted as a negative interaction
 rather than single-split noise.
 
 Resolved, and it didn't survive -- but not for the reason it was first

@@ -17,11 +17,11 @@ training set, no 3D conformer step needed at all (ChemBERTa operates
 directly on the tokenized SMILES string, unlike quantum_pharmacophore's
 tblite features or pharmacophore_fingerprint's pmapper features, both
 of which need a real 3D embedding first) -- so there's essentially no
-embedding-failure mode the way those two have; a genuinely unparseable
+embedding-failure mode the way those two have; an unparseable
 SMILES is the only real failure case.
 
 CRITICAL: this module must NEVER be imported in the same process as
-LightGBM. Confirmed directly, freshly, this session: `import torch`
+LightGBM. Confirmed directly: `import torch`
 followed by fitting an LGBMClassifier in the same process crashes with
 a real SIGSEGV (exit code 139) -- the same OpenMP-runtime conflict
 already documented for cypmode.challenge.multitask (see pyproject.toml's

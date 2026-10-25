@@ -13,7 +13,7 @@ Run: PYTHONPATH=. .venv-ml/bin/python -m cypmode.challenge.nested_runners_torch 
 The multitask network is the one place where "extra" compounds help: the
 training file carries eight continuous endpoints (direct and TDI-arm pIC50 for
 four isoforms) for ~6,100 compounds, far more supervision than the ~2,300
-pool rows with a boolean label. Using them honestly means a task may train on
+pool rows with a boolean label. Using them without leakage means a task may train on
 ``task.train`` plus compounds OUTSIDE the plan's pool and external set -- and on
 nothing else: other pool rows (for an inner task, the outer-validation rows)
 must stay invisible, or the nested estimate would be leaky.

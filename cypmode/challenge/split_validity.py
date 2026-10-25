@@ -5,7 +5,7 @@
 """Checks whether a train/test split is actually informative before trusting
 any MCC computed on it -- a validation set that's chemically close to
 training (near-duplicates/analogs) can make a CV split look far more
-reliable than performance on genuinely novel chemistry actually is, a
+reliable than performance on novel chemistry actually is, a
 known general risk in cheminformatics benchmarking.
 
 Applies that check to our own data: our own CV folds (i.i.d. from the

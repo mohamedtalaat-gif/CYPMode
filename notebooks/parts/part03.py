@@ -210,7 +210,7 @@ CELLS = [
 
 A learning algorithm takes a table of numbers: one row per compound, one column per measured or computed quantity, all rows of the same length. A molecule is a graph of atoms (section 2.1), of any size and shape, so the first
 job is to turn it into a row of a fixed length that keeps what matters for the question. There is no single right way, and different ways keep different things, so the project uses many of them side by side and lets the models decide. This part builds them
-one by one: the fingerprints, which record which small pieces of structure are present (3.1 to 3.4), the three-dimensional pharmacophore fingerprint (3.5), the grouping of compounds into chemical series, which is needed for honest validation
+one by one: the fingerprints, which record which small pieces of structure are present (3.1 to 3.4), the three-dimensional pharmacophore fingerprint (3.5), the grouping of compounds into chemical series, which is needed for a validation that does not leak
 (3.6), and the feature store in which all the blocks are kept (3.7). Two rules hold for everything in this part: a feature is computed from the structure alone, never from a label, so that it cannot leak an answer into a model, and a feature that the project defined
 and measured as useless is still described here, because what it was meant to do is part of the record.
 

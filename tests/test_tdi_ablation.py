@@ -48,7 +48,7 @@ def test_m3_no_amine_features_never_contains_the_amine_flag_value():
     silently kept the amine flag despite the documented, settled decision
     to drop it (CYPMode_Architecture_Specification.md's Decision Log).
     m3_no_amine_features is the corrected production feature set --
-    confirm it's genuinely descriptors+motif+Morgan, with the amine
+    confirm it's descriptors+motif+Morgan, with the amine
     flag's value nowhere in it (not just the same length by coincidence).
     """
     df = pd.DataFrame({"SMILES": [VERAPAMIL], "descriptors": [np.zeros(5)]})  # verapamil: amine flag = 1.0

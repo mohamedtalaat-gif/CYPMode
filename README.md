@@ -31,7 +31,7 @@ pose-validity and margin rules in which every lever was decided by a gate on cry
 
 **What is different here.**
 
-1. *Honest evaluation.* Models are judged by nested cross-validation that reproduces the scored population (similarity to the blinded set, test prevalence, only confidently labelled
+1. *Evaluation without selection bias.* Models are judged by nested cross-validation that reproduces the scored population (similarity to the blinded set, test prevalence, only confidently labelled
    compounds), with every selection step inside the loop, and compared with the corrected resampled t test of Nadeau and Bengio.
 2. *Pre-registered gates.* The rule an idea must pass is written down before the idea is tested. An idea that fails stays in a ledger of negative results; it is not tuned until it passes. The
    ledger and its counts are generated from the run logs: [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md) and [METHOD_REPORT.md](METHOD_REPORT.md).
@@ -68,7 +68,7 @@ CYPMode began as a heme-coordination motif screen for CYP450 inhibitors with a s
 this file). It now also contains an entry for the OpenADMET CYP blind challenge:
 
 - **TDI classification** (time-dependent inhibition of CYP3A4 and CYP2D6): a label-process-aware model evaluated with a nested,
-  selection-honest cross-validation on the same population the challenge scores.
+  selection-corrected cross-validation on the same population the challenge scores.
 - **CYP3A4 structure prediction**: Boltz-2 (and optionally OpenFold3) co-folding with a gated pose-selection recipe.
 
 Every addition to a model passes through a pre-registered gate (corrected resampled t, both confidence cut-offs, alone and inside the
@@ -150,14 +150,14 @@ Final stack per isoform, from the nested cross-validation on the population the 
 
 | isoform | stack | members | groups added by a met gate | AUC (z0 1.0) | AUC (z0 1.96) | MCC (z0 1.0 / 1.96) |
 | --- | --- | --- | --- | --- | --- | --- |
-| CYP3A4 | default+neural | 26 | ['neural'] | 0.828 | 0.855 | 0.461 / 0.513 |
+| CYP3A4 | default+all_survivors | 28 | ['chemprop_foundation', 'neural'] | 0.834 | 0.862 | 0.476 / 0.539 |
 | CYP2D6 | default | 23 | none | 0.731 | 0.754 | 0.167 / 0.204 |
 
 Members of the default stack: k-nearest neighbours (Tanimoto) (3), support vector machine (Tanimoto kernel) (3), LightGBM classifier (11), extremely randomised trees (1), random forest (1), LightGBM regressor of the arm shift (2), LightGBM regressors of the two arms (2); 23 members in all.
 <!-- generated:final-stack end -->
 
 <!-- generated:gate-verdicts begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
-Every addition was judged by a rule fixed before its result. 176 gate verdicts from 57 experiments: 10 MET and 166 NOT MET. The gates that were met: aux_neural, aux_neural_f10, bond restraint, contact restraint, force-field relaxation of poses, negative control (permuted labels), pool gates repeated with OpenStructure's yardstick, replicates with 10 outer folds. A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: CYP3A4: ['neural']; CYP2D6: none.
+Every addition was judged by a rule fixed before its result. 213 gate verdicts from 70 experiments: 11 MET and 202 NOT MET. The gates that were met: aux_chemprop_foundation, aux_neural, aux_neural_f10, bond restraint, contact restraint, force-field relaxation of poses, negative control (permuted labels), pool gates repeated with OpenStructure's yardstick, replicates with 10 outer folds. A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: CYP3A4: ['chemprop_foundation', 'neural']; CYP2D6: none.
 
 <details><summary>All verdicts</summary>
 
@@ -175,11 +175,17 @@ Every addition was judged by a rule fixed before its result. 176 gate verdicts f
 | TabPFN on frozen CheMeleon embeddings | NOT MET | NOT MET | - |
 | aux atomjepa | NOT MET | NOT MET | - |
 | aux atomjepa head | NOT MET | NOT MET | - |
+| aux chemprop foundation | MET | - | - |
 | aux ext adme | NOT MET | NOT MET | - |
 | aux ext cont | NOT MET | NOT MET | - |
 | aux ext tox | NOT MET | NOT MET | - |
+| aux hypothesis | NOT MET | NOT MET | - |
 | aux neural | MET | NOT MET | - |
 | aux neural f10 | MET | - | - |
+| aux pocket cyp2d6 | - | NOT MET | - |
+| aux pocket cyp3a4 | NOT MET | - | - |
+| aux site cyp2d6 | - | NOT MET | - |
+| aux site cyp3a4 | NOT MET | - | - |
 | basic-centre block (protonation states, centre classes) | NOT MET | NOT MET | - |
 | bond restraint confirmed on new ligands | - | - | NOT MET |
 | committee label-process model | NOT MET | NOT MET | - |
@@ -190,6 +196,11 @@ Every addition was judged by a rule fixed before its result. 176 gate verdicts f
 | cross-isoform transfer of the assay arms | NOT MET | NOT MET | - |
 | expected-improvement sampling of poses | - | - | NOT MET |
 | exploratory atomjepa head f10 | NOT MET | - | - |
+| exploratory hypothesis permuted | NOT MET | NOT MET | - |
+| exploratory pocket control | NOT MET | NOT MET | - |
+| exploratory pocket first run seed0 control | NOT MET | NOT MET | - |
+| exploratory pocket first run seed0 own | NOT MET | NOT MET | - |
+| exploratory site control | NOT MET | NOT MET | - |
 | force-field relaxation of poses | - | - | MET |
 | frozen CheMeleon embeddings | NOT MET | NOT MET | - |
 | gate-shift features | NOT MET | NOT MET | - |
@@ -210,12 +221,14 @@ Every addition was judged by a rule fixed before its result. 176 gate verdicts f
 | physics, pharmacophore and combined pose terms | - | - | NOT MET |
 | plain Chemprop in the stack | NOT MET | NOT MET | - |
 | pool gates repeated with OpenStructure's yardstick | - | - | mbr_selection_ost NOT MET; engine_consensus_ost NOT MET; ei_sampling_ost NOT MET; heme_frame_prior_ost NOT MET; pose_physics_ost NOT MET; pose_pharmacophore_ost NOT MET; pose_combined_ost NOT MET; series_consensus_ost NOT MET; restraint_bond_ost MET; restraint_contact_ost MET; pilot_conformers_ost NOT MET; pilot_cryoem_ost NOT MET; pilot_seeds_ost NOT MET; mbr_lddt_exploratory_ost NOT MET; restraint_bond_lddt_exploratory_ost NOT MET; mbr_on_restrained_lddt_exploratory_ost NOT MET |
+| pose pharmacophore model | - | - | NOT MET |
 | replicates with 10 outer folds | replicate physics NOT MET; replicate physics_compact NOT MET; replicate physics_b NOT MET; replicate neural MET | NOT MET | - |
 | restraint confirmation repeated with OpenStructure's LDDT-PLI | - | - | NOT MET |
 | restraints and pose-diversity pilots | - | - | restraint_bond MET; restraint_contact MET; pilot_conformers NOT MET; pilot_cryoem NOT MET; pilot_seeds NOT MET |
 | selection-aware CYP2D6 model with physics | - | NOT MET | - |
 | selection-aware CYP2D6 model with the screen | - | NOT MET | - |
 | selection-aware model, second version | - | NOT MET | - |
+| selection validation bioemu2 | - | - | NOT MET |
 | single-concentration screen as a predicted block | NOT MET | NOT MET | - |
 | softmax-temperature selector | NOT MET | NOT MET | - |
 | test-likeness weighting | NOT MET | NOT MET | - |
@@ -271,7 +284,7 @@ How the 20 poses of the submitted zip were chosen, from the verdicts of the gate
 - selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)
 - extra samples allocated uniformly: ei_sampling not MET
 - margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)
-- force-field relaxation of the chosen poses in the frozen pocket (gate met on 30 crystal-anchored ligands): 20 of 20 poses replaced under a rule fixed before the use (both poses pass the 22 checks, the smallest relative distance to the receptor rises and stays at or above 0.8, the ligand moves by at most 1.0 A, a coordinated iron-nitrogen distance changes by at most 0.2 A); smallest relative distance 0.801 to 0.850
+- force-field relaxation of the chosen poses in the frozen pocket (gate met on 30 crystal-anchored ligands): 20 of 20 poses replaced under a rule fixed before the use (both poses pass the 22 checks, the smallest relative distance to the receptor rises and stays at or above 0.8, the ligand moves by at most 1.0 A, a coordinated iron-nitrogen distance changes by at most 0.2 A); smallest relative distance 0.801 to 0.849
 <!-- generated:structure-recipe end -->
 
 ## Repository map
@@ -331,17 +344,17 @@ ADMET model trained on them inherits the same blind spot: the label says
 "how" is the difference between Type I inhibition (reversible, substrate
 in the active site, the heme's axial water stays put) and Type II
 inhibition (a nitrogen lone pair coordinates directly to the heme iron,
-displacing that water) — a much tighter, often far more clinically
+displacing that water), a much tighter, often far more clinically
 significant interaction (de Groot, *Drug Discov. Today*, 2006, 11:601-606).
 A binary "1" collapses both into the same bit.
 
 Checked this against the data itself, not just the framing: across all
 five isoforms, only 26-31% of TDC's labeled inhibitors carry any
 heme-coordinating motif at all (`cypmode/data/panel.py`,
-`summarize_panel()` — CYP1A2 28.1%, CYP2C9 30.0%, CYP2C19 28.2%, CYP2D6
+`summarize_panel()`, CYP1A2 28.1%, CYP2C9 30.0%, CYP2C19 28.2%, CYP2D6
 26.5%, CYP3A4 30.6%, n=2,514-5,829 labeled inhibitors per isoform). Most
 of the panel's "inhibitor" label describes something a motif screen
-wouldn't expect to coordinate the heme directly — which is exactly the
+wouldn't expect to coordinate the heme directly, which is exactly the
 information a plain binary label discards.
 
 This project is scoped as a direct extension of a newly solved CYP3A4
@@ -349,53 +362,53 @@ cryo-EM structure paper (ketoconazole, ritonavir, azamulin, and
 vardenafil bound), not a general re-annotation of the whole panel by
 assertion: `cypmode/validation/structures.py` checks the motif screen's
 calls against physics-based structure prediction (Boltz-2) for exactly
-the four compounds that paper solved structures for, and no others —
+the four compounds that paper solved structures for, and no others , 
 full-panel physics-based validation across ~62,000 compounds would take
 on the order of 2,000 GPU-hours on this hardware, which isn't a rerun of
 that paper's method, it's a different, unvalidated claim.
 
 ## What's here
 
-- `cypmode/metrics/motifs.py` — a fast RDKit/SMARTS screen for the classic
+- `cypmode/metrics/motifs.py`: a fast RDKit/SMARTS screen for the classic
   heme-coordinating substructures (imidazole, triazole, pyridine,
   thiazole), in the structural-alert tradition of Leach, *Molecular
   Modelling: Principles and Applications* (2001, ch. 12, section 12.2).
   Seconds for the whole panel, not a mechanism predictor on its own.
-- `cypmode/data/panel.py` — loads and mechanism-annotates TDC's five-isoform
+- `cypmode/data/panel.py`: loads and mechanism-annotates TDC's five-isoform
   CYP inhibition panel.
-- `cypmode/data/octant_benchmark.py` — checks the motif screen against a
+- `cypmode/data/octant_benchmark.py`: checks the motif screen against a
   different, independent axis: real CYP3A4 dose-response potency from a
   ~1,200-compound diversity-library screen (OpenADMET/Octant), rather than
   TDC's binary labels or the four structurally-validated reference
   compounds. See Independent large-N potency check, below.
-- `cypmode/validation/build_input.py` — builds a Boltz-2 YAML input (protein
+- `cypmode/validation/build_input.py`: builds a Boltz-2 YAML input (protein
   + heme, covalently bonded) for any ligand SMILES, and locates the
   coordinating cysteine on any given protein sequence rather than assuming
   a fixed residue number. Neither of the original four reference inputs
-  was generated by code — this replaces that gap.
-- `cypmode/validation/pipeline.py` — `run_structural_validation(name,
+  was generated by code, this replaces that gap.
+- `cypmode/validation/pipeline.py`: `run_structural_validation(name,
   smiles)`: one call from a SMILES string to a coordination result, for a
   new compound the four reference inputs know nothing about. Wraps
   build_input, an actual `boltz predict` subprocess run (tens of minutes,
   not skipped or faked), and structures.py's summary in one function
   instead of three separate manual steps.
-- `cypmode/validation/structures.py` — parses Boltz-2's predicted structures
+- `cypmode/validation/structures.py`: parses Boltz-2's predicted structures
   (heme explicitly modeled and covalently bonded to the real axial
   cysteine, not left out) and measures the heme iron's distance to
-  whichever ligand nitrogen(s) actually match a Type II motif — not just
+  whichever ligand nitrogen(s) actually match a Type II motif, not just
   the geometrically closest one, which isn't always the same atom (see
   Methodology note, below).
-- `cypmode/validation/batch.py` — runs `run_structural_validation` across a
+- `cypmode/validation/batch.py`: runs `run_structural_validation` across a
   whole compound set (name -> SMILES) in one call, checkpointing results
   after every compound so a run spanning hours survives interruption, and
   isolating one compound's failure from the rest of the batch.
-- `cypmode/validation/build_summary.py` — regenerates
+- `cypmode/validation/build_summary.py`: regenerates
   `data/structure_track/outputs/validation_summary.json` by discovering finished runs
   under `data/structure_track/outputs/out/` and reading each one's SMILES back out of
   its own input YAML; see Reproducing this, below.
-- `app.py` — a Streamlit tool: paste a compound, get the motif call and,
+- `app.py`: a Streamlit tool: paste a compound, get the motif call and,
   for the four reference compounds, the structural check.
-- `docs/figures/generate_validation_figure.py` — regenerates the Fe-N bar
+- `docs/figures/generate_validation_figure.py`: regenerates the Fe-N bar
   chart below (light and dark variants) from
   `data/structure_track/outputs/validation_summary.json`; needs `pip install matplotlib`,
   not otherwise a project dependency.
@@ -432,7 +445,7 @@ streamlit run app.py
 
 ## Try it online
 
-*Hosted demo link pending — `requirements.txt` is prepped for Hugging Face
+*Hosted demo link pending, `requirements.txt` is prepped for Hugging Face
 Spaces (Streamlit SDK) or Streamlit Community Cloud; `app.py`'s Structural
 validation tab reads the checked-in
 `data/structure_track/outputs/validation_summary.json` rather than needing a local
@@ -443,27 +456,27 @@ Boltz-2 run, so it works identically hosted or local.*
 Boltz-2 ([jwohlwend/boltz](https://github.com/jwohlwend/boltz), MIT) is
 used to predict CYP3A4-ligand complexes for the four compounds a recent
 cryo-EM paper (co-authored by Pat Walters) solved structures for. The
-first attempt at this left the heme cofactor out of the model entirely —
+first attempt at this left the heme cofactor out of the model entirely , 
 caught before drawing any conclusion from it, because an apo-protein
 docking pose can't confirm or refute heme coordination if there's no
 heme in the structure. The corrected input explicitly includes heme
 (PDB ligand code `HEM`) as a third chain, covalently bonded
-(`constraints: bond`) to Cys442 — the real axial thiolate ligand,
+(`constraints: bond`) to Cys442, the real axial thiolate ligand,
 located by finding the conserved P450 signature motif
 `FxxGxxxCxG` in the UniProt P08684 sequence, not assumed from memory. No
 constraint is placed on the *inhibitor's* position relative to the heme,
-so a short predicted iron-to-ligand-nitrogen distance is a genuine,
-unforced structural prediction, not something the input forced to
+so a short predicted iron-to-ligand-nitrogen distance is a
+structural prediction that the input did not force, not something the input forced to
 happen.
 
 ### Reproducing this, and validating a new compound
 
 The `data/structure_track/inputs/*.yaml` files above are the exact inputs; the
 predicted structures and confidence/affinity JSON they produce are not
-committed (regeneratable, and large — see below), only the small numeric
+committed (regeneratable, and large, see below), only the small numeric
 summary derived from them is. `boltz` needs its own virtual environment
 (Python 3.10-3.12; pins PyTorch Lightning independently of this project's
-other dependencies) — set up once:
+other dependencies), set up once:
 
 ```bash
 python3 -m venv .venv-boltz
@@ -471,8 +484,8 @@ source .venv-boltz/bin/activate
 pip install boltz
 ```
 
-For a compound this project doesn't already know about — a blind-challenge
-entry, for instance — `cypmode.validation.pipeline` is the one call from a
+For a compound this project doesn't already know about, a blind-challenge
+entry, for instance, `cypmode.validation.pipeline` is the one call from a
 SMILES string to a result, in this project's own `.venv` (not
 `.venv-boltz`; it shells out to `.venv-boltz/bin/boltz` as a subprocess
 rather than needing to run inside that environment):
@@ -482,7 +495,7 @@ pip install -e ".[validate]"
 python -m cypmode.validation.pipeline azamulin_v2 "CC[C@]1(C)C[C@@H](OC(=O)..."
 ```
 
-This builds the YAML (against CYP3A4 by default — pass
+This builds the YAML (against CYP3A4 by default, pass
 `--protein-sequence` for a different target, and note that a different
 construct can shift residue numbering, so don't assume Cys442 carries
 over unchanged), runs `boltz predict` for real (tens of minutes, not
@@ -490,7 +503,7 @@ skipped, output streamed live rather than silent until it exits), and
 prints the structural-validation result as JSON. It's
 `run_structural_validation()` in Python if you'd rather call it directly.
 
-Runs with `--override` by default — confirmed directly (a fresh compound,
+Runs with `--override` by default, confirmed directly (a fresh compound,
 no prior cache) that Boltz-2 can exit 0 having predicted the structure but
 silently skipped the affinity step; `--override` is what makes it actually
 run, and it still reuses the expensive MSA/preprocessing cache when the
@@ -498,8 +511,8 @@ input hasn't changed, so this costs nothing beyond forcing the prediction
 step to complete. Pass `--no-override` to opt out.
 
 To reproduce one of the four checked-in reference compounds by hand
-instead — or if you want to run `boltz predict` yourself with different
-flags — `cypmode.validation.build_input` builds the same YAML
+instead, or if you want to run `boltz predict` yourself with different
+flags, `cypmode.validation.build_input` builds the same YAML
 `cypmode.validation.pipeline` generates internally:
 
 ```python
@@ -510,7 +523,7 @@ yaml_text = build_boltz_yaml(protein_sequence, ligand_smiles, cys)
 ```
 
 `--cache` is where model weights and the CCD chemical-component cache
-download to on first run — about 7.6 GB, a one-time cost of using Boltz-2
+download to on first run, about 7.6 GB, a one-time cost of using Boltz-2
 at all, not specific to this project (any Boltz-2 user pays it).
 `--use_msa_server` generates the MSA automatically via the public MMseqs2
 server instead of requiring a precomputed one. `--accelerator gpu`
@@ -518,7 +531,7 @@ auto-resolves to Metal/MPS on Apple Silicon or CUDA on NVIDIA. Each
 compound took roughly 40 minutes on an Apple M-series chip.
 
 Once result directories exist under `data/structure_track/outputs/out/`, regenerate the
-checked-in summary and figure — `build_summary` discovers compounds from
+checked-in summary and figure, `build_summary` discovers compounds from
 that directory itself, and reads each one's SMILES back out of its own
 input YAML, rather than a separate hardcoded list:
 
@@ -532,7 +545,7 @@ python docs/figures/generate_validation_figure.py   # needs matplotlib
 was "closest ligand nitrogen, whichever one that is." That's wrong in
 general, caught by testing it against a fifth case: for vardenafil, the
 geometrically closest ligand nitrogen (4.84 Å) is not part of any matched
-Type II motif at all — it's a different nitrogen, chemically irrelevant to
+Type II motif at all, it's a different nitrogen, chemically irrelevant to
 heme coordination. `cypmode/validation/structures.py` now reconstructs the
 ligand's real bonds via RDKit's `AssignBondOrdersFromTemplate` (the same
 technique `cyp-heatmap` uses) so the distance reported is specifically the
@@ -540,7 +553,7 @@ closest **motif-matched** nitrogen, with every candidate nitrogen's
 distance still available in `all_ligand_nitrogen_distances` for manual
 review. The `coordinated` call for all four compounds is unchanged;
 vardenafil's reported distance moved from 4.84 Å to its real value, 10.54
-Å — evidence for "not coordinated" got stronger, not weaker, once the
+Å, evidence for "not coordinated" got stronger, not weaker, once the
 right atom was being measured.
 
 Results, from `cypmode/validation/structures.py`'s `summarize_compound()`
@@ -560,22 +573,22 @@ Two of the motif screen's four calls hold up structurally, and the other
 two turn out to be informative in different ways, not simple failures:
 
 - **Ketoconazole and ritonavir** land inside dative-bond range (2.0-2.3 Å
-  is the range solved Type II CYP structures show — Poulos & Johnson,
+  is the range solved Type II CYP structures show, Poulos & Johnson,
   ch. 3 in Ortiz de Montellano (ed.), *Cytochrome P450*, 3rd ed., 2005),
   with no constraint forcing that outcome. Ritonavir's is the compound the
-  thiazole motif was added for (see git history) — its coordination here
+  thiazole motif was added for (see git history), its coordination here
   confirms that fix structurally, not just by substructure match. One
-  honest wrinkle: Boltz-2's own `affinity_probability_binary` for
+  wrinkle: Boltz-2's own `affinity_probability_binary` for
   ritonavir (0.40) is lower than ketoconazole's (0.86) despite both
-  coordinating the heme at similar distance and confidence — the
+  coordinating the heme at similar distance and confidence, the
   structural (geometric) and the learned affinity-probability signals
   don't fully agree here, and this project doesn't have an explanation
   for that beyond noting it.
-- **Azamulin** doesn't coordinate (13.41 Å — nowhere near the pocket in
+- **Azamulin** doesn't coordinate (13.41 Å, nowhere near the pocket in
   this pose), despite matching the triazole motif. Checked why instead of
   calling it a false negative: according to PubMed, azamulin is an
   established mechanism-based (suicide-substrate) inactivator of CYP3A4,
-  not a reversible Type II coordinator — CYP3A4 metabolizes it into a
+  not a reversible Type II coordinator, CYP3A4 metabolizes it into a
   reactive intermediate that covalently modifies the enzyme, a
   turnover-dependent process a static co-folding prediction can't
   represent (Lim et al., *Drug Metab Dispos*, 2005,
@@ -593,30 +606,30 @@ two turn out to be informative in different ways, not simple failures:
   consistent with its documented suicide-substrate mechanism, but a
   co-folding failure of exactly the kind that announcement describes is a
   live alternative (or compounding) explanation this project has no way to
-  rule out from a single static prediction — flagged here rather than
+  rule out from a single static prediction, flagged here rather than
   claimed as resolved.
 - **Vardenafil** doesn't coordinate either (10.54 Å), resolving the open
   question below in favor of false positive: its `imidazole_Nsub` match
   sits inside a fused pyrazolo-pyrimidinone core, and the structural check
   confirms that's not behaving like a discrete coordinating azole.
 
-### Generalization check — not a reference compound
+### Generalization check, not a reference compound
 
 The four results above are the actual validated claim: TDC-motivated,
 scoped to compounds with independently solved cryo-EM structures, and
 cross-checked below. Separately, `cypmode.validation.pipeline` was run
 end to end on **itraconazole** (real ChEMBL SMILES, another triazole
-antifungal — same class as ketoconazole, but never used to build or tune
+antifungal, same class as ketoconazole, but never used to build or tune
 any part of this project's motif patterns, cysteine-finding, or
 atom-matching code) purely as a wiring test: does the pipeline work on a
 compound it has no answer key for.
 
-It ran to completion — Fe-N = 2.02 Å, coordinated — and caught a real bug
+It ran to completion (Fe-N = 2.02 Å, coordinated) and caught a real bug
 in the process: Boltz-2 exited 0 having predicted the structure while
 silently skipping the affinity step, on a fresh compound with no stale
 cache to blame (fixed by defaulting to `--override`; see git history).
 The 2.02 Å result is chemically unsurprising for a triazole in
-ketoconazole's own class, which is exactly the point — this confirms the
+ketoconazole's own class, which is exactly the point, this confirms the
 *machinery* generalizes and found a real reliability gap while doing it,
 not that itraconazole's coordination is independently validated the way
 the four compounds below are. Itraconazole isn't in `data/structure_track/inputs/` as
@@ -637,16 +650,16 @@ contact with the heme iron) from `CYP3A4_heatmap_rich_data.csv`:
 
 | Compound | `MetalAcceptor` (cyp-heatmap) | Closest motif-N distance (this project) | Agree? |
 |---|---|---|---|
-| Ketoconazole (`ketaconazole-a`/`-b`) | 1 | 2.05 Å — coordinated | yes |
-| Ritonavir | 1 | 2.19 Å — coordinated | yes |
-| Azamulin | 0 | 13.41 Å — not coordinated | yes |
-| Vardenafil (`vardenafil21`) | 0 (`HBAcceptor`=1 instead) | 10.54 Å — not coordinated | yes |
+| Ketoconazole (`ketaconazole-a`/`-b`) | 1 | 2.05 Å, coordinated | yes |
+| Ritonavir | 1 | 2.19 Å, coordinated | yes |
+| Azamulin | 0 | 13.41 Å, not coordinated | yes |
+| Vardenafil (`vardenafil21`) | 0 (`HBAcceptor`=1 instead) | 10.54 Å, not coordinated | yes |
 
 Two independent methods agree on the binary coordination call for all
-four. One honest gap this correction exposed: cyp-heatmap's `HBAcceptor`
+four. One gap this correction exposed: cyp-heatmap's `HBAcceptor`
 hit on vardenafil is a real interaction with *some* heme-adjacent atom,
 but this project's Type-II-motif-matched nitrogen (10.54 Å) is too far to
-be it — the more likely candidate is one of vardenafil's other, closer
+be it, the more likely candidate is one of vardenafil's other, closer
 nitrogens in `all_ligand_nitrogen_distances` (e.g. 4.84 Å), which isn't
 part of a Type II motif and so isn't something this project's screen was
 ever checking. Neither pipeline validates the other's numeric details (a
@@ -664,11 +677,11 @@ structurally?
 
 Source: [OpenADMET/Octant's CYP inhibition & reactivity blog
 release](https://huggingface.co/datasets/openadmet/Octant_CYP_inhibition_reactivity_blog_release)
-(CC BY 4.0) — a ~1,200-compound diversity-library CYP3A4 dose-response
+(CC BY 4.0), a ~1,200-compound diversity-library CYP3A4 dose-response
 screen, with a 30-minute active-enzyme pre-incubation (so measured potency
 reflects combined reversible + time-dependent inhibition). This is a
 different chemical library from both TDC's Veith panel and this project's
-four structural reference compounds — confirmed directly by SMILES
+four structural reference compounds, confirmed directly by SMILES
 comparison, only vardenafil overlaps with it at all.
 
 `python -m cypmode.data.octant_benchmark` (`cypmode/data/octant_benchmark.py`)
@@ -681,11 +694,11 @@ U test. The one compound of the release that is also in the challenge's blinded 
 | Motif-positive | 450 | 5.32 | 5.43 |
 | Motif-negative | 633 | 5.17 | 5.30 |
 
-**p = 0.0085** (one-sided, motif-positive > motif-negative) — a real,
+**p = 0.0085** (one-sided, motif-positive > motif-negative), a real,
 statistically significant difference on a dataset the motif screen was
 never tuned against.
 
-**Honest reading:** the difference is real but small — under half a log
+**Reading:** the difference is real but small, under half a log
 unit, on two heavily overlapping distributions. This is independent
 evidence that the structural feature the screen looks for tracks a real
 pharmacological property, not proof the screen can predict potency: as
@@ -694,7 +707,7 @@ Scope and limitations (below) already states, it was built to flag
 binds. Treat this as one more independent data point supporting the
 underlying chemistry, not an upgrade to what the screen claims to do.
 
-## OpenADMET CYP Blind Challenge — Structure Prediction Track (in progress)
+## OpenADMET CYP Blind Challenge, Structure Prediction Track (in progress)
 
 While preparing for the [OpenADMET CYP Inhibition Blind
 Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge)'s Direct
@@ -704,7 +717,7 @@ directly (rather than only the challenge's announcement timeline) turned up
 a third dataset config, `structure`, added 2026-09-23: a 20-compound
 blinded test set for a CYP3A4 structure-prediction/co-folding task. As of
 2026-09-24, this track is not yet visible on the challenge's own Space UI
-or FAQ — the data is public (Apache 2.0, same as the rest of the challenge
+or FAQ, the data is public (Apache 2.0, same as the rest of the challenge
 data) a day ahead of any announcement of it.
 
 This overlaps directly with this project's own structural-validation
@@ -720,34 +733,34 @@ public blinded test set, saved as-is (as corrected by the organisers on
 stereochemistry, and every run of them was made again from the corrected
 SMILES; a pose is eligible for the submission only when it carries the
 official stereochemistry, `cypmode/validation/pose_stereo.py`). Running the Type II motif screen
-against it: **12 of the 20 compounds (60%) carry a coordinating motif** —
+against it: **12 of the 20 compounds (60%) carry a coordinating motif** , 
 reproducible with `cypmode.metrics.motifs.detect_motifs`.
 `cypmode/validation/batch.py` is running `run_structural_validation`
-against all 20 (not only the motif-positive ones — coordination status
+against all 20 (not only the motif-positive ones, coordination status
 isn't knowable without running the structure, that's the whole point of
 this pipeline); results will land in
 `data/structure_track/outputs/structure_track_results.json` once that finishes.
 
 **Stated plainly:** this track's official scoring rules, submission
-format, and deadline aren't published anywhere as of this writing — only
+format, and deadline aren't published anywhere as of this writing, only
 the blinded SMILES are public. Nothing here is a submission; it's early
 preparation with a pipeline this project already had, pointed at real
 compounds from a real (if not yet formally announced) part of the
 challenge.
 
-### TDI reference panel — real quantitative validation, and a real gap
+### TDI reference panel, real quantitative validation, and a real gap
 
 The independent checks above validate the motif screen's binary coordination
 call and its correlation with potency at scale. Separately: does it say
-anything real about *time-dependent* inhibition (TDI) — mechanism-based
+anything real about *time-dependent* inhibition (TDI), mechanism-based
 inactivation, not reversible coordination?
 
 Source: [OpenADMET/Octant's CYP Data Engine blog post
-repo](https://github.com/OpenADMET/Octant_CYP_blog_post) (CC BY 4.0) —
+repo](https://github.com/OpenADMET/Octant_CYP_blog_post) (CC BY 4.0) , 
 a small, 6-named-drug panel with real preincubation-vs-direct pIC50 shift
 measurements (`cypmode/validation/tdi_reference.py`,
-`data/tdi_track/inputs/octant_cache/tdi_reference/`). Two of the six — ketoconazole and
-azamulin — are already in this project's own structural reference set, so
+`data/tdi_track/inputs/octant_cache/tdi_reference/`). Two of the six, ketoconazole and
+azamulin, are already in this project's own structural reference set, so
 both their motif call *and* their static heme-coordination geometry are
 independently known, not just their TDI status:
 
@@ -761,19 +774,19 @@ independently known, not just their TDI status:
 | Troleandomycin | 1.25 | **Yes** | **No** | not run |
 
 Two things line up exactly with this project's existing structural claims:
-ketoconazole (motif-positive, coordinated, real TDI shift ≈ 0 — a genuine
+ketoconazole (motif-positive, coordinated, real TDI shift ≈ 0, a
 reversible Type II inhibitor) and azamulin (motif-positive, *not*
-coordinated, real strong TDI shift — consistent with real mechanism-based
+coordinated, real strong TDI shift, consistent with real mechanism-based
 inactivation rather than static coordination, not just an assumption).
 
 **The real gap, stated plainly:** diltiazem, verapamil, and troleandomycin
 are documented, clinically relevant time-dependent CYP3A4 inhibitors, and
-all three carry **no Type II motif at all** — their real mechanisms go
+all three carry **no Type II motif at all**, their real mechanisms go
 through a tertiary amine (verapamil, diltiazem) or a macrolide nitroso-heme
 complex (troleandomycin), chemistry this screen was never built to detect
 (it only looks for azole/pyridine/thiazole nitrogens). Half of this small
 real panel's TDI-positive compounds would be invisible to the motif screen
-entirely — a different, larger failure mode than azamulin's "motif-positive
+entirely, a different, larger failure mode than azamulin's "motif-positive
 but non-coordinating" case, and one no amount of Type-II-motif tuning can
 fix, since the chemistry itself is outside what the screen looks for.
 
@@ -782,20 +795,20 @@ fix, since the chemistry itself is outside what the screen looks for.
 - The motif screen is a substructure alert, not a mechanism predictor: a
   match means "capable of heme coordination," not "confirmed to
   coordinate in this isoform's active site." Confirmed above for
-  vardenafil specifically — its `imidazole_Nsub` match, inside a fused
+  vardenafil specifically, its `imidazole_Nsub` match, inside a fused
   ring system rather than a discrete azole, is a real false positive, not
   a hypothetical one.
 - The screen only covers direct heme-iron coordination. It has nothing to
   say about mechanism-based (quasi-irreversible) inactivation or other
-  non-coordinating inhibition modes — azamulin, above, is a confirmed
+  non-coordinating inhibition modes, azamulin, above, is a confirmed
   example: real CYP3A4 inhibitor, "Type II" motif match, no structural
   coordination, because its actual mechanism is suicide inactivation, a
   category this screen was never built to detect.
 - Structural validation is restricted to the four compounds with
-  independently solved reference structures, by design — see Problem,
+  independently solved reference structures, by design, see Problem,
   above, on why panel-wide physics-based validation isn't attempted here.
 - A short Fe-ligand-N distance is evidence of a geometrically plausible
-  coordination pose, not proof of the biological mechanism — Boltz-2 has
+  coordination pose, not proof of the biological mechanism, Boltz-2 has
   no notion of catalytic turnover or covalent chemistry, so it can
   confirm a static coordination geometry but, as azamulin shows, silence
   on that front doesn't rule out a real, different mechanism.
@@ -803,7 +816,7 @@ fix, since the chemistry itself is outside what the screen looks for.
 ## References
 
 Tools and data this project depends on, cited properly rather than just
-linked in passing — using someone else's published work without a real
+linked in passing, using someone else's published work without a real
 citation isn't acceptable here, regardless of how the link is phrased
 elsewhere in this README:
 
@@ -817,30 +830,30 @@ elsewhere in this README:
   Learning Datasets and Tasks for Drug Discovery and Development."
   *NeurIPS 2021 Datasets and Benchmarks*. arXiv:2102.09548.
 - OpenADMET. "CYP Inhibition Blind Challenge."
-  https://huggingface.co/spaces/openadmet/cyp-challenge — the training
+  https://huggingface.co/spaces/openadmet/cyp-challenge, the training
   data, blinded test set, and TDI task definition this project's
   `cypmode/challenge/` package works against all come from here.
 - OpenADMET/Octant. `Octant_CYP_blog_post`
-  (github.com/OpenADMET/Octant_CYP_blog_post), CC BY 4.0 — the 6-drug
+  (github.com/OpenADMET/Octant_CYP_blog_post), CC BY 4.0, the 6-drug
   quantitative TDI preincubation-shift panel `cypmode/validation/tdi_reference.py`
   cross-checks against.
 - Landrum, G. et al. RDKit: Open-source cheminformatics.
-  https://www.rdkit.org — descriptors, fingerprints, and SMARTS matching
+  https://www.rdkit.org, descriptors, fingerprints, and SMARTS matching
   throughout this project are built on it.
 - Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., Liu,
   T.-Y. "LightGBM: A Highly Efficient Gradient Boosting Decision Tree."
-  *NeurIPS* (2017). — the classifier used throughout `cypmode/challenge/`.
+  *NeurIPS* (2017)., the classifier used throughout `cypmode/challenge/`.
 - Castellanos, M.A., MacDermott-Opeskin, H., Ainsley, J., et al., Walters,
   W.P. "Assessing the state of the art in ADMET prediction: Lessons from
   the OpenADMET-ExpansionRx community blind challenge." *ChemRxiv*
-  (2026). https://doi.org/10.26434/chemrxiv.15009342.v1 — a separate,
+  (2026). https://doi.org/10.26434/chemrxiv.15009342.v1, a separate,
   already-completed OpenADMET blind challenge (not the CYP challenge
   itself), whose statistical-methodology findings this project's own
   `cypmode/challenge/stacking_significance.py` is checked against; see
   `CYPMode_Architecture_Specification.md`.
 - Huddleston, K. "Cofolding? I hardly know her! - Cofolding Methods on
   ADMET Targets." *OpenADMET Blog* (2026).
-  https://doi.org/10.5281/zenodo.21785463 — real, quantified evidence
+  https://doi.org/10.5281/zenodo.21785463, real, quantified evidence
   that Boltz-2 and OpenFold3 (both used in this project's Structure
   track) place CYP3A4 ligands correctly only 57.8%/31.5% of the time
   even under an optimistic oracle-ranking evaluation; see

@@ -24,7 +24,7 @@ GLOSSARY = {
     "cryo-EM": "an experimental technique that determines structures by imaging frozen molecules with an electron microscope",
     "ångström": "a unit of length of 0.1 nanometre; a bond between two atoms is about 1 to 2 ångström long",
     "blind": "a test whose correct answers are kept by the organisers and not shown to the participants",
-    "Matthews correlation coefficient": "a score for yes/no predictions: 0 for guessing, 1 for perfect, honest when yes is rare",
+    "Matthews correlation coefficient": "a score for yes/no predictions: 0 for guessing, 1 for perfect, and informative when yes is rare",
     "MCC": "the abbreviation of the Matthews correlation coefficient",
     "LDDT-PLI": "a score from 0 to 1 for how well the distances between a ligand's atoms and the nearby protein atoms are reproduced",
     "PoseBusters": "a program that checks a predicted structure for physical and chemical sanity",

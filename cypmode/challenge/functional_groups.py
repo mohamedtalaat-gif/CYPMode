@@ -91,7 +91,7 @@ def group_matrix(smiles: list[str]) -> pd.DataFrame:
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
-    """The Wilson score interval of a proportion k / n (the interval that stays inside 0 and 1 and is honest for small n)."""
+    """The Wilson score interval of a proportion k / n (the interval that stays inside 0 and 1 and keeps its coverage for small n)."""
     if n == 0:
         return float("nan"), float("nan")
     p = k / n

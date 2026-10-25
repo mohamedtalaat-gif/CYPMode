@@ -106,7 +106,7 @@ n_tdi_files = len(file_table)
 MD_13_INTRO = """
 # Part XIII. Closing
 
-Twelve parts have built a method, tested it, and shown how the tests were themselves tested. This part says what that adds up to. It is short on purpose: the evidence is in the parts that produced it, and the closing is only honest if it says no more than the evidence does. 13.1 separates what the project shows from what it does not. 13.2 lists the limitations the method report logs, with the ones the report does not. 13.3 names the questions that remain open and what would settle each. 13.4 gives the final results and the state of the submission files, read from the files themselves.
+Twelve parts have built a method, tested it, and shown how the tests were themselves tested. This part says what that adds up to. It is short on purpose: the evidence is in the parts that produced it, and the closing is sound only if it says no more than the evidence does. 13.1 separates what the project shows from what it does not. 13.2 lists the limitations the method report logs, with the ones the report does not. 13.3 names the questions that remain open and what would settle each. 13.4 gives the final results and the state of the submission files, read from the files themselves.
 """
 
 MD_13_1 = """
@@ -136,7 +136,7 @@ MD_13_1_B = """
 
 *It does not show how well the entries score.* The step from the estimates above to the leaderboard is unmeasured until a submission exists, and the limitations of 13.2 say that the offset depends on the model. A cross-validated AUC on the training data is not the challenge score.
 
-*It does not show that the gains it kept are real.* The family of {{=n_family}} tests of Part IX has {{=n_raw_below}} with a raw p-value below 0.05 ({{=raw_below_names}}), and {{=holm_sentence}} (the smallest adjusted p-value is {{=smallest_holm:.2f}}). The neural pair passes its registered gate, with a raw p-value of {{=neural_p:.3f}} on CYP3A4 and a replicate on the 10-outer-fold plan, but its adjusted p-value is {{=neural_holm:.2f}}. The honest reading is that its gain is plausible and modest and has not been shown beyond what the number of attempts could produce.
+*It does not show that the gains it kept are real.* The family of {{=n_family}} tests of Part IX has {{=n_raw_below}} with a raw p-value below 0.05 ({{=raw_below_names}}), and {{=holm_sentence}} (the smallest adjusted p-value is {{=smallest_holm:.2f}}). The neural pair passes its registered gate, with a raw p-value of {{=neural_p:.3f}} on CYP3A4 and a replicate on the 10-outer-fold plan, but its adjusted p-value is {{=neural_holm:.2f}}. The reading is that its gain is plausible and modest and has not been shown beyond what the number of attempts could produce.
 
 *It does not show that a pose is right.* The poses are valid; nobody outside the organisers knows how close they are to the crystal. On the benchmark of ligands with deposited crystals the first pick of the model is far from the crystal on average, and the limitation on structure in 13.2 gives the figure.
 

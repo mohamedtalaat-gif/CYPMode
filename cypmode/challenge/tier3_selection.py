@@ -88,7 +88,7 @@ def select_fixed_budget_oof(
 
     This is the practical alternative to running fold-local selection 5
     separate times: Boltz-2's real per-compound cost (15-30+ minutes,
-    confirmed directly this session) makes a single, whole-dataset budget
+    confirmed directly) makes a single, whole-dataset budget
     the only tractable option, not a per-fold repeat over mostly the same
     compounds.
     """

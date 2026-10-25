@@ -205,7 +205,7 @@ MD_12_6 = """
 
 > **Field:** Software engineering
 
-*Where this section sits:* the last four sections described mechanisms. This one lists the rules those mechanisms exist for, from the first section of the checklist, which no result or deadline changes, and says for each how it is enforced. The honest answer is that some are enforced by a program and some only by a person, and the section says which.
+*Where this section sits:* the last four sections described mechanisms. This one lists the rules those mechanisms exist for, from the first section of the checklist, which no result or deadline changes, and says for each how it is enforced. The answer is that some are enforced by a program and some only by a person, and the section says which.
 
 A rule that is only a promise is weakest at the moment it matters most: late, tired and near a deadline, the temptation is to make an exception once. The project's habit is therefore to turn every rule that can be turned into a check into a check, and to say plainly which ones cannot be. The next cell reads the rules from the checklist and pairs each with its mechanism; the mapping is written by hand, and the cell fails if a file it names does not exist.
 """

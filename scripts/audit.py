@@ -116,7 +116,7 @@ def check_pip_audit() -> None:
     # pip-audit do a strict dry-run reinstall of the whole set together,
     # which fails on this real environment's legitimately-incompatible
     # cross-pins (built up incrementally across many real `pip install`
-    # calls this session, never resolved from one requirements file) --
+    # calls, never resolved from one requirements file) --
     # confirmed directly, a real ResolutionImpossible on numpy, not a
     # config mistake. --local only audits the CURRENT process's own
     # environment though, and pip-audit itself only lives in .venv-audit

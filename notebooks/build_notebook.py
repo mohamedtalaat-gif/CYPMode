@@ -55,7 +55,7 @@ def main() -> int:
     args = parser.parse_args()
     if args.written:
         left = unwritten_parts(ALL_CELLS, (Path(__file__).resolve().parent / "PLAN.md").read_text())
-        print("every planned part and appendix is written" if not left else f"{len(left)} not written yet: " + ", ".join(left))
+        print("every planned part and appendix is written" if not left else f"{len(left)} without text: " + ", ".join(left))
         return 1 if left else 0
     cells, missing = assemble(ALL_CELLS)
     part_zero = next((i for lv, text, i in headings(cells) if lv == 1 and text.startswith("Part 0")), 0)

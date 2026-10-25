@@ -101,7 +101,7 @@ def load_single_isoform_aid(path: str | Path, isoform: str) -> pd.DataFrame:
     AID 884 for CYP3A4 -- the individual per-isoform screens the later
     AID 1851 panel assay draws from, confirmed via a real compound-list
     overlap check: only 2,193/9,385 AID891 compounds and 10/13,076 AID884
-    compounds overlap with AID1851 -- 77% and 99.9% genuinely new
+    compounds overlap with AID1851 -- 77% and 99.9% new
     compounds respectively, not a duplicate of that data). Same real
     replicate-row quirk as AID 1851 (verified directly: 935 duplicate CIDs
     in AID891, 1,079 in AID884) -- collapsed the same way, first-seen per

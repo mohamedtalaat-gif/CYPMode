@@ -18,7 +18,7 @@ section 12.2), not a mechanism predictor: a motif match flags a compound as
 *capable* of heme coordination, not confirmed to coordinate in a specific
 CYP isoform's active site. Ring systems can match a pattern by coincidence
 of atom connectivity without behaving like the discrete azole the rule was
-derived from — see cypmode/validation/structures.py, which checks motif
+derived from, see cypmode/validation/structures.py, which checks motif
 calls against physics-based (Boltz-2) structure prediction restricted to
 compounds with independently solved reference structures.
 """

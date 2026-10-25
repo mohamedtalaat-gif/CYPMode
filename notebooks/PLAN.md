@@ -24,7 +24,7 @@ of contents, bold terms, display equations rendered for the PDF, "On what actual
    An experiment that failed its gate is explained as carefully as one that passed, including why it did not help.
 6. **No typed-in numbers.** Every number, table and figure is produced by a code cell that reads the repository's own files at build time;
    a failing cell fails the build. The notebook is rebuilt from the repository whenever results change.
-7. **Honest scope.** Where the code does less than its name suggests, an "On what actually ran" paragraph says so.
+7. **Stated scope.** Where the code does less than its name suggests, an "On what actually ran" paragraph says so.
 8. **Whole-project coverage, enforced.** The builder fails when any module of `cypmode/`, any file of `scripts/`, any job of `queue/jobs/`
    or any test file is not named in the notebook, so nothing in the repository can go unexplained, and every later addition has to be
    explained before the notebook builds. Appendix D prints the resulting map from file to section.
@@ -102,7 +102,7 @@ of contents, bold terms, display equations rendered for the PDF, "On what actual
 - 5.7 Cross-checking the screen against time-dependent shift measurements.
 - 5.8 The Streamlit application and its figures.
 
-## Part VI. Measuring honestly
+## Part VI. Measuring without selection bias
 
 - 6.1 Why a score on the training data lies.
 - 6.2 Cross-validation and its optimism when it also chooses.
