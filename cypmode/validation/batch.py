@@ -142,6 +142,13 @@ def _main() -> None:
     )
     parser.add_argument("--no-stream", dest="stream_output", action="store_false")
     parser.add_argument(
+        "--no-override",
+        dest="override",
+        action="store_false",
+        help="reuse the existing predictions of a run (Boltz-2 then runs only the missing step, for example an affinity step that was skipped for memory) instead of forcing a fresh run",
+    )
+    parser.add_argument("--accelerator", default="gpu", choices=("gpu", "cpu"), help="passed through to boltz predict; the CPU has no memory cap, the GPU (MPS) has the watermark of the guards")
+    parser.add_argument(
         "--no-affinity",
         dest="predict_affinity",
         action="store_false",
@@ -245,6 +252,8 @@ def _main() -> None:
         table_path=table_path,
         target=args.target,
         stream_output=args.stream_output,
+        override=args.override,
+        accelerator=args.accelerator,
         predict_affinity=args.predict_affinity,
         recycling_steps=args.recycling_steps,
         max_msa_seqs=args.max_msa_seqs,

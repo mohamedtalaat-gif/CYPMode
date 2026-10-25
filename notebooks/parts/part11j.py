@@ -110,6 +110,27 @@ largest_fe_change = float((changed_picks.fe_n_new - changed_picks.fe_n_old).abs(
 print(f"{n_picks_changed} of {len(picks)} chosen poses are not the earlier ones")
 '''
 
+AFFINITY = r'''
+# What happened to the affinity step of the three base runs of job 275 (11.12), read from the logs: the memory warning of the base runs, and the checks that job 277 made after it ran the missing step again.
+base_log = (ROOT / "data/structure_track/outputs/cyp3a4/logs/stereo_base_runs.log").read_text()
+n_oom = base_log.count("ran out of memory, skipping batch")
+verify_text = (ROOT / "data/structure_track/outputs/cyp3a4/logs/affinity_retry_verify.log").read_text()
+n_retried_unchanged = len(re.findall(r"structure files byte-identical", verify_text))
+n_retried_changed = verify_text.count("CHANGED")
+table_line = re.search(r"base table: (\d+) rows, (\d+) in error", verify_text)
+n_table_rows, n_table_errors = int(table_line.group(1)), int(table_line.group(2))
+assert n_oom == n_retried_unchanged == n_corrected and n_retried_changed == 0 and n_table_errors == 0 and n_table_rows == n_official  # a failing cell fails the build
+print(f"{n_oom} affinity steps skipped for memory; {n_retried_unchanged} structures byte-identical after the missing step was made; table {n_table_rows} rows, {n_table_errors} in error")
+'''
+
+AFFINITY_VALUES = r'''
+# The affinity probabilities of the three ligands from the corrected SMILES and from the racemic runs that were set aside (held back: results for the blinded compounds).
+pairs = [(float(new), float(old)) for new, old in re.findall(r"affinity probability ([\d.]+), value [-\d.]+ \(the racemic run: ([\d.]+)\)", verify_text)]
+affinity_change = [round(new - old, 3) for new, old in pairs]
+largest_affinity_change = max(abs(c) for c in affinity_change) if affinity_change else float("nan")
+print(f"affinity probability, corrected minus racemic: {affinity_change}")
+'''
+
 CELLS = [
     md("""
 ## 11.12 The official set corrected: three ligands that came without their stereochemistry
@@ -143,6 +164,21 @@ The table shows that the two enantiomers have volumes of opposite sign, that a m
 Of the 20 poses chosen by the unchanged rule, {{=n_picks_changed}} are not the poses that the racemic runs gave; for those the ligand moved by {{=median_pick_rmsd:.2f}} Å at the median between the two picks (pocket-aligned, symmetry-aware), and the largest change of the iron-nitrogen distance of a Type II ligand is {{=largest_fe_change:.2f}} Å. A new draw from a model gives a different pose even from the same input, so a change of pose is the expected result of the rerun and not a finding; it is reported so that nothing in the notebook, the figures or the film quotes a pose of the racemic runs.
 """, held_back=True),
     md("""
-*On what actually ran.* `cypmode/validation/pose_stereo.py` (`unspecified_stereo`, `has_stereo`, `reproduces_stereo`, `pdb_reproduces_stereo`, `cif_reproduces_stereo`, `zip_reproduces_stereo`) reads the stereochemistry of a pose and checks a zip or the pools; `cypmode/validation/stereo_rerun.py` finds the stale runs, sets them aside with a ledger and compares the earlier picks with the new ones. The job `275_stereo_official_rerun` does all of it in order (set aside, the base runs of the three ligands, the final recipe, the report of the picks, the checks and the scorer's call on the new zip) and the job `276_requeue_after_stereo` then runs the final chain again, from the final build of the time-dependent inhibition track on, so that every number, figure and page that depends on the poses is made again. The tests are `tests/test_pose_stereo.py` (the official file has no open centre, the racemic SMILES of the first publication leave one, a pose and its mirror image on the three ligands and on the cis and trans cyclohexane, the residue `LIG` of a submission file, a zip) and `tests/test_stereo_rerun.py` (a stale run, the set-aside, doing it twice, the dry run, the report of the picks).
+**A second finding of the rerun: the affinity step of the three base runs.** The base run of a ligand is Boltz-2 with its second network, the **affinity head**, which takes the structure that was just predicted and returns a number for how strongly the ligand binds and the probability that it binds at all. The head is not part of the choice of the pose: the recipe works with the structures, and the runs of the recipe do not ask for it. It is kept in the base run because the table of the 20 ligands has always had its values. After the correction, the affinity step of all {{=n_oom}} base runs that were made again stopped with the message "ran out of memory, skipping batch": the processor that the model runs on (the graphics unit of this machine, called **MPS**) may allocate only a fixed share of its memory, which the guards of the queue lowered to a **watermark** of 1.3 times the recommended working set after the machine had run out of memory and restarted on 2026-10-07, and the affinity head needs more than that for these three. No affinity step had been run since then (the last affinity file of the project is of 2026-09-27), so the base runs of the correction were the first to meet the cap. Boltz-2 does not fail on this: it skips the step and exits normally.
+
+The pipeline did notice, because it looks for the affinity file and raises when there is none, and the batch runner records a failure as the entry `error` of the ligand and goes on. Two things followed that nobody had asked for. The whole row of the ligand was lost, since the entry holds the error and nothing else, so the table had no coordination, no iron-nitrogen distance and no confidence for the three ligands although their structures were intact. And the checkpoint that makes the batch runner skip a finished ligand skips an error too, so no later run would have tried again; job 275 ended as finished, because its checks were those of the stereochemistry and not of the completeness of the table. It was found when the result of the job was read, and the same reading found that no other result file of the project holds an entry in error and that no other log holds the warning (the only other message of this kind in the logs of the project is that of one benchmark ligand of the second co-folding model, OpenFold3, which is another program with its own table).
+
+What was done, registered before the job ran (`cypmode/validation/affinity_retry.py`, job `277_affinity_base_runs`): the SHA-256 of the structure files of each failed run is recorded and its entry leaves the checkpoint (the original is kept); Boltz-2 is run again with `--no-override`, which makes it skip a finished prediction and run only the step that is missing, on the central processor (CPU), which has no memory cap and is slower; the structure files are compared with the recorded digests afterwards, so that the poses on which the recipe worked are known to be the same; and the audit has a new check, that the table of the 20 ligands holds no row in error. The memory cap was not raised, since the machine has little swap left and the cap is what keeps it from stopping again.
+"""),
+    code(AFFINITY),
+    md("""
+The log of the check shows {{=n_retried_unchanged}} of {{=n_corrected}} structures byte-identical to the recorded ones and a table of {{=n_table_rows}} rows with {{=n_table_errors}} in error (the build checks it). The values of the affinity head are not used by any later step; they are in the table only so that it is complete.
+"""),
+    code(AFFINITY_VALUES, held_back=True),
+    md("""
+The affinity probability of the three ligands changed by at most {{=largest_affinity_change:.2f}} between the racemic run and the run from the corrected SMILES. The two inputs differ in the stereochemistry, the draws of the structure differ, and the head was run on the processor and not on the graphics unit, so the three causes cannot be told apart from this comparison; none of them is used by a decision.
+""", held_back=True),
+    md("""
+*On what actually ran.* `cypmode/validation/pose_stereo.py` (`unspecified_stereo`, `has_stereo`, `reproduces_stereo`, `pdb_reproduces_stereo`, `cif_reproduces_stereo`, `zip_reproduces_stereo`) reads the stereochemistry of a pose and checks a zip or the pools; `cypmode/validation/stereo_rerun.py` finds the stale runs, sets them aside with a ledger and compares the earlier picks with the new ones. The job `275_stereo_official_rerun` does all of it in order (set aside, the base runs of the three ligands, the final recipe, the report of the picks, the checks and the scorer's call on the new zip) and the job `276_requeue_after_stereo` then runs the final chain again, from the final build of the time-dependent inhibition track on, so that every number, figure and page that depends on the poses is made again. `cypmode/validation/affinity_retry.py` (`failed_rows`, `affinity_failures`, `digests`, `prepare`, `unchanged`) completes the table of the base runs and the job `277_affinity_base_runs` runs it, with `--no-override` and `--accelerator cpu`, two options that `cypmode/validation/batch.py` has since the correction. The tests are `tests/test_pose_stereo.py` (the official file has no open centre, the racemic SMILES of the first publication leave one, a pose and its mirror image on the three ligands and on the cis and trans cyclohexane, the residue `LIG` of a submission file, a zip) and `tests/test_stereo_rerun.py` (a stale run, the set-aside, doing it twice, the dry run, the report of the picks) and `tests/test_affinity_retry.py` (the error of a missing affinity file against any other error, recording the digests and taking the entry out, doing it twice, a changed structure file, a run without a structure, the two options of the batch runner).
 """),
 ]

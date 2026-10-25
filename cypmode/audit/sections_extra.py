@@ -173,6 +173,12 @@ def final_candidates(ctx: Context) -> Section:
                   f"{sum(v is True for v in stereo.values())} of {len(stereo)}")
         except ImportError:
             s.add(f"{z.name}: scorer-exact PoseBusters check", None, "posebusters not installed")
+    from cypmode.validation.affinity_retry import failed_rows
+
+    base_table = ROOT / "data/structure_track/outputs/cyp3a4/structure_track_results.json"
+    if base_table.exists():  # a failed step of one run leaves its whole row in error and the checkpoint skips it on every later run (2026-10-25)
+        failed = failed_rows(base_table)
+        s.add("the base-run table of the 20 official ligands has no row in error (structure summary and affinity of every ligand)", not failed, f"{len(failed)} in error" + (f": {', '.join(failed[:4])}" if failed else ""))
     s.body.insert(0, md_table(pd.DataFrame(rows, columns=["file", "sha256", "valid", "CYP3A4 rate", "CYP2D6 rate"])) if rows else "No final TDI candidate files yet (job 090).")
     if not rows:
         s.add("final TDI candidate files present", None, "pending job 090")
