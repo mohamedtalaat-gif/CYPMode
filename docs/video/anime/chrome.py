@@ -13,6 +13,7 @@ import urllib.request
 from pathlib import Path
 from typing import Self
 
+from websockets.exceptions import ConnectionClosed
 from websockets.sync.client import connect
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
@@ -26,8 +27,14 @@ class Chrome:
         self._profile = tempfile.TemporaryDirectory()
         self._process = None
         self._socket = None
+        self._page = None
+        self.restarts = 0
 
     def __enter__(self) -> Self:
+        self._launch()
+        return self
+
+    def _launch(self) -> None:
         flags = ["--headless=new", f"--remote-debugging-port={self.port}", f"--user-data-dir={self._profile.name}", "--hide-scrollbars", f"--window-size={WIDTH},{HEIGHT}",
                  "--force-device-scale-factor=1", "--allow-file-access-from-files", "--disable-background-timer-throttling", "about:blank"]
         self._process = subprocess.Popen([CHROME, *flags], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -43,7 +50,35 @@ class Chrome:
         self._socket = connect(page["webSocketDebuggerUrl"], max_size=None)
         self.call("Page.enable")
         self.call("Emulation.setDeviceMetricsOverride", width=WIDTH, height=HEIGHT, deviceScaleFactor=1, mobile=False)
-        return self
+
+    def restart(self) -> None:
+        """Start a new browser after the first one has gone (the page that was open is opened again); every call of the film is a function of the time it is given, so no state is lost."""
+        self.restarts += 1
+        try:
+            self._socket.close()
+        except (OSError, AttributeError):
+            pass
+        if self._process is not None:
+            self._process.terminate()
+            try:
+                self._process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                self._process.kill()
+        self._profile.cleanup()
+        self._profile = tempfile.TemporaryDirectory()
+        self._launch()
+        if self._page is not None:
+            self.open(self._page)
+
+    def retrying(self, action, attempts: int = 30):
+        """Run ``action`` and, when the browser has gone while it ran, start a new one and run it again."""
+        for attempt in range(attempts):
+            try:
+                return action()
+            except (ConnectionClosed, OSError):
+                if attempt == attempts - 1:
+                    raise
+                self.restart()
 
     def __exit__(self, *exc) -> None:
         if self._socket is not None:
@@ -64,6 +99,7 @@ class Chrome:
                 return message["result"]
 
     def open(self, path: Path) -> None:
+        self._page = Path(path)
         self.call("Page.navigate", url=Path(path).resolve().as_uri())
         for _ in range(100):
             if self.evaluate("document.readyState") == "complete":

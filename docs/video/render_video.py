@@ -45,10 +45,13 @@ def render_frames(chrome: Chrome, duration: float) -> int:
     FRAMES.mkdir(parents=True)
     total = round(duration * FPS)
     for index in range(total):
-        chrome.evaluate(f"renderAsync({index / FPS})")
-        chrome.screenshot(FRAMES / f"frame_{index:05d}.png")
+        def draw(index=index):
+            chrome.evaluate(f"renderAsync({index / FPS})")
+            chrome.screenshot(FRAMES / f"frame_{index:05d}.png")
+
+        chrome.retrying(draw)  # a frame is a function of its time, so the browser can be started again whenever it has gone
         if index % 240 == 0:
-            print(f"frame {index} of {total}", flush=True)
+            print(f"frame {index} of {total}, {chrome.restarts} browser restarts", flush=True)
     return total
 
 
@@ -61,15 +64,18 @@ def dom_digests(poster_only: bool = False) -> dict:
         if not poster_only:
             total, chain = round(float(chrome.evaluate("DURATION")) * FPS), []
             for start in range(0, total, 480):  # twenty seconds at a time
-                chain.append(chrome.evaluate(f"domDigest({start}, {min(start + 480, total)}, {FPS})"))
+                chain.append(chrome.retrying(lambda start=start: chrome.evaluate(f"domDigest({start}, {min(start + 480, total)}, {FPS})")))
             out["film"] = hashlib.sha256(":".join(chain).encode()).hexdigest()
     return out
 
 
 def write_poster(chrome: Chrome) -> None:
     """The poster is its own picture (poster.js: the title, the question, four real numbers and the whole team), not a frame of the film."""
-    chrome.evaluate("posterAsync()")
-    chrome.screenshot(POSTER)
+    def draw():
+        chrome.evaluate("posterAsync()")
+        chrome.screenshot(POSTER)
+
+    chrome.retrying(draw)
 
 
 def mux_voice() -> None:
