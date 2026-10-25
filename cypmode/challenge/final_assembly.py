@@ -29,7 +29,7 @@ via an explicit "missing_flag" the model could read as a near-perfect
 shortcut ("missing_flag=1" -> ~0% positive in training) -- but the real
 blind test set NEVER exposes whether a compound has real
 direct-inhibition data (SMILES + Molecule_Name only, for every row),
-so every test row got missing_flag=0 and the shortcut simply didn't
+so every test row got missing_flag=0 and the shortcut simply did not
 fire, pushing predictions to 60.9% positive against a real 21.3%
 training base rate. Re-verified via CV that actually simulates
 deployment (validation-fold compounds scored with zero awareness of
@@ -122,7 +122,7 @@ def fit_predict_cyp3a4(train_df: pd.DataFrame, test_df: pd.DataFrame, random_sta
 def _main() -> None:
     if not CYP2D6_CACHE_PATH.exists():
         raise SystemExit(
-            f"{CYP2D6_CACHE_PATH} doesn't exist -- run "
+            f"{CYP2D6_CACHE_PATH} does not exist -- run "
             "`python -m cypmode.challenge.final_assembly_cyp2d6` first, as a separate process "
             "(it imports torch; this module must never share a process with it, see module docstring)"
         )

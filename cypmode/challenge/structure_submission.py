@@ -101,7 +101,7 @@ def revalidate_posebusters(names: list[str], target: str = TARGET) -> pd.DataFra
                 )
             else:
                 # No sampled model passed -- fall back to model_0's own checks
-                # so the report still shows exactly what's wrong with it.
+                # so the report still shows exactly what is wrong with it.
                 structure = load_structure(_cif_path(name))
                 from cypmode.validation.pose_validity import check_pose_validity
 
@@ -156,7 +156,7 @@ def build_structure_submission(
     submission-formatted PDB, and zip them. Returns a summary dict rather
     than raising on a PoseBusters failure by default (skip_posebusters_failures=False
     means "include it anyway, but report it" -- excluding a compound instead
-    of submitting a poor pose isn't obviously better since the format
+    of submitting a poor pose is not obviously better since the format
     requires exactly 20 files; see the printed warning for what to do).
 
     With consensus_csv (the table cypmode.validation.pose_consensus

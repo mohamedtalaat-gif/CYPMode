@@ -52,8 +52,8 @@ def test_compute_oof_predictions_every_compound_predicted_by_a_model_that_never_
         assert labeled[oof_col].notna().all()
         # predictions should correlate with the real (noisy linear) signal --
         # LightGBM approximating a linear sum from limited samples per fold
-        # won't be a tight fit, so this checks the OOF wiring works, not
-        # model accuracy (that's what the real-data run reports separately)
+        # will not be a tight fit, so this checks the OOF wiring works, not
+        # model accuracy (that is what the real-data run reports separately)
         corr = np.corrcoef(labeled[oof_col], labeled[f"{cyp}_pIC50_direct_inhibition"])[0, 1]
         assert corr > 0.3
 
@@ -69,7 +69,7 @@ def test_fit_final_model_and_predict_test_roundtrip():
 
 
 def test_inverse_variance_weighting_reduces_influence_of_noisy_points():
-    # A single very-high-std outlier shouldn't dominate the fit the way
+    # A single very-high-std outlier should not dominate the fit the way
     # unweighted regression would let it.
     rng = np.random.default_rng(1)
     n = 40

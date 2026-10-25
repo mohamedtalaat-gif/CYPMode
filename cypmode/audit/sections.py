@@ -288,7 +288,7 @@ def baselines(ctx: Context) -> Section:
             tag = "similarity x prevalence" + ("" if z0 is None else f" x confident (z0 = {z0})")
             for sel, label in ((BestSingle(), "best single candidate"), (StackedLogit(), "stack (StackedLogit)")):
                 table = nested_evaluate(cache, names, [sel], wf, prev, "auc")
-                rows.append((iso, f"our nested {label}", tag, len(plan.pool), float(table["outer_score"].mean()), float(table["outer_mcc_rate"].mean())))
+                rows.append((iso, f"nested {label}", tag, len(plan.pool), float(table["outer_score"].mean()), float(table["outer_mcc_rate"].mean())))
                 if sel.name == "stack_logit":
                     ctx.metrics[f"{iso}_stack_auc_z{str(z0).replace('.', '_')}"] = float(table["outer_score"].mean())
     df = pd.DataFrame(rows, columns=["isoform", "model", "evaluation population", "n", "AUC", "MCC"])
@@ -311,7 +311,7 @@ def committee(ctx: Context) -> Section:
     from cypmode.challenge.nested_runners import default_candidates
 
     s = Section("6. Committee (query-by-committee) backtest against the margin baseline")
-    s.body.append("Question: does committee disagreement tell us where the stack is wrong beyond what the stack's own decision margin already says? Judged by a permutation null with Bonferroni correction, never by bootstrapping fixed predictions.")
+    s.body.append("Question: does committee disagreement indicate where the stack is wrong beyond what the stack's own decision margin already says? Judged by a permutation null with Bonferroni correction, never by bootstrapping fixed predictions.")
     for iso in ISOFORMS:
         _, cache = ctx.cache(iso)
         rctx, _ = ctx.runner(iso)

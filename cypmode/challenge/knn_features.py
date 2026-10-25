@@ -5,7 +5,7 @@
 """KNN-label (read-across) features: for each compound, the known TDI
 status of its K nearest chemical neighbors (by Tanimoto similarity on
 ECFP4), aggregated into a small feature set. Captures local
-structure-activity signal a global tree/linear model doesn't automatically
+structure-activity signal a global tree/linear model does not automatically
 exploit, on top of M3's own features.
 
 Leakage-critical, in two ways: (1) a compound's own label must never
@@ -43,9 +43,9 @@ def knn_label_features(query_fps: list, reference_fps: list, reference_labels: n
     neighbors that are positive, the same fraction but Tanimoto-similarity
     weighted, the mean similarity to those k neighbors, and how many
     neighbors were actually available). reference_fps/reference_labels
-    must already exclude the query itself if it's part of the reference
+    must already exclude the query itself if it is part of the reference
     pool -- this function has no notion of compound identity, so it
-    can't enforce that; see add_knn_label_features_for_fold.
+    cannot enforce that; see add_knn_label_features_for_fold.
     """
     reference_labels = np.asarray(reference_labels, dtype=float)
     n_ref = len(reference_fps)

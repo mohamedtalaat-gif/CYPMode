@@ -3,15 +3,15 @@
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
 """Checks whether a train/test split is actually informative before trusting
-any MCC computed on it -- a validation set that's chemically close to
+any MCC computed on it -- a validation set that is chemically close to
 training (near-duplicates/analogs) can make a CV split look far more
 reliable than performance on novel chemistry actually is, a
 known general risk in cheminformatics benchmarking.
 
-Applies that check to our own data: our own CV folds (i.i.d. from the
-training population, expected to look "easy"/similar) against the real
-750-compound blinded TDI test set (the one that actually matters -- tells
-us whether our cross-validated MCC is likely to transfer to it).
+Applies that check to the data of the project: its CV folds (i.i.d. from the
+training population, expected to look "easy"/similar) against the
+750-compound blinded TDI test set (the one that matters; the result indicates
+whether the cross-validated MCC is likely to transfer to it).
 """
 
 from pathlib import Path
@@ -49,7 +49,7 @@ def _main() -> None:
 
     rows = []
 
-    # Sanity check: our own i.i.d. CV fold vs its own training portion --
+    # Sanity check: an i.i.d. CV fold of the project vs its own training portion --
     # expected to look "easy" (same population, random split), the
     # baseline this project's own reported CV numbers are measured against.
     y = train_df["CYP3A4_is_TDI"].fillna(0).astype(int).to_numpy()

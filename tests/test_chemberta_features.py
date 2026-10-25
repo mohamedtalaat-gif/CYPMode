@@ -34,7 +34,7 @@ def test_compute_chemberta_embedding_is_a_real_finite_vector(loaded_model):
     embedding = compute_chemberta_embedding(KETOCONAZOLE, tokenizer, model, torch_module)
     assert embedding.shape == (CHEMBERTA_EMBEDDING_DIM,)
     assert np.isfinite(embedding).all()
-    assert embedding.sum() != 0  # a real model shouldn't collapse to an all-zero vector
+    assert embedding.sum() != 0  # a real model should not collapse to an all-zero vector
 
 
 def test_compute_chemberta_embedding_distinguishes_two_different_real_molecules(loaded_model):

@@ -9,9 +9,9 @@ a .parquet or .csv with exactly 750 rows and 4 columns -- SMILES (string),
 Molecule_Name (string), CYP2D6_is_TDI (bool), CYP3A4_is_TDI (bool), in
 that column order. See CYPMode_Architecture_Specification.md.
 
-This module only formats and validates; it doesn't generate predictions
+This module only formats and validates; it does not generate predictions
 itself. Building it now, independent of having a final trained model,
-means the submission step isn't a rushed, unverified afterthought once
+means the submission step is not a rushed, unverified afterthought once
 predictions exist -- the format is already checked against the real
 blinded test set.
 """
@@ -59,7 +59,7 @@ def validate_submission(
     missing_cols = [c for c in REQUIRED_COLUMNS if c not in submission.columns]
     if missing_cols:
         errors.append(f"missing required column(s): {missing_cols}")
-        return False, errors  # can't check anything else meaningfully without the columns
+        return False, errors  # cannot check anything else meaningfully without the columns
 
     extra_cols = [c for c in submission.columns if c not in REQUIRED_COLUMNS]
     if extra_cols:
@@ -102,7 +102,7 @@ def load_test_set(path: str | Path = TEST_SET_PATH) -> pd.DataFrame:
 # Source: the public Hugging Face Space ``openadmet/cyp-challenge`` (files ``submission.py`` and ``config.py``), read on
 # 2026-10-08. The portal accepts extra columns and 0/1 as well as True/False, but rejects NaN, non-binary values and a
 # column holding a single class ("a constant prediction cannot be scored"); validate_submission above is stricter on
-# purpose, and this function adds exactly the checks the portal runs so a file cannot pass ours and fail theirs.
+# purpose, and this function adds exactly the checks the portal runs so a file cannot pass the local check and fail the check of the portal.
 
 PORTAL_ROWS = 750
 PORTAL_IDENTIFIERS = ["SMILES", "Molecule_Name"]

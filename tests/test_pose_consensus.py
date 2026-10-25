@@ -203,7 +203,7 @@ def test_alignment_refuses_structures_that_dont_correspond():
     stranger = _build_complex(elements, coords)
     for residue in list(stranger[0]["A"].get_residues())[5:]:
         stranger[0]["A"].detach_child(residue.id)
-    with pytest.raises(ValueError, match="don't correspond"):
+    with pytest.raises(ValueError, match="do not correspond"):
         aligned_ligand_rmsd(reference, stranger, LIGAND_SMILES)
 
 
@@ -304,11 +304,11 @@ def test_build_consensus_table_survives_an_rmsd_failure(tmp_path, monkeypatch):
     _patch_table_inputs(monkeypatch, {"a": _metrics(n_fe=6.0)}, {"a": _metrics(n_fe=2.1)}, {"a": 0.0})
 
     def boom(ref, probe, smi):
-        raise ValueError("structures don't correspond")
+        raise ValueError("structures do not correspond")
 
     monkeypatch.setattr(pose_consensus, "aligned_ligand_rmsd", boom)
     row = build_consensus_table(["a"]).iloc[0]
-    assert pd.isna(row["ligand_rmsd"]) and row["rmsd_error"] == "structures don't correspond"
+    assert pd.isna(row["ligand_rmsd"]) and row["rmsd_error"] == "structures do not correspond"
     assert (row["engine"], row["reason"]) == ("openfold3", "engines_disagree_heme_coordination_prior")  # unknown RMSD = disagreement
 
 

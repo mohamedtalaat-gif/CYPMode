@@ -6,7 +6,7 @@
 
 Input is the table written by ``pose_rescoring_validation --engine-poses`` (one row per predicted
 pose, with its true ligand RMSD to the crystal pose and the leave-the-compound-out rescoring
-scores). Every rule answers the same question -- "which single pose would we submit for this
+scores). Every rule answers the same question -- "which single pose would be submitted for this
 compound?" -- and is scored by the true RMSD of the pose it picks. The oracle rules (the best pose
 that exists) are the ceiling a selection rule could reach, not a rule anyone can apply.
 """

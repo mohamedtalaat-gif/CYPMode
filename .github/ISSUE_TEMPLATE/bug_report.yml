@@ -1,5 +1,5 @@
 name: Bug report
-description: Something doesn't work the way the docs/code say it should
+description: Something does not work the way the docs/code say it should
 labels: ["bug"]
 body:
   - type: textarea

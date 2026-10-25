@@ -66,6 +66,29 @@ def test_the_last_failure_is_raised_when_every_attempt_has_failed():
     assert browser.restarts == 2
 
 
+def test_a_browser_that_does_not_start_is_started_again(monkeypatch):
+    monkeypatch.setattr(chrome_module.time, "sleep", lambda seconds: None)
+    browser = Browser()
+    starts = []
+
+    def launch():
+        starts.append(1)
+        if len(starts) < 3:
+            raise RuntimeError("Chrome did not start")
+
+    browser._launch = launch
+    browser.restart()
+    assert len(starts) == 3 and browser.restarts == 1
+
+
+def test_a_browser_that_never_starts_raises_after_the_attempts(monkeypatch):
+    monkeypatch.setattr(chrome_module.time, "sleep", lambda seconds: None)
+    browser = Browser()
+    browser._launch = lambda: (_ for _ in ()).throw(RuntimeError("Chrome did not start"))
+    with pytest.raises(RuntimeError):
+        browser.restart(attempts=3)
+
+
 def test_an_error_of_the_page_is_not_a_reason_to_start_a_new_browser():
     browser = Browser()
     with pytest.raises(RuntimeError):

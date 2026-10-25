@@ -7,7 +7,7 @@
 Split out so docs/figures/generate_validation_figure.py (matplotlib only)
 can import COORDINATION_DISTANCE_CUTOFF_A without pulling in Biopython,
 which cypmode/validation/structures.py needs but this figure script
-doesn't.
+does not.
 """
 
 # Dative Fe-N coordination bonds in solved Type II CYP structures run
@@ -21,7 +21,7 @@ COORDINATION_DISTANCE_CUTOFF_A = 2.6
 # cypmode.validation.pipeline -- pass a different sequence for a different
 # protein/construct, and note that a different construct can shift residue
 # numbering (find_coordinating_cysteine() re-derives the axial cysteine's
-# position from whatever sequence it's given, rather than assuming this
+# position from whatever sequence it is given, rather than assuming this
 # one's numbering carries over).
 CYP3A4_SEQUENCE = (
     "MALIPDLAMETWLLLAVSLVLLYLYGTHSHGLFKKLGIPGPTPLPFLGNILSYHKGFCMFDMECHKKYGKVWGFYDGQQPVLAITDPDMIKTVLVKECYSVFTNRRPFGPVGFMKSAISIAEDEEW"

@@ -108,7 +108,7 @@ def _pocket_ca_pairs(reference, probe, radius: float) -> tuple[list, list]:
             ref_atoms.append(res["CA"])
             probe_atoms.append(probe_cas[key])
     if len(ref_atoms) < 10:
-        raise ValueError(f"only {len(ref_atoms)} matched pocket CA atoms within {radius} A of the heme iron -- structures don't correspond")
+        raise ValueError(f"only {len(ref_atoms)} matched pocket CA atoms within {radius} A of the heme iron -- structures do not correspond")
     return ref_atoms, probe_atoms
 
 
@@ -118,7 +118,7 @@ def aligned_ligand_rmsd(reference, probe, ligand_smiles: str, radius: float = PO
     probe is superposed onto the reference on the CA atoms around the
     heme, then RDKit's CalcRMS compares the two ligands in place while
     minimizing over symmetry-equivalent atom mappings (so a flipped
-    phenyl ring isn't counted as a pose difference). Both ligand mols are
+    phenyl ring is not counted as a pose difference). Both ligand mols are
     rebuilt from the same SMILES template, so their topologies match.
     Returns {"ligand_rmsd": float, "pocket_ca_rmsd": float}.
     """
@@ -173,7 +173,7 @@ def _decision(engine: str, reason: str) -> dict:
 def choose_pose(boltz: dict | None, openfold3: dict | None, ligand_rmsd: float | None, agreement_rmsd: float = AGREEMENT_RMSD_A) -> dict:
     """The selection rule from the module docstring, as a pure function of
     the two poses' pose_metrics dicts (None = that engine has no
-    prediction for this compound) and their ligand RMSD (None = couldn't
+    prediction for this compound) and their ligand RMSD (None = could not
     be computed). Returns {"engine": "boltz" | "openfold3", "reason": str}.
     """
     if openfold3 is None:

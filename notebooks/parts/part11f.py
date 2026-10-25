@@ -34,7 +34,7 @@ show_table(mbr_toy_table, floatfmt=".2f")
 '''
 
 SELECTION_RESULTS = '''
-# The rules of selection on the benchmark of 11.5. Every rule answers one question for each ligand, "which single pose do we submit?", and is scored by that pose's RMSD to the crystal pose. The table of each ligand's outcomes is the one
+# The rules of selection on the benchmark of 11.5. Every rule answers one question for each ligand, "which single pose is submitted?", and is scored by that pose's RMSD to the crystal pose. The table of each ligand's outcomes is the one
 # written by cypmode/validation/selection_validation.py (job 170_mbr_selection_validation); the gates are recomputed with its own function. "Oracle" is the best pose that exists in the pool: the ceiling that a rule could reach and
 # no rule can apply. The second table adds the experimental-prior rescoring of 11.5 (pose_rescoring.py), which scores a pose by how well it agrees with where deposited ligands sit in the pocket, on the same ligands.
 from cypmode.validation.selection_validation import gates as selection_gates

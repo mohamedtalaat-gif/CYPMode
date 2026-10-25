@@ -14,7 +14,7 @@ crystal frame:
   random translation up to MAX_SHIFT_A), with RMSDs to the crystal pose
   computed under the identity atom mapping;
 - every reference that is the same compound is excluded (leave-compound-
-  out), so the score can't just find the answer in the reference set;
+  out), so the score cannot just find the answer in the reference set;
 - optionally every reference at least NOVEL_SIMILARITY chemically similar
   is excluded too, mimicking a novel scaffold with no crystallized
   analogs -- the realistic situation for the OCNT-* compounds, and
@@ -71,7 +71,7 @@ def make_decoys(crystal: np.ndarray, n: int, rng: np.random.Generator) -> list[n
 
 def one_per_compound(references: list[dict], min_heavy: int = 15) -> list[dict]:
     """The best-resolution copy of each distinct ligand with at least
-    min_heavy heavy atoms (a handful of atoms can't define an orientation).
+    min_heavy heavy atoms (a handful of atoms cannot define an orientation).
     """
     best: dict[str, dict] = {}
     for ref in references:
@@ -184,7 +184,7 @@ def crystal_mol(smiles: str, elements: list[str], coords: np.ndarray):
     compound's SMILES template, 3D coordinates from the crystal (the same
     proximity-bonding + AssignBondOrdersFromTemplate recipe as
     cypmode.validation.structures._ligand_mol_3d, but from plain arrays).
-    None if the crystal ligand doesn't match the template (missing or
+    None if the crystal ligand does not match the template (missing or
     modified atoms) -- such a copy is skipped, never forced.
     """
     from rdkit import Chem, rdBase

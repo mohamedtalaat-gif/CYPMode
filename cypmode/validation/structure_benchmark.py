@@ -7,7 +7,7 @@
 Five panel compounds are too few to learn which engine, sampling setup or selection rule to
 trust, and the official compounds have no public answer. The PDB does hold co-crystal poses for
 ~100 distinct CYP3A4 ligands (cypmode.validation.reference_ligands), so this module picks the
-most chemically DIVERSE of them -- maximin on Morgan fingerprints, seeded with the compounds we
+most chemically DIVERSE of them -- maximin on Morgan fingerprints, seeded with the compounds that were
 already predicted so every new pick is far from those and from each other -- and writes them as a
 batch input. The pick is deterministic and criteria-driven (drug-sized, well resolved, not
 organometallic), not a hand-written list.

@@ -28,13 +28,13 @@ not an approximation of it), and rdkit.Chem.rdMolAlign.CalcRMS for the
 final ligand RMSD -- CalcRMS specifically (not GetBestRMS, which
 cypmode.validation.pose_comparison.ligand_pose_rmsd uses for a
 different purpose): CalcRMS computes a symmetry-aware RMSD "in place,"
-without re-aligning the two molecules first, which is exactly what's
+without re-aligning the two molecules first, which is exactly what is
 needed once the pocket-based superposition has already fixed the
 relative frame -- RDKit's own docstring for CalcRMS names "the RMSD
 between docking poses and the co-crystallized ligand" as its intended
 use, the same real situation as this module's.
 
-Real caveat (matching pose_comparison.py's own): this project doesn't
+Real caveat (matching pose_comparison.py's own): this project does not
 yet have two independent real structures of the same compound (one
 Boltz-2 run per compound) or a real deposited reference structure
 locally to compare against -- this module is real, tested
@@ -92,7 +92,7 @@ def bisy_rmsd(reference_structure, predicted_structure, ligand_smiles: str, liga
     symmetry-aware ligand RMSD under that fixed superposition -- not
     re-aligned on the ligand itself, which would defeat the point of
     scoring absolute pocket placement rather than just ligand shape
-    (that's what cypmode.validation.pose_comparison.ligand_pose_rmsd is
+    (that is what cypmode.validation.pose_comparison.ligand_pose_rmsd is
     for).
 
     Raises ValueError if fewer than 3 binding-site residues have a

@@ -9,10 +9,10 @@ Not part of the cypmode package or its runtime dependencies -- a one-off
 script, run manually, in the publication-figure style described in
 https://github.com/ChenLiu-1996/figures4papers (PUBLICATION_RCPARAMS/PALETTE
 from its scientific-figure-making skill). Needs matplotlib, which the rest
-of this project doesn't depend on: `pip install matplotlib`.
+of this project does not depend on: `pip install matplotlib`.
 
 Two theme variants, not one figure with a CSS media query -- GitHub renders
-Markdown images as plain <img> tags, so a single SVG can't switch itself.
+Markdown images as plain <img> tags, so a single SVG cannot switch itself.
 README.md embeds both with the `#gh-light-mode-only` / `#gh-dark-mode-only`
 URL-fragment convention GitHub's Markdown renderer recognizes, so the right
 one shows automatically.
@@ -93,7 +93,7 @@ def render(theme_name: str, colors: dict, names: list, distances: list, coordina
     )
 
     for bar, dist in zip(bars, distances, strict=True):
-        # Bars near the cutoff line need extra clearance so the label doesn't
+        # Bars near the cutoff line need extra clearance so the label does not
         # sit on top of the dashed line itself.
         pad = max(0.3, COORDINATION_CUTOFF_A - dist + 0.3) if dist < COORDINATION_CUTOFF_A else 0.3
         ax.text(

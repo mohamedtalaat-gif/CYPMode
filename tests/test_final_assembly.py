@@ -85,7 +85,7 @@ def test_fit_predict_cyp3a4_prediction_matches_its_own_reported_threshold():
 
 
 def test_fit_predict_cyp3a4_never_leaks_train_labels_into_predict_at_the_source_level():
-    """The final classifier is fit once on ALL training data -- there's no
+    """The final classifier is fit once on ALL training data -- there is no
     fold-holdout for the deployed model. The real leakage discipline this
     function must preserve is different: no piece of test_df ever informs
     the KNN reference pool or the fitted model beyond its own features. A

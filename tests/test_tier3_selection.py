@@ -45,7 +45,7 @@ def test_uncertainty_selection_mask_threshold_is_a_training_fold_property():
         features[train_mask], labels[train_mask], features, quantile=0.3
     )
     # Changing only the held-out portion's features must not change the
-    # threshold -- it's derived from the training portion alone.
+    # threshold -- it is derived from the training portion alone.
     features_perturbed = features.copy()
     features_perturbed[60:] = features_perturbed[60:] * 100  # wildly different held-out features
     _selected_b, threshold_b = uncertainty_selection_mask(
@@ -89,7 +89,7 @@ def test_select_fixed_budget_oof_returns_exactly_the_budget():
     selected = select_fixed_budget_oof(df, label_col="label", budget=15, n_splits=5)
     assert len(selected) == 15
     assert "oof_uncertainty" in selected.columns
-    # every compound's OOF prediction came from a model that didn't train on it
+    # every compound's OOF prediction came from a model that did not train on it
     assert selected["oof_proba"].notna().all()
 
 

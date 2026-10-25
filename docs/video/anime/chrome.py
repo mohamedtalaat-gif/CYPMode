@@ -51,9 +51,25 @@ class Chrome:
         self.call("Page.enable")
         self.call("Emulation.setDeviceMetricsOverride", width=WIDTH, height=HEIGHT, deviceScaleFactor=1, mobile=False)
 
-    def restart(self) -> None:
-        """Start a new browser after the first one has gone (the page that was open is opened again); every call of the film is a function of the time it is given, so no state is lost."""
+    def restart(self, attempts: int = 12) -> None:
+        """Start a new browser after the first one has gone (the page that was open is opened again); every call of the film is a function of the time it is given, so no state is lost.
+        A browser that is ended while it starts, or before the page has loaded, is started again, up to ``attempts`` times."""
         self.restarts += 1
+        for attempt in range(attempts):
+            self._stop()
+            self._profile = tempfile.TemporaryDirectory()
+            try:
+                self._launch()
+                if self._page is not None:
+                    self.open(self._page)
+                return
+            except (RuntimeError, ConnectionClosed, OSError):
+                if attempt == attempts - 1:
+                    raise
+                time.sleep(1)
+
+    def _stop(self) -> None:
+        """Close the connection, end the process and remove the profile of the browser that is running, if any."""
         try:
             self._socket.close()
         except (OSError, AttributeError):
@@ -64,11 +80,8 @@ class Chrome:
                 self._process.wait(timeout=10)
             except subprocess.TimeoutExpired:
                 self._process.kill()
+            self._process = None
         self._profile.cleanup()
-        self._profile = tempfile.TemporaryDirectory()
-        self._launch()
-        if self._page is not None:
-            self.open(self._page)
 
     def retrying(self, action, attempts: int = 30):
         """Run ``action`` and, when the browser has gone while it ran, start a new one and run it again."""

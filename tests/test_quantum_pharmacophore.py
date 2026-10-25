@@ -110,7 +110,7 @@ def test_compute_quantum_features_batch_works_with_multiple_workers(tmp_path):
     """Regression test for the exact bug class pharmacophore_fingerprint.py's
     own multi-worker test guards against: a real n_workers=8 run crashed
     there because the compute callable passed to multiprocessing.Pool.imap
-    was a local lambda, which isn't picklable -- n_workers=1 (every other
+    was a local lambda, which is not picklable -- n_workers=1 (every other
     test in this file) never exercises that code path at all. This module
     passes the top-level extract_quantum_features function directly (no
     lambda), so this should already be safe, but only a real n_workers>1

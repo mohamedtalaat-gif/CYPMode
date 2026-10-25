@@ -3,14 +3,14 @@
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
 """PoseBusters physical/chemical validity checks on an already-predicted
-Boltz-2 structure -- confirmed directly real and working on our own
+Boltz-2 structure -- confirmed to work on the
 output (unlike ProLIF, which repeatedly failed on the same kind of
 structure: missing VDW radii, an explicit-hydrogen requirement Boltz-2's
-heavy-atom-only output doesn't meet, a kekulization failure, and finally
+heavy-atom-only output does not meet, a kekulization failure, and finally
 a hard segfault -- see cypmode.validation.pocket_geometry's module
 docstring for why ProLIF was declined).
 
-This isn't just a nice-to-have QC step: OpenADMET's own Structure Track
+This is not just a nice-to-have QC step: OpenADMET's own Structure Track
 (launched 2026-09-25, see CYPMode_Architecture_Specification.md's
 "Official challenge update" section) made PoseBusters a mandatory,
 scored part of the real competition -- any submitted structure that
@@ -47,7 +47,7 @@ def check_pose_validity(structure, ligand_smiles: str, config: str = "dock") -> 
     own preset for "a single predicted pose, no reference structure to
     compare against" -- exactly this project's situation (see
     cypmode.validation.pose_comparison's own module docstring for why a
-    real reference isn't available locally yet).
+    real reference is not available locally yet).
 
     Always uses PoseBusters' summary (boolean-per-check) report, not its
     full numeric one: the full report mixes booleans with raw distances/
@@ -87,7 +87,7 @@ def select_valid_model(predictions_dir: str | Path, ligand_smiles: str, max_mode
     confidence-ranked, 0 = best). Tries them in that ranked order and
     returns the first one that passes every PoseBusters check, rather
     than always trusting model_0 -- a real steric clash or geometry
-    artifact in the top-confidence sample doesn't mean every sampled
+    artifact in the top-confidence sample does not mean every sampled
     diffusion trajectory has the same problem.
 
     Returns {"model_index": int, "cif_path": Path, "result": dict} for

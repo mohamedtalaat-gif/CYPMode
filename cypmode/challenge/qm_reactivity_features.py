@@ -33,8 +33,8 @@ with a lone-pair-bearing nucleophilic tertiary amine).
 
 Real, two-part install fix needed, both patched directly in the
 installed package (not vendored/gitignored like third_party/TDC-main,
-but the same kind of real third-party incompatibility, not a bug in our
-own code): (1) qmdesc/handler.py's own `import pkg_resources` -- removed
+but the same kind of real third-party incompatibility, not a bug in the
+code of the project): (1) qmdesc/handler.py's own `import pkg_resources` -- removed
 by modern setuptools, same issue fixed earlier for
 third_party/TDC-main -- replaced with importlib.resources. (2) PyTorch
 2.6+ changed torch.load's default weights_only to True, and qmdesc's own
@@ -95,7 +95,7 @@ def compute_qm_reactivity_features(smiles: str, handler=None) -> np.ndarray:
     compound has no trialkylamine nitrogen at all, matching this
     project's own established NaN-for-missingness convention (e.g.
     cypmode.challenge.tier3_features). The four qm_mol_* columns are
-    whole-molecule Fukui summary stats, always present even when there's
+    whole-molecule Fukui summary stats, always present even when there is
     no basic nitrogen -- general reactivity context no feature here
     depended on before.
 
@@ -195,7 +195,7 @@ def load_cached_qm_reactivity_features(df: pd.DataFrame, cache_path: str | Path 
     cache_path = Path(cache_path)
     if not cache_path.exists():
         raise FileNotFoundError(
-            f"{cache_path} doesn't exist -- run `python -m cypmode.challenge.qm_reactivity_features` "
+            f"{cache_path} does not exist -- run `python -m cypmode.challenge.qm_reactivity_features` "
             "first to populate it (a separate, torch-only process)."
         )
     cached = pd.read_csv(cache_path)

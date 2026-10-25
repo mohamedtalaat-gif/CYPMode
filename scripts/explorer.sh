@@ -20,7 +20,7 @@ case "$mode" in
   ipynb) marimo export ipynb "$APP" -o "${2:-$EXPORT/cypmode_explorer.ipynb}" --include-outputs ;;
   wasm)
     out="${2:-$EXPORT/wasm}"
-    marimo export html-wasm "$APP" -o "$out" --mode run
+    marimo export html-wasm "$APP" -o "$out" --mode run   # the folder holds the front-end files of marimo; their interface strings are the library's own
     find "$out" -maxdepth 1 -name '*.md' -delete   # the export places a markdown file of the program's own instructions beside the page; the published folder holds only the page and its data
     ;;
   *) echo "usage: bash scripts/explorer.sh run|edit|html|ipynb|wasm" >&2; exit 2 ;;

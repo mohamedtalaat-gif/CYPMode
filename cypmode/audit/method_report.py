@@ -357,7 +357,7 @@ def build_method_report() -> str:
         "",
         "Two tracks of the OpenADMET CYP blind challenge: time-dependent-inhibition (TDI) classification for CYP3A4 and CYP2D6, and",
         "CYP3A4 protein-ligand structure prediction. All performance figures are cross-validated estimates on the public training data;",
-        "the step to the leaderboard is unmeasured until a submission exists. Novelty is claimed only in the form \"to our knowledge not",
+        "the step to the leaderboard is unmeasured until a submission exists. Novelty is claimed only in the form \"not",
         "found in a search of the sources named in section 12 on the search date\"; every component has published relatives.",
         "",
         "## 2. Data and the label rule",

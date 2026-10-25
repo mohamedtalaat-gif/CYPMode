@@ -97,9 +97,9 @@ for iso in TDI_ISOFORMS:
     board = pd.read_csv(ROOT / f"data/tdi_track/inputs/leaderboard_snapshots/interim_{iso}_2026-10-04.csv")
     reference = board[board["Model Report Link"] == "Official LightGBM baseline"].iloc[0]
     board_rows.append({"enzyme": iso, "rank on the interim board": int(reference["Rank"]), "entries": len(board), "board MCC": float(reference["MCC"]), "board MCC sd (bootstrap)": float(reference["MCC std"]),
-                       "our fixed-seed CV MCC": baseline_value("fixed-seed five-fold, run here", iso, "MCC mean"), "our tutorial-protocol MCC": baseline_value("tutorial protocol, run here", iso, "MCC mean")})
+                       "fixed-seed CV MCC": baseline_value("fixed-seed five-fold, run here", iso, "MCC mean"), "tutorial-protocol MCC": baseline_value("tutorial protocol, run here", iso, "MCC mean")})
 board_table = pd.DataFrame(board_rows).set_index("enzyme")
-board_table["board minus fixed-seed CV"] = board_table["board MCC"] - board_table["our fixed-seed CV MCC"]
+board_table["board minus fixed-seed CV"] = board_table["board MCC"] - board_table["fixed-seed CV MCC"]
 show_table(board_table.reset_index(), floatfmt=".3f")
 '''
 

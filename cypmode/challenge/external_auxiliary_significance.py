@@ -12,7 +12,7 @@ bindingdb_auxiliary's BindingDB feature went the other way (0.072->
 0.037, actively hurts). Two independent external sources landing on the
 same real effect size is a much stronger signal than any single one of
 this project's other CYP2D6 feature tests has shown, but every other
-promising-looking CYP2D6 single-split number so far either didn't
+promising-looking CYP2D6 single-split number so far either did not
 survive repeated CV (the OOF-bridge retraction) or came back null once
 retested properly (KNN, Tier3, ChemBERTa, quantum pharmacophore,
 pharmacophore fingerprint) -- so this gets the same treatment before

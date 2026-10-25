@@ -43,14 +43,14 @@ MEMORY_MODE_FILE = Path("data/structure_track/inputs/openfold3_memory_mode.txt")
 MEMORY_MODES = ("config", "lowmem")  # config: runner YAML with a smaller chunk size; lowmem: that plus the low-memory chunk_layer path
 INPUTS_DIR = Path("data/structure_track/inputs")
 OUT_ROOT = Path("data/structure_track/outputs/openfold3")
-DEFAULT_TIMEOUT_S = 3600  # a normal CYP3A4 prediction takes ~16 min; a stalled one shouldn't hold the machine forever
+DEFAULT_TIMEOUT_S = 3600  # a normal CYP3A4 prediction takes ~16 min; a stalled one should not hold the machine forever
 
 
 def read_boltz_inputs(name: str, target: str = "cyp3a4", inputs_dir: Path = INPUTS_DIR) -> dict:
     """The protein sequence and ligand SMILES from the compound's own
     Boltz-2 input YAML -- the single source of truth for what both
     engines predict. The heme (CCD HEM) is implied for every CYP, so it
-    isn't read from the YAML.
+    is not read from the YAML.
     """
     spec = yaml.safe_load((inputs_dir / f"{target}_{name}.yaml").read_text())
     protein = ligand = None
@@ -239,7 +239,7 @@ def _main() -> None:
     parser.add_argument(
         "--test-set",
         default="data/structure_track/inputs/structure_track_test_blinded.csv",
-        help="CSV with a Molecule_Name column; used when --names isn't given",
+        help="CSV with a Molecule_Name column; used when --names is not given",
     )
     parser.add_argument("--limit", type=int, default=None, help="only the first N compounds (dry runs)")
     parser.add_argument("--samples", type=int, default=1, help="diffusion samples per compound")

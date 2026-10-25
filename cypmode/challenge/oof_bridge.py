@@ -4,9 +4,9 @@
 
 """Out-of-fold direct-inhibition pIC50 bridge for the TDI model.
 
-The blind test set has no direct-inhibition pIC50 exposed (see
-CYPMode_DATA_AUDIT.md's Feature Eligibility Matrix), so a TDI model
-that wants potency as a feature can't just read it off the test rows.
+The blind test set has no direct-inhibition pIC50 exposed (section 17 of the audit report lists the
+feature blocks and what each reads), so a TDI model that uses potency as a
+feature cannot read it from the test rows.
 This module trains a separate regressor and produces out-of-fold (OOF)
 predictions on the training data -- each compound's predicted pIC50 comes
 from a model that never saw that compound during training -- so the
@@ -18,7 +18,7 @@ Originally planned as a Tobit/censored-regression loss (borrowed from
 github.com/OpenADMET/moal), matching that project's primary-screen
 inequality-censored labels. Checked against the real data first: direct-
 inhibition pIC50 below the assay floor (pIC50=4) is NOT hard-censored --
-there's no pile-up at a floor value, values continue smoothly down to
+there is no pile-up at a floor value, values continue smoothly down to
 ~1.9. What IS real is heteroscedastic measurement noise: the reported std
 column jumps 5-10x below pIC50=4 (confirmed directly on the real data).
 Tobit assumes the wrong noise model here; inverse-variance weighted
@@ -58,7 +58,7 @@ def compute_descriptors(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _inverse_variance_weights(std: pd.Series, floor: float = 1e-3) -> np.ndarray:
-    """1/std**2, with a floor so a near-zero std can't produce an
+    """1/std**2, with a floor so a near-zero std cannot produce an
     unbounded weight (none are exactly zero in the real data, but this
     keeps the function safe for any future input, not just today's file).
     """
@@ -104,7 +104,7 @@ def compute_oof_predictions(
 def fit_final_model(df: pd.DataFrame, isoform: str) -> LGBMRegressor:
     """The model that actually runs on the blind test set: fit on ALL
     available training data for one isoform (inverse-variance weighted),
-    no held-out fold -- there's no OOF concern at inference time since the
+    no held-out fold -- there is no OOF concern at inference time since the
     test set has no ground truth to leak.
     """
     value_col = f"{isoform}_pIC50_direct_inhibition"

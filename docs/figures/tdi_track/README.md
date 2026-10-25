@@ -3,10 +3,10 @@
 Structural/mechanistic evidence and classical machine learning combined to
 predict time-dependent (mechanism-based) CYP3A4/CYP2D6 inhibition for the
 [OpenADMET CYP Inhibition Blind Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge).
-Full methodology and every intermediate finding, including the ones that
-didn't work, are in
-[`CYPMode_DATA_AUDIT.md`](../../../CYPMode_DATA_AUDIT.md) and
-[`CYPMode_Architecture_Specification.md`](../../../CYPMode_Architecture_Specification.md).
+The full methodology and every intermediate finding, including those that
+did not work, are in
+[`CYPMode_Architecture_Specification.md`](../../../CYPMode_Architecture_Specification.md)
+and in the audit report (`audit/AUDIT_REPORT.md`).
 This page is the short version: what the numbers are, and what they mean.
 
 ## MCC by pipeline stage
@@ -32,10 +32,10 @@ split):
    touching validation labels) instead of left at the default 0.5. TDI is
    a ~21%-positive, imbalanced label, so 0.5 was always too conservative.
 
-CYP2D6 starts and stays far weaker than CYP3A4 throughout, this isn't a
+CYP2D6 starts and stays far weaker than CYP3A4 throughout, this is not a
 gap this project is hiding: CYP2D6's real baseline MCC is close to zero,
-and even the improvements here don't change that fundamental difficulty.
-It's the direct motivation for adding structural evidence (Tier 3) next.
+and even the improvements here do not change that fundamental difficulty.
+It is the direct motivation for adding structural evidence (Tier 3) next.
 
 ## Does the reliability score actually track real error?
 

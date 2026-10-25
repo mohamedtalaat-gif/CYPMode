@@ -30,7 +30,7 @@ completed structures before being wired in here:
   region around the ligand via pyKVFinder's own `ligand`/`ligand_cutoff`
   parameters. The largest cavity found within that restricted region is
   taken as "the binding pocket" -- a real, documented simplification, not
-  a guarantee that's always the single physically correct cavity.
+  a guarantee that is always the single physically correct cavity.
 """
 
 import copy

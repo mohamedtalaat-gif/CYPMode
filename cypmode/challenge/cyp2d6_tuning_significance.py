@@ -12,8 +12,8 @@ test rather than being folded into an existing one.
 
 Real, checked facts motivating the specific variants below: CYP2D6's
 positive rate (21.6%, 324/1497) is nearly identical to CYP3A4's (21.3%,
-764/3584) -- this isn't an unusually imbalanced isoform, so class
-weighting is tested because it's cheap and untried, not because the
+764/3584) -- this is not an unusually imbalanced isoform, so class
+weighting is tested because it is cheap and untried, not because the
 imbalance itself looks unusual. CYP2D6 does have under half CYP3A4's
 labeled compound count, the more likely real driver of every repeated-CV
 test's large fold-to-fold variance (std ~0.05-0.08, routinely dwarfing

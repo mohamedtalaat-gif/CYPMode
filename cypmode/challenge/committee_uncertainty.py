@@ -12,8 +12,8 @@ ensemble of distinct models, as opposed to the stochastic passes of one model
 heterogeneous candidates, so a committee costs nothing extra to build.
 
 Whether it is *useful* is an empirical question, and the bar is not "is it
-correlated with error" but "does it tell us anything the distance of the
-stack's score to its own decision threshold (the margin) does not". Every
+correlated with error" but "does it add anything to the distance of the
+stack's score to its own decision threshold (the margin)". Every
 component is therefore evaluated on compounds no candidate or selector ever
 saw (the outer-validation rows of every nested fold) with three questions:
 

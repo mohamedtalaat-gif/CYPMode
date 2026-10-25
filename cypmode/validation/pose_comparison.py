@@ -8,7 +8,7 @@ seeds) for a consistency check, or a prediction against a real deposited
 reference structure once one is available locally.
 
 Originally investigated as pyDockRMSD (github.com/neudinger/pyDockRMSD,
-wrapping the published DockRMSD algorithm), but that package isn't
+wrapping the published DockRMSD algorithm), but that package is not
 currently on PyPI and its own README explicitly warns Apple Silicon needs
 a manual conda/source build -- exactly the heavy, fragile-install pattern
 this project has repeatedly and correctly declined (openadmet-models,
@@ -22,11 +22,11 @@ while correctly ignoring pure rigid-body translation (0.0 A, since
 alignment removes that before scoring), which a naive coordinate-only
 RMSD would not do correctly for either case.
 
-Note on current use: this project doesn't yet have real, independent
+Note on current use: this project does not yet have real, independent
 repeat predictions of the same compound (each real batch compound has
 exactly one Boltz-2 run), nor the actual deposited experimental
 coordinates for the 4 cryo-EM reference compounds locally (see README.md:
-our own structural validation explicitly compares against a *predicted*,
+the structural validation of the project explicitly compares against a *predicted*,
 not deposited, reference structure). This module is real, tested
 infrastructure for when either becomes available, not applied to a real
 comparison yet.

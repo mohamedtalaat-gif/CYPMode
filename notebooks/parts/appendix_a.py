@@ -200,7 +200,7 @@ The same list again, written into the text rather than generated when the page i
 | `204_chemprop_CYP2D6` | CheMeleon stage 1 for CYP2D6 is not run: the enzyme was dropped from the CheMeleon design on 2026-10-16 (plain Chemprop is at chance on CYP2D6, outer AUC 0.54 and 0.53; the frozen CheMeleon block reaches 0.63; see |
 | `205_tabicl_addition` | TabICL added to the default stack once its cache is complete (jobs 201 and 202). |
 | `206_chemprop_addition` | Plain Chemprop (cache complete on the nested plan) added to the default stack, both enzymes; CheMeleon has its own staged jobs (203, 204, 236 to 239). |
-| `207_ost_vs_ours` | OpenStructure's own LDDT-PLI (the organisers' scorer, in the conda environment `ost`) against ours, pose by pose, on the confirmation ligands. |
+| `207_ost_vs_ours` | OpenStructure's own LDDT-PLI (the organisers' scorer, in the conda environment `ost`) against the local values, pose by pose, on the confirmation ligands. |
 | `208_mlp_aux_CYP3A4` | Multitask network with the official screen and Emax readings as auxiliary heads, completed for every task of the nested plan (time-boxed chunks, resumable). |
 | `209_mlp_aux_CYP2D6` | Multitask network with the official screen and Emax readings as auxiliary heads, completed for every task of the nested plan (time-boxed chunks, resumable). |
 | `210_mlp_aux_addition` | The multitask network with auxiliary heads added to the default stack once its cache is complete (jobs 208 and 209). |

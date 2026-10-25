@@ -340,7 +340,7 @@ in a few lines, so that no part of it is a black box, and then compared with the
 
 > **Field:** Machine learning · Statistics · Mathematics
 
-**The task.** We have $n$ examples. Each is a pair $(x_i, y_i)$: $x_i$ is a row of $p$ numbers describing compound $i$ (its **features**, section 3.7) and $y_i$ is the thing to be predicted, here 1 if the compound is a time-dependent inhibitor and 0 if not (its **label**). A **model** is a function $f_\\theta(x)$ with adjustable
+**The task.** There are $n$ examples. Each is a pair $(x_i, y_i)$: $x_i$ is a row of $p$ numbers describing compound $i$ (its **features**, section 3.7) and $y_i$ is the thing to be predicted, here 1 if the compound is a time-dependent inhibitor and 0 if not (its **label**). A **model** is a function $f_\\theta(x)$ with adjustable
 numbers $\\theta$, its **parameters**; given a compound it produces a **score**. **Supervised learning** chooses $\\theta$ so that the scores agree with the labels of the examples it was shown, *and* so that they will also agree with the labels of compounds it was not shown. A **loss function** $L(y, f)$ measures how bad a score $f$ is for a compound with label $y$; the **empirical risk** is its average over the examples,
 $R(\\theta) = \\frac1n\\sum_{i=1}^{n} L\\bigl(y_i, f_\\theta(x_i)\\bigr)$, and training means finding $\\theta$ that makes $R$ small, in most methods by **gradient descent**: repeatedly moving $\\theta$ a small step $\\eta$ (the **learning rate**) against the gradient, $\\theta \\leftarrow \\theta - \\eta\\,\\nabla_\\theta R$, because the gradient points to where $R$ grows fastest.
 

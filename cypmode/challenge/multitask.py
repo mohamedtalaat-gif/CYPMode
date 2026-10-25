@@ -13,8 +13,8 @@ already busy running Boltz-2). See pyproject.toml's `multitask` extra.
 
 One shared trunk, one small head per isoform. Trained with a masked
 binary cross-entropy loss: most compounds have a label for only one
-isoform (see CYPMode_DATA_AUDIT.md's missingness section), and
-masking -- not imputing a fake label -- is how that's actually handled.
+isoform (see section 4 of the audit report), and masking,
+not imputing a label, is how that is handled.
 """
 
 import numpy as np

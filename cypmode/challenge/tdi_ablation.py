@@ -6,11 +6,11 @@
 flags) actually help a real multivariate TDI classifier, beyond the plain
 RDKit-descriptor baseline?
 
-CYPMode_DATA_AUDIT.md found that the motif+amine categorization has no
+The data audit of 2026-09-26 found that the motif+amine categorization has no
 useful *marginal* (univariate) association with real TDI status across the
 full training population -- the "neither" category had the highest
 TDI-positive rate for both isoforms, the opposite of what the small 6-drug
-reference panel suggested. That result doesn't settle the question on its
+reference panel suggested. That result does not settle the question on its
 own: a marginal cross-tab can miss a real effect a multivariate model
 picks up (e.g. the amine flag might matter only in combination with
 specific descriptor ranges), and it can also just confirm the null. This
@@ -23,7 +23,7 @@ M1 = M0 + motif flag
 M2 = M1 + trialkylamine flag
 M3 = M2 + Morgan fingerprint (ECFP4, radius 2, 2048 bits)
 
-If M2 doesn't beat M1, Tier 2's amine flag is dropped, not kept out of
+If M2 does not beat M1, Tier 2's amine flag is dropped, not kept out of
 attachment to CYPMode's own prior work -- see README.md's Scope and
 limitations for how this project has handled negative results before.
 """
@@ -57,7 +57,7 @@ def add_ablation_features(df: pd.DataFrame) -> pd.DataFrame:
     feature-vector column per model (m0_features .. m3_features), so
     cross_validate_fixed_seed can score each with feature_col=.
 
-    m3_features keeps the amine flag on purpose: it's the last stage of
+    m3_features keeps the amine flag on purpose: it is the last stage of
     the M0-M3 ablation staircase (M2 = M1 + amine, M3 = M2 + Morgan), and
     changing what it contains would retroactively redefine every already-
     computed M0-M3 ablation result (data/tdi_track/outputs/comparisons/ablation_m0_m3.csv).

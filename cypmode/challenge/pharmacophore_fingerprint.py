@@ -107,7 +107,7 @@ def compute_pharmacophore_fingerprints_batch(
     """Computes (or loads from cache_path) one fingerprint row per SMILES,
     one column per bit (`bit_0`..`bit_{nbits-1}`). Resumable the same way
     quantum_pharmacophore.compute_quantum_features_batch is: SMILES
-    already cached aren't recomputed, and results are flushed to disk
+    already cached are not recomputed, and results are flushed to disk
     every checkpoint_every compounds, not only once at the end.
 
     Unlike quantum_pharmacophore's cache (8 scalar columns), this one is
@@ -134,7 +134,7 @@ def compute_pharmacophore_fingerprints_batch(
         # a plain module-level function bound via functools.partial, not a
         # local lambda -- multiprocessing.Pool pickles the callable to send
         # to worker processes, and a lambda closed over local variables
-        # isn't picklable (confirmed directly: this crashed the first real
+        # is not picklable (confirmed directly: this crashed the first real
         # n_workers=8 batch run with AttributeError, even though it worked
         # fine in tests, which only ever exercised the n_workers=1 path).
         compute = functools.partial(compute_pharmacophore_fingerprint, nbits=nbits)
@@ -209,7 +209,7 @@ def _main() -> None:
     for cyp in TDI_ISOFORMS:
         col = f"{cyp}_is_TDI"
         cyp_df = tdi_df.dropna(subset=[col]).reset_index(drop=True)
-        # An all-zero fingerprint isn't a neutral value -- it's a specific
+        # An all-zero fingerprint is not a neutral value -- it is a specific
         # false claim ("no pharmacophoric features detected"), the real
         # signature of a failed embedding/feature-detection, not a valid
         # observation. Excluded here the same way quantum_pharmacophore.py

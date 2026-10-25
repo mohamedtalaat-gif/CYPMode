@@ -99,7 +99,7 @@ def load_chembl_isoform(path: str | Path) -> pd.DataFrame:
     every real measurement found for that compound (see module docstring
     for why median-combining, not row-deduplication, is the right call --
     same reasoning as bindingdb_auxiliary's own load function). A record
-    whose canonical_smiles doesn't parse in RDKit is dropped, not passed
+    whose canonical_smiles does not parse in RDKit is dropped, not passed
     through (same real-world-data discipline as bindingdb_auxiliary's own
     loader).
     """

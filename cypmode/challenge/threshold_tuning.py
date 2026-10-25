@@ -47,7 +47,7 @@ def _inner_oof_threshold(
 ) -> float:
     """The training-portion-only threshold: an inner K-fold produces
     inner-OOF probabilities across the whole training portion (every
-    training compound scored by a model that didn't train on it), and the
+    training compound scored by a model that did not train on it), and the
     threshold is swept on those -- still zero information from the outer
     validation fold.
     """
@@ -160,7 +160,7 @@ def find_robust_threshold(
     analytically at every base rate in `base_rates` (TP=pi*TPR,
     FN=pi*(1-TPR), FP=(1-pi)*FPR, TN=(1-pi)*(1-FPR)), converted to MCC, and
     aggregated across the base-rate grid: "worst_case" (this threshold's
-    minimum MCC over the grid -- maximized, a minimax choice that's robust
+    minimum MCC over the grid -- maximized, a minimax choice that is robust
     if the test base rate turns out to be anywhere in that range) or
     "mean" (average MCC over the grid). Returns the chosen threshold and
     the full per-threshold, per-criterion table for inspection.

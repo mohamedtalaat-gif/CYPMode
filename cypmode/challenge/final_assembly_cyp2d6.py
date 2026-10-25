@@ -9,10 +9,10 @@ Real evidence behind this exact configuration (data/tdi_track/outputs/):
   the best number found for CYP2D6 across every architecture/feature
   combination tried, including the shared trunk + KNN (0.135 -- KNN
   actively hurts here, see shared_trunk_knn_no_amine.csv) and OOF-bridge
-  (0.075 on the LightGBM architecture -- negligible, and CYP2D6 doesn't
+  (0.075 on the LightGBM architecture -- negligible, and CYP2D6 does not
   even use that architecture; not re-tested on the shared trunk given
   the LightGBM read was already flat and OOF-bridge coverage there is
-  near-total anyway, so a floor/no-floor split like CYP3A4's doesn't
+  near-total anyway, so a floor/no-floor split like CYP3A4's does not
   apply the same way -- CYP2D6 uses a different, label-free mass-spec
   assay, see CYPMode_Architecture_Specification.md's "Official scoring
   harness" section for why that assay difference plausibly explains
@@ -73,7 +73,7 @@ def fit_predict_cyp2d6(
     row, using a threshold tuned the same way as every fold in
     cross_validate_shared_trunk_with_threshold_tuning -- an inner K-fold
     over the (here: full) training portion, never touching test labels
-    (which don't exist anyway).
+    (which do not exist anyway).
     """
     X_train_raw = np.stack(train_df[FEATURE_COL]).astype(np.float32)
     X_test_raw = np.stack(test_df[FEATURE_COL]).astype(np.float32)

@@ -68,7 +68,7 @@ def test_compute_pharmacophore_fingerprints_batch_caches_to_disk_and_resumes(tmp
 def test_compute_pharmacophore_fingerprints_batch_works_with_multiple_workers(tmp_path):
     # regression test: the real n_workers=8 batch run crashed with
     # AttributeError because the compute callable passed to
-    # multiprocessing.Pool.imap was a local lambda, which isn't
+    # multiprocessing.Pool.imap was a local lambda, which is not
     # picklable -- n_workers=1 (every other test here) never exercises
     # that code path, so this must use n_workers > 1 to actually catch it.
     cache_path = tmp_path / "cache.csv"

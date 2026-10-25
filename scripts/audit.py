@@ -27,7 +27,7 @@ session:
 
 Usage: python3 scripts/audit.py [--skip-tests] [--skip-mypy]
 Exit code is non-zero if any BLOCKING check fails (ruff, bandit-high,
-tests). mypy/vulture/radon/pip-audit are reported but don't fail the
+tests). mypy/vulture/radon/pip-audit are reported but do not fail the
 run by default -- this codebase was never fully typed, and vulture/radon
 findings need human judgment, not an automatic gate.
 """
@@ -84,7 +84,7 @@ def check_vulture() -> None:
 def check_radon() -> None:
     section("radon (cyclomatic complexity -- informational)")
     # radon's FileConfig eagerly parses pyproject.toml with configparser
-    # interpolation enabled and crashes on a literal '%' in our pytest
+    # interpolation enabled and crashes on a literal '%' in the pytest
     # markers' prose (a real radon limitation, not a project bug) -- run
     # from a cwd with no pyproject.toml in its ancestry, absolute target
     # path, so radon's upward config search never finds it.
@@ -133,7 +133,7 @@ def check_pip_audit() -> None:
     out = proc.stdout + proc.stderr
     print(out[-4000:] or "(clean)")
     # cypmode itself is correctly, harmlessly skipped ("not found on PyPI")
-    # -- it's our own local package, not something with a CVE registry
+    # -- it is the local package of the project, not something with a CVE registry
     # entry to check. Only fail the audit on a real reported vulnerability.
     has_real_vuln = "Found " in out and "known vulnerabilit" in out
     RESULTS.append(("pip-audit", not has_real_vuln, f"exit {proc.returncode}, vulnerabilities found: {has_real_vuln}"))
@@ -217,7 +217,7 @@ def main() -> None:
 
     if not AUDIT_BIN.exists():
         sys.exit(
-            f"{AUDIT_BIN} doesn't exist -- run:\n"
+            f"{AUDIT_BIN} does not exist -- run:\n"
             f"  python3 -m venv .venv-audit && .venv-audit/bin/pip install ruff bandit vulture radon mypy pip-audit"
         )
 

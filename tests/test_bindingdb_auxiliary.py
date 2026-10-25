@@ -43,7 +43,7 @@ def _fake_bindingdb_json(tmp_path, records):
 
 def test_load_bindingdb_isoform_takes_median_across_repeated_measurements(tmp_path):
     # Real quirk: the same compound can appear many times across different
-    # papers with different reported values -- median-combine, don't drop.
+    # papers with different reported values -- median-combine, do not drop.
     records = [
         {"query": "x", "monomerid": "1", "smile": KETOCONAZOLE, "affinity_type": "Ki", "affinity": "1000"},
         {"query": "x", "monomerid": "1", "smile": KETOCONAZOLE, "affinity_type": "Ki", "affinity": "3000"},
@@ -59,7 +59,7 @@ def test_load_bindingdb_isoform_takes_median_across_repeated_measurements(tmp_pa
 
 def test_load_bindingdb_isoform_drops_unparseable_extended_smiles(tmp_path):
     # Real quirk, confirmed directly on a real CYP3A4 pull: a trailing
-    # "|r,THB:...|" extended-annotation suffix that plain RDKit can't
+    # "|r,THB:...|" extended-annotation suffix that plain RDKit cannot
     # parse -- must be dropped, not passed through to crash downstream
     # featurization.
     records = [
@@ -124,7 +124,7 @@ def test_fit_and_predict_auxiliary_model_runs_end_to_end():
 def test_fit_auxiliary_model_uses_the_active_threshold():
     smiles_pool = [KETOCONAZOLE, CLOTRIMAZOLE, ETHANOL, BENZENE] * 5
     # all potent (well below 10 uM default threshold) -> all should end up
-    # labeled active internally; just confirm this doesn't raise on an
+    # labeled active internally; just confirm this does not raise on an
     # all-one-class label set (LightGBM handles it; predict_proba should
     # still return finite values)
     bdb_df = pd.DataFrame({"SMILES": smiles_pool, "affinity_uM": [0.01] * len(smiles_pool)})

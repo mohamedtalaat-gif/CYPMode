@@ -6,8 +6,8 @@
 
 The four data/structure_track/inputs/cyp3a4_*.yaml files were originally hand-written,
 one at a time, with the coordinating cysteine's position located once,
-inline, and typed into each file. That doesn't scale past four known
-compounds and can't be re-verified against a different protein construct.
+inline, and typed into each file. That does not scale past four known
+compounds and cannot be re-verified against a different protein construct.
 This module makes both steps real, callable code.
 """
 
@@ -27,7 +27,7 @@ def find_coordinating_cysteine(protein_sequence: str) -> int:
     """Locate the axial heme-ligating cysteine via the conserved FxxGxxxCxG motif.
 
     Returns the cysteine's 1-indexed residue position. Raises ValueError if
-    the motif isn't found exactly once -- this is a real structural feature
+    the motif is not found exactly once -- this is a real structural feature
     to verify per protein/construct, not something to guess or reuse across
     a different numbering scheme.
     """
@@ -148,7 +148,7 @@ def build_boltz_yaml(
     1 for the base structure) -- real, observed cost of 55min-10+ hours
     per compound on this hardware for that step alone. Callers that only
     need heme-coordination geometry (the Fe-ligand-N distance; see
-    cypmode/validation/structures.py) don't need the affinity head at all.
+    cypmode/validation/structures.py) do not need the affinity head at all.
     """
     if coordinating_cys < 1 or coordinating_cys > len(protein_sequence):
         raise ValueError(

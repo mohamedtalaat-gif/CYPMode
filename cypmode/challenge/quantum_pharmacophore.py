@@ -51,8 +51,8 @@ single-point on one MMFF-optimized 3D conformer:
   charge_mean is just that constant divided by atom count, redundant
   with descriptors already in M3).
 
-A compound whose 3D embedding fails (RDKit's ETKDG occasionally can't
-embed a valid conformer) or whose xTB single-point doesn't converge
+A compound whose 3D embedding fails (RDKit's ETKDG occasionally cannot
+embed a valid conformer) or whose xTB single-point does not converge
 gets a NaN-filled feature row, logged by SMILES -- not a hard crash
 that kills a several-thousand-compound batch.
 """
@@ -85,7 +85,7 @@ CACHE_PATH = Path("data/tdi_track/outputs/caches/quantum_pharmacophore_cache.csv
 def embed_3d_conformer(smiles: str, random_seed: int = 42):
     """RDKit ETKDG embedding + MMFF optimization. Returns None (not
     raised) if embedding fails, since a handful of difficult SMILES
-    shouldn't crash a batch run -- see module docstring.
+    should not crash a batch run -- see module docstring.
     """
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
@@ -101,7 +101,7 @@ def compute_gfn2_xtb_properties(mol) -> dict:
     """Runs one real GFN2-xTB single-point via tblite and returns its raw
     dict (energy, charges, dipole, orbital-energies, orbital-occupations,
     etc.) -- imports tblite lazily so the rest of this module (and any
-    caller that only needs FEATURE_NAMES or cached results) doesn't need
+    caller that only needs FEATURE_NAMES or cached results) does not need
     tblite installed.
     """
     from tblite.interface import Calculator
@@ -227,7 +227,7 @@ def add_quantum_features(
 ) -> pd.DataFrame:
     """Adds a `quantum_features` column (one fixed-size np.array per row,
     order matching FEATURE_NAMES) to df, keyed off its own SMILES column.
-    Rows whose features couldn't be computed carry a NaN-filled array --
+    Rows whose features could not be computed carry a NaN-filled array --
     a caller stacking this into a classifier should drop/impute those
     rather than silently letting LightGBM (which does tolerate NaN) mask
     a real computation failure as a missing-at-random value.
@@ -244,7 +244,7 @@ def load_cached_quantum_features(df: pd.DataFrame, cache_path: str | Path = CACH
     read-only counterpart to add_quantum_features, for a caller that
     must not risk importing tblite into a process that also uses
     LightGBM (see module docstring). Raises a clear error if the cache
-    doesn't cover every compound in df, rather than a silent, all-NaN
+    does not cover every compound in df, rather than a silent, all-NaN
     join. Lives here, not in quantum_pharmacophore_significance.py,
     specifically so a lightgbm-free caller could use it too, matching
     why chemberta_features.load_cached_chemberta_embeddings lives in
@@ -253,7 +253,7 @@ def load_cached_quantum_features(df: pd.DataFrame, cache_path: str | Path = CACH
     cache_path = Path(cache_path)
     if not cache_path.exists():
         raise FileNotFoundError(
-            f"{cache_path} doesn't exist -- run `python -m cypmode.challenge.quantum_pharmacophore` "
+            f"{cache_path} does not exist -- run `python -m cypmode.challenge.quantum_pharmacophore` "
             "first to populate it (a separate, tblite-only process)."
         )
     cached = pd.read_csv(cache_path)

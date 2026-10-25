@@ -25,7 +25,7 @@ def standardized_parent_smiles(smiles: str) -> str | None:
     """The canonical SMILES of a compound's standardized parent structure
     (salt-stripped, neutralized) -- None for an unparseable SMILES, not a
     raised exception, since callers use this for bulk dataset matching
-    where a handful of malformed rows shouldn't crash the whole pass.
+    where a handful of malformed rows should not crash the whole pass.
     """
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:

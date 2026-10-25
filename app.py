@@ -10,7 +10,7 @@ the physics-based structural check for the four reference compounds this
 screen is validated against, read from a small checked-in summary so this
 tab works the same in a hosted deployment as it does locally -- the full
 Boltz-2 output (multi-GB weights, MSA downloads, predicted structures)
-isn't something a hosted demo can run or ship. See README.md's Validation
+is not something a hosted demo can run or ship. See README.md's Validation
 section and cypmode/validation/structures.py to reproduce those numbers
 from a local Boltz-2 run.
 """
@@ -75,7 +75,7 @@ def motif_screen_tab():
         "motifs, imidazole, triazole, pyridine, thiazole. A match means "
         "'capable of heme coordination,' not 'confirmed to coordinate in a "
         "specific isoform's active site', see the Structural validation tab "
-        "and README for what's actually been checked against physics."
+        "and README for what is actually been checked against physics."
     )
 
     col1, col2 = st.columns(2)
@@ -155,7 +155,7 @@ def load_challenge_compounds() -> pd.DataFrame:
 def merge_challenge_results(compounds_df: pd.DataFrame, results_df: pd.DataFrame) -> pd.DataFrame:
     """Left-join the batch structural-validation results (cypmode.validation.batch's
     CSV export) onto the compound table by name -- compounds the batch run
-    hasn't reached yet simply get null result columns, not an error, since
+    has not reached yet simply get null result columns, not an error, since
     that run can take hours and this table should reflect whatever's done
     so far.
     """

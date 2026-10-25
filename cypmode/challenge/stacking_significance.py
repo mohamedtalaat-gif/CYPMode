@@ -17,7 +17,7 @@ scored WORSE for CYP2D6 (single-split MCC 0.054) than either alone (KNN
 corrected testing before being trusted as a negative interaction
 rather than single-split noise.
 
-Resolved, and it didn't survive -- but not for the reason it was first
+Resolved, and it did not survive -- but not for the reason it was first
 checked. This module's own _main() was itself silently using m3_features
 (amine flag still included) instead of m3_no_amine_features, the same
 bug fixed everywhere else in this project (see
@@ -27,7 +27,7 @@ M3+KNN+BDB=0.086) was itself computed on the wrong feature set. Re-run
 with the corrected features: M3=0.082, M3+KNN=0.066, M3+BDB=0.057,
 M3+KNN+BDB=0.089 -- KNN and BindingDB alone no longer even look
 positive, and the combined variant is no longer the worst of the four,
-it's the best (all four still pairwise non-significant, reject=False
+it is the best (all four still pairwise non-significant, reject=False
 throughout). The original "negative interaction" story does not
 replicate; it was an artifact of the amine-flag bug, not a real
 CYP2D6-specific effect.

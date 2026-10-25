@@ -16,9 +16,9 @@ distances are an unforced structural prediction, not something built into
 the input.
 
 Earlier versions of this module used "closest ligand nitrogen, regardless of
-which one" as a proxy for "the coordinating nitrogen." That's wrong in
+which one" as a proxy for "the coordinating nitrogen." That is wrong in
 general -- confirmed directly on vardenafil, where the geometrically closest
-ligand nitrogen (4.84 A) isn't part of any matched Type II motif at all; the
+ligand nitrogen (4.84 A) is not part of any matched Type II motif at all; the
 nitrogens the motif screen actually flagged sit at 10.5-11.8 A. The fix
 reconstructs the ligand's real bonds and aromaticity from its SMILES
 (RDKit's AssignBondOrdersFromTemplate, the same technique
@@ -66,7 +66,7 @@ def _add_missing_occupancy(cif_text: str) -> str:
     Biopython's MMCIFParser requires. Adds the column with a constant 1.0 --
     valid for a predicted model, which has no partial occupancy -- relying on
     OpenFold3 writing one atom per line, so a row's trailing token lines up
-    with the new header appended last. Returns the text unchanged if there's
+    with the new header appended last. Returns the text unchanged if there is
     no `_atom_site` loop to patch.
     """
     lines = cif_text.splitlines()
@@ -129,8 +129,8 @@ def _mol_from_direct_atom_correspondence(template, ligand_atoms):
     conformation makes two non-bonded atoms sit closer together than two
     actually-bonded atoms elsewhere in the same ligand): Boltz-2 does not
     always preserve the input SMILES's atom order in its CIF output --
-    spot-checked against itraconazole/ketoconazole, where it doesn't -- so
-    this can't replace proximity bonding as the default method. But when it
+    spot-checked against itraconazole/ketoconazole, where it does not -- so
+    this cannot replace proximity bonding as the default method. But when it
     does happen to hold, it sidesteps proximity bonding's real failure mode
     entirely (a spurious close contact being misread as a bond, which is
     what actually broke OCNT-2311782 -- proximity bonding found 29 bonds
@@ -138,8 +138,8 @@ def _mol_from_direct_atom_correspondence(template, ligand_atoms):
     tested as an alternative, made the identical mistake, since both are
     fundamentally the same kind of distance-based heuristic).
 
-    Returns None (not raised) if the atom order doesn't correspond
-    (different element sequence) or the coordinates don't actually support
+    Returns None (not raised) if the atom order does not correspond
+    (different element sequence) or the coordinates do not actually support
     it (a template bond's length would be chemically unreasonable under
     this direct correspondence) -- callers should fall back further, not
     trust an unverified index match.
@@ -263,8 +263,8 @@ def load_trunk_embeddings(predictions_dir: str | Path) -> dict:
     CLI flag (confirmed directly in third_party/boltz-main's own source:
     data/write/writer.py writes prediction["s"]/["z"] to this file when
     that flag is set; model/models/boltz2.py's predict_step returns them
-    unconditionally, so the flag only controls whether they're saved, not
-    whether they're computed).
+    unconditionally, so the flag only controls whether they are saved, not
+    whether they are computed).
     """
     files = list(Path(predictions_dir).glob("embeddings_*.npz"))
     if not files:
@@ -293,7 +293,7 @@ def summarize_compound(
     """Summarize one Boltz-2 result directory, e.g. .../boltz_results_cyp3a4_ketoconazole.
 
     ligand_smiles is required -- motif matching needs the 2D structure, not
-    just the predicted geometry, and this function doesn't assume or look up
+    just the predicted geometry, and this function does not assume or look up
     a fixed set of known compounds.
 
     expect_affinity=False skips reading the affinity JSON entirely (for a
@@ -329,6 +329,6 @@ def summarize_compound(
     if expect_trunk_embedding:
         embeddings = load_trunk_embeddings(predictions_dir)
         # list, not ndarray -- this result dict is JSON-serialized (batch.py's
-        # checkpointing), and json.dumps can't handle a raw numpy array.
+        # checkpointing), and json.dumps cannot handle a raw numpy array.
         result["pooled_trunk_embedding"] = pooled_trunk_embedding(embeddings).tolist()
     return result

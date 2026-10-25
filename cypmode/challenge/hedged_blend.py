@@ -22,8 +22,8 @@ The same table answers the more basic question that job 012 could not, because t
 it was scored under (which is not a choice available at deployment): fitted under a fixed assumed regime, is the selection-aware
 stack better than the hits-only stack across the whole plausible band? Rule (fixed in advance): selection-aware replaces hits-only
 only if, for the chosen fit weight, its mean AUC is higher at every band weight at both z0 AND the corrected paired p < 0.05 at
-every band weight at both z0. The fit weight itself is reported for 0.25, 0.5 and 1.0 (a design choice we control at
-deployment) and the one with the best worst-case selection-aware AUC over the band is the one the final build uses.
+every band weight at both z0. The fit weight itself is reported for 0.25, 0.5 and 1.0 (a design choice that is
+controlled at deployment) and the one with the best worst-case selection-aware AUC over the band is the one the final build uses.
 
 Usage: python -m cypmode.challenge.hedged_blend --isoform CYP2D6 --repeats 3
 """

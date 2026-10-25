@@ -4,10 +4,10 @@
 
 """OpenStructure's LDDT-PLI and BiSyRMSD for every pose that a pool gate was judged on.
 
-``ost_official`` found that our LDDT-PLI does not agree with the organisers' scorer closely enough (mean absolute difference 0.066 against the registered 0.05, pose ordering 77.3% against 90%) and
-registered that the gates that rest on our measure are then repeated with OpenStructure's. The gates of the pools (minimum Bayes risk, engine consensus, expected-improvement sampling, the heme-frame
-prior, the series term, the three pose terms, the restraint and the three pilots) are judged by ``true_rmsd``, our pocket-aligned symmetry-aware RMSD to the crystal pose, whose official counterpart is
-OpenStructure's BiSyRMSD; three exploratory gates are judged by our LDDT-PLI. This module scores every pose of the tables of those gates (``YARDSTICK_TABLES``) with OpenStructure, in the conda
+``ost_official`` found that the LDDT-PLI of the project does not agree with the organisers' scorer closely enough (mean absolute difference 0.066 against the registered 0.05, pose ordering 77.3% against 90%) and
+registered that the gates that rest on the local measure are then repeated with OpenStructure's. The gates of the pools (minimum Bayes risk, engine consensus, expected-improvement sampling, the heme-frame
+prior, the series term, the three pose terms, the restraint and the three pilots) are judged by ``true_rmsd``, the pocket-aligned symmetry-aware RMSD of the project to the crystal pose, whose official counterpart is
+OpenStructure's BiSyRMSD; three exploratory gates are judged by the LDDT-PLI of the project. This module scores every pose of the tables of those gates (``YARDSTICK_TABLES``) with OpenStructure, in the conda
 environment ``ost``, exactly as ``ost_official`` does for the confirmation poses; ``ost_pool_gates`` then repeats the gates with the new values.
 
 ``python -m cypmode.validation.ost_pools [--max-minutes N]`` writes ``data/structure_track/outputs/cyp3a4/ost_pools.csv`` (one row per pose; resumable: scored poses are kept) and prints the number
@@ -72,7 +72,7 @@ def inventory(keys: list[tuple[str, str, int]]) -> list[dict]:
 
 
 def score_copies(model_pdb: Path, smiles: str, records: list[dict], workdir: Path) -> dict:
-    """OpenStructure's LDDT-PLI and BiSyRMSD of a pose against every crystal copy of its ligand: the largest LDDT-PLI and the smallest BiSyRMSD, as our own measures take the best copy."""
+    """OpenStructure's LDDT-PLI and BiSyRMSD of a pose against every crystal copy of its ligand: the largest LDDT-PLI and the smallest BiSyRMSD, as the local measures take the best copy."""
     from cypmode.validation.ost_official import ost_score, write_reference_pdb
 
     lddt, rmsd, error = [], [], ""

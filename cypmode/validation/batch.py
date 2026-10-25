@@ -7,8 +7,8 @@
 cypmode.validation.pipeline.run_structural_validation handles one compound
 end to end, but a real batch (e.g. every compound in an external blinded
 test set) needs that call repeated across many compounds, with two things
-a plain loop doesn't give for free: one compound's failure (a bad SMILES,
-a Boltz-2 crash) shouldn't lose every other compound's result, and a run
+a plain loop does not give for free: one compound's failure (a bad SMILES,
+a Boltz-2 crash) should not lose every other compound's result, and a run
 spanning many hours needs its results checkpointed as it goes, not only
 written out at the very end.
 """
@@ -44,7 +44,7 @@ def to_dataframe(results: dict, compounds: dict[str, str] | None = None) -> pd.D
     Keeps the scalar fields a quick read or a spreadsheet needs; the full
     nested per-nitrogen distance lists (motif_nitrogen_distances,
     all_ligand_nitrogen_distances) stay in the source JSON only -- they
-    don't flatten into a row without inventing a schema for "however many
+    do not flatten into a row without inventing a schema for "however many
     nitrogens this particular ligand happens to have". Pass `compounds`
     (the same name->SMILES mapping given to run_batch) to include SMILES in
     the table; without it, the SMILES column is left empty.
@@ -88,7 +88,7 @@ def run_batch(
     progress survives an interruption. Resumes automatically: names already
     present in an existing results_path are skipped rather than re-run. A
     per-compound failure is recorded as {"error": ...} rather than raised,
-    so one bad compound doesn't stop the rest of the batch.
+    so one bad compound does not stop the rest of the batch.
 
     If table_path is given, also (re)writes table_path.csv and
     table_path.parquet from the results so far after every compound -- a
@@ -153,7 +153,7 @@ def _main() -> None:
         dest="predict_affinity",
         action="store_false",
         help="skip the affinity property entirely -- only the structure/coordination geometry is needed "
-        "for compounds that don't require a predicted affinity value (confirmed: the affinity head alone "
+        "for compounds that do not require a predicted affinity value (confirmed: the affinity head alone "
         "runs 5x the diffusion sampling of the base structure by default)",
     )
     parser.add_argument("--recycling-steps", type=int, default=None, help="passed through to boltz predict")

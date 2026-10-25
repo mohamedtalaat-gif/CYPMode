@@ -8,7 +8,7 @@ exist) and, from the nested harness, the query-by-committee signals and the
 decision margin. Deliberately kept outside the prediction path -- see
 CYPMode_Architecture_Specification.md. Not called "uncertainty
 quantification" anywhere until validate_reliability_correlation shows it
-actually tracks real error; until then it's just computed numbers.
+actually tracks real error; until then it is just computed numbers.
 
 The committee/margin components are judged by cypmode.challenge.committee_uncertainty
 on held-out nested folds, against the margin as a baseline; its decision records
@@ -37,7 +37,7 @@ def ensemble_disagreement(
 ) -> np.ndarray:
     """Std deviation of predicted P(TDI) across n_models LGBMClassifiers,
     same training data, different random seeds only. High disagreement =
-    the training signal doesn't pin down a confident answer for that
+    the training signal does not pin down a confident answer for that
     compound. All n_models are fit on train_features/train_labels only --
     apply_features never influences training.
     """
@@ -116,7 +116,7 @@ def compute_reliability_score(
     z-scoring and summing would itself be an unvalidated modeling choice).
     svm_ood_score_values and structural_confidence_values are both
     optional; structural_confidence_values is NaN-filled where Tier 3
-    wasn't run for a compound. validate_reliability_correlation handles
+    was not run for a compound. validate_reliability_correlation handles
     NaNs by dropping them per-component, not by imputing.
     """
     out = pd.DataFrame(

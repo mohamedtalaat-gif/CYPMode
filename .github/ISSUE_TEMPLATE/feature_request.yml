@@ -5,8 +5,8 @@ body:
   - type: textarea
     id: problem
     attributes:
-      label: What's missing
-      description: What you're trying to do that the project doesn't currently support.
+      label: What is missing
+      description: What you are trying to do that the project does not currently support.
     validations:
       required: true
   - type: textarea
@@ -15,6 +15,6 @@ body:
       label: Source / methodology
       description: >
         If this is a new motif or structural alert, a paper or named method
-        it's based on, see CONTRIBUTING.md's conventions on citable sources.
+        it is based on, see CONTRIBUTING.md's conventions on citable sources.
     validations:
       required: false

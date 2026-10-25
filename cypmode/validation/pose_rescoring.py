@@ -5,7 +5,7 @@
 """Experimental-prior rescoring of a predicted inhibitor pose in CYP3A4.
 
 The Structure Track's accuracy metrics are scored against sequestered
-structures, so a predicted pose can't be scored locally. What can be asked
+structures, so a predicted pose cannot be scored locally. What can be asked
 instead: how well does this pose agree with where experimentally resolved
 ligands sit in this pocket? The reference set is the PDB's active-site
 CYP3A4 co-crystal ligands (cypmode.validation.reference_ligands). Each
@@ -80,7 +80,7 @@ def morgan_fingerprint(smiles: str):
     reference SMILES are fingerprinted for every pose scored. RDKit's log is
     muted while parsing -- some reference ligands are organometallic
     complexes whose unusual bond types make it very noisy, and None (not an
-    exception) is returned for anything that doesn't parse.
+    exception) is returned for anything that does not parse.
     """
     with rdBase.BlockLogs():
         mol = Chem.MolFromSmiles(smiles)
@@ -107,8 +107,8 @@ def superpose_reference(reference: dict, candidate_fe: np.ndarray, candidate_ca:
     superposing the reference's pocket C-alpha atoms onto the candidate's
     (matched by residue number, restricted to those within POCKET_RADIUS_A
     of the candidate's iron). Returns (coords_in_candidate_frame, ca_rmsd),
-    or None if too few residues match or the pockets don't superpose
-    within MAX_ALIGN_RMSD_A -- a reference that doesn't fit is dropped,
+    or None if too few residues match or the pockets do not superpose
+    within MAX_ALIGN_RMSD_A -- a reference that does not fit is dropped,
     never forced.
     """
     ref_ca = {int(k): np.asarray(v, dtype=float) for k, v in reference["pocket_ca"].items()}

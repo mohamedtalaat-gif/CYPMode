@@ -19,7 +19,7 @@ from pathlib import Path
 
 # Deliberately not imported at module level: summarize_compound needs
 # Biopython (the `validate` extra), but discover_compounds() and
-# _read_ligand_smiles() below don't, and should stay importable/testable
+# _read_ligand_smiles() below do not, and should stay importable/testable
 # without it -- imported lazily inside main() instead.
 
 ROOT = Path(__file__).resolve().parents[2]

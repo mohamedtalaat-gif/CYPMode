@@ -16,7 +16,7 @@ download/load is slow) -- ~3.6 minutes for the full ~6,145-compound
 training set, no 3D conformer step needed at all (ChemBERTa operates
 directly on the tokenized SMILES string, unlike quantum_pharmacophore's
 tblite features or pharmacophore_fingerprint's pmapper features, both
-of which need a real 3D embedding first) -- so there's essentially no
+of which need a real 3D embedding first) -- so there is essentially no
 embedding-failure mode the way those two have; an unparseable
 SMILES is the only real failure case.
 
@@ -61,9 +61,9 @@ def _load_model():
 def compute_chemberta_embedding(smiles: str, tokenizer=None, model=None, torch_module=None) -> np.ndarray:
     """One compound's real 768-dim ChemBERTa embedding (mean-pooled over
     token hidden states -- a standard, simple pooling choice; no [CLS]
-    token special-casing needed since RoBERTa-style models don't reserve
+    token special-casing needed since RoBERTa-style models do not reserve
     a dedicated pooler for this checkpoint). Loads the model fresh if
-    tokenizer/model/torch_module aren't passed in -- pass them explicitly
+    tokenizer/model/torch_module are not passed in -- pass them explicitly
     when embedding many compounds in a loop, so the ~178s one-time model
     load only happens once (see compute_chemberta_embeddings_batch).
 
@@ -95,7 +95,7 @@ def compute_chemberta_embeddings_batch(
     here (unlike those two): at ~35 ms/molecule this is already fast
     enough single-threaded (~3.6 min for the full training set) that a
     Pool's process-startup overhead (each worker would reload the model)
-    isn't worth it.
+    is not worth it.
     """
     dim_cols = [f"dim_{i}" for i in range(CHEMBERTA_EMBEDDING_DIM)]
     all_cols = ["SMILES", *dim_cols]
@@ -130,7 +130,7 @@ def load_cached_chemberta_embeddings(df: pd.DataFrame, cache_path: str | Path = 
     without computing anything -- the read-only counterpart to
     add_chemberta_features (which will compute+cache anything missing).
     Raises a clear error (not a silent, all-missing join) if the cache
-    doesn't cover every compound in df -- a caller who forgot to run
+    does not cover every compound in df -- a caller who forgot to run
     this module's own extraction step first should see exactly that,
     not a confusing downstream shape mismatch. Lives here (not in
     chemberta_significance.py, which imports it) specifically so a
@@ -142,7 +142,7 @@ def load_cached_chemberta_embeddings(df: pd.DataFrame, cache_path: str | Path = 
     cache_path = Path(cache_path)
     if not cache_path.exists():
         raise FileNotFoundError(
-            f"{cache_path} doesn't exist -- run `python -m cypmode.challenge.chemberta_features` "
+            f"{cache_path} does not exist -- run `python -m cypmode.challenge.chemberta_features` "
             "first to populate it (a separate, torch-only process)."
         )
     dim_cols = [f"dim_{i}" for i in range(CHEMBERTA_EMBEDDING_DIM)]

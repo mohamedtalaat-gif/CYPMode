@@ -66,7 +66,7 @@ def run_structural_validation(
     written the structure but silently skipped the affinity JSON, and that
     --override is what makes it actually run that step -- not just a stale
     old-cache issue reusing a name. --override still reuses the expensive
-    MSA/preprocessing cache when the input hasn't changed (confirmed in the
+    MSA/preprocessing cache when the input has not changed (confirmed in the
     same run: "All inputs are already processed"), so this costs nothing
     beyond forcing the prediction step to actually execute.
 
@@ -81,7 +81,7 @@ def run_structural_validation(
     until now, which would have silently collided CYP2D6 runs' files
     with CYP3A4's own under the same names. Pass target="cyp2d6" (with a
     real CYP2D6 protein_sequence) for a different real isoform, rather
-    than reusing this default against a sequence it doesn't actually
+    than reusing this default against a sequence it does not actually
     name.
 
     out_dir is the shared base for every target's results -- this

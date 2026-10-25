@@ -10,13 +10,13 @@ activity calls (no preincubation comparison, so it has no TDI labels of
 its own -- see module docstring's Note on scope below).
 
 Motivation: this project's own TDI training set comes from a curated,
-medicinal-chemistry-series-heavy compound pool (see
-CYPMode_DATA_AUDIT.md's scaffold analysis). AID 1851's compounds are
+medicinal-chemistry-series-heavy compound pool (section 4 of the audit
+report). AID 1851's compounds are
 drawn from a broader, more chemically diverse screening library, largely
 disjoint from that pool. A model trained on AID 1851 to predict general
 CYP2D6/CYP3A4 direct-activity from structure, then applied to this
 project's own TDI compounds, gives an auxiliary feature informed by a much
-larger and more diverse chemical space than our own training data alone
+larger and more diverse chemical space than the training data of the project alone
 covers -- not a replacement for direct evidence, a broader prior.
 
 Note on scope: AID 1851 measures direct inhibitor/substrate activity in a
@@ -74,7 +74,7 @@ def load_aid1851(path: str | Path = AID1851_RAW_PATH) -> pd.DataFrame:
     happened to have replicate rows when fitting the auxiliary model.
     `drop_duplicates(subset=["PUBCHEM_CID"])` per panel, before merging,
     is what prevents that -- keeping first-seen is an arbitrary tie-break
-    among replicates, not a claim that it's the "right" one, but it fixes
+    among replicates, not a claim that it is the "right" one, but it fixes
     the row-multiplication bug either way.
     """
     raw = pd.read_csv(path, skiprows=[1, 2, 3, 4], low_memory=False)
@@ -220,7 +220,7 @@ def _main() -> None:
 
     n_before = len(aid_df)
     aid_df = exclude_exact_overlap(aid_df, tdi_df["SMILES"])
-    print(f"AID1851: {n_before} compounds, {n_before - len(aid_df)} exact-SMILES overlap with our TDI data excluded")
+    print(f"AID1851: {n_before} compounds, {n_before - len(aid_df)} exact-SMILES overlap with the TDI data excluded")
 
     all_results = []
     for cyp in TDI_ISOFORMS:

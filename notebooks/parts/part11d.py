@@ -57,9 +57,9 @@ expansion_poses = pd.read_csv(ROOT / "data/structure_track/outputs/cyp3a4/restra
 ost_scores = pd.read_csv(ROOT / "data/structure_track/outputs/cyp3a4/ost_vs_ours.csv")
 ost_stats = regate(expansion_poses, ost_scores, expansion_ligands, plan["design"]["samples_per_condition"], alpha_plan)
 confirmation_table = pd.DataFrame([
-    {"measure": "primary stratum, our LDDT-PLI", **{k: primary_stats[k] for k in ("n", "mean", "wins", "p_better", "p_worse", "min_drop_one")}},
+    {"measure": "primary stratum, LDDT-PLI of the project", **{k: primary_stats[k] for k in ("n", "mean", "wins", "p_better", "p_worse", "min_drop_one")}},
     {"measure": "primary stratum, OpenStructure's LDDT-PLI", **{k: ost_stats["openstructure"][k] for k in ("n", "mean", "wins", "p_better", "p_worse", "min_drop_one")}},
-    {"measure": "secondary stratum, our LDDT-PLI", **{k: secondary_stats[k] for k in ("n", "mean", "wins", "p_better", "p_worse", "min_drop_one")}}])
+    {"measure": "secondary stratum, LDDT-PLI of the project", **{k: secondary_stats[k] for k in ("n", "mean", "wins", "p_better", "p_worse", "min_drop_one")}}])
 show_table(confirmation_table, floatfmt=".3f")
 joined = lddt_primary.join(expansion_ligands.assign(ligand=lambda t: "exp-" + t["comp_id"]).set_index("ligand")[["min_fe_distance", "deposited", "n_heavy"]])
 coordinating = joined[joined["min_fe_distance"] <= expansion.COORDINATION_DISTANCE_A]

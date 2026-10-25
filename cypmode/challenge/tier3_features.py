@@ -48,7 +48,7 @@ TIER3_FEATURE_COLUMNS = ["tier3_coordinated", "tier3_fe_n_distance", "tier3_conf
 # Real observed Fe-N distances run ~2-14 A (see CYPMode_Architecture_Specification.md's
 # validation table); this sentinel is deliberately far outside that range so a
 # tree can split on "a Type II motif nitrogen was present to measure and it
-# just wasn't coordinating" as a distinct, informative case from "not in
+# just was not coordinating" as a distinct, informative case from "not in
 # Tier 3 at all" (NaN) -- collapsing both into NaN would throw away a real,
 # available fact (no motif nitrogen existed here at all) that costs nothing
 # to keep.

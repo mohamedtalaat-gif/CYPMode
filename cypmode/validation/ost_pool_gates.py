@@ -4,8 +4,8 @@
 
 """The gates of the pools repeated with OpenStructure's yardstick (the registered consequence of the verdict of ``ost_official``).
 
-The gates of the structure pools are judged by ``true_rmsd``, our pocket-aligned symmetry-aware RMSD to the crystal pose, and three exploratory gates by our LDDT-PLI. ``ost_pools`` scored every pose
-of their tables with OpenStructure, the organisers' scorer. This module writes copies of the pose tables in which ``true_rmsd`` is OpenStructure's BiSyRMSD (the smallest over the crystal copies, as ours
+The gates of the structure pools are judged by ``true_rmsd``, the pocket-aligned symmetry-aware RMSD of the project to the crystal pose, and three exploratory gates by the LDDT-PLI of the project. ``ost_pools`` scored every pose
+of their tables with OpenStructure, the organisers' scorer. This module writes copies of the pose tables in which ``true_rmsd`` is OpenStructure's BiSyRMSD (the smallest over the crystal copies, as the local values
 is) and runs each gate again on them, with the same code and the same rule; the exploratory LDDT-PLI gates run on OpenStructure's LDDT-PLI. Nothing the gates wrote before is touched: the copies and the
 outcome tables go to ``data/structure_track/outputs/cyp3a4/ost_yardstick/`` and the verdict lines carry the suffix ``_ost``.
 
@@ -14,7 +14,7 @@ restraint_bond / restraint_contact and the pilots (``structure_gates``), and the
 ``ost_regate``.
 
 ``python -m cypmode.validation.ost_pool_gates`` first runs every gate on unchanged copies of the tables and stops if one of the verdicts differs from the one in its original log (a check of this module's
-plumbing), then runs them on the OpenStructure copies and prints, for each gate, the verdict with our yardstick and with OpenStructure's, and whether any verdict changed.
+plumbing), then runs them on the OpenStructure copies and prints, for each gate, the verdict with the local yardstick and with OpenStructure's, and whether any verdict changed.
 """
 
 from __future__ import annotations
@@ -136,7 +136,7 @@ def run_structure_gates(directory: Path) -> str:
 
 
 def run_lddt_gates(poses: pd.DataFrame) -> str:
-    """The three exploratory gates of ``mbr_lddt_reevaluation`` on a table of LDDT-PLI per pose (ours, or OpenStructure's)."""
+    """The three exploratory gates of ``mbr_lddt_reevaluation`` on a table of LDDT-PLI per pose (local, or OpenStructure's)."""
     from cypmode.validation import mbr_lddt_reevaluation as m
     from cypmode.validation.selection_validation import P_VALUE, paired_gate
 
@@ -156,7 +156,7 @@ def run_lddt_gates(poses: pd.DataFrame) -> str:
 
 
 def lddt_table(ost: pd.DataFrame | None) -> pd.DataFrame:
-    """The LDDT-PLI per pose of the exploratory gates: our table, or the same poses with OpenStructure's value."""
+    """The LDDT-PLI per pose of the exploratory gates: the local table, or the same poses with OpenStructure's value."""
     ours = pd.read_csv(OUT / "pose_lddt_to_crystal.csv")
     if ost is None:
         return ours
@@ -201,7 +201,7 @@ def main() -> int:
         print(f"\n== {label}, yardstick: OpenStructure")
         print(GATE_LINE.sub(lambda m: m.group(0).replace(f"STRUCTURE GATE {m.group(1)}", f"STRUCTURE GATE {m.group(1)}_ost", 1), text).rstrip())
     changed = {g: (ours.get(g), v) for g, v in repeated.items() if g in ours and ours[g] != v}
-    print("\nSUMMARY (verdict with our yardstick -> with OpenStructure's):")
+    print("\nSUMMARY (verdict with the local yardstick -> with OpenStructure's):")
     for gate, verdict in sorted(repeated.items()):
         before = ours.get(gate)
         print(f"  {gate}: {'MET' if before else 'NOT MET'} -> {'MET' if verdict else 'NOT MET'}" if before is not None else f"  {gate}: (no original verdict) -> {'MET' if verdict else 'NOT MET'}")

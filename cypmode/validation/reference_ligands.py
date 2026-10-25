@@ -22,7 +22,7 @@ Buffers, ions, detergents and other small molecules are excluded by a
 component blocklist plus a size floor (MIN_HEAVY_ATOMS, MW >= MIN_MW).
 
 The raw mmCIFs are cached under data/structure_track/inputs/pdb_cache/
-(gitignored, regenerable); the compact REFERENCE_JSON is what's tracked.
+(gitignored, regenerable); the compact REFERENCE_JSON is what is tracked.
 """
 
 import json

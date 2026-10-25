@@ -20,7 +20,7 @@ effect almost to invisibility by construction, and this keeps the
 M3/M3+Tier3 numbers here directly comparable to tier3_features.py's own
 already-reported result for the same population. KNN is still built
 fold-internally over the FULL training population each fold (not
-restricted to Tier3-covered rows) -- it's a real project-wide feature
+restricted to Tier3-covered rows) -- it is a real project-wide feature
 that just happens to be scored on this same restricted subset here, not
 a Tier3-only feature itself.
 """

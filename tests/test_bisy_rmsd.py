@@ -45,7 +45,7 @@ def test_bisy_rmsd_is_invariant_to_a_global_rigid_transform_of_the_whole_complex
     """The real, discriminating test: rotating/translating the ENTIRE
     complex (protein + heme + ligand together) changes every atom's raw
     coordinates, but the ligand's position RELATIVE to the binding
-    pocket hasn't changed at all. A correct pocket-superposed BiSyRMSD
+    pocket has not changed at all. A correct pocket-superposed BiSyRMSD
     must still report ~0 here -- a naive RMSD on raw, un-superposed
     coordinates would not.
     """

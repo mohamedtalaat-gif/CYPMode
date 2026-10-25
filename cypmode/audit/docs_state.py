@@ -44,7 +44,7 @@ TITLES = {
     "hedged_blend": "hedged blend of the hits-only and the selection-aware stacks", "heme_frame_prior": "heme-frame prior over poses",
     "mbr_lddt_reevaluation": "minimum Bayes risk and restraint judged by LDDT-PLI (exploratory)", "mmp_transfer": "matched-molecular-pair transfer", "monroe_embeddings": "Monroe (GRIT) embeddings",
     "nonneg_stack": "non-negative stacking", "ost_pool_gates": "pool gates repeated with OpenStructure's yardstick", "ost_regate": "restraint confirmation repeated with OpenStructure's LDDT-PLI",
-    "ost_vs_ours": "our LDDT-PLI against OpenStructure's", "pair_transfer": "SAR pair transfer", "pair_transfer_physics": "SAR pair transfer with physics", "permutation_control": "negative control (permuted labels)",
+    "ost_vs_ours": "the LDDT-PLI of the project against that of OpenStructure", "pair_transfer": "SAR pair transfer", "pair_transfer_physics": "SAR pair transfer with physics", "permutation_control": "negative control (permuted labels)",
     "physics_compact": "compact physics block", "physics_compact_f10": "compact physics block, replicate with 10 outer folds", "physics_experiment": "physics block, tier A",
     "physics_experiment_f10": "physics block tier A, replicate with 10 outer folds", "physics_tierb": "physics block, tier B", "physics_tierb_f10": "physics block tier B, replicate with 10 outer folds",
     "population_physics": "selection-aware CYP2D6 model with physics", "population_screen": "selection-aware CYP2D6 model with the screen", "pose_awareness": "physics, pharmacophore and combined pose terms",

@@ -21,7 +21,7 @@ from cypmode.validation.structures import (
 
 class _FakeAtom:
     """Minimal stand-in for a Bio.PDB Atom -- _mol_from_direct_atom_correspondence
-    only ever touches .element and .get_coord() on the ligand_atoms it's given.
+    only ever touches .element and .get_coord() on the ligand_atoms it is given.
     """
 
     def __init__(self, element: str, coord):
@@ -138,7 +138,7 @@ def test_summarize_compound_handles_a_real_proximity_bonding_failure():
     # ("atom # 10 N, 4, is greater than permitted"). Confirmed the direct
     # atom-correspondence fallback resolves it: this compound has no Type II
     # motif at all (a real, valid "not coordinated" result, not a symptom of
-    # the bug), so the check here is just that it doesn't raise.
+    # the bug), so the check here is just that it does not raise.
     result = summarize_compound(OCNT_2311782_RESULT_DIR, OCNT_2311782_SMILES, expect_affinity=False)
     assert result["compound"] == "cyp3a4_OCNT-2311782"
     assert result["coordinated"] is False
@@ -174,7 +174,7 @@ def test_summarize_compound_expect_affinity_false_skips_affinity_gracefully(tmp_
 def test_pooled_trunk_embedding_gives_a_fixed_size_vector_regardless_of_token_count():
     # s: (n_tokens, d_s), z: (n_tokens, n_tokens, d_z) -- different token
     # counts for two synthetic complexes must still produce comparable,
-    # same-length pooled vectors (d_s + d_z each), since that's the whole
+    # same-length pooled vectors (d_s + d_z each), since that is the whole
     # point of pooling before using this as an ML feature across compounds.
     small = {"s": np.random.default_rng(0).normal(size=(50, 8)), "z": np.random.default_rng(0).normal(size=(50, 50, 4))}
     large = {"s": np.random.default_rng(1).normal(size=(300, 8)), "z": np.random.default_rng(1).normal(size=(300, 300, 4))}

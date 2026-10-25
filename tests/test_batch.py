@@ -131,7 +131,7 @@ def test_run_batch_survives_a_table_snapshot_write_failure(tmp_path):
     assert result == {"a": {**FAKE_SUMMARY, "compound": "a"}, "b": {**FAKE_SUMMARY, "compound": "b"}}
     assert json.loads(results_path.read_text()) == result
     # the CSV write (no external engine dependency) still succeeded even
-    # though parquet didn't -- the failure is isolated to what actually failed
+    # though parquet did not -- the failure is isolated to what actually failed
     assert pd.read_csv(table_path.with_suffix(".csv"))["compound"].tolist() == ["a", "b"]
 
 

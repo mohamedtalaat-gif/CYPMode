@@ -13,8 +13,8 @@ the labeled CYP3A4 population (1,501/3,584), so that OR clause selects
 thousands of compounds, against a real observed Boltz-2 cost of
 15-30+ minutes each. Not tractable, and redundant besides: the motif flag
 is already a free Tier 2 feature, so spending an expensive structural run
-on a compound the model already "knows about" via that flag doesn't add
-information it doesn't already have.
+on a compound the model already "knows about" via that flag does not add
+information it does not already have.
 
 Revised policy: pure uncertainty-based selection, no motif OR clause, and
 a hard fixed budget (top-N most uncertain compounds) rather than an

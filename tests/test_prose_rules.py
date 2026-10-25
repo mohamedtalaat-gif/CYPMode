@@ -48,15 +48,28 @@ def test_each_rule_finds_the_wording_it_is_named_for(tmp_path):
         write(tmp_path, "a.md", f"the user decided on a plan and the {ROLE} agreed\n"),
         write(tmp_path, "b.md", "I added the table and I'll check it\n"),
         write(tmp_path, "c.md", "fixed this session, your call\n"),
-        write(tmp_path, "d.md", "NOT WRITTEN YET\n"),
-        write(tmp_path, "e.md", "a result \u2014 and a tick \u2713\n"),
-        write(tmp_path, "f.md", "an honest look, genuinely different\n"),
+        write(tmp_path, "d.md", "We checked it and our result held for us\n"),
+        write(tmp_path, "e.md", "it doesn't work and that's all\n"),
+        write(tmp_path, "f.md", "NOT WRITTEN YET\n"),
+        write(tmp_path, "g.md", "a result \u2014 and a tick \u2713\n"),
+        write(tmp_path, "h.md", "an honest look, genuinely different\n"),
+        write(tmp_path, "i.md", "it is worth noting that, moreover, it works\n"),
     ]
     found = prose_rules.violations(tmp_path, files)
     assert list(found) == list(prose_rules.RULES)
-    assert [lines for lines in found.values()] == [["a.md:1"], ["b.md:1"], ["c.md:1"], ["d.md:1"], ["e.md:1"], ["f.md:1"], []]
-    stock = prose_rules.violations(tmp_path, [write(tmp_path, "g.md", "it is worth noting that, moreover, it works\n")])
-    assert stock["conversational openers and stock phrases"] == ["g.md:1"]
+    assert [lines for lines in found.values()] == [[f"{name}.md:1"] for name in "abcdefghi"]
+
+
+def test_a_quotation_in_a_document_keeps_the_words_of_its_source(tmp_path):
+    files = [write(tmp_path, "a.md", 'The text reads "a shift can\'t be measured directly" and no more.\n'), write(tmp_path, "b.py", 'message = "a shift can\'t be measured"\n')]
+    found = prose_rules.violations(tmp_path, files)
+    assert found["contractions"] == ["b.py:1"]  # in code the string is text that is shown, so it is matched
+
+
+def test_the_two_letters_of_a_country_and_the_possessive_of_a_variable_are_not_the_plural_first_person(tmp_path):
+    files = [write(tmp_path, "a.py", "locale = 'en-US'\nours = load()\n"), write(tmp_path, "b.md", "the US Food and Drug Administration\n")]
+    assert prose_rules.violations(tmp_path, files)["first-person plural"] == []
+    assert prose_rules.violations(tmp_path, [write(tmp_path, "c.md", "compared with ours\n")])["first-person plural"] == ["c.md:1"]
 
 
 def test_an_established_term_that_contains_a_listed_word_is_not_a_manner_of_writing(tmp_path):

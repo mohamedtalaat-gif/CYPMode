@@ -29,7 +29,7 @@ jobs:
       # 2026-09-26: "ModuleNotFoundError: No module named 'lightgbm'" during
       # collection of tests/test_chemberta_significance.py produced
       # "Interrupted: 1 error during collection", meaning none of the other
-      # ~178 tests in the main group ran at all -- this omission wasn't
+      # ~178 tests in the main group ran at all -- this omission was not
       # hypothetical, it silently zeroed out CI's real coverage). The panel
       # tests read the small checked-in data/tdc_cache/, no network call
       # required. Structural-validation tests skip cleanly without a local

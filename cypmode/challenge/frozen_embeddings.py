@@ -6,7 +6,7 @@
 
 CheMeleon (Burns et al., Zenodo 10.5281/zenodo.15426600, weights already on disk at ~/.chemprop/chemeleon_mp.pt) is a
 Chemprop directed message-passing encoder pretrained on a large set of computed molecular descriptors. Fine-tuning it
-on our few thousand labels was judged infeasible earlier; here it is used FROZEN: each molecule becomes the mean-
+on the few thousand labels of the project was judged infeasible earlier; here it is used FROZEN: each molecule becomes the mean-
 aggregated 2048-d message-passing readout, reduced to 64 principal components (fitted on all 6,895 structures, which
 needs no label), and added to feature sets A and A+fps as the block ``chemeleon``. A naive 768-d ChemBERTa concatenation
 significantly hurt CYP3A4 earlier, hence the reduction.

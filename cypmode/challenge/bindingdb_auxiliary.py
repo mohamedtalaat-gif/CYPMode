@@ -13,7 +13,7 @@ download needed).
 
 Motivation and scope: same as pubchem_auxiliary -- a model trained on a
 broader, literature-curated compound set than this project's own curated
-TDI training data, applied to our own compounds as an auxiliary feature.
+TDI training data, applied to the compounds of the project as an auxiliary feature.
 BindingDB gives real Ki/IC50/EC50 binding-affinity measurements (not
 qHTS screening activity calls like AID 1851), literature-curated across
 many independent papers -- a different, complementary source, not a
@@ -32,7 +32,7 @@ independent papers, so the same compound can appear with several
 different reported affinity values (up to 64 for a single SMILES in this
 project's own real CYP2D6 pull) -- these are independent real
 measurements, not same-assay replicate rows like AID 1851's duplicates,
-so they're combined via median affinity rather than deduplicated by
+so they are combined via median affinity rather than deduplicated by
 dropping rows.
 """
 
@@ -75,7 +75,7 @@ def _parse_affinity_nM(value: str) -> float | None:
     """BindingDB's real convention for a censored measurement is a leading
     >, <, or ~ on the numeric string -- stripped here rather than treated
     as part of the number. Returns None (not raised) for anything else
-    unparseable, since a handful of malformed values shouldn't crash a
+    unparseable, since a handful of malformed values should not crash a
     17k-row real-world literature-curated file.
     """
     value = value.strip().lstrip("><~=")
@@ -95,7 +95,7 @@ def load_bindingdb_isoform(path: str | Path) -> pd.DataFrame:
     own "smile" strings (7 of 8,679 for a real CYP3A4 pull) carry a
     trailing extended-annotation suffix (e.g. "...|r,THB:11:9:3:5.6|" --
     BindingDB/ChemAxon torsion/stereo metadata for complex macrocycles)
-    that plain RDKit's Chem.MolFromSmiles doesn't parse, returning None --
+    that plain RDKit's Chem.MolFromSmiles does not parse, returning None --
     not raising, so this would otherwise crash downstream (confirmed: a
     real run crashed inside Morgan fingerprinting on exactly this). Rows
     that fail to parse are dropped here rather than passed through.

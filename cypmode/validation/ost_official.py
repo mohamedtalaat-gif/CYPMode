@@ -2,16 +2,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Does our LDDT-PLI agree with the one the challenge computes with OpenStructure?
+"""Does the LDDT-PLI of the project agree with the one the challenge computes with OpenStructure?
 
 Every structure gate of the project (the restraint, the selection rules, the series and pose-awareness terms) rests on ``lddt_to_crystal``, a re-implementation of the
 official LDDT-PLI. The scorer itself is OpenStructure (``LDDTPLIScorer``, ``SCRMSDScorer``), which is available only through conda; ``ost_worker`` runs it in the ``ost``
 environment exactly as the organisers' evaluation code does. This module writes the crystal complexes as reference PDBs (protein chain A, ligand ``LIG`` as chain B, heme as
-chain C: the layout of a submitted file), scores every pose of the confirmation ligands against them with OpenStructure, and compares the result with ours pose by pose.
+chain C: the layout of a submitted file), scores every pose of the confirmation ligands against them with OpenStructure, and compares the result with the local values pose by pose.
 
 ``python -m cypmode.validation.ost_official`` writes ``data/structure_track/outputs/cyp3a4/ost_vs_ours.csv`` (resumable: finished poses are kept) and prints the agreement.
 GATE (registered before the run): the rank correlation between the two LDDT-PLI values over all poses is at least 0.9 and the mean absolute difference is at most 0.05; the
-ordering of the poses of a ligand (the quantity every selection rule uses) agrees in at least 90% of the pairs. Otherwise the gates that rest on our measure are repeated with
+ordering of the poses of a ligand (the quantity every selection rule uses) agrees in at least 90% of the pairs. Otherwise the gates that rest on the local measure are repeated with
 OpenStructure's.
 """
 

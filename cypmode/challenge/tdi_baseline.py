@@ -98,7 +98,7 @@ def cross_validate_fixed_seed(
     a fixed-seed StratifiedKFold rather than the tutorial's own repeated
     unseeded random splits. The tutorial's own number is useful as a sanity
     check that this project's pipeline matches published behavior, but it
-    isn't reproducible run to run and isn't enough on its own for comparing
+    is not reproducible run to run and is not enough on its own for comparing
     CYPMode's later additions against -- this is the number those
     comparisons should actually use, same folds every time.
 

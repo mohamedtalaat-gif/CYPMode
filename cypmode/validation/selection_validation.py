@@ -4,7 +4,7 @@
 
 """Does minimum-Bayes-risk pose selection beat the model's own first pick, and does a second engine help? (jobs 170 / 150)
 
-Every rule answers one question per ligand, "which single pose do we submit?", and is scored by that pose's true ligand
+Every rule answers one question per ligand, "which single pose is submitted?", and is scored by that pose's true ligand
 RMSD to the crystal pose of the benchmark. MBR (``pose_selection``) picks the pose with the highest mean LDDT-PLI against
 the other poses of the pool; it has no fitted parameter, so "leave one ligand out" holds by construction (a ligand's pick
 uses its own pool only).

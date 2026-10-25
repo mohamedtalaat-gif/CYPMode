@@ -14,7 +14,7 @@ public issue.
 ## Scope notes specific to this project
 
 - `cypmode/validation/structures.py` parses mmCIF files produced by a local
-  Boltz-2 run. It doesn't fetch or execute anything from an untrusted
+  Boltz-2 run. It does not fetch or execute anything from an untrusted
   source, but a malformed or adversarial CIF file passed to it directly
   (outside the normal Boltz-2 output flow) is unvalidated input, treat it
   the same as any other untrusted file.

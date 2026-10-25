@@ -266,7 +266,7 @@ The exponential family contains the exact answer ($a = 1$), and the minimisation
 
 > **Field:** Quantum chemistry · Mathematics (linear algebra)
 
-*Where this section sits:* second rung. 10.1 left us with an equation that cannot be solved and a bound that tells us how to rank approximations. Hartree-Fock is the simplest approximation that is good enough to be useful: it replaces the wavefunction of $N$ electrons by one built from $N$ one-electron functions. The section builds it for the smallest molecules, so that the machinery can be seen, and measures what it leaves out.
+*Where this section sits:* second rung. 10.1 ended with an equation that cannot be solved and a bound that gives a way to rank approximations. Hartree-Fock is the simplest approximation that is good enough to be useful: it replaces the wavefunction of $N$ electrons by one built from $N$ one-electron functions. The section builds it for the smallest molecules, so that the machinery can be seen, and measures what it leaves out.
 
 **Orbitals and the Slater determinant.** An **orbital** $\\varphi_i(\\mathbf r)$ is a one-electron wavefunction. If the electrons did not repel each other, the $N$-electron wavefunction would be a product of orbitals. A plain product does not change sign when two electrons are exchanged, so it violates the Pauli principle, and the cure is to antisymmetrise: the **Slater determinant** is the determinant of the $N \\times N$ matrix whose entry in row $i$ and column $j$ is orbital $i$ (with its spin) evaluated at the coordinates of electron $j$; exchanging two electrons exchanges two columns, and the determinant changes sign. For a closed shell (every orbital holds two electrons of opposite spin, $N/2$ spatial orbitals) the energy of the determinant is
 
