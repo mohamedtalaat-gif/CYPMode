@@ -20,7 +20,7 @@ def _():
 
 @app.cell(hide_code=True)
 def _(mo, pd):
-    # Everything the explorer shows comes from five small tables and a manifest in ./public (built by `python -m cypmode.explorer.data`); nothing is fitted or computed again here.
+    # Everything the explorer shows comes from small tables, the out-of-fold files and a manifest in ./public (built by `python -m cypmode.explorer.data`); nothing is fitted or computed again here.
     _root = mo.notebook_location() / "public"
 
     def _read(name):
@@ -32,8 +32,10 @@ def _(mo, pd):
     poses = _read("poses")
     rules = _read("rules")
     excerpts = _read("excerpts")
+    candidates = _read("candidates").fillna({"blocks": ""})
+    blocks = _read("blocks")
     oof = {enzyme: pd.read_csv(str(_root / f"oof_{enzyme}.csv.gz")) for enzyme in ("CYP3A4", "CYP2D6")}
-    return excerpts, ledger, oof, paired, poses, rules, selectors
+    return blocks, candidates, excerpts, ledger, oof, paired, poses, rules, selectors
 
 
 @app.cell(hide_code=True)
@@ -184,14 +186,17 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo, selectors):
     sel_enzyme = mo.ui.dropdown(options=sorted(selectors["enzyme"].unique()), value=min(selectors["enzyme"].unique()), label="Enzyme")
+    sel_fold = mo.ui.dropdown(options=["all folds"] + [str(k) for k in sorted(selectors["outer"].unique())], value="all folds", label="Outer fold")
     sel_metric = mo.ui.radio(options=["outer_score", "outer_mcc", "optimism"], value="outer_score", label="Measure", inline=True)
-    mo.hstack([sel_enzyme, sel_metric], justify="start", gap=2)
-    return sel_enzyme, sel_metric
+    mo.hstack([sel_enzyme, sel_fold, sel_metric], justify="start", gap=2)
+    return sel_enzyme, sel_fold, sel_metric
 
 
 @app.cell(hide_code=True)
-def _(alt, mo, sel_enzyme, sel_metric, selectors):
+def _(alt, mo, sel_enzyme, sel_fold, sel_metric, selectors):
     _rows = selectors[selectors["enzyme"] == sel_enzyme.value]
+    if sel_fold.value != "all folds":
+        _rows = _rows[_rows["outer"] == int(sel_fold.value)]
     _box = alt.Chart(_rows).mark_boxplot(extent="min-max", size=24).encode(y=alt.Y("selector:N", title=None), x=alt.X(f"{sel_metric.value}:Q", title=sel_metric.value))
     _points = alt.Chart(_rows).mark_circle(size=30, opacity=0.5, color="#0e9f8a").encode(y="selector:N", x=f"{sel_metric.value}:Q", tooltip=["selector", "repeat", "outer", sel_metric.value])
     _means = _rows.groupby("selector")[sel_metric.value].agg(["mean", "std", "count"]).round(4).reset_index()
@@ -238,13 +243,14 @@ def _(mo):
     ## 5. The out-of-fold predictions
 
     Every candidate of the nested plan, scored on compounds it never saw: each compound of the training pool is predicted once per repeat by a model fitted without it. The predictions
-    are the stored ones; nothing is refitted here. Pick an enzyme and a candidate, call the top share of compounds positive, and read the confusion matrix and the Matthews correlation
-    coefficient at that call rate.
+    are the stored ones; nothing is refitted here. Pick an enzyme, an outer fold (or all of them) and the feature blocks that a candidate must use; then pick a candidate, call the top share
+    of compounds positive, and read the confusion matrix and the Matthews correlation coefficient at that call rate, the AUC of the candidate in every outer fold and what each feature block
+    shows on average.
     """)
 
 
 @app.cell(hide_code=True)
-def _(np, oof, pd):
+def _(candidates, np, oof, pd):
     def auc_of(y, scores):
         """Area under the ROC curve as the probability that a positive outranks a negative (ties count one half)."""
         ranks = pd.Series(scores).rank().to_numpy()
@@ -252,15 +258,29 @@ def _(np, oof, pd):
         negatives = len(y) - positives
         return float((ranks[y == 1].sum() - positives * (positives + 1) / 2) / (positives * negatives))
 
-    def candidate_table(enzyme):
+    def folds_of(frame):
+        """The number of outer folds of an out-of-fold table."""
+        return int(frame[[c for c in frame.columns if c.startswith("fold|")]].to_numpy().max()) + 1
+
+    def candidate_table(enzyme, fold="all folds", needed=()):
+        """One row per candidate that uses every block of ``needed``: the AUC over the repeats on the compounds of one outer fold, or of all of them."""
         frame = oof[enzyme]
         y = frame["y"].to_numpy()
+        used = dict(zip(candidates["candidate"], candidates["blocks"].str.split("+").map(lambda parts: {p for p in parts if p}), strict=True))
         rows = []
-        for column in frame.columns[1:]:
+        for column in frame.columns:
+            if column == "y" or column.startswith("fold|"):
+                continue
             name, repeat = column.rsplit("|", 1)
-            rows.append({"candidate": name, "repeat": int(repeat), "auc": auc_of(y, frame[column].to_numpy())})
+            if not set(needed) <= used.get(name, set()):
+                continue
+            keep = np.ones(len(y), dtype=bool) if fold == "all folds" else (frame[f"fold|{repeat}"] == int(fold)).to_numpy()
+            rows.append({"candidate": name, "repeat": int(repeat), "auc": auc_of(y[keep], frame[column].to_numpy()[keep]), "compounds": int(keep.sum())})
+        if not rows:
+            return pd.DataFrame(columns=["candidate", "mean", "low", "high", "compounds", "family", "blocks"])
         long = pd.DataFrame(rows)
-        return long.groupby("candidate")["auc"].agg(mean="mean", low="min", high="max").reset_index().sort_values("mean", ascending=False).reset_index(drop=True)
+        table = long.groupby("candidate").agg(mean=("auc", "mean"), low=("auc", "min"), high=("auc", "max"), compounds=("compounds", "first")).reset_index()
+        return table.merge(candidates, on="candidate", how="left").sort_values("mean", ascending=False).reset_index(drop=True)
 
     def roc_points(y, scores):
         order = np.argsort(-scores, kind="stable")
@@ -279,27 +299,35 @@ def _(np, oof, pd):
         denominator = np.sqrt(float(tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
         return {"called positive": tp + fp, "TP": tp, "FP": fp, "FN": fn, "TN": tn, "MCC": round((tp * tn - fp * fn) / denominator, 4) if denominator else 0.0}
 
-    return auc_of, candidate_table, confusion, roc_points
+    return auc_of, candidate_table, confusion, folds_of, roc_points
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(blocks, folds_of, mo, oof):
     oof_enzyme = mo.ui.dropdown(options=["CYP3A4", "CYP2D6"], value="CYP3A4", label="Enzyme")
+    oof_fold = mo.ui.dropdown(options=["all folds"] + [str(k) for k in range(folds_of(oof["CYP3A4"]))], value="all folds", label="Outer fold")
+    oof_blocks = mo.ui.multiselect(options={f"{row.block}: {row.label}": row.block for row in blocks.itertuples()}, label="Feature blocks (candidates that use all of the selected)")
     oof_top = mo.ui.slider(start=5, stop=60, step=5, value=20, label="Candidates shown", show_value=True)
-    mo.hstack([oof_enzyme, oof_top], justify="start", gap=2)
-    return oof_enzyme, oof_top
+    mo.vstack([mo.hstack([oof_enzyme, oof_fold, oof_top], justify="start", gap=2), oof_blocks])
+    return oof_blocks, oof_enzyme, oof_fold, oof_top
 
 
 @app.cell(hide_code=True)
-def _(alt, candidate_table, mo, oof_enzyme, oof_top):
-    ranking = candidate_table(oof_enzyme.value)
+def _(alt, candidate_table, mo, oof_blocks, oof_enzyme, oof_fold, oof_top):
+    ranking = candidate_table(oof_enzyme.value, oof_fold.value, tuple(oof_blocks.value))
+    mo.stop(ranking.empty, mo.md("No candidate with an outer-fold prediction for every compound uses all of the selected feature blocks."))
     _shown = ranking.head(oof_top.value)
     _bars = alt.Chart(_shown).mark_circle(size=70, color="#0e9f8a").encode(x=alt.X("mean:Q", title="mean AUC over the repeats", scale=alt.Scale(zero=False)), y=alt.Y("candidate:N", sort=None, title=None), tooltip=["candidate", "mean", "low", "high"])
     _range = alt.Chart(_shown).mark_rule(color="#12203a").encode(x="low:Q", x2="high:Q", y=alt.Y("candidate:N", sort=None))
     mo.vstack(
         [
-            mo.md(f"{len(ranking)} candidates have an outer-fold prediction for every compound of {oof_enzyme.value}. The dot is the mean AUC over the three repeats and the line its range."),
+            mo.md(
+                f"{len(ranking)} candidates have an outer-fold prediction for every compound of {oof_enzyme.value}"
+                + (f" and use {', '.join(oof_blocks.value)}" if oof_blocks.value else "")
+                + f"; the AUC is on {'all' if oof_fold.value == 'all folds' else 'the ' + str(int(ranking['compounds'].iloc[0])) + ' compounds of outer fold ' + oof_fold.value}. The dot is the mean AUC over the three repeats and the line its range."
+            ),
             (_bars + _range).properties(width=560, height=18 * len(_shown) + 30),
+            mo.ui.table(_shown[["candidate", "family", "blocks", "mean", "low", "high"]].round(4), selection=None, page_size=8),
         ]
     )
     return (ranking,)
@@ -324,14 +352,16 @@ def _(
     np,
     oof,
     oof_enzyme,
+    oof_fold,
     pd,
     rep_pick,
     roc_points,
     share,
 ):
     _frame = oof[oof_enzyme.value]
-    _y = _frame["y"].to_numpy()
-    _scores = _frame[f"{cand_pick.value}|{rep_pick.value}"].to_numpy()
+    _keep = np.ones(len(_frame), dtype=bool) if oof_fold.value == "all folds" else (_frame[f"fold|{rep_pick.value}"] == int(oof_fold.value)).to_numpy()
+    _y = _frame["y"].to_numpy()[_keep]
+    _scores = _frame[f"{cand_pick.value}|{rep_pick.value}"].to_numpy()[_keep]
     _fpr, _tpr = roc_points(_y, _scores)
     _at = confusion(_y, _scores, share.value)
     _curve = pd.DataFrame({"false positive rate": _fpr, "true positive rate": _tpr})
@@ -344,7 +374,7 @@ def _(
             (_roc + _diagonal + _dot).properties(width=300, height=300),
             mo.vstack(
                 [
-                    mo.md(f"AUC **{auc_of(_y, _scores):.4f}** on {len(_y)} compounds, {int(_y.sum())} positive ({np.mean(_y):.1%})."),
+                    mo.md(f"AUC **{auc_of(_y, _scores):.4f}** on {len(_y)} compounds ({'all folds' if oof_fold.value == 'all folds' else 'outer fold ' + oof_fold.value} of repeat {rep_pick.value}), {int(_y.sum())} positive ({np.mean(_y):.1%})."),
                     mo.ui.table(pd.DataFrame([_at]), selection=None),
                     mo.md("The red point is the chosen call rate on the ROC curve."),
                 ]
@@ -353,6 +383,51 @@ def _(
         justify="start",
         gap=2,
         align="start",
+    )
+
+
+@app.cell(hide_code=True)
+def _(auc_of, cand_pick, folds_of, mo, np, oof, oof_enzyme, pd):
+    _frame = oof[oof_enzyme.value]
+    _y = _frame["y"].to_numpy()
+    _rows = []
+    for _fold in range(folds_of(_frame)):
+        _row = {"outer fold": _fold}
+        for _repeat in range(3):
+            _keep = (_frame[f"fold|{_repeat}"] == _fold).to_numpy()
+            _row[f"repeat {_repeat}"] = round(auc_of(_y[_keep], _frame[f"{cand_pick.value}|{_repeat}"].to_numpy()[_keep]), 4)
+        _row["compounds"] = int(_keep.sum())
+        _rows.append(_row)
+    _table = pd.DataFrame(_rows)
+    mo.vstack(
+        [
+            mo.md(f"**{cand_pick.value} in every outer fold of {oof_enzyme.value}** (the AUC on the compounds that the fold scored, one column per repeat; the spread between folds is the noise that a corrected test has to allow for)."),
+            mo.ui.table(_table, selection=None),
+            mo.md(f"Mean over the folds and repeats: {float(np.mean(_table[[c for c in _table.columns if c.startswith('repeat')]].to_numpy())):.4f}."),
+        ]
+    )
+
+
+@app.cell(hide_code=True)
+def _(blocks, candidate_table, mo, oof_enzyme, oof_fold, pd):
+    _all = candidate_table(oof_enzyme.value, oof_fold.value)
+    _rows = []
+    for _block in blocks["block"]:
+        _uses = _all["blocks"].str.split("+").map(lambda parts, b=_block: b in parts)
+        if _uses.sum() and (~_uses).sum():
+            _rows.append({"feature block": _block, "candidates that use it": int(_uses.sum()), "mean AUC with it": round(float(_all.loc[_uses, "mean"].mean()), 4),
+                          "mean AUC without it": round(float(_all.loc[~_uses, "mean"].mean()), 4)})
+    _summary = pd.DataFrame(_rows)
+    _summary["difference"] = (_summary["mean AUC with it"] - _summary["mean AUC without it"]).round(4)
+    mo.vstack(
+        [
+            mo.md(
+                f"**What the feature blocks show on {oof_enzyme.value}** ({'all folds' if oof_fold.value == 'all folds' else 'outer fold ' + oof_fold.value}). For each block, the mean AUC of the candidates that use it against the mean AUC of those that do not. "
+                "The difference is descriptive: it mixes the block with the family of the model and with the other blocks that the same candidates use, and it is not a gate. The verdict of a block is the one of the "
+                "gate ledger above, which compares the same model with and without the block on the same folds."
+            ),
+            mo.ui.table(_summary.sort_values("difference", ascending=False), selection=None, page_size=12),
+        ]
     )
 
 

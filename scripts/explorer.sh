@@ -6,7 +6,7 @@
 #   bash scripts/explorer.sh ipynb [FILE]   a Jupyter notebook with the outputs
 #   bash scripts/explorer.sh wasm [DIR]     a page that runs in a browser without a server (the data files are bundled; the browser loads Pyodide from a CDN)
 # The environment is .venv-marimo (python3 -m venv .venv-marimo; .venv-marimo/bin/pip install marimo altair pandas numpy pyyaml uv nbformat). The explorer never starts a nested
-# cross-validation, a co-folding run or a queue job: it holds no model and reads the five tables, the excerpts and the out-of-fold predictions of the bundle.
+# cross-validation, a co-folding run or a queue job: it holds no model and reads the tables, the excerpts and the out-of-fold predictions of the bundle.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="$PWD/.venv-marimo/bin:$PATH"

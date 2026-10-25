@@ -7,12 +7,12 @@
 from notebooks.notebook_builder import code, md
 
 STRUCTURE_FILE = '''
-# What a predicted complex file holds. The file is one of the 20 structures of the final submission (the ligand OCNT-2312554 in CYP3A4), in the layout the challenge asks for: the protein as chain A, the ligand as the residue
+# What a predicted complex file holds. The file is the first, in alphabetical order, of the 20 structures of the final submission (a ligand in CYP3A4), in the layout the challenge asks for: the protein as chain A, the ligand as the residue
 # LIG on chain B, the heme as the residue HEM on chain C. The first four lines are shown as they are in the file, then the file is read with Biopython and counted. The last number in each line of coordinates before the element is the
 # "B-factor" column, which in a crystal file records how much an atom is smeared; the co-folding model writes its own per-atom confidence into it (a number from 0 to 100).
 from Bio.PDB import PDBParser
 
-pose_path = ROOT / "data/structure_track/outputs/cyp3a4/final/_pdb_files/OCNT-2312554.pdb"
+pose_path = sorted((ROOT / "data/structure_track/outputs/cyp3a4/final/_pdb_files").glob("*.pdb"))[0]
 raw_lines = pose_path.read_text().splitlines()
 print("\\n".join(raw_lines[:4]))
 hetero_start = next(i for i, line in enumerate(raw_lines) if line.startswith("HETATM"))
@@ -46,7 +46,7 @@ import yaml
 
 from cypmode.validation.build_input import CYS_MOTIF_PATTERN, find_coordinating_cysteine
 
-input_yaml = yaml.safe_load((ROOT / "data/structure_track/inputs/cyp3a4_OCNT-2312554.yaml").read_text())
+input_yaml = yaml.safe_load(sorted((ROOT / "data/structure_track/inputs").glob("cyp3a4_OCNT-*.yaml"))[0].read_text())
 cyp3a4_sequence = input_yaml["sequences"][0]["protein"]["sequence"]
 cysteine_position = find_coordinating_cysteine(cyp3a4_sequence)
 signature = re.search(CYS_MOTIF_PATTERN, cyp3a4_sequence)
@@ -201,11 +201,12 @@ The order is the order of the pipeline. Sections 11.1 to 11.3 say what a structu
 
 **What the file holds.** The simplest format is that of the Protein Data Bank itself, a text file with one line for each atom. The cell prints the first lines of one of the 20 submitted files and reads it with a library for structures. Each line gives the kind of record (`ATOM` for the residues of the protein, `HETATM` for everything else, here the ligand and the heme), a serial number, the atom name, the residue name, the chain, the residue number, the three coordinates in ångströms, an occupancy, the **B-factor** column and the element. In a crystal file the B-factor records how much an atom is smeared; the co-folding model writes into it its own confidence in the atom's position, from 0 to 100. The format stores no bonds for the ligand, and no bond orders at all: a program that needs them, as the scorer does, takes them from the SMILES string of the compound. The challenge asks for the protein as chain A, the ligand as the residue `LIG` and the heme as `HEM`.
 """),
-    code(STRUCTURE_FILE),
+    code(STRUCTURE_FILE, held_back=True),
     md("""
 The file holds {{=n_residues_protein}} residues of protein in {{=n_protein_atoms:,}} atoms, a ligand of {{=n_ligand_atoms}} atoms and the heme of {{=n_heme_atoms}}. The model's confidence is high for the protein ({{=chain_table.iloc[0, 4]:.0f}} on average) and the heme ({{=chain_table.iloc[2, 4]:.0f}}) and lower for the ligand ({{=chain_table.iloc[1, 4]:.0f}}). The sulfur of the cysteine {{=cysteine_position}} is {{=iron_to_sulfur:.2f}} Å from the iron, the distance of a coordinate bond, and the nearest nitrogen of this ligand is {{=iron_to_nitrogen:.2f}} Å from it on the other side. That is the geometry of a Type II ligand (1.9): iron bound by the sulfur on one face and by the nitrogen of the inhibitor on the other. How often the models place a ligand so, and whether they place it right, is the content of the rest of the part.
-
-*On what actually ran.* The cells read `final/_pdb_files/OCNT-2312554.pdb` of the final recipe (11.10) and the input `data/structure_track/inputs/cyp3a4_OCNT-2312554.yaml`, with Biopython and `cypmode/validation/build_input.py` (`find_coordinating_cysteine`, `CYS_MOTIF_PATTERN`). The count of the structures of the archive is the project's own reference set, built by `cypmode/validation/reference_ligands.py` (11.5).
+""", held_back=True),
+    md("""
+*On what actually ran.* The cells read one file of `final/_pdb_files` of the final recipe (11.10) and one input of `data/structure_track/inputs`, with Biopython and `cypmode/validation/build_input.py` (`find_coordinating_cysteine`, `CYS_MOTIF_PATTERN`). The count of the structures of the archive is the project's own reference set, built by `cypmode/validation/reference_ligands.py` (11.5).
 """),
     md("""
 ## 11.2 Co-folding models: how a structure is predicted from a sequence and a molecule

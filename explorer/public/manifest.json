@@ -1,11 +1,11 @@
 {
   "ledger.csv": {
-    "rows": 167,
-    "sha256": "1e75d1203197320a24efaf7ca562f0802881264f2ffc2561fb92e611a13b77b3"
+    "rows": 184,
+    "sha256": "5868ad952c8b0dbb34e2969a3626f56ab70cf7184540d5ab0b2f085b54007211"
   },
   "paired.csv": {
-    "rows": 154,
-    "sha256": "debf3406075484d10686ed1897271cc2deda47d4cc38bc1687bdee4eeb64b829"
+    "rows": 188,
+    "sha256": "3b2a187995883440e633d32072d11cf5471792a4440bbd5b009079f61b539274"
   },
   "selectors.csv": {
     "rows": 150,
@@ -20,19 +20,27 @@
     "sha256": "f8cfe8eceb3bef3d3ea5b6f60a5b0f6cd43ff16fa492754ac38603279a23d33d"
   },
   "excerpts.csv": {
-    "rows": 330,
-    "sha256": "a83d5e9032bb1f12bbcc9365ea6c3a326f60a77045ffb85ca38522201f86914d"
+    "rows": 401,
+    "sha256": "5e0b7a295f3385e219a6731c27b9f5273d347bcae6c4a0e9ff3f74f48d349baa"
   },
   "oof_CYP3A4.csv.gz": {
-    "candidates": 99,
+    "candidates": 113,
     "repeats": 3,
     "compounds": 2334,
-    "sha256": "fa863b811cce11ccff04fe558e350c9bbe8df1ca984c45aa985060b934814b10"
+    "sha256": "1b6fe60b57cd1b7e93d99f66bc46af675663ac4704b3e63671aa1fea9ca09e1b"
   },
   "oof_CYP2D6.csv.gz": {
-    "candidates": 95,
+    "candidates": 107,
     "repeats": 3,
     "compounds": 1493,
-    "sha256": "265fcfbd49e53960cfc815dd2df8806cb25ff3eb0488a7626d6a2db61fcd2b52"
+    "sha256": "0b60ad5ee072541005a14245319d9e2b34c29500d268e7b6368ef32ef0fe926d"
+  },
+  "candidates.csv": {
+    "rows": 113,
+    "sha256": "80868be11b74b8e8e906da83872b72ec8bd7fa180752b209034d2cc7ca607234"
+  },
+  "blocks.csv": {
+    "rows": 24,
+    "sha256": "0b9ed3e3ee2117afe11608a427299b1b8da204c6a07362e9eb1679af576b9ecd"
   }
 }

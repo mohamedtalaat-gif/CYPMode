@@ -73,3 +73,56 @@ def test_the_out_of_fold_predictions_fill_every_compound_once_per_repeat_and_ski
     assert names == ["whole"]
     assert scores.shape == (1, 2, 40) and y.shape == (40,)
     assert np.allclose(scores[0, 0], pool / 1000.0) and np.allclose(scores[0, 1], pool / 1000.0)
+
+
+def test_the_outer_fold_of_every_compound_is_recorded_once_per_repeat(tmp_path):
+    pool = np.arange(100, 160)
+    plan = NestedPlan(pool, np.tile([0, 1], 30), repeats=2, outer_splits=3, inner_splits=2, seed=0, external=np.arange(500, 510))
+    root = tmp_path / "CYP3A4"
+    root.mkdir()
+    plan.save(root / "plan.npz")
+    folds = data.outer_fold_assignment("CYP3A4", tmp_path)
+    assert folds.shape == (2, 60)
+    assert set(np.unique(folds)) == {0, 1, 2}  # every compound has a fold in every repeat, and there is none left over
+    assert all(np.bincount(row).min() > 0 for row in folds)
+    for repeat, fold in plan.outer_folds():
+        task = plan.task(repeat, fold, OUTER_REFIT)
+        positions = [int(np.flatnonzero(pool == row)[0]) for row in task.evaluate]
+        assert (folds[task.repeat, positions] == fold).all()
+
+
+def test_every_candidate_of_the_files_has_a_family_and_the_blocks_that_it_uses():
+    table = data.candidate_rows(["lgbm_A_deep", "lgbm_A+fps+physB_deep", "knn_tanimoto_k5", "mlp_multitask_label", "pxrblk_A_deep", "pair_desc+phys", "atomjepa_head", "chemprop_mt_shift"]).set_index("candidate")
+    assert table.loc["lgbm_A_deep", "blocks"] == "morgan_c2+rdkit_desc"
+    assert {"physics_b", "maccs", "erg"} <= set(table.loc["lgbm_A+fps+physB_deep", "blocks"].split("+"))
+    assert table.loc["knn_tanimoto_k5", "blocks"] == "" and table.loc["mlp_multitask_label", "blocks"] == ""
+    assert table.loc["pxrblk_A_deep", "blocks"] == "morgan_c2+rdkit_desc" and table.loc["pair_desc+phys", "blocks"] == "rdkit_desc+physics"
+    assert table.loc["atomjepa_head", "blocks"] == "atomjepa" and table.loc["chemprop_mt_shift", "family"] == "Chemprop, multitask"
+    assert table["family"].ne("").all()
+
+
+def test_every_block_that_a_candidate_uses_has_a_description():
+    used = {block for _, blocks in data.candidate_registry().values() for block in blocks}
+    assert used and used <= set(data.BLOCK_LABELS)
+    rows = data.block_rows(data.candidate_rows(["lgbm_A_deep", "lgbm_A+phys_deep"]))
+    assert rows.set_index("block").loc["physics", "candidates"] == 1 and rows.set_index("block").loc["rdkit_desc", "candidates"] == 2
+
+
+def test_a_table_with_the_fold_columns_is_still_a_public_bundle(tmp_path, monkeypatch):
+    monkeypatch.setattr(data, "held_back_patterns", list)
+    frame = pd.DataFrame({"y": [0, 1, 0, 1, 0], "fold|0": [0, 1, 0, 1, 0], "fold|1": [1, 0, 1, 0, 1], "a|0": [0.1] * 5, "a|1": [0.2] * 5})
+    frame.to_csv(tmp_path / "oof_CYP3A4.csv.gz", index=False, compression={"method": "gzip", "mtime": 0})
+    assert data.check_public(tmp_path) == []
+
+
+def test_the_bundle_of_the_repository_has_the_outer_folds_and_the_two_new_tables():
+    from pathlib import Path
+
+    folder = Path("explorer/public")
+    for enzyme in data.ENZYMES:
+        frame = pd.read_csv(folder / f"oof_{enzyme}.csv.gz", nrows=5)
+        assert list(frame.columns[:4]) == ["y", "fold|0", "fold|1", "fold|2"]
+    candidates = pd.read_csv(folder / "candidates.csv").fillna("")
+    names = {column.rsplit("|", 1)[0] for column in pd.read_csv(folder / "oof_CYP3A4.csv.gz", nrows=1).columns[4:]}
+    assert names <= set(candidates["candidate"]) and (folder / "blocks.csv").exists()
+    assert not candidates["family"].eq("other").any(), "a candidate that no registry names would be listed without a family: " + ", ".join(candidates.loc[candidates["family"].eq("other"), "candidate"])

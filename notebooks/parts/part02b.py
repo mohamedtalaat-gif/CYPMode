@@ -287,7 +287,7 @@ CELLS = [
 
 > **Field:** Data science · Statistics
 
-Section 2.2 showed that the compounds are not measured evenly across the four enzymes. The pattern has a structure that matters for everything that follows. Compound names end in a number (`OCNT-2395436`), and when the compounds are put in the order of that number, the share of
+Section 2.2 showed that the compounds are not measured evenly across the four enzymes. The pattern has a structure that matters for everything that follows. Compound names end in a number (the letters `OCNT-` and seven digits), and when the compounds are put in the order of that number, the share of
 compounds that carry a measurement on an enzyme *other than CYP3A4* is not constant. The module `cypmode/challenge/library_blocks.py` finds the stretch where that share is high without being told where it is: it computes the share in a rolling window
 of compounds in the order of the numbers and takes the longest run in which the share stays above a minimum. The cell runs it on the training file and draws the share along the numbering.
 """),

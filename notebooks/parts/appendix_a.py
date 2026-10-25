@@ -64,6 +64,7 @@ job_rows = []
 for path in sorted((ROOT / "queue/jobs").glob("*.sh")):
     comment = next((line.lstrip("# ").strip() for line in path.read_text().splitlines()[1:] if line.startswith("#")), "")
     number, _, name = path.stem.partition("_")
+    comment = re.sub(r"OCNT-[0-9]+", "an official ligand", comment)  # the table says what a job does and names no compound of the blinded sets
     job_rows.append({"job": number, "name": name, "what it does": comment[:230] + (" ..." if len(comment) > 230 else "")})
 job_table = pd.DataFrame(job_rows)
 show_table(job_table, floatfmt=".0f")

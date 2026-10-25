@@ -1,0 +1,25 @@
+block,label,candidates
+rdkit_desc,RDKit descriptors,89
+morgan_c2,"Morgan count fingerprint, radius 2",85
+motif,heme-binder motif flags,43
+maccs,MACCS keys,43
+avalon,Avalon fingerprint,43
+torsion_c,"torsion fingerprint, counts",43
+fmorgan_c2,"feature-Morgan fingerprint, radius 2",43
+erg,ErG pharmacophore fingerprint,43
+ext_activity,inhibitor probabilities of models trained on external panels,7
+physics,"GFN2-xTB atom, site and pharmacophore block (tier A)",7
+atomjepa,"frozen Atom-JEPA embeddings, 64 principal components",4
+tdi_alert_context,the surroundings of each structural alert,4
+physics_b,"GFN2-xTB tier B (Boltzmann conformers, relaxed hydrogen abstraction)",4
+chemeleon,"frozen CheMeleon embeddings, 64 principal components",3
+monroe,"frozen Monroe (GRIT) embeddings, 64 principal components",3
+ext_adme,logD and protein binding predicted by surrogate models of OpenADMET,2
+basic_centre,"protonation states, basic-centre classes and charge-to-ring geometry",2
+ext_cont,"continuous responses of the NCATS qHTS panel, predicted from external compounds",2
+ext_tox,"responses of the Tox21 CYP screen, predicted from Tox21 compounds only",2
+pp2d6,the compound relative to the CYP2D6 pocket,2
+pp3a4,the compound relative to the CYP3A4 pocket (density fields of the crystal ligands),2
+st2d6,structure-based site model of the CYP2D6 pocket,2
+st3a4,structure-based site model of the CYP3A4 pocket,2
+tdi_alerts,structural alerts of mechanism-based inactivation,1

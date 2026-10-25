@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""A snapshot of the public results for the explorer: five small tables in ``explorer/public`` and a manifest with the SHA-256 of each.
+"""A snapshot of the public results for the explorer: eight small tables and the out-of-fold files in ``explorer/public`` and a manifest with the SHA-256 of each.
 
 The explorer (``explorer/cypmode_explorer.py``, a marimo notebook) reads only this folder, so that it runs the same from a clone of the repository, in a browser without a server and
 beside the full local tree, and so that what it shows is exactly what this module chose to publish. The tables are read from the run logs and result files that already exist; nothing is
@@ -14,7 +14,9 @@ computed again, no model is fitted and no queue job is started.
   poses.csv       the poses of the crystal-anchored benchmark, one row per ligand, engine and sample, with the RMSD to the crystal pose
   rules.csv       the RMSD of the pose that each choosing rule submits, per benchmark ligand
   excerpts.csv    the lines of every run log that carry a registered verdict or a paired comparison, so that a gate can be read with its numbers
-  oof_<enzyme>.csv.gz  the outer-fold predictions of every complete candidate for the training compounds: one row per compound of the pool, the label and one column per candidate and repeat; the rows of the blinded test set are never in it
+  candidates.csv  every candidate of the out-of-fold files with its family and the feature blocks that it uses (from the registry of the nested runners)
+  blocks.csv      every feature block with a short description and the number of candidates that use it
+  oof_<enzyme>.csv.gz  the outer-fold predictions of every complete candidate for the training compounds: one row per compound of the pool, the label, the outer fold of the compound in each repeat (``fold|<repeat>``) and one column per candidate and repeat; the rows of the blinded test set are never in it
 
 Nothing here names a blinded compound: the sources are the logs and the tables of the training compounds and of the public crystal ligands, and ``check_public`` refuses a bundle that holds a
 name of the blinded test sets, a file the HELD BACK block of ``.gitignore`` lists, or a table of 750 or 20 rows (the sizes of the two blinded sets).
@@ -108,6 +110,107 @@ def outer_predictions(enzyme: str, nested: Path = NESTED) -> tuple[list[str], np
     return names, plan.y.astype(np.int8), np.stack(matrices) if matrices else np.zeros((0, plan.repeats, len(plan.pool)), dtype=np.float32)
 
 
+CANDIDATE_MODULES = ("cypmode.challenge.nested_runners", "cypmode.challenge.aux_blocks", "cypmode.challenge.cached_candidates")
+BLOCK_LABELS = {
+    "morgan_c2": "Morgan count fingerprint, radius 2",
+    "rdkit_desc": "RDKit descriptors",
+    "motif": "heme-binder motif flags",
+    "maccs": "MACCS keys",
+    "avalon": "Avalon fingerprint",
+    "torsion_c": "torsion fingerprint, counts",
+    "fmorgan_c2": "feature-Morgan fingerprint, radius 2",
+    "erg": "ErG pharmacophore fingerprint",
+    "tdi_alerts": "structural alerts of mechanism-based inactivation",
+    "tdi_alert_context": "the surroundings of each structural alert",
+    "ext_activity": "inhibitor probabilities of models trained on external panels",
+    "ext_cont": "continuous responses of the NCATS qHTS panel, predicted from external compounds",
+    "ext_tox": "responses of the Tox21 CYP screen, predicted from Tox21 compounds only",
+    "ext_adme": "logD and protein binding predicted by surrogate models of OpenADMET",
+    "physics": "GFN2-xTB atom, site and pharmacophore block (tier A)",
+    "physics_b": "GFN2-xTB tier B (Boltzmann conformers, relaxed hydrogen abstraction)",
+    "chemeleon": "frozen CheMeleon embeddings, 64 principal components",
+    "monroe": "frozen Monroe (GRIT) embeddings, 64 principal components",
+    "atomjepa": "frozen Atom-JEPA embeddings, 64 principal components",
+    "basic_centre": "protonation states, basic-centre classes and charge-to-ring geometry",
+    "pp3a4": "the compound relative to the CYP3A4 pocket (density fields of the crystal ligands)",
+    "pp2d6": "the compound relative to the CYP2D6 pocket",
+    "st3a4": "structure-based site model of the CYP3A4 pocket",
+    "st2d6": "structure-based site model of the CYP2D6 pocket",
+}
+BASE_SETS = {"A": ("morgan_c2", "rdkit_desc"), "A+fps": ("morgan_c2", "rdkit_desc", "motif", "maccs", "avalon", "torsion_c", "fmorgan_c2", "erg")}
+# candidates that the registry does not hold, because they run in another environment or are made by a function that needs arguments: the blocks are read from the name where it states them
+UNREGISTERED = {
+    "lgbm_A+hypperm_deep": ("lgbm_clf, permuted-label control of the hypothesis model", BASE_SETS["A"]),
+    "lgbm_A+fps+hypperm_deep": ("lgbm_clf, permuted-label control of the hypothesis model", BASE_SETS["A+fps"]),
+    "atomjepa_head": ("Atom-JEPA readout", ("atomjepa",)),
+    "chemprop_mt_shift": ("Chemprop, multitask", ()),
+    "pair_desc+phys": ("SAR pairs", ("rdkit_desc", "physics")),
+}
+
+
+def candidate_registry() -> dict[str, tuple[str, tuple[str, ...]]]:
+    """name -> (family, blocks) of every candidate that the nested runners and the block experiments declare (read from their code; nothing is run)."""
+    import importlib
+    import inspect
+
+    found: dict[str, tuple[str, tuple[str, ...]]] = {}
+    for module_name in CANDIDATE_MODULES:
+        module = importlib.import_module(module_name)
+        for name, function in inspect.getmembers(module, inspect.isfunction):
+            if function.__module__ != module_name or name.startswith("_"):
+                continue
+            if any(p.default is inspect.Parameter.empty and p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD) for p in inspect.signature(function).parameters.values()):
+                continue
+            try:
+                made = function()
+            except Exception:  # a declaration that needs files or another environment is left to the table of the unregistered names
+                continue
+            if isinstance(made, list) and made and hasattr(made[0], "family") and hasattr(made[0], "blocks"):
+                for candidate in made:
+                    found.setdefault(candidate.name, (candidate.family, tuple(candidate.blocks)))
+    return found
+
+
+def candidate_rows(names: list[str]) -> pd.DataFrame:
+    """The family and the feature blocks of every candidate of the out-of-fold files; ``blocks`` is empty when the candidate does not read the feature store."""
+    registry = candidate_registry()
+    rows = []
+    for name in names:
+        if name in UNREGISTERED:
+            family, blocks = UNREGISTERED[name]
+        elif name in registry:
+            family, blocks = registry[name]
+            if family == "cached":  # a prediction made in the torch environment and stored: the feature store is not what it reads
+                family = "cached, made in the torch environment"
+        elif (match := re.fullmatch(r"(\w+?)blk_(A\+fps|A)_deep", name)):
+            family, blocks = f"{match.group(1)} block experiment", BASE_SETS[match.group(2)]
+        elif name.startswith(("mlp_multitask", "tabicl", "tabpfn")):
+            family, blocks = "cached, made in the torch environment", ()
+        else:
+            family, blocks = "other", ()
+        rows.append({"candidate": name, "family": family, "blocks": "+".join(blocks)})
+    return pd.DataFrame(rows, columns=["candidate", "family", "blocks"])
+
+
+def block_rows(candidates: pd.DataFrame) -> pd.DataFrame:
+    """Every feature block that a candidate uses, with a short description and the number of candidates that use it."""
+    used = pd.Series([b for blocks in candidates["blocks"] for b in blocks.split("+") if b]).value_counts()
+    return pd.DataFrame({"block": used.index, "label": [BLOCK_LABELS.get(b, b) for b in used.index], "candidates": used.to_numpy()})
+
+
+def outer_fold_assignment(enzyme: str, nested: Path = NESTED) -> np.ndarray:
+    """The outer fold that scores each compound of the pool in each repeat, as an array of shape repeats x pool (positions as in ``outer_predictions``)."""
+    from cypmode.challenge.nested import OUTER_REFIT, NestedPlan
+
+    plan = NestedPlan.load(Path(nested) / enzyme / "plan.npz")
+    position = {int(row): i for i, row in enumerate(plan.pool)}
+    folds = np.full((plan.repeats, len(plan.pool)), -1, dtype=np.int8)
+    for repeat, fold in plan.outer_folds():
+        task = plan.task(repeat, fold, OUTER_REFIT)
+        folds[task.repeat, [position[int(row)] for row in task.evaluate]] = fold
+    return folds
+
+
 def tables(logs: Path = LOGS, nested: Path = NESTED, structure: Path = STRUCTURE) -> dict[str, pd.DataFrame]:
     from cypmode.audit.ledger_kinds import ledger_rows
 
@@ -147,7 +250,7 @@ def check_public(folder: Path = OUT) -> list[str]:
 
 
 def build(out: Path = OUT) -> dict:
-    """Write the five tables and the manifest; return the manifest."""
+    """Write the tables, the out-of-fold files and the manifest; return the manifest."""
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     manifest = {}
@@ -160,11 +263,20 @@ def build(out: Path = OUT) -> dict:
             names, y, scores = outer_predictions(enzyme)
             path = out / f"oof_{enzyme}.csv.gz"
             wide = {"y": y.astype(int)}
+            folds = outer_fold_assignment(enzyme)
+            for repeat in range(folds.shape[0]):
+                wide[f"fold|{repeat}"] = folds[repeat].astype(int)
             for i, name in enumerate(names):
                 for repeat in range(scores.shape[1]):
                     wide[f"{name}|{repeat}"] = scores[i, repeat].round(4)
             pd.DataFrame(wide).to_csv(path, index=False, compression={"method": "gzip", "mtime": 0})
             manifest[path.name] = {"candidates": len(names), "repeats": int(scores.shape[1]), "compounds": int(scores.shape[2]), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    names = sorted({column.rsplit("|", 1)[0] for enzyme in ENZYMES if (out / f"oof_{enzyme}.csv.gz").exists() for column in pd.read_csv(out / f"oof_{enzyme}.csv.gz", nrows=1).columns[1:]} - {"fold"})
+    candidates = candidate_rows(names)
+    for name, frame in (("candidates", candidates), ("blocks", block_rows(candidates))):
+        path = out / f"{name}.csv"
+        frame.to_csv(path, index=False)
+        manifest[path.name] = {"rows": len(frame), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest
 

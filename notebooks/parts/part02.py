@@ -7,13 +7,13 @@
 from notebooks.notebook_builder import code, figure, md
 
 MOLECULE_AS_GRAPH = '''
-# The example compound of the challenge (OCNT-2395436) read as a graph: RDKit turns the SMILES text into atoms (the vertices) and bonds (the edges). Hydrogens are not stored as atoms;
+# An example compound of the training file read as a graph: RDKit turns the SMILES text into atoms (the vertices) and bonds (the edges). Hydrogens are not stored as atoms;
 # they are counted from the valence, which is how SMILES leaves them out.
 from rdkit import Chem
 from rdkit.Chem import Descriptors, rdMolDescriptors
 
-example_name = "OCNT-2395436"
-example = train.set_index("Molecule_Name").loc[example_name, "SMILES"]
+example = "CC(C)(C)NS(=O)(=O)C1(CNC2=C(Br)C=NC=C2C#N)CCC1"  # a compound of the training file, found by its structure
+example_name = train.loc[train["SMILES"] == example, "Molecule_Name"].iloc[0]
 mol = Chem.MolFromSmiles(example)
 atom_rows = []
 for atom in mol.GetAtoms():
