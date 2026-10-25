@@ -134,7 +134,7 @@ MD_13_1_B = """
 
 **What it does not show, and does not claim.**
 
-*It does not show how well the entries score.* The step from the estimates above to the leaderboard is unmeasured until a submission exists, and the limitations of 13.2 say that the offset depends on the model. A cross-validated AUC on the training data is not the challenge score.
+*It does not show how well the entries score.* The score that the portal gives an entry is a separate measurement on the hidden labels, and the limitations of 13.2 say that the offset between a cross-validated estimate and that score depends on the model. A cross-validated AUC on the training data is not the challenge score.
 
 *It does not show that the gains it kept are real.* The family of {{=n_family}} tests of Part IX has {{=n_raw_below}} with a raw p-value below 0.05 ({{=raw_below_names}}), and {{=holm_sentence}} (the smallest adjusted p-value is {{=smallest_holm:.2f}}). The neural pair passes its registered gate, with a raw p-value of {{=neural_p:.3f}} on CYP3A4 and a replicate on the 10-outer-fold plan, but its adjusted p-value is {{=neural_holm:.2f}}. The reading is that its gain is plausible and modest and has not been shown beyond what the number of attempts could produce.
 

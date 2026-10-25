@@ -3,10 +3,10 @@
   area: evaluation
   uses: [CYP3A4_stack_auc_zNone, CYP3A4_stack_auc_z1_96, CYP2D6_stack_auc_zNone, CYP2D6_stack_auc_z1_96]
   text: >-
-    All performance figures are cross-validated estimates on the training data. Nothing has been measured on the
+    All performance figures are cross-validated estimates on the training data. No figure here uses the
     hidden test labels. The stack AUC changes with the scored population: CYP3A4 {CYP3A4_stack_auc_zNone} on all rows
     vs {CYP3A4_stack_auc_z1_96} on confident rows, CYP2D6 {CYP2D6_stack_auc_zNone} vs {CYP2D6_stack_auc_z1_96}.
-    The step from these estimates to the leaderboard is unmeasured until a submission exists.
+    The leaderboard score of an entry is a separate measurement on the hidden labels, and the step from these estimates to it depends on the model (L2).
 - id: L2
   area: evaluation
   uses: [CYP3A4_baseline_live_board_mcc, CYP2D6_baseline_live_board_mcc]

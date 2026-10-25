@@ -202,7 +202,7 @@ def architecture_section() -> str:
     lines += [
         "7. **Calibration and calls.** Probabilities by isotonic regression on the inner out-of-fold scores (notebook 8.5). The number of positive calls is a multiple of the estimated prevalence of the scored population, the multiple in",
         f"   {{{', '.join(str(m) for m in build.RATE_MULTIPLIERS)}}} chosen by the highest mean outer-fold MCC (notebook 8.4)" + (": " + "; ".join(f"{iso} {r['call_rate_multiplier']}" for iso, r in manifest["isoforms"].items()) if manifest else "") + ".",
-        "8. **Two files.** A (hits-only CYP2D6 model) and B (the selection-aware CYP2D6 model, which multiplies P(label | hit) by a gate P(hit)); CYP3A4 is identical in both. The entry that is final is chosen by a rule declared in advance (notebook 9.1).",
+        "8. **Two files.** A (hits-only CYP2D6 model) and B (the selection-aware CYP2D6 model, which multiplies P(label | hit) by a gate P(hit)); CYP3A4 is identical in both. The entry that is final is chosen by a rule declared in advance (`cypmode/challenge/selection_decision.py`, notebook 13.4).",
         "",
         "Figures: `docs/figures/architecture/arch_tdi_pipeline-light.png` and `arch_nested_cv-light.png` (dark versions beside them).",
         "",
@@ -357,7 +357,7 @@ def build_method_report() -> str:
         "",
         "Two tracks of the OpenADMET CYP blind challenge: time-dependent-inhibition (TDI) classification for CYP3A4 and CYP2D6, and",
         "CYP3A4 protein-ligand structure prediction. All performance figures are cross-validated estimates on the public training data;",
-        "the step to the leaderboard is unmeasured until a submission exists. Novelty is claimed only in the form \"not",
+        "the score that the portal gives an uploaded entry is a separate measurement on the hidden labels (limitations L1 and L2). Novelty is claimed only in the form \"not",
         "found in a search of the sources named in section 12 on the search date\"; every component has published relatives.",
         "",
         "## 2. Data and the label rule",

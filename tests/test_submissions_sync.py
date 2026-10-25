@@ -16,10 +16,10 @@ def entries():
 MANIFEST = {"isoforms": {iso: {"stack": "default", "n_candidates": 23, "called_rate": 0.372, "call_rate_multiplier": 1.2, "target_prevalence": 0.31} for iso in ("CYP3A4", "CYP2D6")}}
 
 
-def test_the_tdi_readme_names_the_file_its_hash_and_that_nothing_was_uploaded():
+def test_the_tdi_readme_names_the_file_its_hash_and_where_the_upload_is_recorded():
     text = sync.render_tdi_readme(entries(), MANIFEST, {"CYP3A4_is_TDI": 0, "CYP2D6_is_TDI": 40})
     assert "tdi_track_candidate_A_hits_only.csv" in text and "ab" * 32 in text
-    assert "None of them has been uploaded" in text
+    assert "the receipts of the portal, not this folder, record what was uploaded and when" in text and "has been uploaded" not in text
     assert "differ in 0 CYP3A4 calls and 40 CYP2D6 calls" in text
 
 
@@ -32,7 +32,7 @@ def test_the_tdi_readme_shows_a_failed_check_instead_of_hiding_it():
 def test_the_structure_readme_lists_every_member_and_the_reasons():
     text = sync.render_structure_readme("cd" * 32, ["B.pdb", "A.pdb"], 0, {"recipe": {"reasons": ["restraint 'bond': gate MET"]}}, "ok")
     assert text.index("`A.pdb`") < text.index("`B.pdb`")
-    assert "restraint 'bond': gate MET" in text and "0 of 2 fail any check" in text and "has not been uploaded" in text
+    assert "restraint 'bond': gate MET" in text and "0 of 2 fail any check" in text and "record whether and when it was uploaded" in text
 
 
 def test_the_top_readme_does_not_link_to_a_track_that_is_not_part_of_the_project():

@@ -3,7 +3,7 @@
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
 """Brings ``submissions/`` to the state of the final results: the files that would be uploaded to the challenge portal, each checked with the portal's own rules, with checksums
-and a README per track. Nothing is uploaded; the choice of which file to upload, and the upload, stay manual.
+and a README per track. No program of the repository uploads anything; the choice of which file to upload, and the upload, stay manual.
 
 TDI track: every candidate file of ``data/tdi_track/outputs/final`` is copied (name prefixed with the track), re-validated with ``validate_submission`` and
 ``portal_validate_classification``, and described. Structure track: the final zip of ``data/structure_track/outputs/cyp3a4/final`` is copied, checked with
@@ -66,7 +66,7 @@ def differing_calls(first: Path, second: Path) -> dict[str, int]:
 def render_tdi_readme(entries: list[dict], manifest: dict, differences: dict[str, int] | None) -> str:
     lines = ["# TDI track: submission files", "",
              "The files below are the candidates of the final build (`cypmode.challenge.final_tdi_build`, files and hashes in `data/tdi_track/outputs/final/manifest.json`), copied here",
-             "unchanged and checked again with the portal's own rules. **None of them has been uploaded.** The portal takes one file per submission; which one to upload is decided before submitting.", "",
+             "unchanged and checked again with the portal's own rules. The portal takes one file per submission; which one to upload is decided before submitting, by the rule of `cypmode/challenge/selection_decision.py`, and the receipts of the portal, not this folder, record what was uploaded and when.", "",
              "## Required format (read from the challenge portal's `config.py` and `submission.py`, 2026-09-26)", "",
              "- A `.parquet` or `.csv` file with exactly **750 rows** and exactly these 4 columns, in this order, case-sensitive: `SMILES`, `Molecule_Name`, `CYP2D6_is_TDI`, `CYP3A4_is_TDI`.",
              "- The two endpoint columns are boolean (`True`/`False` or `1`/`0`), without missing values, and neither may hold a single class.", "",
@@ -90,7 +90,7 @@ def render_tdi_readme(entries: list[dict], manifest: dict, differences: dict[str
 
 def render_structure_readme(zip_hash: str, members: list[str], failures: int, recipe: dict, portal_message: str, relaxation: dict | None = None) -> str:
     lines = ["# Structure track: submission file", "",
-             f"`{STRUCTURE_ZIP_NAME}` is the final zip of `cypmode.validation.final_recipe`{', with the relaxation of `cypmode.validation.relax_final` applied' if relaxation else ''}, copied unchanged. **It has not been uploaded.** `pdb_files/` holds the same 20 complexes, unpacked from it for inspection.", "",
+             f"`{STRUCTURE_ZIP_NAME}` is the final zip of `cypmode.validation.final_recipe`{', with the relaxation of `cypmode.validation.relax_final` applied' if relaxation else ''}, copied unchanged. The receipts of the portal, not this folder, record whether and when it was uploaded. `pdb_files/` holds the same 20 complexes, unpacked from it for inspection.", "",
              "## Required format (quoted from the portal's submission form, 2026-09-26)", "",
              "> Submit a `.zip` archive containing exactly **20 `.pdb` files**, one per compound, named after the compound identifier (e.g. `x00011-1.pdb`). Each file must be a full protein-ligand complex with the ligand residue named `LIG`.", "",
              "## Checks", "", f"- portal check (a `.zip` with exactly 20 files): {portal_message}",
@@ -114,9 +114,9 @@ def render_structure_readme(zip_hash: str, members: list[str], failures: int, re
 def render_top_readme() -> str:
     return """# Submissions
 
-The files that would be uploaded to the [OpenADMET CYP Inhibition Blind Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge), kept apart from `data/*/outputs/`, which holds the project's
+The files that are uploaded by hand to the [OpenADMET CYP Inhibition Blind Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge), kept apart from `data/*/outputs/`, which holds the project's
 own experiments. Each track folder has its own README with the required format, the checks every file passed and the file hashes, and is rewritten by `cypmode.challenge.submissions_sync`
-from the final results. **No file here has been uploaded to the portal.**
+from the final results. The receipts of the portal, not this folder, record what was uploaded and when.
 
 - [`tdi_track/`](tdi_track/README.md): time-dependent inhibition (classification), CYP3A4 and CYP2D6.
 - [`structure_track/`](structure_track/README.md): structure prediction, 20 CYP3A4 complexes.
