@@ -94,3 +94,9 @@ def test_an_error_of_the_page_is_not_a_reason_to_start_a_new_browser():
     with pytest.raises(RuntimeError):
         browser.retrying(lambda: (_ for _ in ()).throw(RuntimeError("JavaScript error")))
     assert browser.restarts == 0
+
+
+def test_the_port_of_the_debugging_connection_is_free_and_not_the_same_for_two_starts():
+    ports = {chrome_module.free_port() for _ in range(3)}
+    assert all(1024 < port < 65536 for port in ports)
+    assert chrome_module.Chrome().port is None

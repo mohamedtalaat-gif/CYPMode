@@ -6,6 +6,7 @@
 
 import base64
 import json
+import socket
 import subprocess
 import tempfile
 import time
@@ -20,9 +21,17 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 WIDTH, HEIGHT = 1920, 1080
 
 
+def free_port() -> int:
+    """A port that no process listens on at the moment."""
+    with socket.socket() as probe:
+        probe.bind(("127.0.0.1", 0))
+        return probe.getsockname()[1]
+
+
 class Chrome:
-    def __init__(self, port: int = 9333):
-        self.port = port
+    def __init__(self, port: int | None = None):
+        self.port = port  # None: a free port is taken for every start, so that no other browser on the machine shares it
+        self._active_port = port
         self._id = 0
         self._profile = tempfile.TemporaryDirectory()
         self._process = None
@@ -35,12 +44,13 @@ class Chrome:
         return self
 
     def _launch(self) -> None:
-        flags = ["--headless=new", f"--remote-debugging-port={self.port}", f"--user-data-dir={self._profile.name}", "--hide-scrollbars", f"--window-size={WIDTH},{HEIGHT}",
+        self._active_port = self.port or free_port()
+        flags = ["--headless=new", f"--remote-debugging-port={self._active_port}", f"--user-data-dir={self._profile.name}", "--hide-scrollbars", f"--window-size={WIDTH},{HEIGHT}",
                  "--force-device-scale-factor=1", "--allow-file-access-from-files", "--disable-background-timer-throttling", "about:blank"]
         self._process = subprocess.Popen([CHROME, *flags], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         for _ in range(100):
             try:
-                tabs = json.load(urllib.request.urlopen(f"http://127.0.0.1:{self.port}/json"))
+                tabs = json.load(urllib.request.urlopen(f"http://127.0.0.1:{self._active_port}/json"))
                 break
             except OSError:
                 time.sleep(0.2)
