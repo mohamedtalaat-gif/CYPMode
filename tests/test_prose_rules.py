@@ -39,6 +39,7 @@ def test_licence_texts_vendored_libraries_the_audit_report_and_other_kinds_of_fi
         write(tmp_path, "docs/card/vendor/lib-min.js", "an honest — line\n"),
         write(tmp_path, "data/outputs/README.md", f"{ROLE}\n"),
         write(tmp_path, "docs/figure.svg", f"<text>{ROLE}</text>\n"),
+        write(tmp_path, "notebooks/public/cypmode_notebook_public.html", "a picture of base64 text: Xl4X/we+our/us and a library: wasn't\n"),  # the generated export of the notebook, whose prose is scanned in its parts
     ]
     assert all(not hits for hits in prose_rules.violations(tmp_path, files).values())
 

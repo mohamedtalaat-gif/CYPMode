@@ -149,7 +149,7 @@ pre-registered gate is therefore reported as a pass of the registered rule and n
 ### 4.4 The selection-corrected design and its audit
 
 The label rule reproduces every training label (0 and 0 mismatches); the plans are rebuilt from the raw files and compared; every feature block is checked for leakage; the audit
-is generated twice and compared byte for byte; the test suite has 970 passing tests; the summary of the audit is 91 PASS and 0 FAIL (notebook Part XII).
+is generated twice and compared byte for byte; the test suite has (pending: job 900) passing tests; the summary of the audit is 88 PASS and 3 FAIL (notebook Part XII).
 
 ### 4.5 What the project built, and what it borrowed
 
@@ -513,48 +513,17 @@ Gate verdicts of the structure levers (restraint, diversity, selection, engines,
 | structure_gates.log | pilot_cryoem | NOT MET |
 | structure_gates.log | pilot_seeds | NOT MET |
 
-Final recipe and zip: {
-  "decision": {
-    "gates": {
-      "mbr_selection": false,
-      "engine_consensus": false,
-      "heme_frame_prior": false,
-      "ei_sampling": false,
-      "restraint_bond": true,
-      "restraint_contact": true,
-      "pilot_conformers": false,
-      "pilot_cryoem": false,
-      "pilot_seeds": false,
-      "pose_physics": false,
-      "pose_pharmacophore": false,
-      "pose_combined": false,
-      "series_consensus": false,
-      "restraint_bond_expansion": false,
-      "restraint_bond_harm": false
-    },
-    "recipe": {
-      "restraint": "bond",
-      "levers": [],
-      "openfold3": false,
-      "selection": "first_valid",
-      "terms": [],
-      "ei_allocation": false,
-      "extra_per_ligand": 2,
-      "reasons": [
-        "restraint 'bond': gate MET",
-        "diversity levers: none (no pilot gate MET)",
-        "Boltz only: engine_consensus not MET",
-        "selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)",
-        "extra samples allocated uniformly: ei_sampling not MET",
-        "margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)"
-      ]
-    },
-    "existing_samples": {
-      "OCNT-2395436": 1,
-      "OCNT-2395503": 1,
-      "OCNT-2395342": 1,
-      "OCNT-2395712": 1,
-      "OCNT
+Final recipe and zip: restraint `bond`, selection `first_valid`, 2 extra samples per ligand, levers: none, OpenFold3 not used, expected-improvement allocation not used; 20.6 hours of engine time were estimated before the runs.
+The archive `structures_final.zip` (SHA-256 `966c034c2537`) holds 20 complexes and 0 of them fail a PoseBusters check.
+
+The reasons recorded with the recipe:
+
+- restraint 'bond': gate MET
+- diversity levers: none (no pilot gate MET)
+- Boltz only: engine_consensus not MET
+- selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)
+- extra samples allocated uniformly: ei_sampling not MET
+- margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)
 
 Force-field relaxation of the chosen poses: the gate on the poses of ligands with public crystal poses, then its use on the 20 submitted poses under the rule registered in `relax_final.py`:
 
@@ -583,7 +552,7 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 - **L4** (uncertainty): Committee disagreement adds information beyond the decision margin for 1 components on CYP3A4 and 2 on CYP2D6 under the permutation test; where the count is zero the committee is reported as a measured negative result and does not alter predictions.
 - **L5** (calibration): The probabilities the final build publishes (isotonic-calibrated) have calibration slopes of 0.9252 (CYP3A4) and 0.8249 (CYP2D6) on held-out folds. The sigmoid of the regularised blend as it comes out is a ranking score and not a probability (slopes 1.1813 and -0.0164); it is never published as one. Probabilities are calibrated to the weighted validation population, not to the unknown scored test population.
 - **L6** (structure): On the diverse crystal benchmark the model's first-pick pose is 4.1929 A from the crystal pose on average; the structure score depends on a handful of compounds and is noisy. The benchmark ligands come from the PDB, which co-folding models may have seen, so absolute accuracy is optimistic.
-- **L7** (reproducibility): The test suite has 970 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
+- **L7** (reproducibility): The test suite has 969 passing and 1 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
 - **L8** (repository): The working tree has 0 modified and 0 untracked entries: results in this report come from uncommitted code until the work is committed.
 - **L9** (population): The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). A selection-aware model gains a large amount of AUC when they are numerous and loses a little when they are rare (see the sensitivity table), and the baseline's public metrics do not identify their share (538 grid points are consistent with them). Only a submission can settle this.
 - **L10** (calibration): The CYP2D6 blend as it comes out is close to a constant (weighted expected calibration error 0.3592 against 0.0431 for CYP3A4): it ranks and transfers a call rate but is not a probability. The probabilities that are published pass through an isotonic step fitted on inner out-of-fold scores, which brings the error to 0.0054 (CYP2D6) and 0.0189 (CYP3A4); a monotone step restores calibration and adds no discrimination.
