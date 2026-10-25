@@ -132,9 +132,9 @@ def enforced_rules(ctx: Context) -> Section:
     s.add("public documents carry no private local paths", not private, ", ".join(private) or "none found")
     from cypmode.audit.prose_rules import mentions_of_the_owner
 
-    owner = mentions_of_the_owner()
-    s.add("no text of the project refers to an owner (a decision or a step is written without a person named by a role)", not owner, ", ".join(owner[:5]) or "none found")
-    s.body.append("Rules checked: code comments in English; no private paths in the documents meant to be public; no text that refers to an owner; attribution hygiene is section 12.")
+    role = mentions_of_the_owner()
+    s.add("no text of the project attributes a decision or a step to a person named by a role", not role, ", ".join(role[:5]) or "none found")
+    s.body.append("Rules checked: code comments in English; no private paths in the documents meant to be public; no text that names a person by a role; attribution hygiene is section 12.")
     return s
 
 
