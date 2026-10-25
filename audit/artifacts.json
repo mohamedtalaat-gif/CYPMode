@@ -303,18 +303,18 @@
   }
  },
  "readme_card": {
-  "built_utc": "2026-10-25 08:27:35",
+  "built_utc": "2026-10-25 14:02:50",
   "extra": {
    "html_sha256": {
-    "dark": "6a697f66c73176171787a346be359837d1ff0473c74994aeea04d4f89790e91e",
-    "light": "3701cd64f7ac7d682b9765d0d8bdd00aadf2038e663f6563df5139e978821304"
+    "dark": "0792ccf50d5c0e3bc7f3f7bb9bd8d00b7a7e4498369cacb4a8e79fd095c12063",
+    "light": "6abf34bdd31665f83307794e381902526b680fd2628622595f8a4c91d73ad4af"
    },
    "mode": "public"
   },
-  "fingerprint": "b8930fba849e533fcd8e7f0891f4c26b6df6846630fdc2fb48c09b35ff2e63d2",
+  "fingerprint": "689c92fd287ce77932da3f0e488c3f4b4c771304f7d8ab18dd01a7b64f242388",
   "outputs": {
-   "docs/card/cypmode_card-dark.png": "b4e854366076e7a2a0115a755a324b8ce6d3eff975693be4d1448d97d4c70b4b",
-   "docs/card/cypmode_card-light.png": "0185467a257bc45fe3e3fd72327dd050ba9c962cef43e23ff221b783f116208e"
+   "docs/card/cypmode_card-dark.png": "9ba557be7cac6cd6c28b41e5ea0f56d6fb845fac4ab87cc4f321dc9eca080d83",
+   "docs/card/cypmode_card-light.png": "8efeba878015d369ff50604606e1c37fe8f2aed702a71d02fbc13612d7af9066"
   }
  }
 }
