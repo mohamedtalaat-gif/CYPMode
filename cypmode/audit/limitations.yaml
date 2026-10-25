@@ -87,8 +87,12 @@
     Two families of Chemprop candidates were run as a staged design under a rule written beforehand, for CYP3A4 only: CheMeleon was screened on 5 folds and not continued, because
     its gain (+0.0035 AUC) was below the bar of the stage rule, and the two OpenADMET pretraining weights (MiniMol targets and the Novartis ADMET surrogate) passed the screen and were
     run to the 15-fold gate, which they met. A candidate that was screened on 5 folds and not continued, or not run (CYP2D6), has no verdict: the report does not call it NOT MET, and
-    the smallest gain that a 5-fold screen can certify is about one and a half times the smallest gain of the 15-fold design (see the design-floor figure). The code and the weight
-    files are in the repository.
+    the smallest gain that a 5-fold screen can certify is about one and a half times the smallest gain of the 15-fold design (see the design-floor figure). CYP2D6 was left out of the
+    whole Chemprop design by a decision of 2026-10-16, taken before any CheMeleon measurement and confirmed on 2026-10-22: plain Chemprop is at chance on CYP2D6 (outer AUC 0.54 and 0.53)
+    while the frozen CheMeleon block reaches 0.63, and the full design costs about 12 days of machine time (about 37 minutes per task, 80 tasks for each variant and enzyme) for a gain that was expected to be small: the first
+    estimate of what the fine-tuned network could add, +0.004 to +0.008 AUC, was below the smallest difference of about 0.01 that the design can certify. The decision
+    was taken before the result of the OpenADMET weights on CYP3A4 was known, so that whether they help on CYP2D6 is untested and not answered. The code and the weight files are in
+    the repository.
 - id: L13
   area: data
   uses: []
