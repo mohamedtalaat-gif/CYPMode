@@ -152,9 +152,9 @@ data/structure_track/outputs/cyp3a4/logs/stereo_*.log
 data/structure_track/outputs/cyp3a4/logs/affinity_retry_*.log
 docs/figures/structure/struct_all20_gallery-*
 docs/figures/structure/struct_posebusters-*
-docs/card/cypmode_card-light.png
-docs/card/cypmode_card-dark.png
-docs/card/interactive/
+docs/card/cypmode_card_full-light.png
+docs/card/cypmode_card_full-dark.png
+docs/card/interactive/full/
 docs/video/cypmode_overview_poster.png
 docs/figures/structure/struct_diffusion_denoising*
 data/structure_track/outputs/cyp3a4/pharmacophore_official20/

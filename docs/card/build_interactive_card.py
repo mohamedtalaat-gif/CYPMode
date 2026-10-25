@@ -241,14 +241,15 @@ def page(mode: str = "public") -> str:
 
 def main() -> int:
     mode = "full" if "--full" in sys.argv else "public"
-    OUT.mkdir(exist_ok=True)
+    folder = OUT / "full" if mode == "full" else OUT  # the full page has a folder of its own, which stays on the machine until the release
+    folder.mkdir(parents=True, exist_ok=True)
     text = page(mode)
-    target = OUT / "index.html"
+    target = folder / "index.html"
     target.write_text(text)
     (OUT / ".nojekyll").write_text("")
     from cypmode.audit.artifacts import record
 
-    record("interactive_card", [target], {"html_sha256": hashlib.sha256(text.encode()).hexdigest(), "mode": mode})
+    record("interactive_card_full" if mode == "full" else "interactive_card", [target], {"html_sha256": hashlib.sha256(text.encode()).hexdigest(), "mode": mode})
     print(f"wrote {target} ({target.stat().st_size / 1e6:.2f} MB)")
     return 0
 

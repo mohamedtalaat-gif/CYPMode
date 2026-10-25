@@ -5,8 +5,8 @@
 """Publish what was held back: ``python scripts/release_after_deadline.py [--dry-run] [--rebuild-card]``.
 
 Until the challenge closes (2026-11-03 23:59 UTC) the repository carries the code and the reports but no result for a blinded compound: the HELD BACK block of ``.gitignore`` keeps the
-predictions, the submitted structures, the pictures and the film that show them, and the notebook exports on the local machine, and the film section and the card of the README are commented out. This script,
-which refuses to run before the deadline, removes that block, removes the public edition of the notebook (the complete one replaces it), restores the film section and the card and (with ``--rebuild-card``) rebuilds the README card with the submitted structures. It changes nothing
+predictions, the submitted structures, the pictures and the film that show them, and the notebook exports on the local machine, and the film section and the full card of the README are commented out, while the public card (crystal structures of the PDB only) is shown. This script,
+which refuses to run before the deadline, removes that block, removes the public edition of the notebook (the complete one replaces it), replaces the public card by the full card, restores the film section and (with ``--rebuild-card``) rebuilds the README card with the submitted structures. It changes nothing
 else and never commits or pushes; it prints what becomes visible so that it can be reviewed first.
 """
 
@@ -21,7 +21,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEADLINE = datetime(2026, 11, 3, 23, 59, tzinfo=timezone.utc)
 BLOCK = re.compile(r"\n# >>> HELD BACK UNTIL AFTER THE DEADLINE.*?# <<< HELD BACK\n", re.DOTALL)
-HELD_SECTIONS = (("<!-- held-back:film\n", "held-back:film-end -->\n"), ("<!-- held-back:card\n", "held-back:card-end -->\n"))  # the film section and the card at the top of the README
+HELD_SECTIONS = (("<!-- held-back:film\n", "held-back:film-end -->\n"), ("<!-- held-back:card\n", "held-back:card-end -->\n"))  # the film section and the full card at the top of the README
+PUBLIC_CARD = re.compile(r"<!-- public:card begin -->\n.*?<!-- public:card end -->\n\n?", re.DOTALL)  # the public card, which the full card replaces
 
 
 def strip_held_back(gitignore: str) -> str:
@@ -29,8 +30,13 @@ def strip_held_back(gitignore: str) -> str:
     return BLOCK.sub("\n", gitignore)
 
 
+def remove_public_card(readme: str) -> str:
+    """The README without the public card, which the full card replaces."""
+    return PUBLIC_CARD.sub("", readme)
+
+
 def restore_film(readme: str) -> str:
-    """The README with the commented-out film section and card switched on."""
+    """The README with the commented-out film section and full card switched on."""
     for opening, closing in HELD_SECTIONS:
         readme = readme.replace(opening, "").replace(closing, "")
     return readme
@@ -55,7 +61,7 @@ def main() -> int:
         print(f"the challenge closes at {DEADLINE:%Y-%m-%d %H:%M} UTC and it is {now:%Y-%m-%d %H:%M} UTC: nothing is released before then (use --dry-run to look)")
         return 1
     gitignore, readme = (ROOT / ".gitignore"), (ROOT / "README.md")
-    new_ignore, new_readme = strip_held_back(gitignore.read_text()), restore_film(readme.read_text())
+    new_ignore, new_readme = strip_held_back(gitignore.read_text()), restore_film(remove_public_card(readme.read_text()))
     print(f"HELD BACK block {'found' if new_ignore != gitignore.read_text() else 'not found'}; held-back sections {'found' if new_readme != readme.read_text() else 'not found'}")
     print(f"the public edition of the notebook {'is there and would be removed: the complete edition replaces it' if (ROOT / 'notebooks/public').exists() else 'is not there'}")
     if args.dry_run:

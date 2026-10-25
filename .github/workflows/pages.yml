@@ -38,7 +38,8 @@ jobs:
 
       - name: Add the interactive card when it is in the repository
         run: |
-          if [ -f docs/card/interactive/index.html ]; then mkdir -p site/card && cp docs/card/interactive/index.html site/card/index.html; fi
+          if [ -f docs/card/interactive/full/index.html ]; then mkdir -p site/card && cp docs/card/interactive/full/index.html site/card/index.html;
+          elif [ -f docs/card/interactive/index.html ]; then mkdir -p site/card && cp docs/card/interactive/index.html site/card/index.html; fi
 
       - name: Add the notebook (the complete edition once it is in the repository, the public one before)
         run: |

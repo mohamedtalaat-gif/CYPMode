@@ -10,7 +10,8 @@ drawn by RDKit from their SMILES with the nitrogen that coordinates the heme iro
 
 Two modes. ``public`` (the default) shows only public structures: the hero is the crystal structure of CYP3A4 with fluconazole (PDB 6MA7) and the six tiles are crystal complexes of the PDB with
 imidazole and pyridine ligands, so that nothing on the card is a predicted structure of a blinded ligand; it is the card that goes into the repository before the challenge closes. ``--full`` draws
-the submitted structures (the hero and six of the twenty poses with the iron-nitrogen distances measured on them); it is built only after the deadline, by ``scripts/release_after_deadline.py``.
+the submitted structures (the hero and six of the twenty poses with the iron-nitrogen distances measured on them) into ``cypmode_card_full-dark.png`` and ``cypmode_card_full-light.png``; it is built only after
+the deadline, by ``scripts/release_after_deadline.py``, and its names are in the HELD BACK block of ``.gitignore`` while the public card is in the repository.
 """
 
 import base64
@@ -217,13 +218,13 @@ def main() -> int:
             chrome.call("Emulation.setDeviceMetricsOverride", width=CARD[0], height=CARD[1], deviceScaleFactor=SCALE, mobile=False)
             time.sleep(0.5)
             data = chrome.call("Page.captureScreenshot", format="png", clip={"x": 0, "y": 0, "width": CARD[0], "height": CARD[1], "scale": 1})["data"]
-            target = HERE / f"cypmode_card-{theme}.png"
+            target = HERE / (f"cypmode_card_full-{theme}.png" if mode == "full" else f"cypmode_card-{theme}.png")
             target.write_bytes(base64.b64decode(data))
             written.append(target)
             print(f"wrote {target.name} ({target.stat().st_size / 1e6:.2f} MB)")
     from cypmode.audit.artifacts import record
 
-    record("readme_card", written, {"html_sha256": digests, "mode": mode})
+    record("readme_card_full" if mode == "full" else "readme_card", written, {"html_sha256": digests, "mode": mode})
     return 0
 
 

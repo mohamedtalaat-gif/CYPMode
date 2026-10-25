@@ -22,6 +22,24 @@ def test_the_commented_card_is_switched_on_with_the_film_section():
     assert "card.png" in out and "## The film" in out and "held-back" not in out and "-->" not in out
 
 
+def test_the_public_card_gives_way_to_the_full_card():
+    text = ("# T\n\n<!-- public:card begin -->\n<img src=\"public.png\">\n<!-- public:card end -->\n\n"
+            "<!-- held-back:card\n<img src=\"full.png\">\nheld-back:card-end -->\n\nbody\n")
+    out = release.restore_film(release.remove_public_card(text))
+    assert "full.png" in out and "public.png" not in out and "public:card" not in out and "held-back" not in out and out.endswith("body\n")
+
+
+def test_the_readme_shows_the_public_card_and_holds_the_full_card_back():
+    text = Path("README.md").read_text()
+    public = text[text.index("<!-- public:card begin -->"):text.index("<!-- public:card end -->")]
+    held = text[text.index("<!-- held-back:card"):text.index("held-back:card-end -->")]
+    assert "cypmode_card-light.png" in public and "cypmode_card_full" not in public
+    assert "cypmode_card_full-light.png" in held and "cypmode_card-light.png" not in held
+    ignore = Path(".gitignore").read_text()
+    assert "docs/card/cypmode_card_full-light.png" in ignore and "docs/card/interactive/full/" in ignore
+    assert "docs/card/cypmode_card-light.png" not in ignore and "docs/card/interactive/\n" not in ignore
+
+
 def test_the_commented_film_section_is_switched_on():
     text = "x\n<!-- held-back:film\n## The film\nsome text\nheld-back:film-end -->\n\ny\n"
     out = release.restore_film(text)
