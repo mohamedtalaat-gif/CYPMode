@@ -1,8 +1,8 @@
 # Submissions
 
-The files that would be uploaded to the [OpenADMET CYP Inhibition Blind Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge), kept apart from `data/*/outputs/`, which holds the project's
+The files that are uploaded by hand to the [OpenADMET CYP Inhibition Blind Challenge](https://huggingface.co/spaces/openadmet/cyp-challenge), kept apart from `data/*/outputs/`, which holds the project's
 own experiments. Each track folder has its own README with the required format, the checks every file passed and the file hashes, and is rewritten by `cypmode.challenge.submissions_sync`
-from the final results. **No file here has been uploaded to the portal.**
+from the final results. The receipts of the portal, not this folder, record what was uploaded and when.
 
 - [`tdi_track/`](tdi_track/README.md): time-dependent inhibition (classification), CYP3A4 and CYP2D6.
 - [`structure_track/`](structure_track/README.md): structure prediction, 20 CYP3A4 complexes.

@@ -167,12 +167,14 @@ Members of the default stack: k-nearest neighbours (Tanimoto) (3), support vecto
 <!-- generated:final-stack end -->
 
 <!-- generated:gate-verdicts begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
-Every addition was judged by a rule fixed before its result. 213 gate verdicts from 70 experiments: 11 MET and 202 NOT MET. The gates that were met: aux_chemprop_foundation, aux_neural, aux_neural_f10, bond restraint, contact restraint, force-field relaxation of poses, negative control (permuted labels), pool gates repeated with OpenStructure's yardstick, replicates with 10 outer folds. A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: CYP3A4: ['chemprop_foundation', 'neural']; CYP2D6: none.
+Every addition was judged by a rule fixed before its result. 213 gate verdicts from 70 experiments: 11 MET and 202 NOT MET. The gates that were met: Chemprop from the two OpenADMET pretraining weights (staged), aux_neural_f10, bond restraint, contact restraint, force-field relaxation of poses, negative control (permuted labels), pool gates repeated with OpenStructure's yardstick, replicates with 10 outer folds, the neural pair (multitask network and its auxiliary-head version) in the stack. A MET verdict on a negative control means that the pipeline gives chance on permuted labels, as it must. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: CYP3A4: ['chemprop_foundation', 'neural']; CYP2D6: none.
 
 <details><summary>All verdicts</summary>
 
 | experiment | TDI CYP3A4 | TDI CYP2D6 | structure |
 | --- | --- | --- | --- |
+| Atom-JEPA readout in the stack | NOT MET | NOT MET | - |
+| Chemprop from the two OpenADMET pretraining weights (staged) | MET | - | - |
 | Emax of both arms as a predicted block | NOT MET | NOT MET | - |
 | Monroe (GRIT) embeddings | NOT MET | NOT MET | - |
 | PXR-induction readings as a predicted block | NOT MET | NOT MET | - |
@@ -183,39 +185,32 @@ Every addition was judged by a rule fixed before its result. 213 gate verdicts f
 | TabICL on frozen CheMeleon embeddings | NOT MET | NOT MET | - |
 | TabPFN in the stack | NOT MET | NOT MET | - |
 | TabPFN on frozen CheMeleon embeddings | NOT MET | NOT MET | - |
-| aux atomjepa | NOT MET | NOT MET | - |
-| aux atomjepa head | NOT MET | NOT MET | - |
-| aux chemprop foundation | MET | - | - |
-| aux ext adme | NOT MET | NOT MET | - |
-| aux ext cont | NOT MET | NOT MET | - |
-| aux ext tox | NOT MET | NOT MET | - |
-| aux hypothesis | NOT MET | NOT MET | - |
-| aux neural | MET | NOT MET | - |
+| Tox21 CYP-screen readings as a predicted block | NOT MET | NOT MET | - |
 | aux neural f10 | MET | - | - |
-| aux pocket cyp2d6 | - | NOT MET | - |
-| aux pocket cyp3a4 | NOT MET | - | - |
-| aux site cyp2d6 | - | NOT MET | - |
-| aux site cyp3a4 | NOT MET | - | - |
 | basic-centre block (protonation states, centre classes) | NOT MET | NOT MET | - |
 | bond restraint confirmed on new ligands | - | - | NOT MET |
 | committee label-process model | NOT MET | NOT MET | - |
 | compact physics block | NOT MET | NOT MET | - |
 | compact physics block, replicate with 10 outer folds | NOT MET | NOT MET | - |
+| compound relative to the CYP2D6 pocket | - | NOT MET | - |
+| compound relative to the CYP3A4 pocket | NOT MET | - | - |
 | compounds without a direct curve | NOT MET | - | - |
 | consensus of poses across a chemical series | - | - | NOT MET |
+| continuous external-panel responses as a predicted block | NOT MET | NOT MET | - |
 | cross-isoform transfer of the assay arms | NOT MET | NOT MET | - |
 | expected-improvement sampling of poses | - | - | NOT MET |
 | exploratory atomjepa head f10 | NOT MET | - | - |
-| exploratory hypothesis permuted | NOT MET | NOT MET | - |
-| exploratory pocket control | NOT MET | NOT MET | - |
-| exploratory pocket first run seed0 control | NOT MET | NOT MET | - |
-| exploratory pocket first run seed0 own | NOT MET | NOT MET | - |
-| exploratory site control | NOT MET | NOT MET | - |
+| first run of the pocket block, void: control pocket | NOT MET | NOT MET | - |
+| first run of the pocket block, void: own pocket | NOT MET | NOT MET | - |
 | force-field relaxation of poses | - | - | MET |
+| frozen Atom-JEPA embeddings as a block | NOT MET | NOT MET | - |
 | frozen CheMeleon embeddings | NOT MET | NOT MET | - |
 | gate-shift features | NOT MET | NOT MET | - |
 | hedged blend of the hits-only and the selection-aware stacks | - | NOT MET | - |
 | heme-frame prior over poses | - | - | NOT MET |
+| hypothesis model with permuted labels (control) | NOT MET | NOT MET | - |
+| ligand-based pharmacophore hypothesis model | NOT MET | NOT MET | - |
+| logD and protein binding from the OpenADMET surrogate models | NOT MET | NOT MET | - |
 | matched-molecular-pair transfer | NOT MET | NOT MET | - |
 | minimum Bayes risk and restraint judged by LDDT-PLI (exploratory) | - | - | NOT MET |
 | minimum Bayes risk selection and engine consensus | - | - | NOT MET |
@@ -223,25 +218,30 @@ Every addition was judged by a rule fixed before its result. 213 gate verdicts f
 | multitask network with the screen and Emax as auxiliary heads | NOT MET | NOT MET | - |
 | negative control (permuted labels) | MET | MET | - |
 | non-negative stacking | NOT MET | NOT MET | - |
+| pharmacophore model of the poses | - | - | NOT MET |
 | physics block tier A, replicate with 10 outer folds | NOT MET | NOT MET | - |
 | physics block tier B, replicate with 10 outer folds | NOT MET | NOT MET | - |
 | physics block, tier A | NOT MET | NOT MET | - |
 | physics block, tier B | NOT MET | NOT MET | - |
 | physics, pharmacophore and combined pose terms | - | - | NOT MET |
 | plain Chemprop in the stack | NOT MET | NOT MET | - |
+| pocket block of the other enzyme (control) | NOT MET | NOT MET | - |
 | pool gates repeated with OpenStructure's yardstick | - | - | mbr_selection_ost NOT MET; engine_consensus_ost NOT MET; ei_sampling_ost NOT MET; heme_frame_prior_ost NOT MET; pose_physics_ost NOT MET; pose_pharmacophore_ost NOT MET; pose_combined_ost NOT MET; series_consensus_ost NOT MET; restraint_bond_ost MET; restraint_contact_ost MET; pilot_conformers_ost NOT MET; pilot_cryoem_ost NOT MET; pilot_seeds_ost NOT MET; mbr_lddt_exploratory_ost NOT MET; restraint_bond_lddt_exploratory_ost NOT MET; mbr_on_restrained_lddt_exploratory_ost NOT MET |
-| pose pharmacophore model | - | - | NOT MET |
+| pose choice with BioEmu2 ensembles | - | - | NOT MET |
 | replicates with 10 outer folds | replicate physics NOT MET; replicate physics_compact NOT MET; replicate physics_b NOT MET; replicate neural MET | NOT MET | - |
 | restraint confirmation repeated with OpenStructure's LDDT-PLI | - | - | NOT MET |
 | restraints and pose-diversity pilots | - | - | restraint_bond MET; restraint_contact MET; pilot_conformers NOT MET; pilot_cryoem NOT MET; pilot_seeds NOT MET |
 | selection-aware CYP2D6 model with physics | - | NOT MET | - |
 | selection-aware CYP2D6 model with the screen | - | NOT MET | - |
 | selection-aware model, second version | - | NOT MET | - |
-| selection validation bioemu2 | - | - | NOT MET |
 | single-concentration screen as a predicted block | NOT MET | NOT MET | - |
+| site model of the other enzyme (control) | NOT MET | NOT MET | - |
 | softmax-temperature selector | NOT MET | NOT MET | - |
+| structure-based site model of the CYP2D6 pocket | - | NOT MET | - |
+| structure-based site model of the CYP3A4 pocket | NOT MET | - | - |
 | test-likeness weighting | NOT MET | NOT MET | - |
 | the LDDT-PLI of the project against that of OpenStructure | - | - | NOT MET |
+| the neural pair (multitask network and its auxiliary-head version) in the stack | MET | NOT MET | - |
 | two-arm regressors, floor-clipped | NOT MET | NOT MET | - |
 
 </details>

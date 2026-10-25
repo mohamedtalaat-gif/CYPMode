@@ -1,6 +1,6 @@
 # Structure track: submission file
 
-`structure_track_submission.zip` is the final zip of `cypmode.validation.final_recipe`, with the relaxation of `cypmode.validation.relax_final` applied, copied unchanged. **It has not been uploaded.** `pdb_files/` holds the same 20 complexes, unpacked from it for inspection.
+`structure_track_submission.zip` is the final zip of `cypmode.validation.final_recipe`, with the relaxation of `cypmode.validation.relax_final` applied, copied unchanged. The receipts of the portal, not this folder, record whether and when it was uploaded. `pdb_files/` holds the same 20 complexes, unpacked from it for inspection.
 
 ## Required format (quoted from the portal's submission form, 2026-09-26)
 
@@ -11,7 +11,7 @@
 - portal check (a `.zip` with exactly 20 files): ok
 - PoseBusters on the 20 complexes: 0 of 20 fail any check (a failing structure scores zero on the structure metrics, so none is handed in)
 - the zip is built with fixed timestamps, so rebuilding it from the same predictions gives the same bytes
-- sha256 of the zip: `28f40e84d47342071b849501f9ccdc2738c8f7c194692eb7f896a353026b687f`
+- sha256 of the zip: `966c034c2537377210bf42cec69eb855a095e183d3c05e27aa712e586802ea55`
 
 ## How the poses were chosen
 
@@ -24,7 +24,7 @@
 
 ## Relaxation of the chosen poses
 
-The ligand of each chosen pose was relaxed in its frozen pocket with a force field (`cypmode.validation.relax`), after a gate on 30 ligands with public crystal poses had found it to raise validity and margin without moving the poses away from the crystal. A relaxed pose replaced the original only when both pass the 22 checks, the smallest relative distance to the receptor rises and stays at or above 0.8, the ligand moved by at most 1.0 A and a coordinated iron-nitrogen distance changed by at most 0.2 A. 20 of 20 poses were replaced; the smallest relative distance in the zip went from 0.801 to 0.850. The zip of the unrelaxed poses has sha256 `e878e145e81a5140a48b7d7951461dd706d1bab2e57d105e38800ccc6afab2e7`.
+The ligand of each chosen pose was relaxed in its frozen pocket with a force field (`cypmode.validation.relax`), after a gate on 30 ligands with public crystal poses had found it to raise validity and margin without moving the poses away from the crystal. A relaxed pose replaced the original only when both pass the 22 checks, the smallest relative distance to the receptor rises and stays at or above 0.8, the ligand moved by at most 1.0 A and a coordinated iron-nitrogen distance changed by at most 0.2 A. 20 of 20 poses were replaced; the smallest relative distance in the zip went from 0.801 to 0.849. The zip of the unrelaxed poses has sha256 `614fee9dc20517770958b24815bfce29b3915771bae5672ec4df5560aae5af66`.
 
 ## Contents
 

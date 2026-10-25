@@ -10,7 +10,7 @@ Counts: PASS = 91, FAIL = 0, INFO = 9, SKIP = 0
 |---|---|---|
 | training and test files present | PASS |  |
 | working tree clean (everything committed) | PASS | 0 modified, 0 untracked |
-| all tests pass | PASS | 968 passed, 0 failed |
+| all tests pass | PASS | 970 passed, 0 failed |
 | feature block `rdkit_desc` computed twice | PASS | max |diff| 0.0000 |
 | feature block `morgan_c2` computed twice | PASS | max |diff| 0.0000 |
 | feature block `tdi_alerts` computed twice | PASS | max |diff| 0.0000 |
@@ -118,7 +118,7 @@ Counts: PASS = 91, FAIL = 0, INFO = 9, SKIP = 0
 | rdkit | 2026.3.6 |
 | PyYAML | 6.0.3 |
 
-Git HEAD `b042b6c`; working tree: 0 modified, 0 deleted, 0 untracked entries.
+Git HEAD `5c57b8f`; working tree: 0 modified, 0 deleted, 0 untracked entries.
 
 Input files (size in bytes, sha256 prefix):
 
@@ -138,7 +138,7 @@ Input files (size in bytes, sha256 prefix):
 
 ## 2. Test suite (executed now)
 
-pytest summary counts: passed = 968, skipped = 1
+pytest summary counts: passed = 970, skipped = 1
 
 ## 3. Determinism and cache consistency
 
@@ -1584,7 +1584,7 @@ Rules checked: the author, the repository and the DOI are the same in the citati
 
 ## 21. Wording of the text files
 
-Every line of the 661 text files that git tracks or would add (vendored libraries, licence texts and the generated audit report are left out) is matched against each rule, and so is every line of the messages of the commits that are not published yet. A rule passes when no line matches.
+Every line of the 662 text files that git tracks or would add (vendored libraries, licence texts and the generated audit report are left out) is matched against each rule, and so is every line of the messages of the commits that are not published yet. A rule passes when no line matches.
 | rule | lines in the files | files | lines in unpublished commit messages |
 |---|---|---|---|
 | role names as the actor of a decision or a step | 0 | 0 | 0 |
@@ -1605,7 +1605,7 @@ Every line of the 661 text files that git tracks or would add (vendored librarie
 - **L4** (uncertainty): Committee disagreement adds information beyond the decision margin for 1 components on CYP3A4 and 2 on CYP2D6 under the permutation test; where the count is zero the committee is reported as a measured negative result and does not alter predictions.
 - **L5** (calibration): The probabilities the final build publishes (isotonic-calibrated) have calibration slopes of 0.9252 (CYP3A4) and 0.8249 (CYP2D6) on held-out folds. The sigmoid of the regularised blend as it comes out is a ranking score and not a probability (slopes 1.1813 and -0.0164); it is never published as one. Probabilities are calibrated to the weighted validation population, not to the unknown scored test population.
 - **L6** (structure): On the diverse crystal benchmark the model's first-pick pose is 4.1929 A from the crystal pose on average; the structure score depends on a handful of compounds and is noisy. The benchmark ligands come from the PDB, which co-folding models may have seen, so absolute accuracy is optimistic.
-- **L7** (reproducibility): The test suite has 968 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
+- **L7** (reproducibility): The test suite has 970 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
 - **L8** (repository): The working tree has 0 modified and 0 untracked entries: results in this report come from uncommitted code until the work is committed.
 - **L9** (population): The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). A selection-aware model gains a large amount of AUC when they are numerous and loses a little when they are rare (see the sensitivity table), and the baseline's public metrics do not identify their share (538 grid points are consistent with them). Only a submission can settle this.
 - **L10** (calibration): The CYP2D6 blend as it comes out is close to a constant (weighted expected calibration error 0.3592 against 0.0431 for CYP3A4): it ranks and transfers a call rate but is not a probability. The probabilities that are published pass through an isotonic step fitted on inner out-of-fold scores, which brings the error to 0.0054 (CYP2D6) and 0.0189 (CYP3A4); a monotone step restores calibration and adds no discrimination.
