@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
+from pathlib import Path
 from types import SimpleNamespace
 
 from cypmode.audit import prose_rules
@@ -90,6 +91,16 @@ def test_the_audit_section_reports_every_rule_with_its_count(tmp_path, monkeypat
     failed = [check for check in section.checks if check.status == FAIL]
     assert len(section.checks) == len(prose_rules.RULES) and len(failed) == 2  # the dash and the intensifier
     assert ctx.metrics["wording_lines"] == 2
+
+    # the section that follows it, on the paths that the same text files name
+    write(tmp_path, "sub/real.md", "x\n")
+    docs = [write(tmp_path, "b.md", "`sub/real.md`, `missing/file.md`, `backend/app.py`, `queue/jobs/NNN_job.sh` and `scripts/missing_script.sh`\n")]
+    monkeypatch.setattr(prose_rules, "project_files", lambda root=tmp_path: docs)
+    monkeypatch.setattr(sections_extra, "ROOT", tmp_path)
+    found = sections_extra.references(ctx)
+    assert [c.status for c in found.checks] == [FAIL] and "2 missing" in found.checks[0].detail  # missing/file.md and scripts/missing_script.sh; the file of the organisers and the pattern are allowed
+    assert ctx.metrics["path_references_allowed"] == 2
+    assert sections_extra.path_exists("data/panel", "notebooks/PLAN.md", Path.cwd())  # the plan of the notebook names a module without the prefix of the package
 
 
 def test_no_text_of_this_repository_breaks_a_wording_rule():

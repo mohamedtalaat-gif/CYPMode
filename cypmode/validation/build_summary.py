@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Regenerates data/structure_track/outputs/validation_summary.json from local Boltz-2 runs.
+"""Regenerates data/structure_track/outputs/{target}/validation_summary.json (cyp3a4 by default) from local Boltz-2 runs.
 
 Discovers compounds from data/structure_track/outputs/out/ itself rather than a fixed
 list, and reads each one's ligand SMILES from its own input YAML

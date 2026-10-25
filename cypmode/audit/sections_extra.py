@@ -250,7 +250,66 @@ def wording(ctx: Context) -> Section:
     return s
 
 
-EXTRA = [gate_ledger, checklist, environment_and_seeds, block_leakage, enforced_rules, final_candidates, citation_consistency, wording]
+# Paths that the text names and that need not exist in the working tree, each with the reason; every other path between backticks in the documents must exist.
+PATH_ALLOWANCES = (
+    (re.compile(r"NNN_"), "the pattern of the name of a job"),
+    (re.compile(r"^(?:backend|evaluation|hf_space)(?:/|$)|^validation/tdi_validation\.py$|^docs/structure-scoring\.md$"), "a file in the repository of the organisers"),
+    (re.compile(r"^docs/leaderboard_scores\.csv$"), "written by hand after the uploads; the method report reads it only when it exists"),
+    (re.compile(r"^docs/card/interactive/full(?:/|$)"), "built after the deadline by scripts/release_after_deadline.py"),
+    (re.compile(r"^final/"), "relative to the folder that the sentence names"),
+    (re.compile(r"^notebooks/(?:education|walkthrough)\.ipynb$"), "the two notebooks of the first plan, replaced by one"),
+    (re.compile(r"^data/cyp_challenge(?:/|$)"), "the early folder of the files that were taken out of the history on 2026-10-16"),
+    (re.compile(r"^submissions/_superseded/"), "files that the sync of the submissions moved aside; held back"),
+    (re.compile(r"^notebooks/_math_cache$"), "a cache that the build of the notebook creates"),
+)
+PATH_TOKEN = re.compile(r"`([A-Za-z0-9_./\-]+/[A-Za-z0-9_.\-/]*)`")
+PATH_ROOTS = {"cypmode", "tests", "scripts", "docs", "data", "notebooks", "queue", "explorer", "environment", "audit", "submissions", ".github", "backend", "evaluation", "hf_space", "final", "validation"}
+
+
+def named_paths(text: str) -> set[str]:
+    """The paths between backticks in a text: a token with a slash that starts at a folder of the repository (or of its organisers) or ends in a file extension; patterns and addresses are left out."""
+    found = set()
+    for match in PATH_TOKEN.finditer(text):
+        token = match.group(1).rstrip("/")
+        if token.startswith(("http", "/", "~", ".venv", "../")) or "..." in token:
+            continue
+        if token.split("/")[0] in PATH_ROOTS or token.endswith((".py", ".md", ".csv", ".json", ".sh", ".yaml", ".log", ".txt")):
+            found.add(token)
+    return found
+
+
+def path_exists(token: str, document: str, root: Path | None = None) -> bool:
+    """A path exists as written, next to the document, or (the plan of the notebook) as a module of the package without its prefix."""
+    root = root or ROOT
+    return any(candidate.exists() for candidate in (root / token, (root / document).parent / token, root / "cypmode" / token, root / "cypmode" / f"{token}.py"))
+
+
+def references(ctx: Context) -> Section:
+    """Section 22: every path that the documents and the parts of the notebook name between backticks exists, or is on the list of allowances with its reason."""
+    from cypmode.audit import prose_rules
+
+    s = Section("22. Paths that the text names")
+    names = [n for n in prose_rules.project_files() if prose_rules.scanned(n) and (n.endswith(".md") or n.startswith("notebooks/parts/"))]
+    rows, allowed = [], 0
+    for name in names:
+        for token in sorted(named_paths((ROOT / name).read_text(errors="ignore"))):
+            if path_exists(token, name):
+                continue
+            if any(pattern.search(token) for pattern, _ in PATH_ALLOWANCES):
+                allowed += 1
+            else:
+                rows.append((name, token))
+    s.body.append(
+        f"Every path between backticks in the {len(names)} documents and parts of the notebook is looked up (as written, next to the document, or as a module of the package). {allowed} references to a path that is not in the tree "
+        "are allowed, each with its reason (a pattern, a file of the organisers, a file written after the uploads or after the deadline, an early name); the others are listed. A reference passes when the path exists."
+    )
+    s.body.append(md_table(pd.DataFrame(rows, columns=["document", "path that does not exist"])) if rows else "No other reference to a missing path.")
+    s.add("every path that the text names exists or is allowed with a reason", not rows, f"{len(rows)} missing" + (f", e.g. {rows[0][0]}: {rows[0][1]}" if rows else ""))
+    ctx.metrics.update(path_references_missing=len(rows), path_references_allowed=allowed)
+    return s
+
+
+EXTRA = [gate_ledger, checklist, environment_and_seeds, block_leakage, enforced_rules, final_candidates, citation_consistency, wording, references]
 _ = sys
 
 

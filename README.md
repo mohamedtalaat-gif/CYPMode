@@ -360,9 +360,9 @@ The project is scoped as a direct extension of a newly solved CYP3A4 cryo-EM str
 - `cypmode/validation/pipeline.py`: `run_structural_validation(name, smiles)` is one call from a SMILES string to a coordination result for a compound that the four reference inputs do not cover. It wraps `build_input`, a `boltz predict` subprocess run (tens of minutes, not skipped or simulated) and the summary of `structures.py` in one function instead of three manual steps.
 - `cypmode/validation/structures.py`: parses the structures predicted by Boltz-2 (the heme is modeled explicitly and bonded covalently to the axial cysteine) and measures the distance of the heme iron to the ligand nitrogens that match a Type II motif, and not only to the geometrically closest one, which is not always the same atom (see the methodology note below).
 - `cypmode/validation/batch.py`: runs `run_structural_validation` over a compound set (name to SMILES) in one call, checkpoints the results after every compound so that a run of several hours survives an interruption, and isolates the failure of one compound from the rest of the batch.
-- `cypmode/validation/build_summary.py`: regenerates `data/structure_track/outputs/validation_summary.json` by discovering finished runs under `data/structure_track/outputs/out/` and reading the SMILES of each from its own input YAML (see "Reproducing this" below).
+- `cypmode/validation/build_summary.py`: regenerates `data/structure_track/outputs/cyp3a4/validation_summary.json` by discovering finished runs under `data/structure_track/outputs/out/` and reading the SMILES of each from its own input YAML (see "Reproducing this" below).
 - `app.py`: a Streamlit tool in which a pasted compound receives the motif call and, for the four reference compounds, the structural check.
-- `docs/figures/generate_validation_figure.py`: regenerates the Fe-N bar chart below (light and dark variants) from `data/structure_track/outputs/validation_summary.json`; it needs `pip install matplotlib`, which is not otherwise a dependency of the project.
+- `docs/figures/generate_validation_figure.py`: regenerates the Fe-N bar chart below (light and dark variants) from `data/structure_track/outputs/cyp3a4/validation_summary.json`; it needs `pip install matplotlib`, which is not otherwise a dependency of the project.
 
 ## Install
 
@@ -389,7 +389,7 @@ streamlit run app.py
 
 ## Hosting
 
-`requirements.txt` is prepared for Hugging Face Spaces (Streamlit SDK) and for Streamlit Community Cloud. The Structural validation tab of `app.py` reads the checked-in `data/structure_track/outputs/validation_summary.json` and does not need a local Boltz-2 run, so it behaves identically hosted and local.
+`requirements.txt` is prepared for Hugging Face Spaces (Streamlit SDK) and for Streamlit Community Cloud. The Structural validation tab of `app.py` reads the checked-in `data/structure_track/outputs/cyp3a4/validation_summary.json` and does not need a local Boltz-2 run, so it behaves identically hosted and local.
 
 ## Validation against crystal and cryo-EM structures
 
@@ -497,7 +497,7 @@ During the preparation for the Direct Inhibition track of the [OpenADMET CYP Inh
 
 The task overlaps with the structural-validation pipeline of the project (Boltz-2 with an explicit heme and a covalent axial-cysteine bond, `cypmode/validation/pipeline.py`), which had been built for an earlier purpose (checking Type II motif calls against physics-based structure prediction for the 4 solved reference compounds above) and applies to any CYP3A4-ligand SMILES pair without modification.
 
-`data/structure_track/inputs/structure_track_test_blinded.csv` is the public blinded test set of this track, saved as published and as corrected by the organisers on 2026-10-24: three ligands had first been published without their stereochemistry, every run of them was made again from the corrected SMILES, and a pose is eligible for the submission only when it carries the official stereochemistry (`cypmode/validation/pose_stereo.py`). The Type II motif screen applied to it finds that **12 of the 20 compounds (60%) carry a coordinating motif** (reproducible with `cypmode.metrics.motifs.detect_motifs`). `cypmode/validation/batch.py` runs `run_structural_validation` on all 20 compounds, not only on the motif-positive ones, because the coordination status cannot be known without running the structure, which is the purpose of the pipeline; the results are written to `data/structure_track/outputs/structure_track_results.json`.
+`data/structure_track/inputs/structure_track_test_blinded.csv` is the public blinded test set of this track, saved as published and as corrected by the organisers on 2026-10-24: three ligands had first been published without their stereochemistry, every run of them was made again from the corrected SMILES, and a pose is eligible for the submission only when it carries the official stereochemistry (`cypmode/validation/pose_stereo.py`). The Type II motif screen applied to it finds that **12 of the 20 compounds (60%) carry a coordinating motif** (reproducible with `cypmode.metrics.motifs.detect_motifs`). `cypmode/validation/batch.py` runs `run_structural_validation` on all 20 compounds, not only on the motif-positive ones, because the coordination status cannot be known without running the structure, which is the purpose of the pipeline; the results are written to `data/structure_track/outputs/cyp3a4/structure_track_results.json`.
 
 On 2026-09-24 the scoring rules, the submission format and the deadline of the track had not been published and only the blinded SMILES were public; the rules were published on 2026-09-25 (see `CYPMode_Architecture_Specification.md`). The work of that date was preparation with a pipeline that the project already had, applied to the compounds of a part of the challenge that had not yet been formally announced.
 
