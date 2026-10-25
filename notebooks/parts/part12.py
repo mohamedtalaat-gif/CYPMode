@@ -51,8 +51,13 @@ n_determinism_checks, n_determinism_pass = len(determinism_table), int((determin
 seed_line = re.search(r"Seed registry: (\d+) distinct", audit_text)
 n_seed_entries = int(seed_line.group(1))
 
-speed_log = (ROOT / "data/structure_track/outputs/cyp3a4/logs/chemeleon_speed.log").read_text()
-gpu_operation = re.search(r"(\w+) does not have a deterministic implementation", speed_log).group(1)
+import json
+
+speed_dir = ROOT / "data/tdi_track/outputs/comparisons"
+speed_first = json.loads((speed_dir / "chemeleon_speed_CYP3A4_2026-10-17.json").read_text())
+speed_second = json.loads((speed_dir / "chemeleon_speed_CYP3A4.json").read_text())
+gpu_operation = re.search(r"(\w+) does not have a deterministic implementation", speed_first["failure"]).group(1)
+assert speed_first["gpu_seconds"] is None and speed_first["decision"] == "not run: cost" and speed_second["failure"] is None and speed_second["decision"] == "mps"  # the text below tells these two records
 '''
 
 MD_12_1 = """
@@ -84,11 +89,11 @@ The repair of the solver was followed by the work it required. Job 084 evaluated
 
 The determinism section of the audit has {{=n_determinism_checks}} lines and {{=n_determinism_pass}} of them are PASS; the others are information that the audit reports without requiring it. They cover the feature blocks computed twice, the folds rebuilt from the raw files, a model fitted twice with the same seed and with one and with four threads, and a cached prediction compared with a fresh fit of the current code (they agree to about the eighth decimal, the precision of the float32 numbers in the cache). The seed registry of the audit lists {{=n_seed_entries}} distinct (file, kind, value) entries, and a seed that is not written where the audit can see it is not allowed.
 
-*Where determinism could not be had.* One of the experiments of Part IX asked for the strongest form of it, and the machine could not give it. The speed test of the CheMeleon fine-tuning (9.10) trains with deterministic algorithms required, which makes the library refuse any operation that has no deterministic implementation; on the Apple GPU the operation `{{=gpu_operation}}` has none, and the run stopped at once. No GPU time was measured. The decision that followed was about cost on the processor, recorded in the checklist, and not a claim about the method; the log is the evidence that the stop was about the operation and not about speed.
+*Where determinism had to be relaxed.* One of the experiments of Part IX asked for the strongest form of it, and the machine could not give it at first. The first speed test of the CheMeleon fine-tuning (9.10, 2026-10-17) trained with deterministic algorithms required, which makes the library refuse any operation that has no deterministic implementation; on the Apple GPU the operation `{{=gpu_operation}}` has none, and the run stopped at once. No GPU time was measured, so the decision of that day, not to run the fine-tuning for cost, rested on the estimate of the processor alone. The test was made again on 2026-10-22 with the deterministic algorithms in warn-only mode (`scripts/chemprop_mps.sh`): the library warns about the operation instead of refusing it, the seed stays fixed, and only the order of the additions of that one operation may vary. One task took {{=speed_second['gpu_seconds']:.0f}} s on the GPU against {{=speed_second['cpu_seconds_per_task']:.0f}} s on the processor; the scores of the two agreed (rank correlation {{=speed_second['spearman']:.2f}}, AUC {{=speed_second['auc_gpu']:.3f}} against {{=speed_second['auc_cpu']:.3f}}), and the decision became to run the stage on the GPU: {{=speed_second['hours_left_on_gpu']:.1f}} h for the {{=speed_second['tasks_left']}} missing tasks against {{=speed_second['hours_left_on_cpu']:.1f}} h on the processor, with a limit of {{=speed_second['limit_hours']:.0f}} h. The two records are kept side by side (`chemeleon_speed_CYP3A4_2026-10-17.json` and `chemeleon_speed_CYP3A4.json`); the first is the evidence that the stop was about the operation and not about speed.
 
 **The record of the push.** A number is reproducible only if the repository that reaches a reader is the one the author had. `scripts/mirror_check.sh` checks that after a push: it fetches the remote branch and fails when the working tree differs from HEAD in any way (a modified, an untracked or a missing file), or when `origin/<branch>` is not at HEAD, and it prints the files that stay local on purpose, those listed in `.gitignore`. It is the other end of the chain that the pinned environments and the fixed seeds begin: the numbers can be produced again from the files, and the files are the ones that were pushed. The script is not run by the notebook, which is built before the push; its check is described here from the script itself.
 
-*On what actually ran.* The first cell is a toy made for the lesson. The second reads the checklist, the audit report and the log of the speed test.
+*On what actually ran.* The first cell is a toy made for the lesson. The second reads the checklist, the audit report and the two records of the speed test.
 """
 
 AUDIT_SECTIONS = r'''
@@ -272,7 +277,7 @@ The table below names every file of the suite and gives a line on what each chec
 | `test_nested_runners_torch.py` | the leakage guards of the torch-side nested runners: a task trains only on its own rows plus compounds outside the pool, and the predictions do not depend on evaluation or outer-validation rows |
 | `test_nonneg_stack.py` | the non-negative blend: every coefficient at least zero, the fit matching the unconstrained one when that is already non-negative, the penalty switching candidates off, and the blend ranking like the logistic one |
 | `test_notebook_public.py` | the public edition of the notebook: a cell marked held back still runs but shows a note, a Markdown cell marked so becomes the note, the complete edition keeps every output, and the scan refuses a cell that names an official ligand or five or more blinded compounds but lets one example compound pass |
-| `test_notebook_template_order.py` | the order of the notebook: a number written into the text as an expression between double braces is found when a later cell computes it, a format, a comprehension and a built-in are not names to define, and every number of the notebook is computed by a cell above the text that reads it |
+| `test_notebook_template_order.py` | the order of the notebook: a number written into the text as an expression between double braces is found when a later cell computes it, a format, a comprehension and a built-in are not names to define, and every number of the notebook is computed by a cell above the text that reads it (the job `278_requeue_notebook_build` made the notebook jobs run again after the first build stopped on this) |
 | `test_notebook_builder.py` | the builder itself: cells in a shared namespace with their outputs recorded, a failing cell reported, the glossary rule, numbers in markdown filled from the namespace, and the contents following the headings |
 | `test_octant_benchmark.py` | the Octant benchmark: the motif columns added, the potency compared by motif, a missing pIC50 excluded, and the inhibition data read from the checked-in cache without downloading again |
 | `test_official_extra.py` | the organisers' extra files: the batch identifier resolved to its compound, the guard removing only blinded rows, the arrays aligned to the requested names, no blinded compound holding a reading in any official file, the audit passing on the downloaded files, and the PXR loader dropping blinded compounds |
