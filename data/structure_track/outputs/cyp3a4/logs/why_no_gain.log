@@ -1,71 +1,81 @@
-2026-10-17 07:24:41,433 CYP3A4 physics done
-2026-10-17 07:25:02,527 CYP3A4 pair_desc done
-2026-10-17 07:25:23,672 CYP3A4 pair_physics done
-2026-10-17 07:25:45,442 CYP3A4 mmp done
-2026-10-17 07:26:07,807 CYP3A4 embeddings done
-2026-10-17 07:26:30,530 CYP3A4 testlike done
-2026-10-17 07:26:52,721 CYP3A4 arms_clip done
-2026-10-17 07:27:25,639 CYP3A4 committee done
-2026-10-17 07:27:47,076 CYP3A4 physics_compact done
-2026-10-17 07:28:09,910 CYP3A4 physics_b done
-2026-10-17 07:28:31,339 CYP3A4 xiso done
-2026-10-17 07:28:52,648 CYP3A4 screen done
-2026-10-17 07:29:14,173 CYP3A4 emax done
-2026-10-17 07:29:35,454 CYP3A4 pxr done
-2026-10-17 07:30:00,203 CYP3A4 gate_shift done
-2026-10-17 07:30:22,789 CYP3A4 nodirect done
-2026-10-17 07:30:44,261 CYP3A4 basic_centre done
-2026-10-17 07:31:05,760 CYP3A4 ext_cont done
-2026-10-17 07:31:27,381 CYP3A4 ext_tox done
-2026-10-17 07:31:48,146 CYP3A4 ext_adme done
-2026-10-17 07:32:10,473 CYP3A4 atomjepa done
-2026-10-17 07:32:32,676 CYP3A4 monroe done
-2026-10-17 07:32:53,398 CYP3A4 atomjepa_head done
-2026-10-17 07:32:53,401 CYP3A4 chemprop_foundation: no cached predictions, skipped
-2026-10-17 07:33:14,356 CYP3A4 tabicl done
-2026-10-17 07:33:35,323 CYP3A4 tabpfn done
-2026-10-17 07:33:56,471 CYP3A4 tabicl_monroe done
-2026-10-17 07:34:17,506 CYP3A4 tabicl_chemeleon done
-2026-10-17 07:34:38,354 CYP3A4 tabpfn_chemeleon done
-2026-10-17 07:34:59,763 CYP3A4 mlp done
-2026-10-17 07:35:21,146 CYP3A4 mlp_aux done
-2026-10-17 07:35:42,497 CYP3A4 chemprop done
-2026-10-17 07:35:42,499 CYP3A4 chemeleon: no cached predictions, skipped
-2026-10-17 07:36:04,732 CYP3A4 neural done
-2026-10-17 07:36:18,442 CYP2D6 physics done
-2026-10-17 07:36:25,368 CYP2D6 pair_desc done
-2026-10-17 07:36:32,300 CYP2D6 pair_physics done
-2026-10-17 07:36:39,382 CYP2D6 mmp done
-2026-10-17 07:36:46,584 CYP2D6 embeddings done
-2026-10-17 07:36:53,873 CYP2D6 testlike done
-2026-10-17 07:37:01,067 CYP2D6 arms_clip done
-2026-10-17 07:37:08,383 CYP2D6 committee done
-2026-10-17 07:37:15,435 CYP2D6 physics_compact done
-2026-10-17 07:37:22,664 CYP2D6 physics_b done
-2026-10-17 07:37:29,667 CYP2D6 xiso done
-2026-10-17 07:37:36,675 CYP2D6 screen done
-2026-10-17 07:37:43,724 CYP2D6 emax done
-2026-10-17 07:37:50,768 CYP2D6 pxr done
-2026-10-17 07:37:59,079 CYP2D6 gate_shift done
-2026-10-17 07:37:59,086 CYP2D6 nodirect: no cached predictions, skipped
-2026-10-17 07:38:06,143 CYP2D6 basic_centre done
-2026-10-17 07:38:13,185 CYP2D6 ext_cont done
-2026-10-17 07:38:20,196 CYP2D6 ext_tox done
-2026-10-17 07:38:27,213 CYP2D6 ext_adme done
-2026-10-17 07:38:34,337 CYP2D6 atomjepa done
-2026-10-17 07:38:41,475 CYP2D6 monroe done
-2026-10-17 07:38:48,385 CYP2D6 atomjepa_head done
-2026-10-17 07:38:48,387 CYP2D6 chemprop_foundation: no cached predictions, skipped
-2026-10-17 07:38:55,286 CYP2D6 tabicl done
-2026-10-17 07:39:02,193 CYP2D6 tabpfn done
-2026-10-17 07:39:09,065 CYP2D6 tabicl_monroe done
-2026-10-17 07:39:15,968 CYP2D6 tabicl_chemeleon done
-2026-10-17 07:39:22,887 CYP2D6 tabpfn_chemeleon done
-2026-10-17 07:39:29,936 CYP2D6 mlp done
-2026-10-17 07:39:36,971 CYP2D6 mlp_aux done
-2026-10-17 07:39:43,875 CYP2D6 chemprop done
-2026-10-17 07:39:43,877 CYP2D6 chemeleon: no cached predictions, skipped
-2026-10-17 07:39:50,951 CYP2D6 neural done
+2026-10-25 03:02:45,901 CYP3A4 physics done
+2026-10-25 03:03:06,937 CYP3A4 pair_desc done
+2026-10-25 03:03:27,905 CYP3A4 pair_physics done
+2026-10-25 03:03:49,468 CYP3A4 mmp done
+2026-10-25 03:04:11,726 CYP3A4 embeddings done
+2026-10-25 03:04:34,476 CYP3A4 testlike done
+2026-10-25 03:04:56,208 CYP3A4 arms_clip done
+2026-10-25 03:05:28,961 CYP3A4 committee done
+2026-10-25 03:05:50,451 CYP3A4 physics_compact done
+2026-10-25 03:06:13,320 CYP3A4 physics_b done
+2026-10-25 03:06:34,798 CYP3A4 xiso done
+2026-10-25 03:06:56,202 CYP3A4 screen done
+2026-10-25 03:07:17,783 CYP3A4 emax done
+2026-10-25 03:07:39,034 CYP3A4 pxr done
+2026-10-25 03:08:03,742 CYP3A4 gate_shift done
+2026-10-25 03:08:26,200 CYP3A4 nodirect done
+2026-10-25 03:08:47,684 CYP3A4 basic_centre done
+2026-10-25 03:09:09,087 CYP3A4 ext_cont done
+2026-10-25 03:09:30,638 CYP3A4 ext_tox done
+2026-10-25 03:09:51,387 CYP3A4 ext_adme done
+2026-10-25 03:10:13,726 CYP3A4 atomjepa done
+2026-10-25 03:10:35,193 CYP3A4 pocket_cyp3a4 done
+2026-10-25 03:10:56,615 CYP3A4 pocket_cyp2d6 done
+2026-10-25 03:11:18,161 CYP3A4 site_cyp3a4 done
+2026-10-25 03:11:39,711 CYP3A4 site_cyp2d6 done
+2026-10-25 03:12:01,075 CYP3A4 hypothesis done
+2026-10-25 03:12:23,328 CYP3A4 monroe done
+2026-10-25 03:12:44,132 CYP3A4 atomjepa_head done
+2026-10-25 03:13:05,755 CYP3A4 chemprop_foundation done
+2026-10-25 03:13:26,808 CYP3A4 tabicl done
+2026-10-25 03:13:47,872 CYP3A4 tabpfn done
+2026-10-25 03:14:09,122 CYP3A4 tabicl_monroe done
+2026-10-25 03:14:30,247 CYP3A4 tabicl_chemeleon done
+2026-10-25 03:14:51,180 CYP3A4 tabpfn_chemeleon done
+2026-10-25 03:15:12,591 CYP3A4 mlp done
+2026-10-25 03:15:33,988 CYP3A4 mlp_aux done
+2026-10-25 03:15:55,318 CYP3A4 chemprop done
+2026-10-25 03:15:55,323 CYP3A4 chemeleon: no cached predictions, skipped
+2026-10-25 03:16:17,562 CYP3A4 neural done
+2026-10-25 03:16:30,978 CYP2D6 physics done
+2026-10-25 03:16:37,848 CYP2D6 pair_desc done
+2026-10-25 03:16:44,729 CYP2D6 pair_physics done
+2026-10-25 03:16:51,753 CYP2D6 mmp done
+2026-10-25 03:16:58,882 CYP2D6 embeddings done
+2026-10-25 03:17:06,122 CYP2D6 testlike done
+2026-10-25 03:17:13,163 CYP2D6 arms_clip done
+2026-10-25 03:17:20,322 CYP2D6 committee done
+2026-10-25 03:17:27,321 CYP2D6 physics_compact done
+2026-10-25 03:17:34,533 CYP2D6 physics_b done
+2026-10-25 03:17:41,517 CYP2D6 xiso done
+2026-10-25 03:17:48,500 CYP2D6 screen done
+2026-10-25 03:17:55,520 CYP2D6 emax done
+2026-10-25 03:18:02,531 CYP2D6 pxr done
+2026-10-25 03:18:10,798 CYP2D6 gate_shift done
+2026-10-25 03:18:10,803 CYP2D6 nodirect: no cached predictions, skipped
+2026-10-25 03:18:17,787 CYP2D6 basic_centre done
+2026-10-25 03:18:24,764 CYP2D6 ext_cont done
+2026-10-25 03:18:31,758 CYP2D6 ext_tox done
+2026-10-25 03:18:38,729 CYP2D6 ext_adme done
+2026-10-25 03:18:45,801 CYP2D6 atomjepa done
+2026-10-25 03:18:52,817 CYP2D6 pocket_cyp3a4 done
+2026-10-25 03:18:59,811 CYP2D6 pocket_cyp2d6 done
+2026-10-25 03:19:06,836 CYP2D6 site_cyp3a4 done
+2026-10-25 03:19:13,798 CYP2D6 site_cyp2d6 done
+2026-10-25 03:19:20,791 CYP2D6 hypothesis done
+2026-10-25 03:19:27,938 CYP2D6 monroe done
+2026-10-25 03:19:34,822 CYP2D6 atomjepa_head done
+2026-10-25 03:19:34,825 CYP2D6 chemprop_foundation: no cached predictions, skipped
+2026-10-25 03:19:41,711 CYP2D6 tabicl done
+2026-10-25 03:19:48,595 CYP2D6 tabpfn done
+2026-10-25 03:19:55,442 CYP2D6 tabicl_monroe done
+2026-10-25 03:20:02,341 CYP2D6 tabicl_chemeleon done
+2026-10-25 03:20:09,209 CYP2D6 tabpfn_chemeleon done
+2026-10-25 03:20:16,222 CYP2D6 mlp done
+2026-10-25 03:20:23,207 CYP2D6 mlp_aux done
+2026-10-25 03:20:30,055 CYP2D6 chemprop done
+2026-10-25 03:20:30,059 CYP2D6 chemeleon: no cached predictions, skipped
+2026-10-25 03:20:37,085 CYP2D6 neural done
 # Why the ideas that did not join added nothing (generated by `cypmode/challenge/why_no_gain.py`)
 
 Every row compares the default stack with the default stack plus one group of candidates, on the nested outer folds, with the weights and the corrected resampled t of the gates. The detectable effect is the smallest true AUC difference that a one-sided test at 5% detects with 80% power at the corrected standard error; the design floor is the same quantity with infinitely many repeats. Redundancy is the mean absolute Spearman correlation between the group's predictions and the default stack's on held-out rows. Weight is the share of the stack's absolute coefficients that falls on the group. The equivalence verdict compares the 90% interval of the change with +-0.01 AUC: *equivalent* means the idea adds nothing that matters, *inconclusive* means the design cannot tell.
@@ -114,6 +124,16 @@ Every row compares the default stack with the default stack plus one group of ca
 | ext_adme | 1.96 | 2 | +0.0026 | -0.0037 to +0.0090 | 0.474 | equivalent | +0.41 | 0.0095 | 0.0079 | +0.024 | 0.82 | 2.4% | the stack gave it almost no weight (2.4% of the coefficients); its predictions are largely redundant with the stack (mean absolute rho 0.82, largest 0.83); the change (+0.0026) is smaller than the smallest effect this design can detect (0.0095) |
 | atomjepa | 1.0 | 3 | -0.0069 | -0.0240 to +0.0103 | 0.492 | inconclusive | -0.40 | 0.0255 | 0.0215 | +0.022 | 0.64 | 7.3% | it lowered the AUC by 0.0069; the change (-0.0069) is smaller than the smallest effect this design can detect (0.0255) |
 | atomjepa | 1.96 | 3 | -0.0051 | -0.0156 to +0.0054 | 0.407 | inconclusive | -0.48 | 0.0156 | 0.0131 | +0.020 | 0.65 | 2.4% | the stack gave it almost no weight (2.4% of the coefficients); it lowered the AUC by 0.0051; the change (-0.0051) is smaller than the smallest effect this design can detect (0.0156) |
+| pocket_cyp3a4 | 1.0 | 2 | -0.0024 | -0.0168 to +0.0120 | 0.775 | inconclusive | -0.16 | 0.0215 | 0.0181 | +0.061 | 0.76 | 19.7% | it lowered the AUC by 0.0024; the change (-0.0024) is smaller than the smallest effect this design can detect (0.0215) |
+| pocket_cyp3a4 | 1.96 | 2 | +0.0051 | -0.0040 to +0.0143 | 0.340 | inconclusive | +0.55 | 0.0137 | 0.0115 | +0.058 | 0.77 | 5.8% | the change (+0.0051) is smaller than the smallest effect this design can detect (0.0137) |
+| pocket_cyp2d6 | 1.0 | 2 | -0.0039 | -0.0143 to +0.0065 | 0.516 | inconclusive | -0.37 | 0.0155 | 0.0130 | +0.045 | 0.77 | 10.0% | it lowered the AUC by 0.0039; the change (-0.0039) is smaller than the smallest effect this design can detect (0.0155) |
+| pocket_cyp2d6 | 1.96 | 2 | -0.0008 | -0.0118 to +0.0102 | 0.904 | inconclusive | -0.07 | 0.0164 | 0.0138 | +0.043 | 0.77 | 4.7% | the stack gave it almost no weight (4.7% of the coefficients); it lowered the AUC by 0.0008; the change (-0.0008) is smaller than the smallest effect this design can detect (0.0164) |
+| site_cyp3a4 | 1.0 | 2 | -0.0048 | -0.0206 to +0.0109 | 0.597 | inconclusive | -0.30 | 0.0235 | 0.0197 | +0.024 | 0.81 | 7.7% | its predictions are largely redundant with the stack (mean absolute rho 0.81, largest 0.84); it lowered the AUC by 0.0048; the change (-0.0048) is smaller than the smallest effect this design can detect (0.0235) |
+| site_cyp3a4 | 1.96 | 2 | +0.0017 | -0.0043 to +0.0077 | 0.627 | equivalent | +0.28 | 0.0090 | 0.0075 | +0.021 | 0.81 | 5.2% | its predictions are largely redundant with the stack (mean absolute rho 0.81, largest 0.83); the change (+0.0017) is smaller than the smallest effect this design can detect (0.0090) |
+| site_cyp2d6 | 1.0 | 2 | -0.0036 | -0.0172 to +0.0100 | 0.647 | inconclusive | -0.26 | 0.0203 | 0.0171 | +0.034 | 0.81 | 11.7% | its predictions are largely redundant with the stack (mean absolute rho 0.81, largest 0.83); it lowered the AUC by 0.0036; the change (-0.0036) is smaller than the smallest effect this design can detect (0.0203) |
+| site_cyp2d6 | 1.96 | 2 | -0.0019 | -0.0099 to +0.0061 | 0.677 | equivalent | -0.24 | 0.0119 | 0.0100 | +0.032 | 0.81 | 7.2% | its predictions are largely redundant with the stack (mean absolute rho 0.81, largest 0.82); it lowered the AUC by 0.0019; the change (-0.0019) is smaller than the smallest effect this design can detect (0.0119) |
+| hypothesis | 1.0 | 2 | -0.0061 | -0.0227 to +0.0105 | 0.529 | inconclusive | -0.36 | 0.0248 | 0.0208 | +0.014 | 0.81 | 3.8% | the stack gave it almost no weight (3.8% of the coefficients); its predictions are largely redundant with the stack (mean absolute rho 0.81, largest 0.84); it lowered the AUC by 0.0061; the change (-0.0061) is smaller than the smallest effect this design can detect (0.0248) |
+| hypothesis | 1.96 | 2 | -0.0000 | -0.0046 to +0.0045 | 0.987 | equivalent | -0.01 | 0.0068 | 0.0057 | +0.013 | 0.81 | 0.9% | the stack gave it almost no weight (0.9% of the coefficients); its predictions are largely redundant with the stack (mean absolute rho 0.81, largest 0.83); it lowered the AUC by 0.0000; the change (-0.0000) is smaller than the smallest effect this design can detect (0.0068) |
 | monroe | 1.0 | 3 | -0.0034 | -0.0198 to +0.0129 | 0.719 | inconclusive | -0.21 | 0.0244 | 0.0205 | +0.068 | 0.65 | 18.6% | it lowered the AUC by 0.0034; the change (-0.0034) is smaller than the smallest effect this design can detect (0.0244) |
 | monroe | 1.96 | 3 | +0.0031 | -0.0022 to +0.0083 | 0.321 | equivalent | +0.58 | 0.0078 | 0.0066 | +0.067 | 0.65 | 17.1% | the change (+0.0031) is smaller than the smallest effect this design can detect (0.0078) |
 | atomjepa_head | 1.0 | 1 | -0.0029 | -0.0207 to +0.0149 | 0.778 | inconclusive | -0.16 | 0.0266 | 0.0223 | +0.088 | 0.49 | 9.6% | it lowered the AUC by 0.0029; the change (-0.0029) is smaller than the smallest effect this design can detect (0.0266) |
@@ -137,7 +157,7 @@ Every row compares the default stack with the default stack plus one group of ca
 | neural | 1.0 | 3 | +0.0039 | -0.0079 to +0.0158 | 0.569 | inconclusive | +0.33 | 0.0177 | 0.0148 | +0.058 | 0.46 | 25.7% | the change (+0.0039) is smaller than the smallest effect this design can detect (0.0177) |
 | neural | 1.96 | 3 | +0.0047 | -0.0052 to +0.0147 | 0.415 | inconclusive | +0.47 | 0.0149 | 0.0125 | +0.057 | 0.47 | 18.4% | the change (+0.0047) is smaller than the smallest effect this design can detect (0.0149) |
 
-Corrected p values of the 62 comparisons of ideas that did not join: 0 below 0.05 (about 3.1 would be expected if none carried an effect and the test were exact); counts in the five equal bins of [0, 1]: 1, 3, 18, 28, 12. The corrected test is conservative, so the counts rise towards 1.
+Corrected p values of the 72 comparisons of ideas that did not join: 0 below 0.05 (about 3.6 would be expected if none carried an effect and the test were exact); counts in the five equal bins of [0, 1]: 1, 4, 21, 32, 14. The corrected test is conservative, so the counts rise towards 1.
 
 ## CYP3A4
 
@@ -185,10 +205,22 @@ Corrected p values of the 62 comparisons of ideas that did not join: 0 below 0.0
 | ext_adme | 1.96 | 2 | +0.0024 | -0.0025 to +0.0074 | 0.399 | equivalent | +0.49 | 0.0074 | 0.0062 | +0.074 | 0.91 | 38.4% | its predictions are largely redundant with the stack (mean absolute rho 0.91, largest 0.92); the change (+0.0024) is smaller than the smallest effect this design can detect (0.0074) |
 | atomjepa | 1.0 | 3 | +0.0012 | -0.0021 to +0.0044 | 0.541 | equivalent | +0.35 | 0.0049 | 0.0041 | +0.047 | 0.83 | 14.9% | its predictions are largely redundant with the stack (mean absolute rho 0.83, largest 0.92); the change (+0.0012) is smaller than the smallest effect this design can detect (0.0049) |
 | atomjepa | 1.96 | 3 | +0.0009 | -0.0023 to +0.0042 | 0.614 | equivalent | +0.29 | 0.0048 | 0.0041 | +0.048 | 0.83 | 13.4% | its predictions are largely redundant with the stack (mean absolute rho 0.83, largest 0.92); the change (+0.0009) is smaller than the smallest effect this design can detect (0.0048) |
+| pocket_cyp3a4 | 1.0 | 2 | -0.0002 | -0.0049 to +0.0045 | 0.934 | equivalent | -0.05 | 0.0070 | 0.0059 | +0.035 | 0.90 | 14.9% | its predictions are largely redundant with the stack (mean absolute rho 0.90, largest 0.91); it lowered the AUC by 0.0002; the change (-0.0002) is smaller than the smallest effect this design can detect (0.0070) |
+| pocket_cyp3a4 | 1.96 | 2 | +0.0017 | -0.0025 to +0.0059 | 0.480 | equivalent | +0.41 | 0.0063 | 0.0053 | +0.035 | 0.90 | 16.0% | its predictions are largely redundant with the stack (mean absolute rho 0.90, largest 0.92); the change (+0.0017) is smaller than the smallest effect this design can detect (0.0063) |
+| pocket_cyp2d6 | 1.0 | 2 | -0.0001 | -0.0027 to +0.0026 | 0.970 | equivalent | -0.02 | 0.0039 | 0.0033 | +0.037 | 0.90 | 12.5% | its predictions are largely redundant with the stack (mean absolute rho 0.90, largest 0.91); it lowered the AUC by 0.0001; the change (-0.0001) is smaller than the smallest effect this design can detect (0.0039) |
+| pocket_cyp2d6 | 1.96 | 2 | +0.0003 | -0.0042 to +0.0048 | 0.900 | equivalent | +0.07 | 0.0067 | 0.0056 | +0.036 | 0.90 | 20.7% | its predictions are largely redundant with the stack (mean absolute rho 0.90, largest 0.92); the change (+0.0003) is smaller than the smallest effect this design can detect (0.0067) |
+| site_cyp3a4 | 1.0 | 2 | +0.0003 | -0.0022 to +0.0027 | 0.856 | equivalent | +0.10 | 0.0036 | 0.0030 | +0.035 | 0.91 | 6.1% | its predictions are largely redundant with the stack (mean absolute rho 0.91, largest 0.92); the change (+0.0003) is smaller than the smallest effect this design can detect (0.0036) |
+| site_cyp3a4 | 1.96 | 2 | -0.0000 | -0.0022 to +0.0022 | 0.979 | equivalent | -0.01 | 0.0033 | 0.0027 | +0.034 | 0.91 | 3.5% | the stack gave it almost no weight (3.5% of the coefficients); its predictions are largely redundant with the stack (mean absolute rho 0.91, largest 0.93); it lowered the AUC by 0.0000; the change (-0.0000) is smaller than the smallest effect this design can detect (0.0033) |
+| site_cyp2d6 | 1.0 | 2 | -0.0001 | -0.0018 to +0.0015 | 0.876 | equivalent | -0.09 | 0.0025 | 0.0021 | +0.036 | 0.91 | 6.2% | its predictions are largely redundant with the stack (mean absolute rho 0.91, largest 0.92); it lowered the AUC by 0.0001; the change (-0.0001) is smaller than the smallest effect this design can detect (0.0025) |
+| site_cyp2d6 | 1.96 | 2 | +0.0003 | -0.0014 to +0.0019 | 0.778 | equivalent | +0.16 | 0.0025 | 0.0021 | +0.034 | 0.91 | 2.4% | the stack gave it almost no weight (2.4% of the coefficients); its predictions are largely redundant with the stack (mean absolute rho 0.91, largest 0.93); the change (+0.0003) is smaller than the smallest effect this design can detect (0.0025) |
+| hypothesis | 1.0 | 2 | -0.0003 | -0.0024 to +0.0018 | 0.810 | equivalent | -0.14 | 0.0031 | 0.0026 | +0.031 | 0.91 | 9.7% | its predictions are largely redundant with the stack (mean absolute rho 0.91, largest 0.92); it lowered the AUC by 0.0003; the change (-0.0003) is smaller than the smallest effect this design can detect (0.0031) |
+| hypothesis | 1.96 | 2 | -0.0005 | -0.0030 to +0.0021 | 0.753 | equivalent | -0.18 | 0.0038 | 0.0032 | +0.030 | 0.91 | 7.0% | its predictions are largely redundant with the stack (mean absolute rho 0.91, largest 0.93); it lowered the AUC by 0.0005; the change (-0.0005) is smaller than the smallest effect this design can detect (0.0038) |
 | monroe | 1.0 | 3 | +0.0031 | -0.0007 to +0.0068 | 0.171 | equivalent | +0.81 | 0.0056 | 0.0047 | +0.084 | 0.83 | 21.2% | its predictions are largely redundant with the stack (mean absolute rho 0.83, largest 0.91); the change (+0.0031) is smaller than the smallest effect this design can detect (0.0056) |
 | monroe | 1.96 | 3 | +0.0041 | -0.0003 to +0.0085 | 0.123 | equivalent | +0.92 | 0.0066 | 0.0055 | +0.084 | 0.83 | 24.0% | its predictions are largely redundant with the stack (mean absolute rho 0.83, largest 0.91); the change (+0.0041) is smaller than the smallest effect this design can detect (0.0066) |
 | atomjepa_head | 1.0 | 1 | +0.0107 | +0.0030 to +0.0185 | 0.028 | inconclusive | +1.38 | 0.0115 | 0.0097 | +0.162 | 0.70 | 33.0% | the change (+0.0107) is smaller than the smallest effect this design can detect (0.0115) |
 | atomjepa_head | 1.96 | 1 | +0.0081 | +0.0011 to +0.0151 | 0.059 | inconclusive | +1.15 | 0.0104 | 0.0087 | +0.162 | 0.70 | 32.3% | the change (+0.0081) is smaller than the smallest effect this design can detect (0.0104) |
+| chemprop_foundation | 1.0 | 2 | +0.0133 | +0.0070 to +0.0196 | 0.002 | inconclusive | +2.08 | 0.0095 | 0.0079 | +0.125 | 0.65 | 40.3% | joined the final stack |
+| chemprop_foundation | 1.96 | 2 | +0.0144 | +0.0067 to +0.0220 | 0.005 | inconclusive | +1.85 | 0.0115 | 0.0096 | +0.126 | 0.65 | 40.6% | joined the final stack |
 | tabicl | 1.0 | 1 | +0.0001 | -0.0020 to +0.0021 | 0.945 | equivalent | +0.04 | 0.0030 | 0.0026 | +0.026 | 0.87 | 1.1% | the stack gave it almost no weight (1.1% of the coefficients); its predictions are largely redundant with the stack (mean absolute rho 0.87, largest 0.87); the change (+0.0001) is smaller than the smallest effect this design can detect (0.0030) |
 | tabicl | 1.96 | 1 | +0.0003 | -0.0015 to +0.0021 | 0.779 | equivalent | +0.16 | 0.0027 | 0.0022 | +0.025 | 0.88 | 0.0% | the stack gave it almost no weight (0.0% of the coefficients); its predictions are largely redundant with the stack (mean absolute rho 0.88, largest 0.88); the change (+0.0003) is smaller than the smallest effect this design can detect (0.0027) |
 | tabpfn | 1.0 | 1 | +0.0012 | -0.0012 to +0.0036 | 0.388 | equivalent | +0.50 | 0.0036 | 0.0030 | +0.058 | 0.89 | 10.1% | its predictions are largely redundant with the stack (mean absolute rho 0.89, largest 0.89); the change (+0.0012) is smaller than the smallest effect this design can detect (0.0036) |
@@ -208,7 +240,7 @@ Corrected p values of the 62 comparisons of ideas that did not join: 0 below 0.0
 | neural | 1.0 | 3 | +0.0106 | +0.0039 to +0.0173 | 0.014 | inconclusive | +1.57 | 0.0100 | 0.0084 | +0.071 | 0.74 | 45.2% | joined the final stack |
 | neural | 1.96 | 3 | +0.0106 | +0.0029 to +0.0183 | 0.029 | inconclusive | +1.36 | 0.0115 | 0.0097 | +0.071 | 0.74 | 52.5% | joined the final stack |
 
-Corrected p values of the 62 comparisons of ideas that did not join: 2 below 0.05 (about 3.1 would be expected if none carried an effect and the test were exact); counts in the five equal bins of [0, 1]: 16, 11, 10, 14, 11. The corrected test is conservative, so the counts rise towards 1.
+Corrected p values of the 72 comparisons of ideas that did not join: 2 below 0.05 (about 3.6 would be expected if none carried an effect and the test were exact); counts in the five equal bins of [0, 1]: 16, 11, 11, 16, 18. The corrected test is conservative, so the counts rise towards 1.
 
-Shapiro-Wilk p of the paired differences is below 0.05 in 53 of 126 comparisons; the t test assumes normally distributed differences.
+Shapiro-Wilk p of the paired differences is below 0.05 in 68 of 148 comparisons; the t test assumes normally distributed differences.
 

@@ -1,0 +1,11 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+crystal ligand copies evaluated: 131 of 148 (89 distinct ligands)
+300 conformers: a conformer within 1.0 A of the crystal pose for 15% of the copies; median nearest RMSD 1.70 A, median energy of the nearest conformer 6.8 kcal/mol
+  the bound state lies within 5 kcal/mol of the lowest conformer for 17 of 19 covered copies (89%), 13% of all evaluated
+  the bound state lies within 10 kcal/mol of the lowest conformer for 18 of 19 covered copies (95%), 14% of all evaluated
+  the bound state lies within 20 kcal/mol of the lowest conformer for 19 of 19 covered copies (100%), 15% of all evaluated
+  median energy that the bound state needs 0.0 kcal/mol, 90th percentile 2.5 kcal/mol
+the ensemble of the block (12 conformers within 5 kcal/mol): a member within 1.0 A of the crystal pose for 12% of the 131 copies; median nearest RMSD 2.45 A
+CONFORMER CHECK block_ensemble_covers_the_bound_state (at least 80% of the copies within 1.0 A): NO
+consequence: the verdicts of the pocket block and of the site model are reported as tested with an ensemble that misses the bound conformation of 88% of the crystal ligands
+the 104 predicted benchmark poses against the low-energy conformers of S4 (within 8 kcal/mol): median RMSD to the nearest conformer 1.20 A; farther than 1.0 A for 62%, farther than 2.0 A for 18% (these poses resemble no low-energy conformer); median relative energy of the nearest conformer 2.2 kcal/mol

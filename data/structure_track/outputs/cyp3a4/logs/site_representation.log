@@ -1,0 +1,6 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+variability of the site: 148 crystal copies, 62 core residues (present in at least 90% of the copies); pocket RMSD to the nearest copy with a different PDB code and ligand: median 0.22 A, 90th percentile 0.37 A, 95th percentile 0.40 A (the flag of an unseen pocket conformation)
+predicted pockets: 104 of 104 poses compared; RMSD to the nearest reference pocket (own compound left out) median 0.18 A, 0% beyond the flag; Spearman rho with the true RMSD of the pose -0.048 over all poses, mean per ligand -0.062
+support of the fields: share of heavy atoms outside the support, crystal copies (fields built without their compound) median 0.000, 95th percentile 0.395 (the cut)
+predicted poses beyond the cut: 0% of 104; Spearman rho of the outside share with the true RMSD +0.244 over all poses, mean per ligand -0.119
+SITE CHECK flags: pocket RMSD flag 0.40 A, support cut 0.395 (written to site_representation_flags.json; information, no gate)

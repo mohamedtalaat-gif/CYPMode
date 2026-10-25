@@ -1,0 +1,52 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+   compound  poses  mean_pool  mbr_pick  rho_pharmacophore_model  pharmacophore_model_pick  rho_pharmacophore_model_combined  pharmacophore_model_combined_pick  rho_field  rho_recall  rho_precision  rho_outside
+  bench-2QH     11      0.693     0.854                    0.218                     0.629                             0.046                              0.580      0.518      -0.500         -0.500          NaN
+bench-A1A4S     11      4.669     6.068                   -0.300                     5.931                            -0.698                              6.068     -0.018      -0.580         -0.768        0.164
+bench-A1ASV     11      2.474     2.347                   -0.873                     2.973                            -0.561                              2.347     -0.873         NaN            NaN          NaN
+bench-A1CIW     11      6.126     6.301                    0.118                     5.267                            -0.329                              6.293      0.136       0.076         -0.357        0.418
+  bench-MWS      5      1.872     1.323                   -0.400                     2.595                             0.783                              1.323     -0.400      -0.671         -0.671       -0.112
+  bench-MWV     11      4.920     4.811                    0.264                     4.839                             0.398                              4.890      0.145       0.337          0.243       -0.111
+  bench-PK9     17      3.589     4.736                   -0.758                     4.808                            -0.511                              4.808     -0.760      -0.779         -0.764          NaN
+  bench-TCI      5      5.734     4.947                   -0.564                     4.947                            -0.100                              4.947     -0.300      -0.369         -0.354       -0.354
+  bench-TPF     17      3.768     3.889                   -0.039                     3.759                             0.153                              3.759      0.113      -0.346         -0.198          NaN
+  bench-YNV      5      5.909     5.870                   -0.051                     6.223                            -0.500                              5.870     -0.700       0.205          0.359       -0.894
+   compound  poses  mean_pool  mbr_pick  rho_pharmacophore_model  pharmacophore_model_pick  rho_pharmacophore_model_combined  pharmacophore_model_combined_pick  rho_field  rho_recall  rho_precision  rho_outside
+  bench-2QH     11      0.693     0.854                    0.218                     0.629                             0.046                              0.580      0.518      -0.500         -0.500          NaN
+bench-A1A4S     11      4.669     6.068                    0.078                     2.416                            -0.404                              6.068      0.100      -0.115          0.014        0.337
+bench-A1ASV     11      2.474     2.347                   -0.873                     2.973                            -0.561                              2.347     -0.873         NaN            NaN          NaN
+bench-A1CIW     11      6.126     6.301                    0.118                     5.267                            -0.329                              6.293      0.136       0.076         -0.357        0.418
+  bench-MWS      5      1.872     1.323                   -0.400                     2.595                             0.783                              1.323     -0.400      -0.671         -0.671       -0.112
+  bench-MWV     11      4.920     4.811                    0.264                     4.839                             0.398                              4.890      0.145       0.337          0.243       -0.111
+  bench-PK9     17      3.589     4.736                   -0.722                     4.808                            -0.528                              4.808     -0.721      -0.779         -0.764          NaN
+  bench-TCI      5      5.734     4.947                   -0.564                     4.947                            -0.100                              4.947     -0.300      -0.369         -0.354       -0.354
+  bench-TPF     17      3.768     3.889                   -0.039                     3.759                             0.153                              3.759      0.113      -0.346         -0.198          NaN
+  bench-YNV      5      5.909     5.870                   -0.051                     6.223                            -0.500                              5.870     -0.700       0.205          0.359       -0.894
+104 poses of 10 ligands
+regime novel (the gate): 10 ligands
+pharmacophore_model: mean Spearman rho -0.239, positive for 30% of 10 ligands, mean RMSD of the top-scored pose 4.197 (MBR 4.115, random pose 3.975)
+STRUCTURE GATE pose_pharmacophore_model (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
+STRUCTURE GATE pose_pharmacophore_model_use: not evaluated, the gate of the score is not met
+pharmacophore_model_combined: mean Spearman rho -0.132, positive for 40% of 10 ligands, mean RMSD of the top-scored pose 4.088 (MBR 4.115, random pose 3.975)
+STRUCTURE GATE pose_pharmacophore_model_combined (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
+STRUCTURE GATE pose_pharmacophore_model_combined_use: not evaluated, the gate of the score is not met
+field: mean Spearman rho -0.214, positive for 40% of 10 ligands
+recall: mean Spearman rho -0.292, positive for 33% of 9 ligands
+precision: mean Spearman rho -0.334, positive for 22% of 9 ligands
+outside: mean Spearman rho -0.148, positive for 33% of 6 ligands
+information (not a gate), regime novel: the crystal pose against the predicted poses, 10 ligands (mean of the crystal pose / of the pool / of the pose closest to the crystal)
+  field: 0.793 / 0.895 / 0.893; the crystal pose scores above the mean of its pool for 2 of 10 ligands
+  recall: 0.222 / 0.256 / 0.228; the crystal pose scores above the mean of its pool for 5 of 10 ligands
+  precision: 0.172 / 0.205 / 0.173; the crystal pose scores above the mean of its pool for 2 of 10 ligands
+  outside: 0.020 / 0.016 / 0.019; the crystal pose scores above the mean of its pool for 3 of 10 ligands
+regime compound (information): 10 ligands
+pharmacophore_model: mean Spearman rho -0.197, positive for 40% of 10 ligands, mean RMSD of the top-scored pose 3.846 (MBR 4.115, random pose 3.975)
+pharmacophore_model_combined: mean Spearman rho -0.104, positive for 40% of 10 ligands, mean RMSD of the top-scored pose 4.088 (MBR 4.115, random pose 3.975)
+field: mean Spearman rho -0.198, positive for 50% of 10 ligands
+recall: mean Spearman rho -0.240, positive for 33% of 9 ligands
+precision: mean Spearman rho -0.247, positive for 33% of 9 ligands
+outside: mean Spearman rho -0.119, positive for 33% of 6 ligands
+information (not a gate), regime compound: the crystal pose against the predicted poses, 10 ligands (mean of the crystal pose / of the pool / of the pose closest to the crystal)
+  field: 0.809 / 0.910 / 0.911; the crystal pose scores above the mean of its pool for 3 of 10 ligands
+  recall: 0.234 / 0.258 / 0.242; the crystal pose scores above the mean of its pool for 5 of 10 ligands
+  precision: 0.198 / 0.226 / 0.208; the crystal pose scores above the mean of its pool for 3 of 10 ligands
+  outside: 0.020 / 0.015 / 0.019; the crystal pose scores above the mean of its pool for 3 of 10 ligands

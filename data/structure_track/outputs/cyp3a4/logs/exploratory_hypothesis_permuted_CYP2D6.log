@@ -1,0 +1,27 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+2026-10-24 14:56:35,065 lgbm_A+hypperm_deep: 10/79 tasks
+2026-10-24 14:56:44,642 lgbm_A+hypperm_deep: 20/79 tasks
+2026-10-24 14:56:54,333 lgbm_A+hypperm_deep: 30/79 tasks
+2026-10-24 14:57:04,057 lgbm_A+hypperm_deep: 40/79 tasks
+2026-10-24 14:57:13,808 lgbm_A+hypperm_deep: 50/79 tasks
+2026-10-24 14:57:23,555 lgbm_A+hypperm_deep: 60/79 tasks
+2026-10-24 14:57:33,286 lgbm_A+hypperm_deep: 70/79 tasks
+2026-10-24 14:57:42,160 lgbm_A+hypperm_deep: 79/79 tasks
+2026-10-24 14:58:00,423 lgbm_A+fps+hypperm_deep: 10/79 tasks
+2026-10-24 14:58:18,718 lgbm_A+fps+hypperm_deep: 20/79 tasks
+2026-10-24 14:58:36,924 lgbm_A+fps+hypperm_deep: 30/79 tasks
+2026-10-24 14:58:55,024 lgbm_A+fps+hypperm_deep: 40/79 tasks
+2026-10-24 14:59:13,332 lgbm_A+fps+hypperm_deep: 50/79 tasks
+2026-10-24 14:59:32,170 lgbm_A+fps+hypperm_deep: 60/79 tasks
+2026-10-24 14:59:50,261 lgbm_A+fps+hypperm_deep: 70/79 tasks
+2026-10-24 15:00:06,298 lgbm_A+fps+hypperm_deep: 79/79 tasks
+
+CYP2D6: 15 outer folds; base stack 23 candidates; added candidates cached: ['lgbm_A+hypperm_deep', 'lgbm_A+fps+hypperm_deep']
+  z0=1.0  alone  lgbm_A+hypperm_deep      vs lgbm_A_deep     : AUC 0.6964 -> 0.6968 (+0.0004, p=0.985, better 8/15) | AP +0.0108 (p=0.748)
+  z0=1.0  alone  lgbm_A+fps+hypperm_deep  vs lgbm_A+fps_deep : AUC 0.7185 -> 0.7180 (-0.0005, p=0.959, better 9/15) | AP -0.0101 (p=0.561)
+  z0=1.0  stacked base+added vs base: AUC -0.0036 (p=0.686, better 6/15) AP -0.0049 (p=0.557, better 5/15)
+  z0=1.96 alone  lgbm_A+hypperm_deep      vs lgbm_A_deep     : AUC 0.7267 -> 0.7290 (+0.0023, p=0.921, better 10/15) | AP +0.0110 (p=0.841)
+  z0=1.96 alone  lgbm_A+fps+hypperm_deep  vs lgbm_A+fps_deep : AUC 0.7396 -> 0.7415 (+0.0019, p=0.900, better 7/15) | AP -0.0138 (p=0.554)
+  z0=1.96 stacked base+added vs base: AUC -0.0011 (p=0.627, better 5/15) AP +0.0008 (p=0.908, better 7/15)
+CYP2D6 GATE (alone, corrected p < 0.05 at both z0): NOT MET
+CYP2D6 GATE (stacked, corrected p < 0.05 at both z0): NOT MET
