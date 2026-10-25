@@ -10,12 +10,13 @@ from cypmode.challenge import selection_decision as sd
 
 A_MCC = [0.15, 0.10, 0.07, 0.05, 0.05, 0.04, 0.03]
 B_MCC = [0.03, 0.09, 0.12, 0.13, 0.13, 0.13, 0.13]
+C_MCC = [0.03, 0.08, 0.10, 0.11, 0.11, 0.11, 0.10]
 GRID = (0.0, 0.1, 0.25, 0.4, 0.5, 0.68, 1.0)
 
 
 def deployment_table(units: int = 6) -> pd.DataFrame:
     rows = [{"model": model, "repeat": u // 3, "outer": u % 3, "z0": z0, "weight": w, "mcc": values[i], "auc": 0.6}
-            for model, values in (("hits_only", A_MCC), ("selection_aware", B_MCC)) for z0 in (1.0, 1.96) for i, w in enumerate(GRID) for u in range(units)]
+            for model, values in (("hits_only", A_MCC), ("selection_aware", B_MCC), ("blend", C_MCC)) for z0 in (1.0, 1.96) for i, w in enumerate(GRID) for u in range(units)]
     return pd.DataFrame(rows)
 
 
@@ -37,6 +38,14 @@ def test_the_top_share_is_called_along_the_last_axis_and_by_weight():
 
 def top_calls(scores, rate):
     return sd.top_share_calls(scores, rate)
+
+
+def test_a_percentile_is_comparable_across_scales_and_respects_the_weights():
+    scores = np.array([0.1, 0.5, 0.9, 0.3])
+    assert np.allclose(sd.weighted_percentile(scores, np.ones(4)), [0.125, 0.625, 0.875, 0.375])
+    assert np.allclose(sd.weighted_percentile(scores * 100 - 7, np.ones(4)), sd.weighted_percentile(scores, np.ones(4)))  # a change of scale leaves it unchanged
+    heavy = sd.weighted_percentile(scores, np.array([1.0, 1.0, 1.0, 5.0]))
+    assert heavy[3] > sd.weighted_percentile(scores, np.ones(4))[3]  # a heavy compound moves the mass that lies below the compounds above it
 
 
 def test_two_files_with_the_same_scores_never_differ_and_opposite_scores_differ_in_every_call():

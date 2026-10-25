@@ -22,7 +22,7 @@ region reaches from 0 to 1.5). This module therefore does three things.
   2. The summary of the evidence on w, read from the stored outputs of jobs 013 and the board fit (nothing is recomputed).
   3. The operating characteristics of reading the live board as a detector of the regime. The live board scores half of the test set. For each w and z0, a half of
      ``HALF`` compounds is drawn from the out-of-fold pool with probability proportional to the evaluation weight (the test-like population of that regime), each file calls
-     the top ``RATE`` share of that half by its own score, the calls are scored with the MCC, and the difference MCC(B) - MCC(A) is recorded, ``RESAMPLES`` times per repeat. The distribution of that
+     the top ``RATE`` share of that half by the weighted percentile of its own score in the outer unit that scored it (the scores of different folds are not on one scale), the calls are scored with the MCC, and the difference MCC(B) - MCC(A) is recorded, ``RESAMPLES`` times per repeat. The distribution of that
      difference under each w is what an upload of A and then B would show.
 
 Procedure, fixed in advance (written 2026-10-25 after the tables of jobs 012, 013 and 014 had been read; the bootstrap intervals, the distribution of the live
@@ -95,6 +95,15 @@ def weighted_top_calls(scores: np.ndarray, weights: np.ndarray, rate: float) -> 
     return calls
 
 
+def weighted_percentile(scores: np.ndarray, weights: np.ndarray) -> np.ndarray:
+    """The weighted share of the population that scores below each compound (half of its own weight included); scores of different folds are not on one scale, percentiles are."""
+    order = np.argsort(scores, kind="stable")
+    cumulative = np.cumsum(weights[order])
+    percentile = np.empty(len(scores))
+    percentile[order] = (cumulative - 0.5 * weights[order]) / cumulative[-1]
+    return percentile
+
+
 def live_differences(y: np.ndarray, scores_a: np.ndarray, scores_b: np.ndarray, weights: np.ndarray, n: int, resamples: int, rate: float, rng: np.random.Generator) -> tuple[np.ndarray, float]:
     """MCC(B) - MCC(A) on ``resamples`` halves of ``n`` compounds drawn with probability proportional to ``weights``, each file calling the top ``rate`` share of the half by its own score,
     and the mean number of calls that differ in a half."""
@@ -147,7 +156,10 @@ def board_band(frame: pd.DataFrame) -> dict:
 def fallback_choice(scores: pd.DataFrame) -> tuple[str, dict]:
     """The file with the smaller largest regret over the whole grid (mean MCC over z0 and units), and the regrets."""
     table = scores.groupby(["model", "weight"])["mcc"].mean().unstack(0)
-    regret = {m: float((table[["hits_only", "selection_aware"]].max(axis=1) - table[m]).max()) for m in ("hits_only", "selection_aware")}
+    best = table[["hits_only", "selection_aware"]].max(axis=1)  # the files that exist
+    regret = {m: float((best - table[m]).max()) for m in ("hits_only", "selection_aware")}
+    best_three = table[["hits_only", "selection_aware", "blend"]].max(axis=1)  # for information: the blend has no file
+    regret.update({f"{m}_of_three": float((best_three - table[m]).max()) for m in ("hits_only", "selection_aware", "blend")})
     return ("A" if regret["hits_only"] <= regret["selection_aware"] else "B"), regret
 
 
@@ -167,10 +179,12 @@ def collect_outer(cache, ctx, matcher, prevalence, names, fit_weight, selectors)
             chosen = selector.fit(list(names), oof, y_in, w_in, "auc")
             scores = chosen.predict(outer)
             unit["models"][selector.name] = {"scores": scores, "called": hb.call_top_fraction(scores, chosen.rate()).astype(bool)}
+        unit["percentiles"] = {}
         for z0 in hb.Z_CUTS:
             for factor in hb.GRID:
                 wf = hb.scaled_nonhits(hb.confident_weights(matcher, ctx.confidence, z0), ctx.hit, factor)
                 unit["weights"][(z0, factor)] = np.asarray(hb._weights(y_out, refit.evaluate, refit.train, wf, prevalence), dtype=float)
+                unit["percentiles"][(z0, factor)] = {m: weighted_percentile(made["scores"], unit["weights"][(z0, factor)]) for m, made in unit["models"].items()}
         units.append(unit)
     return units
 
@@ -193,7 +207,7 @@ def pooled_by_repeat(units: list[dict]) -> dict[int, dict]:
         part = [u for u in units if u["repeat"] == repeat]
         pooled[repeat] = {
             "y": np.concatenate([u["y"] for u in part]),
-            "scores": {m: np.concatenate([u["models"][m]["scores"] for u in part]) for m in MODELS},
+            "percentiles": {key: {m: np.concatenate([u["percentiles"][key][m] for u in part]) for m in MODELS} for key in part[0]["weights"]},
             "weights": {key: np.concatenate([u["weights"][key] for u in part]) for key in part[0]["weights"]},
         }
     return pooled
@@ -206,7 +220,8 @@ def live_distributions(pooled: dict[int, dict], rate: float, seed: int = 0) -> t
     for (z0, factor) in pooled[next(iter(pooled))]["weights"]:
         parts = []
         for p in pooled.values():
-            samples, n_diff = live_differences(p["y"], p["scores"]["hits_only"], p["scores"]["selection_aware"], p["weights"][(z0, factor)], HALF, RESAMPLES, rate, rng)
+            percentiles = p["percentiles"][(z0, factor)]
+            samples, n_diff = live_differences(p["y"], percentiles["hits_only"], percentiles["selection_aware"], p["weights"][(z0, factor)], HALF, RESAMPLES, rate, rng)
             parts.append(samples)
             differing.append(n_diff)
         out[(z0, factor)] = np.concatenate(parts)
@@ -261,7 +276,10 @@ def print_tables(table: pd.DataFrame, evidence: dict, distributions: dict, n_dif
             print(f"    z0={z0:<4} w={w:<4} MCC(B) - MCC(A): mean {d.mean():+.3f}  sd {d.std():.3f}  P(>= {decision['threshold']:+.3f}) {float((d >= decision['threshold']).mean()):.2f}")
     print(f"\nCYP2D6 loss if the regime is LOW (w = 0, B loses): {decision['delta_low']:.3f}; if it is HIGH (w >= 0.25, B wins): {decision['delta_high']:.3f}")
     print(f"CYP2D6 threshold on the live difference MCC(B) - MCC(A): {decision['threshold']:+.3f}; error if w = 0: {decision['error_low']:.2f}; mean error if w >= 0.25: {decision['error_high']:.2f}; risk {decision['risk']:.4f}")
-    print(f"CYP2D6 largest regret over the whole grid: hits-only {decision['regret']['hits_only']:.3f}, selection-aware {decision['regret']['selection_aware']:.3f}; the fallback is file {decision['fallback']}")
+    print(f"CYP2D6 largest regret over the whole grid (mean MCC over z0 and units, against the better of the two files): hits-only {decision['regret']['hits_only']:.3f}, selection-aware {decision['regret']['selection_aware']:.3f}; the fallback is file {decision['fallback']}")
+    three = {m: decision["regret"][f"{m}_of_three"] for m in ("hits_only", "selection_aware", "blend")}
+    print(f"CYP2D6 for information, against the best of the three (the rank blend has no file and its gate of job 014 is NOT MET): hits-only {three['hits_only']:.3f}, selection-aware {three['selection_aware']:.3f}, blend {three['blend']:.3f}")
+    print(f"CYP2D6 FINAL ENTRY BY THE REGISTERED RULE: file {decision['fallback'] if not decision['usable'] else 'decided by the live difference against the threshold'}")
     print(f"CYP2D6 A/B DETECTOR: {'USABLE' if decision['usable'] else 'NOT USABLE'} (both errors at most {MAX_ERROR})")
 
 
