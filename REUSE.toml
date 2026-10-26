@@ -5,7 +5,7 @@ SPDX-PackageDownloadLocation = "https://github.com/mohamedtalaat-gif/CYPMode"
 
 # The code: AGPL-3.0-or-later with the additional terms of NOTICE. The source files that carry a header say so themselves.
 [[annotations]]
-path = ["cypmode/**", "explorer/*.py", "scripts/**", "queue/**", "tests/**", "notebooks/*.py", "notebooks/parts/**", "app.py", "docs/**/*.py", "docs/**/*.js", "docs/**/*.html", "docs/**/*.swift", "environment/**", "pyproject.toml", ".github/**", ".gitignore", "run_cypmode.bat", "run_cypmode.command", "requirements.txt"]
+path = ["cypmode/**", "explorer/*.py", "scripts/**", "queue/**", "tests/**", "notebooks/*.py", "notebooks/parts/**", "app.py", "docs/**/*.py", "docs/**/*.js", "docs/**/*.html", "docs/**/*.swift", "environment/**", "pyproject.toml", ".github/**", ".gitignore", "run_cypmode.bat", "run_cypmode.command", "explorer/*.command", "explorer/*.bat", "requirements.txt"]
 precedence = "closest"
 SPDX-FileCopyrightText = "2026 Muhammad Talaat"
 SPDX-License-Identifier = "AGPL-3.0-or-later"

@@ -404,7 +404,7 @@ pip install --no-deps "PyTDC==1.1.14"
 
 ## Run the app
 
-Double-click `run_cypmode.command` (macOS) or `run_cypmode.bat` (Windows) and choose the screening tool or the interactive explorer. The same two can be started from a terminal:
+Double-click `run_cypmode.command` (macOS) or `run_cypmode.bat` (Windows) and choose the screening tool or the interactive explorer. The explorer also has its own launcher in its folder, `explorer/run_explorer.command` (macOS) and `explorer/run_explorer.bat` (Windows). The same two can be started from a terminal:
 
 ```bash
 streamlit run app.py                     # the screening tool and the results tab of the TDI track
