@@ -634,14 +634,16 @@ def attribution(ctx: Context) -> Section:
     terms = local_terms()
     forbidden = {
         "leaderboard alias used as a credit": re.compile(r"\b450nm\b"),
-        **({"words of the private list": re.compile("|".join(terms), re.IGNORECASE)} if terms else {}),
+        **({"words of the private list": re.compile("|".join(terms), re.IGNORECASE | re.MULTILINE)} if terms else {}),
     }
     tracked = run(["git", "ls-files"]).splitlines() + run(["git", "ls-files", "--others", "--exclude-standard"]).splitlines()
     text_ext = (".py", ".md", ".sh", ".txt", ".yaml", ".yml", ".toml", ".ipynb", ".cfg", ".html")
     counts = {k: 0 for k in forbidden}
-    for rel in sorted(set(tracked)):
+    whole = ("notebooks/public/", "notebooks/cypmode_notebook.")  # the editions of the notebook are scanned whole, the exports of the full edition included
+    extra = [rel for rel in ("notebooks/cypmode_notebook.ipynb", "notebooks/cypmode_notebook.html") if (ROOT / rel).exists()]
+    for rel in sorted(set(tracked + extra)):
         p = ROOT / rel
-        if not (rel.endswith(text_ext) or rel == ".gitignore") or rel.startswith(("cypmode/audit/", "third_party/", ".venv")) or not p.exists() or p.stat().st_size > 2_000_000:
+        if not (rel.endswith(text_ext) or rel == ".gitignore") or rel.startswith(("cypmode/audit/", "third_party/", ".venv")) or not p.exists() or p.stat().st_size > (100_000_000 if rel.startswith(whole) else 2_000_000):
             continue
         text = p.read_text(errors="ignore")
         for k, rx in forbidden.items():
