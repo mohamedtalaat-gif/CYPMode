@@ -281,6 +281,18 @@ print(f"{band_summary['plausible']} of the {band_summary['cells']} (w, c) pairs 
       f"cover w from {band_summary['w low']} to {band_summary['w high']}: {int(by_w.sum())} of the {len(by_w)} values of w have at least one plausible c")
 '''
 
+LABEL_SHIFT = '''
+# A second estimate of the positive rate of the scored set that reads no board (cypmode/challenge/label_shift.py, job 285): the log of that job holds, for each enzyme, the estimate for the scored compounds with its
+# 95 % interval, the rate that the final build uses (read there for the comparison only), the error of the recovery test of known rates as a share of the rate, and the verdict of the rule written before the first run.
+from cypmode.audit.method_report import label_shift_summary
+
+shift = label_shift_summary()
+shift_table = pd.DataFrame([{"enzyme": iso, "estimate": float(v["estimate"]), "interval low": float(v["lo"]), "interval high": float(v["hi"]), "rate of the final build": float(v["board"]),
+                             "recovery error, share of the rate": float(v["ratio"]), "verdict of the rule": v["verdict"]} for iso, v in shift.items()])
+inside = {iso: "inside" if float(v["lo"]) <= float(v["board"]) <= float(v["hi"]) else "outside" for iso, v in shift.items()}
+show_table(shift_table, floatfmt=".3f")
+'''
+
 CELLS = [
     md("""
 ## 2.6 Which compounds were measured on which enzyme: blocks and selection
@@ -430,5 +442,28 @@ sampling uncertainty, are kept.
     md("""
 The data cannot say. Whatever weight $w$ is put on the never-measured compounds, from none to {{=band_summary['grid w high']}} times the training share, some choice of the second parameter fits the three published numbers, so the region of plausible mixtures spans the whole grid and does not identify the share of non-hits in the scored set (the audit of the project lists this as a failed check on purpose, `audit/AUDIT_REPORT.md`). That is a
 limit of the information in the tables and not of the method, and it is why the project judges the selection-aware model over the *whole* band of shares (section 9.1) instead of choosing one, and decides between the two models for CYP2D6 by a rule fixed in advance (the final decision is in section 13.4).
+"""),
+    md("""
+## 2.11 A check of the positive rate that reads no board
+
+> **Field:** Statistics · Machine learning
+
+Section 2.10 recovers the positive rate of the scored set from numbers that the boards publish. That rate sets the weights of the evaluation and the number of positive calls, so a reader may ask whether the training file and the structures of the blinded file could give the same rate without any board. They can, but only roughly, and this section shows how roughly.
+
+**The idea.** Take a classifier that gives every compound a score, higher for a positive compound than for a negative one on average. Let $m_1$ be the average score of positive compounds and $m_0$ the average score of negative compounds, both measured on compounds whose labels are known and that the classifier was not trained on. If the blinded file holds a share $\\pi$ of positives, its average score must be $\\pi m_1 + (1 - \\pi) m_0$, because the average of a mixture is the mixture of the averages. The average score over the blinded file needs no label, so the equation can be solved for $\\pi$:
+
+$$\\pi \\;=\\; \\frac{\\bar s_{\\text{blinded}} - m_0}{m_1 - m_0}.$$
+
+This is label-shift estimation with a black-box classifier (Lipton, Wang and Smola, 2018), here in its soft form, the probabilistic adjusted classify and count (Bella and colleagues, 2010). It assumes that within each class the compounds look the same in the training file and in the blinded file, and that only the share of the classes differs. That assumption is partly false here, because the blinded compounds are analogues of training compounds, so the held-out compounds are weighted to the similarity profile of the blinded file (a function of structures only), and the folds keep chemical series whole, so that a held-out compound has no close relative in the part that the model was trained on, as is true of many blinded compounds.
+
+Two steps are specific to this challenge. The held-out compounds and the blinded compounds must be scored on one scale, so that $m_0$ and $m_1$ mean the same on both sides; each of the fifteen fold models therefore scores both. And only confidently labelled compounds are scored (section 2.5), so the rate among all compounds is moved to the scored compounds with the share of confident compounds among the positives and among the negatives, measured on the training file. For CYP2D6 the training population is the whole panel, with the compounds that were never promoted counted as negatives (section 2.6), because the scored set holds compounds of both kinds.
+
+**The rule, fixed before the first run.** First, a recovery test: the held-out compounds of a fold are split by series, one half fixes $m_0$ and $m_1$ and the other half is resampled to a known positive rate and scored without its labels; the estimate counts only if the recovered rates are off by at most a quarter of the rate on average. Second, the estimate is informative only if its 95% interval is at most half as wide as the rate of the final build. Third, the verdict is AGREES if that rate lies inside the interval, DISAGREES if it lies outside, and NOT INFORMATIVE if either earlier condition fails. No verdict changes a submitted file.
+"""),
+    code(LABEL_SHIFT),
+    md("""
+For CYP3A4 the estimate for the scored compounds is {{=shift['CYP3A4']['estimate']}} with the interval {{=shift['CYP3A4']['lo']}} to {{=shift['CYP3A4']['hi']}}, and the final build uses {{=shift['CYP3A4']['board']}}, which lies {{=inside['CYP3A4']}} the interval; the rule gives **{{=shift['CYP3A4']['verdict']}}** ({{=shift['CYP3A4']['reason']}}). For CYP2D6 the estimate is {{=shift['CYP2D6']['estimate']}} with the interval {{=shift['CYP2D6']['lo']}} to {{=shift['CYP2D6']['hi']}} against {{=shift['CYP2D6']['board']}}, which lies {{=inside['CYP2D6']}} the interval; the rule gives **{{=shift['CYP2D6']['verdict']}}** ({{=shift['CYP2D6']['reason']}}).
+
+The intervals are wide for a reason that the formula shows: the denominator $m_1 - m_0$ is small, because even a good classifier gives scores that overlap between the classes, and every error in the two averages is divided by it. The training file and the structures alone therefore fix the positive rate only to within about the width of these intervals, which is why the boards remain the source of the rate that the final build uses, and why section 2.10 was written. The check is kept because it could have disagreed: a rate outside an informative interval would have been reported as a conflict.
 """),
 ]

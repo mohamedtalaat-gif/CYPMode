@@ -333,6 +333,22 @@ def tier_counts() -> dict[str, tuple[str, str, str]]:
     return found
 
 
+
+def label_shift_summary() -> dict[str, dict[str, str]]:
+    """Per isoform from the log of the label-shift check: the estimate of the positive rate of the scored set with its interval at the primary cut, the rate of the final build, the recovery error and the verdict."""
+    path = LOGS / "label_shift.log"
+    text = path.read_text(errors="ignore") if path.exists() else ""
+    out = {}
+    for iso, body in re.findall(r"^LABEL SHIFT (CYP\w+): (.*?)(?=^LABEL-SHIFT CHECK)", text, re.MULTILINE | re.DOTALL):
+        estimate = re.search(r"z0 = 1\.0 lgbm_A\+fps_deep: .*?scored compounds by transfer ([\d.]+) \(([\d.]+) to ([\d.]+)\)", body)
+        ratio = re.search(r"mean error over the rates, as a share of the rate: ([\d.]+)", body)
+        board = re.search(r"positive rate used by the final build \(read for the comparison only\): ([\d.]+)", body)
+        verdict = re.search(rf"^LABEL-SHIFT CHECK {iso}: ([A-Z ]+) \((.*)\)$", text, re.MULTILINE)
+        if estimate and ratio and board and verdict:
+            out[iso] = {"estimate": estimate.group(1), "lo": estimate.group(2), "hi": estimate.group(3), "board": board.group(1), "ratio": ratio.group(1), "verdict": verdict.group(1), "reason": verdict.group(2)}
+    return out
+
+
 def committee_row(iso: str) -> tuple[str, str, str] | None:
     """The stacked gain of the committee candidates, its p-value and the calibration error of the committee probability, both at z0 = 1.0, from the log of the committee test."""
     path = LOGS / f"committee_label_model_{iso}.log"
@@ -349,7 +365,7 @@ def innovation_section() -> str:
 
     manifest = json.loads((FINAL_TDI / "manifest.json").read_text()) if (FINAL_TDI / "manifest.json").exists() else None
     structure = json.loads((FINAL_STRUCTURE / "manifest.json").read_text()) if (FINAL_STRUCTURE / "manifest.json").exists() else None
-    labels, tiers = label_rows(), tier_counts()
+    labels, tiers, shift = label_rows(), tier_counts(), label_shift_summary()
     s0, s3, gain, p, entry = selection_numbers()
     verdicts, families, met = totals()
     permuted = {iso: first_number((LOGS / f"permutation_control_{iso}.log").read_text(errors="ignore") if (LOGS / f"permutation_control_{iso}.log").exists() else "", r"z0=1\.0\s+real labels.*?permuted: AUC ([\d.]+)") for iso in ("CYP3A4", "CYP2D6")}
@@ -374,6 +390,17 @@ def innovation_section() -> str:
         f"- **A contaminated slice of the labels was found and removed from the CYP3A4 pool.** {labels['CYP3A4'][2] if 'CYP3A4' in labels else '?'} CYP3A4 rows have no direct-inhibition measurement and follow a different label convention than the blinded set; the pool keeps the {labels['CYP3A4'][0] if 'CYP3A4' in labels else '?'} rows with both arms, and every CYP3A4 number is computed on that population (section 2).",
         f"- **The evaluation reproduces the scored population.** The outer folds are weighted by similarity to the blinded structures and by the estimated prevalence, and only confidently labelled compounds are evaluated; {build.REPEATS} repeats of {build.DESIGN['outer']} outer folds ({build.REPEATS * build.DESIGN['outer']} outer evaluations) with every selection step inside the inner folds (section 5).",
         f"- **One aggregate number is recovered from the public leaderboards.** The accuracy, precision and recall that the boards publish for every entry fix the positive rate of the scored set: {manifest['isoforms']['CYP3A4']['target_prevalence']:.3f} for CYP3A4 and {manifest['isoforms']['CYP2D6']['target_prevalence']:.3f} for CYP2D6. It sets the call rate (a multiple of the prevalence: {manifest['isoforms']['CYP3A4']['call_rate_multiplier']} and {manifest['isoforms']['CYP2D6']['call_rate_multiplier']}); no label of any compound and no probing submission is used (limitation L13)." if manifest else f"- **One aggregate number is recovered from the public leaderboards.** {pending('job 090')}",
+        (
+            "- **A check of that rate that reads no board.** Black-box label-shift estimation (a classifier that scores held-out compounds and the blinded structures on one scale, folds that keep chemical series whole, "
+            + "the held-out compounds weighted by structure similarity only) estimates the positive rate of the scored set from the training data. At z0 = 1.0 it gives "
+            + "; ".join(f"{v['estimate']} ({v['lo']} to {v['hi']}) for {iso}, against {v['board']} in the final build" for iso, v in shift.items())
+            + ". The rule fixed before the first run (`cypmode/challenge/label_shift.py`) gives "
+            + "; ".join(f"{v['verdict']} for {iso} ({v['reason']})" for iso, v in shift.items())
+            + ". The training data alone do not fix the rate to better than the width of these intervals, so the boards remain the source of the rate; "
+            + " ".join(f"the {iso} interval {'contains' if float(v['lo']) <= float(v['board']) <= float(v['hi']) else 'does not contain'} the rate of the final build." for iso, v in shift.items())
+            if len(shift) == 2
+            else f"- **A check of that rate that reads no board.** {pending('job 285')}"
+        ),
         f"- **The official structure set was checked for stereochemistry.** {chiral or '?'} of the 20 ligands carry specified stereochemistry; only {pooled or '?'} of the {pool_total or '?'} pool poses of those ligands reproduce it, so the pick is restricted to poses that do, and all 20 submitted poses reproduce the official stereochemistry (`stereo_check.log`).",
         "",
         "### Uncertainty",
@@ -401,7 +428,7 @@ def innovation_section() -> str:
         "",
         "- The cross-validated AUC and MCC are estimates on the training data. The portal scores hidden labels, its test set sits closer to the training data than a random fold does, and the live board scores a part of it.",
         "- The structure recipe does not claim a better pose choice: every rule for choosing among predicted poses is NOT MET. What it adds is the restraint, the validity margin, the stereochemistry check and the relaxation.",
-        "- The positive rates come from the public boards, not from an independent estimate; limitation L13 states what depends on them.",
+        "- The positive rates come from the public boards. The attempt to estimate them without a board is reported above with the verdict of its rule; limitation L13 states what depends on them.",
         "",
     ]
     return "\n".join(lines)
@@ -428,6 +455,12 @@ def innovation_table() -> str:
         rows.append(("Reliability tiers by similarity to the training data, intervals over chemical series", f"blinded compounds supported: {tiers['CYP3A4'][0]} of 750 (CYP3A4), {tiers['CYP2D6'][0]} of 750 (CYP2D6)", "`applicability_domain.log`"))
     if manifest:
         rows.append(("Positive rates of the scored set recovered from the public boards", f"{manifest['isoforms']['CYP3A4']['target_prevalence']:.3f} (CYP3A4), {manifest['isoforms']['CYP2D6']['target_prevalence']:.3f} (CYP2D6)", "limitation L13"))
+    shift = label_shift_summary()
+    rows.append((
+        "The same rates estimated without a board, by label shift, under a rule fixed before the first run",
+        "; ".join(f"{v['estimate']} ({v['lo']} to {v['hi']}) against {v['board']} for {iso}: {v['verdict']}" for iso, v in shift.items()) if len(shift) == 2 else pending("job 285"),
+        "`label_shift.log`",
+    ))
     rows.append(("Restraint of the iron-nitrogen bond for Type II ligands", f"gate {gates.get('restraint_bond', '?')} on the crystal benchmark, {gates.get('restraint_bond_ost', '?')} under the OpenStructure scorer", "`structure_gates.log`, `ost_pool_gates.log`"))
     if structure:
         rows.append(("Validity margin of the scorer's own call and a relaxation under a registered rule", f"relaxation adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']}; smallest margin {structure['relaxation']['smallest_margin_before']:.3f} to {structure['relaxation']['smallest_margin_after']:.3f}", "`relax_final.log`"))

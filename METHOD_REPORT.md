@@ -49,6 +49,7 @@ This section lists what the work adds, one claim at a time, with the evidence th
 - **A contaminated slice of the labels was found and removed from the CYP3A4 pool.** 1249 CYP3A4 rows have no direct-inhibition measurement and follow a different label convention than the blinded set; the pool keeps the 2334 rows with both arms, and every CYP3A4 number is computed on that population (section 2).
 - **The evaluation reproduces the scored population.** The outer folds are weighted by similarity to the blinded structures and by the estimated prevalence, and only confidently labelled compounds are evaluated; 3 repeats of 5 outer folds (15 outer evaluations) with every selection step inside the inner folds (section 5).
 - **One aggregate number is recovered from the public leaderboards.** The accuracy, precision and recall that the boards publish for every entry fix the positive rate of the scored set: 0.310 for CYP3A4 and 0.059 for CYP2D6. It sets the call rate (a multiple of the prevalence: 1.3 and 1.0); no label of any compound and no probing submission is used (limitation L13).
+- **A check of that rate that reads no board.** Black-box label-shift estimation (a classifier that scores held-out compounds and the blinded structures on one scale, folds that keep chemical series whole, the held-out compounds weighted by structure similarity only) estimates the positive rate of the scored set from the training data. At z0 = 1.0 it gives 0.135 (0.043 to 0.286) for CYP2D6, against 0.059 in the final build; 0.352 (0.274 to 0.451) for CYP3A4, against 0.310 in the final build. The rule fixed before the first run (`cypmode/challenge/label_shift.py`) gives NOT INFORMATIVE for CYP2D6 (recovery error 0.68 of the rate is above 0.25); NOT INFORMATIVE for CYP3A4 (interval width 0.176 is above 0.5 times 0.310). The training data alone do not fix the rate to better than the width of these intervals, so the boards remain the source of the rate; the CYP2D6 interval contains the rate of the final build. the CYP3A4 interval contains the rate of the final build.
 - **The official structure set was checked for stereochemistry.** 4 of the 20 ligands carry specified stereochemistry; only 23 of the 36 pool poses of those ligands reproduce it, so the pick is restricted to poses that do, and all 20 submitted poses reproduce the official stereochemistry (`stereo_check.log`).
 
 ### Uncertainty
@@ -72,7 +73,7 @@ This section lists what the work adds, one claim at a time, with the evidence th
 
 - The cross-validated AUC and MCC are estimates on the training data. The portal scores hidden labels, its test set sits closer to the training data than a random fold does, and the live board scores a part of it.
 - The structure recipe does not claim a better pose choice: every rule for choosing among predicted poses is NOT MET. What it adds is the restraint, the validity margin, the stereochemistry check and the relaxation.
-- The positive rates come from the public boards, not from an independent estimate; limitation L13 states what depends on them.
+- The positive rates come from the public boards. The attempt to estimate them without a board is reported above with the verdict of its rule; limitation L13 states what depends on them.
 
 ## 1. Scope and what is not claimed
 

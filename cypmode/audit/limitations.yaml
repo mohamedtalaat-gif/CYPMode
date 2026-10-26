@@ -105,7 +105,8 @@
     fix the rate (the implied rate agrees across all entries). It is aggregate information about the hidden labels that was available because the boards publish it: it weights the
     evaluation yardstick (the test prevalence) and sets the call rate (a multiple of the prevalence). No label of any compound and no per-compound information from a board was used,
     and no submission was made to probe a label. A model without this step would call the positive rate of the training data (about one fifth for both enzymes) instead of about
-    one third (CYP3A4) and one in seventeen (CYP2D6), which costs MCC mostly on CYP2D6.
+    one third (CYP3A4) and one in seventeen (CYP2D6), which costs MCC mostly on CYP2D6. A check that reads no board (a label-shift estimate from the training data and the blinded structures, `cypmode/challenge/label_shift.py`, with a rule fixed before its first run) is
+    reported with its verdict in the innovation summary of the method report; the rate used by the final build rests on the boards.
 - id: L14
   area: candidates
   uses: [block_ensemble_coverage_pct, block_ensemble_copies, wide_ensemble_coverage_pct]

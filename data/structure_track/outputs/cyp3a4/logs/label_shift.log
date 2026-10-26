@@ -1,0 +1,100 @@
+2026-10-26 08:51:44,987 CYP2D6 lgbm_A+fps_deep repeat 0 fold 0: 869 held-out, 750 blinded
+2026-10-26 08:51:46,182 CYP2D6 lgbm_A_deep repeat 0 fold 0: 869 held-out, 750 blinded
+2026-10-26 08:51:48,468 CYP2D6 lgbm_A+fps_deep repeat 0 fold 1: 870 held-out, 750 blinded
+2026-10-26 08:51:49,578 CYP2D6 lgbm_A_deep repeat 0 fold 1: 870 held-out, 750 blinded
+2026-10-26 08:51:51,888 CYP2D6 lgbm_A+fps_deep repeat 0 fold 2: 869 held-out, 750 blinded
+2026-10-26 08:51:53,092 CYP2D6 lgbm_A_deep repeat 0 fold 2: 869 held-out, 750 blinded
+2026-10-26 08:51:55,472 CYP2D6 lgbm_A+fps_deep repeat 0 fold 3: 870 held-out, 750 blinded
+2026-10-26 08:51:56,598 CYP2D6 lgbm_A_deep repeat 0 fold 3: 870 held-out, 750 blinded
+2026-10-26 08:51:58,877 CYP2D6 lgbm_A+fps_deep repeat 0 fold 4: 870 held-out, 750 blinded
+2026-10-26 08:52:00,050 CYP2D6 lgbm_A_deep repeat 0 fold 4: 870 held-out, 750 blinded
+2026-10-26 08:52:02,427 CYP2D6 lgbm_A+fps_deep repeat 1 fold 0: 870 held-out, 750 blinded
+2026-10-26 08:52:03,604 CYP2D6 lgbm_A_deep repeat 1 fold 0: 870 held-out, 750 blinded
+2026-10-26 08:52:05,943 CYP2D6 lgbm_A+fps_deep repeat 1 fold 1: 869 held-out, 750 blinded
+2026-10-26 08:52:07,138 CYP2D6 lgbm_A_deep repeat 1 fold 1: 869 held-out, 750 blinded
+2026-10-26 08:52:09,584 CYP2D6 lgbm_A+fps_deep repeat 1 fold 2: 869 held-out, 750 blinded
+2026-10-26 08:52:10,848 CYP2D6 lgbm_A_deep repeat 1 fold 2: 869 held-out, 750 blinded
+2026-10-26 08:52:13,209 CYP2D6 lgbm_A+fps_deep repeat 1 fold 3: 870 held-out, 750 blinded
+2026-10-26 08:52:14,321 CYP2D6 lgbm_A_deep repeat 1 fold 3: 870 held-out, 750 blinded
+2026-10-26 08:52:16,690 CYP2D6 lgbm_A+fps_deep repeat 1 fold 4: 870 held-out, 750 blinded
+2026-10-26 08:52:17,814 CYP2D6 lgbm_A_deep repeat 1 fold 4: 870 held-out, 750 blinded
+2026-10-26 08:52:20,128 CYP2D6 lgbm_A+fps_deep repeat 2 fold 0: 870 held-out, 750 blinded
+2026-10-26 08:52:21,297 CYP2D6 lgbm_A_deep repeat 2 fold 0: 870 held-out, 750 blinded
+2026-10-26 08:52:23,619 CYP2D6 lgbm_A+fps_deep repeat 2 fold 1: 870 held-out, 750 blinded
+2026-10-26 08:52:24,735 CYP2D6 lgbm_A_deep repeat 2 fold 1: 870 held-out, 750 blinded
+2026-10-26 08:52:27,131 CYP2D6 lgbm_A+fps_deep repeat 2 fold 2: 870 held-out, 750 blinded
+2026-10-26 08:52:28,303 CYP2D6 lgbm_A_deep repeat 2 fold 2: 870 held-out, 750 blinded
+2026-10-26 08:52:30,584 CYP2D6 lgbm_A+fps_deep repeat 2 fold 3: 869 held-out, 750 blinded
+2026-10-26 08:52:31,781 CYP2D6 lgbm_A_deep repeat 2 fold 3: 869 held-out, 750 blinded
+2026-10-26 08:52:34,152 CYP2D6 lgbm_A+fps_deep repeat 2 fold 4: 869 held-out, 750 blinded
+2026-10-26 08:52:35,345 CYP2D6 lgbm_A_deep repeat 2 fold 4: 869 held-out, 750 blinded
+LABEL SHIFT CYP2D6: 15 held-out folds of series kept whole, 13044 held-out compounds in all, 750 blinded compounds, classifier lgbm_A+fps_deep (sensitivity: lgbm_A_deep)
+  training compounds: weighted positive rate 0.064
+  z0 = 1.0: recovery of known rates among the scored compounds (bias, root-mean-square error; transfer route | direct route)
+    known rate 0.03: +0.018, 0.032 | +0.053, 0.071
+    known rate 0.06: +0.015, 0.035 | +0.055, 0.069
+    known rate 0.10: +0.024, 0.068 | +0.077, 0.112
+    known rate 0.20: +0.017, 0.081 | +0.089, 0.126
+    mean error over the rates, as a share of the rate: 0.68 (limit 0.25)
+  z0 = 1.0 lgbm_A+fps_deep: all compounds 0.196 (0.066 to 0.370); scored compounds by transfer 0.135 (0.043 to 0.286), directly 0.237 (0.084 to 0.412); spread over folds 0.070
+  z0 = 1.0 lgbm_A_deep: all compounds 0.135 (0.048 to 0.341); scored compounds by transfer 0.087 (0.030 to 0.250), directly 0.199 (0.060 to 0.352); spread over folds 0.033
+  z0 = 1.96: recovery of known rates among the scored compounds (bias, root-mean-square error; transfer route | direct route)
+    known rate 0.03: +0.013, 0.023 | +0.049, 0.062
+    known rate 0.06: +0.011, 0.026 | +0.059, 0.071
+    known rate 0.10: +0.017, 0.052 | +0.069, 0.088
+    known rate 0.20: +0.026, 0.076 | +0.084, 0.108
+    mean error over the rates, as a share of the rate: 0.53 (limit 0.25)
+  z0 = 1.96 lgbm_A+fps_deep: all compounds 0.196 (0.066 to 0.370); scored compounds by transfer 0.094 (0.027 to 0.214), directly 0.206 (0.083 to 0.412); spread over folds 0.054
+  z0 = 1.96 lgbm_A_deep: all compounds 0.135 (0.048 to 0.341); scored compounds by transfer 0.058 (0.020 to 0.185), directly 0.182 (0.068 to 0.358); spread over folds 0.023
+  positive rate used by the final build (read for the comparison only): 0.059
+LABEL-SHIFT CHECK CYP2D6: NOT INFORMATIVE (recovery error 0.68 of the rate is above 0.25)
+2026-10-26 08:52:47,693 CYP3A4 lgbm_A+fps_deep repeat 0 fold 0: 467 held-out, 750 blinded
+2026-10-26 08:52:48,740 CYP3A4 lgbm_A_deep repeat 0 fold 0: 467 held-out, 750 blinded
+2026-10-26 08:52:50,944 CYP3A4 lgbm_A+fps_deep repeat 0 fold 1: 467 held-out, 750 blinded
+2026-10-26 08:52:51,997 CYP3A4 lgbm_A_deep repeat 0 fold 1: 467 held-out, 750 blinded
+2026-10-26 08:52:54,205 CYP3A4 lgbm_A+fps_deep repeat 0 fold 2: 467 held-out, 750 blinded
+2026-10-26 08:52:55,236 CYP3A4 lgbm_A_deep repeat 0 fold 2: 467 held-out, 750 blinded
+2026-10-26 08:52:57,336 CYP3A4 lgbm_A+fps_deep repeat 0 fold 3: 466 held-out, 750 blinded
+2026-10-26 08:52:58,393 CYP3A4 lgbm_A_deep repeat 0 fold 3: 466 held-out, 750 blinded
+2026-10-26 08:53:00,593 CYP3A4 lgbm_A+fps_deep repeat 0 fold 4: 467 held-out, 750 blinded
+2026-10-26 08:53:01,717 CYP3A4 lgbm_A_deep repeat 0 fold 4: 467 held-out, 750 blinded
+2026-10-26 08:53:03,888 CYP3A4 lgbm_A+fps_deep repeat 1 fold 0: 467 held-out, 750 blinded
+2026-10-26 08:53:04,942 CYP3A4 lgbm_A_deep repeat 1 fold 0: 467 held-out, 750 blinded
+2026-10-26 08:53:07,015 CYP3A4 lgbm_A+fps_deep repeat 1 fold 1: 467 held-out, 750 blinded
+2026-10-26 08:53:08,113 CYP3A4 lgbm_A_deep repeat 1 fold 1: 467 held-out, 750 blinded
+2026-10-26 08:53:10,474 CYP3A4 lgbm_A+fps_deep repeat 1 fold 2: 467 held-out, 750 blinded
+2026-10-26 08:53:11,540 CYP3A4 lgbm_A_deep repeat 1 fold 2: 467 held-out, 750 blinded
+2026-10-26 08:53:13,679 CYP3A4 lgbm_A+fps_deep repeat 1 fold 3: 467 held-out, 750 blinded
+2026-10-26 08:53:14,777 CYP3A4 lgbm_A_deep repeat 1 fold 3: 467 held-out, 750 blinded
+2026-10-26 08:53:16,865 CYP3A4 lgbm_A+fps_deep repeat 1 fold 4: 466 held-out, 750 blinded
+2026-10-26 08:53:17,921 CYP3A4 lgbm_A_deep repeat 1 fold 4: 466 held-out, 750 blinded
+2026-10-26 08:53:20,000 CYP3A4 lgbm_A+fps_deep repeat 2 fold 0: 467 held-out, 750 blinded
+2026-10-26 08:53:21,029 CYP3A4 lgbm_A_deep repeat 2 fold 0: 467 held-out, 750 blinded
+2026-10-26 08:53:23,177 CYP3A4 lgbm_A+fps_deep repeat 2 fold 1: 467 held-out, 750 blinded
+2026-10-26 08:53:24,270 CYP3A4 lgbm_A_deep repeat 2 fold 1: 467 held-out, 750 blinded
+2026-10-26 08:53:26,432 CYP3A4 lgbm_A+fps_deep repeat 2 fold 2: 467 held-out, 750 blinded
+2026-10-26 08:53:27,495 CYP3A4 lgbm_A_deep repeat 2 fold 2: 467 held-out, 750 blinded
+2026-10-26 08:53:29,591 CYP3A4 lgbm_A+fps_deep repeat 2 fold 3: 466 held-out, 750 blinded
+2026-10-26 08:53:30,591 CYP3A4 lgbm_A_deep repeat 2 fold 3: 466 held-out, 750 blinded
+2026-10-26 08:53:32,680 CYP3A4 lgbm_A+fps_deep repeat 2 fold 4: 467 held-out, 750 blinded
+2026-10-26 08:53:33,738 CYP3A4 lgbm_A_deep repeat 2 fold 4: 467 held-out, 750 blinded
+LABEL SHIFT CYP3A4: 15 held-out folds of series kept whole, 7002 held-out compounds in all, 750 blinded compounds, classifier lgbm_A+fps_deep (sensitivity: lgbm_A_deep)
+  training compounds: weighted positive rate 0.344
+  z0 = 1.0: recovery of known rates among the scored compounds (bias, root-mean-square error; transfer route | direct route)
+    known rate 0.15: +0.021, 0.036 | +0.064, 0.071
+    known rate 0.25: +0.019, 0.043 | +0.061, 0.072
+    known rate 0.35: +0.004, 0.045 | +0.040, 0.059
+    known rate 0.45: +0.028, 0.052 | +0.053, 0.066
+    mean error over the rates, as a share of the rate: 0.16 (limit 0.25)
+  z0 = 1.0 lgbm_A+fps_deep: all compounds 0.366 (0.289 to 0.468); scored compounds by transfer 0.352 (0.274 to 0.451), directly 0.384 (0.316 to 0.480); spread over folds 0.060
+  z0 = 1.0 lgbm_A_deep: all compounds 0.348 (0.262 to 0.445); scored compounds by transfer 0.335 (0.252 to 0.430), directly 0.372 (0.295 to 0.467); spread over folds 0.063
+  z0 = 1.96: recovery of known rates among the scored compounds (bias, root-mean-square error; transfer route | direct route)
+    known rate 0.15: +0.018, 0.035 | +0.082, 0.087
+    known rate 0.25: +0.018, 0.041 | +0.075, 0.084
+    known rate 0.35: +0.002, 0.044 | +0.042, 0.058
+    known rate 0.45: +0.027, 0.052 | +0.042, 0.057
+    mean error over the rates, as a share of the rate: 0.16 (limit 0.25)
+  z0 = 1.96 lgbm_A+fps_deep: all compounds 0.366 (0.289 to 0.468); scored compounds by transfer 0.365 (0.284 to 0.461), directly 0.392 (0.329 to 0.487); spread over folds 0.058
+  z0 = 1.96 lgbm_A_deep: all compounds 0.348 (0.262 to 0.445); scored compounds by transfer 0.346 (0.260 to 0.441), directly 0.382 (0.312 to 0.469); spread over folds 0.057
+  positive rate used by the final build (read for the comparison only): 0.310
+LABEL-SHIFT CHECK CYP3A4: NOT INFORMATIVE (interval width 0.176 is above 0.5 times 0.310)

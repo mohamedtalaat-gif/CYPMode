@@ -203,7 +203,7 @@ it did or did not help.
 
 ## Coverage map by part (the exact file-to-section map is printed in Appendix D)
 
-- Part II: `challenge/tdi_targets`, `library_blocks`, `label_confidence`, `leaderboard_prior`, `population_share`, `structure_standardization`, `external_activity`, `chembl_auxiliary`, `bindingdb_auxiliary`, `pubchem_auxiliary`, `data/octant_benchmark`, `data/panel`.
+- Part II: `challenge/tdi_targets`, `library_blocks`, `label_confidence`, `leaderboard_prior`, `label_shift`, `population_share`, `structure_standardization`, `external_activity`, `chembl_auxiliary`, `bindingdb_auxiliary`, `pubchem_auxiliary`, `data/octant_benchmark`, `data/panel`.
 - Part III: `challenge/feature_store`, `grouping`, `pharmacophore_fingerprint`.
 - Part IV: `challenge/multitask`, `chemberta_features`, `nested_runners_torch`, `nested_runners_chemprop`.
 - Part V: `metrics/motifs`, `metrics/amines`, `data/panel`, `data/octant_benchmark`, `validation/structures`, `pocket_geometry`, `tdi_reference`, `app.py`.

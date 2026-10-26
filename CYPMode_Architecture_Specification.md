@@ -402,6 +402,7 @@ The tables below are written by `cypmode/audit/docs_state.py` from the final bui
 | Every idea passes a gate written before its result | 184 verdicts in 58 families, 9 MET | `NEGATIVE_RESULTS.md` |
 | Reliability tiers by similarity to the training data, intervals over chemical series | blinded compounds supported: 750 of 750 (CYP3A4), 0 of 750 (CYP2D6) | `applicability_domain.log` |
 | Positive rates of the scored set recovered from the public boards | 0.310 (CYP3A4), 0.059 (CYP2D6) | limitation L13 |
+| The same rates estimated without a board, by label shift, under a rule fixed before the first run | 0.135 (0.043 to 0.286) against 0.059 for CYP2D6: NOT INFORMATIVE; 0.352 (0.274 to 0.451) against 0.310 for CYP3A4: NOT INFORMATIVE | `label_shift.log` |
 | Restraint of the iron-nitrogen bond for Type II ligands | gate MET on the crystal benchmark, MET under the OpenStructure scorer | `structure_gates.log`, `ost_pool_gates.log` |
 | Validity margin of the scorer's own call and a relaxation under a registered rule | relaxation adopted for 20 of 20; smallest margin 0.801 to 0.849 | `relax_final.log` |
 <!-- generated:innovation end -->
