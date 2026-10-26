@@ -114,3 +114,13 @@
     The pocket block and the site model were tested with a conformer ensemble of 12 conformers within 5 kcal/mol of the lowest, which holds a member within 1.0 A of the crystal pose
     for only {block_ensemble_coverage_pct}% of {block_ensemble_copies} crystal ligand copies; 300 conformers do so for {wide_ensemble_coverage_pct}%. Their negative verdicts are those of
     models that mostly did not see the bound conformation of the ligand. A wider ensemble was not tried.
+- id: L15
+  area: structure
+  uses: [structure_s1_lddt_pli, structure_c_lddt_pli, structure_baseline_lddt_pli, structure_s1_bisy, structure_baseline_bisy]
+  text: >-
+    On the live board, which scores 10 of the 20 ligands, the submitted structure recipe scored an LDDT-PLI of {structure_s1_lddt_pli}, below the organisers' Boltz-2 baseline
+    ({structure_baseline_lddt_pli}), with a lower BiSyRMSD ({structure_s1_bisy} A against {structure_baseline_bisy} A). The second candidate, the first eligible unguided pose, scored
+    {structure_c_lddt_pli} and did not pass the threshold registered before its upload. The gates of the structure track were measured on 30 crystal ligands that are chemically far from the
+    20 official ligands, so the evidence for the iron-nitrogen restraint may not transfer, and no rule for choosing a pose among the predicted ones passed its gate. The recipe is reported
+    as submitted and makes no claim of a better LDDT-PLI than the baseline.
+

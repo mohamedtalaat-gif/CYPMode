@@ -130,3 +130,11 @@ def test_the_innovation_summary_stands_between_the_disclosures_and_section_one_a
 def test_the_innovation_table_has_one_row_per_claim_with_a_source():
     rows = [line for line in report.innovation_table().splitlines()[2:]]
     assert len(rows) >= 7 and all(line.count("|") == 4 for line in rows)
+
+
+def test_the_structure_board_paragraph_reads_the_recorded_scores_and_the_registered_threshold():
+    text = report.structure_board_lead()
+    frame = pd.read_csv(report.STRUCTURE_BOARD)
+    assert "(pending" not in text and f"{frame.set_index('entry').loc['candidate C', 'lddt_pli']:.4f}" in text
+    assert "docs/structure_candidate_c.md" in text
+    assert not frame["entry"].str.contains(r"\|").any(), "a board alias must not be written into a tracked file"

@@ -521,6 +521,8 @@ The highest block of identifiers of the training file is an analog-expansion rou
 
 The structure levers gave 36 pre-registered verdicts, 5 of them MET (bond restraint, contact restraint, force-field relaxation of poses, pool gates repeated with OpenStructure's yardstick). Every rule for choosing a pose among the predicted ones was NOT MET on the crystal-anchored benchmark, so the pick is the model's own ranking among the valid poses; what the recipe adds is a restraint of the iron-nitrogen contact, the scorer's own validity call with a margin rule, and a registered relaxation.
 
+Live scores of the two structure uploads (the live board scores 10 of the 20 ligands; `docs/structure_board_scores.csv`, copied from the board on 2026-10-26): the submitted recipe scored an LDDT-PLI of 0.3623 (standard deviation 0.0245) and a BiSyRMSD of 4.32 A, rank 31 of 39 while it was the live entry; the organisers' Boltz-2 baseline scored 0.3950 and 5.19 A. The recipe is therefore below the baseline on the primary metric, by 0.033 against a board standard deviation of 0.060, and ahead of it on the BiSyRMSD. A second candidate, the first eligible unguided pose of each ligand, scored 0.3975 and 3.97 A; its gain of +0.0352 is below the threshold that was registered before the upload (`docs/structure_candidate_c.md`), so the submitted recipe stays the structure entry.
+
 Gate verdicts of the structure levers (restraint, diversity, selection, engines, expected-improvement sampling, heme-frame prior):
 
 | log | gate | verdict |

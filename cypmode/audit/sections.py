@@ -542,6 +542,16 @@ def structure(ctx: Context) -> Section:
         wide = re.search(r"a conformer within ([\d.]+) A of the crystal pose for (\d+)% of the copies", text)
         if block and wide:
             ctx.metrics.update(block_ensemble_coverage_pct=int(block.group(2)), block_ensemble_copies=int(block.group(3)), wide_ensemble_coverage_pct=int(wide.group(2)))
+    board = ROOT / "docs/structure_board_scores.csv"
+    if board.exists():  # the live scores of the structure uploads, recorded by hand with the date they were read (limitation L15)
+        scores = pd.read_csv(board).set_index("entry")
+        ctx.metrics.update(
+            structure_s1_lddt_pli=float(scores.loc["submitted recipe (S1)", "lddt_pli"]),
+            structure_baseline_lddt_pli=float(scores.loc["organisers' Boltz-2 baseline", "lddt_pli"]),
+            structure_c_lddt_pli=float(scores.loc["candidate C", "lddt_pli"]),
+            structure_s1_bisy=float(scores.loc["submitted recipe (S1)", "bisy_rmsd"]),
+            structure_baseline_bisy=float(scores.loc["organisers' Boltz-2 baseline", "bisy_rmsd"]),
+        )
     return s
 
 
