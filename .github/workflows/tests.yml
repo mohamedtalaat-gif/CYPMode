@@ -47,7 +47,7 @@ jobs:
       - name: Run tests (main group)
         run: pytest -v
 
-      - name: Checklist consistency
+      - name: Queue consistency
         run: python -m cypmode.audit.checklist
 
       # These three test files each need an extra dependency (torch or

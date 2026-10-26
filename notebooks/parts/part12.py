@@ -34,12 +34,11 @@ assert number_of_distinct_totals > 1  # the order matters, or the lesson is wron
 '''
 
 DETERMINISM_RECORD = r'''
-# What the repository itself recorded about reproducibility. Nothing is typed in: the line of the checklist that records the check of every comparison after the stack was made deterministic (8.3), the determinism section of the audit report
-# (the tests that the audit runs again every time), and the log of the GPU speed test of the CheMeleon fine-tuning, where determinism was required and the machine could not give it.
+# What the repository itself recorded about reproducibility. Nothing is typed in except one count: the determinism section of the audit report (the tests that the audit runs again every time), the seed registry, and the log of the GPU speed test
+# of the CheMeleon fine-tuning, where determinism was required and the machine could not give it, are read from the files; the number of stacked comparisons that job 084 evaluated again (8.3) was counted when the job finished, and is written here.
 import re
 
-checklist_text = (ROOT / "SUBMISSION_CHECKLIST.md").read_text()
-n_recomputed = int(re.search(r"\((\d+) stacked comparisons\)", checklist_text).group(1))
+n_recomputed = 56  # the stacked comparisons evaluated again by job 084 (queue/jobs/084_tdi_stack_reevaluation.sh), counted when it finished on 2026-10-18
 
 audit_text = (ROOT / "audit/AUDIT_REPORT.md").read_text()
 determinism_block = re.search(r"## 3\. Determinism and cache consistency\n(.*?)\n## ", audit_text, re.S).group(1)
@@ -93,7 +92,7 @@ The determinism section of the audit has {{=n_determinism_checks}} lines and {{=
 
 **The record of the push.** A number is reproducible only if the repository that reaches a reader is the one the author had. `scripts/mirror_check.sh` checks that after a push: it fetches the remote branch and fails when the working tree differs from HEAD in any way (a modified, an untracked or a missing file), or when `origin/<branch>` is not at HEAD, and it prints the files that stay local on purpose, those listed in `.gitignore`. It is the other end of the chain that the pinned environments and the fixed seeds begin: the numbers can be produced again from the files, and the files are the ones that were pushed. The script is not run by the notebook, which is built before the push; its check is described here from the script itself.
 
-*On what actually ran.* The first cell is a toy made for the lesson. The second reads the checklist, the audit report and the two records of the speed test.
+*On what actually ran.* The first cell is a toy made for the lesson. The second reads the audit report and the two records of the speed test.
 """
 
 AUDIT_SECTIONS = r'''
@@ -200,7 +199,7 @@ MD_12_3 = """
 MD_12_3_B = """
 The suite has {{=n_test_functions}} test functions in {{=n_test_files}} files, the largest of them above, and the steps of the workflow are listed in the second table.
 
-**Continuous integration** is the practice of running the tests automatically on every change, on a machine other than the author's, so that a result that depends on something only the author's machine has is found. The workflow of the repository (`.github/workflows/tests.yml`) runs on {{=operating_systems}} and has {{=n_workflow_steps}} steps, listed above: it installs the package, runs the main group of tests, runs the consistency check of the checklist (12.5), and then runs the files that cannot share a process with the others, one step each. The comments in the file record real failures: a missing package at collection time stopped the whole run, so that none of the other tests ran, and the workflow checked almost nothing without saying so. A test run that silently runs nothing is worse than none, which is why that comment is in the workflow.
+**Continuous integration** is the practice of running the tests automatically on every change, on a machine other than the author's, so that a result that depends on something only the author's machine has is found. The workflow of the repository (`.github/workflows/tests.yml`) runs on {{=operating_systems}} and has {{=n_workflow_steps}} steps, listed above: it installs the package, runs the main group of tests, runs the consistency check of the queue (12.5), and then runs the files that cannot share a process with the others, one step each. The comments in the file record real failures: a missing package at collection time stopped the whole run, so that none of the other tests ran, and the workflow checked almost nothing without saying so. A test run that silently runs nothing is worse than none, which is why that comment is in the workflow.
 
 **The lesson about isolation.** Two native libraries that each carry their own copy of the runtime for parallel loops (OpenMP) can disturb one another when both are loaded into one process. The suite found this the hard way, and `pyproject.toml` records it in its markers. Loading PyTorch and LightGBM together ends in a crash of the process (the status {{=segfault_status}}, a segmentation fault), every time; loading the quantum-chemistry package after a number of LightGBM-heavy tests ends in a **deadlock**, a state in which every part of the program waits for another and nothing moves, at no use of the processor. Because pytest imports every file it collects, even one it will later deselect, a marker is not enough: the files that load the second library are named in `--ignore` options (there are {{=n_ignored}}), and each is run on its own, in a process of its own, as the last steps of the workflow and the isolated runs of the queue do.
 

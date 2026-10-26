@@ -12,7 +12,7 @@ SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 # The documents: the texts, the figures, the film, the card, the poster and the notebook.
 [[annotations]]
-path = ["README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "USE_AND_CITATION.md", "METHOD_REPORT.md", "NEGATIVE_RESULTS.md", "CYPMode_*.md", "SUBMISSION_CHECKLIST.md", "audit/**", "notebooks/PLAN.md", "notebooks/cypmode_notebook.*", "docs/**/*.md", "docs/figures/**/*.png", "docs/figures/**/*.svg", "docs/figures/**/*.gif", "docs/card/**/*.png", "docs/video/**/*.png", "docs/video/**/*.mp4", "docs/video/**/*.gif", "docs/video/**/*.json", "submissions/**/README.md"]
+path = ["README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "USE_AND_CITATION.md", "METHOD_REPORT.md", "NEGATIVE_RESULTS.md", "CYPMode_*.md", "audit/**", "notebooks/PLAN.md", "notebooks/cypmode_notebook.*", "docs/**/*.md", "docs/figures/**/*.png", "docs/figures/**/*.svg", "docs/figures/**/*.gif", "docs/card/**/*.png", "docs/video/**/*.png", "docs/video/**/*.mp4", "docs/video/**/*.gif", "docs/video/**/*.json", "submissions/**/README.md"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Muhammad Talaat"
 SPDX-License-Identifier = "CC-BY-NC-SA-4.0"

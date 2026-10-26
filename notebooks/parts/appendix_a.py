@@ -37,7 +37,7 @@ repo_places = [
     ("cypmode/validation", "the structure track: Boltz-2 and OpenFold3 runs, scoring of poses, the gates, the final recipe", "*.py"),
     ("cypmode/metrics", "motif and amine detection used by the first version of the project", "*.py"),
     ("cypmode/data", "loaders of the public data sets of the first version", "*.py"),
-    ("cypmode/audit", "the audit, the method report, the negative-results ledger, the checklist check, the readiness scan", "*.py"),
+    ("cypmode/audit", "the audit, the method report, the negative-results ledger, the queue check, the readiness scan", "*.py"),
     ("scripts", "the queue runner and its guards, the audit and reproduction scripts, the release script", "*"),
     ("queue/jobs", "one shell script per experiment or build step, run in the order of its number", "*.sh"),
     ("tests", "the test suite", "*.py"),
@@ -258,7 +258,7 @@ The same list again, written into the text rather than generated when the page i
 | `944_pymol_clips` | The real-structure stills and turntables of the film (docs/video/STORYBOARD.md): the heme pocket of CYP3A4 and the pose pools of the official ligands, rendered with PyMOL from the coordinates. |
 | `945_video_render` | The animation (docs/video/STORYBOARD.md): every frame drawn by code, encoded to mp4, plus a gif preview and a poster frame. |
 | `950_submissions_final_sync` | The very last job: submissions/ is rewritten from the final TDI candidates and the final structure zip, each checked with the portal's own rules (it never uploads anything). |
-| `960_pre_submission_gate` | The last gate: whether the queue, the checklist, the audit, the submission files, the documents, the notebook and the film are finished, consistent and fresh. |
+| `960_pre_submission_gate` | The last gate: whether the queue, the audit, the submission files, the documents, the notebook and the film are finished, consistent and fresh. |
 """
 
 CELLS = [
@@ -304,7 +304,7 @@ python -m pytest tests -q                                  # 2. the tests (the i
 bash scripts/reproduce_tdi.sh                              # 3. raw challenge files -> validated TDI candidate files
 bash scripts/queue_start.sh                                # 4. the queue: every other experiment, in the order of its number
 bash scripts/queue_status.sh                               #    what is done, running, waiting
-python -m cypmode.audit.checklist --status                 # 5. what the checklist says is done
+python -m cypmode.audit.checklist                         # 5. every queue job names modules and scripts that exist
 bash scripts/run_audit.sh                                  # 6. the audit, generated twice and compared byte for byte
 python -m cypmode.audit.method_report                      # 7. the method report and the negative-results ledger
 python -m cypmode.audit.public_readiness                   # 8. the scan for what must not be published
@@ -342,7 +342,7 @@ The first two rows are the plain rule. The third and fourth are the rule for a g
 
 A model for the TDI track is added in four steps, and the order is the point.
 
-1. **Declare.** Before any number of the new model exists, the item of `SUBMISSION_CHECKLIST.md` says what it is, where it comes from, the comparison that decides it (alone, and added to the stack, on both isoforms), and the rule it must pass. The commit that holds the declaration is dated before the commit that holds its result, and the history is never squashed, so that the order can be checked.
+1. **Declare.** Before any number of the new model exists, its declaration says what it is, where it comes from, the comparison that decides it (alone, and added to the stack, on both isoforms), and the rule it must pass. The declaration is written in the header of the module that runs the comparison and in the header of its queue job. The commit that holds the declaration is dated before the commit that holds its result, and the history is never squashed, so that the order can be checked.
 2. **Register.** The model is written as a candidate (`Candidate` in `cypmode/challenge/nested_runners.py`; the torch-side ones in `nested_runners_torch.py`, the cached ones in `cached_candidates.py`), added to a group, and the group gets its log name in `final_tdi_build.GROUPS`. The test suite checks that every registered block computes on a small set of molecules and the tests of the final build check the registered groups and the names of their logs.
 3. **Run.** Two queue jobs: one that fills the cache of predictions for every task of the nested plan (in time-boxed chunks, resumable), and one that runs `python -m cypmode.challenge.aux_experiments --experiment <name> --isoform <iso>`, which compares the model alone and added to the default stack and writes the gate line.
 4. **Let the build decide.** Nothing is done by hand: the next run of the final build reads the line, and the model joins the stack or it does not. A model that fails stays in the ledger of negative results with its numbers.

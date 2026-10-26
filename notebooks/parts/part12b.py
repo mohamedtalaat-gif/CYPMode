@@ -107,14 +107,13 @@ freshness_sentence = "At the time of this build the check passes: the two files 
 '''
 
 CHECKLIST_AND_SCAN = r'''
-# The two checks that look at the repository from outside. The first is the consistency of the checklist: every job number, every code file in backticks and every module a job calls must exist, and every open item must have a job or a tag that
-# says who does it. The second is the readiness scan: three of its detectors are run on a string made for the purpose (the private path, the key and the address are put together at run time, so that this notebook does not contain what the scan looks for).
+# The two checks that look at the repository from outside. The first is the consistency of the queue: every module and every script that a job calls must exist, and a job must not wait for code that does not exist.
+# The second is the readiness scan: three of its detectors are run on a string made for the purpose (the private path, the key and the address are put together at run time, so that this notebook does not contain what the scan looks for).
 from cypmode.audit import checklist as checklist_module
 from cypmode.audit import public_readiness as readiness
 
-problems_found, untagged_items, item_counts = checklist_module.check()
-n_checklist_problems, n_untagged = len(problems_found), len(untagged_items)
-n_items_done, n_items_open = item_counts["done"], item_counts["open"]
+queue_problems = checklist_module.job_problems()
+n_checklist_problems, n_jobs = len(queue_problems), len(list(checklist_module.JOBS.glob("*.sh")))
 sample = "see " + "/Use" + "rs/someone/project/file.csv, token " + "hf_" + "a" * 34 + ", write to " + "some.one" + "@" + "example.org"
 found_by_scan = readiness.scan_text(sample)
 scan_table = pd.DataFrame({"detector": list(found_by_scan), "matches in the sample": [len(v) for v in found_by_scan.values()]})
@@ -145,7 +144,7 @@ MD_12_5_B = """
 
 **The artifacts that present the results.** The same discipline covers the files that show the results to a reader: the README card, the poster, the film and the figures. `cypmode/audit/artifacts.py` keeps the record `audit/artifacts.json`, written by the builders of those four artifacts: for each one the SHA-256 of every file it wrote, a fingerprint of the numbers it was built from (everything that the film's facts module reads from the final outputs, the ledger, the audit and the repository), and the builder's own digests. Its `verify`, called by the pre-submission gate, asks three questions of every artifact: whether each recorded output is still the file the builder wrote, whether the numbers it shows are the final ones (the recorded fingerprint equals the current one), and whether the artifact's own source still produces the same content. The card's HTML and the DOM of every frame of the film and of the poster are recomputed and compared exactly; the PNG and the H.264 files are not compared pixel by pixel, because rendering the same frame twice differs in a few dozen pixels by less than one level of 255 and the encoder adds its own differences. The gate fails an artifact that was edited after its build, one built from numbers that have changed since, and one whose source no longer reproduces it. The interactive card, one self-contained page built by `docs/card/build_interactive_card.py` in the queue job `946_interactive_card`, is recorded and checked the same way (its HTML is recomputed and compared exactly, `tests/test_interactive_card.py` checks that the iron\u2013nitrogen distance measured on the coordinates it embeds equals the deposited one and that the page makes no request). The notebook itself has two editions for the same reason as the card: results for the blinded compounds must not be public before the challenge closes, and the notebook must be. A cell can be marked `held_back`; the public edition (the queue job `947_notebook_public`, `python -m notebooks.build_notebook --public`) runs it all the same, so that the variables of the later cells exist, but shows a note instead of its outputs and fails when any cell still names an official structure ligand or five or more blinded compounds (`tests/test_notebook_public.py`). The complete edition replaces it when the challenge has closed.
 
-**The checklist is checked too.** `SUBMISSION_CHECKLIST.md` is the contract of the project: each open item names the job that does it or says who does. It is a document, so it can promise something that does not exist. `cypmode/audit/checklist.py` makes the three ways in which it drifts from the repository checkable by a script: a job number in the text that has no job, a code file in backticks that does not exist, and a job that calls a module that does not exist (which would make it answer "not ready" for ever). It also lists the open items that have neither a job nor a tag. The workflow of 12.3 runs it on every change. In this build it finds {{=n_checklist_problems}} problems and {{=n_untagged}} untagged items in {{=n_items_done}} items done and {{=n_items_open}} open.
+**The queue is checked too.** Every job of the queue is a shell script that calls modules and scripts of the repository, and a job can promise something that does not exist. `cypmode/audit/checklist.py` makes the ways in which a job drifts from the repository checkable by a script: a job that calls a module that does not exist, a job that waits for a code file that does not exist (which would make it answer "not ready" for ever), and a script that does not exist. The workflow of 12.3 runs it on every change. In this build it finds {{=n_checklist_problems}} problems in {{=n_jobs}} jobs.
 
 **What must not be published.** The public-readiness scan (`cypmode/audit/public_readiness.py`) looks at the files that git tracks or would add. Its detectors find private paths on the author's machine, strings shaped like credentials, e-mail addresses other than the public contact lines, files near the size limit of the hosting service, long verbatim runs from the books used while writing, and, until the challenge closes, results for the blinded compounds: a file that names five or more of them, or a table with one row per blinded compound (750 for the TDI test set, 20 for the structure set), is a prediction and must not be pushed. The files that are held back are the {{=n_held_back}} patterns of the HELD BACK block of `.gitignore`, and the scan can also read every blob of the git history, because a push carries the history. The table shows three detectors firing on a sample that was made for the purpose.
 """
@@ -153,17 +152,21 @@ MD_12_5_B = """
 MD_12_5_C = """
 {{=n_detectors_fired}} of the detectors fired on the sample, as they must. What the scan cannot do is find what it was not taught to look for: it is a net with a mesh, and the mesh is the list of patterns. The final chain runs it (job 930) and its findings that code can fix are fixed; the others are for a person to decide, and the push is not made before they are.
 
-*On what actually ran.* The first cell runs the claim-to-evidence check as a child process and reads the two reports and the generated blocks. The second calls the checklist check and the scan's `scan_text` in the notebook's process.
+*On what actually ran.* The first cell runs the claim-to-evidence check as a child process and reads the two reports and the generated blocks. The second calls the queue check and the scan's `scan_text` in the notebook's process.
 """
 
 RULES = r'''
-# The rules that never change, read from the checklist (section 0), each with the mechanism that enforces it. The mapping from rule to mechanism is written here by hand and every mechanism it names is checked to exist; a rule that nothing
+# The rules that never change, each with the mechanism that enforces it. The rules and the mapping from rule to mechanism are written here and every mechanism it names is checked to exist; a rule that nothing
 # enforces by program is labelled as a rule of procedure, because that is what it is.
-import re
-
-checklist_text = (ROOT / "SUBMISSION_CHECKLIST.md").read_text()
-rules_block = re.search(r"## 0\. Rules that never change\n(.*?)\n## ", checklist_text, re.S).group(1)
-rules = [re.sub(r"\s*\[.*$|\s*\(standing rule\)\s*$", "", item).strip() for item in re.findall(r"^- \[ \] (.+)$", rules_block, re.M)]
+rules = [
+    "No submission and no push without the explicit go-ahead of the author; local commits are made as the work goes",
+    "No leaderboard probing (no flipping compounds to read labels); the live board scores half the test set, so it is a sanity check, never a tuning target",
+    "Numbers are quoted from the corrected procedure only (nested cross-validation, the corrected resampled t, permutation nulls); no bootstrap of fixed predictions",
+    "Credit another team's idea only if it is published with a link, under the publication's name, and never by leaderboard alias",
+    "Code comments in English",
+    "Machine safety: one heavy job at a time, a guard on memory and on free disk, results mirrored off the temporary folder",
+    "Stop rule: any idea that fails its gate is written down as a negative result and dropped, not tuned until it passes",
+]
 enforcement = [
     ("No submission and no push", "procedure, with a program behind part of it", ["scripts/release_after_deadline.py", "cypmode/audit/pre_submission.py"]),
     ("No leaderboard probing", "procedure; no program of the repository submits anything", ["cypmode/challenge/submission.py"]),
@@ -205,13 +208,13 @@ MD_12_6 = """
 
 > **Field:** Software engineering
 
-*Where this section sits:* the last four sections described mechanisms. This one lists the rules those mechanisms exist for, from the first section of the checklist, which no result or deadline changes, and says for each how it is enforced. The answer is that some are enforced by a program and some only by a person, and the section says which.
+*Where this section sits:* the last four sections described mechanisms. This one lists the rules those mechanisms exist for, which no result or deadline changes, and says for each how it is enforced. The answer is that some are enforced by a program and some only by a person, and the section says which.
 
-A rule that is only a promise is weakest at the moment it matters most: late, tired and near a deadline, the temptation is to make an exception once. The project's habit is therefore to turn every rule that can be turned into a check into a check, and to say plainly which ones cannot be. The next cell reads the rules from the checklist and pairs each with its mechanism; the mapping is written by hand, and the cell fails if a file it names does not exist.
+A rule that is only a promise is weakest at the moment it matters most: late, tired and near a deadline, the temptation is to make an exception once. The project's habit is therefore to turn every rule that can be turned into a check into a check, and to say plainly which ones cannot be. The next cell pairs each rule with its mechanism; both are written by hand, and the cell fails if a file it names does not exist.
 """
 
 MD_12_6_B = """
-There are {{=n_rules}} rules, and {{=n_by_program}} of them have a program behind them. The two that are rules of procedure are the ones that concern an act of the author, not a property of a file: nothing is submitted or pushed without the author's explicit go-ahead, and the portal is never used to read the labels. For the first there is a program that helps (the release script refuses to publish anything before the deadline, and the pre-submission gate says whether everything is finished, consistent and fresh), but the decision itself is a person's, and the checklist says so.
+There are {{=n_rules}} rules, and {{=n_by_program}} of them have a program behind them. The two that are rules of procedure are the ones that concern an act of the author, not a property of a file: nothing is submitted or pushed without the author's explicit go-ahead, and the portal is never used to read the labels. For the first there is a program that helps (the release script refuses to publish anything before the deadline, and the pre-submission gate says whether everything is finished, consistent and fresh), but the decision itself is a person's, and the rule says so.
 
 **A hook.** A **hook** is a small program that git runs at a fixed moment. The repository uses one, kept in the local copy and not among the files that git stores: it runs before each commit, applies the linter to the files that are staged and looks for merge-conflict markers left in them. The hook is deliberately fast, so that nobody is tempted to skip it, and skipping it is not allowed; when the new modules were first committed, it was the hook that showed how many findings they carried, and the cleanup was then made a job of the queue (job 295) with its own checks and a rollback. In this build the hook is present: pre-commit {{=hooks_present['pre-commit']}}.
 
@@ -223,7 +226,7 @@ The test file has passed and the dry run reports what the release script would c
 
 **What the checks cannot do.** They catch what they were taught to look for: the patterns of the scan, the files of the HELD BACK block, the numbers that the report copies. They do not decide whether a method is right, whether a gate was chosen fairly, or whether a sentence in a document is true. Those are the work of Parts VI and IX, and of the person who reads the text word by word. Engineering for trust is the part that makes the other parts checkable; it is not a substitute for them.
 
-*On what actually ran.* The first cell reads the checklist and the existence of the files it names; the hooks are looked for in the local copy of the repository. The second runs the test file of the hold-back and the release script with `--dry-run` as child processes.
+*On what actually ran.* The first cell checks that the files that enforce each rule exist; the hook is looked for in the local copy of the repository. The second runs the test file of the hold-back and the release script with `--dry-run` as child processes.
 """
 
 EXPLORER_FACTS = r"""

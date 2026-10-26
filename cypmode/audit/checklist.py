@@ -4,7 +4,8 @@
 
 """Does the checklist match the repository? Every promise must point at something that exists.
 
-The checklist (SUBMISSION_CHECKLIST.md) is executed by the queue (queue/jobs/NNN_*.sh). This module makes the three ways it can
+The checklist (SUBMISSION_CHECKLIST.md) is a private working file, kept out of every push; it is executed by the queue (queue/jobs/NNN_*.sh), and a tree
+without it is checked for the queue jobs alone. This module makes the three ways it can
 drift from reality checkable by a script instead of by reading:
 
   * a job number mentioned in the checklist has no job file;
@@ -70,7 +71,7 @@ def job_problems() -> list[str]:
 
 
 def check() -> tuple[list[str], list[str], dict[str, int]]:
-    text = CHECKLIST.read_text()
+    text = CHECKLIST.read_text() if CHECKLIST.exists() else ""  # a private file: in a tree without it only the queue jobs are checked
     problems, loose = [], []
     existing = {p.name.split("_", 1)[0] for p in JOBS.glob("*.sh")}
     for jid in sorted(job_ids(text)):
@@ -117,7 +118,7 @@ def title(body: str) -> str:
 def status_report() -> dict[str, list[str]]:
     """Checklist items grouped by what is happening to them: done, running, queued, failed, no queue job."""
     groups: dict[str, list[str]] = {"done": [], "running": [], "queued": [], "failed": [], "jobs finished, item not ticked": [], "standing rule": [], "after the gate": [], "written by hand": [], "no queue job": []}
-    for mark, body, line in items(CHECKLIST.read_text()):
+    for mark, body, line in items(CHECKLIST.read_text() if CHECKLIST.exists() else ""):
         jobs = sorted(job_ids(body))
         states = {j: job_state(j) for j in jobs}
         label = f"{title(body)}" + (f"  [{', '.join(f'{j} {st}' for j, st in states.items())}]" if jobs else "")
@@ -145,6 +146,8 @@ def main() -> int:
             for row in rows:
                 print("  -", row)
         return 0
+    if not CHECKLIST.exists():
+        print("no working checklist in this tree: only the queue jobs are checked")
     problems, loose, counts = check()
     print(f"checklist items: {counts['done']} done, {counts['running']} running, {counts['open']} open")
     print(f"jobs in the queue: {len(list(JOBS.glob('*.sh')))}")

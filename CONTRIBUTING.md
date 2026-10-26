@@ -39,17 +39,19 @@ cache, Boltz-2 outputs or the large caches skip cleanly when those are absent.
 ## Checks before a pull request
 
 ```bash
-python -m cypmode.audit.checklist       # every job, module and file named in SUBMISSION_CHECKLIST.md exists
+python -m cypmode.audit.checklist       # every queue job names modules and scripts that exist
 bash scripts/run_audit.sh               # full audit report, generated twice and compared byte for byte
 python -m cypmode.audit.method_report --check   # METHOD_REPORT.md and NEGATIVE_RESULTS.md equal a fresh generation
 python -m cypmode.audit.public_readiness        # private paths, credential-shaped strings, large files, third-party text
-python -m cypmode.audit.checklist --status      # done, running and queued items of the checklist
+bash scripts/queue_status.sh            # done, running and waiting queue jobs
 ```
 
-Documents that describe the architecture (the sketches in `README.md` and `SUBMISSION_CHECKLIST.md`, the repository map, this file) are
+Documents that describe the architecture (the sketches in `README.md`, the repository map, this file) are
 updated in the same change as the code they describe.
 
 ## Experiments
+
+Comments of the form "checklist item" in the code refer to the author's working list of planned experiments, a private file that is kept out of the repository.
 
 A new model component is a candidate group in `cypmode/challenge/nested_runners.py` with a driver built on
 `cypmode/challenge/addition_experiment.py`: it is evaluated alone and inside the assembled stack, with the corrected resampled t at both

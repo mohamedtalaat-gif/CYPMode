@@ -56,7 +56,6 @@ REVIEWED = {  # files that name blinded compounds without being a result for the
     "data/tdi_track/outputs/comparisons/softmax_curve_CYP2D6.csv": "cross-validation summary: one row per selector and cut (20 rows), no compound",
     "data/tdi_track/outputs/comparisons/baseline_reproduction.csv": "the official baseline's scores in the project's cross-validation",
     "METHOD_REPORT.md": "prose and a dump of the recipe (samples per ligand); no per-compound result",
-    "SUBMISSION_CHECKLIST.md": "prose naming the compounds of the leak guard",
     "docs/card/build_card.py": "the identifiers of the six poses of the full card, in code",
     "submissions/structure_track/README.md": "lists the file names of the zip and its SHA-256, and how the poses were chosen; no coordinates",
 }

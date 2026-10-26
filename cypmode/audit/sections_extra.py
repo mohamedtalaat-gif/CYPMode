@@ -42,13 +42,11 @@ def gate_ledger(ctx: Context) -> Section:
 def checklist(ctx: Context) -> Section:
     from cypmode.audit.checklist import check
 
-    s = Section("15. Checklist consistency (every promise points at something that exists)")
-    problems, loose, counts = check()
-    s.body.append(f"Items: {counts['done']} done, {counts['running']} running, {counts['open']} open. Jobs in the queue: {len(list((ROOT / 'queue/jobs').glob('*.sh')))}.")
+    s = Section("15. Queue consistency (every job points at modules and scripts that exist)")
+    problems, _loose, _counts = check()
+    s.body.append(f"Jobs in the queue: {len(list((ROOT / 'queue/jobs').glob('*.sh')))}.")
     s.body += [f"- PROBLEM: {p}" for p in problems] or ["No missing job, module or code file."]
-    s.body += [f"- no queue job: {item}" for item in loose]
-    s.add("checklist references resolve", not problems, f"{len(problems)} problems")
-    s.add("every open item has a queue job", not loose, f"{len(loose)} without")
+    s.add("queue jobs name modules and scripts that exist", not problems, f"{len(problems)} problems")
     return s
 
 
