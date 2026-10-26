@@ -411,43 +411,43 @@
   }
  },
  "film": {
-  "built_utc": "2026-10-25 23:41:50",
+  "built_utc": "2026-10-26 17:23:14",
   "extra": {
    "assets": "ec1bcd91786a07c55a3e989e79abe357fbc8d5918d41547ec007435026b8726d",
-   "dom_digest": "17dcdd00cd87dfca347c0e257e4926553f8e458fce45b9afe4c3bcd41a71a54b",
+   "dom_digest": "ff3390b334631b37d9090e5b6c2b1db538ad9e147270e1bdc836ce687d476cdb",
    "frames": 9456,
    "voices": true
   },
-  "fingerprint": "6a198c01e6203b9ececc8ba24197175cd269d86258b7ab00b2e5dcbb82bc3ac8",
+  "fingerprint": "de8c308c830448b984e44ffe93902589c669ea15d69b9e955af67eac0e56ee1c",
   "outputs": {
-   "docs/video/cypmode_overview.mp4": "dbfff4af3b6bad56489fc65640e98313aae62f2209fbb45efb37f4c788d41ed1",
-   "docs/video/cypmode_overview_preview.gif": "b06e03aeae43733c69936225d90f362f2686500048ba75122772121288043d67",
-   "docs/video/cypmode_overview_web.mp4": "5826796f1a9d81d1766afee4ef4ed3ef1092e451edbab23281378faf78102c36"
+   "docs/video/cypmode_overview.mp4": "1ae00616773b8f2bbbc9c2e8c47db142d53df639e0f89fe7cd13efa8ea64d7d0",
+   "docs/video/cypmode_overview_preview.gif": "8f056eeb6cf100d0e822a25ae6739667915012bc5ab9730a7989c971f7ce088a",
+   "docs/video/cypmode_overview_web.mp4": "7d18b997d6cf53c053d7617ca2de026300c6f8340db3104c5bd55f74cbd5c05b"
   }
  },
  "interactive_card": {
-  "built_utc": "2026-10-25 23:42:09",
+  "built_utc": "2026-10-26 17:23:34",
   "extra": {
    "html_sha256": "b07ebb26c62df8b01c0bcd7916f6b0a815f73b74ab27a3d72498091df61ae3aa",
    "mode": "public"
   },
-  "fingerprint": "6a198c01e6203b9ececc8ba24197175cd269d86258b7ab00b2e5dcbb82bc3ac8",
+  "fingerprint": "de8c308c830448b984e44ffe93902589c669ea15d69b9e955af67eac0e56ee1c",
   "outputs": {
    "docs/card/interactive/index.html": "b07ebb26c62df8b01c0bcd7916f6b0a815f73b74ab27a3d72498091df61ae3aa"
   }
  },
  "poster": {
-  "built_utc": "2026-10-25 23:41:51",
+  "built_utc": "2026-10-26 17:23:15",
   "extra": {
    "dom_digest": "4096680957652931"
   },
-  "fingerprint": "6a198c01e6203b9ececc8ba24197175cd269d86258b7ab00b2e5dcbb82bc3ac8",
+  "fingerprint": "de8c308c830448b984e44ffe93902589c669ea15d69b9e955af67eac0e56ee1c",
   "outputs": {
-   "docs/video/cypmode_overview_poster.png": "b6649c78da5217ba08827bf711fcfe0f567c56bdda6a867c7f8efef8ee002e4e"
+   "docs/video/cypmode_overview_poster.png": "89980c0aaa411f571dfff1cc5c58c580d206b568e75971691ce7c5165f76bef4"
   }
  },
  "readme_card": {
-  "built_utc": "2026-10-25 22:25:16",
+  "built_utc": "2026-10-26 16:04:58",
   "extra": {
    "html_sha256": {
     "dark": "ca538ec4e588c01e2754487a2faed0383e42b52e1ef6e8b45668e3fabc23f376",
@@ -455,7 +455,7 @@
    },
    "mode": "public"
   },
-  "fingerprint": "6a198c01e6203b9ececc8ba24197175cd269d86258b7ab00b2e5dcbb82bc3ac8",
+  "fingerprint": "de8c308c830448b984e44ffe93902589c669ea15d69b9e955af67eac0e56ee1c",
   "outputs": {
    "docs/card/cypmode_card-dark.png": "84901669765a11959ec85a97985551affbae9e0a08a43cafdf76fda63e310236",
    "docs/card/cypmode_card-light.png": "21c9fb12f1a1cb8f1af1c170c2c061f87dbf439293a97819ba0a58fe48d6cbb3"
