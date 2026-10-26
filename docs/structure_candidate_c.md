@@ -1,0 +1,11 @@
+# Structure track: candidate C and the rule that decides between it and the submitted entry
+
+This note is dated by the commit that adds it, which precedes the upload of candidate C.
+
+**The submitted entry (S1).** The recipe of section 11 of `METHOD_REPORT.md`, uploaded on 2026-10-26 at 01:42 UTC. Its live LDDT-PLI is 0.3623 on 10 of the 20 ligands.
+
+**Why a second candidate.** On the same live ligands the organisers' Boltz-2 baseline scores 0.3950, and a published entry that repaired only the ligand of the baseline poses scores 0.4241. The 30 benchmark ligands on which the gates of the structure track were measured are chemically far from the 20 official ligands (the best similarity of an official ligand to the reference set is 0.12 to 0.34), so the benchmark evidence for the restraint may not transfer.
+
+**Candidate C.** For every ligand the first eligible unguided pose, taken from the runs of the recipe without the restrained run, under the eligibility of the recipe (the 22 checks of the scorer's PoseBusters call, the stereochemistry of the official SMILES, the margin floor 0.8 or else the largest margin), followed by the force-field relaxation under the rule registered in `cypmode/validation/relax_final.py`. A ligand that has no eligible unguided pose keeps the pose of S1. Of the 20 poses 11 differ from S1; the zip has the SHA-256 c8c0c1a1b77d76de65c4c9972496be58701836fac247737e96ad15807b023503, passes the portal rules and the 22 checks for all 20 poses (smallest relative distance 0.876) and keeps the official stereochemistry.
+
+**The rule.** The live LDDT-PLI of C is read once. If it is at least 0.4123, the live value of S1 plus 0.05, C is the structure entry; otherwise S1 is. The threshold follows the Ladder of Blum and Hardt (an improvement is accepted only when it exceeds the noise; the standard deviation of the live score is about 0.05). The final upload of the structure track carries the Method Report Link and the open-source mark and is the winner of this rule. No other candidate is uploaded to the structure track to decide between the two. The classification track is not touched.
