@@ -7,6 +7,7 @@
 ``load()`` returns one ``Facts`` object; Markdown cells refer to its fields as ``{{=F.n_train:,}}``, so a number in a sentence is never typed by hand.
 """
 
+import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -14,7 +15,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from cypmode.audit.method_report import gate_rows
+from cypmode.audit.ledger_kinds import totals
+from cypmode.challenge.nested_runners import default_candidates
 from cypmode.challenge.tdi_targets import training_view
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,12 +35,15 @@ class Facts:
     n_columns: int
     n_blocks: int
     n_models: int
+    n_families: int
+    n_final: dict = field(default_factory=dict)
     labelled: dict = field(default_factory=dict)
     positives: dict = field(default_factory=dict)
     unlabelled: dict = field(default_factory=dict)
     auc: dict = field(default_factory=dict)
     mcc: dict = field(default_factory=dict)
     gates: int = 0
+    families: int = 0
     gates_met: int = 0
     gates_not_met: int = 0
     poses: int = 0
@@ -51,9 +56,9 @@ class Facts:
 
 
 def gate_counts() -> tuple[int, int, int]:
-    """(judged, met, not met) from the ledger the method report prints; the exploratory re-scorings were not declared beforehand and are not counted."""
-    verdicts = [verdict for _, name, verdict in gate_rows() if "exploratory" not in name]
-    return len(verdicts), verdicts.count("MET"), verdicts.count("NOT MET")
+    """(judged, met, not met) of the pre-registered ledger: the one count of what was tried that the method report, the README and the film quote; the negative control and the exploratory second looks are not in it."""
+    verdicts, _, met = totals()
+    return verdicts, met, verdicts - met
 
 
 def load() -> Facts:
@@ -69,6 +74,8 @@ def load() -> Facts:
     stacks = {iso: pd.read_csv(FINAL_TDI / f"{iso}_stack_choice.csv").query("stack == 'default'").iloc[0] for iso in ISOFORMS}
     poses = pd.read_csv(STRUCTURE / "posebusters_validity_official20.csv")
     judged, met, not_met = gate_counts()
+    final = json.loads((FINAL_TDI / "manifest.json").read_text())["isoforms"]
+    kinds = len({c.family for c in default_candidates()})
     tests = sorted((ROOT / "tests").glob("test_*.py"))
     return Facts(
         n_train=len(train),
@@ -76,12 +83,15 @@ def load() -> Facts:
         n_columns=int(sum(store[b].shape[1] for b in blocks)),
         n_blocks=len(blocks),
         n_models=int(stacks["CYP3A4"]["n_candidates"]),
+        n_families=kinds,
+        n_final={iso: int(final[iso]["n_candidates"]) for iso in ISOFORMS},
         labelled=labelled,
         positives=positives,
         unlabelled=unlabelled,
         auc={iso: float(stacks[iso]["auc_z1.0"]) for iso in ISOFORMS},
         mcc={iso: float(stacks[iso]["mcc_z1.0"]) for iso in ISOFORMS},
         gates=judged,
+        families=totals()[1],
         gates_met=met,
         gates_not_met=not_met,
         poses=len(poses),

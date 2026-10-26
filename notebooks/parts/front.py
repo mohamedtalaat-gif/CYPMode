@@ -49,7 +49,7 @@ when the molecule is bound inside CYP3A4.
 Because the answers stay hidden until the challenge closes, the central difficulty is to judge how good a model is without optimism. The project therefore evaluates every model by
 nested cross-validation, in which no choice the model makes (which members to trust, how to blend them, where to put the yes/no threshold) is tested on the data it was chosen on,
 and it judges every proposed improvement by a rule written down before its result existed. {{=F.gates}} such rules were judged: {{=F.gates_not_met}} ended "not met" and {{=F.gates_met}}
-ended "met". The final classification model blends {{=F.n_models}} models that read {{=F.n_columns:,}} numbers per molecule. In nested cross-validation it reaches an area under the ROC curve
+ended "met". The final classification model blends {{=F.n_final['CYP3A4']}} models for CYP3A4 and {{=F.n_final['CYP2D6']}} for CYP2D6, which read {{=F.n_columns:,}} numbers per molecule. In nested cross-validation it reaches an area under the ROC curve
 (a score that is 0.5 for guessing and 1 for a perfect ranking, defined in section 4.10) of {{=F.auc['CYP3A4']:.3f}} for CYP3A4 and {{=F.auc['CYP2D6']:.3f}} for CYP2D6. These are
 estimates made on the training data. The challenge score itself is not known until the challenge closes. The submitted structures number {{=F.poses}}, and {{=F.pose_failures}} of them fail the
 challenge's physical-validity checks.

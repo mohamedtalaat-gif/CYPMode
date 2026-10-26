@@ -110,6 +110,9 @@ def test_every_document_quotes_the_one_count_of_what_was_tried():
     from docs.video import facts
 
     assert facts.gate_counts() == (verdicts, verdicts - met)
+    from notebooks import facts as notebook_facts
+
+    assert notebook_facts.gate_counts() == (verdicts, met, verdicts - met)
 
 
 @needs_outputs

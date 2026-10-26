@@ -80,7 +80,7 @@ LEDGER = '''
 # The ledger: every logged verdict of a pre-declared gate, grouped by experiment. The counts are read from the experiments' own logs.
 import re
 
-from cypmode.audit.method_report import gate_rows
+from cypmode.audit.ledger_kinds import ledger_rows
 
 DESCRIPTION = {
     "selection_aware_v2": ("selection-aware CYP2D6 model: P(label) = P(hit) x P(label | hit)", "9.1"),
@@ -130,8 +130,8 @@ def section_key(stem):
 
 
 rows = {}
-for log, gate, verdict in gate_rows():
-    stem = re.sub(r"(_f10)?\\.log$", "", re.sub(r"_(CYP3A4|CYP2D6)(?=(_f10)?\\.log)", "", log))
+frame = ledger_rows()
+for stem, verdict in zip(frame["stem"], frame["verdict"], strict=True):
     entry = rows.setdefault(stem, {"met": 0, "not met": 0})
     entry["met" if verdict == "MET" else "not met"] += 1
 ledger = pd.DataFrame([
@@ -139,8 +139,11 @@ ledger = pd.DataFrame([
     for stem, v in sorted(rows.items(), key=lambda kv: (section_key(kv[0]), kv[0]))
 ])
 show_table(ledger)
-met = [name for _, name, verdict in gate_rows() if verdict == "MET"]
-print("gates met:", ", ".join(met))
+met_rows = frame[frame["verdict"] == "MET"]
+met = list(dict.fromkeys(DESCRIPTION[stem][0] if stem in DESCRIPTION else TITLES.get(stem, stem) for stem in met_rows["stem"]))
+met_structure = int((met_rows["kind"] == "structure levers").sum())
+met_model = len(met_rows) - met_structure
+print("experiments with a verdict met:", "; ".join(met))
 '''
 
 BUILD = '''
@@ -313,7 +316,7 @@ from the repository's files, so the counts on them are the current ones.
 | Training file | {{=F.n_train:,}} molecules with two assay arms per enzyme (measured without and with a head start for the inhibitor) | 2.2, 2.6 |
 | Label rule | the yes/no label follows from the two measurements, `s = t - max(d, 4) > log10 2`, and each label gets a confidence from the measurement noise | 2.3, 2.5 |
 | Features | every molecule becomes {{=F.n_columns:,}} numbers in {{=F.n_blocks}} blocks: fingerprints of its substructures, calculated properties, alerts for reactive groups, and physics from quantum chemistry | Part III, Part X |
-| Candidate models | {{=F.n_models}} models of five kinds (boosted trees, nearest neighbours, support vector machines, extremely randomised trees, a random forest), each reading some of the features | Part IV, 8.1 |
+| Candidate models | {{=F.n_models}} models of {{=F.n_families}} kinds (boosted trees, nearest neighbours, support vector machines, extremely randomised trees, a random forest and two boosted regressors of the assay arms), each reading some of the features | Part IV, 8.1 |
 | Nested validation | the whole procedure is evaluated on folds that no choice has seen; the evaluation weights match the test set | Part VI |
 | Stacked blend | a logistic regression combines the candidates' scores; its penalty is chosen inside the inner folds | 8.2 |
 | Gates | each new idea must beat the stack with corrected p < 0.05 at two confidence cut-offs before it is used | 6.7, Parts IX and X |
@@ -354,12 +357,12 @@ again in a replicate with 10 folds; the verdicts of a replicate are counted with
 """),
     code(LEDGER),
     md("""
-{{=F.gates}} verdicts were recorded for rules declared beforehand, and {{=F.gates_met}} of them are "met": {{=', '.join(met)}}. Both belong to the structure track. All the others, every
-addition to the classification model and every more elaborate way of choosing a pose, ended "not met". The re-scoring of minimum-Bayes-risk pose selection with LDDT-PLI is marked
-exploratory because its rule was not declared beforehand, so it is shown but not counted.
+{{=F.gates}} verdicts in {{=F.families}} families of ideas were recorded for rules declared beforehand, and {{=F.gates_met}} of them are "met": {{=met_model}} for the classification model and {{=met_structure}} for the structure track. The experiments
+with a verdict met are {{='; '.join(met)}}. All the others, including every more elaborate way of choosing a pose and most additions to the classification model, ended "not met". The table holds ideas only: the negative control of the pipeline
+(permuted labels must give chance) and the exploratory second looks, among them the re-scoring of minimum-Bayes-risk pose selection with LDDT-PLI whose rule was not declared beforehand, are checks and not ideas, and they are not in it.
 
 A ledger that is almost entirely "not met" is not a failure of the method. It is what a strict method is for. The classification model that results is deliberately plain: a blend of
-{{=F.n_models}} standard models on a large set of fingerprints and calculated properties. Its distinguishing features are in how it is evaluated, in how the label is modelled, and in the
+{{=F.n_models}} standard models (the default stack; the final CYP3A4 stack adds {{=F.n_final['CYP3A4'] - F.n_models}} members from groups that passed their gates) on a large set of fingerprints and calculated properties. Its distinguishing features are in how it is evaluated, in how the label is modelled, and in the
 record of what was tried. Sections 9.10 and 13.1 return to what the ledger does and does not show.
 """),
     md("""
