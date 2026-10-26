@@ -450,7 +450,7 @@ limit of the information in the tables and not of the method, and it is why the 
 
 Section 2.10 recovers the positive rate of the scored set from numbers that the boards publish. That rate sets the weights of the evaluation and the number of positive calls, so a reader may ask whether the training file and the structures of the blinded file could give the same rate without any board. They can, but only roughly, and this section shows how roughly.
 
-**The idea.** Take a classifier that gives every compound a score, higher for a positive compound than for a negative one on average. Let $m_1$ be the average score of positive compounds and $m_0$ the average score of negative compounds, both measured on compounds whose labels are known and that the classifier was not trained on. If the blinded file holds a share $\\pi$ of positives, its average score must be $\\pi m_1 + (1 - \\pi) m_0$, because the average of a mixture is the mixture of the averages. The average score over the blinded file needs no label, so the equation can be solved for $\\pi$:
+**The idea.** Take a classifier that gives every compound a score $s$, higher for a positive compound than for a negative one on average. Let $m_1$ be the average score of positive compounds and $m_0$ the average score of negative compounds, both measured on compounds whose labels are known and that the classifier was not trained on. If the blinded file holds a share $\\pi$ of positives, its average score must be $\\pi m_1 + (1 - \\pi) m_0$, because the average of a mixture is the mixture of the averages. The average score $\\bar s_{\\text{blinded}}$ over the blinded file needs no label, so the equation can be solved for $\\pi$:
 
 $$\\pi \\;=\\; \\frac{\\bar s_{\\text{blinded}} - m_0}{m_1 - m_0}.$$
 

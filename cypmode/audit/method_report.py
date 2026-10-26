@@ -434,8 +434,11 @@ def innovation_section() -> str:
     return "\n".join(lines)
 
 
-def innovation_table() -> str:
-    """The claims of the innovation section in one table (claim, the number that carries it, the log it comes from); the README and the specification embed it as a generated block."""
+INNOVATION_COLUMNS = ["claim", "evidence", "source"]
+
+
+def innovation_rows() -> list[tuple[str, str, str]]:
+    """The claims of the innovation section, one row each: the claim, the number that carries it and the log it comes from."""
     from cypmode.audit.ledger_kinds import totals
 
     manifest = json.loads((FINAL_TDI / "manifest.json").read_text()) if (FINAL_TDI / "manifest.json").exists() else None
@@ -464,7 +467,12 @@ def innovation_table() -> str:
     rows.append(("Restraint of the iron-nitrogen bond for Type II ligands", f"gate {gates.get('restraint_bond', '?')} on the crystal benchmark, {gates.get('restraint_bond_ost', '?')} under the OpenStructure scorer", "`structure_gates.log`, `ost_pool_gates.log`"))
     if structure:
         rows.append(("Validity margin of the scorer's own call and a relaxation under a registered rule", f"relaxation adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']}; smallest margin {structure['relaxation']['smallest_margin_before']:.3f} to {structure['relaxation']['smallest_margin_after']:.3f}", "`relax_final.log`"))
-    return table(rows, ["claim", "evidence", "source"])
+    return rows
+
+
+def innovation_table() -> str:
+    """The rows of ``innovation_rows`` as a markdown table; the README and the specification embed it as a generated block."""
+    return table(innovation_rows(), INNOVATION_COLUMNS)
 
 
 def structure_margin() -> str:

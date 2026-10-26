@@ -140,10 +140,37 @@ ledger = pd.DataFrame([
 ])
 show_table(ledger)
 met_rows = frame[frame["verdict"] == "MET"]
-met = list(dict.fromkeys(DESCRIPTION[stem][0] if stem in DESCRIPTION else TITLES.get(stem, stem) for stem in met_rows["stem"]))
+met_rows = met_rows.assign(order=(met_rows["kind"] == "structure levers").astype(int) * 2 + met_rows["name"].str.endswith("_ost").astype(int)).sort_values("order", kind="stable")  # the classification model first, then the structure track, the repeats under the second scorer last
+MET_LABEL = {  # a verdict that is met is named by what it passed, not by the family of the experiment (a family also holds verdicts that were not met)
+    "restraint_bond": "the restraint of the iron-nitrogen bond",
+    "restraint_contact": "the restraint of the iron-nitrogen contact",
+    "restraint_bond_ost": "the same bond restraint under the OpenStructure scorer",
+    "restraint_contact_ost": "the same contact restraint under the OpenStructure scorer",
+    "force_field_relaxation": "the force-field relaxation of poses",
+}
+
+
+def met_label(stem, name):
+    if name in MET_LABEL:
+        return MET_LABEL[name]
+    replicated = re.search(r"replicate (\\w+)", name)
+    if replicated:
+        return f"the 10-fold replicate of the {replicated.group(1)} group"
+    return TITLES.get(stem, stem)
+
+
+met = list(dict.fromkeys(met_label(stem, name) for stem, name in zip(met_rows["stem"], met_rows["name"], strict=True)))
 met_structure = int((met_rows["kind"] == "structure levers").sum())
 met_model = len(met_rows) - met_structure
-print("experiments with a verdict met:", "; ".join(met))
+print("verdicts met:", "; ".join(met))
+'''
+
+INNOVATION = '''
+# The claims of the innovation summary of the method report, with the number that carries each one; the rows are read from the logs, the manifests and the audit by cypmode/audit/method_report.py.
+from cypmode.audit.method_report import INNOVATION_COLUMNS, innovation_rows
+
+claims = pd.DataFrame(innovation_rows(), columns=INNOVATION_COLUMNS)
+show_table(claims)
 '''
 
 BUILD = '''
@@ -357,9 +384,9 @@ again in a replicate with 10 folds; the verdicts of a replicate are counted with
 """),
     code(LEDGER),
     md("""
-{{=F.gates}} verdicts in {{=F.families}} families of ideas were recorded for rules declared beforehand, and {{=F.gates_met}} of them are "met": {{=met_model}} for the classification model and {{=met_structure}} for the structure track. The experiments
-with a verdict met are {{='; '.join(met)}}. All the others, including every more elaborate way of choosing a pose and most additions to the classification model, ended "not met". The table holds ideas only: the negative control of the pipeline
-(permuted labels must give chance) and the exploratory second looks, among them the re-scoring of minimum-Bayes-risk pose selection with LDDT-PLI whose rule was not declared beforehand, are checks and not ideas, and they are not in it.
+{{=F.gates}} verdicts in {{=F.families}} families of ideas were recorded for rules declared beforehand, and {{=F.gates_met}} of them are "met": {{=met_model}} for the classification model and {{=met_structure}} for the structure track. The verdicts
+that are met are {{='; '.join(met)}}. All the others, including every more elaborate way of choosing a pose and most additions to the classification model, ended "not met". The table holds ideas only: the check of the pipeline on permuted labels
+(which must give chance) and the exploratory second looks, among them the re-scoring of minimum-Bayes-risk pose selection with LDDT-PLI whose rule was not declared beforehand, are checks and not ideas, and they are not in it.
 
 A ledger that is almost entirely "not met" is not a failure of the method. It is what a strict method is for. The classification model that results is deliberately plain: a blend of
 {{=F.n_models}} standard models (the default stack; the final CYP3A4 stack adds {{=F.n_final['CYP3A4'] - F.n_models}} members from groups that passed their gates) on a large set of fingerprints and calculated properties. Its distinguishing features are in how it is evaluated, in how the label is modelled, and in the
@@ -395,5 +422,21 @@ python -m notebooks.build_exports      # write the single-file HTML and the PDF 
 
 The equations in the HTML and the PDF are typeset by KaTeX, a mathematics typesetting library included in `notebooks/_vendor/katex/` with its licence, so that no network connection is
 needed. The cells can also be run in an ordinary Jupyter session started in the repository root: the first code cell imports the helpers that put figures and tables into a cell's output.
+"""),
+    md("""
+## 0.7 What the work adds, claim by claim
+
+> **Field:** Overview · Statistics
+
+The method report opens, before its results, with an innovation summary, and the README and the architecture specification carry the same table. A claim of novelty is easy to write and hard to check, so each row of the table
+names the number that carries the claim and the log that holds it. The rows are about five things: how the label is modelled (through the two measurements that define it), how the evaluation is made to resemble the scored population (Part VI),
+a model of the selection that decided which CYP2D6 compounds were measured (Part IX), how the reliability of a prediction is stated (similarity tiers with intervals over chemical series, a check that probabilities match frequencies, and a committee that was tested and did
+not help), and the simple ideas of the structure track (the iron-nitrogen restraint, the validity margin and the relaxation under a registered rule). One row is an attempt that came back inconclusive, the estimate of the positive rate without a
+leaderboard (section 2.11); it is in the table because a claim list that holds only successes is not a record.
+"""),
+    code(INNOVATION),
+    md("""
+Two things are deliberately absent from the table. It makes no claim about the score on the hidden labels, which is not known until the challenge closes, and it makes no claim that a rule for choosing among predicted poses works: every such rule
+failed its gate (section 11.8), and the structure track keeps the model's own ranking among the poses that are valid.
 """),
 ]
