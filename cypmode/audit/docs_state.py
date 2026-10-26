@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""The generated blocks of README.md and CYPMode_Architecture_Specification.md: the final stack, the verdicts of the gates and the structure recipe.
+"""The generated blocks of README.md and CYPMode_Architecture_Specification.md: the final stack, the verdicts of the gates, the structure recipe and the table of what the work adds.
 
 The text around the blocks is written by hand. Between a pair of markers
 
@@ -189,8 +189,14 @@ def structure_block() -> str:
     return "\n".join(["How the 20 poses of the submitted zip were chosen, from the verdicts of the gates and the recipe that reads them (`cypmode/validation/final_recipe.py`):", "", *lines])
 
 
-BLOCKS = {"final-stack": final_stack_block, "gate-verdicts": gate_verdicts_block, "structure-recipe": structure_block}
-TARGETS = {"README.md": ("final-stack", "gate-verdicts", "structure-recipe"), "CYPMode_Architecture_Specification.md": ("final-stack", "structure-recipe")}
+def innovation_block() -> str:
+    from cypmode.audit.method_report import innovation_table
+
+    return innovation_table()
+
+
+BLOCKS = {"final-stack": final_stack_block, "gate-verdicts": gate_verdicts_block, "structure-recipe": structure_block, "innovation": innovation_block}
+TARGETS = {"README.md": ("innovation", "final-stack", "gate-verdicts", "structure-recipe"), "CYPMode_Architecture_Specification.md": ("innovation", "final-stack", "structure-recipe")}
 
 
 def pattern(name: str) -> re.Pattern:

@@ -51,6 +51,21 @@ pose-validity and margin rules in which every lever was decided by a gate on cry
 4. *Uncertainty by construction.* Reliability tiers by similarity to the training data (`applicability_domain.py`), probabilities calibrated on inner out-of-fold scores, and the disagreement of the
    committee, reported with every prediction.
 
+**What each of these rests on.** The table is written by code from the logs, the manifests and the audit; a number that changes in a log changes here.
+
+<!-- generated:innovation begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
+| claim | evidence | source |
+| --- | --- | --- |
+| The label is a function of two measurements; the models learn the measurements | 0 and 0 mismatches of the label rule over 2334 and 1493 rows with both arms | audit section 4 |
+| A slice of the CYP3A4 labels follows another convention and is left out | 1249 rows without a direct measurement | audit section 4 |
+| Selection-aware CYP2D6 model; the file is chosen by a rule fixed before any upload | AUC 0.5618 to 0.7278 (+0.1660, corrected p = 0.026) on a scored set that looks like the training panel; the rule gives file A | `population_panel_CYP2D6_r3.log`, `selection_decision_CYP2D6.log` |
+| Every idea passes a gate written before its result | 184 verdicts in 58 families, 9 MET | `NEGATIVE_RESULTS.md` |
+| Reliability tiers by similarity to the training data, intervals over chemical series | blinded compounds supported: 750 of 750 (CYP3A4), 0 of 750 (CYP2D6) | `applicability_domain.log` |
+| Positive rates of the scored set recovered from the public boards | 0.310 (CYP3A4), 0.059 (CYP2D6) | limitation L13 |
+| Restraint of the iron-nitrogen bond for Type II ligands | gate MET on the crystal benchmark, MET under the OpenStructure scorer | `structure_gates.log`, `ost_pool_gates.log` |
+| Validity margin of the scorer's own call and a relaxation under a registered rule | relaxation adopted for 20 of 20; smallest margin 0.801 to 0.849 | `relax_final.log` |
+<!-- generated:innovation end -->
+
 **What it does not claim.** Cross-validation estimates are not the challenge score: the challenge scores hidden labels, and its test set is closer to the training set than a cross-validation
 fold is. A predicted structure is a model, not a measurement. The numbers reported here come from nested cross-validation on the training data and from checks of the predicted coordinates. One piece of aggregate information about the hidden labels is used: the positive rate of the scored set, which the public leaderboards make recoverable from the accuracy, precision and recall they publish (it weights the yardstick and sets the call rate); no label of any compound and no probing submission is used, and the method report lists it as a limitation.
 

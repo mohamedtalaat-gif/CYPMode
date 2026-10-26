@@ -34,6 +34,46 @@ Nested cross-validated estimates of the final stacks (AUC at the stricter and at
 - **Identifier.** The archived release has no DOI yet; the citation file lists it when it has one. The text to cite is in `USE_AND_CITATION.md`.
 - **Reproduction and checks.** `NEGATIVE_RESULTS.md` (every experiment that failed its gate), `audit/AUDIT_REPORT.md` (generated twice and compared byte for byte), `bash scripts/reproduce_tdi.sh`.
 
+## Innovation summary
+
+This section lists what the work adds, one claim at a time, with the evidence that stands next to it. Each row is a claim that the logs can check; the cross-validated numbers are estimates on the training data and not scores on the hidden labels (limitations L1, L2 and L13). Where an idea was tried and failed its gate, that is stated with the idea.
+
+### Architecture: the label is modelled through its process
+
+- **The label is a function of two measurements, so the models learn the measurements.** The TDI label is positive when `s = t - max(d, 4) > log10 2`. The rule reproduces every training label (0 mismatches for CYP3A4, 0 for CYP2D6). The stack therefore fits the shift `s` and the arms, and the label and its confidence `z = |s - log10 2| / sd(s)` follow from them, instead of fitting a binary label that discards the size of the margin.
+- **A selection-aware CYP2D6 model.** CYP2D6 was measured only for compounds that an earlier screen promoted, so a model of the label alone answers a question about a selected population. The second file multiplies P(label | hit) by a gate P(hit). When the scored set looks like the training panel it raises the outer AUC from 0.5618 to 0.7278 (+0.1660, corrected p = 0.026); the gain disappears when the scored set holds no never-promoted compounds, and at the call rate of the final build the loss there is larger than the gain where it wins (section 7). The choice between the two files was made by a rule fixed before any upload, and the rule gives **file A** (the hits-only file); the other file is kept with its SHA-256.
+- **Groups join a stack only through a gate.** 184 pre-registered verdicts in 58 families; 9 are MET and 175 are NOT MET. The final stacks are 28 (CYP3A4) and 23 (CYP2D6) candidates, selected by the logs and by nothing else.
+
+### Data usage
+
+- **A contaminated slice of the labels was found and removed from the CYP3A4 pool.** 1249 CYP3A4 rows have no direct-inhibition measurement and follow a different label convention than the blinded set; the pool keeps the 2334 rows with both arms, and every CYP3A4 number is computed on that population (section 2).
+- **The evaluation reproduces the scored population.** The outer folds are weighted by similarity to the blinded structures and by the estimated prevalence, and only confidently labelled compounds are evaluated; 3 repeats of 5 outer folds (15 outer evaluations) with every selection step inside the inner folds (section 5).
+- **One aggregate number is recovered from the public leaderboards.** The accuracy, precision and recall that the boards publish for every entry fix the positive rate of the scored set: 0.310 for CYP3A4 and 0.059 for CYP2D6. It sets the call rate (a multiple of the prevalence: 1.3 and 1.0); no label of any compound and no probing submission is used (limitation L13).
+- **The official structure set was checked for stereochemistry.** 4 of the 20 ligands carry specified stereochemistry; only 23 of the 36 pool poses of those ligands reproduce it, so the pick is restricted to poses that do, and all 20 submitted poses reproduce the official stereochemistry (`stereo_check.log`).
+
+### Uncertainty
+
+- **Reliability by similarity to the training data, with intervals over chemical series.** Held-out compounds of the outer folds are cut by the nearest-training similarity; the interval of each bin resamples whole Butina clusters, so a bin is called supported only when the lower end of its interval reaches 0.60 (`applicability_domain.py`, `applicability_domain.log`). For CYP3A4 the 750 blinded compounds fall into 750 supported, 0 weak and 0 unsupported compounds; for CYP2D6 into 0 supported, 599 weak and 151 unsupported compounds, so the CYP2D6 predictions carry the weaker reliability.
+- **Probabilities calibrated on the inner folds, with the failure reported.** The expected calibration error after isotonic regression is 0.0189 (CYP3A4) and 0.0054 (CYP2D6); the raw CYP2D6 blend has 0.3592 and is a ranking, not a probability (limitation L10).
+- **A committee of models as an uncertainty signal was tested and did not help.** Added to the stack it moves the AUC by +0.0023 (p = 0.405) for CYP3A4 and -0.0070 (p = 0.615) for CYP2D6 at z0 = 1.0; its probability is miscalibrated as it comes out (expected calibration error 0.1410 and 0.3059). It is reported with the predictions and never alters one.
+
+### Simple ideas that carry the structure track
+
+- **A restraint of the iron-nitrogen bond for Type II ligands.** One extra constraint in the Boltz-2 input; the gates `restraint_bond` and `restraint_contact` are MET and MET on the crystal-anchored benchmark, and the same gates under the OpenStructure scorer give MET and MET.
+- **The scorer's own validity call with a margin.** Every pose is checked by the 22 PoseBusters checks of the scorer, and a pose is eligible only when its smallest relative distance to the receptor is at least 0.8; a pose that fails a check scores zero, so validity is treated as a constraint and not as a feature.
+- **A relaxation under a rule written before it was run.** The force-field relaxation of the ligand in the fixed pocket replaces a pose only when both pass the checks, the margin rises, the ligand moves at most 1.0 A and the iron-nitrogen distance changes at most 0.2 A; it was adopted for 20 of 20 ligands and raised the smallest margin from 0.801 to 0.849.
+
+### Rigor
+
+- **Negative results are results.** `NEGATIVE_RESULTS.md` lists all 175 verdicts that were NOT MET. The negative control, the whole nested procedure on permuted labels, gives an outer AUC of 0.5096 (CYP3A4) and 0.5012 (CYP2D6) at z0 = 1.0.
+- **Every number in the reports is copied by code from a log and checked by the audit,** which is generated twice and compared byte for byte (section 4.4).
+
+### What is not claimed
+
+- The cross-validated AUC and MCC are estimates on the training data. The portal scores hidden labels, its test set sits closer to the training data than a random fold does, and the live board scores a part of it.
+- The structure recipe does not claim a better pose choice: every rule for choosing among predicted poses is NOT MET. What it adds is the restraint, the validity margin, the stereochemistry check and the relaxation.
+- The positive rates come from the public boards, not from an independent estimate; limitation L13 states what depends on them.
+
 ## 1. Scope and what is not claimed
 
 Two tracks of the OpenADMET CYP blind challenge: time-dependent-inhibition (TDI) classification for CYP3A4 and CYP2D6, and

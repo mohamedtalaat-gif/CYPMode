@@ -256,14 +256,20 @@ def stack_lead(final_text: str, manifest: dict | None) -> str:
     return "Each isoform has the stack that the pre-registered rule selects, from the nested cross-validation on the population the challenge scores. " + " ".join(parts) + f" The positive calls are the top {manifest['isoforms']['CYP3A4']['called_rate']:.1%} of the test compounds for CYP3A4 and the top {manifest['isoforms']['CYP2D6']['called_rate']:.1%} for CYP2D6."
 
 
-def selection_lead() -> str:
-    """Section 7 in words, from the lines of the log of the selection-aware model and from the registered decision."""
+def selection_numbers() -> tuple[str | None, ...]:
+    """The hits-only AUC, the selection-aware AUC, their difference, its corrected p-value and the file that the registered rule gives, read from the logs of jobs 010 and 016."""
     panel = (LOGS / "population_panel_CYP2D6_r3.log").read_text(errors="ignore") if (LOGS / "population_panel_CYP2D6_r3.log").exists() else ""
     decision = (LOGS / "selection_decision_CYP2D6.log").read_text(errors="ignore") if (LOGS / "selection_decision_CYP2D6.log").exists() else ""
     z1 = panel.split("z0 = 1.96")[0]
     s0, s3 = first_number(z1, r"S0 hits-only\s+outer AUC ([\d.]+)"), first_number(z1, r"S3 \+end-to-end\s+outer AUC ([\d.]+)")
     gain, p = first_number(z1, r"S3 \+end-to-end.*?vs S0 AUC (\+[\d.]+) \(p=([\d.]+)"), first_number(z1, r"S3 \+end-to-end.*?vs S0 AUC \+[\d.]+ \(p=([\d.]+)")
     entry = first_number(decision, r"FINAL ENTRY BY THE REGISTERED RULE: (file \w)")
+    return s0, s3, gain, p, entry
+
+
+def selection_lead() -> str:
+    """Section 7 in words, from the lines of the log of the selection-aware model and from the registered decision."""
+    s0, s3, gain, p, entry = selection_numbers()
     if not (s0 and s3 and gain and p and entry):
         return pending("jobs 010 and 016")
     return (f"CYP2D6 compounds were measured on this enzyme only if an earlier screen promoted them, so the training labels come from a selected subset and the scored set may hold compounds that would never have been promoted. The selection-aware model multiplies P(label | hit) by a gate P(hit). "
@@ -307,6 +313,131 @@ def structure_lead() -> str:
     met = [STRUCTURE_GATES.get(n.split(" ")[0], TITLES.get(s, n)) for s, n, v in zip(part["stem"], part["name"], part["verdict"], strict=True) if v == "MET"]
     return (f"The structure levers gave {len(part)} pre-registered verdicts, {len(met)} of them MET ({', '.join(sorted(set(met))) or 'none'}). Every rule for choosing a pose among the predicted ones was NOT MET on the crystal-anchored benchmark, so the pick is the model's own ranking among the valid poses; "
             "what the recipe adds is a restraint of the iron-nitrogen contact, the scorer's own validity call with a margin rule, and a registered relaxation.")
+
+
+def label_rows() -> dict[str, tuple[str, str, str]]:
+    """Per isoform from the data section of the audit: rows with both arms, mismatches of the label rule, rows without a direct measurement."""
+    text = AUDIT.read_text() if AUDIT.exists() else ""
+    return {iso: (both, miss, nodirect) for iso, both, miss, nodirect in re.findall(r"^\| (CYP\w+) \| (\d+) \| (\d+) \| (\d+) \| [\d.]+ \|", text, re.MULTILINE)}
+
+
+def tier_counts() -> dict[str, tuple[str, str, str]]:
+    """Per isoform from the applicability-domain log: blinded compounds in the supported, weak and unsupported tier at the primary confidence cut."""
+    path = LOGS / "applicability_domain.log"
+    text = path.read_text(errors="ignore") if path.exists() else ""
+    found = {}
+    for iso, body in re.findall(r"^## (CYP\w+)\n(.*?)(?=^## |\Z)", text, re.MULTILINE | re.DOTALL):
+        m = re.search(r"Blinded compounds by tier \(primary cut z0 = 1\.0\): (\d+) supported \(\d+%\), (\d+) weak \(\d+%\), (\d+) unsupported", body)
+        if m:
+            found[iso] = m.groups()
+    return found
+
+
+def committee_row(iso: str) -> tuple[str, str, str] | None:
+    """The stacked gain of the committee candidates, its p-value and the calibration error of the committee probability, both at z0 = 1.0, from the log of the committee test."""
+    path = LOGS / f"committee_label_model_{iso}.log"
+    text = path.read_text(errors="ignore") if path.exists() else ""
+    gain = re.search(r"z0=1\.0\s+stacked base\+added vs base: AUC ([+-][\d.]+) \(p=([\d.]+)", text)
+    ece = re.search(r"z0=1\.0\s+ECE ([\d.]+)", text)
+    return (gain.group(1), gain.group(2), ece.group(1)) if gain and ece else None
+
+
+def innovation_section() -> str:
+    """What the work adds, claim by claim, with the evidence next to each claim; every number is read from a log, a manifest or the audit report."""
+    from cypmode.audit.ledger_kinds import totals
+    from cypmode.challenge import final_tdi_build as build
+
+    manifest = json.loads((FINAL_TDI / "manifest.json").read_text()) if (FINAL_TDI / "manifest.json").exists() else None
+    structure = json.loads((FINAL_STRUCTURE / "manifest.json").read_text()) if (FINAL_STRUCTURE / "manifest.json").exists() else None
+    labels, tiers = label_rows(), tier_counts()
+    s0, s3, gain, p, entry = selection_numbers()
+    verdicts, families, met = totals()
+    permuted = {iso: first_number((LOGS / f"permutation_control_{iso}.log").read_text(errors="ignore") if (LOGS / f"permutation_control_{iso}.log").exists() else "", r"z0=1\.0\s+real labels.*?permuted: AUC ([\d.]+)") for iso in ("CYP3A4", "CYP2D6")}
+    calibration = (LOGS / "calibration.log").read_text(errors="ignore") if (LOGS / "calibration.log").exists() else ""
+    ece = {(iso, method): value for iso, method, value in re.findall(r"^\s*(CYP\w+)\s+(raw|isotonic)\s+([\d.]+)", calibration, re.MULTILINE)}
+    stereo = (LOGS / "stereo_check.log").read_text(errors="ignore") if (LOGS / "stereo_check.log").exists() else ""
+    chiral, pooled, pool_total = first_number(stereo, r"specified stereochemistry: (\d+) of \d+"), first_number(stereo, r"\((\d+) of \d+\)\s*$"), first_number(stereo, r"\(\d+ of (\d+)\)\s*$")
+    gates = {name: verdict for _, name, verdict in gate_rows()}
+    lines = [
+        "## Innovation summary",
+        "",
+        "This section lists what the work adds, one claim at a time, with the evidence that stands next to it. Each row is a claim that the logs can check; the cross-validated numbers are estimates on the training data and not scores on the hidden labels (limitations L1, L2 and L13). Where an idea was tried and failed its gate, that is stated with the idea.",
+        "",
+        "### Architecture: the label is modelled through its process",
+        "",
+        f"- **The label is a function of two measurements, so the models learn the measurements.** The TDI label is positive when `s = t - max(d, 4) > log10 2`. The rule reproduces every training label ({labels['CYP3A4'][1] if 'CYP3A4' in labels else '?'} mismatches for CYP3A4, {labels['CYP2D6'][1] if 'CYP2D6' in labels else '?'} for CYP2D6). The stack therefore fits the shift `s` and the arms, and the label and its confidence `z = |s - log10 2| / sd(s)` follow from them, instead of fitting a binary label that discards the size of the margin.",
+        f"- **A selection-aware CYP2D6 model.** CYP2D6 was measured only for compounds that an earlier screen promoted, so a model of the label alone answers a question about a selected population. The second file multiplies P(label | hit) by a gate P(hit). When the scored set looks like the training panel it raises the outer AUC from {s0} to {s3} ({gain}, corrected p = {p}); the gain disappears when the scored set holds no never-promoted compounds, and at the call rate of the final build the loss there is larger than the gain where it wins (section 7). The choice between the two files was made by a rule fixed before any upload, and the rule gives **{entry}** (the hits-only file); the other file is kept with its SHA-256." if (s0 and s3 and gain and p and entry) else f"- **A selection-aware CYP2D6 model.** {pending('jobs 010 and 016')}",
+        f"- **Groups join a stack only through a gate.** {verdicts} pre-registered verdicts in {families} families; {met} are MET and {verdicts - met} are NOT MET. The final stacks are {manifest['isoforms']['CYP3A4']['n_candidates']} (CYP3A4) and {manifest['isoforms']['CYP2D6']['n_candidates']} (CYP2D6) candidates, selected by the logs and by nothing else." if manifest else f"- **Groups join a stack only through a gate.** {pending('job 090')}",
+        "",
+        "### Data usage",
+        "",
+        f"- **A contaminated slice of the labels was found and removed from the CYP3A4 pool.** {labels['CYP3A4'][2] if 'CYP3A4' in labels else '?'} CYP3A4 rows have no direct-inhibition measurement and follow a different label convention than the blinded set; the pool keeps the {labels['CYP3A4'][0] if 'CYP3A4' in labels else '?'} rows with both arms, and every CYP3A4 number is computed on that population (section 2).",
+        f"- **The evaluation reproduces the scored population.** The outer folds are weighted by similarity to the blinded structures and by the estimated prevalence, and only confidently labelled compounds are evaluated; {build.REPEATS} repeats of {build.DESIGN['outer']} outer folds ({build.REPEATS * build.DESIGN['outer']} outer evaluations) with every selection step inside the inner folds (section 5).",
+        f"- **One aggregate number is recovered from the public leaderboards.** The accuracy, precision and recall that the boards publish for every entry fix the positive rate of the scored set: {manifest['isoforms']['CYP3A4']['target_prevalence']:.3f} for CYP3A4 and {manifest['isoforms']['CYP2D6']['target_prevalence']:.3f} for CYP2D6. It sets the call rate (a multiple of the prevalence: {manifest['isoforms']['CYP3A4']['call_rate_multiplier']} and {manifest['isoforms']['CYP2D6']['call_rate_multiplier']}); no label of any compound and no probing submission is used (limitation L13)." if manifest else f"- **One aggregate number is recovered from the public leaderboards.** {pending('job 090')}",
+        f"- **The official structure set was checked for stereochemistry.** {chiral or '?'} of the 20 ligands carry specified stereochemistry; only {pooled or '?'} of the {pool_total or '?'} pool poses of those ligands reproduce it, so the pick is restricted to poses that do, and all 20 submitted poses reproduce the official stereochemistry (`stereo_check.log`).",
+        "",
+        "### Uncertainty",
+        "",
+        "- **Reliability by similarity to the training data, with intervals over chemical series.** Held-out compounds of the outer folds are cut by the nearest-training similarity; the interval of each bin resamples whole Butina clusters, so a bin is called supported only when the lower end of its interval reaches 0.60 (`applicability_domain.py`, `applicability_domain.log`). "
+        + (f"For CYP3A4 the 750 blinded compounds fall into {tiers['CYP3A4'][0]} supported, {tiers['CYP3A4'][1]} weak and {tiers['CYP3A4'][2]} unsupported compounds; for CYP2D6 into {tiers['CYP2D6'][0]} supported, {tiers['CYP2D6'][1]} weak and {tiers['CYP2D6'][2]} unsupported compounds, so the CYP2D6 predictions carry the weaker reliability." if "CYP3A4" in tiers and "CYP2D6" in tiers else pending("job 270")),
+        f"- **Probabilities calibrated on the inner folds, with the failure reported.** The expected calibration error after isotonic regression is {ece.get(('CYP3A4', 'isotonic'), '?')} (CYP3A4) and {ece.get(('CYP2D6', 'isotonic'), '?')} (CYP2D6); the raw CYP2D6 blend has {ece.get(('CYP2D6', 'raw'), '?')} and is a ranking, not a probability (limitation L10).",
+        "- **A committee of models as an uncertainty signal was tested and did not help.** " + (
+            f"Added to the stack it moves the AUC by {committee_row('CYP3A4')[0]} (p = {committee_row('CYP3A4')[1]}) for CYP3A4 and {committee_row('CYP2D6')[0]} (p = {committee_row('CYP2D6')[1]}) for CYP2D6 at z0 = 1.0; its probability is miscalibrated as it comes out (expected calibration error {committee_row('CYP3A4')[2]} and {committee_row('CYP2D6')[2]}). It is reported with the predictions and never alters one."
+            if committee_row("CYP3A4") and committee_row("CYP2D6") else pending("committee test")
+        ),
+        "",
+        "### Simple ideas that carry the structure track",
+        "",
+        f"- **A restraint of the iron-nitrogen bond for Type II ligands.** One extra constraint in the Boltz-2 input; the gates `restraint_bond` and `restraint_contact` are {gates.get('restraint_bond', '?')} and {gates.get('restraint_contact', '?')} on the crystal-anchored benchmark, and the same gates under the OpenStructure scorer give {gates.get('restraint_bond_ost', '?')} and {gates.get('restraint_contact_ost', '?')}.",
+        f"- **The scorer's own validity call with a margin.** Every pose is checked by the 22 PoseBusters checks of the scorer, and a pose is eligible only when its smallest relative distance to the receptor is at least {structure_margin()}; a pose that fails a check scores zero, so validity is treated as a constraint and not as a feature.",
+        (f"- **A relaxation under a rule written before it was run.** The force-field relaxation of the ligand in the fixed pocket replaces a pose only when both pass the checks, the margin rises, the ligand moves at most {structure['relaxation']['rule']['max_movement_A']} A and the iron-nitrogen distance changes at most {structure['relaxation']['rule']['max_fe_n_change_A']} A; it was adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']} ligands and raised the smallest margin from {structure['relaxation']['smallest_margin_before']:.3f} to {structure['relaxation']['smallest_margin_after']:.3f}." if structure else f"- **A relaxation under a rule written before it was run.** {pending('job 243')}"),
+        "",
+        "### Rigor",
+        "",
+        f"- **Negative results are results.** `NEGATIVE_RESULTS.md` lists all {verdicts - met} verdicts that were NOT MET. The negative control, the whole nested procedure on permuted labels, gives an outer AUC of {permuted['CYP3A4'] or '?'} (CYP3A4) and {permuted['CYP2D6'] or '?'} (CYP2D6) at z0 = 1.0.",
+        "- **Every number in the reports is copied by code from a log and checked by the audit,** which is generated twice and compared byte for byte (section 4.4).",
+        "",
+        "### What is not claimed",
+        "",
+        "- The cross-validated AUC and MCC are estimates on the training data. The portal scores hidden labels, its test set sits closer to the training data than a random fold does, and the live board scores a part of it.",
+        "- The structure recipe does not claim a better pose choice: every rule for choosing among predicted poses is NOT MET. What it adds is the restraint, the validity margin, the stereochemistry check and the relaxation.",
+        "- The positive rates come from the public boards, not from an independent estimate; limitation L13 states what depends on them.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def innovation_table() -> str:
+    """The claims of the innovation section in one table (claim, the number that carries it, the log it comes from); the README and the specification embed it as a generated block."""
+    from cypmode.audit.ledger_kinds import totals
+
+    manifest = json.loads((FINAL_TDI / "manifest.json").read_text()) if (FINAL_TDI / "manifest.json").exists() else None
+    structure = json.loads((FINAL_STRUCTURE / "manifest.json").read_text()) if (FINAL_STRUCTURE / "manifest.json").exists() else None
+    labels, tiers = label_rows(), tier_counts()
+    s0, s3, gain, p, entry = selection_numbers()
+    verdicts, families, met = totals()
+    gates = {name: verdict for _, name, verdict in gate_rows()}
+    rows = []
+    if labels:
+        rows.append(("The label is a function of two measurements; the models learn the measurements", f"{labels['CYP3A4'][1]} and {labels['CYP2D6'][1]} mismatches of the label rule over {labels['CYP3A4'][0]} and {labels['CYP2D6'][0]} rows with both arms", "audit section 4"))
+        rows.append(("A slice of the CYP3A4 labels follows another convention and is left out", f"{labels['CYP3A4'][2]} rows without a direct measurement", "audit section 4"))
+    if s0 and s3 and gain and p and entry:
+        rows.append(("Selection-aware CYP2D6 model; the file is chosen by a rule fixed before any upload", f"AUC {s0} to {s3} ({gain}, corrected p = {p}) on a scored set that looks like the training panel; the rule gives {entry}", "`population_panel_CYP2D6_r3.log`, `selection_decision_CYP2D6.log`"))
+    rows.append(("Every idea passes a gate written before its result", f"{verdicts} verdicts in {families} families, {met} MET", "`NEGATIVE_RESULTS.md`"))
+    if tiers.get("CYP3A4") and tiers.get("CYP2D6"):
+        rows.append(("Reliability tiers by similarity to the training data, intervals over chemical series", f"blinded compounds supported: {tiers['CYP3A4'][0]} of 750 (CYP3A4), {tiers['CYP2D6'][0]} of 750 (CYP2D6)", "`applicability_domain.log`"))
+    if manifest:
+        rows.append(("Positive rates of the scored set recovered from the public boards", f"{manifest['isoforms']['CYP3A4']['target_prevalence']:.3f} (CYP3A4), {manifest['isoforms']['CYP2D6']['target_prevalence']:.3f} (CYP2D6)", "limitation L13"))
+    rows.append(("Restraint of the iron-nitrogen bond for Type II ligands", f"gate {gates.get('restraint_bond', '?')} on the crystal benchmark, {gates.get('restraint_bond_ost', '?')} under the OpenStructure scorer", "`structure_gates.log`, `ost_pool_gates.log`"))
+    if structure:
+        rows.append(("Validity margin of the scorer's own call and a relaxation under a registered rule", f"relaxation adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']}; smallest margin {structure['relaxation']['smallest_margin_before']:.3f} to {structure['relaxation']['smallest_margin_after']:.3f}", "`relax_final.log`"))
+    return table(rows, ["claim", "evidence", "source"])
+
+
+def structure_margin() -> str:
+    from cypmode.validation.official_posebusters import MARGIN_FLOOR
+
+    return f"{MARGIN_FLOOR}"
 
 
 def lessons_lead() -> list[str]:
@@ -579,6 +710,7 @@ def build_method_report() -> str:
         "and a value without a source reads `(pending: <job>)`. Nothing in this report is a claim about the hidden test labels.",
         "",
         summary_section(),
+        innovation_section(),
         "## 1. Scope and what is not claimed",
         "",
         "Two tracks of the OpenADMET CYP blind challenge: time-dependent-inhibition (TDI) classification for CYP3A4 and CYP2D6, and",

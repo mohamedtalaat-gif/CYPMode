@@ -110,3 +110,20 @@ def test_every_document_quotes_the_one_count_of_what_was_tried():
     from docs.video import facts
 
     assert facts.gate_counts() == (verdicts, verdicts - met)
+
+
+@needs_outputs
+def test_the_innovation_summary_stands_between_the_disclosures_and_section_one_and_leaves_no_gap():
+    text = report.build_method_report()
+    assert text.index("## Summary and disclosures") < text.index("## Innovation summary") < text.index("## 1. Scope and what is not claimed")
+    section = report.innovation_section()
+    assert "(pending" not in section and "?" not in re.sub(r"`[^`]*`", "", section), "a claim of the innovation summary has no source"
+    assert "### What is not claimed" in section
+    named = set(pd.read_csv("data/structure_track/inputs/structure_track_test_blinded.csv")["Molecule_Name"]) & set(re.findall(r"OCNT-\d+", section))
+    assert not named
+
+
+@needs_outputs
+def test_the_innovation_table_has_one_row_per_claim_with_a_source():
+    rows = [line for line in report.innovation_table().splitlines()[2:]]
+    assert len(rows) >= 7 and all(line.count("|") == 4 for line in rows)
