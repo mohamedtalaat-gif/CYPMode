@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Set aside the runs that were made from an outdated official SMILES, so that they are regenerated from the corrected one (registered on 2026-10-24).
+"""Set aside the runs that were made from an outdated official SMILES, so that they are regenerated from the corrected one (job 275_stereo_official_rerun, registered on 2026-10-24).
 
 The organisers replaced the SMILES of three official ligands, first published as racemates, by the SMILES of the models used for scoring, which carry the stereochemistry. A run is *stale* when the SMILES of its
 Boltz input (``data/structure_track/inputs/cyp3a4_<run>.yaml``, rewritten by the pipeline every time a run starts) differs, as a canonical isomeric SMILES, from the one of its ligand in the official file. The

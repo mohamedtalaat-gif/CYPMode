@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Cryo-EM protein templates for the pose pool (job 135).
+"""Cryo-EM protein templates for the pose pool (job 135_boltz_cryoem_pilot).
 
 The PDB holds five cryo-EM structures of human CYP3A4 (UniProt P08684): 38FU (apo), 38FV (ritonavir), 38FW (ketoconazole), 38FX (azamulin) and
 38FY (vardenafil), released 2026-09-30 at 3.2-3.7 A. They are trimers; chain A is used as a one-chain protein template, like a crystal monomer.

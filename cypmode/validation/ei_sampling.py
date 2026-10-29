@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Expected-improvement sampling: spend extra poses where the pool disagrees most (job 172).
+"""Expected-improvement sampling: spend extra poses where the pool disagrees most (job 172_ei_sampling).
 
 Boltz-2 samples of one ligand come from one trunk pass and mostly agree; the pose that minimum-Bayes-risk selection picks is
 the consensus of the pool. A ligand whose pool has already reached a tight consensus gains little from another sample, one whose

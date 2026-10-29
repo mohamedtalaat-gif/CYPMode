@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Pharmacophore model of a predicted pose (declared on 2026-10-23 before any code ran).
+"""Pharmacophore model of a predicted pose (job 272_pose_pharmacophore_gate, declared on 2026-10-23 before any code ran).
 
 The structure track has had pharmacophore terms for choosing a pose (``pose_awareness``: two distances written by hand) and a shape prior from the crystal ligands (``pose_rescoring``), and no pharmacophore
 *model* of a pose. The fields and the sites that ``cypmode.challenge.pocket_pharmacophore`` builds from the public crystal ligands of CYP3A4 are one: a pose is put in the frame of the heme of its own

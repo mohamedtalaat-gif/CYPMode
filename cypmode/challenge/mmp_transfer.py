@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""SAR made explicit: matched-molecular-pair transformations (job 047).
+"""SAR made explicit: matched-molecular-pair transformations (job 047_mmp_transfer).
 
 Structure-activity relationship is usually stated as a transformation: replace one fragment of a molecule by another
 at the same site and see how the activity changes. Two compounds form a matched pair when single-bond fragmentation

@@ -1,6 +1,6 @@
 #!/bin/bash
 source queue/lib.sh
-# The pharmacophore model of a predicted pose (declared 2026-10-23 before any code), judged on the same pooled crystal-anchored benchmark as the pose terms of job 168. Each pose is put in the frame of its
+# The pharmacophore model of a predicted pose (declared 2026-10-23 before any code), judged on the same pooled crystal-anchored benchmark as the pose terms of job 168_pose_awareness. Each pose is put in the frame of its
 # own heme and scored against the fields and the sites of the crystal ligands built without the references of the scored ligand (the compound itself, and in the regime of the gate its analogues too).
 need_file cypmode/validation/pose_pharmacophore.py
 need_file $OUT/diversity_pilot_poses.csv

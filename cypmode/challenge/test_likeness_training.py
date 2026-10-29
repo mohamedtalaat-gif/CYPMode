@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Test-likeness-weighted training (job 060).
+"""Test-likeness-weighted training (job 060_test_likeness_training).
 
 The blinded test set is analog-heavy: its median nearest-neighbour similarity to the training set is 0.58-0.59 while the
 training set's own is 0.44 (diversity panel 0.31). A model fitted with equal weights spends most of its capacity on the

@@ -244,7 +244,7 @@ def choose_call_rate(cache, names, ctx, weight_fn_for, prevalence) -> tuple[floa
 
 
 def calibrated_probabilities(cache, names, deployment, plan) -> np.ndarray:
-    """Isotonic map fitted on the inner out-of-fold stack scores (the calibration of job 030), applied to the test scores."""
+    """Isotonic map fitted on the inner out-of-fold stack scores (the calibration of job 030_calibration), applied to the test scores."""
     rows, _ = inner_oof(cache, names, -1, 0)
     y = plan.labels(rows)
     calibrator = fit_calibrator("isotonic", np.asarray(deployment.selection.inner_scores), y, deployment.selection.inner_weights)

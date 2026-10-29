@@ -6,7 +6,7 @@
 structures in 2D, with the functional groups and the structure-activity relationships of the series.
 
 ``struct_pharm_pose_3d`` and ``struct_pharm_series`` use benchmark ligands, whose crystal structures are public, and are shown as they are. ``struct_pharm_official20_2d`` and ``struct_pharm_official20_3d`` show the
-final poses of the 20 official ligands and the numbers of job 925: their files are in the HELD BACK block of ``.gitignore`` and the notebook embeds them with ``held_back=True``.
+final poses of the 20 official ligands and the numbers of job 925_official_pharmacophore: their files are in the HELD BACK block of ``.gitignore`` and the notebook embeds them with ``held_back=True``.
 """
 
 import zipfile
@@ -227,7 +227,7 @@ def official_2d_caption() -> str:
     groups = chemotypes(smiles)
     return (f"The {len(summary)} official ligands in 2D, grouped into {len([g for g in groups if len(g) > 1])} chemotypes and {len([g for g in groups if len(g) == 1])} singletons (Morgan Tanimoto similarity of at least "
             f"{CHEMOTYPE_SIMILARITY} to a neighbour; the largest group first). Each structure shows its functional groups (one colour per group of the fixed table, named under it) and, for a chemotype, the atoms of the "
-            "maximum common substructure of the group are outlined in the colour of the group. Under each, the pharmacophore numbers of its final pose from job 925: the iron-donor error of a Type II donor or the distance of the "
+            "maximum common substructure of the group are outlined in the colour of the group. Under each, the pharmacophore numbers of its final pose from job 925_official_pharmacophore: the iron-donor error of a Type II donor or the distance of the "
             "oxidation site outside the 3.5 to 6.0 Å window, the recall of the crystal sites and a mark when a flag of the check of the binding-site representation is raised. These are predictions for blinded ligands.")
 
 

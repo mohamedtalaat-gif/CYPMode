@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Floor-clipped two-arm regression (job 078).
+"""Floor-clipped two-arm regression (job 078_arm_variants).
 
 The label is a function of the two assay arms, t (TDI condition) and d (direct inhibition): positive <=>
 t - max(d, 4) > log10 2. Anything below the floor 4 is irrelevant to it, yet the existing two-arm regressors

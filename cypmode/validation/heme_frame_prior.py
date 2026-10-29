@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Heme-frame pose prior from crystal ligands (job 175).
+"""Heme-frame pose prior from crystal ligands (job 175_heme_frame_prior).
 
 Where does a ligand sit relative to the heme? Every pose is described in the heme's own frame, with the iron as origin and
 the porphyrin normal as axis, by seven rotation-invariant numbers (the four pyrrole nitrogens make the heme nearly

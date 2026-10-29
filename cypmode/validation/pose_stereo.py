@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Whether a predicted pose carries the stereochemistry of the official SMILES (registered on 2026-10-24).
+"""Whether a predicted pose carries the stereochemistry of the official SMILES (job 275_stereo_official_rerun, registered on 2026-10-24).
 
 The scorer's PoseBusters call (the ``dock`` configuration) has no chirality check, so a pose of the wrong enantiomer passes all 22 checks with the same margin as the right one. Three of the 20 official ligands
 were first published without stereochemistry, and a co-folding model that is given such a SMILES is free to draw either enantiomer, so the stereochemistry of a pose has to be read from its coordinates.

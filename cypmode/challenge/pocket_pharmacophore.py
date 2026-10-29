@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Pocket-level pharmacophore block (declared on 2026-10-23 before any result).
+"""Pocket-level pharmacophore block (job 262_pocket_pharmacophore_extract, declared on 2026-10-23 before any result).
 
 Every other pharmacophore representation of the project describes the ligand alone. This one describes a compound relative to the pocket of one enzyme.
 

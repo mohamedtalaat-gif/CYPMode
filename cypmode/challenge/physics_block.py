@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Atom-, site- and pharmacophore-aware GFN2-xTB physics block (job 070).
+"""Atom-, site- and pharmacophore-aware GFN2-xTB physics block (job 070_physics_xtb_block).
 
 The two earlier quantum blocks (global GFN2 descriptors, an ML surrogate of Fukui indices at the basic nitrogen)
 were null. Both described the molecule as a whole or looked at one atom type. TDI is a statement about specific

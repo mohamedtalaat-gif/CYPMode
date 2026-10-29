@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Check of the conformational bias of the ligand ensembles (declared on 2026-10-23 before any code ran).
+"""Check of the conformational bias of the ligand ensembles (job 273_conformer_bias, declared on 2026-10-23 before any code ran).
 
 The ensembles of the pocket block and of the site model hold up to 12 conformers within 5 kcal/mol of the lowest (MMFF), low-energy states by construction; a ligand bound in a pocket is often not in
 one. For each crystal ligand copy of the CYP3A4 reference set (``reference_ligands``; no blinded compound is involved): ``N_CONFORMERS`` ETKDG conformers (seed 42, MMFF-relaxed), the heavy-atom RMSD
