@@ -375,7 +375,8 @@ Additions to the engine since that section was written, each behind its own gate
   heme-frame prior and expected-improvement sampling; `final_recipe.py` combines the terms whose gates are met and lists, for every
   official ligand, the measured CYP3A4 values of the same compound in the TDI training file.
 - Tooling: `cypmode/audit/checklist.py` (`--status`), `cypmode/audit/public_readiness.py`, `scripts/reproduce_tdi.sh`,
-  `python -m notebooks.build_notebook`.
+  `python -m notebooks.build_notebook`, and `cypmode/audit/project_map.py`, which writes the four pages of `docs/map` (the code, the queue, the flow of the data, the evidence)
+  from the tracked files; the pages are checked by a test.
 - Cryo-EM protein templates (`cryoem_templates.py`): the five cryo-EM CYP3A4 entries 38FU-38FY (chain A of each trimer) as one more pose-diversity lever, judged by the same pilot gate as the crystal-conformer, seed and step-scale levers.
 - Cross-isoform arm transfer (`xiso_transfer.py`): the assay arms of the other isoforms, predicted from structure with cross-fitted regressors, as features of the target-isoform classifier; same gate as every other addition.
 - Second looks at the assembled stack (`all_in_one.py`, `atomjepa_head`): the stack of every cached candidate whose predictions are complete, compared with the final stack of each isoform on the same plan (corrected paired t at both cut-offs and the design floor); it is registered not to replace the final stack by itself, because it has no replicate. The Atom-JEPA readout is repeated on 10 outer folds. The verdicts are in the `exploratory_*` logs, which no gate parser reads.

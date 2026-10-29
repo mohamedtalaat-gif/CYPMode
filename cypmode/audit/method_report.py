@@ -340,6 +340,19 @@ def benchmark_paragraph() -> str:
     )
 
 
+def map_paragraph() -> str:
+    """Where the map of the project is and what it holds, with the counts that the map itself writes."""
+    from cypmode.audit import project_map
+
+    modules, jobs = len(project_map.module_paths()), len(project_map.job_facts())
+    return (
+        f"**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all {modules} modules with what each does and what it imports, all {jobs} jobs of the queue with what each waits for "
+        "and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. "
+        "The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` "
+        "and a test fail when a page differs from the code. Two of the diagrams are drawn in the README."
+    )
+
+
 def structure_lead() -> str:
     from cypmode.audit.docs_state import STRUCTURE_GATES, TITLES
     from cypmode.audit.ledger_kinds import ledger_rows
@@ -1073,6 +1086,8 @@ def build_method_report() -> str:
         "",
         "Reproduce the TDI candidates with `bash scripts/reproduce_tdi.sh`; the audit with `bash scripts/run_audit.sh` (two runs, byte-identical);",
         "the environment is pinned in `environment/`. The structure recipe runs through `python -m cypmode.validation.final_recipe`.",
+        "",
+        map_paragraph(),
         "",
         "Sources credited (published, linked): OpenADMET CYP blind challenge and its official LightGBM baseline; the OpenADMET blog post",
         "\"Cofolding? I hardly know her!\" for the co-folding accuracy figure; repository `openadmet-cyp-structure`",

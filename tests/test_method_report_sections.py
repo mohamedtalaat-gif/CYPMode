@@ -179,3 +179,11 @@ def test_the_benchmark_paragraph_gives_the_rule_the_seeds_and_every_ligand_with_
     from cypmode.validation import structure_benchmark as sb
 
     assert all(seed in text for seed in sb.PANEL_SEEDS) and f"resolution at most {sb.MAX_RESOLUTION} A" in text and "(pending" not in text
+
+
+def test_the_report_points_to_the_map_with_the_counts_that_the_map_writes():
+    from cypmode.audit import project_map
+
+    text = report.map_paragraph()
+    assert f"all {len(project_map.module_paths())} modules" in text and f"all {len(project_map.job_facts())} jobs" in text and "docs/map" in text
+    assert text in report.build_method_report()
