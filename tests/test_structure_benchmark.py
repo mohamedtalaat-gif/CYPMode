@@ -6,13 +6,12 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-import yaml
 
 from cypmode.validation.structure_benchmark import (
     MAX_HEAVY,
     MIN_HEAVY,
-    PANEL_SEEDS,
     candidates,
+    panel_seed_smiles,
     pick_diverse,
 )
 
@@ -53,10 +52,7 @@ REFERENCE_SET = Path("data/structure_track/inputs/cyp3a4_reference_ligands.json"
 def test_the_committed_benchmark_is_what_the_picker_returns_from_the_panel_seeds():
     from cypmode.validation.reference_ligands import load_reference_set
 
-    seeds = []
-    for name in PANEL_SEEDS:
-        spec = yaml.safe_load(Path(f"data/structure_track/inputs/cyp3a4_{name}.yaml").read_text())
-        seeds += [e["ligand"]["smiles"] for e in spec["sequences"] if "ligand" in e and "smiles" in e["ligand"]]
-    picked = pick_diverse(candidates(load_reference_set()), seeds, 10)
-    committed = pd.read_csv("data/structure_track/inputs/structure_benchmark.csv")["Molecule_Name"].str.removeprefix("bench-")
-    assert set(picked["comp_id"]) == set(committed) and len(committed) == 10
+    picked = pick_diverse(candidates(load_reference_set()), panel_seed_smiles(), 10)
+    committed = pd.read_csv("data/structure_track/inputs/structure_benchmark.csv")
+    assert [f"bench-{c}" for c in picked["comp_id"]] == committed["Molecule_Name"].tolist()  # the same ten, in the same order
+    assert picked["smiles"].tolist() == committed["SMILES"].tolist()

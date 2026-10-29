@@ -4,7 +4,7 @@
 
 """A crystal-anchored benchmark for tuning the structure engine.
 
-Five panel compounds are too few to learn which engine, sampling setup or selection rule to
+The panel compounds are too few to learn which engine, sampling setup or selection rule to
 trust, and the official compounds have no public answer. The PDB does hold co-crystal poses for
 ~100 distinct CYP3A4 ligands (cypmode.validation.reference_ligands), so this module picks the
 most chemically DIVERSE of them -- maximin on Morgan fingerprints, seeded with the compounds that were
@@ -55,19 +55,24 @@ def pick_diverse(table: pd.DataFrame, seed_smiles: list[str], n: int, random_see
     return table.iloc[[i - n_seed for i in chosen if i >= n_seed]].reset_index(drop=True)
 
 
+def panel_seed_smiles(directory: Path = Path("data/structure_track/inputs")) -> list[str]:
+    """The ligand SMILES of the panel compounds of ``PANEL_SEEDS``, read from their Boltz-2 inputs: the compounds that start the pick."""
+    import yaml
+
+    seeds: list[str] = []
+    for name in PANEL_SEEDS:
+        spec = yaml.safe_load((directory / f"cyp3a4_{name}.yaml").read_text())
+        seeds += [e["ligand"]["smiles"] for e in spec["sequences"] if "ligand" in e and "smiles" in e["ligand"]]
+    return seeds
+
+
 def _main() -> None:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Pick the crystal benchmark: python -m cypmode.validation.structure_benchmark (rewrites data/structure_track/inputs/structure_benchmark.csv)")
     parser.add_argument("--n", type=int, default=10)
     parser.add_argument("--out", default="data/structure_track/inputs/structure_benchmark.csv")
     args = parser.parse_args()
     references = load_reference_set()
-    panel = [p.stem.removeprefix("cyp3a4_") for p in Path("data/structure_track/inputs").glob("cyp3a4_*.yaml") if not p.stem.startswith("cyp3a4_OCNT")]
-    import yaml
-
-    seeds = []
-    for name in panel:
-        spec = yaml.safe_load(Path(f"data/structure_track/inputs/cyp3a4_{name}.yaml").read_text())
-        seeds += [e["ligand"]["smiles"] for e in spec["sequences"] if "ligand" in e and "smiles" in e["ligand"]]
+    seeds = panel_seed_smiles()
     table = candidates(references)
     picked = pick_diverse(table, seeds, args.n)
     out = pd.DataFrame({"Molecule_Name": [f"bench-{c}" for c in picked["comp_id"]], "SMILES": picked["smiles"]})
