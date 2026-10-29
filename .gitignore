@@ -168,6 +168,7 @@ docs/video/cypmode_overview_preview.gif
 notebooks/cypmode_notebook.ipynb
 notebooks/cypmode_notebook.html
 notebooks/cypmode_notebook.pdf
+explorer/full/
 # <<< HELD BACK
 # Boltz inputs of the experiment ligands: written by the batch runner from the benchmark tables (they carry the paths of the machine that ran them)
 data/structure_track/inputs/cyp3a4_exp-*.yaml
