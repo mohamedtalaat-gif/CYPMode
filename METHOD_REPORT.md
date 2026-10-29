@@ -206,6 +206,38 @@ publication of each: the co-folding engines, PoseBusters, the corrected resample
 
 A gate that fails is a result. It is written down with its numbers, it is not tuned until it passes, and an idea that is found after looking is a discovery that needs a replicate, not a verdict.
 
+### 4.7 Experiments without a registered gate
+
+A log that holds no gate line is not a row of the ledger, and the ledger is the one count that this report quotes. These experiments were run and are listed here by their logs, so that the count of what was tried is not read as the count of what was run. The change in AUC is the paired difference of a candidate with its plain counterpart, with the corrected resampled t of the log.
+
+| log | what it holds | result |
+| --- | --- | --- |
+| `applicability_domain.log` | reliability by similarity to the training data | described in the innovation summary |
+| `block_holdout.log` | the test-like hold-out of the analog-expansion block | described in section 10 |
+| `calibration.log` | calibration of the published probabilities | described in section 9 |
+| `confidence_CYP2D6.log` | training on label confidence: the rows with |z| < 1 dropped or down-weighted, two deep LightGBM feature sets (notebook 9.8) | 5 outer folds, 8 comparisons, AUC change +0.0039 to +0.0292, smallest p = 0.26 |
+| `confidence_CYP2D6_r3.log` | training on label confidence: the rows with |z| < 1 dropped or down-weighted, two deep LightGBM feature sets (notebook 9.8) | 15 outer folds, 8 comparisons, AUC change +0.0065 to +0.0221, smallest p = 0.27 |
+| `confidence_CYP3A4.log` | training on label confidence: the rows with |z| < 1 dropped or down-weighted, two deep LightGBM feature sets (notebook 9.8) | 5 outer folds, 8 comparisons, AUC change -0.0017 to +0.0074, smallest p = 0.17 |
+| `confidence_CYP3A4_r3.log` | training on label confidence: the rows with |z| < 1 dropped or down-weighted, two deep LightGBM feature sets (notebook 9.8) | 15 outer folds, 8 comparisons, AUC change -0.0041 to +0.0039, smallest p = 0.51 |
+| `conformer_bias.log` | how often the 12-conformer ensemble holds the crystal pose | limitation L14 |
+| `context_CYP2D6_r3.log` | the alert-in-context block added to two deep LightGBM feature sets, alone and with the rows of |z| < 1 dropped (notebook 9.8) | 15 outer folds, 8 comparisons, AUC change -0.0028 to +0.0064, smallest p = 0.72 |
+| `context_CYP3A4_r3.log` | the alert-in-context block added to two deep LightGBM feature sets, alone and with the rows of |z| < 1 dropped (notebook 9.8) | 15 outer folds, 8 comparisons, AUC change -0.0016 to +0.0031, smallest p = 0.51 |
+| `data_checker_emax_vs_test.log` | check of the training file against the blinded file with the challenge data checker | similarity threshold 1.0: 0 pair(s) flagged |
+| `data_checker_inhibition_vs_test.log` | check of the training file against the blinded file with the challenge data checker | similarity threshold 1.0: 0 pair(s) flagged |
+| `data_checker_tdi_train_vs_test.log` | check of the training file against the blinded file with the challenge data checker | similarity threshold 1.0: 0 pair(s) flagged |
+| `data_checker_tdi_train_vs_test_0.9.log` | check of the training file against the blinded file with the challenge data checker | similarity threshold 0.9: 1 pair(s) flagged, of similarity 0.952 |
+| `label_shift.log` | the estimate of the positive rate without a board | CYP2D6: NOT INFORMATIVE; CYP3A4: NOT INFORMATIVE |
+| `population_panel_CYP2D6.log` | the panel experiments of the selection-aware model | described in section 7 |
+| `population_panel_CYP2D6_r3.log` | the panel experiments of the selection-aware model | described in section 7 |
+| `population_panel_CYP3A4.log` | the panel experiments of the selection-aware model | described in section 7 |
+| `population_sensitivity_panel_CYP2D6_r3.log` | dependence of the selection-aware model on the share of never-promoted compounds | described in section 7 |
+| `selection_decision_CYP2D6.log` | the registered choice of the CYP2D6 file | described in section 7 |
+| `site_representation.log` | variability of the binding site and the support of the pocket fields | described in notebook 11.11 |
+| `test_nonhit_share_CYP2D6.log` | the estimate of the share of never-promoted compounds among the blinded compounds | described in section 7 |
+| `why_no_gain.log` | diagnostics of why each idea that did not join added nothing; the table is `why_no_gain.csv` | described in notebook 9.12 |
+
+The logs of the exploratory second looks of section 4.3 are `exploratory_all_in_one_CYP2D6.log`, `exploratory_all_in_one_CYP3A4.log`, `exploratory_all_in_one_first_run_CYP2D6.log`, `exploratory_all_in_one_first_run_CYP3A4.log`, `exploratory_atomjepa_head_f10_CYP3A4.log`, `exploratory_bioemu2_first_attempts.log`, `exploratory_bioemu2_probe.log`, `exploratory_hypothesis_permuted_CYP2D6.log`, `exploratory_hypothesis_permuted_CYP3A4.log`, `exploratory_pharmacophore_models_replicate.log`, `exploratory_pocket_control_CYP2D6.log`, `exploratory_pocket_control_CYP3A4.log`, `exploratory_pocket_first_run_seed0_control_CYP2D6.log`, `exploratory_pocket_first_run_seed0_control_CYP3A4.log`, `exploratory_pocket_first_run_seed0_own_CYP2D6.log`, `exploratory_pocket_first_run_seed0_own_CYP3A4.log`, `exploratory_pocket_first_run_seed0_replicate.log`, `exploratory_pocket_replicate.log`, `exploratory_site_control_CYP2D6.log`, `exploratory_site_control_CYP3A4.log`. Every other log of the folder is a build, an extraction or a run that feeds a gate or a document, and a test fails when a log has none of these roles (`log_roles`).
+
 
 ## 5. Scoring-set-aware yardstick
 

@@ -693,8 +693,119 @@ def exploration_section() -> str:
         "",
         "A gate that fails is a result. It is written down with its numbers, it is not tuned until it passes, and an idea that is found after looking is a discovery that needs a replicate, not a verdict.",
         "",
+        ungated_section(),
     ]
     return "\n".join(lines)
+
+
+
+ANALYSES = re.compile(r"^(?:confidence_.*|context_.*|data_checker_.*|why_no_gain|population_sensitivity_.*|population_panel_.*|selection_decision_.*|test_nonhit_share_.*|block_holdout|label_shift|calibration|applicability_domain|conformer_bias|site_representation)\.log$")  # logs that hold a result and carry no gate line: each is named in section 4.7
+INFRASTRUCTURE = re.compile(
+    r"^(?:.*_(?:extract|build)|build_.*|lint_.*|audit_run|pre_submission_gate|figures_build|video_render|voices_.*|blender_clips|pymol_clips|explorer_bundle|interactive_card_.*|card_build|submissions_sync|"
+    r"method_report|docs_state|public_readiness|bench_.*|cryoem_.*|pilot_.*|series_.*|restraint_expansion_.*|stereo_.*|affinity_.*|bioemu2_benchmark|openfold3_.*|official_posebusters_.*|ost_pools|"
+    r"final_recipe|final_recipe_.*|relax_final|pose_awareness_single|official_extra_audit|exploratory_.*|tabicl.*|tabpfn.*|atomjepa_head.*|chemprop_CYP.*|mlp_aux_.*|neural_f10_.*|grid_f10_.*|final_tdi_build_f10|recompute_paired_summaries|chemeleon_speed)\.log$"
+)  # builds, extractions and runs that feed a gate or a document; the exploratory second looks are listed by name in section 4.7
+
+
+def log_roles() -> dict[str, str]:
+    """Every log of the experiment folder and its role: a gate (the log holds a pre-registered verdict), an analysis (a result without a gate line, named in section 4.7), infrastructure, or none."""
+    from cypmode.audit.ledger_kinds import stem_of
+
+    gated = {stem_of(f) for f, _, _ in gate_rows()}
+    roles = {}
+    for path in sorted(LOGS.glob("*.log")):
+        if stem_of(path.name) in gated:
+            roles[path.name] = "gate"
+        elif ANALYSES.match(path.name):
+            roles[path.name] = "analysis"
+        elif INFRASTRUCTURE.match(path.name):
+            roles[path.name] = "infrastructure"
+        else:
+            roles[path.name] = "none"
+    return roles
+
+
+def unclassified_logs() -> list[str]:
+    """Logs that have no role: a new experiment whose result no document would mention."""
+    return [name for name, role in log_roles().items() if role == "none"]
+
+
+PAIR = re.compile(r"z0=([\d.]+)\s+(\S+)\s+vs plain: AUC ([\d.]+) -> ([\d.]+) \(([+-][\d.]+), p=([\d.]+)")
+ANALYSIS_TEXT = [  # log pattern, what the log holds, and where its result is described ("paired", "checker" and "shift" mean that the result is read from the log itself)
+    (r"confidence_.*", "training on label confidence: the rows with |z| < 1 dropped or down-weighted, two deep LightGBM feature sets (notebook 9.8)", "paired"),
+    (r"context_.*", "the alert-in-context block added to two deep LightGBM feature sets, alone and with the rows of |z| < 1 dropped (notebook 9.8)", "paired"),
+    (r"data_checker_.*", "check of the training file against the blinded file with the challenge data checker", "checker"),
+    (r"why_no_gain", "diagnostics of why each idea that did not join added nothing; the table is `why_no_gain.csv`", "described in notebook 9.12"),
+    (r"block_holdout", "the test-like hold-out of the analog-expansion block", "described in section 10"),
+    (r"population_sensitivity_.*", "dependence of the selection-aware model on the share of never-promoted compounds", "described in section 7"),
+    (r"population_panel_.*", "the panel experiments of the selection-aware model", "described in section 7"),
+    (r"selection_decision_.*", "the registered choice of the CYP2D6 file", "described in section 7"),
+    (r"test_nonhit_share_.*", "the estimate of the share of never-promoted compounds among the blinded compounds", "described in section 7"),
+    (r"label_shift", "the estimate of the positive rate without a board", "shift"),
+    (r"calibration", "calibration of the published probabilities", "described in section 9"),
+    (r"applicability_domain", "reliability by similarity to the training data", "described in the innovation summary"),
+    (r"conformer_bias", "how often the 12-conformer ensemble holds the crystal pose", "limitation L14"),
+    (r"site_representation", "variability of the binding site and the support of the pocket fields", "described in notebook 11.11"),
+]
+
+
+def paired_summary(name: str) -> str:
+    """The comparisons of one log of paired candidates: the number of outer folds, how many comparisons, the range of the AUC change and the smallest p-value (the corrected resampled t of the log)."""
+    path = LOGS / name
+    text = path.read_text(errors="ignore") if path.exists() else ""
+    pairs, folds = PAIR.findall(text), re.search(r"(\d+) outer folds", text)
+    if not pairs or not folds:
+        return pending(name)
+    changes = [float(c) for *_, c, _ in pairs]
+    return f"{folds.group(1)} outer folds, {len(pairs)} comparisons, AUC change {min(changes):+.4f} to {max(changes):+.4f}, smallest p = {min(float(p) for *_, p in pairs):.2f}"
+
+
+def checker_summary(name: str) -> str:
+    """The result of one run of the challenge data checker, read from its report: the similarity threshold, the number of pairs it flags and their similarity (no compound is named)."""
+    path = ROOT / "audit/data_checker" / (name.removeprefix("data_checker_").removesuffix(".log") + ".json")
+    if not path.exists():
+        return pending(name)
+    data = json.loads(path.read_text())
+    flagged = data.get("train_test_leakage", {}).get("tanimoto_similarity", [])
+    threshold, n = data["config"]["max_train_test_similarity"], data["summary"]["total_tanimoto_leakage_pairs"]
+    values = ", ".join(f"{pair['similarity']:.3f}" for pair in flagged)
+    return f"similarity threshold {threshold}: {n} pair(s) flagged" + (f", of similarity {values}" if flagged else "")
+
+
+def analysis_row(name: str) -> tuple[str, str, str]:
+    for pattern, holds, how in ANALYSIS_TEXT:
+        if re.fullmatch(pattern + r"\.log", name):
+            if how == "paired":
+                result = paired_summary(name)
+            elif how == "checker":
+                result = checker_summary(name)
+            elif how == "shift":
+                shift = label_shift_summary()
+                result = "; ".join(f"{iso}: {v['verdict']}" for iso, v in shift.items()) if shift else pending("job 285")
+            else:
+                result = how
+            return f"`{name}`", holds, result
+    raise KeyError(f"no description for the analysis log {name}")
+
+
+def ungated_section() -> str:
+    """Section 4.7: the experiments that hold a result and no gate line, so that no document leaves out an experiment because the ledger does not count it."""
+    roles = log_roles()
+    rows = [analysis_row(name) for name, role in roles.items() if role == "analysis"]
+    exploratory = ", ".join(f"`{n}`" for n in roles if n.startswith("exploratory_"))
+    return "\n".join([
+        "### 4.7 Experiments without a registered gate",
+        "",
+        (
+            "A log that holds no gate line is not a row of the ledger, and the ledger is the one count that this report quotes. These experiments were run and are listed here by their logs, so that the count of what was tried is not read as the count of what was run. "
+            "The change in AUC is the paired difference of a candidate with its plain counterpart, with the corrected resampled t of the log."
+        ),
+        "",
+        table(rows, ["log", "what it holds", "result"]),
+        "",
+        f"The logs of the exploratory second looks of section 4.3 are {exploratory or pending('the exploratory jobs')}. Every other log of the folder is a build, an extraction or a run that feeds a gate or a document, and a test fails when a log has none of these roles (`log_roles`).",
+        "",
+    ])
 
 
 def ensemble_caveat(log: Path | None = None) -> str:

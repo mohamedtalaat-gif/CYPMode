@@ -138,3 +138,25 @@ def test_the_structure_board_paragraph_reads_the_recorded_scores_and_the_registe
     assert "(pending" not in text and f"{frame.set_index('entry').loc['candidate C', 'lddt_pli']:.4f}" in text
     assert "docs/structure_candidate_c.md" in text
     assert not frame["entry"].str.contains(r"\|").any(), "a board alias must not be written into a tracked file"
+
+
+@needs_outputs
+def test_every_log_of_the_experiment_folder_has_a_role():
+    stray = report.unclassified_logs()
+    assert not stray, f"logs with no role (add the pattern to ANALYSES or INFRASTRUCTURE of the method report, and describe an analysis in ANALYSIS_TEXT): {stray}"
+
+
+@needs_outputs
+def test_the_report_names_every_analysis_log_and_reads_its_result_from_the_log():
+    text = report.build_method_report()
+    analyses = [name for name, role in report.log_roles().items() if role == "analysis"]
+    assert analyses and all(f"`{name}`" in text for name in analyses)
+    assert "### 4.7 Experiments without a registered gate" in text
+    row = report.analysis_row("confidence_CYP3A4_r3.log")
+    assert "(pending" not in row[2] and "smallest p" in row[2]
+    assert "similarity threshold 0.9: 1 pair(s) flagged" in report.analysis_row("data_checker_tdi_train_vs_test_0.9.log")[2]
+
+
+def test_an_unknown_analysis_log_is_refused_not_skipped():
+    with pytest.raises(KeyError):
+        report.analysis_row("a_new_experiment_CYP3A4.log")
