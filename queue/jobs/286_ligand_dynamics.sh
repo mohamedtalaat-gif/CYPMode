@@ -11,5 +11,5 @@ done
 wait
 planned=$(python -c "import json; print(len(json.load(open('data/structure_track/outputs/cyp3a4/ligand_dynamics/manifest.json'))))")
 done_count=$(ls data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/*.npz 2>/dev/null | wc -l)
-[ "$planned" = "$done_count" ] || { echo "only $done_count of $planned trajectories exist"; exit 1; }
+[ "$planned" -eq "$done_count" ] || { echo "only $done_count of $planned trajectories exist"; exit 1; }
 python -m cypmode.validation.ligand_dynamics --gate > $L/ligand_dynamics.log 2>&1

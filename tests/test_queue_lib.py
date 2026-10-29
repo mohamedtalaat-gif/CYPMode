@@ -2,11 +2,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 LIB = Path(__file__).resolve().parents[1] / "queue" / "lib.sh"
+JOB_DIR = LIB.parent / "jobs"
 JOBS = ["010_a", "096_applicability_domain", "097_why_no_gain", "203_chemprop", "204_chemprop", "219_ext", "227_surrogates", "299_requeue_final_chain", "900_audit"]
 
 
@@ -78,3 +80,17 @@ def test_both_audits_of_the_final_sequence_wait_for_the_tree_and_the_second_for_
     requeue = (root / "queue/jobs/283_requeue_final_sequence.sh").read_text()
     for job in ("900_tests_and_audit", "941_card_build", "945_video_render", "946_interactive_card", "950_submissions_final_sync", "955_final_audit", "960_pre_submission_gate"):
         assert job in requeue
+
+
+def string_compared_counts(text: str) -> list[str]:
+    """The lines of a job script that compare, as strings, a variable that was filled from a wc pipeline."""
+    counted = re.findall(r"^\s*(\w+)=\$\(.*\|\s*wc\b", text, re.MULTILINE)
+    return [line.strip() for name in counted for line in text.splitlines() if re.search(rf"\[ .*\$\{{?{name}\b.*\]", line) and re.search(r"\s(=|==|!=)\s", line)]
+
+
+def test_a_count_from_wc_is_not_compared_as_a_string():
+    """The wc of macOS pads its number with spaces, so a string comparison of two equal counts fails: job 286 stopped with 'only 104 of 104 trajectories exist'."""
+    old = 'n=$(ls x/*.npz | wc -l)\n[ "$planned" = "$n" ] || { echo "only $n of $planned"; exit 1; }\n'
+    assert string_compared_counts(old) == ['[ "$planned" = "$n" ] || { echo "only $n of $planned"; exit 1; }']
+    assert string_compared_counts(old.replace(' = ', ' -eq ')) == []
+    assert {job.name: string_compared_counts(job.read_text()) for job in JOB_DIR.glob("*.sh") if string_compared_counts(job.read_text())} == {}
