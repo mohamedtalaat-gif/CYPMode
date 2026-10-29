@@ -147,6 +147,8 @@ MD_12_5_B = """
 **The queue is checked too.** Every job of the queue is a shell script that calls modules and scripts of the repository, and a job can promise something that does not exist. `cypmode/audit/checklist.py` makes the ways in which a job drifts from the repository checkable by a script: a job that calls a module that does not exist, a job that waits for a code file that does not exist (which would make it answer "not ready" for ever), and a script that does not exist. The workflow of 12.3 runs it on every change. In this build it finds {{=n_checklist_problems}} problems in {{=n_jobs}} jobs.
 
 **What must not be published.** The public-readiness scan (`cypmode/audit/public_readiness.py`) looks at the files that git tracks or would add. Its detectors find private paths on the author's machine, strings shaped like credentials, e-mail addresses other than the public contact lines, files near the size limit of the hosting service, long verbatim runs from the books used while writing, and, until the challenge closes, results for the blinded compounds: a file that names five or more of them, or a table with one row per blinded compound (750 for the TDI test set, 20 for the structure set), is a prediction and must not be pushed. The files that are held back are the {{=n_held_back}} patterns of the HELD BACK block of `.gitignore`, and the scan can also read every blob of the git history, because a push carries the history. The table shows three detectors firing on a sample that was made for the purpose.
+
+**A map of the project.** A reader who opens the repository meets {{=len(project_map_modules)}} modules and {{=project_map_jobs}} jobs and needs to know where things are and what depends on what. The folder `docs/map` answers it with four pages: the code (every package and module, what it does and what it imports), the queue (every job, what it waits for, and the chain that rebuilds and checks the project), the flow of the data (from the inputs through the jobs and the logs to the reports) and the evidence (the kinds of idea that were tried). Each page has a diagram and a table. The diagrams are written in Mermaid, a text format for diagrams that GitHub draws when it shows a Markdown file, so a page is plain text that a version control system can compare. No page is written by hand: `cypmode/audit/project_map.py` writes them from the first sentence of each docstring, the header comment of each job and counts of the files, and it reads only tracked sources, never a log or a result, so that a copy of the repository regenerates the same pages. Job `921_docs_state` writes them with the other generated blocks and then runs `python -m cypmode.audit.project_map --check`, which fails when a page differs from the code. The tests in `tests/test_project_map.py` check that every module and every job appears exactly once, that the counts on the arrows equal an independent recount of the imports that cross a package, that every diagram is closed, that the wording rules of 12.6 hold for the pages, and that the committed pages are what the code writes.
 """
 
 MD_12_5_C = """
@@ -265,6 +267,14 @@ MD_12_7_B = """
 *On what actually ran.* The cell of this section read the manifest of the bundle and the pinned versions. The app was started as an application and as a WebAssembly page and its controls were moved in a browser; the bundle builder and its tests ran as described. The explorer is a reader of finished results, nothing in it computes a result that the repository does not already hold, and no statement of this notebook depends on it.
 """
 
+MAP_FACTS = r"""
+# The size of what the map of the project describes, counted by the module that writes the map.
+from cypmode.audit import project_map
+
+project_map_modules = project_map.module_paths()
+project_map_jobs = len(project_map.job_facts())
+"""
+
 CELLS = [
     md(MD_12_4),
     code(QUEUE_HELPERS),
@@ -274,6 +284,7 @@ CELLS = [
     md(MD_12_5),
     code(REPORT_FILES),
     code(CHECKLIST_AND_SCAN),
+    code(MAP_FACTS),
     md(MD_12_5_B),
     md(MD_12_5_C),
     md(MD_12_6),
