@@ -1,0 +1,39 @@
+   compound  poses  mean_pool  mbr_pick  rho_dynamic_pharmacophore  dynamic_pharmacophore_pick  rho_stability  stability_pick  rho_dynamic_combined  dynamic_combined_pick  rho_static_pharmacophore_model
+  bench-2QH     11      0.693     0.854                     -0.330                       0.827          0.400           0.590                -0.032                  0.590                           0.218
+bench-A1A4S     11      4.669     6.068                      0.073                       6.068          0.264           4.312                 0.124                  6.068                          -0.323
+bench-A1ASV     11      2.474     2.347                     -0.818                       2.585         -0.636           2.777                -0.851                  2.777                          -0.873
+bench-A1CIW     11      6.126     6.301                      0.182                       6.065          0.045           5.267                 0.046                  6.293                           0.118
+  bench-MWS      5      1.872     1.323                     -0.100                       2.595          0.300           1.323                 0.205                  1.323                          -0.400
+  bench-MWV     11      4.920     4.811                      0.005                       4.839          0.300           4.839                 0.260                  4.839                           0.264
+  bench-PK9     17      3.589     4.736                     -0.675                       4.837          0.294           2.261                -0.300                  4.761                          -0.751
+  bench-TCI      5      5.734     4.947                     -0.671                       7.151          0.200           4.875                -0.051                  7.151                          -0.564
+  bench-TPF     17      3.768     3.889                      0.141                       3.335          0.056           3.759                 0.188                  3.759                          -0.039
+  bench-YNV      5      5.909     5.870                      0.051                       6.223         -0.800           6.223                -0.300                  6.223                          -0.051
+   compound  poses  mean_pool  mbr_pick  rho_dynamic_pharmacophore  dynamic_pharmacophore_pick  rho_stability  stability_pick  rho_dynamic_combined  dynamic_combined_pick  rho_static_pharmacophore_model
+  bench-2QH     11      0.693     0.854                     -0.330                       0.827          0.400           0.590                -0.032                  0.590                           0.218
+bench-A1A4S     11      4.669     6.068                      0.124                       6.068          0.264           4.312                 0.132                  2.416                           0.078
+bench-A1ASV     11      2.474     2.347                     -0.782                       2.585         -0.636           2.777                -0.826                  2.777                          -0.873
+bench-A1CIW     11      6.126     6.301                      0.182                       6.065          0.045           5.267                 0.046                  6.293                           0.118
+  bench-MWS      5      1.872     1.323                     -0.100                       2.595          0.300           1.323                 0.205                  1.323                          -0.400
+  bench-MWV     11      4.920     4.811                      0.005                       4.839          0.300           4.839                 0.260                  4.839                           0.264
+  bench-PK9     17      3.589     4.736                     -0.653                       4.837          0.294           2.261                -0.286                  4.761                          -0.722
+  bench-TCI      5      5.734     4.947                     -0.671                       7.151          0.200           4.875                -0.051                  7.151                          -0.564
+  bench-TPF     17      3.768     3.889                      0.141                       3.335          0.056           3.759                 0.188                  3.759                          -0.039
+  bench-YNV      5      5.909     5.870                      0.051                       6.223         -0.800           6.223                -0.300                  6.223                          -0.051
+104 poses of 10 ligands
+regime novel (the gate): 10 ligands
+  dynamic_pharmacophore: mean rho -0.214, positive for 50% of 10 ligands
+STRUCTURE GATE dynamics_dynamic_pharmacophore (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
+STRUCTURE GATE dynamics_dynamic_pharmacophore_use: not evaluated, the gate of the score is not met
+  stability: mean rho +0.042, positive for 80% of 10 ligands
+STRUCTURE GATE dynamics_stability (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
+STRUCTURE GATE dynamics_stability_use: not evaluated, the gate of the score is not met
+  dynamic_combined: mean rho -0.071, positive for 50% of 10 ligands
+STRUCTURE GATE dynamics_dynamic_combined (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
+STRUCTURE GATE dynamics_dynamic_combined_use: not evaluated, the gate of the score is not met
+  static_pharmacophore_model: mean rho -0.240, positive for 30% of 10 ligands
+regime compound (information): 10 ligands
+  dynamic_pharmacophore: mean rho -0.203, positive for 50% of 10 ligands
+  stability: mean rho +0.042, positive for 80% of 10 ligands
+  dynamic_combined: mean rho -0.066, positive for 50% of 10 ligands
+  static_pharmacophore_model: mean rho -0.197, positive for 40% of 10 ligands
