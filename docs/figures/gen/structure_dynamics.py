@@ -63,7 +63,7 @@ def gate_figure(theme_name):
     ax.invert_yaxis()
     ax.set_xlim(-1, 1)
     ax.set_xlabel("Spearman rho of the score with minus the true RMSD")
-    ax.legend(frameon=False, fontsize=8, loc="lower left", ncols=2)
+    ax.legend(frameon=False, fontsize=8, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncols=4)
     tidy(ax, th)
     fig.tight_layout()
     return fig

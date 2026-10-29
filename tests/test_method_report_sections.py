@@ -160,3 +160,14 @@ def test_the_report_names_every_analysis_log_and_reads_its_result_from_the_log()
 def test_an_unknown_analysis_log_is_refused_not_skipped():
     with pytest.raises(KeyError):
         report.analysis_row("a_new_experiment_CYP3A4.log")
+
+
+@needs_outputs
+def test_the_ligand_dynamics_is_stated_from_its_log_in_the_summary_and_in_the_table():
+    from cypmode.validation import ligand_dynamics as ld
+
+    facts = ld.read_log((report.LOGS / "ligand_dynamics.log").read_text(errors="ignore"))
+    bullet, row = report.dynamics_bullet(), report.dynamics_row()
+    for name in ld.SCORES:
+        assert f"{facts['scores'][name]['rho']:+.3f}" in bullet and f"{facts['scores'][name]['rho']:+.3f}" in row[1]
+    assert "(pending" not in bullet and row[2] == "`ligand_dynamics.log`"

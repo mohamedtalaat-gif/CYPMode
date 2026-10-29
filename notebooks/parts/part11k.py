@@ -24,6 +24,12 @@ dyn_verdict_sentence = ("None of the three dynamic scores passes the gate: " + "
                         f"with the bar at {MIN_MEAN_RHO:+.2f}." if not dyn_met else "The gate is met by " + " and ".join(dyn_met) + f"; the static model of the same poses scores {dyn_scores['static_pharmacophore_model']['rho']:+.3f}.")
 dyn_decision_sentence = ("No score passes the paired test against MBR, so no candidate D was built and S1 stays the structure entry, as the rule says." if not dyn_used else
                          "The paired test is met by " + " and ".join(dyn_used) + ", so the rule allows candidate D; its construction and its checks are in the paragraph that follows.")
+dyn_frame = pd.read_csv(ROOT / ld.POSES, float_precision="round_trip")
+dyn_frame = dyn_frame[dyn_frame["regime"] == "novel"]
+dyn_rho = pd.DataFrame({n: [ld.pool_rho(pool[n], pool["true_rmsd"]) for _, pool in dyn_frame.groupby("compound", sort=True)] for n in dyn_names})
+dyn_between = dyn_rho["static_pharmacophore_model"].corr(dyn_rho["dynamic_pharmacophore"], method="spearman")
+dyn_centred = lambda column: dyn_frame[column] - dyn_frame.groupby("compound")[column].transform("mean")
+dyn_drift_rho = dyn_centred("drift").corr(dyn_centred("true_rmsd"), method="spearman")
 show_table(dyn_table, floatfmt=".2f")
 '''
 
@@ -69,11 +75,11 @@ CELLS = [
 """),
     figure("struct_dyn_gate"),
     md("""
-The figure shows the gate ligand by ligand. A dot to the right of zero means that within the pool of that ligand the score puts the poses that are closer to the crystal pose first; the dashed line is the bar of the gate. The dynamic scores and the static model do not move together from ligand to ligand, which is what a gate on so few ligands has to live with.
+The figure shows the gate ligand by ligand. A dot to the right of zero means that within the pool of that ligand the score puts the poses that are closer to the crystal pose first; the dashed line is the bar of the gate. The dynamic pharmacophore and the static model of the same poses follow each other from ligand to ligand (Spearman correlation {{=dyn_between:+.2f}} over the {{=dyn_ligands}} ligands, an estimate that so few ligands cannot make precise): where the field ranks the poses of a ligand wrongly at one frame it mostly does so over the whole trajectory. That fits a score that reads the same field at more frames, and it is why the dynamic pharmacophore adds little to the static model.
 """),
     figure("struct_dyn_drift"),
     md("""
-The second figure asks the question of the stability directly. A pose that stays where it was put is not a pose that is close to the crystal: the force field has a minimum near every pose that the prediction produced, and the drift measures how steep that minimum is, not where the crystal pose is.
+The second figure asks the question of the stability directly. After the drift and the error of each pose are centred on the mean of its ligand, their Spearman correlation is {{=dyn_drift_rho:+.2f}} over the {{=dyn_poses}} poses, so in these data a pose that moves little is not a pose that is closer to the crystal pose. One reading is that the force field has a minimum near every pose that the prediction produced, so that the drift measures how steep that minimum is and not where the crystal pose lies; the experiment does not test that reading.
 """),
     figure("struct_dyn_trace"),
     md("""

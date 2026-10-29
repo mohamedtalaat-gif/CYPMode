@@ -423,6 +423,7 @@ def innovation_section() -> str:
         "",
         "### Rigor",
         "",
+        dynamics_bullet(),
         f"- **Negative results are results.** `NEGATIVE_RESULTS.md` lists all {verdicts - met} verdicts that were NOT MET. The negative control, the whole nested procedure on permuted labels, gives an outer AUC of {permuted['CYP3A4'] or '?'} (CYP3A4) and {permuted['CYP2D6'] or '?'} (CYP2D6) at z0 = 1.0.",
         "- **Every number in the reports is copied by code from a log and checked by the audit,** which is generated twice and compared byte for byte (section 4.4).",
         "",
@@ -473,6 +474,24 @@ def innovation_rows() -> list[tuple[str, str, str]]:
     if structure:
         rows.append(("Validity margin of the scorer's own call and a relaxation under a registered rule", f"relaxation adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']}; smallest margin {structure['relaxation']['smallest_margin_before']:.3f} to {structure['relaxation']['smallest_margin_after']:.3f}", "`relax_final.log`"))
     return rows
+
+
+def dynamics_bullet() -> str:
+    """The bullet of the innovation summary for the ligand dynamics in the frozen pocket: what was run, the verdicts of its three scores and what the structure entry does with them."""
+    from cypmode.validation import ligand_dynamics as ld
+
+    path = LOGS / "ligand_dynamics.log"
+    if not path.exists():
+        return f"- **A dynophore that the project can afford was tested and did not help.** {pending('job 286')}"
+    facts = ld.read_log(path.read_text(errors="ignore"))
+    scores, met = facts["scores"], [n for n in ld.SCORES if facts["scores"][n]["gate"] == "MET"]
+    used = [n for n in ld.SCORES if scores[n]["use"] == "MET"]
+    rhos = ", ".join(f"{scores[n]['rho']:+.3f}" for n in ld.SCORES)
+    verdict = (f"none of the three scores met it (mean rho {rhos} against the bar of 0.3; the static model of the same poses gives {scores['static_pharmacophore_model']['rho']:+.3f}), so the structure entry was not changed"
+               if not met else f"the gate was met by {', '.join(met)}" + (f" and the paired test by {', '.join(used)}" if used else ", the paired test by none"))
+    return (f"- **The pharmacophore of a pose read over a short trajectory, tested under a rule fixed before any number.** The ligand moves for {round(ld.STEPS * ld.TIMESTEP_PS)} ps in the frozen pocket (protein and heme at their predicted "
+            f"positions, no water) for {facts['poses']} poses of {facts['ligands']} benchmark ligands; it is not a dynophore of the literature, which follows the whole complex in water (`docs/structure_track/structure_ligand_dynamics.md`, limitation L16). "
+            f"Judged by the gate of the pose rules, {verdict}.")
 
 
 def dynamics_row() -> tuple[str, str, str] | None:
