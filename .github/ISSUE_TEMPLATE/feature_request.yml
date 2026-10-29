@@ -15,6 +15,6 @@ body:
       label: Source / methodology
       description: >
         If this is a new motif or structural alert, a paper or named method
-        it is based on, see CONTRIBUTING.md's conventions on citable sources.
+        it is based on, see the conventions on citable sources in the Contributing section of README.md.
     validations:
       required: false

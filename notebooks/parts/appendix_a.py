@@ -281,7 +281,7 @@ The next cell reads the files in `environment/`, counts the pinned entries of ea
     md("""
 There are {{=n_env_files}} pin files, and every one equals its recorded checksum (the cell requires it). The optional groups of the package are {{=extras_text}}. The quick start of the README installs the main environment with `pip install -e ".[challenge,validate]"`; the other environments are created from their own files. A job whose environment is missing does not run: its first lines (`need_file`) make it wait, so that a missing tool is a visible delay and not a wrong result.
 
-The reason for several environments is practical. A package such as LightGBM, which runs on every thread of the processor, and a package such as PyTorch, which also uses a library for parallel loops, can disturb each other when both are loaded in one process; the repository learned this when a test of the Atom-JEPA readout, run beside the LightGBM tests, hung for hours. 12.3 tells the story; the consequence here is that the tests that load PyTorch or the quantum-chemistry package run in processes of their own, and `CONTRIBUTING.md` says which.
+The reason for several environments is practical. A package such as LightGBM, which runs on every thread of the processor, and a package such as PyTorch, which also uses a library for parallel loops, can disturb each other when both are loaded in one process; the repository learned this when a test of the Atom-JEPA readout, run beside the LightGBM tests, hung for hours. 12.3 tells the story; the consequence here is that the tests that load PyTorch or the quantum-chemistry package run in processes of their own, and the Contributing section of the README says which.
 
 ## A.2 The map of the repository
 
@@ -302,7 +302,7 @@ The project is run in the order that follows; each command is resumable, which m
 ```bash
 python3 -m venv .venv && source .venv/bin/activate        # 1. the main environment
 pip install -e ".[challenge,validate]"
-python -m pytest tests -q                                  # 2. the tests (the isolated files as CONTRIBUTING.md says)
+python -m pytest tests -q                                  # 2. the tests (the isolated files as the Contributing section of the README says)
 bash scripts/reproduce_tdi.sh                              # 3. raw challenge files -> validated TDI candidate files
 bash scripts/queue_start.sh                                # 4. the queue: every other experiment, in the order of its number
 bash scripts/queue_status.sh                               #    what is done, running, waiting

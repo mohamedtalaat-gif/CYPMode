@@ -122,7 +122,7 @@ def enforced_rules(ctx: Context) -> Section:
             text = f.read_text(errors="ignore")
             if arabic.search(text):
                 offenders.append(str(f.relative_to(ROOT)))
-    for name in ("README.md", "CONTRIBUTING.md", "CITATION.cff", "METHOD_REPORT.md", "NEGATIVE_RESULTS.md"):
+    for name in ("README.md", "CITATION.cff", "METHOD_REPORT.md", "NEGATIVE_RESULTS.md"):
         f = ROOT / name
         if f.exists() and any(p in f.read_text(errors="ignore") for p in PRIVATE_PATHS):
             private.append(name)
