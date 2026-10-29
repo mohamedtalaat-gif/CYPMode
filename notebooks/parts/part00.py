@@ -114,7 +114,7 @@ SECTIONS = {
     "aux_tabicl": "9.10", "aux_tabicl_chemeleon": "9.10", "aux_tabicl_monroe": "9.10", "aux_tabpfn": "9.10", "aux_tabpfn_chemeleon": "9.10", "monroe_embeddings": "9.10", "nonneg_stack": "9.10", "population_screen": "9.10",
     "softmax_selector": "9.10", "aux_pocket_cyp2d6": "9.13", "aux_pocket_cyp3a4": "9.13", "exploratory_pocket_control": "9.13", "exploratory_pocket_first_run_seed0_control": "9.13", "exploratory_pocket_first_run_seed0_own": "9.13",
     "aux_hypothesis": "9.14", "aux_site_cyp2d6": "9.14", "aux_site_cyp3a4": "9.14", "exploratory_hypothesis_permuted": "9.14", "exploratory_site_control": "9.14",
-    "ost_vs_ours": "11.4, 11.6", "ost_regate": "11.6", "ost_pool_gates": "11.8, 11.9", "selection_validation_bioemu2": "11.9", "relaxation_gate": "11.10", "ligand_dynamics": "11.12", "pose_pharmacophore_model": "11.11",
+    "ost_vs_ours": "11.4, 11.6", "ost_regate": "11.6", "ost_pool_gates": "11.8, 11.9", "selection_validation_bioemu2": "11.9", "relaxation_gate": "11.10", "ligand_dynamics": "11.13", "pose_pharmacophore_model": "11.11",
 }
 from cypmode.audit.docs_state import TITLES
 
