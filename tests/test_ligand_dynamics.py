@@ -66,3 +66,28 @@ def test_every_pose_is_simulated_by_exactly_one_shard(tmp_path, monkeypatch):
     for shard in range(4):
         ld.simulate_all(manifest, (shard, 4), 1)
     assert sorted(seen) == sorted(j["pdb"] for j in jobs) and len(set(seen)) == 10
+
+
+def test_the_log_is_read_back_as_it_was_written():
+    scored, per_ligand = ld.evaluate(pools(perfect=True))
+    text = f"{len(scored)} poses of {len(per_ligand)} ligands\n" + "\n".join(ld.report(per_ligand, "novel", True)) + "\n" + "\n".join(ld.report(per_ligand, "compound", False))
+    facts = ld.read_log(text)
+    assert (facts["poses"], facts["ligands"]) == (len(scored), len(per_ligand))
+    assert set(facts["scores"]) == {*ld.SCORES, "static_pharmacophore_model"}
+    assert facts["scores"]["dynamic_pharmacophore"]["gate"] == "MET" and facts["scores"]["static_pharmacophore_model"]["gate"] is None
+    _, flat = ld.evaluate(pools(perfect=False, n_ligands=10, seed=3))
+    nothing = ld.read_log("60 poses of 10 ligands\n" + "\n".join(ld.report(flat, "novel", True)))
+    assert nothing["scores"]["stability"]["gate"] == "NOT MET" and nothing["scores"]["stability"]["use"] == "not evaluated"
+
+
+def test_scores_that_are_equal_in_exact_arithmetic_are_ties_and_not_ordered_by_rounding_noise():
+    n = 5
+    ranks = np.arange(1, n + 1)
+    pool = pd.DataFrame({"field": ranks.astype(float), "recall": (n + 1 - ranks).astype(float), "drift": np.linspace(0.5, 1.5, n), "true_rmsd": np.linspace(1.0, 4.0, n)})
+    rank = lambda values: pd.Series(values).rank(pct=True).to_numpy()
+    raw = np.nanmean(np.column_stack([rank(pool["field"]), rank(pool["recall"])]), axis=1)
+    assert len(set(raw)) > 1  # the mean rank is 6/10 for every pose, and the floating point sums still differ in the last digit
+    s = ld.within_pool_dynamics(pool)
+    assert s["dynamic_pharmacophore"].nunique() == 1
+    assert np.isnan(ld.pool_rho(s["dynamic_pharmacophore"], s["true_rmsd"]))  # a score without variation has no rho
+    assert abs(ld.pool_rho(s["stability"], s["true_rmsd"]) - 1.0) < 1e-9

@@ -124,3 +124,13 @@
     20 official ligands, so the evidence for the iron-nitrogen restraint may not transfer, and no rule for choosing a pose among the predicted ones passed its gate. The recipe is reported
     as submitted and makes no claim of a better LDDT-PLI than the baseline.
 
+- id: L16
+  area: structure
+  uses: [dynamics_ps, dynamics_poses, dynamics_ligands, dynamics_n_met, dynamics_best_rho, dynamics_bar]
+  text: >-
+    The ligand dynamics in the frozen pocket ran {dynamics_ps} ps for each of {dynamics_poses} predicted poses of {dynamics_ligands} benchmark ligands, with the protein and the heme held at
+    their predicted positions and without water. It is not a dynophore of the literature, which follows the whole complex in water over nanoseconds, and it cannot show that a pose is
+    wrong because the pocket would open, that a bridging water molecule is missing, or that a slow motion of the ligand changes the pose. The stability of a pose measures its agreement
+    with the force field that also relaxed it. {dynamics_n_met} of its three scores met the gate registered before the result (the highest mean rho was {dynamics_best_rho} against the bar
+    of {dynamics_bar}); {dynamics_ligands} ligands cannot detect a modest effect, so the result is that this cheap dynamics did not rank the predicted poses of these ligands and says nothing
+    about a dynamics of the whole complex or about the 20 official ligands, which are chemically far from the benchmark ligands.

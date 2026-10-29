@@ -136,7 +136,7 @@ def test_the_structure_board_paragraph_reads_the_recorded_scores_and_the_registe
     text = report.structure_board_lead()
     frame = pd.read_csv(report.STRUCTURE_BOARD)
     assert "(pending" not in text and f"{frame.set_index('entry').loc['candidate C', 'lddt_pli']:.4f}" in text
-    assert "docs/structure_candidate_c.md" in text
+    assert "docs/structure_track/structure_candidate_c.md" in text
     assert not frame["entry"].str.contains(r"\|").any(), "a board alias must not be written into a tracked file"
 
 

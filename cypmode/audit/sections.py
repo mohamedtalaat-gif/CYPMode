@@ -542,7 +542,7 @@ def structure(ctx: Context) -> Section:
         wide = re.search(r"a conformer within ([\d.]+) A of the crystal pose for (\d+)% of the copies", text)
         if block and wide:
             ctx.metrics.update(block_ensemble_coverage_pct=int(block.group(2)), block_ensemble_copies=int(block.group(3)), wide_ensemble_coverage_pct=int(wide.group(2)))
-    board = ROOT / "docs/structure_board_scores.csv"
+    board = ROOT / "docs/structure_track/structure_board_scores.csv"
     if board.exists():  # the live scores of the structure uploads, recorded by hand with the date they were read (limitation L15)
         scores = pd.read_csv(board).set_index("entry")
         ctx.metrics.update(
@@ -551,6 +551,20 @@ def structure(ctx: Context) -> Section:
             structure_c_lddt_pli=float(scores.loc["candidate C", "lddt_pli"]),
             structure_s1_bisy=float(scores.loc["submitted recipe (S1)", "bisy_rmsd"]),
             structure_baseline_bisy=float(scores.loc["organisers' Boltz-2 baseline", "bisy_rmsd"]),
+        )
+    dynamics = LOGS / "ligand_dynamics.log"  # the ligand dynamics in the frozen pocket, read back from its log (limitation L16)
+    if dynamics.exists():
+        from cypmode.validation import ligand_dynamics as ld
+        from cypmode.validation.pose_awareness import MIN_MEAN_RHO
+
+        facts = ld.read_log(dynamics.read_text(errors="ignore"))
+        ctx.metrics.update(
+            dynamics_poses=facts["poses"],
+            dynamics_ligands=facts["ligands"],
+            dynamics_ps=round(ld.STEPS * ld.TIMESTEP_PS),
+            dynamics_n_met=sum(facts["scores"][n]["gate"] == "MET" for n in ld.SCORES),
+            dynamics_best_rho=f"{max(facts['scores'][n]['rho'] for n in ld.SCORES):+.3f}",
+            dynamics_bar=f"{MIN_MEAN_RHO:+.2f}",
         )
     return s
 

@@ -23,18 +23,19 @@ NAMES = {"static_pharmacophore_model": "static model (one frame)", "dynamic_phar
 
 
 def poses(regime: str = GATED) -> pd.DataFrame:
-    frame = pd.read_csv(ROOT / TABLE)
+    frame = pd.read_csv(ROOT / TABLE, float_precision="round_trip")
     return frame[frame["regime"] == regime].reset_index(drop=True)
 
 
 def per_ligand_rho(frame: pd.DataFrame) -> pd.DataFrame:
-    """Per ligand, the Spearman rho of each score with minus the true RMSD (the quantity of the gate)."""
+    """Per ligand, the Spearman rho of each score with minus the true RMSD (the quantity of the gate, computed by the function that the gate uses)."""
+    from cypmode.validation.ligand_dynamics import pool_rho
+
     rows = []
     for compound, pool in frame.groupby("compound", sort=True):
         row = {"compound": compound.removeprefix("bench-"), "poses": len(pool)}
         for name in NAMES:
-            ok = pool[name].notna()
-            row[name] = float(spearmanr(pool.loc[ok, name], -pool.loc[ok, "true_rmsd"]).statistic) if ok.sum() >= 3 and pool.loc[ok, name].nunique() > 1 else np.nan
+            row[name] = pool_rho(pool[name], pool["true_rmsd"])
         rows.append(row)
     return pd.DataFrame(rows)
 

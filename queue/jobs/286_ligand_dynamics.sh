@@ -1,6 +1,6 @@
 #!/bin/bash
 source queue/lib.sh
-# Ligand dynamics in the frozen pocket (the rule of docs/structure_ligand_dynamics.md, committed before any number): the pools of the static pharmacophore gate, 20 ps of the ligand in its frozen pocket for every pose, the dynamic scores and the gate.
+# Ligand dynamics in the frozen pocket (the rule of docs/structure_track/structure_ligand_dynamics.md, committed before any number): the pools of the static pharmacophore gate, 20 ps of the ligand in its frozen pocket for every pose, the dynamic scores and the gate.
 need_file cypmode/validation/ligand_dynamics.py
 OPENMM_PY="$HOME/miniforge3/envs/openmm/bin/python"
 [ -x "$OPENMM_PY" ] || defer "the conda environment openmm is missing"

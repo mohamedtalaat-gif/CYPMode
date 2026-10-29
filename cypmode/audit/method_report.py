@@ -27,7 +27,7 @@ FINAL_TDI = ROOT / "data/tdi_track/outputs/final"
 FINAL_STRUCTURE = ROOT / "data/structure_track/outputs/cyp3a4/final"
 AUDIT = ROOT / "audit/AUDIT_REPORT.md"
 LEADERBOARD = ROOT / "docs/leaderboard_scores.csv"
-STRUCTURE_BOARD = ROOT / "docs/structure_board_scores.csv"
+STRUCTURE_BOARD = ROOT / "docs/structure_track/structure_board_scores.csv"
 GATE = re.compile(r"^(?:STRUCTURE GATE (\w+)[^:\n]*|(CYP\w+) GATE \(([^)]*)\)): (MET|NOT MET)", re.MULTILINE)
 
 
@@ -467,9 +467,26 @@ def innovation_rows() -> list[tuple[str, str, str]]:
         "`label_shift.log`",
     ))
     rows.append(("Restraint of the iron-nitrogen bond for Type II ligands", f"gate {gates.get('restraint_bond', '?')} on the crystal benchmark, {gates.get('restraint_bond_ost', '?')} under the OpenStructure scorer", "`structure_gates.log`, `ost_pool_gates.log`"))
+    dynamics = dynamics_row()
+    if dynamics:
+        rows.append(dynamics)
     if structure:
         rows.append(("Validity margin of the scorer's own call and a relaxation under a registered rule", f"relaxation adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']}; smallest margin {structure['relaxation']['smallest_margin_before']:.3f} to {structure['relaxation']['smallest_margin_after']:.3f}", "`relax_final.log`"))
     return rows
+
+
+def dynamics_row() -> tuple[str, str, str] | None:
+    """The claim of the ligand dynamics in the frozen pocket, read from the log of its gate (job 286)."""
+    from cypmode.validation import ligand_dynamics as ld
+
+    path = LOGS / "ligand_dynamics.log"
+    if not path.exists():
+        return None
+    facts = ld.read_log(path.read_text(errors="ignore"))
+    scores = facts["scores"]
+    met = [n for n in ld.SCORES if scores[n]["gate"] == "MET"]
+    evidence = ", ".join(f"{n.replace('_', ' ')} {scores[n]['rho']:+.3f}" for n in ld.SCORES) + f" against {scores['static_pharmacophore_model']['rho']:+.3f} for the static model: " + (f"gate MET for {len(met)} of 3" if met else "gate NOT MET for all 3")
+    return (f"The pharmacophore of a pose read over {round(ld.STEPS * ld.TIMESTEP_PS)} ps of ligand dynamics in the frozen pocket, under a rule fixed before any number", f"mean rho with minus the true RMSD over {facts['ligands']} ligands, {evidence}", "`ligand_dynamics.log`")
 
 
 def innovation_table() -> str:
@@ -486,14 +503,14 @@ def structure_margin() -> str:
 def structure_board_lead() -> str:
     """The live scores of the structure uploads next to the organisers' baseline, from the file that records them by hand, with the result of the rule that decided between the two candidates."""
     if not STRUCTURE_BOARD.exists():
-        return pending("docs/structure_board_scores.csv")
+        return pending("docs/structure_track/structure_board_scores.csv")
     frame = pd.read_csv(STRUCTURE_BOARD)
     by = {row.entry: row for row in frame.itertuples(index=False)}
     s1, c, base = by["submitted recipe (S1)"], by["candidate C"], by["organisers' Boltz-2 baseline"]
     return (
-        f"Live scores of the two structure uploads (the live board scores 10 of the 20 ligands; `docs/structure_board_scores.csv`, copied from the board on {s1.read_on}): the submitted recipe scored an LDDT-PLI of {s1.lddt_pli:.4f} (standard deviation {s1.lddt_pli_std:.4f}) and a BiSyRMSD of {s1.bisy_rmsd:.2f} A, "
+        f"Live scores of the two structure uploads (the live board scores 10 of the 20 ligands; `docs/structure_track/structure_board_scores.csv`, copied from the board on {s1.read_on}): the submitted recipe scored an LDDT-PLI of {s1.lddt_pli:.4f} (standard deviation {s1.lddt_pli_std:.4f}) and a BiSyRMSD of {s1.bisy_rmsd:.2f} A, "
         f"rank {s1.rank} of {s1.entries} while it was the live entry; the organisers' Boltz-2 baseline scored {base.lddt_pli:.4f} and {base.bisy_rmsd:.2f} A. The recipe is therefore below the baseline on the primary metric, by {base.lddt_pli - s1.lddt_pli:.3f} against a board standard deviation of {base.lddt_pli_std:.3f}, and ahead of it on the BiSyRMSD. "
-        f"A second candidate, the first eligible unguided pose of each ligand, scored {c.lddt_pli:.4f} and {c.bisy_rmsd:.2f} A; its gain of {c.lddt_pli - s1.lddt_pli:+.4f} is below the threshold that was registered before the upload (`docs/structure_candidate_c.md`), so the submitted recipe stays the structure entry."
+        f"A second candidate, the first eligible unguided pose of each ligand, scored {c.lddt_pli:.4f} and {c.bisy_rmsd:.2f} A; its gain of {c.lddt_pli - s1.lddt_pli:+.4f} is below the threshold that was registered before the upload (`docs/structure_track/structure_candidate_c.md`), so the submitted recipe stays the structure entry."
     )
 
 
@@ -976,7 +993,7 @@ def build_method_report() -> str:
         "",
         structure_board_lead(),
         "",
-        "Gate verdicts of the structure levers (restraint, diversity, selection, engines, expected-improvement sampling, heme-frame prior):",
+        "Gate verdicts of the structure levers (restraint, diversity, selection, engines, expected-improvement sampling, heme-frame prior, ligand dynamics):",
         "",
         table([r for r in gate_rows() if r[1] and not re.match(r"CYP", r[1])], ["log", "gate", "verdict"]),
         "",

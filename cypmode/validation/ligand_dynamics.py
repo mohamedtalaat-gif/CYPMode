@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Ligand dynamics in the frozen pocket (the rule is in ``docs/structure_ligand_dynamics.md``, committed before any number of the experiment).
+"""Ligand dynamics in the frozen pocket (the rule is in ``docs/structure_track/structure_ligand_dynamics.md``, committed before any number of the experiment).
 
 The question is whether a pharmacophore read over a short trajectory of the ligand in its pocket, or the stability of a pose under dynamics, ranks the predicted poses of a ligand by their
 distance to the crystal pose, which the static pharmacophore model of ``pose_pharmacophore`` did not. This is not a dynophore of the literature: the protein and the heme are frozen at their
@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -163,33 +164,40 @@ def frame_scores(in_frame: dict, frames: np.ndarray, fields: dict, sites: dict) 
     return pd.DataFrame(rows)
 
 
+TIE_DECIMALS = 10  # scores that are equal in exact arithmetic (the mean of two ranks often is) differ in the last binary digit; rounding keeps that noise from ordering them
+
+
+def pool_rho(values: pd.Series, true_rmsd: pd.Series) -> float:
+    """The Spearman rho, within one pool, of a score with minus the true RMSD; NaN for fewer than 3 scored poses or a score without variation."""
+    from scipy.stats import spearmanr
+
+    ok = values.notna()
+    return float(spearmanr(values[ok], -true_rmsd[ok]).statistic) if ok.sum() >= 3 and values[ok].nunique() > 1 else np.nan
+
+
 def within_pool_dynamics(pool: pd.DataFrame) -> pd.DataFrame:
     """Add the three scores (mean within-pool ranks, higher is better) to a per-pose table with the frame means ``field`` and ``recall`` and the ``drift``."""
     out = pool.copy()
     rank = lambda values: pd.Series(values).rank(pct=True).to_numpy()
-    out["dynamic_pharmacophore"] = np.nanmean(np.column_stack([rank(pool["field"]), rank(pool["recall"])]), axis=1)
+    out["dynamic_pharmacophore"] = np.nanmean(np.column_stack([rank(pool["field"]), rank(pool["recall"])]), axis=1).round(TIE_DECIMALS)
     out["stability"] = rank(-pool["drift"])
-    out["dynamic_combined"] = np.nanmean(np.column_stack([rank(out["dynamic_pharmacophore"]), rank(out["stability"])]), axis=1)
+    out["dynamic_combined"] = np.nanmean(np.column_stack([rank(out["dynamic_pharmacophore"]), rank(out["stability"])]), axis=1).round(TIE_DECIMALS)
     return out
 
 
 def evaluate(poses: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Per-pose scores and, per ligand, the Spearman rho of each score with minus the true RMSD and the RMSD of the pose each score picks; ``poses`` has compound, true_rmsd, mbr, field, recall, drift and the
     static ``static_field`` and ``static_recall`` of the start pose."""
-    from scipy.stats import spearmanr
-
     scored, rows = [], []
     for compound, pool in poses.groupby("compound", sort=True):
         s = within_pool_dynamics(pool.reset_index(drop=True))
-        s["static_pharmacophore_model"] = np.nanmean(np.column_stack([s["static_field"].rank(pct=True).to_numpy(), s["static_recall"].rank(pct=True).to_numpy()]), axis=1)
+        s["static_pharmacophore_model"] = np.nanmean(np.column_stack([s["static_field"].rank(pct=True).to_numpy(), s["static_recall"].rank(pct=True).to_numpy()]), axis=1).round(TIE_DECIMALS)
         scored.append(s)
         row = {"compound": compound, "poses": len(s), "mean_pool": float(s.true_rmsd.mean()), "mbr_pick": float(s.loc[s.mbr.idxmax(), "true_rmsd"])}
         for name in (*SCORES, "static_pharmacophore_model"):
-            values = s[name]
-            ok = values.notna()
-            row[f"rho_{name}"] = float(spearmanr(values[ok], -s.loc[ok, "true_rmsd"]).statistic) if ok.sum() >= 3 and values[ok].nunique() > 1 else np.nan
+            row[f"rho_{name}"] = pool_rho(s[name], s["true_rmsd"])
             if name in SCORES:
-                row[f"{name}_pick"] = float(s.loc[values.idxmax(), "true_rmsd"])
+                row[f"{name}_pick"] = float(s.loc[s[name].idxmax(), "true_rmsd"])
         rows.append(row)
     return pd.concat(scored, ignore_index=True), pd.DataFrame(rows)
 
@@ -212,6 +220,24 @@ def report(per_ligand: pd.DataFrame, regime: str, gated: bool) -> list[str]:
             else:
                 lines.append(f"{LOG_GATE} dynamics_{name}_use: not evaluated, the gate of the score is not met")
     return lines
+
+
+def read_log(text: str) -> dict:
+    """The facts of the log that ``gate_stage`` writes: the size of the pool and, for every score of the gated regime, its mean rho, the share of ligands with a positive rho and the verdicts of its
+    gate and of its paired test (None where the log has no such line). The notebook, the method report and the limitations read the experiment through this one function."""
+    gated = text.split("regime compound")[0]
+    count = re.search(r"(\d+) poses of (\d+) ligands", gated)
+    if not count:
+        raise ValueError("the log has no line 'N poses of M ligands'")
+    scores = {}
+    for name in (*SCORES, "static_pharmacophore_model"):
+        found = re.search(rf"^  {name}: mean rho ([+-][\d.]+), positive for (\d+)% of (\d+) ligands", gated, re.MULTILINE)
+        if not found:
+            raise ValueError(f"the log has no line of the gated regime for {name}")
+        gate = re.search(rf"^{LOG_GATE} dynamics_{name} \(.*?\): (MET|NOT MET)$", gated, re.MULTILINE)
+        use = re.search(rf"^{LOG_GATE} dynamics_{name}_use[^:\n]*: (MET|NOT MET|not evaluated)", gated, re.MULTILINE)
+        scores[name] = {"rho": float(found.group(1)), "positive": int(found.group(2)), "n": int(found.group(3)), "gate": gate.group(1) if gate else None, "use": use.group(1) if use else None}
+    return {"poses": int(count.group(1)), "ligands": int(count.group(2)), "scores": scores}
 
 
 # -- the stages ----------------------------------------------------------------------------------------------------------------------------------------------
