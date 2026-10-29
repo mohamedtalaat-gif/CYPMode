@@ -91,6 +91,9 @@ Each lever was judged on the crystal-anchored benchmark by a rule written before
 | consensus of poses across a chemical series | series_consensus |
 | expected-improvement sampling of poses | ei_sampling |
 | heme-frame prior over poses | heme_frame_prior |
+| ligand dynamics in the frozen pocket | dynamics_dynamic_combined |
+| ligand dynamics in the frozen pocket | dynamics_dynamic_pharmacophore |
+| ligand dynamics in the frozen pocket | dynamics_stability |
 | minimum Bayes risk selection and engine consensus | engine_consensus |
 | minimum Bayes risk selection and engine consensus | mbr_selection |
 | pharmacophore model of the poses | pose_pharmacophore_model |
@@ -234,6 +237,9 @@ The rows of the pocket block (`aux_pocket_*`, `exploratory_pocket_*`) and of the
 | hedged_blend_CYP2D6.log | CYP2D6: hedged blend adopted by the minimax rule, fit weight 1.0 | NOT MET |
 | hedged_blend_CYP2D6.log | CYP2D6: selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 1.0 | NOT MET |
 | heme_frame_prior.log | heme_frame_prior | NOT MET |
+| ligand_dynamics.log | dynamics_dynamic_pharmacophore | NOT MET |
+| ligand_dynamics.log | dynamics_stability | NOT MET |
+| ligand_dynamics.log | dynamics_dynamic_combined | NOT MET |
 | mbr_lddt_reevaluation.log | mbr_lddt_exploratory | NOT MET |
 | mbr_lddt_reevaluation.log | restraint_bond_lddt_exploratory | NOT MET |
 | mbr_lddt_reevaluation.log | mbr_on_restrained_lddt_exploratory | NOT MET |

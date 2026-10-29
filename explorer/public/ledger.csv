@@ -89,6 +89,9 @@ hedged_blend_CYP2D6.log,"CYP2D6: selection-aware replaces hits-only: higher mean
 hedged_blend_CYP2D6.log,"CYP2D6: hedged blend adopted by the minimax rule, fit weight 1.0",hedged_blend,label process and selection,NOT MET
 hedged_blend_CYP2D6.log,"CYP2D6: selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 1.0",hedged_blend,label process and selection,NOT MET
 heme_frame_prior.log,heme_frame_prior,heme_frame_prior,structure levers,NOT MET
+ligand_dynamics.log,dynamics_dynamic_pharmacophore,ligand_dynamics,structure levers,NOT MET
+ligand_dynamics.log,dynamics_stability,ligand_dynamics,structure levers,NOT MET
+ligand_dynamics.log,dynamics_dynamic_combined,ligand_dynamics,structure levers,NOT MET
 mmp_transfer_CYP2D6.log,"CYP2D6: alone, corrected p < 0.05 at both z0",mmp_transfer,label process and selection,NOT MET
 mmp_transfer_CYP2D6.log,"CYP2D6: stacked, corrected p < 0.05 at both z0",mmp_transfer,label process and selection,NOT MET
 mmp_transfer_CYP3A4.log,"CYP3A4: alone, corrected p < 0.05 at both z0",mmp_transfer,label process and selection,NOT MET

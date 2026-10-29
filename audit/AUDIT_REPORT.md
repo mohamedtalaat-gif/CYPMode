@@ -10,7 +10,7 @@ Counts: PASS = 88, FAIL = 0, INFO = 9, SKIP = 0
 |---|---|---|
 | training and test files present | PASS |  |
 | working tree clean (everything committed) | PASS | 0 modified, 0 untracked |
-| all tests pass | PASS | 1012 passed, 0 failed |
+| all tests pass | PASS | 1038 passed, 0 failed |
 | feature block `rdkit_desc` computed twice | PASS | max |diff| 0.0000 |
 | feature block `morgan_c2` computed twice | PASS | max |diff| 0.0000 |
 | feature block `tdi_alerts` computed twice | PASS | max |diff| 0.0000 |
@@ -61,7 +61,7 @@ Counts: PASS = 88, FAIL = 0, INFO = 9, SKIP = 0
 | no occurrences of: words of the private list | PASS | 0 found |
 | no occurrences of: words of the private list in commit messages (all branches) | PASS | 0 found |
 | no occurrences of: commit authors besides the project author (all branches) | PASS | 0 found |
-| gate verdicts parsed | INFO | 11 met, 202 not met |
+| gate verdicts parsed | INFO | 11 met, 205 not met |
 | additions whose stacked gain survives the Holm adjustment over the batch | INFO | 0 of 52 |
 | queue jobs name modules and scripts that exist | PASS | 0 problems |
 | .venv matches requirements-lock.txt | PASS | 0 lines differ |
@@ -119,7 +119,7 @@ Counts: PASS = 88, FAIL = 0, INFO = 9, SKIP = 0
 | rdkit | 2026.3.6 |
 | PyYAML | 6.0.3 |
 
-Git HEAD `e0ba4cc`; working tree: 0 modified, 0 deleted, 0 untracked entries.
+Git HEAD `ef43dfb`; working tree: 0 modified, 0 deleted, 0 untracked entries.
 
 Input files (size in bytes, sha256 prefix):
 
@@ -139,7 +139,7 @@ Input files (size in bytes, sha256 prefix):
 
 ## 2. Test suite (executed now)
 
-pytest summary counts: passed = 1012, skipped = 1
+pytest summary counts: passed = 1038, skipped = 1
 
 ## 3. Determinism and cache consistency
 
@@ -1291,6 +1291,9 @@ Inference of the scored set's non-hit share from the baseline's public metrics:
 | hedged_blend_CYP2D6.log | CYP2D6 | hedged blend adopted by the minimax rule, fit weight 1.0 | NOT MET |
 | hedged_blend_CYP2D6.log | CYP2D6 | selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 1.0 | NOT MET |
 | heme_frame_prior.log | structure | heme_frame_prior (mean rho > 0.3 and positive for >= 60% of ligands, leave-compound-out) | NOT MET |
+| ligand_dynamics.log | structure | dynamics_dynamic_pharmacophore (mean rho > 0.3 and positive for >= 60% of ligands) | NOT MET |
+| ligand_dynamics.log | structure | dynamics_stability (mean rho > 0.3 and positive for >= 60% of ligands) | NOT MET |
+| ligand_dynamics.log | structure | dynamics_dynamic_combined (mean rho > 0.3 and positive for >= 60% of ligands) | NOT MET |
 | mbr_lddt_reevaluation.log | structure | mbr_lddt_exploratory (minimum Bayes risk over the Boltz samples against the first pick, scored by LDDT-PLI, thresholds of mbr_selection (p < 0.1), exploratory) | NOT MET |
 | mbr_lddt_reevaluation.log | structure | restraint_bond_lddt_exploratory (first sample with the bond restraint against without it, scored by LDDT-PLI, p < 0.1, exploratory) | NOT MET |
 | mbr_lddt_reevaluation.log | structure | mbr_on_restrained_lddt_exploratory (minimum Bayes risk inside the restrained pool against its first sample, scored by LDDT-PLI, p < 0.1, exploratory) | NOT MET |
@@ -1394,7 +1397,7 @@ Inference of the scored set's non-hit share from the baseline's public metrics:
 | xiso_transfer_CYP3A4.log | CYP3A4 | alone, corrected p < 0.05 at both z0 | NOT MET |
 | xiso_transfer_CYP3A4.log | CYP3A4 | stacked, corrected p < 0.05 at both z0 | NOT MET |
 
-11 gates MET, 202 NOT MET. A gate that is NOT MET is a measured negative result: the idea is dropped, not tuned until it passes.
+11 gates MET, 205 NOT MET. A gate that is NOT MET is a measured negative result: the idea is dropped, not tuned until it passes.
 
 ## 14b. Multiplicity of the additions tested together (Holm adjustment next to the pre-registered gates)
 
@@ -1457,7 +1460,7 @@ The p-value of an addition is the larger of its two confidence cut-offs (its gat
 
 ## 15. Queue consistency (every job points at modules and scripts that exist)
 
-Jobs in the queue: 170.
+Jobs in the queue: 171.
 No missing job, module or code file.
 
 ## 16. Pinned environment and seed registry
@@ -1586,7 +1589,7 @@ Rules checked: the author, the repository and the DOI are the same in the citati
 
 ## 21. Wording of the text files
 
-Every line of the 670 text files that git tracks or would add (vendored libraries, licence texts and the generated audit report are left out) is matched against each rule, and so is every line of the messages of the commits that are not published yet. A rule passes when no line matches.
+Every line of the 682 text files that git tracks or would add (vendored libraries, licence texts and the generated audit report are left out) is matched against each rule, and so is every line of the messages of the commits that are not published yet. A rule passes when no line matches.
 | rule | lines in the files | files | lines in unpublished commit messages |
 |---|---|---|---|
 | role names as the actor of a decision or a step | 0 | 0 | 0 |
@@ -1601,7 +1604,7 @@ Every line of the 670 text files that git tracks or would add (vendored librarie
 
 ## 22. Paths that the text names
 
-Every path between backticks in the 69 documents and parts of the notebook is looked up (as written, next to the document, or as a module of the package). 13 references to a path that is not in the tree are allowed, each with its reason (a pattern, a file of the organisers, a file written after the uploads or after the deadline, an early name); the others are listed. A reference passes when the path exists.
+Every path between backticks in the 75 documents and parts of the notebook is looked up (as written, next to the document, or as a module of the package). 13 references to a path that is not in the tree are allowed, each with its reason (a pattern, a file of the organisers, a file written after the uploads or after the deadline, an early name); the others are listed. A reference passes when the path exists.
 No other reference to a missing path.
 
 ## 13. Limitations log
@@ -1612,7 +1615,7 @@ No other reference to a missing path.
 - **L4** (uncertainty): Committee disagreement adds information beyond the decision margin for 1 components on CYP3A4 and 2 on CYP2D6 under the permutation test; where the count is zero the committee is reported as a measured negative result and does not alter predictions.
 - **L5** (calibration): The probabilities the final build publishes (isotonic-calibrated) have calibration slopes of 0.9252 (CYP3A4) and 0.8249 (CYP2D6) on held-out folds. The sigmoid of the regularised blend as it comes out is a ranking score and not a probability (slopes 1.1813 and -0.0164); it is never published as one. Probabilities are calibrated to the weighted validation population, not to the unknown scored test population.
 - **L6** (structure): On the diverse crystal benchmark the model's first-pick pose is 4.1929 A from the crystal pose on average; the structure score depends on a handful of compounds and is noisy. The benchmark ligands come from the PDB, which co-folding models may have seen, so absolute accuracy is optimistic.
-- **L7** (reproducibility): The test suite has 1012 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
+- **L7** (reproducibility): The test suite has 1038 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
 - **L8** (repository): The working tree has 0 modified and 0 untracked entries: results in this report come from uncommitted code until the work is committed.
 - **L9** (population): The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). The selection-aware file gains AUC when they are numerous and loses both AUC and MCC when there are none, by more than it gains at the call rate of the final build (the table of job 016 in section 7), and neither the label-shift estimate nor the public metrics of the baseline identify their share (538 grid points are consistent with the metrics). The live board scores half of the test set and cannot separate the two files (job 016), so the entry is the hits-only file and the selection-aware file is kept, with its SHA-256, to be scored on the test labels if the organisers publish them: that comparison measures the share and tests the hypothesis on data that no choice of this project touched.
 - **L10** (calibration): The CYP2D6 blend as it comes out is close to a constant (weighted expected calibration error 0.3592 against 0.0431 for CYP3A4): it ranks and transfers a call rate but is not a probability. The probabilities that are published pass through an isotonic step fitted on inner out-of-fold scores, which brings the error to 0.0054 (CYP2D6) and 0.0189 (CYP3A4); a monotone step restores calibration and adds no discrimination.
@@ -1621,3 +1624,4 @@ No other reference to a missing path.
 - **L13** (data): The positive rate of the scored test set was recovered from the public leaderboards, which publish accuracy, precision and recall for every prediction file; the three numbers fix the rate (the implied rate agrees across all entries). It is aggregate information about the hidden labels that was available because the boards publish it: it weights the evaluation yardstick (the test prevalence) and sets the call rate (a multiple of the prevalence). No label of any compound and no per-compound information from a board was used, and no submission was made to probe a label. A model without this step would call the positive rate of the training data (about one fifth for both enzymes) instead of about one third (CYP3A4) and one in seventeen (CYP2D6), which costs MCC mostly on CYP2D6. A check that reads no board (a label-shift estimate from the training data and the blinded structures, `cypmode/challenge/label_shift.py`, with a rule fixed before its first run) is reported with its verdict in the innovation summary of the method report; the rate used by the final build rests on the boards.
 - **L14** (candidates): The pocket block and the site model were tested with a conformer ensemble of 12 conformers within 5 kcal/mol of the lowest, which holds a member within 1.0 A of the crystal pose for only 12% of 131 crystal ligand copies; 300 conformers do so for 15%. Their negative verdicts are those of models that mostly did not see the bound conformation of the ligand. A wider ensemble was not tried.
 - **L15** (structure): On the live board, which scores 10 of the 20 ligands, the submitted structure recipe scored an LDDT-PLI of 0.3623, below the organisers' Boltz-2 baseline (0.3950), with a lower BiSyRMSD (4.3220 A against 5.1870 A). The second candidate, the first eligible unguided pose, scored 0.3975 and did not pass the threshold registered before its upload. The gates of the structure track were measured on 30 crystal ligands that are chemically far from the 20 official ligands, so the evidence for the iron-nitrogen restraint may not transfer, and no rule for choosing a pose among the predicted ones passed its gate. The recipe is reported as submitted and makes no claim of a better LDDT-PLI than the baseline.
+- **L16** (structure): The ligand dynamics in the frozen pocket ran 20 ps for each of 104 predicted poses of 10 benchmark ligands, with the protein and the heme held at their predicted positions and without water. It is not a dynophore of the literature, which follows the whole complex in water over nanoseconds, and it cannot show that a pose is wrong because the pocket would open, that a bridging water molecule is missing, or that a slow motion of the ligand changes the pose. The stability of a pose measures its agreement with the force field that also relaxed it. 0 of its three scores met the gate registered before the result (the highest mean rho was +0.042 against the bar of +0.30); 10 ligands cannot detect a modest effect, so the result is that this cheap dynamics did not rank the predicted poses of these ligands and says nothing about a dynamics of the whole complex or about the 20 official ligands, which are chemically far from the benchmark ligands.

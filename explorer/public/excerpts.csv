@@ -246,6 +246,9 @@ hedged_blend_CYP2D6.log,50,"CYP2D6 GATE (selection-aware replaces hits-only: hig
 hedged_blend_CYP2D6.log,74,"CYP2D6 GATE (hedged blend adopted by the minimax rule, fit weight 1.0): NOT MET"
 hedged_blend_CYP2D6.log,75,"CYP2D6 GATE (selection-aware replaces hits-only: higher mean AUC and corrected p < 0.05 at every band weight at both z0, fit weight 1.0): NOT MET"
 heme_frame_prior.log,16,"STRUCTURE GATE heme_frame_prior (mean rho > 0.3 and positive for >= 60% of ligands, leave-compound-out): NOT MET"
+ligand_dynamics.log,26,STRUCTURE GATE dynamics_dynamic_pharmacophore (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
+ligand_dynamics.log,29,STRUCTURE GATE dynamics_stability (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
+ligand_dynamics.log,32,STRUCTURE GATE dynamics_dynamic_combined (mean rho > 0.3 and positive for >= 60% of ligands): NOT MET
 mbr_lddt_reevaluation.log,203,"STRUCTURE GATE mbr_lddt_exploratory (minimum Bayes risk over the Boltz samples against the first pick, scored by LDDT-PLI, thresholds of mbr_selection (p < 0.1), exploratory): NOT MET"
 mbr_lddt_reevaluation.log,209,"STRUCTURE GATE restraint_bond_lddt_exploratory (first sample with the bond restraint against without it, scored by LDDT-PLI, p < 0.1, exploratory): NOT MET"
 mbr_lddt_reevaluation.log,211,"STRUCTURE GATE mbr_on_restrained_lddt_exploratory (minimum Bayes risk inside the restrained pool against its first sample, scored by LDDT-PLI, p < 0.1, exploratory): NOT MET"

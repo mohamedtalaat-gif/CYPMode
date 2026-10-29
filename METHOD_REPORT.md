@@ -43,7 +43,7 @@ This section lists what the work adds, one claim at a time, with the evidence th
 
 - **The label is a function of two measurements, so the models learn the measurements.** The TDI label is positive when `s = t - max(d, 4) > log10 2`. The rule reproduces every training label (0 mismatches for CYP3A4, 0 for CYP2D6). The stack therefore fits the shift `s` and the arms, and the label and its confidence `z = |s - log10 2| / sd(s)` follow from them, instead of fitting a binary label that discards the size of the margin.
 - **A selection-aware CYP2D6 model.** CYP2D6 was measured only for compounds that an earlier screen promoted, so a model of the label alone answers a question about a selected population. The second file multiplies P(label | hit) by a gate P(hit). When the scored set looks like the training panel it raises the outer AUC from 0.5618 to 0.7278 (+0.1660, corrected p = 0.026); the gain disappears when the scored set holds no never-promoted compounds, and at the call rate of the final build the loss there is larger than the gain where it wins (section 7). The choice between the two files was made by a rule fixed before any upload, and the rule gives **file A** (the hits-only file); the other file is kept with its SHA-256.
-- **Groups join a stack only through a gate.** 184 pre-registered verdicts in 58 families; 9 are MET and 175 are NOT MET. The final stacks are 28 (CYP3A4) and 23 (CYP2D6) candidates, selected by the logs and by nothing else.
+- **Groups join a stack only through a gate.** 187 pre-registered verdicts in 59 families; 9 are MET and 178 are NOT MET. The final stacks are 28 (CYP3A4) and 23 (CYP2D6) candidates, selected by the logs and by nothing else.
 
 ### Data usage
 
@@ -67,7 +67,8 @@ This section lists what the work adds, one claim at a time, with the evidence th
 
 ### Rigor
 
-- **Negative results are results.** `NEGATIVE_RESULTS.md` lists all 175 verdicts that were NOT MET. The negative control, the whole nested procedure on permuted labels, gives an outer AUC of 0.5096 (CYP3A4) and 0.5012 (CYP2D6) at z0 = 1.0.
+- **The pharmacophore of a pose read over a short trajectory, tested under a rule fixed before any number.** The ligand moves for 20 ps in the frozen pocket (protein and heme at their predicted positions, no water) for 104 poses of 10 benchmark ligands; it is not a dynophore of the literature, which follows the whole complex in water (`docs/structure_track/structure_ligand_dynamics.md`, limitation L16). Judged by the gate of the pose rules, none of the three scores met it (mean rho -0.214, +0.042, -0.071 against the bar of 0.3; the static model of the same poses gives -0.240), so the structure entry was not changed.
+- **Negative results are results.** `NEGATIVE_RESULTS.md` lists all 178 verdicts that were NOT MET. The negative control, the whole nested procedure on permuted labels, gives an outer AUC of 0.5096 (CYP3A4) and 0.5012 (CYP2D6) at z0 = 1.0.
 - **Every number in the reports is copied by code from a log and checked by the audit,** which is generated twice and compared byte for byte (section 4.4).
 
 ### What is not claimed
@@ -174,10 +175,10 @@ results (`NEGATIVE_RESULTS.md`). No search procedure chose among them: the progr
 | representation and physics | 14 | 56 | 0 | 56 | frozen embeddings of pretrained networks (CheMeleon, Monroe, Atom-JEPA), semi-empirical quantum chemistry at four levels, the basic-centre block for CYP2D6 |
 | learners and stacking | 12 | 24 | 3 | 21 | tabular foundation models (TabICL, TabPFN, alone and on the embeddings), a multitask network, plain and fine-tuned Chemprop, the OpenADMET pretraining weights, a non-negative and a softmax blend |
 | label process and selection | 10 | 31 | 0 | 31 | a model of how the labels came to be (the arms, the gate, the selection-aware CYP2D6 model and its blends), matched molecular pairs, cross-isoform transfer, committees of label models |
-| structure levers | 13 | 36 | 5 | 31 | restraint of the iron-nitrogen contact, conformer, seed, template and step-scale levers, minimum-Bayes-risk and other rules for choosing a pose, a second co-folding engine, expected-improvement sampling, the heme-frame prior |
+| structure levers | 14 | 39 | 5 | 34 | restraint of the iron-nitrogen contact, conformer, seed, template and step-scale levers, minimum-Bayes-risk and other rules for choosing a pose, a second co-folding engine, expected-improvement sampling, the heme-frame prior |
 | replicates | 1 | 7 | 1 | 6 | the same comparison on ten outer folds for the physics additions and for the neural pair |
 
-In all 184 pre-registered verdicts in 58 families, 9 of them MET (figure `docs/figures/ml/ml_exploration_map-light.png`; notebook Part IX). This is the one count of what was tried that every document of the project quotes. The logs print 29 more gate lines, which are not in it: the negative control, where a MET verdict means that the pipeline gives chance on permuted labels, and the exploratory second looks, which no gate parser reads.
+In all 187 pre-registered verdicts in 59 families, 9 of them MET (figure `docs/figures/ml/ml_exploration_map-light.png`; notebook Part IX). This is the one count of what was tried that every document of the project quotes. The logs print 29 more gate lines, which are not in it: the negative control, where a MET verdict means that the pipeline gives chance on permuted labels, and the exploratory second looks, which no gate parser reads.
 
 ### 4.2 The accounting of the number of attempts
 
@@ -196,7 +197,7 @@ pre-registered gate is therefore reported as a pass of the registered rule and n
 ### 4.4 The selection-corrected design and its audit
 
 The label rule reproduces every training label (0 and 0 mismatches); the plans are rebuilt from the raw files and compared; every feature block is checked for leakage; the audit
-is generated twice and compared byte for byte; the test suite has 1012 passing tests; the summary of the audit is 88 PASS and 0 FAIL (notebook Part XII).
+is generated twice and compared byte for byte; the test suite has 1038 passing tests; the summary of the audit is 88 PASS and 0 FAIL (notebook Part XII).
 
 ### 4.5 What the project built, and what it borrowed
 
@@ -553,16 +554,21 @@ The highest block of identifiers of the training file is an analog-expansion rou
 
 ## 11. Structure track
 
-The structure levers gave 36 pre-registered verdicts, 5 of them MET (bond restraint, contact restraint, force-field relaxation of poses, pool gates repeated with OpenStructure's yardstick). Every rule for choosing a pose among the predicted ones was NOT MET on the crystal-anchored benchmark, so the pick is the model's own ranking among the valid poses; what the recipe adds is a restraint of the iron-nitrogen contact, the scorer's own validity call with a margin rule, and a registered relaxation.
+The structure levers gave 39 pre-registered verdicts, 5 of them MET (bond restraint, contact restraint, force-field relaxation of poses, pool gates repeated with OpenStructure's yardstick). Every rule for choosing a pose among the predicted ones was NOT MET on the crystal-anchored benchmark, so the pick is the model's own ranking among the valid poses; what the recipe adds is a restraint of the iron-nitrogen contact, the scorer's own validity call with a margin rule, and a registered relaxation.
+
+**The crystal ligands of the gates.** The 20 official ligands have no public answer, so every gate of the structure track was measured on ligands whose crystal pose is public. The benchmark is 10 ligands picked from the 101 distinct CYP3A4 ligands of the PDB (`cypmode/validation/reference_ligands.py`) by a rule fixed in advance (`cypmode/validation/structure_benchmark.py`): 20 to 60 heavy atoms, resolution at most 3.0 A, organic atoms only and one fragment (74 of the 101 pass), then the most mutually dissimilar by a maximin pick on Morgan fingerprints that starts from the panel compounds already predicted (azamulin, clotrimazole, diltiazem, itraconazole, ketoconazole, ritonavir, troleandomycin, vardenafil, verapamil). The pick is deterministic and the list is not written by hand; with those seeds the function returns exactly these ligands (`tests/test_structure_benchmark.py`). They are, with the PDB entry of the copy used: MWS (6OOB, 27 heavy atoms, 2.20 A), TCI (9PLJ, 23 heavy atoms, 2.72 A), 2QH (4NY4, 34 heavy atoms, 2.95 A), A1CIW (9PLK, 32 heavy atoms, 2.25 A), YNV (7LXL, 46 heavy atoms, 2.75 A), PK9 (4D6Z, 23 heavy atoms, 1.93 A), TPF (6MA7, 22 heavy atoms, 2.09 A), MWV (6OO9, 36 heavy atoms, 2.25 A), A1ASV (9BV5, 22 heavy atoms, 2.71 A), A1A4S (9COV, 42 heavy atoms, 2.60 A). Two cautions apply. The models may have seen these entries in training, so the absolute accuracy on the benchmark is optimistic and it serves to compare settings and selection rules, not to forecast a score. And the benchmark was chosen for diversity and not for likeness to the official ligands, which are not near the reference set (notebook section 11.5, limitation L15). The gate of the relaxation used 30 ligands: these 10 and the 20 ligands of the restraint-expansion plan registered on 2026-10-12 (every crystal ligand with a Type II donor, organic, one fragment, 8 to 30 heavy atoms, resolution at most 3.5 A and not in the benchmark; every eligible ligand was run and none was picked).
 
 Live scores of the two structure uploads (the live board scores 10 of the 20 ligands; `docs/structure_track/structure_board_scores.csv`, copied from the board on 2026-10-26): the submitted recipe scored an LDDT-PLI of 0.3623 (standard deviation 0.0245) and a BiSyRMSD of 4.32 A, rank 31 of 39 while it was the live entry; the organisers' Boltz-2 baseline scored 0.3950 and 5.19 A. The recipe is therefore below the baseline on the primary metric, by 0.033 against a board standard deviation of 0.060, and ahead of it on the BiSyRMSD. A second candidate, the first eligible unguided pose of each ligand, scored 0.3975 and 3.97 A; its gain of +0.0352 is below the threshold that was registered before the upload (`docs/structure_track/structure_candidate_c.md`), so the submitted recipe stays the structure entry.
 
-Gate verdicts of the structure levers (restraint, diversity, selection, engines, expected-improvement sampling, heme-frame prior):
+Gate verdicts of the structure levers (restraint, diversity, selection, engines, expected-improvement sampling, heme-frame prior, ligand dynamics):
 
 | log | gate | verdict |
 | --- | --- | --- |
 | ei_sampling.log | ei_sampling | NOT MET |
 | heme_frame_prior.log | heme_frame_prior | NOT MET |
+| ligand_dynamics.log | dynamics_dynamic_pharmacophore | NOT MET |
+| ligand_dynamics.log | dynamics_stability | NOT MET |
+| ligand_dynamics.log | dynamics_dynamic_combined | NOT MET |
 | mbr_lddt_reevaluation.log | mbr_lddt_exploratory | NOT MET |
 | mbr_lddt_reevaluation.log | restraint_bond_lddt_exploratory | NOT MET |
 | mbr_lddt_reevaluation.log | mbr_on_restrained_lddt_exploratory | NOT MET |
@@ -631,7 +637,7 @@ STRUCTURE RELAXATION applied to 20 of 20 poses (rule of relax_final.py); smalles
 
 ## 12. Negative results
 
-Of 184 pre-registered verdicts in 58 families of ideas, 175 are NOT MET. A failed gate is a result: it is written down with its numbers and it is not tuned until it passes.
+Of 187 pre-registered verdicts in 59 families of ideas, 178 are NOT MET. A failed gate is a result: it is written down with its numbers and it is not tuned until it passes.
 
 | kind of idea | families | verdicts | not met |
 | --- | --- | --- | --- |
@@ -639,7 +645,7 @@ Of 184 pre-registered verdicts in 58 families of ideas, 175 are NOT MET. A faile
 | representation and physics | 14 | 56 | 56 |
 | learners and stacking | 12 | 24 | 21 |
 | label process and selection | 10 | 31 | 31 |
-| structure levers | 13 | 36 | 31 |
+| structure levers | 14 | 39 | 34 |
 | replicates | 1 | 7 | 6 |
 
 `NEGATIVE_RESULTS.md` lists every idea with its gain and its p-value next to the verdict. The failures that changed the project most are told in full in the notebook (Part IX) and in the specification:
@@ -662,7 +668,7 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 - **L4** (uncertainty): Committee disagreement adds information beyond the decision margin for 1 components on CYP3A4 and 2 on CYP2D6 under the permutation test; where the count is zero the committee is reported as a measured negative result and does not alter predictions.
 - **L5** (calibration): The probabilities the final build publishes (isotonic-calibrated) have calibration slopes of 0.9252 (CYP3A4) and 0.8249 (CYP2D6) on held-out folds. The sigmoid of the regularised blend as it comes out is a ranking score and not a probability (slopes 1.1813 and -0.0164); it is never published as one. Probabilities are calibrated to the weighted validation population, not to the unknown scored test population.
 - **L6** (structure): On the diverse crystal benchmark the model's first-pick pose is 4.1929 A from the crystal pose on average; the structure score depends on a handful of compounds and is noisy. The benchmark ligands come from the PDB, which co-folding models may have seen, so absolute accuracy is optimistic.
-- **L7** (reproducibility): The test suite has 1012 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
+- **L7** (reproducibility): The test suite has 1038 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
 - **L8** (repository): The working tree has 0 modified and 0 untracked entries: results in this report come from uncommitted code until the work is committed.
 - **L9** (population): The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). The selection-aware file gains AUC when they are numerous and loses both AUC and MCC when there are none, by more than it gains at the call rate of the final build (the table of job 016 in section 7), and neither the label-shift estimate nor the public metrics of the baseline identify their share (538 grid points are consistent with the metrics). The live board scores half of the test set and cannot separate the two files (job 016), so the entry is the hits-only file and the selection-aware file is kept, with its SHA-256, to be scored on the test labels if the organisers publish them: that comparison measures the share and tests the hypothesis on data that no choice of this project touched.
 - **L10** (calibration): The CYP2D6 blend as it comes out is close to a constant (weighted expected calibration error 0.3592 against 0.0431 for CYP3A4): it ranks and transfers a call rate but is not a probability. The probabilities that are published pass through an isotonic step fitted on inner out-of-fold scores, which brings the error to 0.0054 (CYP2D6) and 0.0189 (CYP3A4); a monotone step restores calibration and adds no discrimination.
@@ -671,11 +677,14 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 - **L13** (data): The positive rate of the scored test set was recovered from the public leaderboards, which publish accuracy, precision and recall for every prediction file; the three numbers fix the rate (the implied rate agrees across all entries). It is aggregate information about the hidden labels that was available because the boards publish it: it weights the evaluation yardstick (the test prevalence) and sets the call rate (a multiple of the prevalence). No label of any compound and no per-compound information from a board was used, and no submission was made to probe a label. A model without this step would call the positive rate of the training data (about one fifth for both enzymes) instead of about one third (CYP3A4) and one in seventeen (CYP2D6), which costs MCC mostly on CYP2D6. A check that reads no board (a label-shift estimate from the training data and the blinded structures, `cypmode/challenge/label_shift.py`, with a rule fixed before its first run) is reported with its verdict in the innovation summary of the method report; the rate used by the final build rests on the boards.
 - **L14** (candidates): The pocket block and the site model were tested with a conformer ensemble of 12 conformers within 5 kcal/mol of the lowest, which holds a member within 1.0 A of the crystal pose for only 12% of 131 crystal ligand copies; 300 conformers do so for 15%. Their negative verdicts are those of models that mostly did not see the bound conformation of the ligand. A wider ensemble was not tried.
 - **L15** (structure): On the live board, which scores 10 of the 20 ligands, the submitted structure recipe scored an LDDT-PLI of 0.3623, below the organisers' Boltz-2 baseline (0.3950), with a lower BiSyRMSD (4.3220 A against 5.1870 A). The second candidate, the first eligible unguided pose, scored 0.3975 and did not pass the threshold registered before its upload. The gates of the structure track were measured on 30 crystal ligands that are chemically far from the 20 official ligands, so the evidence for the iron-nitrogen restraint may not transfer, and no rule for choosing a pose among the predicted ones passed its gate. The recipe is reported as submitted and makes no claim of a better LDDT-PLI than the baseline.
+- **L16** (structure): The ligand dynamics in the frozen pocket ran 20 ps for each of 104 predicted poses of 10 benchmark ligands, with the protein and the heme held at their predicted positions and without water. It is not a dynophore of the literature, which follows the whole complex in water over nanoseconds, and it cannot show that a pose is wrong because the pocket would open, that a bridging water molecule is missing, or that a slow motion of the ligand changes the pose. The stability of a pose measures its agreement with the force field that also relaxed it. 0 of its three scores met the gate registered before the result (the highest mean rho was +0.042 against the bar of +0.30); 10 ligands cannot detect a modest effect, so the result is that this cheap dynamics did not rank the predicted poses of these ligands and says nothing about a dynamics of the whole complex or about the 20 official ligands, which are chemically far from the benchmark ligands.
 
 ## 14. Reproduction, credits and prior art
 
 Reproduce the TDI candidates with `bash scripts/reproduce_tdi.sh`; the audit with `bash scripts/run_audit.sh` (two runs, byte-identical);
 the environment is pinned in `environment/`. The structure recipe runs through `python -m cypmode.validation.final_recipe`.
+
+**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all 172 modules with what each does and what it imports, all 171 jobs of the queue with what each waits for and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` and a test fail when a page differs from the code. Two of the diagrams are drawn in the README.
 
 Sources credited (published, linked): OpenADMET CYP blind challenge and its official LightGBM baseline; the OpenADMET blog post
 "Cofolding? I hardly know her!" for the co-folding accuracy figure; repository `openadmet-cyp-structure`

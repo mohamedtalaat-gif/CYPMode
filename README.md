@@ -59,11 +59,12 @@ pose-validity and margin rules in which every lever was decided by a gate on cry
 | The label is a function of two measurements; the models learn the measurements | 0 and 0 mismatches of the label rule over 2334 and 1493 rows with both arms | audit section 4 |
 | A slice of the CYP3A4 labels follows another convention and is left out | 1249 rows without a direct measurement | audit section 4 |
 | Selection-aware CYP2D6 model; the file is chosen by a rule fixed before any upload | AUC 0.5618 to 0.7278 (+0.1660, corrected p = 0.026) on a scored set that looks like the training panel; the rule gives file A | `population_panel_CYP2D6_r3.log`, `selection_decision_CYP2D6.log` |
-| Every idea passes a gate written before its result | 184 verdicts in 58 families, 9 MET | `NEGATIVE_RESULTS.md` |
+| Every idea passes a gate written before its result | 187 verdicts in 59 families, 9 MET | `NEGATIVE_RESULTS.md` |
 | Reliability tiers by similarity to the training data, intervals over chemical series | blinded compounds supported: 750 of 750 (CYP3A4), 0 of 750 (CYP2D6) | `applicability_domain.log` |
 | Positive rates of the scored set recovered from the public boards | 0.310 (CYP3A4), 0.059 (CYP2D6) | limitation L13 |
 | The same rates estimated without a board, by label shift, under a rule fixed before the first run | 0.135 (0.043 to 0.286) against 0.059 for CYP2D6: NOT INFORMATIVE; 0.352 (0.274 to 0.451) against 0.310 for CYP3A4: NOT INFORMATIVE | `label_shift.log` |
 | Restraint of the iron-nitrogen bond for Type II ligands | gate MET on the crystal benchmark, MET under the OpenStructure scorer | `structure_gates.log`, `ost_pool_gates.log` |
+| The pharmacophore of a pose read over 20 ps of ligand dynamics in the frozen pocket, under a rule fixed before any number | mean rho with minus the true RMSD over 10 ligands, dynamic pharmacophore -0.214, stability +0.042, dynamic combined -0.071 against -0.240 for the static model: gate NOT MET for all 3 | `ligand_dynamics.log` |
 | Validity margin of the scorer's own call and a relaxation under a registered rule | relaxation adopted for 20 of 20; smallest margin 0.801 to 0.849 | `relax_final.log` |
 <!-- generated:innovation end -->
 
@@ -243,7 +244,7 @@ Members of the default stack: k-nearest neighbours (Tanimoto) (3), support vecto
 <!-- generated:final-stack end -->
 
 <!-- generated:gate-verdicts begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
-Every addition was judged by a rule fixed before its result. 184 pre-registered verdicts from 58 families of ideas: 9 MET and 175 NOT MET. The logs print 29 more gate lines, which are not in that count: the negative control (a MET verdict there means that the pipeline gives chance on permuted labels, as it must) and the exploratory second looks. The gates that were met: Chemprop from the two OpenADMET pretraining weights (staged), bond restraint, contact restraint, force-field relaxation of poses, pool gates repeated with OpenStructure's yardstick, replicates with 10 outer folds, the neural pair (multitask network and plain Chemprop) in the stack. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: CYP3A4: ['chemprop_foundation', 'neural']; CYP2D6: none.
+Every addition was judged by a rule fixed before its result. 187 pre-registered verdicts from 59 families of ideas: 9 MET and 178 NOT MET. The logs print 29 more gate lines, which are not in that count: the negative control (a MET verdict there means that the pipeline gives chance on permuted labels, as it must) and the exploratory second looks. The gates that were met: Chemprop from the two OpenADMET pretraining weights (staged), bond restraint, contact restraint, force-field relaxation of poses, pool gates repeated with OpenStructure's yardstick, replicates with 10 outer folds, the neural pair (multitask network and plain Chemprop) in the stack. An addition to the TDI stack counts only when its gate is met alone and inside the stack; groups added to the final stack: CYP3A4: ['chemprop_foundation', 'neural']; CYP2D6: none.
 
 <details><summary>All verdicts</summary>
 
@@ -285,6 +286,7 @@ Every addition was judged by a rule fixed before its result. 184 pre-registered 
 | hedged blend of the hits-only and the selection-aware stacks | - | NOT MET | - |
 | heme-frame prior over poses | - | - | NOT MET |
 | hypothesis model with permuted labels (control) | NOT MET | NOT MET | - |
+| ligand dynamics in the frozen pocket | - | - | NOT MET |
 | ligand-based pharmacophore hypothesis model | NOT MET | NOT MET | - |
 | logD and protein binding from the OpenADMET surrogate models | NOT MET | NOT MET | - |
 | matched-molecular-pair transfer | NOT MET | NOT MET | - |

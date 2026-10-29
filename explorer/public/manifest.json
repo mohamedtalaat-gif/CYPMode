@@ -1,7 +1,7 @@
 {
   "ledger.csv": {
-    "rows": 184,
-    "sha256": "5868ad952c8b0dbb34e2969a3626f56ab70cf7184540d5ab0b2f085b54007211"
+    "rows": 187,
+    "sha256": "1575da2e9a9119cfcf784f3b025fbe4e2e89e687b2f7458c562213602ca16118"
   },
   "paired.csv": {
     "rows": 188,
@@ -20,8 +20,8 @@
     "sha256": "f8cfe8eceb3bef3d3ea5b6f60a5b0f6cd43ff16fa492754ac38603279a23d33d"
   },
   "excerpts.csv": {
-    "rows": 401,
-    "sha256": "5e0b7a295f3385e219a6731c27b9f5273d347bcae6c4a0e9ff3f74f48d349baa"
+    "rows": 404,
+    "sha256": "3c4332dad66de175000fd2da65c7de22d3a943f781fb7e0086d1357f50e7e97d"
   },
   "oof_CYP3A4.csv.gz": {
     "candidates": 113,

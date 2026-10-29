@@ -84,6 +84,9 @@ ok   struct_openfold3_memory
 ok   struct_posebusters
 ok   struct_mbr_pool
 ok   struct_diffusion_denoising
+ok   struct_dyn_gate
+ok   struct_dyn_drift
+ok   struct_dyn_trace
 ok   struct_rmsd_lddt
 ok   struct_pose_pools
 ok   struct_ost_vs_project

@@ -30,7 +30,7 @@ Nested cross-validation as a grid. The compounds are cut into 5 outer folds; eac
 
 ### arch_ledger_heatmap: Every idea by place and verdict
 
-Every idea that was put to a pre-registered gate, one row per family and one column per place it was tried (CYP3A4, CYP2D6, the structure track): green where a verdict was MET, grey where every verdict was NOT MET, empty where the idea was not tried. 58 families, 6 cells with a MET verdict and 87 with none, grouped by the kind of idea. A family that is MET in one cell and NOT MET in the other is a result for one enzyme only. The count of verdicts behind the cells is the one count that the method report, the README and the film quote.
+Every idea that was put to a pre-registered gate, one row per family and one column per place it was tried (CYP3A4, CYP2D6, the structure track): green where a verdict was MET, grey where every verdict was NOT MET, empty where the idea was not tried. 59 families, 6 cells with a MET verdict and 88 with none, grouped by the kind of idea. A family that is MET in one cell and NOT MET in the other is a result for one enzyme only. The count of verdicts behind the cells is the one count that the method report, the README and the film quote.
 
 - notebook section: 9.11
 - data: data/structure_track/outputs/cyp3a4/logs/*.log
@@ -270,7 +270,7 @@ The weighted MCC on the outer folds as a function of the number of positive call
 
 ### ml_exploration_map: What was explored: the ledger by kind of idea
 
-Every pre-registered verdict of the ledger, grouped by the kind of idea it tested: 184 verdicts in 58 families (data usage: 30 verdicts in 8 families, 0 met; label process and selection: 31 verdicts in 10 families, 0 met; learners and stacking: 24 verdicts in 12 families, 3 met; replicates: 7 verdicts in 1 family, 1 met; representation and physics: 56 verdicts in 14 families, 0 met; structure levers: 36 verdicts in 13 families, 5 met). The search was wide before it was deep: new data (the screen, the Emax, the induction readings, public panels), new representations (pretrained embeddings, physics at four levels), new learners, a model of how the labels came to be, and levers of the structure recipe, each judged by the rule written before its result. Ideas that passed are green; the grey ones stay in the ledger as results. No reinforcement-learning or evolutionary search is used: the exploration is a designed, auditable programme of experiments, not an optimiser.
+Every pre-registered verdict of the ledger, grouped by the kind of idea it tested: 187 verdicts in 59 families (data usage: 30 verdicts in 8 families, 0 met; label process and selection: 31 verdicts in 10 families, 0 met; learners and stacking: 24 verdicts in 12 families, 3 met; replicates: 7 verdicts in 1 family, 1 met; representation and physics: 56 verdicts in 14 families, 0 met; structure levers: 39 verdicts in 14 families, 5 met). The search was wide before it was deep: new data (the screen, the Emax, the induction readings, public panels), new representations (pretrained embeddings, physics at four levels), new learners, a model of how the labels came to be, and levers of the structure recipe, each judged by the rule written before its result. Ideas that passed are green; the grey ones stay in the ledger as results. No reinforcement-learning or evolutionary search is used: the exploration is a designed, auditable programme of experiments, not an optimiser.
 
 - notebook section: 9.9
 - data: data/structure_track/outputs/cyp3a4/logs/<experiment>_<isoform>.log
@@ -432,7 +432,7 @@ How much the selection-aware CYP2D6 model gains depends on how many never-promot
 
 ### eng_queue_timeline: The job queue as a timeline
 
-Each bar is one run of one job of the queue, from the runner's own log (169 jobs, 377 runs: 334 finished, 27 stopped and retried, 16 failed after their attempts). The runs add up to 222 hours of wall-clock time between 08 Oct and 26 Oct (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
+Each bar is one run of one job of the queue, from the runner's own log (170 jobs, 393 runs: 348 finished, 28 stopped and retried, 17 failed after their attempts). The runs add up to 228 hours of wall-clock time between 08 Oct and 29 Oct (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
 
 - notebook section: 12.2
 - data: queue/logs/queue_stage.txt
@@ -440,7 +440,7 @@ Each bar is one run of one job of the queue, from the runner's own log (169 jobs
 
 ### eng_power_events: What the machine did while the queue ran
 
-Every time the machine entered sleep between 19 Oct and 25 Oct, by the cause its own power log gives: 251 x Maintenance Sleep, 110 x Sleep Service Back to Sleep, 4 x Software Sleep pid=611, 4 x Clamshell Sleep, 2 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-10-19, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
+Every time the machine entered sleep between 23 Oct and 29 Oct, by the cause its own power log gives: 339 x Maintenance Sleep, 112 x Sleep Service Back to Sleep, 4 x Software Sleep pid=611, 3 x Clamshell Sleep, 3 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-10-22, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
 
 - notebook section: 12.3
 - data: pmset -g log
@@ -448,7 +448,7 @@ Every time the machine entered sleep between 19 Oct and 25 Oct, by the cause its
 
 ### eng_tests_by_module: The test suite by module
 
-Test functions per test module of the repository: 993 test functions in 144 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
+Test functions per test module of the repository: 1019 test functions in 146 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
 
 - notebook section: 12.5
 - data: tests/test_*.py
@@ -456,7 +456,7 @@ Test functions per test module of the repository: 993 test functions in 144 modu
 
 ### eng_commit_timeline: The history of the repository
 
-The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-10-26: 214 commits on 11 days, the busiest day with 41 (2026-10-25). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
+The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-10-29: 239 commits on 12 days, the busiest day with 41 (2026-10-25). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
 
 - notebook section: 12.4
 - data: git log
@@ -464,7 +464,7 @@ The history of the repository as the number of commits of each day, from the fir
 
 ### eng_repository_map: The repository by folder
 
-The repository by top-level folder: the number of files that git tracks (2095 in all, 350 MB) and their size. The three folders with the most files are data (974), docs (461), cypmode (178). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
+The repository by top-level folder: the number of files that git tracks (2323 in all, 387 MB) and their size. The three folders with the most files are data (1190), docs (468), cypmode (180). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
 
 - notebook section: 12.5
 - data: git ls-files
@@ -544,6 +544,30 @@ Diffusion on a real ligand: the 24 heavy atoms of OCNT-2395712, a donor ligand o
 - data: data/structure_track/outputs/cyp3a4/<ligand>/predictions, two Boltz-2 samples of one donor ligand
 - files: struct_diffusion_denoising-light.svg, struct_diffusion_denoising-light.png, struct_diffusion_denoising-dark.svg, struct_diffusion_denoising-dark.png, struct_diffusion_denoising-anim-light.gif, struct_diffusion_denoising-anim-dark.gif
 
+### struct_dyn_gate: The static and the dynamic scores of a pose, ligand by ligand
+
+Each row is a benchmark ligand with at least 3 predicted poses, each dot the Spearman correlation, within the pool of the ligand, between a score and minus the distance of the pose to the crystal pose (right of zero: the score ranks the better poses first). The line at 0.3 is the bar of the gate. Means over 10 ligands: static model (one frame) -0.24, dynamic pharmacophore -0.21, stability +0.04, dynamic combined -0.07.
+
+- notebook section: 11.13
+- data: data/structure_track/outputs/cyp3a4/ligand_dynamics_poses.csv
+- files: struct_dyn_gate-light.svg, struct_dyn_gate-light.png, struct_dyn_gate-dark.svg, struct_dyn_gate-dark.png
+
+### struct_dyn_drift: The drift of a pose under dynamics against its error
+
+Each dot is one of the 104 predicted poses of the benchmark ligands. Horizontal: the mean heavy-atom RMSD of the ligand to its start pose over the 18 scored frames of the 20 ps (the drift). Vertical: the RMSD of the start pose to the crystal pose. Both are centred on the mean of their ligand, so that only the differences between the poses of one ligand are shown (Spearman rho +0.09). A stable pose is not a pose that is close to the crystal.
+
+- notebook section: 11.13
+- data: data/structure_track/outputs/cyp3a4/ligand_dynamics_poses.csv
+- files: struct_dyn_drift-light.svg, struct_dyn_drift-light.png, struct_dyn_drift-dark.svg, struct_dyn_drift-dark.png
+
+### struct_dyn_trace: The traces of the poses of one ligand over 20 ps
+
+The 20 ps of the poses of PK9, the benchmark ligand whose poses differ most in their distance to the crystal pose. Left: the heavy-atom RMSD of the ligand to its start pose; right: the field score of the pose in the pocket model, frame by frame, which is the quantity that the dynamic pharmacophore averages. The best and the worst pose against the crystal are drawn thick.
+
+- notebook section: 11.13
+- data: data/structure_track/outputs/cyp3a4/ligand_dynamics_poses.csv, data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories
+- files: struct_dyn_trace-light.svg, struct_dyn_trace-light.png, struct_dyn_trace-dark.svg, struct_dyn_trace-dark.png
+
 ### struct_rmsd_lddt: RMSD and LDDT-PLI drawn on a real pose
 
 RMSD and LDDT-PLI on a real prediction. The ligand is PK9, the benchmark ligand whose best Boltz-2 sample is a correct placement and whose worst sample is furthest from the crystal pose (crystal entries 4D75 and 4D6Z). Top: the heavy atoms of the crystal ligand (open circles) and of the predicted ligand (filled), both seen along the two principal axes of the crystal ligand after the pocket of the prediction has been superposed on the crystal pocket (the C-alpha atoms within 10 A of the ligand, the superposition of BiSyRMSD); each dotted line joins an atom to its crystal counterpart, and the RMSD is the root of the mean squared length of these lines, taken over the symmetry-equivalent mappings of the ligand: 1.82 A for sample 2 and 4.82 A for sample 1. Bottom: LDDT-PLI needs no superposition. Every protein atom within 6 A of the crystal ligand is paired with every ligand atom; a point is one pair, with its distance in the crystal on the horizontal axis and in the prediction on the vertical axis; the bands are the four tolerances 0.5, 1, 2 and 4 A, and the score is the mean over the tolerances of the share of pairs inside the band: 0.72 for the best sample and 0.39 for the worst. A pose that fails the PoseBusters checks scores zero whatever its geometry.
@@ -618,7 +642,7 @@ The expected pharmacophore of the 20 official ligands, from their final submitte
 
 ### struct_pharm_pose_3d: The pharmacophore model on real poses: the best and the worst pose of three benchmark ligands
 
-Why the pharmacophore model of a pose does not rank poses. Real structures rendered with PyMOL: the predicted complex (teal ligand, orange heme), the crystal pose of the same ligand (white, the crystal entry aligned on the protein) and the sites of the structure-based model (translucent spheres, one colour per feature family) built without the references of that ligand and its analogues; a site that a feature of the pose matches is drawn firmer, one that it does not is nearly transparent, and the small solid spheres are the features of the pose. For the benchmark ligands with the smallest, the median and the largest first-sample RMSD of the unguided runs (bench-2QH, bench-MWV, bench-YNV), the best (top row) and the worst (bottom row) pose of the pool. The model sees where features lie, not whether the pose is the crystal one: a pose a few ångströms away from the crystal pose can match as many sites as the true one, which is what the gate of S8 measured.
+Why the pharmacophore model of a pose does not rank poses. Real structures rendered with PyMOL: the predicted complex (teal ligand, orange heme), the crystal pose of the same ligand (white, the crystal entry aligned on the protein) and the sites of the structure-based model (translucent spheres, one colour per feature family) built without the references of that ligand and its analogues; a site that a feature of the pose matches is drawn firmer, one that it does not is nearly transparent, and the small solid spheres are the features of the pose. For the benchmark ligands with the smallest, the median and the largest first-sample RMSD of the unguided runs (bench-2QH, bench-MWV, bench-YNV), the best (top row) and the worst (bottom row) pose of the pool. The model sees where features lie, not whether the pose is the crystal one: a pose a few ångströms away from the crystal pose can match as many sites as the true one, which is what the gate of the pharmacophore model measured.
 
 - notebook section: 9.15
 - data: data/structure_track/outputs/cyp3a4/benchmark_engine_pose_validation_unguided_boltz.csv, data/tdi_track/outputs/caches/pocket_fields_cyp3a4.npz
@@ -634,7 +658,7 @@ Structure-activity relationship in the structure track: the three analogue pairs
 
 ### struct_pharm_official20_2d: The 20 official ligands: chemotypes, functional groups and the pharmacophore of their final poses
 
-The 20 official ligands in 2D, grouped into 2 chemotypes and 15 singletons (Morgan Tanimoto similarity of at least 0.45 to a neighbour; the largest group first). Each structure shows its functional groups (one colour per group of the fixed table, named under it) and, for a chemotype, the atoms of the maximum common substructure of the group are outlined in the colour of the group. Under each, the pharmacophore numbers of its final pose from S8 b: the iron-donor error of a Type II donor or the distance of the oxidation site outside the 3.5 to 6.0 Å window, the recall of the crystal sites and a mark when a flag of the check of the binding-site representation is raised. These are predictions for blinded ligands.
+The 20 official ligands in 2D, grouped into 2 chemotypes and 15 singletons (Morgan Tanimoto similarity of at least 0.45 to a neighbour; the largest group first). Each structure shows its functional groups (one colour per group of the fixed table, named under it) and, for a chemotype, the atoms of the maximum common substructure of the group are outlined in the colour of the group. Under each, the pharmacophore numbers of its final pose from job 925_official_pharmacophore: the iron-donor error of a Type II donor or the distance of the oxidation site outside the 3.5 to 6.0 Å window, the recall of the crystal sites and a mark when a flag of the check of the binding-site representation is raised. These are predictions for blinded ligands.
 
 - notebook section: 9.15
 - data: data/structure_track/outputs/cyp3a4/pharmacophore_official20/summary.csv, data/structure_track/inputs/structure_track_test_blinded.csv
