@@ -58,3 +58,11 @@ def test_the_pages_follow_the_wording_rules_and_do_not_depend_on_the_run():
 
 def test_the_committed_pages_match_the_code():
     assert pm.main(["--check"]) == 0
+
+
+def test_the_readme_shows_the_two_diagrams_of_the_map_and_they_are_the_ones_the_code_draws():
+    from cypmode.audit import docs_state
+
+    text = (pm.ROOT / "README.md").read_text()
+    assert docs_state.render(text, ("project-map",)) == text
+    assert pm.dataflow_diagram(pm.dataflow_facts()) in text and pm.code_diagram(pm.code_facts()) in text

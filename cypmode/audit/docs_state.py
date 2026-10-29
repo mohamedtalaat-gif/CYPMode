@@ -195,8 +195,14 @@ def innovation_block() -> str:
     return innovation_table()
 
 
-BLOCKS = {"final-stack": final_stack_block, "gate-verdicts": gate_verdicts_block, "structure-recipe": structure_block, "innovation": innovation_block}
-TARGETS = {"README.md": ("innovation", "final-stack", "gate-verdicts", "structure-recipe"), "CYPMode_Architecture_Specification.md": ("innovation", "final-stack", "structure-recipe")}
+def map_block() -> str:
+    from cypmode.audit.project_map import readme_block
+
+    return readme_block().rstrip("\n")
+
+
+BLOCKS = {"final-stack": final_stack_block, "gate-verdicts": gate_verdicts_block, "structure-recipe": structure_block, "innovation": innovation_block, "project-map": map_block}
+TARGETS = {"README.md": ("innovation", "final-stack", "gate-verdicts", "structure-recipe", "project-map"), "CYPMode_Architecture_Specification.md": ("innovation", "final-stack", "structure-recipe")}
 
 
 def pattern(name: str) -> re.Pattern:

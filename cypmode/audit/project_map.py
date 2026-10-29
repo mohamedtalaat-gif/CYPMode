@@ -110,21 +110,29 @@ def stems(names: set[str]) -> str:
     return shown + (f" and {len(ordered) - USED_BY_SHOWN} more" if len(ordered) > USED_BY_SHOWN else "") if ordered else "none"
 
 
-def render_code() -> str:
-    facts = code_facts()
+def code_diagram(facts: dict) -> str:
+    """The Mermaid diagram of the packages: an arrow from a package to a package whose modules it imports, labelled with the number of those imports."""
     packages = Counter(package_of(m) for m in facts["paths"])
-    edges = sum(len(t) for t in facts["graph"].values())
     node = lambda p: re.sub(r"\W", "_", p)
-    lines = [
-        "# The code",
-        "",
-        f"The project has {len(facts['paths'])} modules in {len(packages)} packages, and the modules hold {edges} imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.",
-        "",
+    return "\n".join([
         "```mermaid",
         "flowchart LR",
         *(f'  {node(p)}["{p} ({plural(n, "module")})"]' for p, n in sorted(packages.items(), key=lambda x: (-x[1], x[0]))),
         *(f"  {node(a)} -->|{n}| {node(b)}" for (a, b), n in sorted(facts["cross"].items(), key=lambda x: (-x[1], x[0]))),
         "```",
+    ])
+
+
+def render_code() -> str:
+    facts = code_facts()
+    packages = Counter(package_of(m) for m in facts["paths"])
+    edges = sum(len(t) for t in facts["graph"].values())
+    lines = [
+        "# The code",
+        "",
+        f"The project has {len(facts['paths'])} modules in {len(packages)} packages, and the modules hold {edges} imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.",
+        "",
+        code_diagram(facts),
         "",
         "A module-level drawing of the largest packages would hold hundreds of arrows and say less than the tables, so each package below lists its modules with what they import and what imports them.",
         "",
@@ -202,30 +210,43 @@ def render_queue() -> str:
 
 # -- the flow of the data -----------------------------------------------------------------------------------------------------------------------------------
 
-def render_dataflow() -> str:
+def dataflow_facts() -> dict:
     jobs = job_facts()
     written = sorted({log for j in jobs for log in j["logs"]})
     sources = [p for pattern in ("cypmode/**/*.py", "notebooks/**/*.py") for p in sorted(ROOT.glob(pattern)) if "__pycache__" not in p.parts]
     texts = {p: p.read_text() for p in sources}
     literal = {log for log in written if "$" not in log}
-    named = sorted(log for log in literal if any(log in text for text in texts.values()))
-    glob_readers = sorted(p.relative_to(ROOT).as_posix() for p, text in texts.items() if GLOB_READER.search(text))
-    writers = sum(1 for j in jobs if j["logs"])
+    return {
+        "jobs": jobs, "written": written, "literal": literal, "named": sorted(log for log in literal if any(log in text for text in texts.values())),
+        "glob_readers": sorted(p.relative_to(ROOT).as_posix() for p, text in texts.items() if GLOB_READER.search(text)), "writers": sum(1 for j in jobs if j["logs"]),
+    }
+
+
+def dataflow_diagram(facts: dict) -> str:
+    """The Mermaid diagram of the five stages, with the counts of the jobs, the logs and the readers."""
+    return "\n".join([
+        "```mermaid",
+        "flowchart LR",
+        '  inputs["inputs<br/>data/*/inputs"] --> jobs',
+        f'  jobs["queue jobs<br/>{facts["writers"]} of {len(facts["jobs"])} write a log"] -->|"{len(facts["written"])} log names"| logs["logs"]',
+        '  logs -->|"every log, through gate_rows"| ledger["ledger<br/>cypmode/audit/ledger_kinds.py"]',
+        f'  logs -->|"{len(facts["named"])} logs are read by name"| reports',
+        '  ledger --> reports["reports, figures, notebook<br/>built by the chain 900 to 960"]',
+        '  reports --> submissions["submission files"]',
+        "```",
+    ])
+
+
+def render_dataflow() -> str:
+    facts = dataflow_facts()
+    jobs, literal, named, glob_readers = facts["jobs"], facts["literal"], facts["named"], facts["glob_readers"]
     documents = [(j["name"], r) for j in jobs if int(j["id"]) >= 900 for r in j["runs"]]
     lines = [
         "# The flow of the data",
         "",
         "The data go one way: the inputs of a track enter the jobs of the queue, the jobs write logs, the ledger reads the lines of the gates in the logs, and the reports, the figures, the notebook and the submission files are built from the logs and the ledger.",
         "",
-        "```mermaid",
-        "flowchart LR",
-        '  inputs["inputs<br/>data/*/inputs"] --> jobs',
-        f'  jobs["queue jobs<br/>{writers} of {len(jobs)} write a log"] -->|"{len(written)} log names"| logs["logs"]',
-        '  logs -->|"every log, through gate_rows"| ledger["ledger<br/>cypmode/audit/ledger_kinds.py"]',
-        f'  logs -->|"{len(named)} logs are read by name"| reports',
-        '  ledger --> reports["reports, figures, notebook<br/>built by the chain 900 to 960"]',
-        '  reports --> submissions["submission files"]',
-        "```",
+        dataflow_diagram(facts),
         "",
         f"A log is named by a module in {len(named)} of the {len(literal)} cases in which a job writes it under a fixed name. The others are read through the folder, and {plural(len(glob_readers), 'module')} read every log of it that way:",
         "",
@@ -297,6 +318,22 @@ def render_index() -> str:
         ]),
         "",
         "What the map does not show: the content of any input or result, and what happens while a job runs. It names files and counts them, and it reads no log.",
+        "",
+    ])
+
+
+def readme_block() -> str:
+    """The section of the README that shows the map: the diagram of the flow of the data and the diagram of the packages, with the way into the pages."""
+    return "\n".join([
+        "## Map of the project",
+        "",
+        "The pages of [docs/map](docs/map/README.md) show where everything is and what depends on what: the code, the queue, the flow of the data and the evidence. Two of their diagrams are drawn here. The first follows the data from the inputs to the submission files, the second shows which packages of the code import which, with the number of imports on each arrow.",
+        "",
+        dataflow_diagram(dataflow_facts()),
+        "",
+        code_diagram(code_facts()),
+        "",
+        "The pages list every module with what it does and what it imports, and every job of the queue with what it waits for.",
         "",
     ])
 

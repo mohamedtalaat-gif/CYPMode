@@ -79,10 +79,54 @@ fold is. A predicted structure is a model, not a measurement. The numbers report
 | What did not work? | [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md), and sections 4.7 and 12 of the method report |
 | How does it all work, from first principles, with no background assumed? | the public edition of the notebook: `notebooks/public/cypmode_notebook_public.html` (one file, opens in a browser), also as `.pdf` and `.ipynb`. Part 0 (Orientation) comes first; then the part that is needed: the data (II), validation without selection bias (VI), the final model (VIII), the additions that were tested (IX), quantum chemistry and physics (X), the structure track (XI). Every section says where it sits in the story and teaches the science it uses; Appendix A is the practical walkthrough and Appendix D says which section explains which file. The full edition is released after the challenge closes |
 | How to explore the numbers? | the interactive explorer, a marimo notebook that reads a small public data bundle and never trains a model or runs a job: `explorer/run_explorer.command` (macOS), `explorer/run_explorer.bat` (Windows) or `bash scripts/explorer.sh run`; it needs the environment `.venv-marimo` (see Quick start) |
-| Where is everything, and what depends on what? | [docs/map](docs/map/README.md): the code, the queue, the flow of the data and the evidence, each a page with a diagram and a table, written from the files of the repository by `python -m cypmode.audit.project_map` |
+| Where is everything, and what depends on what? | the section "Map of the project" below and the four pages of [docs/map](docs/map/README.md), written from the files of the repository by `python -m cypmode.audit.project_map` |
 | How to check the claims? | [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md) (generated twice and compared byte for byte), the tests in `tests/` and `bash scripts/run_audit.sh` |
 | How to reproduce it? | Quick start below, `bash scripts/reproduce_tdi.sh` and the jobs of `queue/jobs/` |
 | Where is the design record? | [CYPMode_Architecture_Specification.md](CYPMode_Architecture_Specification.md) and the architecture sections of this file |
+
+<!-- generated:project-map begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
+## Map of the project
+
+The pages of [docs/map](docs/map/README.md) show where everything is and what depends on what: the code, the queue, the flow of the data and the evidence. Two of their diagrams are drawn here. The first follows the data from the inputs to the submission files, the second shows which packages of the code import which, with the number of imports on each arrow.
+
+```mermaid
+flowchart LR
+  inputs["inputs<br/>data/*/inputs"] --> jobs
+  jobs["queue jobs<br/>158 of 171 write a log"] -->|"201 log names"| logs["logs"]
+  logs -->|"every log, through gate_rows"| ledger["ledger<br/>cypmode/audit/ledger_kinds.py"]
+  logs -->|"58 logs are read by name"| reports
+  ledger --> reports["reports, figures, notebook<br/>built by the chain 900 to 960"]
+  reports --> submissions["submission files"]
+```
+
+```mermaid
+flowchart LR
+  challenge["challenge (98 modules)"]
+  validation["validation (55 modules)"]
+  audit["audit (13 modules)"]
+  data["data (2 modules)"]
+  metrics["metrics (2 modules)"]
+  explorer["explorer (1 module)"]
+  top_level["top level (1 module)"]
+  audit -->|23| challenge
+  challenge -->|18| top_level
+  validation -->|16| challenge
+  audit -->|12| validation
+  validation -->|11| top_level
+  challenge -->|7| metrics
+  challenge -->|3| validation
+  validation -->|3| metrics
+  audit -->|2| top_level
+  data -->|2| metrics
+  explorer -->|2| audit
+  audit -->|1| explorer
+  data -->|1| challenge
+  explorer -->|1| challenge
+  explorer -->|1| top_level
+```
+
+The pages list every module with what it does and what it imports, and every job of the queue with what it waits for.
+<!-- generated:project-map end -->
 
 <!-- held-back:film
 ## The film

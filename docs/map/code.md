@@ -1,6 +1,6 @@
 # The code
 
-The project has 172 modules in 7 packages, and the modules hold 586 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
+The project has 172 modules in 7 packages, and the modules hold 587 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
 
 ```mermaid
 flowchart LR
@@ -206,11 +206,11 @@ Automated audit: one script that regenerates a full report from the current code
 | `cypmode/audit/artifacts.py` | Provenance of the files that present the results: the README card, the poster, the film and the figures. | none | `audit.pre_submission` |
 | `cypmode/audit/checklist.py` | Does the checklist match the repository? | none | `audit.pre_submission`, `audit.sections_extra` |
 | `cypmode/audit/core.py` | Shared pieces of the audit: check/section containers, deterministic Markdown helpers, shared context. | `challenge.label_confidence`, `challenge.leaderboard_prior`, `challenge.nested`, `challenge.nested_runners`, `challenge.validation_matching` | `audit.report`, `audit.sections`, `audit.sections_extra` |
-| `cypmode/audit/docs_state.py` | The generated blocks of README.md and CYPMode_Architecture_Specification.md: the final stack, the verdicts of the gates, the structure recipe and the table of what the work adds. | `audit.ledger_kinds`, `audit.method_report`, `challenge.nested_runners` | `audit.method_report` |
+| `cypmode/audit/docs_state.py` | The generated blocks of README.md and CYPMode_Architecture_Specification.md: the final stack, the verdicts of the gates, the structure recipe and the table of what the work adds. | `audit.ledger_kinds`, `audit.method_report`, `audit.project_map`, `challenge.nested_runners` | `audit.method_report` |
 | `cypmode/audit/ledger_kinds.py` | The kind of idea each row of the gate ledger tested, shared by the exploration figure and by the exploration section of the method report. | `audit.method_report` | `audit.docs_state`, `audit.method_report`, `audit.project_map`, `explorer.data` |
 | `cypmode/audit/method_report.py` | Generate METHOD_REPORT.md and NEGATIVE_RESULTS.md from the repository's own logs, tables and audit. | `audit.docs_state`, `audit.ledger_kinds`, `challenge.final_tdi_build`, `challenge.multiplicity`, `challenge.nested`, `challenge.nested_runners` and 7 more | `audit.docs_state`, `audit.ledger_kinds`, `audit.project_map`, `explorer.data` |
 | `cypmode/audit/pre_submission.py` | The last gate before a submission: one command that says whether everything is finished, consistent and fresh. | `audit.artifacts`, `audit.checklist`, `challenge.submission`, `validation.official_posebusters`, `validation.pose_stereo` | none |
-| `cypmode/audit/project_map.py` | The project map: `python -m cypmode.audit.project_map` writes `docs/map`, `--check` compares the files with the code. | `audit.ledger_kinds`, `audit.method_report` | none |
+| `cypmode/audit/project_map.py` | The project map: `python -m cypmode.audit.project_map` writes `docs/map`, `--check` compares the files with the code. | `audit.ledger_kinds`, `audit.method_report` | `audit.docs_state` |
 | `cypmode/audit/prose_rules.py` | Wording rules for the text files of the project, checked by the audit (section 21). | none | `audit.sections_extra` |
 | `cypmode/audit/public_readiness.py` | Scan the repository for content that should not be published. | none | none |
 | `cypmode/audit/report.py` | Generate the audit report: `python -m cypmode.audit.report --out audit/AUDIT_REPORT.md [--skip-tests]`. | `audit.core`, `audit.sections` | none |
