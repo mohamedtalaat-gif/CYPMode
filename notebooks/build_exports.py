@@ -15,13 +15,14 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import unquote
 
 from markdown_it import MarkdownIt
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import PythonLexer
 
-from notebooks.notebook_builder import slug
+from notebooks.notebook_builder import INLINE_MATH, slug
 
 HERE = Path(__file__).resolve().parent
 NOTEBOOK = HERE / "cypmode_notebook.ipynb"
@@ -96,7 +97,7 @@ renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', displ
 
 CODE = re.compile(r"```.*?```|`[^`\n]+`", re.DOTALL)
 DISPLAY = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
-INLINE = re.compile(r"(?<![\\$])\$(?![\s$])((?:[^$\n\\]|\\.)+?)(?<![\s\\])\$(?![\w$])")
+INLINE = INLINE_MATH
 
 
 def katex_css() -> str:
@@ -141,7 +142,7 @@ def render_markdown(text: str, engine: MarkdownIt) -> str:
     tokens = engine.parse(protected)
     for i, token in enumerate(tokens):
         if token.type == "heading_open":
-            token.attrSet("id", slug(tokens[i + 1].content))
+            token.attrSet("id", slug(re.sub(r"MATHSPAN(\d+)END", lambda m: spans[int(m.group(1))], tokens[i + 1].content)))  # from the heading as written, so that it is the anchor of the contents
     out = engine.renderer.render(tokens, engine.options, {})
     return re.sub(r"MATHSPAN(\d+)END", lambda m: html.escape(spans[int(m.group(1))], quote=False), out)
 
@@ -162,6 +163,13 @@ def render_outputs(outputs: list[dict], engine: MarkdownIt) -> str:
                 body = render_markdown("".join(data["text/markdown"]) if isinstance(data["text/markdown"], list) else data["text/markdown"], engine)
                 parts.append(f'<div class="caption">{body}</div>' if o.get("metadata", {}).get("caption") else f"<div>{body}</div>")
     return "".join(parts)
+
+
+def dangling_anchors(page: str) -> list[str]:
+    """The targets of the internal links of a page that no element id answers. A browser tries the fragment as written and then percent-decoded, so both are tried."""
+    ids = {html.unescape(i) for i in re.findall(r'\sid="([^"]*)"', page)}
+    targets = [html.unescape(t) for t in re.findall(r'<a [^>]*href="#([^"]*)"', page)]
+    return sorted({t for t in targets if t not in ids and unquote(t) not in ids})
 
 
 def build_html(notebook: Path = NOTEBOOK, out: Path | None = None) -> Path:
@@ -185,6 +193,9 @@ def build_html(notebook: Path = NOTEBOOK, out: Path | None = None) -> Path:
         f"<style>{katex_css()}{HtmlFormatter().get_style_defs('.source')}{CSS}</style></head><body><main>{''.join(body)}</main>"
         f"<script>{(VENDOR / 'katex.min.js').read_text()}</script><script>{(VENDOR / 'auto-render.min.js').read_text()}</script><script>{AUTORENDER}</script></body></html>"
     )
+    dangling = dangling_anchors(page)
+    if dangling:
+        raise ValueError(f"links of the page that point to no heading, a click on them would do nothing: {dangling}")
     out = out or notebook.with_suffix(".html")
     out.write_text(page)
     return out

@@ -3,6 +3,7 @@
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
 import json
+import re
 
 from notebooks.notebook_builder import (
     build,
@@ -15,6 +16,7 @@ from notebooks.notebook_builder import (
     md,
     planned_parts,
     section_of_cells,
+    slug,
     unwritten_parts,
 )
 
@@ -136,3 +138,26 @@ def test_every_catalogued_figure_is_shown_by_the_assembled_notebook():
         return
     cells, _missing = assemble(ALL_CELLS)
     assert sorted(set(figure_sections(catalog.read_text())) - shown_figures(cells)) == []
+
+
+def test_a_heading_with_an_equation_is_reached_by_its_entry_of_the_contents():
+    from notebooks.build_exports import (
+        dangling_anchors,
+        markdown_engine,
+        render_markdown,
+    )
+
+    title = "2.3 The rule: how $s = t - \\max(d, 4) > \\log_{10} 2$ was checked"
+    cells = [md("# Part II. The data"), md(f"## {title}\nText."), md("## 2.5 The noise and the confidence $z$\nText.")]
+    assert re.search(r"[\s$\\{}<>]", slug(title)) is None
+    engine = markdown_engine()
+    page = "".join(render_markdown(cell["source"], engine) for cell in [contents_cell(cells), *cells])
+    assert f'href="#{slug(title)}"' in page and f'id="{slug(title)}"' in page
+    assert dangling_anchors(page) == []
+
+
+def test_a_link_without_a_target_and_a_percent_encoded_target_are_told_apart():
+    from notebooks.build_exports import dangling_anchors
+
+    page = '<h2 id="10.1-Schr\u00f6dinger">x</h2><a href="#10.1-Schr%C3%B6dinger">ok</a><a href="#missing">lost</a>'
+    assert dangling_anchors(page) == ["missing"]

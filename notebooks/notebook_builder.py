@@ -246,9 +246,14 @@ HEADING = re.compile(r"^(#{1,3}) (.+)$", re.MULTILINE)
 FENCE = re.compile(r"```.*?```", re.DOTALL)
 
 
+INLINE_MATH = re.compile(r"(?<![\\$])\$(?![\s$])((?:[^$\n\\]|\\.)+?)(?<![\s\\])\$(?![\w$])")  # the TeX spans that the HTML export hands to KaTeX
+
+
 def slug(text: str) -> str:
-    """The anchor of a heading: its text with the spaces replaced by hyphens (the scheme Jupyter uses)."""
-    return re.sub(r"\s+", "-", re.sub(r"[`*]", "", text).strip())
+    """The anchor of a heading: its text with the spaces replaced by hyphens (the scheme Jupyter uses). A TeX span is reduced to its letters and digits, so that no dollar sign, backslash,
+    brace or space is left in an anchor that the contents must write as a link target."""
+    plain = INLINE_MATH.sub(lambda m: "-".join(re.findall(r"[A-Za-z0-9]+", m.group(1))), text)
+    return re.sub(r"\s+", "-", re.sub(r"[`*]", "", plain).strip())
 
 
 def headings(cells: list[dict]) -> list[tuple[int, str, int]]:
