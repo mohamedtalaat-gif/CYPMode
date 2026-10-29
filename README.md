@@ -70,8 +70,18 @@ pose-validity and margin rules in which every lever was decided by a gate on cry
 **What it does not claim.** Cross-validation estimates are not the challenge score: the challenge scores hidden labels, and its test set is closer to the training set than a cross-validation
 fold is. A predicted structure is a model, not a measurement. The numbers reported here come from nested cross-validation on the training data and from checks of the predicted coordinates. One piece of aggregate information about the hidden labels is used: the positive rate of the scored set, which the public leaderboards make recoverable from the accuracy, precision and recall they publish (it weights the yardstick and sets the call rate); no label of any compound and no probing submission is used, and the method report lists it as a limitation.
 
-**Where to look next.** [METHOD_REPORT.md](METHOD_REPORT.md) (what was done, with every gate and number), [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md) (what did not work), [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md)
-(what was checked), `notebooks/` (the teaching notebook, from first principles) and the architecture sections below.
+## Reader's guide
+
+| Question | Where to read or open |
+| --- | --- |
+| What is this, in two minutes? | the section "What CYPMode is" above and [the interactive card](https://mohamedtalaat-gif.github.io/CYPMode/card/) |
+| What is the method, with every gate and number? | [METHOD_REPORT.md](METHOD_REPORT.md): "Summary and disclosures" and "Innovation summary" first, then section 3 (the two architectures step by step), section 4 (what was explored and how the number of attempts is accounted for) and section 5 (how validation is made to resemble the scored set) |
+| What did not work? | [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md), and sections 4.7 and 12 of the method report |
+| How does it all work, from first principles, with no background assumed? | the public edition of the notebook: `notebooks/public/cypmode_notebook_public.html` (one file, opens in a browser), also as `.pdf` and `.ipynb`. Part 0 (Orientation) comes first; then the part that is needed: the data (II), validation without selection bias (VI), the final model (VIII), the additions that were tested (IX), quantum chemistry and physics (X), the structure track (XI). Every section says where it sits in the story and teaches the science it uses; Appendix A is the practical walkthrough and Appendix D says which section explains which file. The full edition is released after the challenge closes |
+| How to explore the numbers? | the interactive explorer, a marimo notebook that reads a small public data bundle and never trains a model or runs a job: `explorer/run_explorer.command` (macOS), `explorer/run_explorer.bat` (Windows) or `bash scripts/explorer.sh run`; it needs the environment `.venv-marimo` (see Quick start) |
+| How to check the claims? | [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md) (generated twice and compared byte for byte), the tests in `tests/` and `bash scripts/run_audit.sh` |
+| How to reproduce it? | Quick start below, `bash scripts/reproduce_tdi.sh` and the jobs of `queue/jobs/` |
+| Where is the design record? | [CYPMode_Architecture_Specification.md](CYPMode_Architecture_Specification.md) and the architecture sections of this file |
 
 <!-- held-back:film
 ## The film
@@ -327,7 +337,7 @@ How the 20 poses of the submitted zip were chosen, from the verdicts of the gate
 | `cypmode/audit/` | automated audit report, gate ledger, checklist consistency check (`checklist.py`), method-report generator (`method_report.py`), public-readiness scan (`public_readiness.py`) |
 | `cypmode/metrics/`, `cypmode/data/` | the original motif screen and panel loaders |
 | `queue/`, `scripts/` | the permanent job queue (`queue/jobs/NNN_*.sh`, helpers in `queue/lib.sh`), runner, memory / battery guards (`scripts/guards.sh`), reproduction and audit scripts, the low-memory OpenFold3 launcher (`scripts/run_openfold_lowmem.py`) |
-| `notebooks/` | the notebook `cypmode_notebook`: the teaching text and the laboratory notebook of the project, built from `notebooks/parts/` by `python -m notebooks.build_notebook` (ipynb, html, pdf) |
+| `notebooks/` | the notebook `cypmode_notebook`: the teaching text and the laboratory notebook of the project, built from `notebooks/parts/` by `python -m notebooks.build_notebook` (ipynb, html, pdf); the public edition is in `notebooks/public/`, the full edition is released after the challenge closes |
 | `environment/` | pinned package lists for the Python environments (main, torch and explorer) with checksums |
 | `explorer/`, `cypmode/explorer/` | the interactive explorer of the finished results, a reactive marimo notebook that reads only a small public data bundle (`explorer/public`, built by `cypmode/explorer/data.py`): the gate ledger, what a different threshold would have let through, the selection rules fold by fold, the benchmark poses and the stored out-of-fold predictions |
 | `tests/` | test suite (the torch and tblite files run in their own processes, see below) |
