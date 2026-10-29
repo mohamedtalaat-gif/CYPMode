@@ -352,7 +352,9 @@ tracks), in `METHOD_REPORT.md` and `NEGATIVE_RESULTS.md` (generated from the run
   floor-clipped arms, selection-aware CYP2D6 model) is a candidate group that enters the stack only when its pre-registered gate is met:
   corrected resampled t below 0.05 at both cut-offs, alone and inside the stack. `cypmode/challenge/final_tdi_build.py` applies the gates.
 - The structure track uses Boltz-2 (optionally OpenFold3) with levers that each pass a gate on the crystal-anchored benchmark;
-  `cypmode/validation/final_recipe.py` maps the verdicts to the recipe.
+  `cypmode/validation/final_recipe.py` maps the verdicts to the recipe. The benchmark is ten CYP3A4 co-crystal ligands of the PDB picked by a rule fixed in advance
+  (`cypmode/validation/structure_benchmark.py`: 20 to 60 heavy atoms, resolution at most 3.0 A, organic, one fragment, then the most mutually dissimilar by a maximin pick
+  on Morgan fingerprints); the method report (section 11) lists them with their PDB entries.
 
 Significance statements in the sections above that rest on Tukey's HSD were recomputed from their saved per-fold scores with the paired
 corrected resampled t (Holm-adjusted); where the two differ the paired result is the one stated.

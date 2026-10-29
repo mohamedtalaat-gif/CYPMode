@@ -171,3 +171,11 @@ def test_the_ligand_dynamics_is_stated_from_its_log_in_the_summary_and_in_the_ta
     for name in ld.SCORES:
         assert f"{facts['scores'][name]['rho']:+.3f}" in bullet and f"{facts['scores'][name]['rho']:+.3f}" in row[1]
     assert "(pending" not in bullet and row[2] == "`ligand_dynamics.log`"
+
+
+def test_the_benchmark_paragraph_gives_the_rule_the_seeds_and_every_ligand_with_its_pdb_entry():
+    text, table = report.benchmark_paragraph(), report.benchmark_ligands()
+    assert len(table) == 10 and all(f"({row.pdb_id}," in text for row in table.itertuples())
+    from cypmode.validation import structure_benchmark as sb
+
+    assert all(seed in text for seed in sb.PANEL_SEEDS) and f"resolution at most {sb.MAX_RESOLUTION} A" in text and "(pending" not in text

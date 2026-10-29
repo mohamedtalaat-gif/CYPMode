@@ -306,6 +306,40 @@ def additions_lead() -> str:
             "A near miss is not tuned until it passes: the verdicts below are those of the first test, and the ones that were repeated on ten outer folds are listed after them.")
 
 
+def benchmark_ligands() -> pd.DataFrame:
+    """The ligands of the crystal-anchored benchmark with the PDB entry, the size and the resolution of the copy that the benchmark uses (the notebook and the report print the same table)."""
+    from cypmode.validation.reference_ligands import load_reference_set
+    from cypmode.validation.structure_benchmark import candidates
+
+    table = candidates(load_reference_set()).set_index("comp_id")
+    names = pd.read_csv(ROOT / "data/structure_track/inputs/structure_benchmark.csv")["Molecule_Name"]
+    return table.loc[[n.removeprefix("bench-") for n in names], ["pdb_id", "n_heavy", "resolution"]].reset_index()
+
+
+def benchmark_paragraph() -> str:
+    """How the crystal ligands of the structure gates were chosen and what they can and cannot show, from the constants of the picking module and the files of the plan."""
+    from cypmode.validation import structure_benchmark as sb
+    from cypmode.validation.reference_ligands import load_reference_set
+
+    references = load_reference_set()
+    distinct, eligible = len({r["comp_id"] for r in references}), len(sb.candidates(references))
+    plan = json.loads((ROOT / "data/structure_track/inputs/restraint_expansion_plan.json").read_text())
+    stratum = plan["eligibility"]["strata"]["primary"]
+    relaxed = pd.read_csv(ROOT / "data/structure_track/outputs/cyp3a4/relaxation_gate_poses.csv")["compound"].drop_duplicates()
+    ligands = benchmark_ligands()
+    listing = ", ".join(f"{row.comp_id} ({row.pdb_id}, {row.n_heavy} heavy atoms, {row.resolution:.2f} A)" for row in ligands.itertuples())
+    return (
+        f"**The crystal ligands of the gates.** The 20 official ligands have no public answer, so every gate of the structure track was measured on ligands whose crystal pose is public. The benchmark is {len(ligands)} ligands "
+        f"picked from the {distinct} distinct CYP3A4 ligands of the PDB (`cypmode/validation/reference_ligands.py`) by a rule fixed in advance (`cypmode/validation/structure_benchmark.py`): {sb.MIN_HEAVY} to {sb.MAX_HEAVY} heavy atoms, "
+        f"resolution at most {sb.MAX_RESOLUTION} A, organic atoms only and one fragment ({eligible} of the {distinct} pass), then the most mutually dissimilar by a maximin pick on Morgan fingerprints that starts from the panel "
+        f"compounds already predicted ({', '.join(sb.PANEL_SEEDS)}). The pick is deterministic and the list is not written by hand; with those seeds the function returns exactly these ligands (`tests/test_structure_benchmark.py`). "
+        f"They are, with the PDB entry of the copy used: {listing}. Two cautions apply. The models may have seen these entries in training, so the absolute accuracy on the benchmark is optimistic and it serves to compare "
+        "settings and selection rules, not to forecast a score. And the benchmark was chosen for diversity and not for likeness to the official ligands, which are not near the reference set (notebook section 11.5, limitation L15). "
+        f"The gate of the relaxation used {len(relaxed)} ligands: these {len(ligands)} and the {int(relaxed.str.startswith('exp-').sum())} ligands of the restraint-expansion plan registered on {plan['registered']} (every crystal ligand with a Type II donor, "
+        f"organic, one fragment, {stratum['min_heavy_atoms']} to {stratum['max_heavy_atoms']} heavy atoms, resolution at most {plan['eligibility']['max_resolution_angstrom']} A and not in the benchmark; every eligible ligand was run and none was picked)."
+    )
+
+
 def structure_lead() -> str:
     from cypmode.audit.docs_state import STRUCTURE_GATES, TITLES
     from cypmode.audit.ledger_kinds import ledger_rows
@@ -1009,6 +1043,8 @@ def build_method_report() -> str:
         "## 11. Structure track",
         "",
         structure_lead(),
+        "",
+        benchmark_paragraph(),
         "",
         structure_board_lead(),
         "",

@@ -312,7 +312,7 @@ Every addition was judged by a rule fixed before its result. 184 pre-registered 
 ```
 
 Benchmark for every structure gate: crystal-anchored CYP3A4 complexes (true ligand RMSD of the picked pose, PoseBusters validity),
-plus a series benchmark of analog pairs that have crystal structures. The earlier Boltz-only zip stays untouched as the fallback.
+plus a series benchmark of analog pairs that have crystal structures. The ten ligands of the crystal-anchored benchmark were picked from the CYP3A4 co-crystal ligands of the PDB by a rule fixed in advance (20 to 60 heavy atoms, resolution at most 3.0 A, organic, one fragment, then the most mutually dissimilar by a maximin pick on Morgan fingerprints); they were chosen for diversity and not for likeness to the 20 official ligands, and the models may have seen their entries in training, so the benchmark compares settings and does not forecast a score. The method report (section 11) and the notebook (section 11.5) list the ten with their PDB entries. The earlier Boltz-only zip stays untouched as the fallback.
 
 ### Final recipe
 

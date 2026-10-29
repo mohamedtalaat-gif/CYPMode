@@ -31,6 +31,7 @@ RDLogger.DisableLog("rdApp.*")
 
 MIN_HEAVY, MAX_HEAVY, MAX_RESOLUTION = 20, 60, 3.0
 ORGANIC = set("CNOSFClBrIPH")
+PANEL_SEEDS = ("azamulin", "clotrimazole", "diltiazem", "itraconazole", "ketoconazole", "ritonavir", "troleandomycin", "vardenafil", "verapamil")  # the panel compounds that had been predicted before the pick; the pick of the committed list is reproduced from them (tests/test_structure_benchmark.py)
 
 
 def candidates(references: list[dict]) -> pd.DataFrame:

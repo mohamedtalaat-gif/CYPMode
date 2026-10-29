@@ -86,6 +86,15 @@ n_donor, n_donor_coordinated = len(donor_ligands), int(donor_ligands["nitrogen o
 donor_coordinated_wrong = int(((donor_ligands["nitrogen on the iron"]) & (donor_ligands["first"] > 2)).sum())
 '''
 
+BENCHMARK_LIST = '''
+# The ten ligands of the benchmark with the PDB entry of the copy that is used (the same table as in the method report): the entry gives the crystal pose that every RMSD of the structure track is measured against.
+from cypmode.audit.method_report import benchmark_ligands
+from cypmode.validation.structure_benchmark import MAX_HEAVY, MAX_RESOLUTION, MIN_HEAVY, PANEL_SEEDS
+
+bench_list = benchmark_ligands().rename(columns={"comp_id": "ligand", "pdb_id": "PDB entry", "n_heavy": "heavy atoms", "resolution": "resolution (A)"})
+show_table(bench_list, floatfmt=".2f")
+'''
+
 CELLS = [
     md("""
 ## 11.5 The reference ligands and the crystal-anchored benchmark
@@ -102,7 +111,11 @@ The set holds {{=n_placements}} placements of {{=n_distinct}} distinct ligands i
 
 **How far the 20 are.** The 20 official ligands are not in the set and are not near it: the best Tanimoto similarity (Morgan fingerprints of radius 2, 2,048 bits, 3.2) of an official ligand to any ligand of the set lies between {{=best_to_reference.min():.2f}} and {{=best_to_reference.max():.2f}}, so that no deposited structure is a good guide to any of them. They are not alone in the world, though: {{=n_with_analog}} of the 20 have an analogue (similarity of at least 0.5) among the compounds of the challenge's own files, which have measurements and no structures. {{=n_official_donor}} of the 20 have a Type II donor. For half of the official ligands, then, the iron-binding nitrogen is predictable from the formula, and for the other half it is not.
 
-**The benchmark.** Since the 20 have no answer key, a benchmark is built from the set: ten ligands chosen by a rule fixed in advance (`cypmode/validation/structure_benchmark.py`): 20 to 60 heavy atoms, resolution of at most 3.0 Å, organic, one fragment, and the most mutually dissimilar by a maximin pick on the fingerprints, starting from the five compounds already predicted so that each pick is far from them and from each other. The rule is deterministic and the list is not hand-written. One caveat is kept visible: the models may have seen these entries in training, so that the absolute accuracy on the benchmark is optimistic. The benchmark is for *comparing* settings and selection rules, not for forecasting a score. Unguided Boltz-2 drew five samples for each ligand, one at a time (about 40 minutes per ligand); nine of the ten ligands were scored. The table gives the result.
+**The benchmark.** Since the 20 have no answer key, a benchmark is built from the set: ten ligands chosen by a rule fixed in advance (`cypmode/validation/structure_benchmark.py`): 20 to 60 heavy atoms, resolution of at most 3.0 Å, organic, one fragment, and the most mutually dissimilar by a maximin pick on the fingerprints, starting from the five compounds already predicted so that each pick is far from them and from each other. The rule is deterministic and the list is not hand-written. One caveat is kept visible: the models may have seen these entries in training, so that the absolute accuracy on the benchmark is optimistic. The benchmark is for *comparing* settings and selection rules, not for forecasting a score. Unguided Boltz-2 drew five samples for each ligand, one at a time (about 40 minutes per ligand); nine of the ten ligands were scored in this first measurement (the tenth, `bench-A1A4S`, was scored in a later run, `benchmark_engine_pose_validation_unguided_boltz.csv`, and is one of the ten ligands of the pools of 11.13). The table gives the result.
+"""),
+    code(BENCHMARK_LIST),
+    md("""
+The ten ligands and the PDB entries of their crystal poses are listed above. A maximin pick chooses the compounds one at a time, each time the candidate whose nearest already-chosen compound is farthest away, so that the choice spreads over chemical space. The panel compounds that start the pick are {{=", ".join(PANEL_SEEDS)}}, and the pick is reproducible: the function `pick_diverse` returns exactly these ten from those seeds (`tests/test_structure_benchmark.py`). The benchmark was chosen for chemical diversity and not for likeness to the 20 official ligands, which is why the best similarity of an official ligand to the reference set is so low (above). Later sections reuse the same ten ligands, and the relaxation of 11.10 was tested on thirty: these ten and twenty more, the ligands of the restraint-expansion plan registered on 2026-10-12 (every crystal ligand with a Type II donor, organic, one fragment, 8 to 30 heavy atoms, resolution at most 3.5 Å and not in the benchmark; every eligible ligand was run and none was picked).
 """),
     code(BENCHMARK_UNGUIDED),
     md("""

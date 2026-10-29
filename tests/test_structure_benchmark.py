@@ -2,11 +2,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
+from pathlib import Path
+
 import pandas as pd
+import pytest
+import yaml
 
 from cypmode.validation.structure_benchmark import (
     MAX_HEAVY,
     MIN_HEAVY,
+    PANEL_SEEDS,
     candidates,
     pick_diverse,
 )
@@ -39,3 +44,19 @@ def test_pick_diverse_is_deterministic_and_never_returns_a_seed_or_duplicates():
     assert first["comp_id"].tolist() == again["comp_id"].tolist()
     assert len(set(first["comp_id"])) == 2
     assert isinstance(first, pd.DataFrame) and "AAA" not in first["comp_id"].tolist()[:1]
+
+
+REFERENCE_SET = Path("data/structure_track/inputs/cyp3a4_reference_ligands.json")
+
+
+@pytest.mark.skipif(not REFERENCE_SET.exists(), reason="the reference set of the PDB is not on this machine")
+def test_the_committed_benchmark_is_what_the_picker_returns_from_the_panel_seeds():
+    from cypmode.validation.reference_ligands import load_reference_set
+
+    seeds = []
+    for name in PANEL_SEEDS:
+        spec = yaml.safe_load(Path(f"data/structure_track/inputs/cyp3a4_{name}.yaml").read_text())
+        seeds += [e["ligand"]["smiles"] for e in spec["sequences"] if "ligand" in e and "smiles" in e["ligand"]]
+    picked = pick_diverse(candidates(load_reference_set()), seeds, 10)
+    committed = pd.read_csv("data/structure_track/inputs/structure_benchmark.csv")["Molecule_Name"].str.removeprefix("bench-")
+    assert set(picked["comp_id"]) == set(committed) and len(committed) == 10
