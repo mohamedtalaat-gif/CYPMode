@@ -1,6 +1,6 @@
 #!/bin/bash
 source queue/lib.sh
-# BioEmu2 on the 10 benchmark ligands, 3 samples each (seeds 0 to 2, the first 256 rows of the alignment of Boltz-2, the Boltz-2 inputs, no contacts), registered in the checklist item S7 before any
+# BioEmu2 on the 10 benchmark ligands, 3 samples each (seeds 0 to 2, the first 256 rows of the alignment of Boltz-2, the Boltz-2 inputs, no contacts), registered on 2026-10-23 before any
 # benchmark ligand was predicted and allowed by the feasibility rule of job 259. It runs alone on the machine, resumes ligand by ligand and fails unless every ligand ends with its three samples.
 need_done 259_bioemu2_probe
 need_file cypmode/validation/bioemu2.py

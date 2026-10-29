@@ -2,14 +2,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""The expected pharmacophore of the 20 official ligands (checklist item S8, part b, declared on 2026-10-23 before any code ran). HELD BACK: the files are predictions for blinded ligands.
+"""The expected pharmacophore of the 20 official ligands (declared on 2026-10-23 before any code ran). HELD BACK: the files are predictions for blinded ligands.
 
 For each official ligand, from the final submitted pose (``structures_final.zip``) and from the pool of its valid predicted poses (``official_posebusters_pools.csv``), in the frame of the heme:
 
 1. the representation of the ligand in the pocket: its typed features with their coordinates, the iron-donor distance of a Type II donor or the distance of the most easily oxidised carbon to the iron,
    and how far the pose lies from the low-energy conformers of ``pose_awareness`` (RMSD and energy of the nearest one);
 2. the site model against the pose (``pose_pharmacophore.score_pose``: field score, recall, matched sites, precision, outside share), with the fields and sites built without the references that are the
-   compound or an analogue of it (the regime ``novel`` of S8 a), and which sites the pose matches;
+   compound or an analogue of it (the regime ``novel`` of job 272), and which sites the pose matches;
 3. the consensus of the pool, so that one pose is not taken for the whole: the share of the poses of the pool that match each site and the spread of the feature positions across the pool;
 4. the receptor side of the final complex: for every donor and acceptor the nearest polar protein atom within ``PARTNER_A`` (or the iron within ``IRON_A``), for every aromatic ring and hydrophobe the residues within
    ``CONTACT_A``, and a flag for a buried polar feature without a partner (``BURIED_ATOMS`` protein heavy atoms within ``BURIED_RADIUS``);

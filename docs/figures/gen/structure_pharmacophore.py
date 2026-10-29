@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Figures of S8, the pharmacophore model of the predicted poses of the structure track: the check of the conformational bias, the check of the binding-site representation, and the expected
+"""Figures of the pharmacophore model of the predicted poses of the structure track: the check of the conformational bias, the check of the binding-site representation, and the expected
 pharmacophore of the 20 official ligands.
 
 The first two use no blinded compound and are shown as they are. The third is drawn from ``pharmacophore_official20/`` and shows predicted poses of the blinded ligands: its files are in the HELD BACK

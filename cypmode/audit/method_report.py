@@ -880,7 +880,7 @@ def ungated_section() -> str:
 
 
 def ensemble_caveat(log: Path | None = None) -> str:
-    """The registered consequence of the conformer check (S8 c): when the ensemble of the pocket block holds a member within 1.0 A of the crystal pose for fewer than 80% of the crystal ligand copies, the
+    """The registered consequence of the conformer check (job 273): when the ensemble of the pocket block holds a member within 1.0 A of the crystal pose for fewer than 80% of the crystal ligand copies, the
     gates of the pocket block and of the site model are listed with that sentence, computed from the log of the check (empty when the check is missing or passes)."""
     log = LOGS / "conformer_bias.log" if log is None else log
     if not log.exists():

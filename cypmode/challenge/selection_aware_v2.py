@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Selection-aware v2: a gate that sees the screen's whole promotion pattern (checklist item I1, job 040).
+"""Selection-aware v2: a gate that sees the screen's whole promotion pattern (job 040).
 
 v1 (population_experiment.py) multiplies P(label | hit) by a gate P(hit) learned from structure alone. The screen
 that produced the training labels promoted compounds to dose-response on four isoforms, and promiscuity is shared

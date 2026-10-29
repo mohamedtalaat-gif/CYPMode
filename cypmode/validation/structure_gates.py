@@ -4,7 +4,7 @@
 
 """Machine-readable verdicts for the restraint and the pose-diversity gates (job 165).
 
-The restraint and pilot runs already produce pose tables (job 140); this module applies the gate texts of the checklist
+The restraint and pilot runs already produce pose tables (job 140); this module applies the gate rules of the structure track
 literally and prints one ``STRUCTURE GATE <name> ...: MET|NOT MET`` line per gate so ``final_recipe`` can read them:
 
   restraint_bond / restraint_contact   mean first-pick RMSD of the restrained runs is lower than the unguided runs on the

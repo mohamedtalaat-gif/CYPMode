@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""The functional groups of the pharmacophore atlas (checklist item "Pharmacophore atlas", declared on 2026-10-23 before any code of it ran).
+"""The functional groups of the pharmacophore atlas (declared on 2026-10-23 before any code of it ran).
 
 A functional group is a small, named arrangement of atoms that chemists read as a unit and that carries one or more pharmacophore features: an amide is a hydrogen-bond donor and acceptor, an aryl chlorine is a
 hydrophobe, a carboxylic acid is a negative ionisable group. The table below is written once, before any rate is looked at, and is not changed after: ``GROUPS`` maps a name to its SMARTS patterns (a compound

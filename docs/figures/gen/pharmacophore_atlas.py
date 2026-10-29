@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""The pharmacophore atlas of the TDI track (checklist item "Pharmacophore atlas", declared on 2026-10-23 before any code of it ran): every representation and model drawn on real molecules in 2D and in 3D,
+"""The pharmacophore atlas of the TDI track (declared on 2026-10-23 before any code of it ran): every representation and model drawn on real molecules in 2D and in 3D,
 with the functional groups and the structure-activity relationships.
 
-No blinded compound is involved. The functional groups come from ``cypmode.challenge.functional_groups`` (a fixed table); the examples are chosen by the rules written in the checklist item, not by eye; every 2D
+No blinded compound is involved. The functional groups come from ``cypmode.challenge.functional_groups`` (a fixed table); the examples are chosen by the rules declared on that date, not by eye; every 2D
 drawing is made by RDKit from a SMILES, every 3D picture from real coordinates (a crystal entry, or an ETKDG conformer with the seed 42 where no structure exists, said in the caption).
 """
 
@@ -194,7 +194,7 @@ def functional_groups(theme_name):
 # -- the examples with their groups and features -------------------------------------------------------------------------------------------------------------
 
 def example_compounds(isoform: str) -> pd.DataFrame:
-    """The rule of the checklist: the two positive and the two negative training compounds with the largest label confidence |z|, in that order (positives first)."""
+    """The rule declared on 2026-10-23: the two positive and the two negative training compounds with the largest label confidence |z|, in that order (positives first)."""
     pool = training_pool(isoform).dropna(subset=["z"])
     picks = [pool[pool.label == label].sort_values("z", ascending=False).head(2) for label in (1, 0)]
     return pd.concat(picks, ignore_index=True)

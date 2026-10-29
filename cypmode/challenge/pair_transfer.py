@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""SAR-aware pair-conditional label transfer (checklist item I4 / job 046).
+"""SAR-aware pair-conditional label transfer (job 046).
 
 A nearest-neighbour model assumes that a similar compound has a similar label and cannot tell which differences
 matter. SAR is exactly that knowledge: a methyl added next to an amine may flip TDI, a chlorine on a distant ring does

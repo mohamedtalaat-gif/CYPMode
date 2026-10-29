@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Does the atom-, site- and pharmacophore-aware GFN2-xTB block improve the TDI model? (checklist item I6)
+"""Does the atom-, site- and pharmacophore-aware GFN2-xTB block improve the TDI model? (job 070)
 
 Pre-registered before any physics candidate was run. The block (physics_block.py) describes the heme-binding atoms,
 the oxidisable C-H sites and the 3D geometry between them. Two questions on the shared yardstick of

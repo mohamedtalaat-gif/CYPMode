@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Pocket-level pharmacophore block (checklist item "Pocket-level pharmacophore block", declared on 2026-10-23 before any result).
+"""Pocket-level pharmacophore block (declared on 2026-10-23 before any result).
 
 Every other pharmacophore representation of the project describes the ligand alone. This one describes a compound relative to the pocket of one enzyme.
 
@@ -17,7 +17,7 @@ turn, 4.5 A above it. A pose is refused when another heavy atom is lower than 1.
 atoms plus the mean, over the families that the compound has, of the mean field value at its features (read at the nearest grid point); no weight is fitted. For each mode that applies the block
 holds the best score, its occupancy part, its six family parts, the share of accepted poses, the height of the centroid and the distance of the nearest heavy atom at the best pose (11 columns).
 
-Site model (checklist item "Pharmacophore modelling", declared on 2026-10-23 before this code ran). The same fields give a discrete structure-based pharmacophore model per enzyme: in each of the six feature
+Site model (declared on 2026-10-23 before this code ran). The same fields give a discrete structure-based pharmacophore model per enzyme: in each of the six feature
 fields the local maxima of at least 0.35 (the maximum of a field is 1), taken in order of value and at least 2.5 A apart, at most 4 per family, are the sites of the model, each weighted by its field value
 and with a tolerance sphere of 1.5 A. A placed compound matches a site when a feature of that family lies in the sphere. The columns, for each mode that applies: the largest weight of matched sites over the
 weight of all sites (recall), the number of sites matched at that pose and the share of the compound's typed features that lie in a sphere of a site of their family (precision); the pose has the largest recall,

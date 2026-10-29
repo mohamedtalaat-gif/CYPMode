@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Pharmacophore model of a predicted pose (checklist item S8, declared on 2026-10-23 before any code ran).
+"""Pharmacophore model of a predicted pose (declared on 2026-10-23 before any code ran).
 
 The structure track has had pharmacophore terms for choosing a pose (``pose_awareness``: two distances written by hand) and a shape prior from the crystal ligands (``pose_rescoring``), and no pharmacophore
 *model* of a pose. The fields and the sites that ``cypmode.challenge.pocket_pharmacophore`` builds from the public crystal ligands of CYP3A4 are one: a pose is put in the frame of the heme of its own
@@ -18,7 +18,7 @@ a novel scaffold with no analogue in the PDB) also every reference with Morgan T
 ``compound`` (only the compound itself left out) is printed beside it and is information.
 
 Scores of a pool are mean within-pool ranks (no fitted weight): ``pharmacophore_model`` = ranks of field and recall; ``pharmacophore_model_combined`` = that rank and the rank of the MBR consensus.
-Gates (the bar of ``pose_awareness``): over the pooled benchmark poses of S4 the Spearman correlation between a score and minus the true RMSD, averaged over ligands, exceeds 0.3 and is positive for
+Gates (the bar of ``pose_awareness``): over the pooled benchmark poses of ``pose_awareness`` the Spearman correlation between a score and minus the true RMSD, averaged over ligands, exceeds 0.3 and is positive for
 at least 60% of the ligands. When a gate is met, a second, paired test decides whether the recipe may use the score (the mean RMSD of its pick below that of MBR, every drop-one difference above
 zero, one-sided paired Wilcoxon p < 0.10); it is evaluated only then. The crystal pose of each benchmark ligand is scored the same way and printed beside the predicted poses as information.
 
@@ -170,7 +170,7 @@ def use_test(per_ligand: pd.DataFrame, score: str) -> dict:
 
 
 def pooled_poses(directory: Path) -> list[tuple[str, str, int, float, Path]]:
-    """[(ligand, run, sample, true RMSD, CIF)] of the pooled Boltz-2 poses of S4 for the benchmark ligands whose structure files exist."""
+    """[(ligand, run, sample, true RMSD, CIF)] of the pooled Boltz-2 poses of ``pose_awareness`` for the benchmark ligands whose structure files exist."""
     from cypmode.validation.pose_awareness import pooled_pose_list
     from cypmode.validation.pose_pools import pool_paths
 
@@ -184,7 +184,7 @@ def pooled_poses(directory: Path) -> list[tuple[str, str, int, float, Path]]:
 
 
 def benchmark_pools(directory: Path) -> dict[str, list[tuple[str, int, float, Path, float]]]:
-    """{ligand: [(run, sample, true RMSD, CIF, MBR consensus)]} for the pooled Boltz-2 poses of S4, ligands with at least 3 poses."""
+    """{ligand: [(run, sample, true RMSD, CIF, MBR consensus)]} for the pooled Boltz-2 poses of ``pose_awareness``, ligands with at least 3 poses."""
     from cypmode.validation.pose_pools import pairwise_lddt
 
     by_ligand: dict[str, list[tuple[str, int, float, Path]]] = {}

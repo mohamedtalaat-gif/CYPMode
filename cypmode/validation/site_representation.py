@@ -2,19 +2,19 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Check of the binding-site representation (checklist item S8, part d, declared on 2026-10-23 before any code ran).
+"""Check of the binding-site representation (declared on 2026-10-23 before any code ran).
 
 The fields and the sites of ``pocket_pharmacophore`` are holo: they are read from ligands in crystal complexes and say where ligands sit in the frame of the heme. They say nothing of an apo pocket or of
 a cryptic pocket that nobody has seen. Three measurements, none a gate (no blinded compound is involved):
 
 1. the variability of the site: for the crystal ligand copies of the CYP3A4 reference set, the RMSD of the pocket C-alpha atoms (the residues present in at least ``CORE_SHARE`` of the copies, superposed
    by the Kabsch method) of each copy to the nearest copy with a different PDB code and a different ligand; the 95th percentile of this distribution is the flag of an unseen pocket conformation;
-2. the pocket of every predicted complex of the pools of ``pose_pharmacophore`` (S8 a), on the same residues, its RMSD to the nearest reference pocket (the references of the ligand itself left out), the
+2. the pocket of every predicted complex of the pools of ``pose_pharmacophore`` (job 272), on the same residues, its RMSD to the nearest reference pocket (the references of the ligand itself left out), the
    share beyond the flag and the correlation with the true RMSD of the pose;
 3. the support of the fields: for each crystal copy, the share of its heavy atoms where the occupancy field built without that compound is below ``pose_pharmacophore.SUPPORT_MIN``; the 95th percentile
    over the copies is the cut at which a pose is said to leave the region where ligands have been seen, and the share of the predicted poses beyond it and the correlation with the true RMSD are printed.
 
-The two flags are written to ``site_representation_flags.json`` for the official ligands of S8 b, whose poses carry both. A flag marks a pose to be read with care and corrects nothing. Limits: the references
+The two flags are written to ``site_representation_flags.json`` for the official ligands of job 925, whose poses carry both. A flag marks a pose to be read with care and corrects nothing. Limits: the references
 are holo and the entries of one enzyme; a pocket that a co-folding model shapes around a ligand can be plausible or spurious and the predicted complex alone cannot say which; a cryptic pocket that no entry shows
 is by construction outside what these fields can represent.
 
@@ -171,9 +171,9 @@ def summarize(crystal: pd.DataFrame, predicted: pd.DataFrame, flag: float, cut: 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--directory", default=str(OUT_DIR), help="where the pose tables of S4 are read from")
+    parser.add_argument("--directory", default=str(OUT_DIR), help="where the pose tables of pose_awareness are read from")
     parser.add_argument("--output", default=str(OUT_DIR), help="where the tables and the flags are written")
-    parser.add_argument("--poses", default=str(OUT_DIR / "pose_pharmacophore_poses.csv"), help="the pose table of S8 a (regime compound), which holds the outside share of every pose")
+    parser.add_argument("--poses", default=str(OUT_DIR / "pose_pharmacophore_poses.csv"), help="the pose table of job 272 (regime compound), which holds the outside share of every pose")
     args = parser.parse_args()
     from cypmode.validation import pose_pharmacophore as pose
 

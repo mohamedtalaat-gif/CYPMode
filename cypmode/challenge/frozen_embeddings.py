@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Frozen CheMeleon foundation embeddings as a feature block (checklist item I7, job 050).
+"""Frozen CheMeleon foundation embeddings as a feature block (job 050).
 
 CheMeleon (Burns et al., Zenodo 10.5281/zenodo.15426600, weights already on disk at ~/.chemprop/chemeleon_mp.pt) is a
 Chemprop directed message-passing encoder pretrained on a large set of computed molecular descriptors. Fine-tuning it

@@ -51,7 +51,7 @@ updated in the same change as the code they describe.
 
 ## Experiments
 
-Comments of the form "checklist item" in the code refer to the author's working list of planned experiments, a private file that is kept out of the repository.
+A date in a comment such as "declared on 2026-10-23 before any result" records when an experiment was registered in the author's working notes, a private file that is kept out of the repository; the rule of each gate is in the module that runs it and in the log that it writes.
 
 A new model component is a candidate group in `cypmode/challenge/nested_runners.py` with a driver built on
 `cypmode/challenge/addition_experiment.py`: it is evaluated alone and inside the assembled stack, with the corrected resampled t at both

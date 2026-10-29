@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Complete the base-run table of the official ligands when the affinity step of a run was skipped for memory (checklist item "Affinity step of the corrected base runs", 2026-10-25).
+"""Complete the base-run table of the official ligands when the affinity step of a run was skipped for memory (registered on 2026-10-25).
 
 Boltz-2 runs its affinity head after the structure. When the affinity head reaches the memory cap of the guards (``PYTORCH_MPS_HIGH_WATERMARK_RATIO=1.3``, ``scripts/guards.sh``) it prints
 "ran out of memory, skipping batch" and writes no ``affinity_*.json``. The pipeline then raises ``no affinity_*.json`` and the batch runner records ``{"error": ...}`` for the whole ligand, so the row of the

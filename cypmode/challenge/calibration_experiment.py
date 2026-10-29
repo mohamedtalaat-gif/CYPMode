@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Does a post-hoc calibration step make the stack's probabilities usable? (checklist item I9, gate fixed in advance)
+"""Does a post-hoc calibration step make the stack's probabilities usable? (job 030, gate fixed in advance)
 
 The audit found the CYP2D6 stack's probabilities almost constant (80% of compounds at 0.49-0.50, calibration slope
 -0.02): the regularised logistic blend ranks but does not output probabilities. Any probability-based use of the model

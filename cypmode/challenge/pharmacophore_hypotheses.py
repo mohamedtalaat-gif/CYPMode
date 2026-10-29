@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Ligand-based pharmacophore hypothesis model (checklist item "Pharmacophore modelling", declared on 2026-10-23 before this code ran).
+"""Ligand-based pharmacophore hypothesis model (declared on 2026-10-23 before this code ran).
 
 Hypotheses. A hypothesis is a subset of two or three pharmacophore features of pmapper (github.com/DrrDom/pmapper, default feature definitions, bin step 1 A) with the binned distances
 between them, identified by the md5 signature that pmapper computes for the subset, so that nothing is hashed into a shared bit as in the fingerprint of ``pharmacophore_fingerprint``. A

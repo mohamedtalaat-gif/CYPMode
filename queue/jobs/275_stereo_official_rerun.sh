@@ -1,7 +1,7 @@
 #!/bin/bash
 source queue/lib.sh
 # Three official ligands (OCNT-2395415, OCNT-2312554, OCNT-2312966) were first published as racemates and were predicted from the racemic SMILES; the organisers replaced them by the SMILES of the models used for
-# scoring (checklist item "Official structure set corrected by the organisers", registered 2026-10-24 before this job ran). The runs made from the old SMILES are set aside unchanged, the base runs and then the runs of
+# scoring (registered on 2026-10-24 before this job ran). The runs made from the old SMILES are set aside unchanged, the base runs and then the runs of
 # the recipe (unguided, restrained and extra samples) are made again from the corrected SMILES, and the recipe chooses again under the unchanged rule with one addition: a pose is eligible only when it carries the
 # official stereochemistry. About 3.5 hours on the GPU, resumable at every step. HELD BACK: the logs are named stereo_*.log, the set-aside folder is under outputs/out, the pools table is under final/.
 need_file cypmode/validation/stereo_rerun.py

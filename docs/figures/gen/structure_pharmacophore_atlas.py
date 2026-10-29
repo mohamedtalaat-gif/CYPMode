@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""The pharmacophore atlas of the structure track (checklist item "Pharmacophore atlas", declared on 2026-10-23 before any code of it ran): the pharmacophore model of S8 drawn on real poses in 3D and on the
+"""The pharmacophore atlas of the structure track (declared on 2026-10-23 before any code of it ran): the pharmacophore model of the poses drawn on real poses in 3D and on the
 structures in 2D, with the functional groups and the structure-activity relationships of the series.
 
 ``struct_pharm_pose_3d`` and ``struct_pharm_series`` use benchmark ligands, whose crystal structures are public, and are shown as they are. ``struct_pharm_official20_2d`` and ``struct_pharm_official20_3d`` show the
-final poses of the 20 official ligands and the numbers of S8 b: their files are in the HELD BACK block of ``.gitignore`` and the notebook embeds them with ``held_back=True``.
+final poses of the 20 official ligands and the numbers of job 925: their files are in the HELD BACK block of ``.gitignore`` and the notebook embeds them with ``held_back=True``.
 """
 
 import zipfile
@@ -49,7 +49,7 @@ def _table(name: str) -> pd.DataFrame:
 # -- poses of the benchmark in 3D with the sites of the model ------------------------------------------------------------------------------------------------
 
 def chosen_ligands() -> list[str]:
-    """The rule of the checklist: the benchmark ligands with the smallest, the median and the largest first-sample RMSD of the unguided Boltz-2 runs."""
+    """The rule declared on 2026-10-23: the benchmark ligands with the smallest, the median and the largest first-sample RMSD of the unguided Boltz-2 runs."""
     table = _table(f"{OUT}/benchmark_engine_pose_validation_unguided_boltz.csv")
     first = table[table["sample"] == 0].sort_values(["true_rmsd", "compound"]).reset_index(drop=True)
     return [first.compound[0], first.compound[len(first) // 2], first.compound[len(first) - 1]]
@@ -101,7 +101,7 @@ def pose_3d_caption() -> str:
             "aligned on the protein) and the sites of the structure-based model (translucent spheres, one colour per feature family) built without the references of that ligand and its analogues; a site that a feature "
             "of the pose matches is drawn firmer, one that it does not is nearly transparent, and the small solid spheres are the features of the pose. For the benchmark ligands with the smallest, the median and the "
             f"largest first-sample RMSD of the unguided runs ({', '.join(ligands)}), the best (top row) and the worst (bottom row) pose of the pool. The model sees where features lie, not whether the pose is the crystal "
-            "one: a pose a few ångströms away from the crystal pose can match as many sites as the true one, which is what the gate of S8 measured.")
+            "one: a pose a few ångströms away from the crystal pose can match as many sites as the true one, which is what the gate of the pharmacophore model measured.")
 
 
 @figure("struct_pharm_pose_3d", GROUP, "The pharmacophore model on real poses: the best and the worst pose of three benchmark ligands", pose_3d_caption,
@@ -227,7 +227,7 @@ def official_2d_caption() -> str:
     groups = chemotypes(smiles)
     return (f"The {len(summary)} official ligands in 2D, grouped into {len([g for g in groups if len(g) > 1])} chemotypes and {len([g for g in groups if len(g) == 1])} singletons (Morgan Tanimoto similarity of at least "
             f"{CHEMOTYPE_SIMILARITY} to a neighbour; the largest group first). Each structure shows its functional groups (one colour per group of the fixed table, named under it) and, for a chemotype, the atoms of the "
-            "maximum common substructure of the group are outlined in the colour of the group. Under each, the pharmacophore numbers of its final pose from S8 b: the iron-donor error of a Type II donor or the distance of the "
+            "maximum common substructure of the group are outlined in the colour of the group. Under each, the pharmacophore numbers of its final pose from job 925: the iron-donor error of a Type II donor or the distance of the "
             "oxidation site outside the 3.5 to 6.0 Å window, the recall of the crystal sites and a mark when a flag of the check of the binding-site representation is raised. These are predictions for blinded ligands.")
 
 

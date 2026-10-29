@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Check of the conformational bias of the ligand ensembles (checklist item S8, part c, declared on 2026-10-23 before any code ran).
+"""Check of the conformational bias of the ligand ensembles (declared on 2026-10-23 before any code ran).
 
 The ensembles of the pocket block and of the site model hold up to 12 conformers within 5 kcal/mol of the lowest (MMFF), low-energy states by construction; a ligand bound in a pocket is often not in
 one. For each crystal ligand copy of the CYP3A4 reference set (``reference_ligands``; no blinded compound is involved): ``N_CONFORMERS`` ETKDG conformers (seed 42, MMFF-relaxed), the heavy-atom RMSD
@@ -108,12 +108,12 @@ def summarize(table: pd.DataFrame) -> list[str]:
 
 
 def pose_strain_lines(path: Path = Path("data/structure_track/outputs/cyp3a4/pose_awareness_poses.csv")) -> list[str]:
-    """Information: how far the predicted benchmark poses of S4 lie from the low-energy conformers. The ensemble of S4 holds only conformers within 8 kcal/mol, so the relative energy of the nearest one cannot
+    """Information: how far the predicted benchmark poses of the pools of `pose_awareness` lie from the low-energy conformers. The conformer ensemble of the pose terms holds only conformers within 8 kcal/mol, so the relative energy of the nearest one cannot
     exceed that; a pose that resembles no low-energy conformer shows as a large RMSD to the nearest one instead."""
     if not path.exists():
         return []
     table = pd.read_csv(path)[["conf_rmsd", "conf_energy"]].dropna()
-    return [(f"the {len(table)} predicted benchmark poses against the low-energy conformers of S4 (within 8 kcal/mol): median RMSD to the nearest conformer {table.conf_rmsd.median():.2f} A; farther than 1.0 A for {(table.conf_rmsd > 1.0).mean():.0%}, farther than 2.0 A for {(table.conf_rmsd > 2.0).mean():.0%} "
+    return [(f"the {len(table)} predicted benchmark poses against the low-energy conformers of the pose terms (within 8 kcal/mol): median RMSD to the nearest conformer {table.conf_rmsd.median():.2f} A; farther than 1.0 A for {(table.conf_rmsd > 1.0).mean():.0%}, farther than 2.0 A for {(table.conf_rmsd > 2.0).mean():.0%} "
             f"(these poses resemble no low-energy conformer); median relative energy of the nearest conformer {table.conf_energy.median():.1f} kcal/mol")]
 
 
