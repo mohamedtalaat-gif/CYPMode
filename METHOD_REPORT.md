@@ -26,7 +26,8 @@ Nested cross-validated estimates of the final stacks (AUC at the stricter and at
 
 - **Open source.** The code is open source and public at https://github.com/mohamedtalaat-gif/CYPMode, under AGPL-3.0-or-later with the additional term of `NOTICE` that the attribution and the citation notice stay with every copy and every output. The
   documents (this report, the notebook, the figures, the film) are under CC BY-NC-SA 4.0 and the data that the code generates under CC BY 4.0 (`LICENSES/`, `REUSE.toml`).
-- **Proprietary data.** None: every input is public.
+- **Proprietary data.** None of the data is proprietary: every input is public. One point is stated here so that nothing is left to be found: the CYP3A4 stack holds two Chemprop networks that start from the public weights of OpenADMET (Apache-2.0). The pretraining targets of one of them are
+  predictions of a surrogate model that Novartis trained on its internal corpus, as the OpenADMET post of 4 August 2026 explains (https://doi.org/10.5281/zenodo.21828040). No proprietary measurement is in the project, and the weights are available to every participant, but they carry what that surrogate learned.
 - **Sources of the data of the final stacks.** The OpenADMET challenge files (training file and blinded structures; the dataset `openadmet/cyp-challenge-train-test`, whose card states Apache-2.0); the TDC / Veith CYP panel (Veith et al., Nature
   Biotechnology 2009; the TDC page states CC BY 4.0), used only to train a label-free block on compounds that are not challenge compounds; and the rows that the public leaderboards publish (accuracy, precision and recall of each entry), from which one
   number about the hidden labels is recovered, the positive rate of the scored set (limitation L13). No label of any blinded compound and no probing submission is used.
