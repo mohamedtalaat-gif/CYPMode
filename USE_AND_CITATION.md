@@ -29,6 +29,7 @@ and the notebook). Until a DOI is listed, cite the repository and the commit tha
   author  = {Talaat, Muhammad},
   title   = {CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge},
   year    = {2026},
+  version = {0.2.0},
   url     = {https://github.com/mohamedtalaat-gif/CYPMode},
   note    = {Cite the DOI listed in CITATION.cff when there is one}
 }

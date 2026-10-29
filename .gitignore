@@ -5,6 +5,7 @@
 .venv-atomjepa/
 .venv-bioemu2/
 .venv-marimo/
+.tools/
 .bioemu2-cache/
 .conda-openadmet-models/
 __pycache__/
@@ -154,6 +155,7 @@ docs/figures/structure/struct_all20_gallery-*
 docs/figures/structure/struct_posebusters-*
 docs/card/cypmode_card_full-light.png
 docs/card/cypmode_card_full-dark.png
+docs/card/cypmode_interactive_preview_full.gif
 docs/card/interactive/full/
 docs/video/cypmode_overview_poster.png
 docs/figures/structure/struct_diffusion_denoising*

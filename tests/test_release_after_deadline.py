@@ -3,7 +3,11 @@
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
 import importlib.util
+import json
+import re
 from pathlib import Path
+
+import yaml
 
 SPEC = importlib.util.spec_from_file_location("release", Path("scripts/release_after_deadline.py"))
 release = importlib.util.module_from_spec(SPEC)
@@ -39,7 +43,7 @@ def test_the_readme_shows_the_public_card_and_holds_the_full_card_back():
     assert "docs/card/cypmode_card_full-light.png" in ignore and "docs/card/interactive/full/" in ignore
     assert "docs/card/cypmode_card-light.png" not in ignore and "docs/card/interactive/\n" not in ignore
     assert "docs/card/cypmode_interactive_preview.gif" in public and Path("docs/card/cypmode_interactive_preview.gif").exists()  # the loop of the public page is part of the public card
-    assert "cypmode_interactive_preview" not in ignore and "cypmode_interactive_preview" not in held
+    assert "docs/card/cypmode_interactive_preview.gif" not in ignore.splitlines() and "cypmode_interactive_preview.gif" not in held
 
 
 def test_the_commented_film_section_is_switched_on():
@@ -70,3 +74,28 @@ def test_the_public_edition_of_the_notebook_is_removed_when_the_complete_one_is_
     (tmp_path / "notebooks/public").mkdir(parents=True)
     (tmp_path / "notebooks/public/cypmode_notebook_public.html").write_text("x")
     assert remove_public_edition(tmp_path) is True and not (tmp_path / "notebooks/public").exists()
+
+
+def test_each_edition_of_the_readme_shows_a_moving_loop_of_its_card():
+    text = Path("README.md").read_text()
+    shown_now = re.sub(r"<!-- held-back:card.*?held-back:card-end -->", "", re.sub(r"<!-- held-back:film.*?held-back:film-end -->", "", text, flags=re.DOTALL), flags=re.DOTALL)
+    complete = release.restore_film(release.remove_public_card(text))
+    assert "docs/card/cypmode_interactive_preview.gif" in shown_now and "cypmode_interactive_preview_full.gif" not in shown_now  # the public edition: the loop of the public page
+    assert "docs/card/cypmode_interactive_preview_full.gif" in complete and "docs/card/cypmode_interactive_preview.gif" not in complete  # the complete edition: the loop of the full page, drawn at the release
+    assert "docs/card/cypmode_interactive_preview_full.gif" in Path(".gitignore").read_text().splitlines() and "docs/card/cypmode_interactive_preview.gif" not in Path(".gitignore").read_text().splitlines()
+    script = Path("scripts/release_after_deadline.py").read_text()
+    assert 'build_preview.py"), "--full"' in script and 'build_interactive_card.py"), "--full"' in script  # the release builds the full page and then the loop of it
+    assert "--full" in Path("docs/card/build_preview.py").read_text() and "cypmode_interactive_preview_full.gif" in Path("docs/card/build_preview.py").read_text()
+
+
+def test_the_zenodo_record_is_described_as_the_citation_file_describes_it_and_the_version_is_the_same_everywhere():
+    cff = yaml.safe_load(Path("CITATION.cff").read_text())
+    zenodo = json.loads(Path(".zenodo.json").read_text())
+    assert zenodo["title"] == cff["title"] and zenodo["description"] == cff["abstract"] and zenodo["keywords"] == cff["keywords"] and zenodo["upload_type"] == "software"
+    assert zenodo["version"] == str(cff["version"]) and zenodo["license"] == cff["license"].lower() == "agpl-3.0-or-later"
+    assert [c["name"] for c in zenodo["creators"]] == [f"{a['family-names']}, {a['given-names']}" for a in cff["authors"]]
+    assert [c["orcid"] for c in zenodo["creators"]] == [a["orcid"].rsplit("/", 1)[-1] for a in cff["authors"]]
+    version = str(cff["version"])
+    assert f'version = "{version}"' in Path("pyproject.toml").read_text()
+    for name in ("README.md", "USE_AND_CITATION.md"):
+        assert f"version = {{{version}}}" in Path(name).read_text(), name

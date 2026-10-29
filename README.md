@@ -19,6 +19,7 @@
   </picture>
 </p>
 <p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/">Open the interactive card</a>: rotate the enzyme, load each of the six complexes and read the iron&ndash;nitrogen distance measured on the coordinates. GitHub does not run scripts in a README, so the interactive version is a page of its own.</p>
+<p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/"><img src="docs/card/cypmode_interactive_preview_full.gif" alt="The interactive card of the complete edition: the enzyme turns once, then a second complex is loaded and the view moves to its ligand, with the iron-nitrogen distance on screen" width="70%"></a></p>
 held-back:card-end -->
 
 ## What CYPMode is
@@ -79,7 +80,7 @@ fold is. A predicted structure is a model, not a measurement. The numbers report
 | What is the method, with every gate and number? | [METHOD_REPORT.md](METHOD_REPORT.md): "Summary and disclosures" and "Innovation summary" first, then section 3 (the two architectures step by step), section 4 (what was explored and how the number of attempts is accounted for) and section 5 (how validation is made to resemble the scored set) |
 | What did not work? | [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md), and sections 4.7 and 12 of the method report |
 | How does it all work, from first principles, with no background assumed? | the public edition of the notebook: `notebooks/public/cypmode_notebook_public.html` (one file, opens in a browser), also as `.pdf` and `.ipynb`. Part 0 (Orientation) comes first; then the part that is needed: the data (II), validation without selection bias (VI), the final model (VIII), the additions that were tested (IX), quantum chemistry and physics (X), the structure track (XI). Every section says where it sits in the story and teaches the science it uses; Appendix A is the practical walkthrough and Appendix D says which section explains which file. The full edition is released after the challenge closes |
-| How to explore the numbers? | the interactive explorer, a marimo notebook that reads a small public data bundle and never trains a model or runs a job: `explorer/run_explorer.command` (macOS), `explorer/run_explorer.bat` (Windows) or `bash scripts/explorer.sh run`; it needs the environment `.venv-marimo` (see Quick start) |
+| How to explore the numbers? | the interactive explorer, a marimo notebook that reads a small public data bundle and never trains a model or runs a job: `explorer/run_explorer.command` (macOS), `explorer/run_explorer.bat` (Windows) or `bash scripts/explorer.sh run`; the first start builds the environment `.venv-marimo` by itself (a few minutes, once), so nothing has to be installed or activated first |
 | Where is everything, and what depends on what? | the section "Map of the project" below and the four pages of [docs/map](docs/map/README.md), written from the files of the repository by `python -m cypmode.audit.project_map` |
 | How to check the claims? | [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md) (generated twice and compared byte for byte), the tests in `tests/` and `bash scripts/run_audit.sh` |
 | How to reproduce it? | Quick start below, `bash scripts/reproduce_tdi.sh` and the jobs of `queue/jobs/` |
@@ -406,7 +407,7 @@ python -m cypmode.audit.method_report           # regenerate METHOD_REPORT.md an
 python -m cypmode.audit.public_readiness        # scan for private paths, credentials, large files, third-party text
 bash scripts/mirror_check.sh                      # after a push: remote branch, HEAD and working tree are identical
 python -m notebooks.build_notebook              # rebuild the notebook (ipynb, html, pdf)
-bash scripts/explorer.sh run                    # the interactive explorer (needs .venv-marimo, see the header of the script); also edit, html, ipynb and wasm
+bash scripts/explorer.sh run                    # the interactive explorer; the first start builds .venv-marimo by itself; also edit, html, ipynb, wasm and plan
 ```
 
 Torch-based tests (`tests/test_multitask.py`, `tests/test_chemberta_features.py`) and the tblite tests must not share a process with
@@ -465,7 +466,7 @@ Double-click `run_cypmode.command` (macOS) or `run_cypmode.bat` (Windows) and ch
 
 ```bash
 streamlit run app.py                     # the screening tool and the results tab of the TDI track
-bash scripts/explorer.sh run             # the interactive explorer of the finished results (needs .venv-marimo)
+bash scripts/explorer.sh run             # the interactive explorer of the finished results (builds its own environment on the first start)
 ```
 
 ## Hosting
@@ -661,7 +662,7 @@ what the licence asks are in [USE_AND_CITATION.md](USE_AND_CITATION.md). A ready
   author  = {Talaat, Muhammad},
   title   = {CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge},
   year    = {2026},
-  version = {0.1.0},
+  version = {0.2.0},
   url     = {https://github.com/mohamedtalaat-gif/CYPMode},
   license = {AGPL-3.0-or-later}
 }

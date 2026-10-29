@@ -29,13 +29,7 @@ case "$mode" in
     streamlit run app.py
     ;;
   explorer)
-    if [ ! -d ".venv-marimo" ]; then
-      echo "No .venv-marimo found. Set up the explorer first, from a terminal:"
-      echo "  python3 -m venv .venv-marimo && .venv-marimo/bin/pip install -r environment/requirements-lock-marimo.txt"
-      read -p "Press Enter to close..."
-      exit 1
-    fi
-    bash scripts/explorer.sh run
+    bash scripts/explorer.sh run   # prepares its own environment on the first start
     ;;
   *)
     echo "usage: run_cypmode.command [app|explorer]"

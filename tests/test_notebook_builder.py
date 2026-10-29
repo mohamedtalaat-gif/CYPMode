@@ -15,6 +15,7 @@ from notebooks.notebook_builder import (
     headings,
     md,
     planned_parts,
+    repository_items,
     section_of_cells,
     slug,
     unwritten_parts,
@@ -161,3 +162,10 @@ def test_a_link_without_a_target_and_a_percent_encoded_target_are_told_apart():
 
     page = '<h2 id="10.1-Schr\u00f6dinger">x</h2><a href="#10.1-Schr%C3%B6dinger">ok</a><a href="#missing">lost</a>'
     assert dangling_anchors(page) == ["missing"]
+
+
+def test_a_hidden_file_is_not_an_item_that_the_notebook_must_explain(tmp_path):
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/run.sh").write_text("echo hi\n")
+    (tmp_path / "scripts/.DS_Store").write_bytes(b"\x00\x00")  # what Finder writes into a folder that someone looked at
+    assert repository_items(tmp_path)["script"] == ["scripts/run.sh"]

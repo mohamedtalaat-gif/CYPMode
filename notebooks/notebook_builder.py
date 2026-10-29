@@ -429,7 +429,7 @@ COVERED_GLOBS = {
 def repository_items(root: Path = ROOT) -> dict[str, list[str]]:
     items: dict[str, list[str]] = {}
     for kind, patterns in COVERED_GLOBS.items():
-        paths = sorted({p.relative_to(root).as_posix() for pat in patterns for p in root.glob(pat) if p.is_file() and p.name != "__init__.py" and "__pycache__" not in p.parts})
+        paths = sorted({p.relative_to(root).as_posix() for pat in patterns for p in root.glob(pat) if p.is_file() and p.name != "__init__.py" and not p.name.startswith(".") and "__pycache__" not in p.parts})  # a hidden file (the .DS_Store of Finder) is no part of the project
         items[kind] = paths
     return items
 

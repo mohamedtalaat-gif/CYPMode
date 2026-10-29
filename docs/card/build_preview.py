@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""The animated preview of the interactive card: ``python docs/card/build_preview.py`` writes ``docs/card/cypmode_interactive_preview.gif``.
+"""The animated preview of the interactive card: ``python docs/card/build_preview.py`` writes ``docs/card/cypmode_interactive_preview.gif`` from the public page, and ``--full`` writes
+``docs/card/cypmode_interactive_preview_full.gif`` from the full page, which exists only after the deadline (``scripts/release_after_deadline.py --rebuild-card`` builds both).
 
 GitHub shows a picture and not a page, so the README carries a short loop of the public interactive page (``docs/card/interactive/index.html``): the enzyme turns once, then the second
 complex is loaded and the view moves to its ligand and turns, with the iron-nitrogen distance measured on the deposited coordinates on screen. The frames are drawn by the headless Chrome
@@ -18,8 +19,8 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "docs/video/anime"))
-PAGE = ROOT / "docs/card/interactive/index.html"
-OUT = ROOT / "docs/card/cypmode_interactive_preview.gif"
+PAGES = {"public": ROOT / "docs/card/interactive/index.html", "full": ROOT / "docs/card/interactive/full/index.html"}
+OUTS = {"public": ROOT / "docs/card/cypmode_interactive_preview.gif", "full": ROOT / "docs/card/cypmode_interactive_preview_full.gif"}
 WIDTH = 560  # pixels of the loop; the viewer is about 780 px wide in the page
 TURN_FRAMES, LIGAND_FRAMES, STEP_MS = 24, 16, 90
 COMPLEX = 2  # the tile that is loaded after the first turn
@@ -32,9 +33,9 @@ def capture(chrome, clip: dict) -> Image.Image:
     return Image.open(io.BytesIO(base64.b64decode(data))).convert("RGB")
 
 
-def frames_of(chrome) -> list[Image.Image]:
+def frames_of(chrome, page: Path) -> list[Image.Image]:
     """The frames of the loop, in order: one turn of the whole enzyme, then the second complex at its ligand."""
-    chrome.open(PAGE)
+    chrome.open(page)
     time.sleep(1.5)
     rect = chrome.evaluate("(() => { const r = document.querySelector('section.view').getBoundingClientRect(); return {x: r.x, y: r.y, width: r.width, height: r.height}; })()")
     clip = {key: float(rect[key]) for key in ("x", "y", "width", "height")}
@@ -58,12 +59,20 @@ def assemble(frames: list[Image.Image], path: Path, width: int = WIDTH, step_ms:
     return path
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
     from chrome import Chrome
 
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--full", action="store_true", help="draw the loop from the full page (built after the deadline) into the file of the complete edition")
+    mode = "full" if parser.parse_args(argv).full else "public"
+    if not PAGES[mode].exists():
+        print(f"{PAGES[mode].relative_to(ROOT)} does not exist: build the {mode} interactive card first (docs/card/build_interactive_card.py{' --full' if mode == 'full' else ''})")
+        return 1
     with Chrome() as chrome:
-        frames = chrome.retrying(lambda: frames_of(chrome))
-    path = assemble(frames, OUT)
+        frames = chrome.retrying(lambda: frames_of(chrome, PAGES[mode]))
+    path = assemble(frames, OUTS[mode])
     print(f"wrote {path.relative_to(ROOT)}: {len(frames)} frames, {path.stat().st_size / 1e6:.2f} MB")
     return 0
 
