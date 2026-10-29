@@ -704,7 +704,7 @@ ANALYSES = re.compile(r"^(?:confidence_.*|context_.*|data_checker_.*|why_no_gain
 INFRASTRUCTURE = re.compile(
     r"^(?:.*_(?:extract|build)|build_.*|lint_.*|audit_run|pre_submission_gate|figures_build|video_render|voices_.*|blender_clips|pymol_clips|explorer_bundle|interactive_card_.*|card_build|submissions_sync|"
     r"method_report|docs_state|public_readiness|bench_.*|cryoem_.*|pilot_.*|series_.*|restraint_expansion_.*|stereo_.*|affinity_.*|bioemu2_benchmark|openfold3_.*|official_posebusters_.*|ost_pools|"
-    r"final_recipe|final_recipe_.*|relax_final|pose_awareness_single|official_extra_audit|exploratory_.*|tabicl.*|tabpfn.*|atomjepa_head.*|chemprop_CYP.*|mlp_aux_.*|neural_f10_.*|grid_f10_.*|final_tdi_build_f10|recompute_paired_summaries|chemeleon_speed)\.log$"
+    r"ligand_dynamics_prepare|ligand_dynamics_simulate_.*|final_recipe|final_recipe_.*|relax_final|pose_awareness_single|official_extra_audit|exploratory_.*|tabicl.*|tabpfn.*|atomjepa_head.*|chemprop_CYP.*|mlp_aux_.*|neural_f10_.*|grid_f10_.*|final_tdi_build_f10|recompute_paired_summaries|chemeleon_speed)\.log$"
 )  # builds, extractions and runs that feed a gate or a document; the exploratory second looks are listed by name in section 4.7
 
 

@@ -1,0 +1,834 @@
+[
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH_0.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH_0.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH_1.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH_1.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH_2.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH_2.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH_3.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH_3.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH_4.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH_4.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH-febond",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH-febond_0.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH-febond_0.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH-febond",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH-febond_1.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH-febond_1.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH-febond",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH-febond_2.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH-febond_2.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH-fecontact",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH-fecontact_0.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH-fecontact_0.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH-fecontact",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH-fecontact_1.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH-fecontact_1.npz"
+ },
+ {
+  "ligand": "bench-2QH",
+  "run": "bench-2QH-fecontact",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-2QH_bench-2QH-fecontact_2.pdb",
+  "smiles": "Cc1cc(ccc1OC)C2(C3=NCC(CN3C(=N2)N)(F)F)c4ccc(c(c4)c5cccnc5)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-2QH_bench-2QH-fecontact_2.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S_0.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S_0.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S_1.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S_1.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S_2.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S_2.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S_3.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S_3.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S_4.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S_4.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S-febond",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S-febond_0.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S-febond_0.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S-febond",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S-febond_1.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S-febond_1.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S-febond",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S-febond_2.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S-febond_2.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S-fecontact",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S-fecontact_0.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S-fecontact_0.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S-fecontact",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S-fecontact_1.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S-fecontact_1.npz"
+ },
+ {
+  "ligand": "bench-A1A4S",
+  "run": "bench-A1A4S-fecontact",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1A4S_bench-A1A4S-fecontact_2.pdb",
+  "smiles": "c1ccc(cc1)CC(C(=O)NCCCc2cccnc2)SCC(Cc3c[nH]c4c3cccc4)NC(=O)c5cccnc5",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1A4S_bench-A1A4S-fecontact_2.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV_0.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV_0.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV_1.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV_1.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV_2.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV_2.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV_3.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV_3.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV_4.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV_4.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV-febond",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV-febond_0.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV-febond_0.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV-febond",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV-febond_1.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV-febond_1.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV-febond",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV-febond_2.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV-febond_2.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV-fecontact",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV-fecontact_0.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV-fecontact_0.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV-fecontact",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV-fecontact_1.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV-fecontact_1.npz"
+ },
+ {
+  "ligand": "bench-A1ASV",
+  "run": "bench-A1ASV-fecontact",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1ASV_bench-A1ASV-fecontact_2.pdb",
+  "smiles": "CC(C)(C)C(=O)Nc1cc(ccc1n2ccnc2)C(F)(F)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1ASV_bench-A1ASV-fecontact_2.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW_0.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW_0.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW_1.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW_1.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW_2.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW_2.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW_3.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW_3.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW_4.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW_4.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW-seed1",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW-seed1_0.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW-seed1_0.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW-seed2",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW-seed2_0.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW-seed2_0.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW-seed3",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW-seed3_0.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW-seed3_0.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW-cf1",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW-cf1_0.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW-cf1_0.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW-cf2",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW-cf2_0.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW-cf2_0.npz"
+ },
+ {
+  "ligand": "bench-A1CIW",
+  "run": "bench-A1CIW-cf3",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-A1CIW_bench-A1CIW-cf3_0.pdb",
+  "smiles": "c1ccc(cc1)C(c2ccccc2)(C3CCN(C3)CCc4ccc5c(c4)CCO5)C(=O)N",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-A1CIW_bench-A1CIW-cf3_0.npz"
+ },
+ {
+  "ligand": "bench-MWS",
+  "run": "bench-MWS",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWS_bench-MWS_0.pdb",
+  "smiles": "CC(=CCOc1c2ccoc2cc3c1C=CC(=O)O3)CCC(C(C)(C)O)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWS_bench-MWS_0.npz"
+ },
+ {
+  "ligand": "bench-MWS",
+  "run": "bench-MWS",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWS_bench-MWS_1.pdb",
+  "smiles": "CC(=CCOc1c2ccoc2cc3c1C=CC(=O)O3)CCC(C(C)(C)O)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWS_bench-MWS_1.npz"
+ },
+ {
+  "ligand": "bench-MWS",
+  "run": "bench-MWS",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWS_bench-MWS_2.pdb",
+  "smiles": "CC(=CCOc1c2ccoc2cc3c1C=CC(=O)O3)CCC(C(C)(C)O)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWS_bench-MWS_2.npz"
+ },
+ {
+  "ligand": "bench-MWS",
+  "run": "bench-MWS",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWS_bench-MWS_3.pdb",
+  "smiles": "CC(=CCOc1c2ccoc2cc3c1C=CC(=O)O3)CCC(C(C)(C)O)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWS_bench-MWS_3.npz"
+ },
+ {
+  "ligand": "bench-MWS",
+  "run": "bench-MWS",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWS_bench-MWS_4.pdb",
+  "smiles": "CC(=CCOc1c2ccoc2cc3c1C=CC(=O)O3)CCC(C(C)(C)O)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWS_bench-MWS_4.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV_0.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV_0.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV_1.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV_1.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV_2.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV_2.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV_3.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV_3.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV_4.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV_4.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV-febond",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV-febond_0.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV-febond_0.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV-febond",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV-febond_1.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV-febond_1.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV-febond",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV-febond_2.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV-febond_2.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV-fecontact",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV-fecontact_0.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV-fecontact_0.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV-fecontact",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV-fecontact_1.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV-fecontact_1.npz"
+ },
+ {
+  "ligand": "bench-MWV",
+  "run": "bench-MWV-fecontact",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-MWV_bench-MWV-fecontact_2.pdb",
+  "smiles": "CC(C)C1c2ccc(cc2CCC1(CCN(C)CCCc3[nH]c4ccccc4n3)OC(=O)COC)F",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-MWV_bench-MWV-fecontact_2.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9_0.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9_0.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9_1.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9_1.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9_2.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9_2.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9_3.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9_3.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9_4.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9_4.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-febond",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-febond_0.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-febond_0.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-febond",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-febond_1.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-febond_1.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-febond",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-febond_2.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-febond_2.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-fecontact",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-fecontact_0.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-fecontact_0.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-fecontact",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-fecontact_1.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-fecontact_1.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-fecontact",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-fecontact_2.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-fecontact_2.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-seed1",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-seed1_0.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-seed1_0.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-seed2",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-seed2_0.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-seed2_0.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-seed3",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-seed3_0.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-seed3_0.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-cf1",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-cf1_0.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-cf1_0.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-cf2",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-cf2_0.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-cf2_0.npz"
+ },
+ {
+  "ligand": "bench-PK9",
+  "run": "bench-PK9-cf3",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-PK9_bench-PK9-cf3_0.pdb",
+  "smiles": "CC(C)(C)OC(=O)NCCCCCC(=O)NCc1cccnc1",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-PK9_bench-PK9-cf3_0.npz"
+ },
+ {
+  "ligand": "bench-TCI",
+  "run": "bench-TCI",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TCI_bench-TCI_0.pdb",
+  "smiles": "CCCCCc1cc(c2c(c1)OC(C3C2C=C(CC3)C)(C)C)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TCI_bench-TCI_0.npz"
+ },
+ {
+  "ligand": "bench-TCI",
+  "run": "bench-TCI",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TCI_bench-TCI_1.pdb",
+  "smiles": "CCCCCc1cc(c2c(c1)OC(C3C2C=C(CC3)C)(C)C)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TCI_bench-TCI_1.npz"
+ },
+ {
+  "ligand": "bench-TCI",
+  "run": "bench-TCI",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TCI_bench-TCI_2.pdb",
+  "smiles": "CCCCCc1cc(c2c(c1)OC(C3C2C=C(CC3)C)(C)C)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TCI_bench-TCI_2.npz"
+ },
+ {
+  "ligand": "bench-TCI",
+  "run": "bench-TCI",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TCI_bench-TCI_3.pdb",
+  "smiles": "CCCCCc1cc(c2c(c1)OC(C3C2C=C(CC3)C)(C)C)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TCI_bench-TCI_3.npz"
+ },
+ {
+  "ligand": "bench-TCI",
+  "run": "bench-TCI",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TCI_bench-TCI_4.pdb",
+  "smiles": "CCCCCc1cc(c2c(c1)OC(C3C2C=C(CC3)C)(C)C)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TCI_bench-TCI_4.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF_0.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF_0.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF_1.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF_1.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF_2.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF_2.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF_3.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF_3.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF_4.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF_4.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-febond",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-febond_0.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-febond_0.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-febond",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-febond_1.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-febond_1.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-febond",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-febond_2.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-febond_2.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-fecontact",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-fecontact_0.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-fecontact_0.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-fecontact",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-fecontact_1.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-fecontact_1.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-fecontact",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-fecontact_2.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-fecontact_2.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-seed1",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-seed1_0.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-seed1_0.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-seed2",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-seed2_0.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-seed2_0.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-seed3",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-seed3_0.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-seed3_0.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-cf1",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-cf1_0.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-cf1_0.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-cf2",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-cf2_0.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-cf2_0.npz"
+ },
+ {
+  "ligand": "bench-TPF",
+  "run": "bench-TPF-cf3",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-TPF_bench-TPF-cf3_0.pdb",
+  "smiles": "c1cc(c(cc1F)F)C(Cn2cncn2)(Cn3cncn3)O",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-TPF_bench-TPF-cf3_0.npz"
+ },
+ {
+  "ligand": "bench-YNV",
+  "run": "bench-YNV",
+  "sample": 0,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-YNV_bench-YNV_0.pdb",
+  "smiles": "CC12CCC3C(C1CCC2O)C(CC4=CC(=O)CCC34C)CC=CCC5CC6=CC(=O)CCC6(C7C5C8CCC(C8(CC7)C)O)C",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-YNV_bench-YNV_0.npz"
+ },
+ {
+  "ligand": "bench-YNV",
+  "run": "bench-YNV",
+  "sample": 1,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-YNV_bench-YNV_1.pdb",
+  "smiles": "CC12CCC3C(C1CCC2O)C(CC4=CC(=O)CCC34C)CC=CCC5CC6=CC(=O)CCC6(C7C5C8CCC(C8(CC7)C)O)C",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-YNV_bench-YNV_1.npz"
+ },
+ {
+  "ligand": "bench-YNV",
+  "run": "bench-YNV",
+  "sample": 2,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-YNV_bench-YNV_2.pdb",
+  "smiles": "CC12CCC3C(C1CCC2O)C(CC4=CC(=O)CCC34C)CC=CCC5CC6=CC(=O)CCC6(C7C5C8CCC(C8(CC7)C)O)C",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-YNV_bench-YNV_2.npz"
+ },
+ {
+  "ligand": "bench-YNV",
+  "run": "bench-YNV",
+  "sample": 3,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-YNV_bench-YNV_3.pdb",
+  "smiles": "CC12CCC3C(C1CCC2O)C(CC4=CC(=O)CCC34C)CC=CCC5CC6=CC(=O)CCC6(C7C5C8CCC(C8(CC7)C)O)C",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-YNV_bench-YNV_3.npz"
+ },
+ {
+  "ligand": "bench-YNV",
+  "run": "bench-YNV",
+  "sample": 4,
+  "pdb": "data/structure_track/outputs/cyp3a4/ligand_dynamics/poses/bench-YNV_bench-YNV_4.pdb",
+  "smiles": "CC12CCC3C(C1CCC2O)C(CC4=CC(=O)CCC34C)CC=CCC5CC6=CC(=O)CCC6(C7C5C8CCC(C8(CC7)C)O)C",
+  "out": "data/structure_track/outputs/cyp3a4/ligand_dynamics/trajectories/bench-YNV_bench-YNV_4.npz"
+ }
+]

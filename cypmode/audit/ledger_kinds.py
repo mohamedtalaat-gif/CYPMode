@@ -20,7 +20,7 @@ KINDS = {  # the family of a ledger row (the stem of its log) -> the kind of ide
     "learners and stacking": ("aux_tabicl", "aux_tabpfn", "aux_tabicl_monroe", "aux_tabicl_chemeleon", "aux_tabpfn_chemeleon", "aux_mlp", "aux_mlp_aux", "aux_chemprop", "aux_chemeleon", "aux_chemprop_foundation", "aux_neural", "nonneg_stack", "softmax_selector"),
     "label process and selection": ("selection_aware_v2", "hedged_blend", "population_screen", "arms_experiment", "committee_label_model", "aux_gate_shift", "xiso_transfer", "pair_transfer",
                                     "pair_transfer_physics", "mmp_transfer"),
-    "structure levers": ("structure_gates", "selection_validation", "selection_validation_bioemu2", "pose_awareness", "pose_pharmacophore_model", "series_consensus", "heme_frame_prior", "ei_sampling", "restraint_expansion", "ost_pool_gates", "ost_regate", "ost_vs_ours", "relaxation_gate"),
+    "structure levers": ("structure_gates", "selection_validation", "selection_validation_bioemu2", "pose_awareness", "pose_pharmacophore_model", "ligand_dynamics", "series_consensus", "heme_frame_prior", "ei_sampling", "restraint_expansion", "ost_pool_gates", "ost_regate", "ost_vs_ours", "relaxation_gate"),
     "replicates": ("replicate_verdict",),
 }
 
