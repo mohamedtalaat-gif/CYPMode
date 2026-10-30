@@ -105,8 +105,9 @@ function sceneDock(s, t) {
     const done = seg(u, 31.4, 32.6);
     body += `<g opacity="${done}">` + pill(`${FACTS.poses - FACTS.pose_failures} of ${FACTS.poses} submitted poses pass every check`, fx + fw / 2, 772, 32, MET, { fill: '#fff', color: NAVY, fillOpacity: 0.97 }) + '</g></g>';
   }
-  body += jelly({ x: 1280, y: 870, scale: 0.5, t }) + text('Boltz-2', 1280, 922, 22, { fill: '#fff', stroke: INK, strokeWidth: 6, weight: 800 });
-  body += jelly({ x: 1425, y: 870, scale: 0.5, t, awake: false }) + text('OpenFold3', 1425, 922, 22, { fill: '#fff', stroke: INK, strokeWidth: 6, weight: 800 });
+  // the two co-folding assistants stand left of the painted staff member (his coat starts at x = 1260): Boltz-2 on the lower right corner of the board, OpenFold3 under it
+  body += jelly({ x: 1160, y: 745, scale: 0.55, t }) + text('Boltz-2', 1160, 774, 22, { fill: '#fff', stroke: INK, strokeWidth: 6, weight: 800 });
+  body += jelly({ x: 1160, y: 905, scale: 0.5, t, awake: false }) + text('OpenFold3', 1160, 931, 22, { fill: '#fff', stroke: INK, strokeWidth: 6, weight: 800 });
   body += staff('dock', 1590, t, { pose: u < 27 ? 'present' : 'hold', mood: 'happy', mouth: 'open', talk: talking(t, u > 0.5 && u < 34), scale: 0.98, flip: 1 });
   body += subs(u, [[0.6, 7.4, 'Dock folds the molecule into the enzyme with Boltz-2.'], [8, 15.6, 'Some molecules bind the heme iron through a nitrogen: a Type II interaction.'], [16, 22.4, 'For some ligands the nitrogen is placed far from the iron, so Dock restrains it.'],
     [22.6, 27, 'On the crystal benchmark the restraint passed its pre-declared gate.'], [28, 35.6, 'Every pose is checked with PoseBusters before it is handed in.']]);
