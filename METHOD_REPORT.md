@@ -34,7 +34,7 @@ Nested cross-validated estimates of the final stacks (AUC at the stricter and at
   Biotechnology 2009; the TDC page states CC BY 4.0), used only to train a label-free block on compounds that are not challenge compounds; and the rows that the public leaderboards publish (accuracy, precision and recall of each entry), from which one
   number about the hidden labels is recovered, the positive rate of the scored set (limitation L13). No label of any blinded compound and no probing submission is used.
 - **Components.** The programs, models and weights that the work uses and their licences are listed in section 14 and in Appendix C of the notebook.
-- **Identifier.** The archived release has no DOI yet; the citation file lists it when it has one. The text to cite is in `USE_AND_CITATION.md`.
+- **Identifier.** DOI 10.5281/zenodo.23816451. The text to cite is in `USE_AND_CITATION.md`.
 - **What is published after the challenge closes.** This release is complete: the code, the method, the reports and the checks are all in it, and the code regenerates every submitted file. The only files that are not in it are the ones that show a
   result for a blinded compound: the submitted files, the predictions and the structures of the blinded compounds, and the figures, the film and the complete edition of the notebook that display them; the public edition of the notebook is in it. A full
   release with those files is published after the challenge has closed (2026-11-03 23:59 UTC). The SHA-256 of each submitted file is in the section *What is submitted*, so that each file can be matched to this report when it is published.
