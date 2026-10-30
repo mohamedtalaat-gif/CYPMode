@@ -5,7 +5,10 @@
 import ast
 import re
 import subprocess
+import sys
 from pathlib import Path
+
+import pytest
 
 IMPORT_TO_PACKAGE = {"sklearn": "scikit-learn", "yaml": "pyyaml", "PIL": "pillow", "chembl_structure_pipeline": "chembl-structure-pipeline"}
 NOT_THIRD_PARTY = {"cypmode", "simulators", "json", "sys", "pathlib", "math", "re", "os"}
@@ -29,6 +32,7 @@ def third_party_imports(*paths: Path) -> set[str]:
     return {IMPORT_TO_PACKAGE.get(name, name).lower().replace("_", "-") for name in found - stdlib - NOT_THIRD_PARTY}
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="the queue and the launchers are bash scripts of Linux and macOS; Windows has run_cypmode.bat instead")
 def test_the_launchers_parse_and_prepare_their_own_environment_instead_of_asking_the_user_to():
     for script in ("scripts/explorer.sh", "run_cypmode.command"):
         assert subprocess.run(["bash", "-n", script], check=False).returncode == 0, script
@@ -50,6 +54,7 @@ def test_every_requirement_is_pinned_and_covers_what_its_notebook_imports():
         assert third_party_imports(*files) <= full, third_party_imports(*files) - full
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="the queue and the launchers are bash scripts of Linux and macOS; Windows has run_cypmode.bat instead")
 def test_the_plan_mode_names_the_notebook_that_would_run_and_changes_nothing():
     before = subprocess.run(["git", "status", "--short"], capture_output=True, text=True, check=False).stdout
     out = subprocess.run(["bash", "scripts/explorer.sh", "plan"], capture_output=True, text=True, check=False)

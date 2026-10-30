@@ -29,7 +29,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+# markdown-it-py reads the notebook text in notebooks/build_exports.py, which tests/test_notebook_builder.py imports
+dev = ["pytest", "markdown-it-py"]
 # Needed only to reload the raw CYP panel labels (cypmode/data/panel.py);
 # a local cache is checked into data/tdc_cache so most usage does not need it.
 # PyTDC itself is deliberately NOT listed here -- install it separately with

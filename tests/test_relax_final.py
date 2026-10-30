@@ -50,9 +50,9 @@ def workspace(tmp_path, monkeypatch):
 
     def relax_all(jobs):
         for job in jobs:
-            out = job["pdb"].split("/")[-1][:-4]
             from pathlib import Path
 
+            out = Path(job["pdb"]).name[:-4]
             Path(job["out"]).write_text(f"RELAXED {out}\n")
             Path(job["out"] + ".json").write_text(json.dumps({"rmsd": movement[out], "fe_n_before": 2.2, "fe_n_after": 2.25}))
 

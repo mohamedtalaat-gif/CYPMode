@@ -8,6 +8,8 @@ name: Tests
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"  # the files of the repository are UTF-8; Python on Windows reads them with the code page of the system unless told so
     strategy:
       fail-fast: false
       matrix:

@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 LIB = Path(__file__).resolve().parents[1] / "queue" / "lib.sh"
 JOB_DIR = LIB.parent / "jobs"
 JOBS = ["010_a", "096_applicability_domain", "097_why_no_gain", "203_chemprop", "204_chemprop", "219_ext", "227_surrogates", "299_requeue_final_chain", "900_audit"]
@@ -26,6 +28,7 @@ def lower_done(tmp_path: Path, me: str, pending: set[str]) -> bool:
     return run.returncode == 0
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="the queue and the launchers are bash scripts of Linux and macOS; Windows has run_cypmode.bat instead")
 def test_the_cheap_jobs_do_not_wait_for_the_long_family_and_the_final_chain_does(tmp_path):
     long_family = {"203_chemprop", "204_chemprop", "096_applicability_domain", "097_why_no_gain"}
     assert lower_done(tmp_path, "219_ext", long_family)  # the cheap candidates run before CheMeleon, which waits for them
@@ -34,6 +37,7 @@ def test_the_cheap_jobs_do_not_wait_for_the_long_family_and_the_final_chain_does
     assert not lower_done(tmp_path, "299_requeue_final_chain", {"219_ext"})
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="the queue and the launchers are bash scripts of Linux and macOS; Windows has run_cypmode.bat instead")
 def test_the_requeue_does_not_wait_for_the_jobs_it_re_queues(tmp_path):
     assert lower_done(tmp_path, "299_requeue_final_chain", {"096_applicability_domain", "097_why_no_gain"})  # they need 299 first
     assert not lower_done(tmp_path, "900_audit", {"096_applicability_domain"})  # the audit does wait for them once the chain is re-queued
@@ -60,6 +64,7 @@ def tree_committed_code(tmp_path: Path) -> int:
     return run.returncode
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="the queue and the launchers are bash scripts of Linux and macOS; Windows has run_cypmode.bat instead")
 def test_the_audits_wait_for_a_committed_tree_and_ignore_only_their_own_files(tmp_path):
     committed_state(tmp_path, {"a.txt": "one\n", "audit/AUDIT_REPORT.md": "report\n"})
     assert tree_committed_code(tmp_path) == 0
