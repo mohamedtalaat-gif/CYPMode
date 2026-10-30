@@ -67,6 +67,94 @@ margin_toy_table = pd.DataFrame(margin_rows)
 show_table(margin_toy_table, floatfmt=".2f")
 '''
 
+FORCE_TERMS = '''
+# The two nonbonded terms of a force field, worked on one pair of atoms. The numbers are those of a carbon-carbon contact (well depth 0.1 kcal/mol, sigma 3.4 A) and of two partial charges,
+# +0.3 and -0.4 of the charge of an electron. The Coulomb constant is not typed in: it is computed from the physical constants as e^2 / (4 pi eps0), per mole, in kcal A / (mol e^2), the unit
+# in which a force field writes its charges. The minimisation is done twice from the same start, 2.4 A: by plain steps down the slope (gradient descent) and by L-BFGS, the method of the project.
+from scipy import constants as phys
+from scipy.optimize import minimize, minimize_scalar
+
+well_eps, well_sigma = 0.1, 3.4
+coulomb_constant = phys.e**2 / (4 * np.pi * phys.epsilon_0) * phys.N_A * 1e10 / (phys.calorie * 1000)
+charge_i, charge_j = 0.3, -0.4
+coulomb_in_relax = float(re.search(r"^COULOMB = ([\\d.]+)", (ROOT / "cypmode/validation/relax.py").read_text(), re.M).group(1))  # the same constant in the units of OpenMM, kJ nm / (mol e^2)
+assert abs(coulomb_constant * phys.calorie / 10 - coulomb_in_relax) < 1e-6 * coulomb_in_relax
+
+def lj_repulsion(r):
+    return 4 * well_eps * (well_sigma / r) ** 12
+
+def lj_attraction(r):
+    return -4 * well_eps * (well_sigma / r) ** 6
+
+def lj_total(r):
+    return lj_repulsion(r) + lj_attraction(r)
+
+def lj_push(r):
+    """Minus the slope of the energy: positive when the atoms are pushed apart."""
+    return 4 * well_eps / r * (12 * (well_sigma / r) ** 12 - 6 * (well_sigma / r) ** 6)
+
+def coulomb_energy(r, dielectric):
+    return coulomb_constant * charge_i * charge_j / (dielectric * r)
+
+r_min_formula = 2 ** (1 / 6) * well_sigma
+r_min_found = float(minimize_scalar(lj_total, bounds=(3.0, 6.0), method="bounded", options={"xatol": 1e-9}).x)
+assert abs(r_min_found - r_min_formula) < 1e-4 and abs(lj_total(r_min_formula) + well_eps) < 1e-12 and abs(lj_total(well_sigma)) < 1e-12
+
+term_rows = []
+for r in (2.4, 3.0, well_sigma, r_min_formula, 4.5, 6.0, 10.0):
+    term_rows.append({"distance r (A)": r, "repulsive part": lj_repulsion(r), "attractive part": lj_attraction(r), "Lennard-Jones sum": lj_total(r),
+                      "Coulomb, dielectric 1": coulomb_energy(r, 1.0), "Coulomb, dielectric 4": coulomb_energy(r, 4.0)})
+term_table = pd.DataFrame(term_rows)
+show_table(term_table, floatfmt=".4f")
+
+def descend(step, start=2.4, tolerance=1e-3, limit=200000):
+    """Gradient descent on the Lennard-Jones energy: move by step times the push until the push is below the tolerance."""
+    r, n, path = start, 0, [(0, start, float(lj_total(start)), float(lj_push(start)))]
+    while abs(lj_push(r)) > tolerance and n < limit:
+        r += step * lj_push(r)
+        n += 1
+        if n <= 4:
+            path.append((n, float(r), float(lj_total(r)), float(lj_push(r))))
+    return n, float(r), path
+
+descent_step, descent_start = 0.002, 2.4
+n_descent, r_descent, descent_path = descend(descent_step, descent_start)
+descent_path.append((n_descent, r_descent, float(lj_total(r_descent)), float(lj_push(r_descent))))
+descent_table = pd.DataFrame(descent_path, columns=["step", "distance r (A)", "energy (kcal/mol)", "push, minus the slope (kcal/mol/A)"])
+show_table(descent_table, floatfmt=".4f")
+step_rows = []
+for step in (0.002, 0.008, 0.03, 0.06):
+    n_steps, r_end, path = descend(step, descent_start)
+    step_rows.append({"step size (A per kcal/mol/A)": step, "distance after the first step (A)": path[1][1], "steps until the push is below 0.001": n_steps, "where it stops (A)": r_end, "distance from the bottom (A)": r_end - r_min_formula})
+step_table = pd.DataFrame(step_rows)
+show_table(step_table, floatfmt=".4f")
+bfgs = minimize(lambda x: lj_total(x[0]), x0=[descent_start], jac=lambda x: [-lj_push(x[0])], method="L-BFGS-B", bounds=[(1.5, 6.0)])
+n_bfgs, r_bfgs = int(bfgs.nit), float(bfgs.x[0])
+curvature_at_bottom = 4 * well_eps * (156 * well_sigma**12 / r_min_formula**14 - 42 * well_sigma**6 / r_min_formula**8)
+
+fig, (left, right) = plt.subplots(1, 2, figsize=(11, 3.9))
+r_axis = np.linspace(3.0, 6.5, 400)
+left.plot(r_axis, lj_repulsion(r_axis), color=theme["red"], lw=1.6, label="repulsive part")
+left.plot(r_axis, lj_attraction(r_axis), color=theme["blue"], lw=1.6, label="attractive part")
+left.plot(r_axis, lj_total(r_axis), color=theme["text"], lw=2.2, label="Lennard-Jones sum")
+left.axhline(0, color=theme["muted"], lw=0.8)
+left.axvline(well_sigma, color=theme["muted"], ls=":", lw=1)
+left.axvline(r_min_formula, color=theme["orange"], ls="--", lw=1)
+left.annotate("sigma: the sum crosses zero", (well_sigma, 0.30), (3.0, 0.36), color=theme["muted"], fontsize=8)
+left.annotate("r_min = 2^(1/6) sigma: the bottom, depth -epsilon", (r_min_formula, -0.1), (4.15, -0.2), color=theme["orange"], fontsize=8)
+left.set(xlabel="distance r between the two atoms (A)", ylabel="energy (kcal/mol)", ylim=(-0.26, 0.42), title="Lennard-Jones")
+left.legend(frameon=False, loc="upper right")
+tidy(left, theme)
+r_long = np.linspace(r_min_formula, 12, 400)
+right.plot(r_long, np.abs(lj_total(r_long)), color=theme["text"], lw=2.2, label="Lennard-Jones sum")
+right.plot(r_long, np.abs(coulomb_energy(r_long, 1.0)), color=theme["purple"], lw=1.6, label="Coulomb, dielectric 1")
+right.plot(r_long, np.abs(coulomb_energy(r_long, 4.0)), color=theme["green"], lw=1.6, label="Coulomb, dielectric 4")
+right.set(xlabel="distance r (A)", ylabel="size of the energy (kcal/mol)", yscale="log", title="How fast each term fades")
+right.legend(frameon=False, loc="lower left")
+tidy(right, theme)
+fig.tight_layout()
+'''
+
 FORCE_TOY = '''
 # The relaxation, in one dimension. A ligand atom sits too close to a frozen receptor atom. The energy has the two terms of a force field that matter for a clash: the Lennard-Jones term between the pair, 4 eps ((sigma/r)^12 - (sigma/r)^6) with
 # the numbers of a carbon-carbon contact (eps 0.1 kcal/mol, sigma 3.4 A), and the tether that holds the atom to its predicted place, k (r - r0)^2 / 2. The minimiser is L-BFGS, the one the real relaxation uses. The table varies the tether:
@@ -228,7 +316,21 @@ There are {{=n_poses}} poses in the twenty pools, {{=n_valid}} of them valid, in
     md("""
 In the first pool the pose with the margin 0.78 is dropped although it is valid, and the poses with 0.86 and 0.81 remain. In the second no valid pose reaches the floor, and the pose with the largest margin, 0.79, is the only one left. In the third there is nothing to choose between and the pool is unchanged.
 
-**The relaxation.** The poses that co-folding models write are not always physically sensible: atoms can sit a little too close, bonds can be a little too long. The PoseBusters paper reports that a short energy minimisation with a force field repairs most of the poses that a deep-learning docking model leaves invalid. A force field (met in 3.6 and 10.6 as the way a shape is relaxed) writes the energy of a molecular system as a sum of simple terms: the stretching of bonds and the bending of angles as springs, the twisting of torsions, and between atoms that are not bonded the **Lennard-Jones** term and the Coulomb term. The Lennard-Jones term is $E = 4\\varepsilon\\left[(\\sigma/r)^{12} - (\\sigma/r)^{6}\\right]$ for two atoms at distance $r$, where $\\sigma$ is the distance at which the repulsion and the attraction cancel in energy ($\\varepsilon$ is the depth of the well): steeply repulsive when atoms are closer than the sum of their radii, weakly attractive beyond it. The Coulomb term, $q_i q_j / (4\\pi\\varepsilon_0\\,\\epsilon_r\\,r)$, is the force between the partial charges of the atoms, divided by the relative **dielectric constant** $\\epsilon_r$ of the medium, which weakens it. To **minimise** the energy is to move the atoms downhill until nothing moves; the method of the project is L-BFGS, which follows the slope of the energy and keeps a memory of the last steps to estimate the curvature.
+**The relaxation.** The poses that co-folding models write are not always physically sensible: atoms can sit a little too close, bonds can be a little too long. The PoseBusters paper reports that a short energy minimisation with a force field repairs most of the poses that a deep-learning docking model leaves invalid. A **force field** (met in 3.5 and 10.5 as the way a shape is relaxed) writes the energy of a molecular system as a sum of simple terms: the stretching of bonds and the bending of angles as springs, the twisting of torsions, and between atoms that are not bonded the **Lennard-Jones** term and the Coulomb term. The Lennard-Jones term is $E = 4\\varepsilon\\left[(\\sigma/r)^{12} - (\\sigma/r)^{6}\\right]$ for two atoms at distance $r$, where $\\sigma$ is the distance at which the repulsion and the attraction cancel in energy ($\\varepsilon$ is the depth of the well): steeply repulsive when atoms are closer than the sum of their radii, weakly attractive beyond it. The Coulomb term, $q_i q_j / (4\\pi\\varepsilon_0\\,\\epsilon_r\\,r)$, is the force between the partial charges of the atoms, divided by the relative **dielectric constant** $\\epsilon_r$ of the medium, which weakens it. To **minimise** the energy is to move the atoms downhill until nothing moves; the method of the project is L-BFGS, which follows the slope of the energy and keeps a memory of the last steps to estimate the curvature. The next cell puts numbers into all three ideas for one pair of atoms, before the relaxation itself is used.
+"""),
+    code(FORCE_TERMS),
+    md("""
+**The two terms, worked on one pair of atoms.** The first table puts numbers into the terms for a carbon-carbon contact, with a well depth $\\varepsilon$ of 0.1 kcal/mol and a $\\sigma$ of 3.4 Å, and for two partial charges, $q_i = +0.3$ and $q_j = -0.4$, counted in units of $e$, the charge of one electron (a kcal/mol is the unit in which force fields write energy: the energy of one mole of such pairs, in kilocalories). Read it from the top. At $r = 2.4$ Å the repulsive half of the Lennard-Jones term is {{=term_table.loc[0, 'repulsive part']:.1f}} kcal/mol and the attractive half only {{=-term_table.loc[0, 'attractive part']:.1f}}, so the sum is {{=term_table.loc[0, 'Lennard-Jones sum']:.1f}} kcal/mol, a hard push apart. At $r = \\sigma$ = 3.4 Å the two halves are equal and opposite and the sum is zero, which is what $\\sigma$ means. The sum is lowest, $-\\varepsilon$ = -0.1 kcal/mol, at the distance $r_{\\min}$ = {{=r_min_formula:.2f}} Å, and beyond it the repulsive half has died out and only a weak pull is left, {{=-term_table.loc[5, 'Lennard-Jones sum']:.3f}} kcal/mol in size at 6 Å and {{=-term_table.loc[6, 'Lennard-Jones sum']:.4f}} at 10 Å. The place of the bottom is not a fitted number. It is where the slope of the energy is zero,
+
+$$\\frac{dE}{dr} = 4\\varepsilon\\left[-12\\,\\frac{\\sigma^{12}}{r^{13}} + 6\\,\\frac{\\sigma^{6}}{r^{7}}\\right] = 0 \\;\\Longrightarrow\\; r^{6} = 2\\sigma^{6} \\;\\Longrightarrow\\; r_{\\min} = 2^{1/6}\\,\\sigma ,$$
+
+and putting $r_{\\min}$ back into the term gives $4\\varepsilon\\,(1/4 - 1/2) = -\\varepsilon$, because $(\\sigma/r_{\\min})^{6} = 1/2$. The cell also searches for the lowest value between 3 and 6 Å without the formula and requires the two to agree: {{=r_min_found:.4f}} Å by search, {{=r_min_formula:.4f}} Å by formula.
+
+**The Coulomb term in numbers.** The energy of two charges is $q_i q_j / (4\\pi\\varepsilon_0\\,\\epsilon_r\\,r)$, where $\\varepsilon_0$ is the electric constant of the vacuum. With the charges in units of $e$, the distance in Å and the energy in kcal/mol, everything except the charges, the dielectric constant and the distance folds into one number, $e^2/(4\\pi\\varepsilon_0)$ per mole, which is {{=coulomb_constant:.2f}} kcal Å/(mol $e^2$). The cell does not type it in: it computes it from the elementary charge, the electric constant, Avogadro's number and the calorie, and requires that it equals the constant that the relaxation code writes in the units of OpenMM, {{=coulomb_in_relax}} kJ nm/(mol $e^2$). At $r_{\\min}$ the pair has {{=term_table.loc[3, 'Coulomb, dielectric 1']:.1f}} kcal/mol with $\\epsilon_r = 1$ (a vacuum) and {{=term_table.loc[3, 'Coulomb, dielectric 4']:.1f}} kcal/mol with $\\epsilon_r = 4$, the value that the relaxation uses (`DIELECTRIC` in `cypmode/validation/relax.py`; bulk water at room temperature is about 78). The minus sign is the attraction of opposite charges: two charges of the same sign give the same size with a plus sign, a repulsion. Two things set the term apart from the Lennard-Jones term. For charged atoms it is much larger: at $r_{\\min}$ it is {{=abs(term_table.loc[3, 'Coulomb, dielectric 4']) / well_eps:.0f}} times the depth of the Lennard-Jones well even with $\\epsilon_r = 4$. And it reaches far: it falls as $1/r$ while the Lennard-Jones attraction falls as $1/r^{6}$, so at 10 Å the Coulomb energy is still {{=-term_table.loc[6, 'Coulomb, dielectric 4']:.2f}} kcal/mol in size when the Lennard-Jones sum is {{=-term_table.loc[6, 'Lennard-Jones sum']:.4f}}. The right panel of the figure shows the two rates on a logarithmic axis.
+
+**Minimising, step by step.** The second table is minimisation done in the simplest possible way. The push on the atom is minus the slope of the energy, $-dE/dr$, and it points downhill. The cell starts the atom at 2.4 Å, where the push is {{=descent_table.iloc[0, 3]:.1f}} kcal/mol/Å, and repeats one rule: move by a small **step size** times the push, here 0.002 Å for every kcal/mol/Å of push. The first move is {{=descent_table.iloc[1, 1] - descent_table.iloc[0, 1]:.3f}} Å, to {{=descent_table.iloc[1, 1]:.2f}} Å, and the energy falls from {{=descent_table.iloc[0, 2]:.1f}} to {{=descent_table.iloc[1, 2]:.1f}} kcal/mol. The next pushes are smaller ({{=descent_table.iloc[1, 3]:.1f}}, {{=descent_table.iloc[2, 3]:.1f}}, {{=descent_table.iloc[3, 3]:.1f}}) because the slope flattens as the atom leaves the repulsive wall. This is gradient descent, the rule of 4.1, which there lowers the loss of a model by moving its weights and here lowers an energy by moving the position of an atom: the slope of the energy with respect to the coordinates is called its gradient, and in one dimension it is the ordinary slope. The rule stops when the push falls below 0.001 kcal/mol/Å, after {{=n_descent}} steps, at {{=r_descent:.4f}} Å, which is {{=r_min_formula - r_descent:.4f}} Å short of the bottom. Thousands of steps are needed because the well is nearly flat at the bottom: its curvature there (how fast the slope changes) is {{=curvature_at_bottom:.2f}} kcal/mol/Å², so a step of {{=descent_step}} removes only about {{=descent_step * curvature_at_bottom:.2%}} of the distance that is left.
+
+The third table shows why the step size cannot simply be made larger. A step of {{=step_table.loc[1, 'step size (A per kcal/mol/A)']}} reaches the bottom in {{=step_table.loc[1, 'steps until the push is below 0.001']}} steps. A step of {{=step_table.loc[2, 'step size (A per kcal/mol/A)']}} throws the atom to {{=step_table.loc[2, 'distance after the first step (A)']:.1f}} Å with its first move, far past the bottom, where the pull is weak, and it needs {{=step_table.loc[2, 'steps until the push is below 0.001']}} steps to crawl back. A step of {{=step_table.loc[3, 'step size (A per kcal/mol/A)']}} throws it to {{=step_table.loc[3, 'distance after the first step (A)']:.1f}} Å, where the push is already below the stopping value, so the rule stops after {{=step_table.loc[3, 'steps until the push is below 0.001']}} step, {{=step_table.loc[3, 'distance from the bottom (A)']:.1f}} Å from the bottom, as if it had arrived. A fixed step is right for one steepness only, and a well is steep on one side and flat on the other. L-BFGS removes the choice: it estimates the curvature from its last few steps and sets the length of each step itself, and from the same start it stops at {{=r_bfgs:.4f}} Å after {{=n_bfgs}} iterations, where gradient descent needed {{=n_descent}} steps. (The cell hands the exact slope to the routine; the real relaxation obtains it from the force field.)
 
 Relaxing a pose must repair it and not re-dock it. The project's version (`cypmode/validation/relax.py`, in OpenMM, run in a conda environment of its own) keeps the protein and the heme fixed, so that they only supply the nonbonded terms; uses Amber ff14SB for the protein, the CHARMM template of heme b for the heme's nonbonded terms, and OpenFF 2.2.1 for the ligand, with AM1-BCC-like partial charges from a graph network (NAGL); sets the dielectric constant to 4; ties every heavy atom of the ligand to its predicted position with a weak spring (a **tether**); and, when a nitrogen of the ligand is within 3 Å of the iron in the prediction, holds that distance with a stiff spring. The tether is what keeps the repair local. The cell is the idea in one dimension: one ligand atom 2.4 Å from a frozen receptor atom, the radii of the two adding up to 3.4 Å, so that its relative distance is 2.4 / 3.4 = 0.71 and it fails the check, minimised for several strengths of the tether.
 """),

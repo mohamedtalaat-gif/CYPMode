@@ -119,6 +119,54 @@ change_size = float(np.abs(updated - pair_state).mean() / np.abs(pair_state).mea
 print(f"largest difference after relabelling the positions: {equivariance_error:.1e}; mean size of the update relative to the state: {change_size:.2f}")
 '''
 
+PAIRFORMER_TOY = '''
+# The Pairformer block, in two steps. First its order: the operations of a block are read from the code of OpenFold3 (the open reimplementation of AlphaFold 3, section 11.9) by the position of each call in the forward
+# pass, together with the sizes of the model that ran in this project. Then the one part of the block that the triangle cell above did not show: attention over the tokens whose scores receive a bias taken from the pair
+# representation. The toy keeps one head and reduces the pair vector to one number (1 where two tokens are in contact, 0 elsewhere), with a weight standing in for the learned map.
+import json
+
+of3_latent = ROOT / "third_party/openfold-3/openfold3/core/model/latent"
+pair_source = (of3_latent / "base_blocks.py").read_text()
+pair_forward = pair_source[pair_source.index("def forward", pair_source.index("class PairBlock")) :]
+block_source = (of3_latent / "pairformer.py").read_text()
+block_forward = block_source[block_source.index("def forward", block_source.index("class PairFormerBlock")) :]
+pair_calls = [("triangle update, outgoing and incoming", "self.tri_mul_out_in("), ("triangle attention, starting and ending node", "self.tri_att_start_end("), ("transition of the pairs", "self.pair_transition(")]
+block_calls = [("the pair stack above", "self.pair_stack("), ("attention over the tokens with the pair bias", "self.attn_pair_bias("), ("transition of the single vectors", "self.single_transition(")]
+order_rows = []
+for stage, source, calls in (("inside the pair stack", pair_forward, pair_calls), ("the block as a whole", block_forward, block_calls)):
+    places = [source.index(call) for _, call in calls]
+    assert places == sorted(places)  # the calls come in the order of the list
+    order_rows += [{"where": stage, "step": n + 1, "operation": name, "call in the code": call.rstrip("(")} for n, (name, call) in enumerate(calls)]
+order_table = pd.DataFrame(order_rows)
+show_table(order_table)
+stack_config = json.loads((ROOT / "data/structure_track/outputs/openfold3/cyp3a4/bench-YNV/model_config.json").read_text())["architecture"]["pairformer"]
+c_single, c_pair, n_blocks_stack = stack_config["c_s"], stack_config["c_z"], stack_config["no_blocks"]
+n_heads_bias, n_heads_triangle, transition_factor = stack_config["no_heads_pair_bias"], stack_config["no_heads_pair"], stack_config["transition_n"]
+
+pf_rng = np.random.default_rng(11)
+n_tokens, d_head = 6, 4
+pf_single = pf_rng.normal(size=(n_tokens, d_head))
+pf_queries, pf_keys = pf_single @ pf_rng.normal(size=(d_head, d_head)), pf_single @ pf_rng.normal(size=(d_head, d_head))
+pf_logits = pf_queries @ pf_keys.T / np.sqrt(d_head)
+pf_contact = np.eye(n_tokens)
+for i in range(n_tokens - 1):
+    pf_contact[i, i + 1] = pf_contact[i + 1, i] = 1  # neighbours along the chain
+pf_contact[0, 4] = pf_contact[4, 0] = 1  # two tokens far apart in the chain that the fold brings together
+bias_weight = 3.0
+
+def pf_softmax(scores):
+    e = np.exp(scores - scores.max(axis=1, keepdims=True))
+    return e / e.sum(axis=1, keepdims=True)
+
+attention_plain, attention_biased = pf_softmax(pf_logits), pf_softmax(pf_logits + bias_weight * pf_contact)
+share_plain, share_biased = (attention_plain * pf_contact).sum(axis=1), (attention_biased * pf_contact).sum(axis=1)
+assert (share_biased > share_plain).all()  # a positive bias on a subset of the tokens always raises the weight that the subset receives
+contact_fraction = float(pf_contact.mean())
+attention_table = pd.DataFrame({"token": range(n_tokens), "tokens in contact with it": [" ".join(str(j) for j in np.flatnonzero(row)) for row in pf_contact],
+                                "attention on them without the bias": share_plain, "attention on them with the bias": share_biased})
+show_table(attention_table, floatfmt=".2f")
+'''
+
 DIFFUSION_TOY = '''
 # A diffusion sampler in two dimensions where the ideal denoiser is known exactly, so that the sampler itself can be examined. The "data" are two clusters of points, standing for two different poses of a ligand, at (-3, 0)
 # and (3, 0), each a Gaussian of standard deviation 0.3 in each direction. For data that are a mixture of Gaussians the best denoiser D(x, sigma) = E[x_0 | x_sigma], the expected clean point given a point with noise of size sigma,
@@ -201,7 +249,7 @@ The order is the order of the pipeline. Sections 11.1 to 11.3 say what a structu
 
 **Where structures come from.** Experimental structures come from **X-ray crystallography** (the protein is crystallised, the diffraction of X-rays gives an electron density map into which atoms are fitted; the **resolution** in ångströms says how fine the map is: below 2 Å individual atoms are clear, at 3 Å only the shape of side chains) and, increasingly, **cryo-electron microscopy** (images of frozen molecules combined into a map; the five CYP3A4 entries released on 2026-09-30 are at 3.2 to 3.7 Å and are trimers). They are deposited in the **Protein Data Bank**, a public archive; each entry has a four-character identifier. The structure track's reference set is made from the CYP3A4 entries of the archive (11.5). Predicted structures come from models (11.2) and are written in the same formats.
 
-**What the file holds.** The simplest format is that of the Protein Data Bank itself, a text file with one line for each atom. The cell prints the first lines of one of the 20 submitted files and reads it with a library for structures. Each line gives the kind of record (`ATOM` for the residues of the protein, `HETATM` for everything else, here the ligand and the heme), a serial number, the atom name, the residue name, the chain, the residue number, the three coordinates in ångströms, an occupancy, the **B-factor** column and the element. In a crystal file the B-factor records how much an atom is smeared; the co-folding model writes into it its own confidence in the atom's position, from 0 to 100. The format stores no bonds for the ligand, and no bond orders at all: a program that needs them, as the scorer does, takes them from the SMILES string of the compound. The challenge asks for the protein as chain A, the ligand as the residue `LIG` and the heme as `HEM`.
+**What the file holds.** The simplest format is that of the Protein Data Bank itself, a text file with one line for each atom (the other format, mmCIF, in which the prediction programs write and the archive keeps its entries, is read field by field in 5.5). The cell prints the first lines of one of the 20 submitted files and reads it with a library for structures. Each line gives the kind of record (`ATOM` for the residues of the protein, `HETATM` for everything else, here the ligand and the heme), a serial number, the atom name, the residue name, the chain, the residue number, the three coordinates in ångströms, an occupancy, the **B-factor** column and the element. In a crystal file the B-factor records how much an atom is smeared; the co-folding model writes into it its own confidence in the atom's position, from 0 to 100. The format stores no bonds for the ligand, and no bond orders at all: a program that needs them, as the scorer does, takes them from the SMILES string of the compound. The challenge asks for the protein as chain A, the ligand as the residue `LIG` and the heme as `HEM`.
 """),
     code(STRUCTURE_FILE, held_back=True),
     md("""
@@ -233,7 +281,17 @@ where $a_{ik}$ and $b_{jk}$ are learned linear transformations of $z_{ik}$ and $
 """),
     code(TRIANGLE_TOY),
     md("""
-Relabelling the seven positions changes the result by {{=equivariance_error:.0e}}, which is rounding, and the update is {{=change_size:.0%}} of the size of the state. Triangle attention needs memory proportional to the cube of the number of tokens, which is what failed on this machine (11.9).
+Relabelling the seven positions changes the result by {{=equivariance_error:.0e}}, which is rounding, and the update is {{=change_size:.0%}} of the size of the state. Triangle attention needs memory proportional to the cube of the number of tokens, which is what failed on this machine (11.9). The next cell shows how these operations are put together.
+"""),
+    code(PAIRFORMER_TOY),
+    md("""
+**The Pairformer.** The trunk of these models is a stack of identical blocks, the **Pairformer** (the name that AlphaFold 3 gave it; AlphaFold 2 had a heavier block, the Evoformer, which kept a whole alignment inside the loop, while AlphaFold 3 reads the alignment once, in a small module of its own, before the stack). A block updates two things: the pair representation $z_{ij}$ and the **single representation** $s_i$, one vector for each token. It does so in a fixed order, which the first table reads from the code of OpenFold3. The pairs come first, through three operations: two triangle updates (the one above, which runs over the pairs that leave the token $i$, and its mirror image over the pairs that arrive at it), two triangle attentions (the pair $(i,j)$ attends over the pairs $(i,k)$ in one and over the pairs $(k,j)$ in the other), and a **transition**, a small network that is applied to every vector on its own, widens it by a factor of {{=transition_factor}} and narrows it again. The single vectors come second: an attention over the tokens, and a transition of their own. In the model that ran in this project a single vector has {{=c_single}} numbers and a pair vector {{=c_pair}}, and the stack has {{=n_blocks_stack}} blocks, so each pair vector is refreshed {{=n_blocks_stack}} times, each time by every operation of the list. The single vectors never write into the pairs inside a block: information goes from the pairs to the single vectors, through the attention that the second table shows.
+
+In that attention each token $i$ compares its query $q_i$ with the key $k_m$ of every token $m$ (the query and the key are learned linear transformations of the single vectors $s_i$ and $s_m$, $d$ is the number of values in them), and the pair adds a **bias** $b_{im}$ to each score before the scores are turned into weights. The bias is a learned linear map of the pair vector, $b_{im} = w^{\\top} z_{im}$, with $w$ a vector of learned weights, so the weight $\\alpha_{ij}$ that the token $i$ gives to the token $j$ is
+
+$$\\alpha_{ij} \\;=\\; \\frac{\\exp\\big(q_i\\cdot k_j/\\sqrt{d} + b_{ij}\\big)}{\\sum_m \\exp\\big(q_i\\cdot k_m/\\sqrt{d} + b_{im}\\big)} .$$
+
+In the real model there are {{=n_heads_bias}} such heads side by side, each with its own $w$. The toy keeps one head, six tokens, and one number for each pair, 1 where two tokens are in contact (neighbours in the chain, and the tokens 0 and 4, which the fold brings together) and 0 elsewhere, with a weight of {{=bias_weight:.0f}} standing in for $w$. Without the bias a token puts on average {{=share_plain.mean():.0%}} of its attention on the tokens in contact with it, which are {{=contact_fraction:.0%}} of all the pairs; with it, {{=share_biased.mean():.0%}}, and no token loses attention to the tokens it touches (the cell requires this: a positive bias on a subset of the tokens always raises the weight that the subset receives). That is how a pair that the triangle operations have found to be close makes the two tokens look at each other when the single vectors are updated.
 
 **The diffusion module.** A **diffusion model** generates by reversing a corruption. Take the coordinates $x_0$ of a structure and add noise of size $\\sigma$: $x_\\sigma = x_0 + \\sigma\\varepsilon$ with $\\varepsilon$ drawn from a normal distribution. A network $D_\\theta(x_\\sigma, \\sigma)$, the **denoiser**, is trained to return the expected clean structure given the noisy one, $D \\approx E[x_0 \\mid x_\\sigma]$, by minimising the squared distance to the true $x_0$ over many structures and noise sizes; here it is also given the trunk's representations. To generate, start from pure noise of a large size $\\sigma_{\\max}$ and lower the noise in steps $\\sigma_{\\max} = t_0 > t_1 > \\dots > t_n \\approx 0$. In the form used by AlphaFold 3 and Boltz (after Karras and co-workers, 2022) a step is: raise the noise level a little, $\\hat t = t_i(1+\\gamma)$, by adding fresh noise to match; then move toward the denoised estimate,
 

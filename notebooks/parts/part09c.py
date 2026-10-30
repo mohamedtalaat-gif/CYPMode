@@ -110,6 +110,54 @@ else:
 print(neural_stack_sentence, "| groups that need a replicate:", ", ".join(CONFIRMED_GROUPS))
 '''
 
+PROTONATION = '''
+# The share of molecules that carry a charge at a given pH, from the pKa, for four small molecules whose pKa the textbook gives (the first three are the ones of section 5.2, the fourth is an acid), at the lowest,
+# the middle and the highest pH of the range that the basic-centre block uses. The same molecules are then given to Dimorphite-DL, the program that block uses, as a check of the arithmetic.
+from dimorphite_dl import protonate_smiles
+from rdkit import Chem
+
+from cypmode.challenge.basic_centre import PH_MAX, PH_MIN
+
+hh_molecules = [("triethylamine", "CCN(CC)CC", "base", 10.7), ("aniline", "Nc1ccccc1", "base", 4.6), ("acetamide", "CC(N)=O", "base", -0.5), ("acetic acid", "CC(=O)O", "acid", 4.76)]
+hh_ph_middle = round((PH_MIN + PH_MAX) / 2, 1)
+
+def charged_share(kind, pka, ph):
+    """Share of the molecules that carry a charge at this pH: a base is charged when it has taken up a hydrogen ion, an acid when it has lost one."""
+    return 1 / (1 + 10 ** ((ph - pka) if kind == "base" else (pka - ph)))
+
+hh_rows = []
+for name, smiles, kind, pka in hh_molecules:
+    state = protonate_smiles(smiles, ph_min=hh_ph_middle, ph_max=hh_ph_middle, precision=1.0)[0].split()[0]
+    charge = Chem.GetFormalCharge(Chem.MolFromSmiles(state))
+    shares = [charged_share(kind, pka, ph) for ph in (PH_MIN, hh_ph_middle, PH_MAX)]
+    assert (shares[1] > 0.5) == (charge != 0)  # the program and the arithmetic agree on which side of one half each molecule is
+    n_states = len(protonate_smiles(smiles, ph_min=PH_MIN, ph_max=PH_MAX, precision=1.0))  # the call of the block: every state found between the two ends of the range
+    hh_rows.append({"molecule": name, "group": kind, "pKa": pka, f"charged share at pH {PH_MIN}": shares[0], f"at pH {hh_ph_middle}": shares[1], f"at pH {PH_MAX}": shares[2], "Dimorphite-DL state": state, "formal charge": charge,
+                    f"states over pH {PH_MIN} to {PH_MAX}": n_states})
+hh_table = pd.DataFrame(hh_rows)
+show_table(hh_table, floatfmt=".4f")
+hh_window = float(np.log10(9))  # a form is at least a tenth of the molecules only within this many pH units of the pKa (share between 0.1 and 0.9)
+assert abs(charged_share("base", 7.4, 7.4 + hh_window) - 0.1) < 1e-12 and abs(charged_share("base", 7.4, 7.4 - hh_window) - 0.9) < 1e-12
+assert abs(charged_share("base", 7.4, 7.4) - 0.5) < 1e-12  # at a pH equal to the pKa half of the molecules are charged
+
+def odds(share):
+    return share / (1 - share)
+
+assert abs(odds(charged_share("base", 7.4, 6.4)) - 10) < 1e-9 and abs(odds(charged_share("base", 7.4, 8.4)) - 0.1) < 1e-9  # one pH unit away from the pKa, the odds change tenfold
+
+fig, axis = plt.subplots(figsize=(10.5, 3.6))
+ph_axis = np.linspace(-1, 13, 300)
+colours = [theme["blue"], theme["orange"], theme["green"], theme["purple"]]
+for (name, _smiles, kind, pka), colour in zip(hh_molecules, colours):
+    axis.plot(ph_axis, charged_share(kind, pka, ph_axis), color=colour, lw=2, label=f"{name} (pKa {pka})")
+axis.axvspan(PH_MIN, PH_MAX, color=theme["muted"], alpha=0.22, label=f"the range of the block, pH {PH_MIN} to {PH_MAX}")
+axis.axhline(0.5, color=theme["muted"], ls=":", lw=1)
+axis.set(xlabel="pH", ylabel="share of the molecules that carry a charge", ylim=(-0.02, 1.02), xlim=(-1, 13))
+axis.legend(frameon=False, loc="center right", fontsize=8)
+tidy(axis, theme)
+fig.tight_layout()
+'''
+
 ADDITIONS = '''
 # The remaining additions of Part IX, read the way 9.9 read the neural pair: one log per addition and enzyme, whose lines give the paired change of the outer-fold AUC when the addition joins the default stack (corrected
 # resampled t, J = 15 folds, 6.5) at the two confidence cut-offs, and a last line with the verdict of the pre-declared gate. The two selectors (an alternative to the logistic blend, not a new member) report the change of the
@@ -493,6 +541,17 @@ A second decision, also taken on 2026-10-16 before any CheMeleon measurement, wa
 The blinded compounds have no screen or Emax reading, so a reading can never be an input of the final model. It can still teach the model what the structure says about it, in the construction of 9.7 (`cypmode/challenge/aux_blocks.py`): a first-stage regressor is fitted on the compounds that have the reading and predicts it for every compound, with five-fold cross-fitting, and the second-stage classifier receives the predictions next to the structure features. Inside a nested task the first stage may read only the training rows of the task and the compounds outside the plan's pool, never an evaluation row. Change of the AUC: the predicted screen as a block, CYP3A4 {{=line_of('single-concentration screen', 'CYP3A4')}}, CYP2D6 {{=line_of('single-concentration screen', 'CYP2D6')}}; the predicted Emax, CYP3A4 {{=line_of('maximal effect', 'CYP3A4')}}, CYP2D6 {{=line_of('maximal effect', 'CYP2D6')}}; the screen as the gate of the selection-aware CYP2D6 model of 9.1 (`cypmode/challenge/screen_selection.py`; the gate is learned from the real screen instead of from "has a curve"), CYP2D6 {{=line_of('screen inside', 'CYP2D6')}}; the multitask network of 9.9 with the screen and the Emax as twelve extra regression targets, CYP3A4 {{=line_of('multitask network with', 'CYP3A4')}}, CYP2D6 {{=line_of('multitask network with', 'CYP2D6')}}.
 
 Two more uses of the rows that the pool leaves out. For CYP3A4, 1,249 compounds have a TDI-arm curve and no direct curve, and are labelled negative by convention; of them, 194 are certain negatives (the label implies a TDI-arm pIC50 above 4.301, so a compound at or below it is negative whatever its direct curve is) and the rest can be given a soft label by a first-stage model fitted on the pool rows of the task (structure and the TDI-arm value as inputs; its five-fold AUC was 0.77, against 0.60 for the TDI-arm value alone). Used so, the change of the AUC of CYP3A4 is {{=line_of('the 1,249', 'CYP3A4')}}. And the label in two parts, $P(t > 4.301) \\times P(t - d > \\log_{10} 2)$, where the first part can be learned from every compound with a TDI-arm curve: CYP3A4 {{=line_of('the label in two parts', 'CYP3A4')}}; CYP2D6 {{=line_of('the label in two parts', 'CYP2D6')}}. The first part cannot help CYP2D6, where 94 percent of the rows with both arms already have a TDI-arm pIC50 above 4.301.
+"""),
+    md("""
+**Protonated or not: the arithmetic.** Whether a basic nitrogen carries a charge depends on the **pH** of the solution, which is $-\\log_{10}[\\mathrm{H}^+]$, minus the base-ten logarithm of the concentration of hydrogen ions in mole per litre (blood sits near 7.4). A base B takes up a hydrogen ion and becomes its conjugate acid $\\mathrm{BH}^+$, and the balance between the two is set by the **acid dissociation constant** $K_a$ of that acid, $K_a = [\\mathrm{B}][\\mathrm{H}^+]/[\\mathrm{BH}^+]$, which is quoted on a logarithmic scale as $\\mathrm{p}K_a = -\\log_{10} K_a$. Taking the logarithm of the constant gives $[\\mathrm{BH}^+]/[\\mathrm{B}] = 10^{\\mathrm{p}K_a - \\mathrm{pH}}$, so the share $f$ of the molecules that carry the hydrogen ion is
+
+$$f \\;=\\; \\frac{[\\mathrm{BH}^+]}{[\\mathrm{BH}^+] + [\\mathrm{B}]} \\;=\\; \\frac{1}{1 + 10^{\\,\\mathrm{pH} - \\mathrm{p}K_a}} .$$
+
+At a pH equal to the pKa half of the molecules carry the hydrogen ion; one unit of pH above it the odds of carrying it fall tenfold, and one unit below they rise tenfold (the cell checks both). An acid, such as acetic acid, is the mirror image: it carries a charge when it has lost its hydrogen ion, and the exponent becomes $\\mathrm{p}K_a - \\mathrm{pH}$. The cell computes the share of charged molecules for four small molecules whose pKa the textbook gives (the first three are those of 5.2, and the pKa of acetic acid, 4.76, is from the same book: Clayden and co-workers, 2012), at the lowest, the middle and the highest pH of the range that the block below uses. It then hands the same molecules to Dimorphite-DL, the program that the block uses, as a check: the program and the arithmetic must agree on which side of one half each molecule lies.
+"""),
+    code(PROTONATION),
+    md("""
+Triethylamine is charged in {{=hh_table.iloc[0, 3]:.2%}} of its molecules at the lowest pH of the range and still in {{=hh_table.iloc[0, 5]:.2%}} at the highest. Aniline is charged in {{=hh_table.iloc[1, 3]:.1%}} at the lowest and {{=hh_table.iloc[1, 5]:.2%}} at the highest, acetamide in practically none, and acetic acid, which is charged on losing its hydrogen ion, in {{=hh_table.iloc[3, 3]:.1%}} to {{=hh_table.iloc[3, 5]:.2%}}. Dimorphite-DL returns the protonated amine for the first, the neutral molecule for the next two and the carboxylate for the acid, which is the side of one half that the arithmetic gives, and one state only for each molecule over the whole range (the last column). The figure shows why: a group is found in two forms, each at least a tenth of the molecules, only within {{=hh_window:.2f}} units of pH of its pKa, and the pKa of all four groups lies far from the band of 6.4 to 8.4. A group whose pKa falls inside the band is the case that a single pH would hide, and it is the reason that the block enumerates a range.
 """),
     md("""
 **A block of chemistry for CYP2D6.** CYP2D6 binds substrates and inhibitors that carry a **protonated** basic nitrogen (one that has taken up a hydrogen ion and carries a positive charge in the assay buffer) a few ångströms from a flat aromatic ring: the cation meets two acidic residues of the pocket, Asp301 and Glu216, while the ring sits over the heme. A fingerprint sees the substructure. It does not know that the nitrogen is protonated at the pH of the assay, how many sites could be, or how far the charge sits from the ring in a real conformation. The basic-centre block (`cypmode/challenge/basic_centre.py`, queue jobs `191_basic_centre_extract` and `199_basic_centre_experiment`) computes those quantities from the structure alone: the **protonation states** of the molecule between pH 6.4 and 8.4 with Dimorphite-DL (which enumerates the states in which the ionisable groups can be found), the class of the most protonated state (primary, secondary or tertiary ammonium, amidinium or guanidinium, quaternary), the shortest bond path from a basic centre to an aromatic atom, and, from ten conformers of the most protonated state, the distances from each basic nitrogen to the aromatic ring centres and the share of conformers with a ring centre 4.5 to 7.5 Å away, the window of the CYP2D6 pharmacophore. {{=n_basic:,}} of the {{=n_bc_total:,}} compounds have a basic centre. The block is the principled form of the idea behind the trialkylamine flag of 7.2, which looked only for one substructure. Change of the AUC: CYP2D6, where it matters most, {{=line_of('basic-centre', 'CYP2D6')}}; CYP3A4 {{=line_of('basic-centre', 'CYP3A4')}}.

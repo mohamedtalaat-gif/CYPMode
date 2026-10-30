@@ -34,6 +34,37 @@ print("columns of the atom table:", ", ".join(columns))
 for label, line in (("a protein atom", first_atom), ("the heme iron", iron_line), ("a ligand atom", ligand_line)):
     print(f"{label:15s}", line)
 
+# The first atom of the file laid against the names of the columns, one field per column. Every column of the real file has a meaning here (the assertion fails if a new column appears).
+column_meaning = {
+    "group_PDB": "ATOM for an atom of a protein chain, HETATM for any other molecule (here the ligand and the heme)",
+    "id": "serial number of the atom in the file",
+    "type_symbol": "the chemical element",
+    "label_atom_id": "name of the atom inside its residue (N the backbone nitrogen, CA the alpha carbon, FE the iron)",
+    "label_alt_id": "label of an alternative position of the atom; a full stop means that it has only one",
+    "label_comp_id": "name of the residue in three letters (MET methionine, HEM the heme, LIG1 the predicted molecule)",
+    "label_seq_id": "position of the residue in the sequence of its chain; a full stop for a molecule that is not part of the sequence",
+    "auth_seq_id": "residue number as the authors of the structure number it",
+    "pdbx_PDB_ins_code": "insertion code, the letter that the older format added to a residue number to fit an extra residue; a question mark means not given",
+    "label_asym_id": "name of the chain in the archive's own naming",
+    "Cartn_x": "x coordinate, in ångström",
+    "Cartn_y": "y coordinate, in ångström",
+    "Cartn_z": "z coordinate, in ångström",
+    "occupancy": "share of the copies of the molecule in which the atom is at this place (1 means all)",
+    "label_entity_id": "number of the distinct molecule that the chain is a copy of",
+    "auth_asym_id": "name of the chain as the authors give it",
+    "auth_comp_id": "name of the residue as the authors give it",
+    "B_iso_or_equiv": "the B-factor; in a Boltz-2 prediction, the confidence of the model in the position of the atom",
+    "pdbx_PDB_model_num": "number of the model in the file (a file can hold several models)",
+}
+assert set(columns) == set(column_meaning)
+fields = first_atom.split()
+assert len(fields) == len(columns)
+show_table(pd.DataFrame({"column (after _atom_site.)": columns, "value for the first atom": fields, "what it says": [column_meaning[c] for c in columns]}))
+atom_table_rows = [dict(zip(columns, line.split())) for line in lines if line.startswith(("ATOM", "HETATM"))]
+n_rows = len(atom_table_rows)
+n_same_names = sum(r["label_asym_id"] == r["auth_asym_id"] and r["label_comp_id"] == r["auth_comp_id"] for r in atom_table_rows)
+n_no_position = sum(r["label_seq_id"] == "." for r in atom_table_rows)
+
 structure = load_structure(cif_of("ketoconazole"))
 chain_rows = [{"chain": chain.id, "residues": len(list(chain.get_residues())), "atoms": len(list(chain.get_atoms())), "what it is": {"A": "the protein, CYP3A4", "B": "the predicted molecule (residue LIG1)", "C": "the heme (residue HEM)"}.get(chain.id, "")} for chain in structure[0]]
 show_table(pd.DataFrame(chain_rows))
@@ -42,6 +73,7 @@ n_atoms_total = len(list(structure.get_atoms()))
 n_protein_residues = chain_rows[0]["residues"]
 ligand_heavy_atoms = len(_ligand_atoms(structure))
 iron_xyz = [float(v) for v in iron.coord]
+assert n_rows == n_atoms_total  # the table of the file and the reader count the same atoms
 '''
 
 DISTANCES = '''
@@ -274,13 +306,15 @@ CELLS = [
 the molecule. This section reads such a prediction, measures one distance in it, and compares the result with what the chemistry of section 1.9 and the screen of 5.1 lead one to expect. Part XI makes the same measurement on every pose it handles, and later uses it as a restraint.
 
 **What a structure file contains.** A structure of a protein with a molecule bound to it is, in the end, a table of atoms. Each row names an atom and says where it is: three numbers $x$, $y$ and $z$, its coordinates in ångström, measured from an arbitrary origin; and to which residue (an amino acid of the protein, or a separate molecule such as the heme or the bound compound) and to which **chain** (one continuous piece of the complex) it belongs. The
-format that Boltz-2 writes, **mmCIF**, is a text file in which a header names the columns of that table and every following line is one atom. The first cell prints the names of the columns of the real file of the ketoconazole prediction, three of its lines, and the parts of the complex as the Biopython reader sees them (a *structure* holds *models*, a model holds chains, a chain holds residues and a residue holds atoms). Two of the columns need a word. The
+format that Boltz-2 writes, **mmCIF**, is a text file in which a header names the columns of that table and every following line is one atom. The first cell prints the names of the columns of the real file of the ketoconazole prediction, three of its lines, the first atom decoded column by column, and the parts of the complex as the Biopython reader sees them (a *structure* holds *models*, a model holds chains, a chain holds residues and a residue holds atoms). Two of the columns need a word. The
 occupancy is the share of the copies of the molecule in which the atom is found at this place; in an experiment it can be below 1, and in a prediction, which is a single model, it is always 1. The B-factor measures, in an experiment, how much the atom is smeared by motion and disorder; in a Boltz-2 prediction the same column carries the model's own confidence in the position of the atom, the **pLDDT**, a number from 0 to 100 (section 11.4).
 """),
     code(STRUCTURE_FILE),
     md("""
 The file holds {{=n_atoms_total:,}} atoms in three chains: the protein, with {{=n_protein_residues}} residues, the predicted molecule, with {{=ligand_heavy_atoms}} atoms (heavy atoms only: hydrogens are not predicted), and the heme, in which the iron is the atom named `FE`, at $x, y, z$ = ({{=iron_xyz[0]:.2f}}, {{=iron_xyz[1]:.2f}}, {{=iron_xyz[2]:.2f}}) ångström. Nothing in the input places the molecule near the iron: the input is the protein sequence, the heme bound to the cysteine and the formula of the
 molecule, so where the molecule ends up is a prediction and not something built into the question.
+
+**Reading the table.** Every table of an mmCIF file starts with the word `loop_`, then the names of its columns, one per line (here all begin `_atom_site.`), and then one row for each record. The names come first because a row means nothing without them, so the second table of the cell lays the first atom of the file against them, field by field. Two marks recur in it: a full stop stands for *does not apply* (this atom has no alternative position) and a question mark for *not given* (there is no insertion code). The columns that begin `label_` hold the archive's own names for the chains and residues, and the ones that begin `auth_` the names that the authors of a structure gave them. In this prediction the two agree on the name of the chain and of the residue in {{=n_same_names:,}} of the {{=n_rows:,}} atom rows. They differ only in the position in the sequence: `label_seq_id` is a full stop for the {{=n_no_position}} atoms of the ligand and the heme, because a molecule that is not a residue of the chain has no place in its sequence, while `auth_seq_id` numbers each of them 1. The older text format of the archive, the PDB format, puts every field at a fixed position of a line of 80 characters, so it cannot hold a structure of more than 99,999 atoms or a chain whose name is longer than one character; mmCIF has neither limit and is the master format of the archive. The files that are submitted to the challenge are in the PDB format (11.1).
 
 **The distance and the rule.** For two atoms $P$ and $Q$ with coordinates $(x_P, y_P, z_P)$ and $(x_Q, y_Q, z_Q)$, the distance is the length of the straight line between them (the **Euclidean distance**, from Pythagoras's theorem applied in three dimensions):
 
