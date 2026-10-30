@@ -432,7 +432,7 @@ How much the selection-aware CYP2D6 model gains depends on how many never-promot
 
 ### eng_queue_timeline: The job queue as a timeline
 
-Each bar is one run of one job of the queue, from the runner's own log (170 jobs, 393 runs: 348 finished, 28 stopped and retried, 17 failed after their attempts). The runs add up to 228 hours of wall-clock time between 08 Oct and 29 Oct (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
+Each bar is one run of one job of the queue, from the runner's own log (170 jobs, 408 runs: 363 finished, 28 stopped and retried, 17 failed after their attempts). The runs add up to 230 hours of wall-clock time between 08 Oct and 30 Oct (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
 
 - notebook section: 12.2
 - data: queue/logs/queue_stage.txt
@@ -440,7 +440,7 @@ Each bar is one run of one job of the queue, from the runner's own log (170 jobs
 
 ### eng_power_events: What the machine did while the queue ran
 
-Every time the machine entered sleep between 23 Oct and 29 Oct, by the cause its own power log gives: 339 x Maintenance Sleep, 112 x Sleep Service Back to Sleep, 4 x Software Sleep pid=611, 3 x Clamshell Sleep, 3 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-10-22, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
+Every time the machine entered sleep between 23 Oct and 29 Oct, by the cause its own power log gives: 339 x Maintenance Sleep, 112 x Sleep Service Back to Sleep, 4 x Software Sleep pid=611, 3 x Clamshell Sleep, 3 x Notification Wake Back to Sleep. The power log itself begins on 2026-10-23, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
 
 - notebook section: 12.3
 - data: pmset -g log
@@ -448,7 +448,7 @@ Every time the machine entered sleep between 23 Oct and 29 Oct, by the cause its
 
 ### eng_tests_by_module: The test suite by module
 
-Test functions per test module of the repository: 1019 test functions in 146 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
+Test functions per test module of the repository: 1025 test functions in 147 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
 
 - notebook section: 12.5
 - data: tests/test_*.py
@@ -456,7 +456,7 @@ Test functions per test module of the repository: 1019 test functions in 146 mod
 
 ### eng_commit_timeline: The history of the repository
 
-The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-10-29: 239 commits on 12 days, the busiest day with 41 (2026-10-25). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
+The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-10-30: 242 commits on 13 days, the busiest day with 41 (2026-10-25). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
 
 - notebook section: 12.4
 - data: git log
@@ -464,7 +464,7 @@ The history of the repository as the number of commits of each day, from the fir
 
 ### eng_repository_map: The repository by folder
 
-The repository by top-level folder: the number of files that git tracks (2323 in all, 387 MB) and their size. The three folders with the most files are data (1190), docs (468), cypmode (180). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
+The repository by top-level folder: the number of files that git tracks (2337 in all, 392 MB) and their size. The three folders with the most files are data (1190), docs (480), cypmode (180). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
 
 - notebook section: 12.5
 - data: git ls-files
