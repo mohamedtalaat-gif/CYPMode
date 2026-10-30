@@ -123,7 +123,7 @@ every set of two or three of them, and writes down the types of the features tog
 `cypmode/challenge/pharmacophore_fingerprint.py`, with a width of 2048 positions.
 
 A 3D shape is needed, and a molecule has no single one: it can bend about its single bonds, and each shape, a **conformer**, gives different distances. The module generates one conformer with the ETKDG method (Riniker and Landrum, 2015), which builds a structure from the pairwise distances allowed by the bonds and corrects the torsion angles
-with preferences that were learned from crystal structures, and relaxes it with the MMFF94 force field (Halgren, 1996), a set of simple formulas for the energy of bond stretching, bending, twisting and non-bonded contacts that is minimised until nothing moves. A molecule whose 3D structure cannot be built gets a fingerprint of zeros, which is a true "no bits", and not an error that would stop a batch of thousands. The cell shows the features found in the example, its fingerprint, and
+with preferences that were learned from crystal structures, and relaxes it with the MMFF94 force field (the Merck Molecular Force Field; Halgren, 1996), a set of simple formulas for the energy of bond stretching, bending, twisting and non-bonded contacts that is minimised until nothing moves. A molecule whose 3D structure cannot be built gets a fingerprint of zeros, which is a true "no bits", and not an error that would stop a batch of thousands. The cell shows the features found in the example, its fingerprint, and
 the effect of the conformer on a distance.
 """),
     code(PHARMACOPHORE),

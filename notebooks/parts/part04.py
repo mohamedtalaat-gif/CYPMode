@@ -50,6 +50,24 @@ show_table(pd.DataFrame(check_rows), floatfmt=".5f")
 worst_gap = max(abs(r["derivative p - y"] - r["finite difference"]) for r in check_rows)
 penalty = {p: float(-np.log(p)) for p in (0.9, 0.5, 0.1, 0.01)}
 print("loss of a positive compound given probability p:", {p: round(v, 2) for p, v in penalty.items()})
+
+# Logistic regression by the gradient descent of the text, on two standardised descriptors of the working data (the logarithm of the partition coefficient of 3.3 and the topological polar surface area), compared with the
+# fit of the library with a negligible penalty. For a weight w_j the chain rule gives dL/dw_j = (p - y) x_j, so each step moves every weight against the average of (p - y) x_j over the compounds.
+from sklearn.linear_model import LogisticRegression
+
+lr_columns = [descriptor_names.index("MolLogP"), descriptor_names.index("TPSA")]
+lr_x = desc_ml[:, lr_columns].astype(float)
+lr_x = (lr_x - lr_x.mean(axis=0)) / lr_x.std(axis=0)
+lr_weights, lr_intercept, lr_step, lr_steps = np.zeros(2), 0.0, 0.5, 5000
+for _ in range(lr_steps):
+    lr_p = sigmoid(lr_intercept + lr_x @ lr_weights)
+    lr_weights = lr_weights - lr_step * (lr_x.T @ (lr_p - y_ml)) / len(y_ml)
+    lr_intercept = lr_intercept - lr_step * float(np.mean(lr_p - y_ml))
+lr_library = LogisticRegression(C=1e6, max_iter=1000).fit(lr_x, y_ml)
+lr_gap = float(max(np.abs(lr_weights - lr_library.coef_[0]).max(), abs(lr_intercept - lr_library.intercept_[0])))
+lr_loss = float(np.mean(log_loss(y_ml, lr_intercept + lr_x @ lr_weights)))
+lr_loss_constant = float(np.mean(log_loss(y_ml, np.log(y_ml.mean() / (1 - y_ml.mean())))))
+print(f"weights {lr_weights.round(4)}, intercept {lr_intercept:.4f}; library {lr_library.coef_[0].round(4)}, {lr_library.intercept_[0]:.4f}; largest gap {lr_gap:.1e}; mean log-loss {lr_loss:.4f} against {lr_loss_constant:.4f} for the constant")
 '''
 
 BIAS_VARIANCE = '''
@@ -362,6 +380,8 @@ $\\mathbb{E}[y \\mid x]$, because $\\frac{d}{df}\\mathbb{E}[(y - f)^2 \\mid x] =
     md("""
 The derivative $p - y$ agrees with the finite difference to within {{=worst_gap:.1e}}, and the loss for a positive compound grows from {{=penalty[0.9]:.2f}} at $p = 0.9$ to {{=penalty[0.01]:.1f}} at $p = 0.01$: a model that is sure and wrong pays far more than a model that hedges.
 
+**Logistic regression.** The simplest choice of the function $f_\\theta$ is a weighted sum of the features, $z = b + \\sum_j w_j x_j$, where $x_j$ is feature $j$ of a compound, $w_j$ its **weight** and $b$ the **intercept**. The model that turns this straight-line score into the probability $p = \\sigma(z)$ is **logistic regression**, and its parameters $\\theta = (b, w_1, w_2, \\dots)$ are the weights and the intercept. They are found by the gradient descent above on the log-loss. The chain rule gives the gradient: since $\\partial z/\\partial w_j = x_j$ and $\\partial L/\\partial z = p - y$, the derivative with respect to a weight is $(p - y)\\,x_j$, so each step moves every weight against the average of $(p - y)\\,x_j$ over the compounds, and the intercept against the average of $p - y$. A **penalty** can be added to the loss to keep the weights small (the L1 and L2 penalties of 8.2), and the constant `C` of the library is the strength of the loss against the penalty. The cell fits the model by the loop of the text on two standardised descriptors, the logarithm of the partition coefficient (3.3) and the polar surface area, with {{=lr_steps}} steps of size {{=lr_step}}: the weights are {{=lr_weights[0]:.3f}} and {{=lr_weights[1]:.3f}} and the intercept {{=lr_intercept:.3f}}, and the library, given the same data with a negligible penalty, finds the same numbers to within {{=lr_gap:.0e}}. The mean log-loss falls from {{=lr_loss_constant:.3f}} for a model that gives every compound the base rate to {{=lr_loss:.3f}}. The project uses logistic regression to blend the scores of its models (8.2), to read off in 4.10 how far a model's probabilities can be trusted, and in several smaller tests.
+
 **Fitting is not the goal; predicting new compounds is.** A model with enough freedom can reproduce the labels of the training compounds exactly and still know nothing about new ones, as a student who memorised the answers of last year's exam. The error on *new* data has three parts, which the **bias-variance decomposition** separates. Suppose the truth is
 $y = g(x) + \\varepsilon$, where $g$ is the true rule and the noise $\\varepsilon$ has mean 0 and variance $\\sigma^2$, and a model $\\hat f$ is fitted to a random training set (so that $\\hat f$ is itself random). The expected squared error at a point $x$, over both the training set and the noise of the new compound, is, after adding and subtracting $\\mathbb{E}[\\hat f(x)]$ and $g(x)$ and noting that the cross
 terms vanish because the noise and the training set are independent and have mean zero,
@@ -375,6 +395,8 @@ the best model is in between: the **bias-variance trade-off**. The cell measures
     md("""
 The error on the training points falls steadily with the degree of the polynomial, while the error on new points is lowest at degree {{=best_degree}} and rises again: low degrees are dominated by bias, high degrees by variance. The three parts add up to the measured error of new points to within {{=decomposition_gap:.3f}}, the sampling error of the simulation. The practical lesson is that the score of a model on the data it was fitted on is
 not a measure of anything, and every number in this notebook that is meant as an estimate of performance is computed on compounds that the model did not see (Part VI).
+
+**Held-out data and cross-validation.** The way to measure how a model will do on compounds it has not seen is to keep some compounds out of the fitting and score the model on them. **Cross-validation** does this for every compound in turn: the $n$ compounds are divided at random into $K$ parts, the **folds**; for each fold in turn the model is fitted on the other $K - 1$ folds and scored on the fold that it did not see; the $K$ scores are averaged, and their spread says how far the estimate itself can be trusted. The folds of this part are made so that each holds about the same share of positive compounds (**stratified** folds), with $K = {{=len(folds_ml)}}$, so that each held-out part has about {{=len(folds_ml[0][1])}} of the {{=len(y_ml)}} compounds of the working data. One caution belongs here and is the subject of Part VI: a number that has been used to *choose* between models, settings or thresholds is no longer a reliable estimate, because the choice looked at it, and the remedy is to nest one cross-validation inside another (**nested cross-validation**).
 
 """),
     figure("ml_bias_variance"),

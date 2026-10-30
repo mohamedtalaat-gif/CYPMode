@@ -215,7 +215,7 @@ equation is valid, and it holds in a typical inhibition assay, where the enzyme 
 The name of the family comes from a pigment (P) first seen in liver cell fragments in 1958 and characterised by Omura and Sato (1962, 1964): it absorbs light of wavelength 450 nanometres (hence 450) when
 its iron is reduced and bound to carbon monoxide. The pigment turned out to be a protein with a heme at its centre. A P450 enzyme is a **monooxygenase**: it takes one of the two oxygen atoms of an oxygen
 molecule and inserts it into a substrate $\\mathrm{RH}$ (a carbon-hydrogen bond becomes a carbon-hydroxyl bond), reducing the other to water, using two electrons supplied by a second protein that
-receives them from NADPH:
+receives them from NADPH (the reduced form of nicotinamide adenine dinucleotide phosphate, a small molecule that carries electrons):
 
 $$\\mathrm{RH} + \\mathrm{O_2} + \\mathrm{NADPH} + \\mathrm{H^+} \\;\\longrightarrow\\; \\mathrm{ROH} + \\mathrm{H_2O} + \\mathrm{NADP^+}.$$
 

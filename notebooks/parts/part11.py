@@ -277,7 +277,7 @@ The pair ({{=top_pair[0]}}, {{=top_pair[1]}}) stands out with a mutual informati
 
 $$z_{ij} \\;\\leftarrow\\; z_{ij} + g_{ij}\\odot W_o\\,\\mathrm{LN}\\Big(\\sum_k a_{ik}\\odot b_{jk}\\Big),$$
 
-where $a_{ik}$ and $b_{jk}$ are learned linear transformations of $z_{ik}$ and $z_{jk}$ (each multiplied by a learned gate), $\\mathrm{LN}$ normalises over the channels, $W_o$ is a learned matrix, $g_{ij}$ a learned gate between 0 and 1, and $\\odot$ is multiplication element by element. A second operation, **triangle attention**, lets the pair $(i,j)$ attend over the pairs $(i,k)$ with a weight that depends on $z_{jk}$. The cell runs one update with random weights. It cannot show what a trained model has learned, but it shows what the operation is: it treats positions by what they are connected to and not by their number, so that relabelling the positions and computing gives the relabelled result.
+where $a_{ik}$ and $b_{jk}$ are learned linear transformations of $z_{ik}$ and $z_{jk}$ (each multiplied by a learned gate), $\\mathrm{LN}$ is layer normalisation, which rescales each vector over its channels so that its numbers have mean 0 and variance 1, $W_o$ is a learned matrix, $g_{ij}$ a learned gate between 0 and 1, and $\\odot$ is multiplication element by element. A second operation, **triangle attention**, lets the pair $(i,j)$ attend over the pairs $(i,k)$ with a weight that depends on $z_{jk}$. The cell runs one update with random weights. It cannot show what a trained model has learned, but it shows what the operation is: it treats positions by what they are connected to and not by their number, so that relabelling the positions and computing gives the relabelled result.
 """),
     code(TRIANGLE_TOY),
     md("""
