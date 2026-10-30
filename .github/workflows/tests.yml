@@ -75,4 +75,5 @@ jobs:
         run: pytest -v tests/test_chemberta_features.py
 
       - name: Run tests (quantum-pharmacophore and physics blocks/tblite, isolated)
+        if: runner.os != 'Windows'  # tblite is not installed there (no wheel), so the three files skip themselves and pytest ends with code 5, no test collected
         run: pytest -v tests/test_quantum_pharmacophore.py tests/test_physics_block.py tests/test_physics_tierb.py
