@@ -230,7 +230,7 @@ taught = [
     (COMP, "Hartree-Fock and basis sets", "10.2", "Hartree-Fock written out for the smallest molecules, and H2 at several distances"),
     (COMP, "Density functional theory", "10.3", "density functional theory against Hartree-Fock on the water molecule"),
     (COMP, "GFN2-xTB and tight binding", "10.4", "one GFN2-xTB single point on toluene, with the program's own report"),
-    (COMP, "Molecular dynamics", "11.13", "none is run in the notebook: the settings and the gate of the experiment are read from the module and from the log of the job, and the integrator is explained in the text"),
+    (COMP, "Molecular dynamics", "11.13", "the Langevin thermostat on particles in a harmonic well, whose position and velocity variances must equal kT / k and kT / m, run with a written-out integrator and with the integrator of OpenMM"),
     (COMP, "Solvent-accessible surface and cavities", "5.6", "the Shrake-Rupley surface written out; cavity detection on a toy in two dimensions"),
     (STRUCT, "Proteins and the PDB file format", "11.1", "what a predicted complex file holds, read from one of the submitted files"),
     (STRUCT, "mmCIF files", "5.5", "the first atom of a real file laid against the names of the columns, field by field"),
@@ -252,7 +252,7 @@ taught = [
     (ML, "Message passing on graphs", "4.8", "a directed message-passing network, the form that Chemprop uses, with random weights"),
     (ML, "Attention", "4.8 11.2", "self-attention written out on the SMILES of the example compound (4.8); attention with a bias from the pairs on six tokens (11.2)"),
     (ML, "Embeddings and pretrained models", "7.9 9.4", "the ChemBERTa embedding of every labelled compound (7.9); the frozen CheMeleon block (9.4)"),
-    (ML, "In-context tabular models", "4.9", "none is run in the notebook: the model needs a separate environment, so the section describes it and the nested evaluation uses it as a candidate"),
+    (ML, "In-context tabular models", "4.9", "the real TabICL model given one toy table with three different rules for the labels: its weights are identical after each table, and its predictions follow the rule of the table"),
     (ML, "Metrics: AUC, MCC and the confusion matrix", "4.10", "the MCC by the formula, by the library and as a correlation coefficient: the same number"),
     (ML, "Calibration", "8.5", "calibration for both enzymes, and isotonic regression by hand with the pool-adjacent-violators algorithm"),
     (ML, "Stacking", "8.2", "a toy in which the truth is known, to show why the blend is penalised"),
@@ -514,7 +514,7 @@ checks must pass before it is written.
 """),
     code(BUILD),
     md("""
-**Where each science is taught.** The notebook assumes no background, so every science that the project uses is taught from its first principles, in the section of the part where it is first needed, with a worked example: a cell that computes the idea on a small case or on the project's own data. The table below is the index. Each row names a science, the sections that teach it (every number is a link to the heading) and what the worked example computes, so that a reader who meets an unfamiliar subject anywhere in the text can look it up here. The build checks that every section named in the table exists and holds a code cell; the description of the example is written by hand. Two sciences have no computed example because the notebook does not run them: the in-context tabular models, which need an environment of their own, and molecular dynamics, whose settings and gate are read from the log of the job. The table says so in those rows.
+**Where each science is taught.** The notebook assumes no background, so every science that the project uses is taught from its first principles, in the section of the part where it is first needed, with a worked example: a cell that computes the idea on a small case or on the project's own data. The table below is the index. Each row names a science, the sections that teach it (every number is a link to the heading) and what the worked example computes, so that a reader who meets an unfamiliar subject anywhere in the text can look it up here. The build checks that every section named in the table exists and holds a code cell; the description of the example is written by hand.
 """),
     code(SCIENCES),
     md("""

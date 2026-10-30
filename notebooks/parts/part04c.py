@@ -246,6 +246,51 @@ brier_skill, ece_value, slope_value = 1 - brier / brier_reference, project["ece"
 calibration_verdict = "meet" if (ece_value <= 0.05 and 0.8 <= slope_value <= 1.2) else "do not meet"
 '''
 
+INCONTEXT_TOY = '''
+# In-context learning with the real model. TabICL (the pretrained table-reading network of this section) is given a table of 80 labelled points in two dimensions three times, with three different rules for the labels, and is asked
+# for the probability of "positive" at four query points that lie away from every boundary. Nothing is trained: fit() only stores and preprocesses the table. The weights of the network are hashed after each of the three fits, and the
+# predictions are compared with the rule of the table in use. The model runs in the environment .venv-ml, as the nested evaluation runs it.
+import json
+import os
+import subprocess
+import textwrap
+
+ic_source = textwrap.dedent("""
+    import hashlib
+    import json
+    import numpy as np
+    from tabicl import TabICLClassifier
+    rng = np.random.default_rng(3)
+    context = rng.uniform(-1, 1, size=(80, 2))
+    queries = np.array([[0.8, 0.8], [0.8, -0.8], [-0.8, 0.8], [-0.8, -0.8]])
+    rules = {"A: positive when x1 > 0": context[:, 0] > 0, "B: positive when x2 > 0": context[:, 1] > 0, "C: positive when x1 < 0": context[:, 0] < 0}
+    model = TabICLClassifier(device="cpu", n_estimators=2, random_state=0)
+    def weights_hash():
+        digest = hashlib.sha256()
+        for name, tensor in sorted(model.model_.state_dict().items()):
+            digest.update(name.encode() + tensor.detach().cpu().numpy().tobytes())
+        return digest.hexdigest()[:16]
+    out = {"queries": queries.tolist(), "n_context": len(context), "rules": {}, "weights_hash": []}
+    for name, labels in rules.items():
+        model.fit(context, labels.astype(int))
+        out["weights_hash"].append(weights_hash())
+        out["rules"][name] = model.predict_proba(queries)[:, 1].tolist()
+    print(json.dumps(out))
+""")
+ic_run = subprocess.run([str(ROOT / ".venv-ml/bin/python"), "-c", ic_source], capture_output=True, text=True, timeout=900, env={**os.environ, "HF_HUB_OFFLINE": "1"})
+assert ic_run.returncode == 0, ic_run.stderr[-400:]
+ic = json.loads(ic_run.stdout.strip().splitlines()[-1])
+ic_queries = np.array(ic["queries"])
+ic_expected = {"A: positive when x1 > 0": ic_queries[:, 0] > 0, "B: positive when x2 > 0": ic_queries[:, 1] > 0, "C: positive when x1 < 0": ic_queries[:, 0] < 0}
+ic_table = pd.DataFrame({"query (x1, x2)": [f"({a:+.1f}, {b:+.1f})" for a, b in ic["queries"]], **{f"P(positive), table {name}": p for name, p in ic["rules"].items()}})
+show_table(ic_table, floatfmt=".3f")
+ic_hash = ic["weights_hash"][0]
+ic_total = sum(len(p) for p in ic["rules"].values())
+ic_followed = sum(int(((np.array(p) > 0.5) == ic_expected[name]).sum()) for name, p in ic["rules"].items())
+assert len(set(ic["weights_hash"])) == 1  # the parameters of the network are identical after the three tables
+assert ic_followed == ic_total  # and every predicted class follows the rule of the table in use
+'''
+
 CELLS = [
     md("""
 ## 4.8 Message-passing networks on molecular graphs, and networks on text
@@ -301,10 +346,14 @@ both files, which needs no label), and, in the form called *truncated SVD* (the 
 
 **Tabular in-context learning.** The models of this part are *fitted* to each training set: their parameters are adjusted by an optimisation. **TabICL** (Qu and co-workers, 2025; related to TabPFN, Hollmann and co-workers) is different: it is a **foundation model**, a model pretrained once on a very large collection of data and a general task and then reused for many specific tasks, here a transformer pretrained on millions of artificial tables generated from random processes, to read a table of labelled rows together with unlabelled rows to be predicted and to output the missing labels in one forward pass. The labelled rows are the **context**, in the way the text before a question is the context
 for a language model, and no weight changes when a new table arrives: "training" is only the reading of the context, which is why the method is called *in-context learning*. Since the networks are pretrained on a wide range of tables, they are strong on small tables, such as the 2300 labelled compounds of one task. The project's candidate `tabicl_svd` (`cypmode/challenge/nested_runners_torch.py`) gives it 128 components of the truncated SVD of the logarithm of the Morgan counts together with the quantile-normalised descriptors, with two
-ensemble members (an **ensemble** is a set of models of one kind, trained from different random starts, whose predictions are averaged) on the CPU. It runs in the separate torch environment, so the cell does not execute it; its result is one of the candidates of the nested evaluation (section 8.1).
+ensemble members (an **ensemble** is a set of models of one kind, trained from different random starts, whose predictions are averaged) on the CPU. It runs in the separate torch environment, so the notebook does not run the candidate itself, only the toy of the cell below; its result is one of the candidates of the nested evaluation (section 8.1).
 
 """),
     figure("ml_pca"),
+    code(INCONTEXT_TOY),
+    md("""
+**In-context learning, run for real.** The cell gives TabICL a table of {{=ic['n_context']}} points in two dimensions whose labels follow a rule, three times, with a different rule each time, and asks for the probability of "positive" at four query points that lie away from every boundary. Nothing is trained: the call that hands over the table only stores and preprocesses it. The weights of the network are the same after all three tables (the cell hashes every parameter and gets {{=ic_hash}} each time), and yet the predictions follow whichever rule the table shows: {{=ic_followed}} of the {{=ic_total}} predicted classes agree with the rule of the table in use. A reader who knows how a model is fitted could take the result for a model that was fitted three times; it was not fitted at all, and everything it appears to have learned was in the table that it was shown. The task is not chemistry: it is the simplest case in which the answer is known, run with the model that the candidate `tabicl_svd` uses, on a toy and not on the compounds of the project.
+"""),
     md("""
 ## 4.10 Metrics: how a model is judged
 

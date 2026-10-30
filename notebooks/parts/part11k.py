@@ -47,6 +47,85 @@ dyn_frames_scored = ld.STEPS // ld.FRAME_EVERY - ld.EQUILIBRATION_FRAMES
 print(f"{ld.STEPS} steps of {dyn_step_fs:.0f} fs = {dyn_time_ps:.0f} ps at {ld.TEMPERATURE_K:.0f} K, a frame every {dyn_frame_ps:.0f} ps, {dyn_frames_scored} frames scored")
 '''
 
+LANGEVIN_TOY = '''
+# Langevin dynamics on the simplest system that has an exact answer: one particle of carbon mass in a harmonic well, V = k x^2 / 2 in each of three directions, at the settings of the experiment (300 K, friction 1 per ps,
+# time step 2 fs). Statistical mechanics says that at equilibrium every direction has the position variance lv_kT / k and every velocity component the variance lv_kT / m (so a mean kinetic energy of lv_kT / 2 per direction).
+# The integrator is written out ("middle" scheme: half kick, half drift, friction and noise, half drift, half kick, as OpenMM's LangevinMiddleIntegrator does) and the same system is run with OpenMM itself.
+import json
+import subprocess
+import textwrap
+from pathlib import Path
+
+from cypmode.validation import ligand_dynamics as ld
+
+LV_KB = 0.0019872041  # kcal/mol/K
+spring_k, atom_mass, n_particles = 2.0, 12.011, 20000  # kcal/mol/A^2 (the tether of the relaxation, 11.10), amu, independent particles
+lv_kT = LV_KB * ld.TEMPERATURE_K
+# units: kcal/mol, angstrom, amu; the time unit that makes the equations plain is sqrt(amu A^2 / (kcal/mol)) = 0.04888 ps (the AKMA unit of time, 48.888 fs)
+to_ps = 0.04888821
+lv_dt, lv_gamma = ld.TIMESTEP_PS / to_ps, ld.FRICTION_PER_PS * to_ps
+
+def langevin_middle(n_steps, lv_dt, lv_gamma, seed=7):
+    rng = np.random.default_rng(seed)
+    x, v = np.zeros((n_particles, 3)), np.zeros((n_particles, 3))  # a cold start: at rest in the middle of the well
+    c1 = np.exp(-lv_gamma * lv_dt)
+    c2 = np.sqrt((1 - c1**2) * lv_kT / atom_mass)
+    force = -spring_k * x
+    for _ in range(n_steps):
+        v += 0.5 * lv_dt * force / atom_mass
+        x += 0.5 * lv_dt * v
+        v = c1 * v + c2 * rng.standard_normal(v.shape)
+        x += 0.5 * lv_dt * v
+        force = -spring_k * x
+        v += 0.5 * lv_dt * force / atom_mass
+    return x, v
+
+n_steps_run = 10000  # 20 ps, the length of the experiment
+lv_x, lv_v = langevin_middle(n_steps_run, lv_dt, lv_gamma)
+var_x, var_v = float(lv_x.var()), float(lv_v.var())
+n_samples = lv_x.size
+rel_error = float(np.sqrt(2 / n_samples))  # the relative standard error of a variance estimated from n_samples normal values
+expected_x, expected_v = lv_kT / spring_k, lv_kT / atom_mass
+mean_kinetic = float(0.5 * atom_mass * (lv_v**2).sum(axis=1).mean())
+
+openmm_source = textwrap.dedent(f"""
+    import json
+    import numpy as np
+    import openmm as mm
+    from openmm import unit
+    n, k, T, lv_gamma, lv_dt, steps = {n_particles}, {spring_k}, {ld.TEMPERATURE_K}, {ld.FRICTION_PER_PS}, {ld.TIMESTEP_PS}, {n_steps_run}
+    system = mm.System()
+    force = mm.CustomExternalForce("0.5 * k * (x^2 + y^2 + z^2)")
+    force.addGlobalParameter("k", k * 4.184 * 100)  # kcal/mol/A^2 in kJ/mol/nm^2
+    for i in range(n):
+        system.addParticle({atom_mass})
+        force.addParticle(i, [])
+    system.addForce(force)
+    integrator = mm.LangevinMiddleIntegrator(T * unit.kelvin, lv_gamma / unit.picosecond, lv_dt * unit.picoseconds)
+    integrator.setRandomNumberSeed({ld.SEED})
+    context = mm.Context(system, integrator, mm.Platform.getPlatformByName("CPU"))
+    context.setPositions(np.zeros((n, 3)))
+    context.setVelocities(np.zeros((n, 3)))
+    integrator.step(steps)
+    state = context.getState(getPositions=True, getVelocities=True)
+    x = state.getPositions(asNumpy=True).value_in_unit(unit.angstrom)
+    v = state.getVelocities(asNumpy=True).value_in_unit(unit.angstrom / unit.picosecond)
+    print(json.dumps({{"var_x": float(x.var()), "var_v": float(v.var())}}))
+""")
+openmm_python = Path.home() / "miniforge3/envs/openmm/bin/python"
+lv_done = subprocess.run([str(openmm_python), "-c", openmm_source], capture_output=True, text=True, timeout=600)
+assert lv_done.returncode == 0, lv_done.stderr[-400:]
+openmm_result = json.loads(lv_done.stdout.strip().splitlines()[-1])
+# OpenMM reports velocities in A/ps; the toy works in A per internal time unit
+var_v_openmm = openmm_result["var_v"] * to_ps**2
+lv_rows = [{"quantity": "position variance per direction (A^2)", "lv_kT / k": expected_x, "this integrator": var_x, "OpenMM": openmm_result["var_x"]},
+        {"quantity": "velocity variance per direction (A^2 per unit time^2)", "lv_kT / m": expected_v, "this integrator": var_v, "OpenMM": var_v_openmm}]
+dynamics_table = pd.DataFrame(lv_rows)
+show_table(dynamics_table, floatfmt=".5f")
+lv_checks = {"toy position": var_x / expected_x - 1, "toy velocity": var_v / expected_v - 1, "OpenMM position": openmm_result["var_x"] / expected_x - 1, "OpenMM velocity": var_v_openmm / expected_v - 1}
+assert all(abs(e) < 4 * rel_error for e in lv_checks.values()), lv_checks  # all four agree with the exact value within four standard errors
+'''
+
 CELLS = [
     md("""
 ## 11.13 Ligand dynamics in the frozen pocket: a dynophore that the project can afford
@@ -57,7 +136,11 @@ CELLS = [
 """),
     code(DYNAMICS_CONSTANTS),
     md("""
-**Molecular dynamics.** The atoms of a molecule are points with masses, and a **force field** (the same kind of energy function as in 11.10) gives the force on each atom for any arrangement. **Molecular dynamics** moves the atoms by Newton's second law in very small steps: at each step the forces are computed and the positions and velocities are updated. Here a step is {{=dyn_step_fs:.0f}} femtoseconds (a femtosecond is a millionth of a billionth of a second); {{=ld.STEPS:,}} steps make {{=dyn_time_ps:.0f}} picoseconds (ps). To keep the molecule at a temperature, a **Langevin thermostat** adds a friction and random kicks to the atoms, which together make the average kinetic energy that of {{=ld.TEMPERATURE_K:.0f}} K. The result is a **trajectory**, a list of arrangements (frames), here one every {{=dyn_frame_ps:.0f}} ps.
+**Molecular dynamics.** The atoms of a molecule are points with masses, and a **force field** (the same kind of energy function as in 11.10) gives the force on each atom for any arrangement. **Molecular dynamics** moves the atoms by Newton's second law in very small steps: at each step the forces are computed and the positions and velocities are updated. Here a step is {{=dyn_step_fs:.0f}} femtoseconds (a femtosecond is a millionth of a billionth of a second); {{=ld.STEPS:,}} steps make {{=dyn_time_ps:.0f}} picoseconds (ps). To keep the molecule at a temperature, a **Langevin thermostat** adds a friction and random kicks to the atoms, which together make the average kinetic energy that of {{=ld.TEMPERATURE_K:.0f}} K. The result is a **trajectory**, a list of arrangements (frames), here one every {{=dyn_frame_ps:.0f}} ps. The next cell runs the thermostat on a system whose exact answer is known.
+"""),
+    code(LANGEVIN_TOY),
+    md("""
+**The thermostat, on a system with an exact answer.** The cell moves particles of carbon mass in a harmonic well, $V = k x^2/2$ in each of three directions, with the spring constant $k$ of the tether of the relaxation (11.10), at the settings of the experiment: {{=ld.TEMPERATURE_K:.0f}} K, a friction of {{=ld.FRICTION_PER_PS:.0f}} per ps and a step of {{=dyn_step_fs:.0f}} fs. Statistical mechanics gives the exact answer. At equilibrium the position along each direction has the variance $k_B T/k$, and each component of the velocity the variance $k_B T/m$, where $k_B$ is the Boltzmann constant, $T$ the temperature and $m$ the mass; that is the statement that every direction holds a kinetic energy of $k_B T/2$ on average. The integrator is written out in the cell: half a kick from the force, half a drift of the position, the friction and the random kick, half a drift, half a kick. That is the "middle" scheme of OpenMM's `LangevinMiddleIntegrator`, which the experiment uses. {{=n_particles:,}} independent particles start at rest in the middle of the well; after {{=n_steps_run:,}} steps (20 ps, the length of the experiment) the position variance is {{=var_x:.4f}} Å² against the exact {{=expected_x:.4f}}, a difference of {{=lv_checks['toy position']:+.1%}}, and the velocity variance differs from the exact value by {{=lv_checks['toy velocity']:+.1%}}. OpenMM's own integrator on the same system differs by {{=lv_checks['OpenMM position']:+.1%}} and {{=lv_checks['OpenMM velocity']:+.1%}}. The statistical error of a variance estimated from {{=n_samples:,}} values is {{=rel_error:.1%}}, so all four numbers agree with the exact value (the cell requires it, within four standard errors). The mean kinetic energy is {{=mean_kinetic:.3f}} kcal/mol, against {{=1.5 * lv_kT:.3f}} for three directions. This is what "the thermostat keeps the temperature at {{=ld.TEMPERATURE_K:.0f}} K" means, and it can be checked because the correct distribution is known.
 
 **The dynophore.** A **pharmacophore** (9.14, 11.11) is the set of chemical features of a ligand that matter for binding, with their positions. A **dynophore** is a pharmacophore that is followed over a molecular dynamics simulation, so that each feature carries the share of the time in which it is present and where it sits. A published account describes the approach as one that "supplements the static structure-based-pharmacophore information with a dynamic component" (Janežič and colleagues, *International Journal of Molecular Sciences* 2021, doi 10.3390/ijms222413474, Appendix C). In that work the simulation is of the whole complex of protein and ligand in water.
 
