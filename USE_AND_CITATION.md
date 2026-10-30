@@ -21,8 +21,8 @@ A use of the code in a product or a service that cannot be released under these 
 
 ## How to cite
 
-Cite the archived release by its DOI, 10.5281/zenodo.23816451 (release 0.2.0 on Zenodo). The version of the record that is made after the challenge has closed holds the full set of results, figures
-and the notebook; it has a DOI of its own, which `CITATION.cff` lists when it exists. A ready entry:
+Cite the archive by the DOI that stands for all its versions, 10.5281/zenodo.23816450, or a release by its own DOI (release 0.2.0: 10.5281/zenodo.23816451). The version of the record that is made after the challenge has closed holds the full set of results, figures
+and the notebook; it has a DOI of its own, which `CITATION.cff` lists when it exists. A ready entry for release 0.2.0:
 
 ```bibtex
 @software{talaat_cypmode,

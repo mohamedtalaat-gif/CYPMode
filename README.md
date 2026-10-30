@@ -634,7 +634,7 @@ what the licence asks are in [USE_AND_CITATION.md](USE_AND_CITATION.md). A ready
 }
 ```
 
-The DOI of the archived release 0.2.0 is [10.5281/zenodo.23816451](https://doi.org/10.5281/zenodo.23816451); it is the identifier to cite.
+The DOI that stands for every version of the archive on Zenodo is [10.5281/zenodo.23816450](https://doi.org/10.5281/zenodo.23816450); release 0.2.0 has its own DOI, [10.5281/zenodo.23816451](https://doi.org/10.5281/zenodo.23816451), which the entry above uses.
 
 ## Contributing
 
