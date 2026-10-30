@@ -1,13 +1,12 @@
-# CYPMode
-
 <!-- public:card begin -->
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/card/cypmode_card-dark.png">
     <img src="docs/card/cypmode_card-light.png" alt="CYPMode: the CYP3A4 enzyme with its heme and fluconazole, six public crystal complexes with their compounds and the headline numbers" width="100%">
   </picture>
-</p>
-<p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/">Open the interactive card</a>: rotate the enzyme, load each of the six public crystal complexes and read the iron&ndash;nitrogen distance measured on the deposited coordinates. GitHub does not run scripts in a README, so the interactive version is a page of its own. The predicted structures of the project are published after the challenge closes.</p>
+  
+<p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/">Open the interactive card</a>: rotate the enzyme, load each of the six public crystal complexes and read the iron&ndash;nitrogen distance measured on the deposited coordinates. GitHub does not run scripts in a README, so the interactive version is a page of its own. The predicted structures of the project are published after the challenge closes.
+  
 <p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/"><img src="docs/card/cypmode_interactive_preview.gif" alt="The interactive card: the enzyme turns once, then a second crystal complex is loaded and the view moves to its ligand, with the iron-nitrogen distance on screen" width="70%"></a></p>
 <!-- public:card end -->
 
