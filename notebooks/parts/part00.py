@@ -178,6 +178,108 @@ BUILD = '''
 print(f"{F.modules} modules in cypmode/, {F.scripts} files in scripts/, {F.jobs} queue jobs, {F.test_files} test files with {F.test_functions} test functions")
 '''
 
+SCIENCES = '''
+# Where each science of the project is taught: the sections, and the worked example (a cell that computes the idea on a small case or on the project's own data). The table is written by hand; the build checks that
+# every section it names exists and holds a code cell, and links each number to the heading exactly as the table of contents does.
+import re
+
+from notebooks.notebook_builder import headings, section_of_cells, slug
+from notebooks.notebook_cells import ALL_CELLS
+
+MATH, BIO, CHEM, CHEMINF, COMP, STRUCT, ML, ENG = (
+    "Mathematics and statistics", "Biology and pharmacology", "Chemistry", "Cheminformatics", "Computational and quantum chemistry", "Structural biology and bioinformatics", "Machine learning", "Engineering of the project")
+taught = [
+    (MATH, "Rates of change: elimination, binding and inactivation", "1.1 1.2 1.6", "one dose with first-order elimination (1.1); the schemes E + S <-> ES -> E + P (1.2) and E + I <-> EI -> E-I* (1.6) integrated as differential equations"),
+    (MATH, "Probability, likelihood and the log-loss", "4.1", "the log-loss of one compound and its derivative p - y, checked against a finite difference"),
+    (MATH, "Standard deviation, confidence limits and measurement noise", "2.5 1.7", "what the confidence limits and the standard deviation of a pIC50 are (2.5); a simulated dose-response experiment with 6 percent noise (1.7)"),
+    (MATH, "Rank test and permutation test", "5.4 6.8", "the rank test written out on a tiny example and on the real groups, and a permutation test that shuffles the group labels (5.4); a label-permutation control on data with nothing to find (6.8)"),
+    (MATH, "The corrected resampled t-test", "6.5", "two classifiers that are equal in truth, compared by cross-validation on many simulated data sets, and why the naive test fails"),
+    (MATH, "Multiple comparisons: Holm's adjustment", "6.5 9.11", "a family of comparisons from the project's own logs (6.5); the ledger of the gates with the correction for the number of attempts (9.11)"),
+    (MATH, "Logistic regression and its penalties", "4.1 8.2", "the weights fitted by gradient descent and compared with the library (4.1); a toy in which the truth is known, to show why the blend is penalised (8.2)"),
+    (MATH, "Optimisation: gradient descent", "4.1 11.10", "the loop that fits the logistic regression (4.1); the same rule lowering an energy with four step sizes, against L-BFGS (11.10)"),
+    (MATH, "Linear algebra: eigenvectors and principal components", "4.9", "principal component analysis by hand on the 217 descriptors of all 6895 compounds, compared with scikit-learn"),
+    (MATH, "Linear algebra: the Kabsch fit", "11.4", "the rotation that best superposes two sets of points, on a small example checked by hand"),
+    (BIO, "The liver and the elimination of a drug", "1.1", "one dose with first-order elimination, C(t) = C0 exp(-kt)"),
+    (BIO, "Enzymes and the Michaelis-Menten equation", "1.2", "E + S <-> ES -> E + P integrated as differential equations and compared with the Michaelis-Menten rate"),
+    (BIO, "Cytochrome P450, the heme and the catalytic cycle", "1.3", "the conserved heme-binding signature F..G...C.G found in the sequence of CYP3A4 by a pattern, with the cysteine that binds the iron; the cycle drawn in a figure"),
+    (BIO, "Drug-drug interactions", "1.4", "the increase in exposure (the AUC ratio) that a competitive inhibitor causes"),
+    (BIO, "Reversible inhibition", "1.5", "how the IC50 of a competitive inhibitor depends on the substrate concentration, IC50 = Ki (1 + [S] / KM)"),
+    (BIO, "Time-dependent inhibition", "1.6", "E + I <-> EI -> E-I* integrated as differential equations"),
+    (BIO, "Dose-response, the Hill equation, the IC50 and the pIC50", "1.7", "a simulated dose-response experiment, ten concentrations in three-fold steps, with its fit"),
+    (BIO, "The two assay arms and the potency shift", "1.8 2.3", "the shift that a time-dependent inhibitor shows after a pre-incubation (1.8); the label rule and its single threshold (2.3)"),
+    (CHEM, "Organic structure: atoms, bonds, aromaticity and stereochemistry", "2.1", "an example compound read as a graph; aromaticity by counting electrons; one molecule written by many random walks; the two mirror forms of a carbon with four different neighbours"),
+    (CHEM, "Functional groups and structural alerts", "1.10 9.15", "the structural alerts of the project against the real labels (1.10); the functional groups of the table against the base rate (9.15)"),
+    (CHEM, "Basic amines, pKa and protonation", "5.2 9.10", "the trialkylamine pattern of the project (5.2); the share of charged molecules from the pKa, checked against Dimorphite-DL (9.10)"),
+    (CHEM, "Nitrogen-iron coordination, Type I and Type II binding", "1.9 5.1 5.5", "the iron-to-ligand distances in crystal structures of CYP3A4 (1.9); the six patterns of the motif screen (5.1); the iron-nitrogen distance computed by hand and by the library (5.5)"),
+    (CHEM, "Reactive metabolites and mechanism-based inactivation", "1.6 1.10", "the kinetic scheme of inactivation (1.6); the structural alerts against the real labels (1.10)"),
+    (CHEMINF, "SMILES and molecular graphs", "2.1", "one molecule written by 2000 random walks over its graph"),
+    (CHEMINF, "Standardising structures", "2.9", "what the standardised parent does to a salt, on three real compounds"),
+    (CHEMINF, "Fingerprints and the Morgan algorithm", "3.1", "the Morgan algorithm written out on a toy that uses nothing but the graph"),
+    (CHEMINF, "Tanimoto similarity", "3.2", "the Tanimoto similarity by hand and by RDKit"),
+    (CHEMINF, "Descriptors", "3.3", "some of the 217 RDKit descriptors, computed for the example compound"),
+    (CHEMINF, "Pharmacophore fingerprints", "3.5", "the example compound as the project's pharmacophore fingerprint sees it"),
+    (CHEMINF, "Scaffolds, clusters and similarity-based validation", "3.6 6.4", "Bemis-Murcko scaffolds and Taylor-Butina clusters (3.6); how close a validation compound is to the training compounds, against how close a test compound is (6.4)"),
+    (CHEMINF, "Matched molecular pairs", "9.2", "two compounds that differ by one cut bond, found with the matched-pair fragmentation of RDKit"),
+    (CHEMINF, "Feature blocks and the feature store", "3.4 3.7", "every block with its real width (3.4); the two promises of the store checked on the real functions (3.7)"),
+    (COMP, "Force fields", "11.10", "the terms of a force field put into numbers on one pair of atoms"),
+    (COMP, "The Lennard-Jones and Coulomb terms", "11.10", "both terms for one pair of atoms: the bottom of the well at 2^(1/6) sigma found by the formula and by a search, and the Coulomb constant computed from the physical constants"),
+    (COMP, "Energy minimisation", "11.10", "gradient descent with four step sizes against L-BFGS, on the Lennard-Jones energy"),
+    (COMP, "The relaxation of a predicted pose", "11.10", "one ligand atom too close to a frozen receptor atom, minimised for several strengths of the tether"),
+    (COMP, "Partial charges", "10.5", "the quantities of the physics block, with the charge of every atom, computed on three small molecules"),
+    (COMP, "The Schrödinger equation and the variational principle", "10.1", "the Schrödinger equation as a matrix eigenvalue problem on a grid; the variational principle on the hydrogen atom"),
+    (COMP, "Hartree-Fock and basis sets", "10.2", "Hartree-Fock written out for the smallest molecules, and H2 at several distances"),
+    (COMP, "Density functional theory", "10.3", "density functional theory against Hartree-Fock on the water molecule"),
+    (COMP, "GFN2-xTB and tight binding", "10.4", "one GFN2-xTB single point on toluene, with the program's own report"),
+    (COMP, "Molecular dynamics", "11.13", "none is run in the notebook: the settings and the gate of the experiment are read from the module and from the log of the job, and the integrator is explained in the text"),
+    (COMP, "Solvent-accessible surface and cavities", "5.6", "the Shrake-Rupley surface written out; cavity detection on a toy in two dimensions"),
+    (STRUCT, "Proteins and the PDB file format", "11.1", "what a predicted complex file holds, read from one of the submitted files"),
+    (STRUCT, "mmCIF files", "5.5", "the first atom of a real file laid against the names of the columns, field by field"),
+    (STRUCT, "Sequence alignments and co-evolution", "11.2", "a toy protein of 12 positions: what 400 related sequences tell about its shape"),
+    (STRUCT, "Co-folding: the pair representation and the triangle update", "11.2", "one triangle update with random weights: relabelling the positions gives the relabelled result"),
+    (STRUCT, "The Pairformer", "11.2", "the order of the operations of a block read from the code of OpenFold3, and attention with a bias from the pairs on six tokens"),
+    (STRUCT, "Diffusion models", "11.2", "a diffusion sampler in two dimensions whose ideal denoiser is known exactly, for several step scales"),
+    (STRUCT, "Boltz-2 and OpenFold3", "11.3 11.9", "the input of a prediction built by the project's own function (11.3); OpenFold3 as it was run for the benchmark (11.9)"),
+    (STRUCT, "Structure templates", "11.7", "how different the pockets of the crystal structures are"),
+    (STRUCT, "Scoring a pose: RMSD, LDDT-PLI and PoseBusters", "11.4", "the three ideas on small examples checked by hand, and the physical-validity checks as the scorer calls them"),
+    (STRUCT, "Pose pools and the choice of a pose", "11.8 11.10", "minimum Bayes risk selection on a toy complex (11.8); the pools of the twenty ligands and the margin rule (11.10)"),
+    (ML, "Supervised learning, bias and variance", "4.1", "a polynomial fit whose error on new points is split into bias, variance and noise on a case where the truth is known"),
+    (ML, "Cross-validation and nested cross-validation", "4.1 6.2 6.3", "folds and held-out data (4.1); what choosing does to a score on pure noise (6.2); the nested plan on a toy of 24 compounds (6.3)"),
+    (ML, "Decision trees", "4.2", "the split search written out for every descriptor and compared with the tree of depth 1 of scikit-learn"),
+    (ML, "Gradient boosting", "4.3", "second-order gradient boosting written out in about forty lines"),
+    (ML, "Random forests", "4.4", "the variance of an average of correlated estimates, simulated"),
+    (ML, "Nearest neighbours and support vector machines", "4.5", "the Tanimoto kernel on the 2334 compounds and the two models built on it"),
+    (ML, "Neural networks and backpropagation", "4.7", "a network with one hidden layer written out with its gradient"),
+    (ML, "Message passing on graphs", "4.8", "a directed message-passing network, the form that Chemprop uses, with random weights"),
+    (ML, "Attention", "4.8 11.2", "self-attention written out on the SMILES of the example compound (4.8); attention with a bias from the pairs on six tokens (11.2)"),
+    (ML, "Embeddings and pretrained models", "7.9 9.4", "the ChemBERTa embedding of every labelled compound (7.9); the frozen CheMeleon block (9.4)"),
+    (ML, "In-context tabular models", "4.9", "none is run in the notebook: the model needs a separate environment, so the section describes it and the nested evaluation uses it as a candidate"),
+    (ML, "Metrics: AUC, MCC and the confusion matrix", "4.10", "the MCC by the formula, by the library and as a correlation coefficient: the same number"),
+    (ML, "Calibration", "8.5", "calibration for both enzymes, and isotonic regression by hand with the pool-adjacent-violators algorithm"),
+    (ML, "Stacking", "8.2", "a toy in which the truth is known, to show why the blend is penalised"),
+    (ML, "Thresholds and calls", "7.5 8.4", "four ways of choosing the threshold on the same probabilities (7.5); the smoothing of the threshold (8.4)"),
+    (ENG, "Reproducibility: seeds, threads and solvers", "12.1", "why the same numbers added in a different order give a different total"),
+    (ENG, "The nested validation harness", "6.3", "the nested plan on a toy of 24 compounds, and the real plan checked by code"),
+    (ENG, "The feature store and the caches", "3.7", "the two promises of the feature store checked on the real functions"),
+    (ENG, "Tests and continuous integration", "12.3", "the test suite counted from its files, and one small test file run in a process of its own"),
+    (ENG, "The job queue", "12.4", "the helpers of queue/lib.sh run for real in child processes, and the log of the runner read back"),
+    (ENG, "The audit", "12.2", "the audit report read as it stands: the counts of its summary and the checks that did not pass"),
+    (ENG, "The generated documents", "12.5", "the two generated reports and the generated blocks of the other documents"),
+]
+titles = {}
+for level, text_of_heading, _ in headings(ALL_CELLS):
+    found = re.match(r"(\\d+\\.\\d+) ", text_of_heading)
+    if level == 2 and found:
+        titles[found.group(1)] = text_of_heading
+has_code = {label for label, cell in zip(section_of_cells(ALL_CELLS), ALL_CELLS) if cell["cell_type"] == "code"}
+named = [s for _, _, sections, _ in taught for s in sections.split()]
+assert all(s in titles for s in named), [s for s in named if s not in titles]  # every section named exists
+assert all(s in has_code for s in named), [s for s in named if s not in has_code]  # and holds a code cell
+science_table = pd.DataFrame([{"Field": field, "Science": science, "Taught in": ", ".join(f"[{s}](#{slug(titles[s])})" for s in sections.split()), "Worked example": example} for field, science, sections, example in taught])
+n_sciences, n_fields, n_sections_named = len(taught), len({row[0] for row in taught}), len(set(named))
+print(f"{n_sciences} sciences in {n_fields} fields, taught in {n_sections_named} different sections")
+show_table(science_table)
+'''
+
 CELLS = [
     md("""
 # Part 0: Orientation
@@ -411,6 +513,10 @@ checks must pass before it is written.
    files, at build time.
 """),
     code(BUILD),
+    md("""
+**Where each science is taught.** The notebook assumes no background, so every science that the project uses is taught from its first principles, in the section of the part where it is first needed, with a worked example: a cell that computes the idea on a small case or on the project's own data. The table below is the index. Each row names a science, the sections that teach it (every number is a link to the heading) and what the worked example computes, so that a reader who meets an unfamiliar subject anywhere in the text can look it up here. The build checks that every section named in the table exists and holds a code cell; the description of the example is written by hand. Two sciences have no computed example because the notebook does not run them: the in-context tabular models, which need an environment of their own, and molecular dynamics, whose settings and gate are read from the log of the job. The table says so in those rows.
+"""),
+    code(SCIENCES),
     md("""
 The notebook is rebuilt whenever results, models or tools change, and a last time when everything has finished running, so that the text, the figures and the files of the
 submission describe the same state of the work. To rebuild it, run the following from the repository root, with the environment of section A.1 active.
