@@ -628,12 +628,13 @@ what the licence asks are in [USE_AND_CITATION.md](USE_AND_CITATION.md). A ready
   title   = {CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge},
   year    = {2026},
   version = {0.2.0},
+  doi     = {10.5281/zenodo.23816451},
   url     = {https://github.com/mohamedtalaat-gif/CYPMode},
   license = {AGPL-3.0-or-later}
 }
 ```
 
-The DOI of the archived release, when `CITATION.cff` lists one, is the identifier to cite.
+The DOI of the archived release 0.2.0 is [10.5281/zenodo.23816451](https://doi.org/10.5281/zenodo.23816451); it is the identifier to cite.
 
 ## Contributing
 

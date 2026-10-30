@@ -21,8 +21,8 @@ A use of the code in a product or a service that cannot be released under these 
 
 ## How to cite
 
-Cite the archived release, with its DOI once `CITATION.cff` lists one (the DOI of the software record on Zenodo; the version of the record that was made after the challenge closed holds the full set of results, figures
-and the notebook). Until a DOI is listed, cite the repository and the commit that you used. A ready entry:
+Cite the archived release by its DOI, 10.5281/zenodo.23816451 (release 0.2.0 on Zenodo). The version of the record that is made after the challenge has closed holds the full set of results, figures
+and the notebook; it has a DOI of its own, which `CITATION.cff` lists when it exists. A ready entry:
 
 ```bibtex
 @software{talaat_cypmode,
@@ -30,8 +30,8 @@ and the notebook). Until a DOI is listed, cite the repository and the commit tha
   title   = {CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge},
   year    = {2026},
   version = {0.2.0},
-  url     = {https://github.com/mohamedtalaat-gif/CYPMode},
-  note    = {Cite the DOI listed in CITATION.cff when there is one}
+  doi     = {10.5281/zenodo.23816451},
+  url     = {https://github.com/mohamedtalaat-gif/CYPMode}
 }
 ```
 
