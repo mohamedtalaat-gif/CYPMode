@@ -459,7 +459,7 @@
   }
  },
  "readme_card": {
-  "built_utc": "2026-10-29 22:29:42",
+  "built_utc": "2026-10-30 15:05:46",
   "extra": {
    "html_sha256": {
     "dark": "1ab1a5a48818c45247357bed213ab9096ba61a212d15585f532b1863d9da2125",
@@ -469,8 +469,10 @@
   },
   "fingerprint": "a1b16c9294decc1e40081b95c08e1bd4a0a94c2bd83e19ffdaa1e33765f26445",
   "outputs": {
+   "docs/card/cypmode_card-dark.gif": "8997c2e9239edb1b6ca36f5a9ed8abfe9d4316fa1248ba58da8e1fce143b0754",
    "docs/card/cypmode_card-dark.png": "75349cf5d181a36b8834dec5b04b560ba5d36b9d008168f34cec273b21e59c83",
-   "docs/card/cypmode_card-light.png": "2ad1cd814e126bd0e816215622ed17bec4f7a59443fab3800902e545dd8c0521"
+   "docs/card/cypmode_card-light.gif": "4ea318b6a26f85509be857efd2ef0cb29a58d6527b8794904da2a4e167053ded",
+   "docs/card/cypmode_card-light.png": "4abd49e4e10d825c1cee797a32548cca61048a7c56752174ef59e9859a5c2839"
   }
  }
 }
