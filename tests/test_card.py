@@ -40,8 +40,8 @@ def test_the_readme_starts_with_the_card_in_both_colour_schemes():
     lines = Path("README.md").read_text().splitlines()
     assert lines[0] == "# CYPMode"
     head = "\n".join(lines[:10])
-    assert "docs/card/cypmode_card-dark.png" in head and "docs/card/cypmode_card-light.png" in head
-    assert Path("docs/card/cypmode_card-dark.png").exists() and Path("docs/card/cypmode_card-light.png").exists()
+    assert "docs/card/cypmode_card-dark.gif" in head and "docs/card/cypmode_card-light.gif" in head  # the card of the README turns
+    assert all(Path(f"docs/card/cypmode_card-{theme}.{kind}").exists() for theme in ("dark", "light") for kind in ("png", "gif"))
 
 
 def test_the_circled_nitrogen_is_the_one_nearest_the_iron_in_the_submitted_pose():
@@ -62,15 +62,43 @@ def test_the_readme_links_the_film_through_its_poster_and_the_small_copy():
     assert "docs/video/cypmode_overview.mp4" not in text  # the 1080p original is over GitHub's 100 MB limit and is not linked
 
 
-def test_the_preview_loop_is_assembled_from_frames_with_the_chosen_width_and_loops_forever(tmp_path):
-    import sys
-
+def test_the_turning_card_is_assembled_from_frames_that_differ_only_in_the_panel_of_the_enzyme_and_loops_forever(tmp_path):
     from PIL import Image
 
-    sys.path.insert(0, "docs/card")
-    import build_preview
+    card = load()
+    frames = []
+    for i in range(8):
+        frame = Image.new("RGB", card.CARD, (20, 30, 60))
+        frame.paste((30 * i, 200, 90), card.HERO_BOX)  # the panel of the enzyme changes from frame to frame, the rest of the card does not
+        frames.append(frame)
+    path = card.assemble_turn(frames, tmp_path / "turn.gif")
+    gif = Image.open(path)
+    assert gif.n_frames == 8 and gif.size == (card.GIF_WIDTH, round(card.CARD[1] * card.GIF_WIDTH / card.CARD[0])) and gif.info["loop"] == 0 and gif.info["duration"] == card.GIF_FRAME_MS
+    first = gif.convert("RGB")
+    gif.seek(5)
+    later = gif.convert("RGB")
+    x0, y0, x1, y1 = (round(v * card.GIF_WIDTH / card.CARD[0]) for v in card.HERO_BOX)
+    centre = ((x0 + x1) // 2, (y0 + y1) // 2)
+    assert first.getpixel((10, 10)) == later.getpixel((10, 10)) and first.getpixel(centre) != later.getpixel(centre)
 
-    frames = [Image.new("RGB", (800, 600), (30 * i, 40, 90)) for i in range(5)]
-    path = build_preview.assemble(frames, tmp_path / "loop.gif", width=200, step_ms=70)
-    loop = Image.open(path)
-    assert loop.n_frames == 5 and loop.size == (200, 150) and loop.info["loop"] == 0 and loop.info["duration"] == 70
+    class Browser:  # a headless browser that has gone once, as it does about 31 seconds after it starts: the picture of the card is taken again in the new browser
+        def __init__(self):
+            self.gone, self.opened = True, []
+
+        def retrying(self, action):
+            try:
+                return action()
+            except ConnectionError:
+                self.gone = False
+                return action()
+
+        def open(self, page):
+            self.opened.append(page)
+
+        def call(self, method, **params):
+            if self.gone and method == "Page.captureScreenshot":
+                raise ConnectionError
+            return {"data": "picture"}
+
+    browser = Browser()
+    assert browser.retrying(lambda: card.shot(browser, Path("page.html"), 1, 0, 0)) == "picture" and len(browser.opened) == 2

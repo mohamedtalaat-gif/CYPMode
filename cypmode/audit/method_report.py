@@ -190,6 +190,9 @@ def summary_section() -> str:
         "  number about the hidden labels is recovered, the positive rate of the scored set (limitation L13). No label of any blinded compound and no probing submission is used.",
         "- **Components.** The programs, models and weights that the work uses and their licences are listed in section 14 and in Appendix C of the notebook.",
         f"- **Identifier.** {('DOI ' + ids['doi'] + '.') if 'doi' in ids else 'The archived release has no DOI yet; the citation file lists it when it has one.'} The text to cite is in `USE_AND_CITATION.md`.",
+        "- **What is published after the challenge closes.** This release is complete: the code, the method, the reports and the checks are all in it, and the code regenerates every submitted file. The only files that are not in it are the ones that show a",
+        "  result for a blinded compound: the submitted files, the predictions and the structures of the blinded compounds, and the figures, the film and the complete edition of the notebook that display them; the public edition of the notebook is in it. A full",
+        "  release with those files is published after the challenge has closed (2026-11-03 23:59 UTC). The SHA-256 of each submitted file is in the section *What is submitted*, so that each file can be matched to this report when it is published.",
         "- **Reproduction and checks.** `NEGATIVE_RESULTS.md` (every experiment that failed its gate), `audit/AUDIT_REPORT.md` (generated twice and compared byte for byte), `bash scripts/reproduce_tdi.sh`.",
         "",
     ]
@@ -349,7 +352,13 @@ def map_paragraph() -> str:
         f"**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all {modules} modules with what each does and what it imports, all {jobs} jobs of the queue with what each waits for "
         "and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. "
         "The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` "
-        "and a test fail when a page differs from the code. Two of the diagrams are drawn in the README, and `docs/map/explorer.html` draws all four views as one page that can be explored, with a search box and, for every module and job, what it is connected to and which section of the notebook names it."
+        "and a test fail when a page differs from the code. The README carries a short loop of the interactive map, `docs/map/explorer.html`, which draws all four views as one page that can be explored, with a search box and, for every module and job, what it is connected to and which section of the notebook names it, and it links to the page on the Pages site and to the file."
+
+        "\n\n"
+        "The flow of the data, from the inputs to the submission files:\n\n"
+        f"{project_map.dataflow_diagram(project_map.dataflow_facts())}\n\n"
+        "The packages of the code; an arrow goes from a package to a package whose modules it imports, and its label counts those imports:\n\n"
+        f"{project_map.code_diagram(project_map.code_facts())}"
     )
 
 
@@ -426,7 +435,7 @@ def innovation_section() -> str:
     lines = [
         "## Innovation summary",
         "",
-        "This section lists what the work adds, one claim at a time, with the evidence that stands next to it. Each row is a claim that the logs can check; the cross-validated numbers are estimates on the training data and not scores on the hidden labels (limitations L1, L2 and L13). Where an idea was tried and failed its gate, that is stated with the idea.",
+        "This section lists what the work adds, one claim at a time, with the evidence that stands next to it. Each row is a claim that the logs can check; the cross-validated numbers are estimates on the training data and not scores on the hidden labels (limitations L1, L2 and L13). Where an idea was tried and failed its gate, that is stated with the idea. Each claim ends with the section of the notebook that explains it from first principles and computes its number.",
         "",
         "### Architecture: the label is modelled through its process",
         "",
@@ -481,10 +490,39 @@ def innovation_section() -> str:
         "- The positive rates come from the public boards. The attempt to estimate them without a board is reported above with the verdict of its rule; limitation L13 states what depends on them.",
         "",
     ]
-    return "\n".join(lines)
+    return "\n".join(f"{line}{notebook_pointer(line)}" for line in lines)
 
 
 INNOVATION_COLUMNS = ["claim", "evidence", "source"]
+
+NOTEBOOK_OF_CLAIM = (  # each claim of the innovation summary with the sections of the notebook that explain it and compute its number (the notebook checks that every section exists and holds a code cell)
+    ("The label is a function of two measurements, so the models learn the measurements.", "2.3 2.5"),
+    ("A selection-aware CYP2D6 model.", "9.1"),
+    ("Groups join a stack only through a gate.", "6.7 9.11"),
+    ("A contaminated slice of the labels was found and removed from the CYP3A4 pool.", "2.3"),
+    ("The evaluation reproduces the scored population.", "6.4"),
+    ("One aggregate number is recovered from the public leaderboards.", "2.10"),
+    ("A check of that rate that reads no board.", "2.11"),
+    ("The official structure set was checked for stereochemistry.", "11.12"),
+    ("Reliability by similarity to the training data, with intervals over chemical series.", "8.7"),
+    ("Probabilities calibrated on the inner folds, with the failure reported.", "8.5"),
+    ("A committee of models as an uncertainty signal was tested and did not help.", "7.6"),
+    ("A restraint of the iron-nitrogen bond for Type II ligands.", "11.6"),
+    ("The scorer's own validity call with a margin.", "11.4 11.10"),
+    ("A relaxation under a rule written before it was run.", "11.10"),
+    ("The pharmacophore of a pose read over a short trajectory, tested under a rule fixed before any number.", "11.13"),
+    ("Negative results are results.", "9.10 9.11"),
+    ("Every number in the reports is copied by code from a log and checked by the audit,", "12.2"),
+)
+
+
+def notebook_pointer(line: str) -> str:
+    """The sentence that names the sections of the notebook for a claim of the innovation summary; nothing for a line that is not a claim."""
+    for claim, sections in NOTEBOOK_OF_CLAIM:
+        if line.startswith(f"- **{claim}**"):
+            found = sections.split()
+            return f" Notebook {'section' if len(found) == 1 else 'sections'} {' and '.join(found)}."
+    return ""
 
 
 def innovation_rows() -> list[tuple[str, str, str]]:
@@ -959,6 +997,8 @@ def build_method_report() -> str:
         "",
         "Generated by `cypmode/audit/method_report.py`; every number is copied from a log, a result table or the audit report,",
         "and a value without a source reads `(pending: <job>)`. Nothing in this report is a claim about the hidden test labels.",
+        "",
+        "What the work adds is listed in the section *Innovation summary*, claim by claim; each claim names the section of the notebook that explains it from first principles and computes its number.",
         "",
         summary_section(),
         innovation_section(),

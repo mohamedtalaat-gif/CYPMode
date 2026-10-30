@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--ICON-->
 <title>CYPMode project map</title>
 <style>
 :root { --bg: #ffffff; --fg: #1a1f2b; --muted: #5c6577; --line: #d7dce5; --panel: #f4f6fa; --accent: #1d4ed8; --out: #1d4ed8; --in: #c2410c; --hit: #fde68a; --card: #ffffff;
@@ -248,13 +249,13 @@ function drawCode(stage) {
 function paintCode() {
   const { mods } = matches(), s = state.sel && state.sel.type === "module" ? modById.get(state.sel.id) : null;
   const near = s ? new Set([s.id, ...s.imports, ...s.importedBy]) : null;
-  const rank = s ? new Set([...near].sort((a, b) => (modById.get(b).imports.length + modById.get(b).importedBy.length) - (modById.get(a).imports.length + modById.get(a).importedBy.length)).slice(0, 14)) : null;
+  const rank = s ? new Set([...near].sort((a, b) => (modById.get(b).imports.length + modById.get(b).importedBy.length) - (modById.get(a).imports.length + modById.get(a).importedBy.length)).slice(0, 10)) : null;
   modules.forEach((m, i) => {
     const c = nodeEls.get(m.id), hidden = state.hidden.has(m.package);
     c.style.display = hidden ? "none" : "";
     const dim = (near && !near.has(m.id)) || (mods && !mods.has(m.id));
     c.classList.toggle("dim", !!dim); c.classList.toggle("sel", !!s && s.id === m.id); c.classList.toggle("hit", !!mods && mods.has(m.id) && !(s && s.id === m.id));
-    const show = !hidden && ((s && (near.size <= 26 || m.id === s.id || rank.has(m.id))) || (mods && mods.has(m.id) && mods.size <= 25));
+    const show = !hidden && ((s && (near.size <= 12 || m.id === s.id || rank.has(m.id))) || (mods && mods.has(m.id) && mods.size <= 25));
     labelEls.get(m.id).setAttribute("visibility", show ? "visible" : "hidden");
     labelEls.get(m.id).classList.toggle("dim", false);
   });

@@ -1,0 +1,10 @@
+# Files that a program writes do not count in the language bar of GitHub and are folded in its diffs: the exports of the notebook, the interactive card and the interactive map.
+notebooks/public/*.html linguist-generated=true
+notebooks/public/*.ipynb linguist-generated=true
+notebooks/cypmode_notebook.html linguist-generated=true
+notebooks/cypmode_notebook.ipynb linguist-generated=true
+docs/card/interactive/**/*.html linguist-generated=true
+docs/map/explorer.html linguist-generated=true
+# Libraries that were copied in whole.
+notebooks/_vendor/** linguist-vendored=true
+docs/card/vendor/** linguist-vendored=true

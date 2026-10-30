@@ -3,23 +3,21 @@
 <!-- public:card begin -->
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/card/cypmode_card-dark.png">
-    <img src="docs/card/cypmode_card-light.png" alt="CYPMode: the CYP3A4 enzyme with its heme and fluconazole, six public crystal complexes with their compounds and the headline numbers" width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/card/cypmode_card-dark.gif">
+    <img src="docs/card/cypmode_card-light.gif" alt="CYPMode: the CYP3A4 enzyme turning once, with its heme and fluconazole, six public crystal complexes with their compounds and the headline numbers" width="100%">
   </picture>
 </p>
 <p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/">Open the interactive card</a>: rotate the enzyme, load each of the six public crystal complexes and read the iron&ndash;nitrogen distance measured on the deposited coordinates. GitHub does not run scripts in a README, so the interactive version is a page of its own. The predicted structures of the project are published after the challenge closes.</p>
-<p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/"><img src="docs/card/cypmode_interactive_preview.gif" alt="The interactive card: the enzyme turns once, then a second crystal complex is loaded and the view moves to its ligand, with the iron-nitrogen distance on screen" width="70%"></a></p>
 <!-- public:card end -->
 
 <!-- held-back:card
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/card/cypmode_card_full-dark.png">
-    <img src="docs/card/cypmode_card_full-light.png" alt="CYPMode: the CYP3A4 enzyme with its heme and a ligand, six complexes with their compounds and the headline numbers" width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/card/cypmode_card_full-dark.gif">
+    <img src="docs/card/cypmode_card_full-light.gif" alt="CYPMode: the CYP3A4 enzyme turning once, with its heme and a ligand, six complexes with their compounds and the headline numbers" width="100%">
   </picture>
 </p>
 <p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/">Open the interactive card</a>: rotate the enzyme, load each of the six complexes and read the iron&ndash;nitrogen distance measured on the coordinates. GitHub does not run scripts in a README, so the interactive version is a page of its own.</p>
-<p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/"><img src="docs/card/cypmode_interactive_preview_full.gif" alt="The interactive card of the complete edition: the enzyme turns once, then a second complex is loaded and the view moves to its ligand, with the iron-nitrogen distance on screen" width="70%"></a></p>
 held-back:card-end -->
 
 ## What CYPMode is
@@ -89,45 +87,13 @@ fold is. A predicted structure is a model, not a measurement. The numbers report
 <!-- generated:project-map begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
 ## Map of the project
 
-The pages of [docs/map](docs/map/README.md) show where everything is and what depends on what: the code, the queue, the flow of the data and the evidence. Two of their diagrams are drawn here. The first follows the data from the inputs to the submission files, the second shows which packages of the code import which, with the number of imports on each arrow.
+The pages of [docs/map](docs/map/README.md) show where everything is and what depends on what: the code, the queue, the flow of the data and the evidence. The interactive map draws the same four views as one page that can be explored: a graph of the modules, a grid of the jobs, a search box, and for each module and job what it imports, what imports it, which job runs it, which test imports it and which section of the notebook names it. The loop below is the page itself.
 
-```mermaid
-flowchart LR
-  inputs["inputs<br/>data/*/inputs"] --> jobs
-  jobs["queue jobs<br/>158 of 171 write a log"] -->|"201 log names"| logs["logs"]
-  logs -->|"every log, through gate_rows"| ledger["ledger<br/>cypmode/audit/ledger_kinds.py"]
-  logs -->|"58 logs are read by name"| reports
-  ledger --> reports["reports, figures, notebook<br/>built by the chain 900 to 960"]
-  reports --> submissions["submission files"]
-```
+<p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/map/"><img src="docs/map/preview/explorer.gif" alt="The interactive map of the project: a search for a word, a module with what it imports and what imports it, the job that runs it, the flow of the data and the kinds of idea" width="90%"></a></p>
 
-```mermaid
-flowchart LR
-  challenge["challenge (98 modules)"]
-  validation["validation (55 modules)"]
-  audit["audit (13 modules)"]
-  data["data (2 modules)"]
-  metrics["metrics (2 modules)"]
-  explorer["explorer (1 module)"]
-  top_level["top level (1 module)"]
-  audit -->|23| challenge
-  challenge -->|18| top_level
-  validation -->|16| challenge
-  audit -->|12| validation
-  validation -->|11| top_level
-  challenge -->|7| metrics
-  challenge -->|3| validation
-  validation -->|3| metrics
-  audit -->|2| top_level
-  data -->|2| metrics
-  explorer -->|2| audit
-  audit -->|1| explorer
-  data -->|1| challenge
-  explorer -->|1| challenge
-  explorer -->|1| top_level
-```
+**Open the interactive map:** [on the Pages site](https://mohamedtalaat-gif.github.io/CYPMode/map/). **Download it:** [explorer.html](https://github.com/mohamedtalaat-gif/CYPMode/raw/main/docs/map/explorer.html) (save the file with a right click and open it in a browser; it is one file and needs no network).
 
-The pages list every module with what it does and what it imports, and every job of the queue with what it waits for. [`docs/map/explorer.html`](docs/map/explorer.html) draws the same four views as one page that can be explored: a graph of the modules, a grid of the jobs, a search box, and for each module and job what it imports, what imports it, which job runs it, which test imports it and which section of the notebook names it. It is one file with its data inside, so it opens in a browser without a network (GitHub shows an HTML file as text, so download it or open it on the Pages site).
+The pages list every module with what it does and what it imports, and every job of the queue with what it waits for.
 <!-- generated:project-map end -->
 
 <!-- held-back:film

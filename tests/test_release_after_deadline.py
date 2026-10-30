@@ -37,13 +37,13 @@ def test_the_readme_shows_the_public_card_and_holds_the_full_card_back():
     text = Path("README.md").read_text()
     public = text[text.index("<!-- public:card begin -->"):text.index("<!-- public:card end -->")]
     held = text[text.index("<!-- held-back:card"):text.index("held-back:card-end -->")]
-    assert "cypmode_card-light.png" in public and "cypmode_card_full" not in public
-    assert "cypmode_card_full-light.png" in held and "cypmode_card-light.png" not in held
+    assert "cypmode_card-light.gif" in public and "cypmode_card_full" not in public  # the card that turns is the picture of the README
+    assert "cypmode_card_full-light.gif" in held and "cypmode_card-light.gif" not in held
     ignore = Path(".gitignore").read_text()
     assert "docs/card/cypmode_card_full-light.png" in ignore and "docs/card/interactive/full/" in ignore
     assert "docs/card/cypmode_card-light.png" not in ignore and "docs/card/interactive/\n" not in ignore
-    assert "docs/card/cypmode_interactive_preview.gif" in public and Path("docs/card/cypmode_interactive_preview.gif").exists()  # the loop of the public page is part of the public card
-    assert "docs/card/cypmode_interactive_preview.gif" not in ignore.splitlines() and "cypmode_interactive_preview.gif" not in held
+    assert Path("docs/card/cypmode_card-light.gif").exists() and Path("docs/card/cypmode_card-dark.gif").exists()  # the turning card of the public edition is in the repository
+    assert "docs/card/cypmode_card-light.gif" not in ignore.splitlines() and "docs/card/cypmode_card_full-light.gif" in ignore.splitlines() and "docs/card/cypmode_card_full-dark.gif" in ignore.splitlines()
 
 
 def test_the_commented_film_section_is_switched_on():
@@ -76,16 +76,16 @@ def test_the_public_edition_of_the_notebook_is_removed_when_the_complete_one_is_
     assert remove_public_edition(tmp_path) is True and not (tmp_path / "notebooks/public").exists()
 
 
-def test_each_edition_of_the_readme_shows_a_moving_loop_of_its_card():
+def test_each_edition_of_the_readme_shows_its_card_turning():
     text = Path("README.md").read_text()
     shown_now = re.sub(r"<!-- held-back:card.*?held-back:card-end -->", "", re.sub(r"<!-- held-back:film.*?held-back:film-end -->", "", text, flags=re.DOTALL), flags=re.DOTALL)
     complete = release.restore_film(release.remove_public_card(text))
-    assert "docs/card/cypmode_interactive_preview.gif" in shown_now and "cypmode_interactive_preview_full.gif" not in shown_now  # the public edition: the loop of the public page
-    assert "docs/card/cypmode_interactive_preview_full.gif" in complete and "docs/card/cypmode_interactive_preview.gif" not in complete  # the complete edition: the loop of the full page, drawn at the release
-    assert "docs/card/cypmode_interactive_preview_full.gif" in Path(".gitignore").read_text().splitlines() and "docs/card/cypmode_interactive_preview.gif" not in Path(".gitignore").read_text().splitlines()
+    assert "docs/card/cypmode_card-light.gif" in shown_now and "cypmode_card_full" not in shown_now  # the public edition: the card of the public structures, turning
+    assert "docs/card/cypmode_card_full-light.gif" in complete and "docs/card/cypmode_card-light.gif" not in complete  # the complete edition: the card of the submitted structures, drawn at the release
+    assert "docs/card/cypmode_card_full-light.gif" in Path(".gitignore").read_text().splitlines() and "docs/card/cypmode_card-light.gif" not in Path(".gitignore").read_text().splitlines()
     script = Path("scripts/release_after_deadline.py").read_text()
-    assert 'build_preview.py"), "--full"' in script and 'build_interactive_card.py"), "--full"' in script  # the release builds the full page and then the loop of it
-    assert "--full" in Path("docs/card/build_preview.py").read_text() and "cypmode_interactive_preview_full.gif" in Path("docs/card/build_preview.py").read_text()
+    assert 'build_card.py"), "--full"' in script and 'build_interactive_card.py"), "--full"' in script  # the release builds the full card, with its turning version, and the full page
+    assert "turning_card" in Path("docs/card/build_card.py").read_text() and "cypmode_card_full" in Path("docs/card/build_card.py").read_text()
 
 
 def test_the_zenodo_record_is_described_as_the_citation_file_describes_it_and_the_version_is_the_same_everywhere():

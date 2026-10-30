@@ -120,7 +120,7 @@ Each is catalogued like the others and drawn from the repository's own files (th
 - **Overview figures** (`gen/overview_more.py`): `arch_ledger_heatmap` (9.11, every idea by place and verdict), `arch_final_results` (8.7, the results on one page), `eng_commit_timeline` (12.4), `mol_butina_clusters` (3.6), `ml_evaluation_weights` (6.4), `ml_gate_flow` (6.7, the rule of the gate as a flow chart),
   `ml_m0_m3_ablation` (7.2), `ml_calibration_methods` (8.5), `ml_selection_sensitivity` (9.1), `data_label_gaussian` (9.3, the label as a Gaussian around a threshold), `data_arm_correlations` (9.7), `struct_engine_comparison` (11.9), `eng_repository_map` (12.5) and, held back, `struct_official20_recipe` (11.10, the run of each final pose).
 - **Every catalogued figure is in the notebook.** The builder (`notebooks/build_notebook.py`) puts a figure that no part shows at the end of the section that the catalog names (the end of its part when the section does not exist), with the held-back flag for the figures of the HELD BACK block, so that a drawn figure can never be missing from the notebook.
-- **The animated preview of the README** (`docs/card/build_preview.py`, job 946): the loop of the public interactive page, drawn from the page by the headless Chrome of the film.
+- **The animated card of the README** (`docs/card/build_card.py`, job 941): the card with the enzyme turning once, each frame drawn from the same page of the card by the headless Chrome of the film.
 
 ## Build
 

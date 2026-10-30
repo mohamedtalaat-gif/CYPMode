@@ -5,7 +5,7 @@ name: Pages
 "on":
   push:
     branches: [main]
-    paths: ["explorer/**", "docs/card/interactive/**", "docs/map/**", "notebooks/public/**", "notebooks/cypmode_notebook.html", "environment/requirements-lock-marimo.txt", ".github/workflows/pages.yml"]
+    paths: ["explorer/**", "docs/card/interactive/**", "docs/map/**", "docs/brand/**", "notebooks/public/**", "notebooks/cypmode_notebook.html", "environment/requirements-lock-marimo.txt", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -49,6 +49,25 @@ jobs:
         run: |
           if [ -f notebooks/cypmode_notebook.html ]; then mkdir -p site/notebook && cp notebooks/cypmode_notebook.html site/notebook/index.html;
           elif [ -f notebooks/public/cypmode_notebook_public.html ]; then mkdir -p site/notebook && cp notebooks/public/cypmode_notebook_public.html site/notebook/index.html; fi
+
+      - name: Put the icon of the project on every page and at the root of the site
+        run: |
+          cp docs/brand/cypmode-icon.svg site/favicon.svg
+          cp docs/brand/favicon-32.png docs/brand/apple-touch-icon.png docs/brand/favicon.ico site/
+          python - <<'PY'
+          import base64, pathlib, re
+          encode = lambda name: base64.b64encode(pathlib.Path("docs/brand", name).read_bytes()).decode()
+          tags = (f'<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,{encode("cypmode-icon.svg")}">'
+                  f'<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,{encode("favicon-32.png")}">'
+                  f'<link rel="apple-touch-icon" href="data:image/png;base64,{encode("apple-touch-icon.png")}">')
+          for page in pathlib.Path("site").rglob("*.html"):
+              text = page.read_text(encoding="utf-8")
+              text = re.sub(r'<link[^>]*rel="(?:shortcut )?(?:icon|apple-touch-icon)"[^>]*>', "", text)
+              head = re.search(r"<head[^>]*>", text)
+              if head:
+                  page.write_text(text[: head.end()] + tags + text[head.end():], encoding="utf-8")
+                  print("icon added to", page)
+          PY
 
       - name: Keep Jekyll away from the pages
         run: touch site/.nojekyll

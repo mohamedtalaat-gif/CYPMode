@@ -59,7 +59,7 @@ def test_the_pages_follow_the_wording_rules_and_do_not_depend_on_the_run():
         assert not any(found.values()), (name, found)
         assert "(pending" not in text
     page = first["explorer.html"]  # the page that can be explored is one file: no script, style or link comes from elsewhere, and its data are the data of the code
-    assert not re.findall(r'(?:src|href)="https?://', page) and "<script src" not in page and "<link " not in page
+    assert not re.findall(r'(?:src|href)="https?://', page) and "<script src" not in page and not re.findall(r'<link [^>]*href="(?!data:)', page)  # the icon is inside the file as well
     assert page.count("/*DATA*/") == 0 and pm.explorer_data()["meta"]["modules"] == len(pm.module_paths())
 
 
@@ -67,9 +67,10 @@ def test_the_committed_pages_match_the_code():
     assert pm.main(["--check"]) == 0
 
 
-def test_the_readme_shows_the_two_diagrams_of_the_map_and_they_are_the_ones_the_code_draws():
+def test_the_readme_shows_the_loop_of_the_interactive_map_with_the_links_to_open_and_to_download_it():
     from cypmode.audit import docs_state
 
     text = (pm.ROOT / "README.md").read_text()
     assert docs_state.render(text, ("project-map",)) == text
-    assert pm.dataflow_diagram(pm.dataflow_facts()) in text and pm.code_diagram(pm.code_facts()) in text
+    assert "docs/map/preview/explorer.gif" in text and (pm.ROOT / "docs/map/preview/explorer.gif").is_file() and (pm.ROOT / "docs/map/preview/build_preview.py").is_file()
+    assert re.search(r"\[on the Pages site\]\(https://[\w.-]+\.github\.io/[\w.-]+/map/\)", text) and "/raw/main/docs/map/explorer.html)" in text

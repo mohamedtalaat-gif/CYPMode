@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import base64
 import functools
 import json
 import re
@@ -27,6 +28,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAP = ROOT / "docs/map"
 PAGE = Path(__file__).with_name("project_map_page.html")
+BRAND = ROOT / "docs/brand"
 TOP = "top level"
 SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[A-Z`(])")
 LOG_WRITE = re.compile(r"\$L/([A-Za-z0-9_.\-${}]+\.log)")
@@ -383,10 +385,16 @@ def explorer_data() -> dict:
     return json.loads(explorer_data_json().replace("<\\/", "</"))
 
 
+def icon_tags() -> str:
+    """The icon of the project as links inside the page (the picture is part of the file, so that it shows in a tab wherever the page is opened from)."""
+    svg, png = (base64.b64encode((BRAND / name).read_bytes()).decode() for name in ("cypmode-icon.svg", "favicon-32.png"))
+    return f'<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,{svg}">\n<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,{png}">'
+
+
 def render_explorer() -> str:
     page = PAGE.read_text()
-    assert page.count("/*DATA*/null") == 1
-    return page.replace("/*DATA*/null", explorer_data_json())
+    assert page.count("/*DATA*/null") == 1 and page.count("<!--ICON-->") == 1
+    return page.replace("<!--ICON-->", icon_tags()).replace("/*DATA*/null", explorer_data_json())
 
 
 # -- the index --------------------------------------------------------------------------------------------------------------------------------------------
@@ -413,17 +421,27 @@ def render_index() -> str:
 
 
 def readme_block() -> str:
-    """The section of the README that shows the map: the diagram of the flow of the data and the diagram of the packages, with the way into the pages."""
+    """The section of the README that shows the map: the loop of the interactive page, the links to open it on the Pages site and to download it, and the way into the pages."""
+    repository = repository_url()
+    account, name = repository.rstrip("/").split("github.com/")[-1].split("/")
+    pages, download = f"https://{account}.github.io/{name}/map/", f"{repository}/raw/main/docs/map/explorer.html"
     return "\n".join([
         "## Map of the project",
         "",
-        "The pages of [docs/map](docs/map/README.md) show where everything is and what depends on what: the code, the queue, the flow of the data and the evidence. Two of their diagrams are drawn here. The first follows the data from the inputs to the submission files, the second shows which packages of the code import which, with the number of imports on each arrow.",
+        (
+            "The pages of [docs/map](docs/map/README.md) show where everything is and what depends on what: the code, the queue, the flow of the data and the evidence. The interactive map draws the same four views "
+            "as one page that can be explored: a graph of the modules, a grid of the jobs, a search box, and for each module and job what it imports, what imports it, which job runs it, which test imports it and "
+            "which section of the notebook names it. The loop below is the page itself."
+        ),
         "",
-        dataflow_diagram(dataflow_facts()),
+        (
+            f'<p align="center"><a href="{pages}"><img src="docs/map/preview/explorer.gif" alt="The interactive map of the project: a search for a word, a module with what it imports and what imports it, '
+            f'the job that runs it, the flow of the data and the kinds of idea" width="90%"></a></p>'
+        ),
         "",
-        code_diagram(code_facts()),
+        f"**Open the interactive map:** [on the Pages site]({pages}). **Download it:** [explorer.html]({download}) (save the file with a right click and open it in a browser; it is one file and needs no network).",
         "",
-        "The pages list every module with what it does and what it imports, and every job of the queue with what it waits for. [`docs/map/explorer.html`](docs/map/explorer.html) draws the same four views as one page that can be explored: a graph of the modules, a grid of the jobs, a search box, and for each module and job what it imports, what imports it, which job runs it, which test imports it and which section of the notebook names it. It is one file with its data inside, so it opens in a browser without a network (GitHub shows an HTML file as text, so download it or open it on the Pages site).",
+        "The pages list every module with what it does and what it imports, and every job of the queue with what it waits for.",
         "",
     ])
 

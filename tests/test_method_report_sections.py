@@ -124,6 +124,9 @@ def test_the_innovation_summary_stands_between_the_disclosures_and_section_one_a
     assert "### What is not claimed" in section
     named = set(pd.read_csv("data/structure_track/inputs/structure_track_test_blinded.csv")["Molecule_Name"]) & set(re.findall(r"OCNT-\d+", section))
     assert not named
+    claims = [line for line in section.splitlines() if line.startswith("- **")]
+    assert len(claims) == len(report.NOTEBOOK_OF_CLAIM) and all(re.search(r" Notebook sections? [\d.]+( and [\d.]+)?\.$", line) for line in claims), "a claim of the innovation summary names no section of the notebook"
+    assert text.index("*Innovation summary*") < text.index("## Summary and disclosures")  # the first lines of the report point to the section
 
 
 @needs_outputs
@@ -186,4 +189,5 @@ def test_the_report_points_to_the_map_with_the_counts_that_the_map_writes():
 
     text = report.map_paragraph()
     assert f"all {len(project_map.module_paths())} modules" in text and f"all {len(project_map.job_facts())} jobs" in text and "docs/map" in text
+    assert text.count("```mermaid") == 2 and project_map.dataflow_diagram(project_map.dataflow_facts()) in text and project_map.code_diagram(project_map.code_facts()) in text  # the two diagrams of the map are drawn in the report
     assert text in report.build_method_report()

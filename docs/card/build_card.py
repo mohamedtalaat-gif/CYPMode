@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""The card at the top of the README: ``python docs/card/build_card.py`` writes ``cypmode_card-dark.png`` and ``cypmode_card-light.png`` next to this file.
+"""The card at the top of the README: ``python docs/card/build_card.py`` writes ``cypmode_card-dark.png`` and ``cypmode_card-light.png`` next to this file, and the same card with the enzyme turning once,
+``cypmode_card-dark.gif`` and ``cypmode_card-light.gif``, which is the picture that the README shows (GitHub shows a picture and not a page; the interactive card is a page of its own).
 
 Everything on the card is read from the repository's own files when it is built: the pictures of the enzyme are PyMOL renders of the submitted structures (``final/_pdb_files``), the compounds are
 drawn by RDKit from their SMILES with the nitrogen that coordinates the heme iron marked, the iron-nitrogen distances are measured on the submitted coordinates, and the numbers come from
@@ -10,13 +11,14 @@ drawn by RDKit from their SMILES with the nitrogen that coordinates the heme iro
 
 Two modes. ``public`` (the default) shows only public structures: the hero is the crystal structure of CYP3A4 with fluconazole (PDB 6MA7) and the six tiles are crystal complexes of the PDB with
 imidazole and pyridine ligands, so that nothing on the card is a predicted structure of a blinded ligand; it is the card that goes into the repository before the challenge closes. ``--full`` draws
-the submitted structures (the hero and six of the twenty poses with the iron-nitrogen distances measured on them) into ``cypmode_card_full-dark.png`` and ``cypmode_card_full-light.png``; it is built only after
+the submitted structures (the hero and six of the twenty poses with the iron-nitrogen distances measured on them) into ``cypmode_card_full-dark.png``, ``cypmode_card_full-light.png`` and the two turning versions ``cypmode_card_full-dark.gif`` and ``cypmode_card_full-light.gif``; it is built only after
 the deadline, by ``scripts/release_after_deadline.py``, and its names are in the HELD BACK block of ``.gitignore`` while the public card is in the repository.
 """
 
 import base64
 import hashlib
 import html
+import io
 import sys
 import time
 from pathlib import Path
@@ -42,6 +44,8 @@ SMILES = ROOT / "data/structure_track/inputs/structure_track_test_blinded.csv"
 BUILD = HERE / "_build"
 CARD = (1920, 960)
 SCALE = 1.25
+TURN_STEP, GIF_WIDTH, GIF_FRAME_MS = 12, 1200, 90  # the enzyme turns by 12 degrees from frame to frame, 30 frames; the picture is 1200 pixels wide
+HERO_BOX = (860, 56, 860 + 1004, 56 + 544)  # the panel of the enzyme on the card, in the pixels of the card: the only part of the picture that changes from frame to frame
 HERO = "OCNT-2395436"  # the ligand that the film follows: a Type II donor with a measured TDI value
 # Six of the twelve submitted poses whose ligand has a Type II donor nitrogen, picked by hand and not at random: the ligand that the film follows (OCNT-2395436), the ligand whose restraint changes the
 # pose most on the benchmark of the film (OCNT-2395712), and four that show imidazole, triazole and pyridine donors in different scaffolds. The card says so; ``docs/figures`` has the gallery of all 20.
@@ -89,9 +93,13 @@ cmd.orient("polymer"); cmd.turn("y", 25); cmd.turn("x", -12); cmd.center("lig or
 '''
 
 
-def hero(theme: str, mode: str = "public") -> pymol_scene.Scene:
+def hero(theme: str, mode: str = "public", spin: int | None = None) -> pymol_scene.Scene:
+    """The enzyme of the card. ``spin`` is None for the still card (drawn at twice the size of its panel) and the angle in degrees, about the vertical axis through the pocket, for a frame of the turning card."""
     path, ligand, key, zoom = (FINAL / f"{HERO}.pdb", "LIG", "card_hero3", -24) if mode == "full" else (pymol_scene.cif(PUBLIC_HERO[0]), PUBLIC_HERO[1], f"card_hero_crystal_{PUBLIC_HERO[0]}_mid", -10)
-    return pymol_scene.render(key, HERO_BODY.format(path=str(path), ligand=ligand, zoom=zoom), (2008, 1088), theme, {"fe": "elem FE", "ligand": "lig"}, files=(path,))
+    body, size = HERO_BODY.format(path=str(path), ligand=ligand, zoom=zoom), (2008, 1088)
+    if spin is not None:
+        body, size, key = body + f'cmd.turn("y", {spin})\n', (1004, 544), f"{key}_turn{spin:03d}"
+    return pymol_scene.render(key, body, size, theme, {"fe": "elem FE", "ligand": "lig"}, files=(path,))
 
 
 def tile(name: str, theme: str) -> pymol_scene.Scene:
@@ -138,17 +146,17 @@ def data_uri(path: Path) -> str:
     return "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode()
 
 
-def card_html(theme: str, mode: str = "public") -> str:
+def card_html(theme: str, mode: str = "public", spin: int | None = None) -> str:
     c = THEMES[theme]
     facts = facts_module.load()
     full = mode == "full"
     smiles = pd.read_csv(SMILES).set_index("Molecule_Name")["SMILES"]
     crystals = pd.read_csv(EXPANSION).set_index("comp_id")
-    scene = hero(theme, mode)
+    scene = hero(theme, mode, spin)
     panel_w, panel_h = 1004, 544
     labels = ""
     for key, text, dx, dy in (("fe", "heme iron", -150, 70), ("ligand", f"predicted ligand {HERO}" if full else "fluconazole (PDB 6MA7)", 40, -80)):
-        x, y = scene.anchors[key][0] / 2008 * panel_w, scene.anchors[key][1] / 1088 * panel_h
+        x, y = scene.anchors[key][0] / (2008 if spin is None else 1004) * panel_w, scene.anchors[key][1] / (1088 if spin is None else 544) * panel_h
         labels += (f'<div class="callout" style="left:{x + dx:.0f}px;top:{y + dy:.0f}px">{html.escape(text)}</div>'
                    f'<svg class="leader" width="{panel_w}" height="{panel_h}"><line x1="{x:.0f}" y1="{y:.0f}" x2="{x + dx + (0 if dx > 0 else 100):.0f}" y2="{y + dy + 14:.0f}" stroke="{c["accent"]}" stroke-width="2"/>'
                    f'<circle cx="{x:.0f}" cy="{y:.0f}" r="6" fill="none" stroke="{c["accent"]}" stroke-width="2"/></svg>')
@@ -203,6 +211,53 @@ h1{{margin:6px 0 0;font-size:142px;line-height:1;font-weight:800;font-style:ital
 </div></body></html>"""
 
 
+def assemble_turn(frames, target: Path) -> Path:
+    """The GIF of the turning card from its frames (RGB pictures of the whole card). The frames differ only inside the panel of the enzyme, so the static part is quantised once and each frame
+    replaces the panel only: the file holds the changes and not thirty cards."""
+    from PIL import Image
+
+    height = round(CARD[1] * GIF_WIDTH / CARD[0])
+    small = [f.resize((GIF_WIDTH, height), Image.LANCZOS) for f in frames]
+    box = tuple(round(v * GIF_WIDTH / CARD[0]) for v in HERO_BOX)
+    panel_h = box[3] - box[1]
+    mosaic = Image.new("RGB", (GIF_WIDTH, height + 4 * panel_h))  # the colours of the page and of four views of the enzyme share one palette of 255 colours
+    mosaic.paste(small[0], (0, 0))
+    for k in range(4):
+        mosaic.paste(small[k * len(small) // 4].crop(box), (0, height + k * panel_h))
+    palette = mosaic.quantize(colors=255, method=Image.Quantize.MEDIANCUT)
+    base = small[0].quantize(palette=palette, dither=Image.Dither.FLOYDSTEINBERG)
+    out = []
+    for frame in small:
+        picture = base.copy()
+        picture.paste(frame.crop(box).quantize(palette=palette, dither=Image.Dither.NONE), box[:2])
+        out.append(picture)
+    out[0].save(target, save_all=True, append_images=out[1:], duration=GIF_FRAME_MS, loop=0, optimize=False)
+    return target
+
+
+def shot(chrome, page: Path, scale: int, load: float, settle: float) -> str:
+    """The picture (PNG, base64) of the card in ``page``. The headless browser ends by itself about 31 seconds after it starts (clean exit, whatever it draws), so every call runs through
+    ``chrome.retrying``, which starts a new browser, opens the page again and repeats the call."""
+    chrome.open(page)
+    time.sleep(load)
+    chrome.call("Emulation.setDeviceMetricsOverride", width=CARD[0], height=CARD[1], deviceScaleFactor=scale, mobile=False)
+    time.sleep(settle)
+    return chrome.call("Page.captureScreenshot", format="png", clip={"x": 0, "y": 0, "width": CARD[0], "height": CARD[1], "scale": 1})["data"]
+
+
+def turning_card(chrome, theme: str, mode: str, target: Path) -> None:
+    """The card with the enzyme turning once: one picture of the card for each angle of the enzyme, drawn by the headless Chrome, then assembled."""
+    from PIL import Image
+
+    frames = []
+    for angle in range(0, 360, TURN_STEP):
+        page = BUILD / f"card-{theme}-turn{angle:03d}.html"
+        page.write_text(card_html(theme, mode, angle))
+        data = chrome.retrying(lambda page=page: shot(chrome, page, 1, 0.8, 0.4))
+        frames.append(Image.open(io.BytesIO(base64.b64decode(data))).convert("RGB"))
+    assemble_turn(frames, target)
+
+
 def main() -> int:
     mode = "full" if "--full" in sys.argv else "public"
     BUILD.mkdir(exist_ok=True)
@@ -213,15 +268,15 @@ def main() -> int:
             source = card_html(theme, mode)
             digests[theme] = hashlib.sha256(source.encode()).hexdigest()
             page.write_text(source)
-            chrome.open(page)
-            time.sleep(1.0)
-            chrome.call("Emulation.setDeviceMetricsOverride", width=CARD[0], height=CARD[1], deviceScaleFactor=SCALE, mobile=False)
-            time.sleep(0.5)
-            data = chrome.call("Page.captureScreenshot", format="png", clip={"x": 0, "y": 0, "width": CARD[0], "height": CARD[1], "scale": 1})["data"]
+            data = chrome.retrying(lambda page=page: shot(chrome, page, SCALE, 1.0, 0.5))
             target = HERE / (f"cypmode_card_full-{theme}.png" if mode == "full" else f"cypmode_card-{theme}.png")
             target.write_bytes(base64.b64decode(data))
             written.append(target)
             print(f"wrote {target.name} ({target.stat().st_size / 1e6:.2f} MB)")
+            turning = target.with_suffix(".gif")
+            turning_card(chrome, theme, mode, turning)
+            written.append(turning)
+            print(f"wrote {turning.name} ({turning.stat().st_size / 1e6:.2f} MB)")
     from cypmode.audit.artifacts import record
 
     record("readme_card_full" if mode == "full" else "readme_card", written, {"html_sha256": digests, "mode": mode})

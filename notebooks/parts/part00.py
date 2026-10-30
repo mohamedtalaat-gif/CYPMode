@@ -167,10 +167,27 @@ print("verdicts met:", "; ".join(met))
 
 INNOVATION = '''
 # The claims of the innovation summary of the method report, with the number that carries each one; the rows are read from the logs, the manifests and the audit by cypmode/audit/method_report.py.
-from cypmode.audit.method_report import INNOVATION_COLUMNS, innovation_rows
+from cypmode.audit.method_report import INNOVATION_COLUMNS, NOTEBOOK_OF_CLAIM, innovation_rows
 
 claims = pd.DataFrame(innovation_rows(), columns=INNOVATION_COLUMNS)
 show_table(claims)
+
+# The same claims with the sections of this notebook that explain them and compute their numbers. The build checks that every section named exists and holds a code cell, and links each number to the heading exactly as the table of contents does.
+from notebooks.notebook_builder import headings, section_of_cells, slug
+from notebooks.notebook_cells import ALL_CELLS
+
+claim_titles = {}
+for level, text_of_heading, _ in headings(ALL_CELLS):
+    number = text_of_heading.split(" ", 1)[0]
+    if level == 2 and number.replace(".", "").isdigit():
+        claim_titles[number] = text_of_heading
+claim_code = {label for label, cell in zip(section_of_cells(ALL_CELLS), ALL_CELLS) if cell["cell_type"] == "code"}
+claim_sections = [number for _, sections in NOTEBOOK_OF_CLAIM for number in sections.split()]
+assert all(number in claim_titles for number in claim_sections), [number for number in claim_sections if number not in claim_titles]  # every section named exists
+assert all(number in claim_code for number in claim_sections), [number for number in claim_sections if number not in claim_code]  # and holds a code cell
+where_explained = pd.DataFrame([{"Claim": claim, "Explained and computed in": ", ".join(f"[{number}](#{slug(claim_titles[number])})" for number in sections.split())} for claim, sections in NOTEBOOK_OF_CLAIM])
+print(f"{len(where_explained)} claims, explained in {len(set(claim_sections))} different sections of this notebook")
+show_table(where_explained)
 '''
 
 BUILD = '''
@@ -539,6 +556,7 @@ names the number that carries the claim and the log that holds it. The rows are 
 a model of the selection that decided which CYP2D6 compounds were measured (Part IX), how the reliability of a prediction is stated (similarity tiers with intervals over chemical series, a check that probabilities match frequencies, and a committee that was tested and did
 not help), and the simple ideas of the structure track (the iron-nitrogen restraint, the validity margin and the relaxation under a registered rule). One row is an attempt that came back inconclusive, the estimate of the positive rate without a
 leaderboard (section 2.11); it is in the table because a claim list that holds only successes is not a record.
+A second table follows the first: for each claim it names the sections of this notebook that explain the idea from first principles and compute its number, and the build fails when a section named there does not exist or holds no code cell.
 """),
     code(INNOVATION),
     md("""
