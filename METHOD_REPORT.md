@@ -202,7 +202,7 @@ pre-registered gate is therefore reported as a pass of the registered rule and n
 ### 4.4 The selection-corrected design and its audit
 
 The label rule reproduces every training label (0 and 0 mismatches); the plans are rebuilt from the raw files and compared; every feature block is checked for leakage; the audit
-is generated twice and compared byte for byte; the test suite has 1044 passing tests; the summary of the audit is 89 PASS and 0 FAIL (notebook Part XII).
+is generated twice and compared byte for byte; the test suite has 1044 passing tests; the summary of the audit is 90 PASS and 0 FAIL (notebook Part XII).
 
 ### 4.5 What the project built, and what it borrowed
 
