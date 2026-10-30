@@ -119,7 +119,7 @@ Counts: PASS = 89, FAIL = 0, INFO = 8, SKIP = 0
 | rdkit | 2026.3.6 |
 | PyYAML | 6.0.3 |
 
-Git HEAD `3fe20d6`; working tree: 0 modified, 0 deleted, 0 untracked entries.
+Git HEAD `fdcf1af`; working tree: 0 modified, 0 deleted, 0 untracked entries.
 
 Input files (size in bytes, sha256 prefix):
 
@@ -1589,7 +1589,7 @@ Rules checked: the author, the repository and the DOI are the same in the citati
 
 ## 21. Wording of the text files
 
-Every line of the 685 text files that git tracks or would add (vendored libraries, licence texts and the generated audit report are left out) is matched against each rule, and so is every line of the messages of the commits that are not published yet. A rule passes when no line matches.
+Every line of the 686 text files that git tracks or would add (vendored libraries, licence texts and the generated audit report are left out) is matched against each rule, and so is every line of the messages of the commits that are not published yet. A rule passes when no line matches.
 | rule | lines in the files | files | lines in unpublished commit messages |
 |---|---|---|---|
 | role names as the actor of a decision or a step | 0 | 0 | 0 |
