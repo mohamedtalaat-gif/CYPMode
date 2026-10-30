@@ -85,7 +85,12 @@ validate = ["biopython", "pyKVFinder", "posebusters", "PyYAML"]
 # unmaintained. pmapper is for pharmacophore_fingerprint.py's 3-point
 # pharmacophore fingerprints -- lightweight (rdkit + networkx only, no
 # compiled numerical backend, so no OpenMP-conflict risk the way tblite
-# has with LightGBM).
+# has with LightGBM). biopython is read at collection time by the tests of the
+# structure track (the modules of cypmode/validation import Bio), and one
+# import error at collection stops the whole pytest run. tblite is installed
+# everywhere except Windows: it has no wheel there, the source build needs a
+# Fortran compiler that the runner does not have, and the three test files
+# that need it skip themselves when it is missing (pytest.importorskip).
 challenge = [
     "lightgbm",
     "useful_rdkit_utils",
@@ -94,7 +99,8 @@ challenge = [
     "chembl_structure_pipeline",
     "statsmodels",
     "pmapper",
-    "tblite",
+    "biopython",
+    "tblite; sys_platform != 'win32'",
 ]
 # For cypmode/challenge/multitask.py's shared-trunk model -- a small, plain
 # PyTorch MLP built deliberately instead of installing openadmet-models

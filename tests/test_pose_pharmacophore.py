@@ -105,6 +105,8 @@ def test_a_predicted_pose_is_put_in_the_frame_of_its_own_heme():
 
 
 def test_the_crystal_poses_of_the_benchmark_are_scored_with_the_fields_built_without_their_own_references(monkeypatch):
+    if not list(Path("data/structure_track/inputs/pdb_cache").glob("*.cif")):
+        pytest.skip("the crystal structures are not in this checkout")
     two = dict(list(pose.benchmark_smiles().items())[:2])
     monkeypatch.setattr(pose, "benchmark_smiles", lambda: two)
     crystal = pose.crystal_scores("novel")

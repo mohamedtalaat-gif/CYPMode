@@ -25,6 +25,7 @@ from cypmode.challenge import pocket_pharmacophore as pp
 
 DATA = Path("data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv")
 needs_data = pytest.mark.skipif(not DATA.exists(), reason="the training data is not in this checkout")
+needs_structures = pytest.mark.skipif(not Path("data/structure_track/inputs/pdb_cache/2V0M.cif").exists(), reason="the cache of the crystal structures is not in a clean checkout")
 needs_pymol = pytest.mark.skipif(shutil.which("pymol") is None and not Path("/opt/homebrew/bin/pymol").exists(), reason="PyMOL is not installed")
 KETOCONAZOLE = "CC(=O)N1CCN(CC1)c1ccc(OCC2COC(Cn3ccnc3)(O2)c2ccc(Cl)cc2Cl)cc1"
 
@@ -89,6 +90,7 @@ def test_the_group_table_has_the_groups_that_p450s_are_known_to_bioactivate_at_t
 
 
 @needs_data
+@needs_structures
 @needs_pymol
 def test_the_pocket_figure_and_the_atlas_are_drawn_with_real_structures():
     import matplotlib.pyplot as plt

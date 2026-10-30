@@ -13,6 +13,7 @@ sys.path[:0] = ["docs/video", "docs/video/anime"]
 from chrome import CHROME
 
 needs_chrome = pytest.mark.skipif(not Path(CHROME).exists(), reason="Google Chrome is not installed")
+needs_facts = pytest.mark.skipif(not Path("docs/video/anime/facts.js").exists(), reason="the facts of the film are written by the render of the film and are not in a clean checkout")
 
 
 @pytest.fixture
@@ -54,6 +55,7 @@ def test_a_missing_record_is_a_failure_and_a_failed_deep_check_is_reported(one_a
 
 
 @needs_chrome
+@needs_facts
 def test_the_dom_of_the_poster_is_deterministic():
     """The raster of a frame can differ in a few pixels between two renders; the DOM that produces it must not."""
     import render_video

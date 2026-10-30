@@ -13,6 +13,14 @@ sys.path[:0] = [str(FIGURES), str(FIGURES.parent.parent)]
 
 from catalog import REGISTRY, Figure, caption_text, figure
 
+
+def needs(path: str):
+    """Skip a test whose input is written by the chain or held back until the challenge closes, so that a clean checkout skips it and the machine of the build runs it."""
+    return pytest.mark.skipif(not Path(path).exists(), reason=f"{path} is not in a clean checkout")
+
+
+FINAL = "data/tdi_track/outputs/final/manifest.json"
+
 pytestmark = pytest.mark.skipif(not Path("data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv").exists(), reason="the training data is not in this checkout")
 
 
@@ -105,6 +113,7 @@ def test_a_message_reaches_exactly_the_atoms_within_k_bonds():
     assert reached[0] == 1 and reached == sorted(reached) and reached[3] < mol.GetNumAtoms()
 
 
+@needs(FINAL)
 def test_the_confusion_matrix_of_the_default_stack_has_the_mcc_of_the_final_build_closely():
     from gen.ml_more import confusion_counts, table_mcc
 
@@ -114,6 +123,7 @@ def test_the_confusion_matrix_of_the_default_stack_has_the_mcc_of_the_final_buil
         assert abs(c["mcc"] - table_mcc(isoform)) < 0.04  # the build transfers the rate inside each fold; the figure calls the same top share
 
 
+@needs("data/tdi_track/outputs/caches/feature_store.npz")
 def test_the_principal_components_explain_less_variance_one_after_the_other():
     from gen.ml_more import component_study
 
@@ -163,6 +173,7 @@ def test_the_pose_pool_figures_read_the_same_numbers_as_the_selection_validation
     assert "10 crystal-anchored benchmark ligands" in pool_caption()
 
 
+@needs("data/tdi_track/inputs/official_extra/cyp_challenge/cyp-challenge-single-concentration-TRAIN.csv")
 def test_the_screen_decides_which_cyp2d6_compounds_reached_the_tdi_assay():
     from gen.data_more import gate_study
 
@@ -210,6 +221,7 @@ def test_the_ledger_heat_map_marks_the_two_groups_of_the_final_stack_as_met_on_c
     assert cells[neural, 0] == 2 and cells[neural, 1] == 1 and cells[foundation, 0] == 2 and cells[foundation, 1] == 0
 
 
+@needs(FINAL)
 def test_the_final_results_page_reads_the_manifest_of_the_final_build():
     import json
 
@@ -266,6 +278,7 @@ def test_the_logs_of_the_calibration_and_of_the_selection_models_are_read():
     assert len(deploy) == 7 and sensitivity_table["z0"].nunique() == 2
 
 
+@needs("data/structure_track/outputs/cyp3a4/final/official_posebusters_pools.csv")
 def test_the_three_engines_and_the_pool_of_the_recipe_are_all_there():
     from gen.overview_more import engine_table, recipe_pool
 
