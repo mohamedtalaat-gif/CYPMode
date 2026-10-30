@@ -38,7 +38,7 @@ def test_the_compounds_of_the_card_are_drawn_with_the_donor_nitrogen_marked(tmp_
 
 def test_the_readme_starts_with_the_card_in_both_colour_schemes():
     lines = Path("README.md").read_text().splitlines()
-    assert lines[0] == "# CYPMode"
+    assert lines[0] == "<!-- public:card begin -->"  # the repository name is the title that GitHub shows, so the README opens with the card
     head = "\n".join(lines[:10])
     assert "docs/card/cypmode_card-dark.gif" in head and "docs/card/cypmode_card-light.gif" in head  # the card of the README turns
     assert all(Path(f"docs/card/cypmode_card-{theme}.{kind}").exists() for theme in ("dark", "light") for kind in ("png", "gif"))
