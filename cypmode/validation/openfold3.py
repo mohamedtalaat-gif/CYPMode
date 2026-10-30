@@ -153,6 +153,9 @@ def run_openfold3(
     fails/times out, or if it produced no structure -- the batch runner
     records that as an error and moves on.
     """
+    if memory not in MEMORY_MODES:
+        raise ValueError(f"memory must be one of {MEMORY_MODES}")
+
     if _another_prediction_running():
         raise RuntimeError("another run_openfold process is already running -- predictions must not overlap (16 GB RAM)")
 
@@ -164,8 +167,6 @@ def run_openfold3(
     for stale in (out_dir / "logs" / "predict_err_rank0.log", out_dir / "summary.txt"):
         stale.unlink(missing_ok=True)  # an earlier attempt's failure must not be reported as this run's
 
-    if memory not in MEMORY_MODES:
-        raise ValueError(f"memory must be one of {MEMORY_MODES}")
     launcher = [str(OPENFOLD3_BIN)] if memory == "config" else [str(OPENFOLD3_PYTHON), str(LOWMEM_SCRIPT)]
     command = [
         *launcher,

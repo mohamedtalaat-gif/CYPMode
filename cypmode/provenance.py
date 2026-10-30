@@ -64,7 +64,9 @@ def commit() -> str | None:
 def _relative(argument: str) -> str:
     """An argument that points inside the repository, written relative to it, so that a record does not carry the path of the machine that made it."""
     prefix = str(ROOT) + os.sep
-    return argument.removeprefix(prefix)
+    if argument.startswith(prefix):
+        return argument.removeprefix(prefix).replace(os.sep, "/")  # the record reads the same on every system
+    return argument
 
 
 def record(command: list[str] | None = None) -> dict:

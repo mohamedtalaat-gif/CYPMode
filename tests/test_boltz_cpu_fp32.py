@@ -33,6 +33,6 @@ def test_the_other_arguments_of_the_trainer_pass_through_unchanged():
 
 def test_the_cpu_command_starts_the_wrapper_with_the_python_of_the_boltz_environment():
     binary = Path("/env/bin/boltz")
-    assert pipeline.boltz_command(binary, "cpu") == ["/env/bin/python", "-P", str(pipeline.CPU_WRAPPER)]
-    assert pipeline.boltz_command(binary, "gpu") == ["/env/bin/boltz"]  # the runs on the GPU are started as before
+    assert pipeline.boltz_command(binary, "cpu") == [str(binary.with_name("python")), "-P", str(pipeline.CPU_WRAPPER)]
+    assert pipeline.boltz_command(binary, "gpu") == [str(binary)]  # the runs on the GPU are started as before
     assert pipeline.CPU_WRAPPER.name == "boltz_cpu_fp32.py" and pipeline.CPU_WRAPPER.exists()

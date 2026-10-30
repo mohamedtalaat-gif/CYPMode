@@ -198,7 +198,7 @@ def compute_quantum_features_batch(
     todo = [s for s in smiles_list if s not in set(cached["SMILES"])]
     if todo:
         cache_path.parent.mkdir(parents=True, exist_ok=True)
-        pool = multiprocessing.Pool(n_workers) if n_workers > 1 else None
+        pool = multiprocessing.get_context("spawn").Pool(n_workers) if n_workers > 1 else None  # spawn, not fork: a process forked after tblite started its OpenMP threads can wait forever (as macOS, which spawns, does not)
         results_iter = pool.imap(extract_quantum_features, todo) if pool else map(extract_quantum_features, todo)
 
         pending_rows = []

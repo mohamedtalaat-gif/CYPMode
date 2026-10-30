@@ -106,7 +106,7 @@ def blinded_names() -> set[str]:
 
 def blinded_hits(path: Path, names: set[str]) -> tuple[int, int]:
     """(distinct blinded identifiers named in the file or its path, data rows of a table), for one file."""
-    blobs = [str(path.relative_to(ROOT)).encode()]
+    blobs = [path.relative_to(ROOT).as_posix().encode()]
     rows = 0
     if path.suffix.lower() == ".zip":
         import zipfile
@@ -128,7 +128,7 @@ def prediction_findings(files: list[Path], names: set[str], reviewed: dict = REV
     """One message per file that holds results for the blinded compounds and is not on the reviewed list."""
     out = []
     for path in files:
-        rel = str(path.relative_to(ROOT))
+        rel = path.relative_to(ROOT).as_posix()
         if rel in reviewed:
             continue
         ids, rows = blinded_hits(path, names)

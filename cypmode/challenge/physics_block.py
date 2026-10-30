@@ -471,7 +471,7 @@ def extract(smiles_list: list[str], cache_path: Path = CACHE_PATH, atoms_path: P
     logger.info("physics extraction: %d compounds, %d cached, %d to do", len(keys), len(done), len(todo))
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     os.environ["OMP_NUM_THREADS"] = "1"
-    pool = multiprocessing.Pool(n_workers, initializer=_init_worker) if n_workers > 1 else None
+    pool = multiprocessing.get_context("spawn").Pool(n_workers, initializer=_init_worker) if n_workers > 1 else None  # spawn, not fork: a process forked after tblite started its OpenMP threads can wait forever
     results = pool.imap(_worker, todo, chunksize=4) if pool else map(_worker, todo)
     feature_rows, atom_rows = [], []
 

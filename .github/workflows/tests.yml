@@ -8,6 +8,7 @@ name: Tests
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30  # a run that waits for ever must fail in minutes and not hold the runner for hours
     env:
       PYTHONUTF8: "1"  # the files of the repository are UTF-8; Python on Windows reads them with the code page of the system unless told so
     strategy:

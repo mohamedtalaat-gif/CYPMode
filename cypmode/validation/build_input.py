@@ -110,7 +110,7 @@ def msa_reference(path: "str | Path") -> str:
     machine that wrote them; every run starts from the repository root, where Boltz-2 resolves a relative path."""
     resolved = Path(path).resolve()
     try:
-        return str(resolved.relative_to(ROOT))
+        return resolved.relative_to(ROOT).as_posix()
     except ValueError:
         return str(resolved)
 

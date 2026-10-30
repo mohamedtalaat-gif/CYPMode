@@ -199,7 +199,7 @@ def extract(smiles_list: list[str], cache_path: Path = CACHE_PATH, atoms_path: P
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     os.environ["OMP_NUM_THREADS"] = "1"
     jobs = [(k, sites.get(k, [])) for k in todo]
-    pool = multiprocessing.Pool(n_workers, initializer=pb._init_worker) if n_workers > 1 else None
+    pool = multiprocessing.get_context("spawn").Pool(n_workers, initializer=pb._init_worker) if n_workers > 1 else None  # spawn, not fork: a process forked after tblite started its OpenMP threads can wait forever
     results = pool.imap(_worker, jobs, chunksize=2) if pool else map(_worker, jobs)
     pending: list[dict] = []
 
