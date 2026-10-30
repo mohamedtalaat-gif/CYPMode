@@ -14,6 +14,8 @@ def test_every_module_is_in_the_code_page_exactly_once_and_every_job_in_the_queu
         assert len(re.findall(rf"^\| `{re.escape(path.relative_to(pm.ROOT).as_posix())}` \|", code, re.MULTILINE)) == 1, module
     for path in (pm.ROOT / "queue/jobs").glob("*.sh"):
         assert len(re.findall(rf"^\| `{path.stem}` \|", queue, re.MULTILINE)) == 1, path.name  # one row in the table of its family
+    data = pm.explorer_data()  # the page that can be explored lists every module and every job once as well
+    assert sorted(m["id"] for m in data["modules"]) == sorted(pm.module_paths()) and sorted(j["name"] for j in data["jobs"]) == sorted(p.stem for p in (pm.ROOT / "queue/jobs").glob("*.sh"))
 
 
 def test_the_arrows_between_packages_count_the_imports_that_cross_them():
@@ -22,6 +24,8 @@ def test_the_arrows_between_packages_count_the_imports_that_cross_them():
     assert sum(facts["cross"].values()) == crossing
     stated = sum(int(n) for n in re.findall(r"  \w+ -->\|(\d+)\| \w+", pm.render_code()))
     assert stated == crossing
+    modules = pm.explorer_data()["modules"]  # and the lists of the page that can be explored agree with the graph, in both directions
+    assert sum(len(m["imports"]) for m in modules) == sum(len(t) for t in facts["graph"].values()) == sum(len(m["importedBy"]) for m in modules)
 
 
 def test_an_import_is_found_wherever_it_stands_and_a_relative_one_is_resolved(tmp_path):
@@ -54,6 +58,9 @@ def test_the_pages_follow_the_wording_rules_and_do_not_depend_on_the_run():
         found = prose_rules.violations(files=[path.relative_to(pm.ROOT).as_posix()]) if path.exists() else {}
         assert not any(found.values()), (name, found)
         assert "(pending" not in text
+    page = first["explorer.html"]  # the page that can be explored is one file: no script, style or link comes from elsewhere, and its data are the data of the code
+    assert not re.findall(r'(?:src|href)="https?://', page) and "<script src" not in page and "<link " not in page
+    assert page.count("/*DATA*/") == 0 and pm.explorer_data()["meta"]["modules"] == len(pm.module_paths())
 
 
 def test_the_committed_pages_match_the_code():

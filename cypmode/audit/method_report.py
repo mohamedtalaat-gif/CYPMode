@@ -349,7 +349,7 @@ def map_paragraph() -> str:
         f"**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all {modules} modules with what each does and what it imports, all {jobs} jobs of the queue with what each waits for "
         "and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. "
         "The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` "
-        "and a test fail when a page differs from the code. Two of the diagrams are drawn in the README."
+        "and a test fail when a page differs from the code. Two of the diagrams are drawn in the README, and `docs/map/explorer.html` draws all four views as one page that can be explored, with a search box and, for every module and job, what it is connected to and which section of the notebook names it."
     )
 
 

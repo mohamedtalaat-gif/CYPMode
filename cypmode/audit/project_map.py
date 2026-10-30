@@ -6,6 +6,8 @@
 
 The map is four views of one project, each a Markdown page with a Mermaid diagram that GitHub draws and a table that names every element: the code (packages and modules with what they import),
 the queue (the jobs, what each waits for and the chain that closes the project), the flow of the data (inputs, jobs, logs, ledger, reports) and the evidence (the families of ideas that were tried).
+A fifth file, ``explorer.html``, draws the same four views as one page that can be explored (a graph of the modules, a grid of the jobs, a search box, and for every module and job what it is connected to
+and which section of the notebook names it); it is one file with its data inside, filled into the template ``project_map_page.html``, and it is checked like the pages.
 Every sentence is the first sentence of a docstring or of the header comment of a job, or a count from the files of the repository. Only tracked sources are read (the modules, the queue scripts and the
 tables of ``ledger_kinds``), so a copy of the repository regenerates the same pages without any result.
 """
@@ -14,6 +16,8 @@ from __future__ import annotations
 
 import argparse
 import ast
+import functools
+import json
 import re
 import sys
 from collections import Counter, defaultdict
@@ -22,6 +26,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MAP = ROOT / "docs/map"
+PAGE = Path(__file__).with_name("project_map_page.html")
 TOP = "top level"
 SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[A-Z`(])")
 LOG_WRITE = re.compile(r"\$L/([A-Za-z0-9_.\-${}]+\.log)")
@@ -300,6 +305,90 @@ def _kind_descriptions() -> dict[str, str]:
     return {}
 
 
+# -- the page that can be explored ------------------------------------------------------------------------------------------------------------------------
+
+def repository_url() -> str:
+    found = re.search(r'^repository-code:\s*"([^"]+)"', (ROOT / "CITATION.cff").read_text(), re.MULTILINE)
+    return found.group(1) if found else ""
+
+
+@functools.cache
+def notebook_sections() -> tuple[dict[str, list[str]], dict[str, dict[str, str]]]:
+    """Which sections of the notebook name each module and job (the coverage that the builder checks), and for every label the text of its heading and the anchor that the contents link to."""
+    from notebooks.notebook_builder import coverage, headings, slug
+    from notebooks.notebook_cells import ALL_CELLS
+
+    mapping, _ = coverage(ALL_CELLS)
+    targets = {}
+    for level, text, _ in headings(ALL_CELLS):
+        numbered = re.match(r"(\d+\.\d+) ", text) if level == 2 else None
+        part = re.match(r"(Part [IVX0]+|Appendix [A-Z])\b", text) if level == 1 else None
+        if numbered or part:
+            label = (numbered or part).group(1)
+            targets[label] = {"label": label, "text": text, "slug": slug(text)}
+    return {path: sections for kind in ("module", "queue job") for path, sections in mapping[kind].items()}, targets
+
+
+@functools.cache
+def explorer_data_json() -> str:
+    from cypmode.audit.ledger_kinds import KINDS
+
+    code, jobs, flow = code_facts(), job_facts(), dataflow_facts()
+    named_in, targets = notebook_sections()
+    known = set(code["paths"])
+
+    def taught(path: str) -> list[dict[str, str]]:
+        return [targets.get(label, {"label": label, "text": label, "slug": ""}) for label in named_in.get(path, [])]
+
+    tests_of: dict[str, list[str]] = defaultdict(list)
+    for path in sorted((ROOT / "tests").glob("test_*.py")):
+        for module in imports_of("tests." + path.stem, path, known):
+            tests_of[module].append(path.relative_to(ROOT).as_posix())
+    run_by: dict[str, list[str]] = defaultdict(list)
+    for job in jobs:
+        for module in job["runs"]:
+            run_by[module].append(job["name"])
+    modules = []
+    for module, path in sorted(code["paths"].items()):
+        rel = path.relative_to(ROOT).as_posix()
+        modules.append({"id": module, "path": rel, "package": package_of(module), "summary": code["summary"][module], "imports": sorted(code["graph"][module]), "importedBy": sorted(code["used_by"][module]),
+                        "runBy": sorted(run_by[module]), "tests": tests_of[module], "taught": taught(rel)})
+    job_rows = [{"id": j["id"], "name": j["name"], "family": j["id"][0] + "xx", "summary": j["summary"], "waitsAll": j["all_lower"], "waits": j["named"], "runs": [m for m in j["runs"] if m in known],
+                 "runsOther": [m for m in j["runs"] if m not in known], "logs": j["logs"], "taught": taught(f"queue/jobs/{j['name']}.sh")} for j in jobs]
+    described = _kind_descriptions()
+    evidence = [{"kind": kind, "what": described.get(kind, ""), "families": list(stems)} for kind, stems in KINDS.items()]
+    documents = [r for j in jobs if int(j["id"]) >= 900 for r in j["runs"] if r in known]
+    inputs = sorted(p.relative_to(ROOT).as_posix() for p in ROOT.glob("data/*/inputs") if p.is_dir())
+    stages = [
+        {"id": "inputs", "title": "Inputs", "count": f"{len(inputs)} tracks", "text": "The files that a track starts from: the challenge's training and test tables for the TDI track, the structure inputs for the structure track.",
+         "itemsTitle": "Folders", "items": [{"text": p} for p in inputs]},
+        {"id": "jobs", "title": "Queue jobs", "count": f"{flow['writers']} of {len(flow['jobs'])} write a log", "itemsTitle": "", "items": [],
+         "text": "Every job of queue/jobs is a script and the runner takes them in the order of their numbers. A job that writes a log leaves the lines that the later stages read."},
+        {"id": "logs", "title": "Logs", "count": f"{len(flow['written'])} log names", "itemsTitle": "Modules that read every log", "items": [({"module": p[:-3].replace("/", ".")} if p[:-3].replace("/", ".") in known else {"text": p}) for p in flow["glob_readers"]],
+         "text": f"{len(flow['named'])} of the {len(flow['literal'])} logs that a job writes under a fixed name are read by name in a module. The others are read through the folder, and these modules read every log of it that way."},
+        {"id": "ledger", "title": "Ledger", "count": f"{sum(len(e['families']) for e in evidence)} families in {len(evidence)} kinds", "itemsTitle": "", "items": [],
+         "text": "The ledger (cypmode/audit/ledger_kinds.py) collects the line of every gate, MET or NOT MET, from the logs and groups the gates by the kind of idea. The view of the evidence lists the kinds."},
+        {"id": "reports", "title": "Reports, figures, notebook", "count": f"{len(documents)} documents built by the chain", "itemsTitle": "Jobs of the chain that run a module (click one to see which)",
+         "items": [{"job": j["name"]} for j in jobs if int(j["id"]) >= 900 and any(r in known for r in j["runs"])],
+         "text": "The jobs numbered 900 and above rebuild every report, figure, notebook and submission file from the logs. These are the jobs of the chain that run a module of the project."},
+        {"id": "submissions", "title": "Submission files", "count": "built last", "itemsTitle": "", "items": [],
+         "text": "The last job of the chain writes the submission files from the final candidates and checks them with the rules of the portal. It never uploads anything."},
+    ]
+    data = {"meta": {"modules": len(modules), "imports": sum(len(m["imports"]) for m in modules), "jobs": len(job_rows), "repository": repository_url()},
+            "modules": modules, "jobs": job_rows, "flow": {"stages": stages}, "evidence": evidence}
+    return json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=False).replace("</", "<\\/")
+
+
+def explorer_data() -> dict:
+    return json.loads(explorer_data_json().replace("<\\/", "</"))
+
+
+def render_explorer() -> str:
+    page = PAGE.read_text()
+    assert page.count("/*DATA*/null") == 1
+    return page.replace("/*DATA*/null", explorer_data_json())
+
+
 # -- the index --------------------------------------------------------------------------------------------------------------------------------------------
 
 def render_index() -> str:
@@ -308,16 +397,17 @@ def render_index() -> str:
     return "\n".join([
         "# Map of the project",
         "",
-        "Four views of one project. Every page is written by `python -m cypmode.audit.project_map` from the files of the repository, and `python -m cypmode.audit.project_map --check` fails when a page differs from them, so a page cannot drift from the code.",
+        "Four views of one project, and one page that draws them so that they can be explored. Every page is written by `python -m cypmode.audit.project_map` from the files of the repository, and `python -m cypmode.audit.project_map --check` fails when a page differs from them, so a page cannot drift from the code.",
         "",
         table(["page", "what it shows", "size"], [
             ["[The code](code.md)", "the packages and modules, what each module does and what it imports", f"{len(facts['paths'])} modules"],
             ["[The queue](queue.md)", "the jobs, what each waits for and the chain that rebuilds and checks the project", f"{len(jobs)} jobs"],
             ["[The flow of the data](dataflow.md)", "from the inputs through the jobs and the logs to the reports and the submission files", "5 stages"],
             ["[The evidence](evidence.md)", "the kinds of idea that were tried and the ledger that counts the verdicts", "one ledger"],
+            ["[The interactive map](explorer.html)", "all four views as one page that can be explored: a graph of the modules, a grid of the jobs, a search box, and for each one what it is connected to", "one file"],
         ]),
         "",
-        "What the map does not show: the content of any input or result, and what happens while a job runs. It names files and counts them, and it reads no log.",
+        "The interactive map is one file with its data inside: download it and open it in a browser (GitHub shows an HTML file as text), or open it on the Pages site. What the map does not show: the content of any input or result, and what happens while a job runs. It names files and counts them, and it reads no log.",
         "",
     ])
 
@@ -333,13 +423,13 @@ def readme_block() -> str:
         "",
         code_diagram(code_facts()),
         "",
-        "The pages list every module with what it does and what it imports, and every job of the queue with what it waits for.",
+        "The pages list every module with what it does and what it imports, and every job of the queue with what it waits for. [`docs/map/explorer.html`](docs/map/explorer.html) draws the same four views as one page that can be explored: a graph of the modules, a grid of the jobs, a search box, and for each module and job what it imports, what imports it, which job runs it, which test imports it and which section of the notebook names it. It is one file with its data inside, so it opens in a browser without a network (GitHub shows an HTML file as text, so download it or open it on the Pages site).",
         "",
     ])
 
 
 def build() -> dict[str, str]:
-    return {"README.md": render_index(), "code.md": render_code(), "queue.md": render_queue(), "dataflow.md": render_dataflow(), "evidence.md": render_evidence()}
+    return {"README.md": render_index(), "code.md": render_code(), "queue.md": render_queue(), "dataflow.md": render_dataflow(), "evidence.md": render_evidence(), "explorer.html": render_explorer()}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -349,12 +439,12 @@ def main(argv: list[str] | None = None) -> int:
     pages = build()
     if args.check:
         stale = [name for name, text in pages.items() if not (MAP / name).exists() or (MAP / name).read_text() != text]
-        stale += [p.name for p in MAP.glob("*.md") if p.name not in pages] if MAP.exists() else []
+        stale += [p.name for p in MAP.iterdir() if p.is_file() and not p.name.startswith(".") and p.name not in pages] if MAP.exists() else []
         print("project map: " + ("matches the code" if not stale else f"differs in {', '.join(sorted(stale))}"))
         return 1 if stale else 0
     MAP.mkdir(parents=True, exist_ok=True)
-    for stray in MAP.glob("*.md"):
-        if stray.name not in pages:
+    for stray in MAP.iterdir():
+        if stray.is_file() and not stray.name.startswith(".") and stray.name not in pages:
             stray.unlink()
     for name, text in pages.items():
         (MAP / name).write_text(text if text.endswith("\n") else text + "\n")

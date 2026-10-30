@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CYPMode project map</title>
+<style>
+:root { --bg: #ffffff; --fg: #1a1f2b; --muted: #5c6577; --line: #d7dce5; --panel: #f4f6fa; --accent: #1d4ed8; --out: #1d4ed8; --in: #c2410c; --hit: #fde68a; --card: #ffffff;
+  --pk0: #2563eb; --pk1: #d97706; --pk2: #059669; --pk3: #9333ea; --pk4: #dc2626; --pk5: #0891b2; --pk6: #65a30d; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --muted: #9aa4b2; --line: #30363d; --panel: #161b22; --accent: #79b8ff; --out: #79b8ff; --in: #ffa657; --hit: #5b4b00; --card: #11161d;
+  --pk0: #58a6ff; --pk1: #f0883e; --pk2: #3fb950; --pk3: #bc8cff; --pk4: #f85149; --pk5: #39c5cf; --pk6: #a5d65a; } }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; display: flex; flex-direction: column; }
+header { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+header h1 { font-size: 17px; margin: 0; font-weight: 650; }
+nav { display: flex; gap: 4px; }
+nav button, .chip, .link { font: inherit; color: inherit; background: none; border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+nav button[aria-selected="true"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.search { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.search input { font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 9px; width: 260px; max-width: 60vw; }
+#count { color: var(--muted); font-size: 13px; }
+main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 360px; }
+#stage { position: relative; overflow: auto; min-height: 0; }
+#panel { border-left: 1px solid var(--line); background: var(--panel); padding: 14px 16px; overflow: auto; min-height: 0; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; grid-template-rows: 60vh auto; } #panel { border-left: 0; border-top: 1px solid var(--line); } }
+svg { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+svg.dragging { cursor: grabbing; }
+.node { stroke: var(--bg); stroke-width: 1.2; cursor: pointer; }
+.node:hover { stroke: var(--fg); }
+.pk0 { fill: var(--pk0); } .pk1 { fill: var(--pk1); } .pk2 { fill: var(--pk2); } .pk3 { fill: var(--pk3); } .pk4 { fill: var(--pk4); } .pk5 { fill: var(--pk5); } .pk6 { fill: var(--pk6); }
+.edge { stroke: var(--muted); stroke-opacity: 0.16; stroke-width: 0.8; }
+.edge.out { stroke: var(--out); stroke-opacity: 0.95; stroke-width: 1.8; }
+.edge.in { stroke: var(--in); stroke-opacity: 0.95; stroke-width: 1.8; }
+.dim { opacity: 0.12; }
+.sel { stroke: var(--fg); stroke-width: 3; }
+.hit { stroke: var(--hit); stroke-width: 3.2; }
+.label { font-size: 10px; fill: var(--fg); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; pointer-events: none; }
+.pklabel { font-size: 34px; font-weight: 700; opacity: 0.16; fill: var(--fg); pointer-events: none; text-anchor: middle; }
+.legend { position: absolute; left: 10px; bottom: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13px; display: flex; flex-direction: column; gap: 3px; }
+.legend label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.legend i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.hint { position: absolute; right: 10px; bottom: 10px; color: var(--muted); font-size: 12px; background: var(--bg); padding: 2px 6px; border-radius: 6px; }
+#panel h2 { font-size: 16px; margin: 0 0 4px; word-break: break-word; }
+#panel h3 { font-size: 13px; margin: 14px 0 5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+#panel p { margin: 4px 0; }
+.pill { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.list { display: flex; flex-wrap: wrap; gap: 5px; }
+.link { padding: 2px 8px; font-size: 13px; border-radius: 999px; }
+.link:hover, .chip:hover, nav button:hover { border-color: var(--accent); }
+.page { padding: 18px 22px; max-width: 1400px; }
+.page h2 { margin: 0 0 6px; font-size: 18px; }
+.page p.lead { color: var(--muted); margin: 0 0 14px; max-width: 80ch; }
+.family { display: grid; grid-template-columns: 70px 1fr; gap: 8px; align-items: start; margin: 8px 0; }
+.family b { color: var(--muted); font-weight: 600; padding-top: 4px; }
+.jobs { display: flex; flex-wrap: wrap; gap: 4px; }
+.job { font: 12px/1 ui-monospace, Menlo, monospace; padding: 6px 7px; border: 1px solid var(--line); border-radius: 5px; background: var(--card); color: var(--fg); cursor: pointer; }
+.job.runs { border-left: 4px solid var(--pk2); }
+.job.sel { outline: 2px solid var(--accent); }
+.job.hit { background: var(--hit); }
+.job.rel { outline: 2px solid var(--in); }
+.job.dim { opacity: 0.25; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 2px; margin: 8px 0 18px; }
+.chain .arrow { color: var(--muted); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.card { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: var(--card); cursor: pointer; }
+.card.sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.card h3 { margin: 0 0 4px; font-size: 15px; }
+.card p { margin: 3px 0; color: var(--muted); font-size: 14px; }
+.stages { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; }
+.stages .card { flex: 1 1 120px; min-width: 120px; }
+.stages .arrow { align-self: center; color: var(--muted); font-size: 20px; }
+a { color: var(--accent); }
+code { font: 12.5px ui-monospace, Menlo, monospace; word-break: break-all; }
+noscript { padding: 20px; display: block; }
+</style>
+</head>
+<body>
+<header>
+  <h1>CYPMode: map of the project</h1>
+  <nav id="tabs" role="tablist" aria-label="Views"></nav>
+  <div class="search"><label for="q" class="sr" style="position:absolute;left:-9999px">Search</label><input id="q" type="search" placeholder="Search modules and jobs" autocomplete="off"><span id="count"></span></div>
+</header>
+<main>
+  <div id="stage"></div>
+  <aside id="panel" aria-live="polite"></aside>
+</main>
+<noscript>This page needs JavaScript. The same information is in the Markdown pages next to it: README.md, code.md, queue.md, dataflow.md and evidence.md.</noscript>
+<script>
+"use strict";
+const DATA = /*DATA*/null;
+const SVGNS = "http://www.w3.org/2000/svg";
+const $ = (s, r = document) => r.querySelector(s);
+function el(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "class") e.className = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const kid of kids.flat()) e.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+  return e;
+}
+function svg(tag, attrs, ...kids) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
+  for (const kid of kids) e.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+  return e;
+}
+
+// ---- the layout of the module graph: a force simulation with a fixed seed, so that every visit draws the same picture ----
+function layout(nodes, edges, groups, W, H) {
+  let seed = 20261103;
+  const rnd = () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const n = nodes.length, k = groups.length, R = Math.min(W, H) * 0.30;
+  const centre = groups.map((g, i) => [W / 2 + R * Math.cos(2 * Math.PI * i / k - Math.PI / 2), H / 2 + R * Math.sin(2 * Math.PI * i / k - Math.PI / 2)]);
+  const x = new Float64Array(n), y = new Float64Array(n), vx = new Float64Array(n), vy = new Float64Array(n);
+  nodes.forEach((nd, i) => { const c = centre[nd.group]; x[i] = c[0] + (rnd() - 0.5) * 90; y[i] = c[1] + (rnd() - 0.5) * 90; });
+  const steps = 500;
+  for (let step = 0; step < steps; step++) {
+    const alpha = 1 - step / steps;
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+      let dx = x[i] - x[j], dy = y[i] - y[j]; const d2 = dx * dx + dy * dy + 0.01;
+      if (d2 > 160000) continue;
+      const d = Math.sqrt(d2), f = 1100 / d2; dx /= d; dy /= d;
+      vx[i] += dx * f; vy[i] += dy * f; vx[j] -= dx * f; vy[j] -= dy * f;
+    }
+    for (const [a, b] of edges) {
+      let dx = x[b] - x[a], dy = y[b] - y[a]; const d = Math.sqrt(dx * dx + dy * dy) + 0.01, f = (d - 46) * 0.018; dx /= d; dy /= d;
+      vx[a] += dx * f; vy[a] += dy * f; vx[b] -= dx * f; vy[b] -= dy * f;
+    }
+    for (let i = 0; i < n; i++) { const c = centre[nodes[i].group]; vx[i] += (c[0] - x[i]) * 0.016 + (W / 2 - x[i]) * 0.0015; vy[i] += (c[1] - y[i]) * 0.016 + (H / 2 - y[i]) * 0.0015; }
+    for (let i = 0; i < n; i++) {
+      vx[i] *= 0.8; vy[i] *= 0.8; const sp = Math.hypot(vx[i], vy[i]), cap = 14 * alpha + 1;
+      if (sp > cap) { vx[i] *= cap / sp; vy[i] *= cap / sp; }
+      x[i] += vx[i]; y[i] += vy[i];
+    }
+  }
+  return nodes.map((_, i) => [x[i], y[i]]);
+}
+
+// ---- state ----
+const modules = DATA.modules, jobs = DATA.jobs;
+const modById = new Map(modules.map((m) => [m.id, m])), jobByName = new Map(jobs.map((j) => [j.name, j]));
+const packages = [...new Set(modules.map((m) => m.package))].sort((a, b) => modules.filter((m) => m.package === b).length - modules.filter((m) => m.package === a).length || (a < b ? -1 : 1));
+const state = { view: "code", sel: null, query: "", hidden: new Set(), cam: { x: 0, y: 0, k: 1 } };
+const TABS = [["code", "The code"], ["queue", "The queue"], ["flow", "The flow of the data"], ["evidence", "The evidence"]];
+let positions = null, nodeEls = new Map(), edgeEls = [], labelEls = new Map();
+
+function matches() {
+  const terms = state.query.toLowerCase().split(/\s+/).filter(Boolean);
+  if (!terms.length) return { mods: null, jobs: null };
+  const ok = (text) => terms.every((t) => text.includes(t));
+  return { mods: new Set(modules.filter((m) => ok((m.id + " " + m.summary).toLowerCase())).map((m) => m.id)), jobs: new Set(jobs.filter((j) => ok((j.name + " " + j.summary).toLowerCase())).map((j) => j.name)) };
+}
+function go(type, id) {
+  state.sel = { type, id };
+  if (type === "module") state.view = "code";
+  else if (type === "job") state.view = "queue";
+  else if (type === "stage") state.view = "flow";
+  else if (type === "kind") state.view = "evidence";
+  render();
+}
+function ref(type, id, label) { return el("button", { class: "link", type: "button", onclick: () => go(type, id) }, label ?? id); }
+function listOf(items) { return items.length ? el("div", { class: "list" }, items) : el("p", {}, "none"); }
+function section(label, title) {
+  const target = label.startsWith("Front") ? "#" : "#" + title.slug;
+  return el("a", { class: "link", href: "../notebook/index.html" + target, title: "Opens the notebook of the Pages site; in the repository the notebook is notebooks/cypmode_notebook.html" }, title.text);
+}
+const repoLink = (path) => el("a", { href: DATA.meta.repository + "/blob/main/" + path }, el("code", {}, path));
+
+// ---- the panel ----
+function renderPanel() {
+  const p = $("#panel"); p.replaceChildren();
+  const { mods, jobs: jobHits } = matches();
+  const s = state.sel;
+  if (!s) {
+    p.append(el("h2", {}, "Start here"),
+      el("p", {}, `${DATA.meta.modules} modules, ${DATA.meta.imports} imports between them, ${DATA.meta.jobs} queue jobs. Click a circle, a job or a card to see what it is, what it is connected to and which section of the notebook teaches it.`),
+      el("p", {}, "In the graph, a line is an import. For the selected module, blue lines go to the modules it imports and orange lines come from the modules that import it. The wheel zooms, a drag moves the picture, and the boxes at the bottom left hide a package."));
+    if (mods) {
+      p.append(el("h3", {}, "Matches"), listOf([...mods].sort().slice(0, 40).map((id) => ref("module", id, id.replace(/^cypmode\./, "")))), listOf([...jobHits].sort().slice(0, 40).map((n) => ref("job", n))));
+    }
+    return;
+  }
+  if (s.type === "module") {
+    const m = modById.get(s.id);
+    p.append(el("h2", {}, m.id.replace(/^cypmode\./, "")), el("span", { class: "pill" }, "package " + m.package), el("p", {}, m.summary), el("p", {}, repoLink(m.path)),
+      el("h3", {}, `Imports (${m.imports.length})`), listOf(m.imports.map((id) => ref("module", id, id.replace(/^cypmode\./, "")))),
+      el("h3", {}, `Imported by (${m.importedBy.length})`), listOf(m.importedBy.map((id) => ref("module", id, id.replace(/^cypmode\./, "")))),
+      el("h3", {}, `Run by queue jobs (${m.runBy.length})`), listOf(m.runBy.map((n) => ref("job", n))),
+      el("h3", {}, `Tests that import it (${m.tests.length})`), m.tests.length ? el("div", { class: "list" }, m.tests.map((t) => repoLink(t))) : el("p", {}, "none"),
+      el("h3", {}, "Taught in the notebook"), m.taught.length ? el("div", { class: "list" }, m.taught.map((t) => section(t.label, t))) : el("p", {}, "not named in the text"));
+  } else if (s.type === "job") {
+    const j = jobByName.get(s.id);
+    p.append(el("h2", {}, j.name), el("span", { class: "pill" }, "family " + j.family), el("p", {}, j.summary), el("p", {}, repoLink("queue/jobs/" + j.name + ".sh")),
+      el("h3", {}, "Waits for"), el("p", {}, [j.waitsAll ? "every job with a smaller number" : "", j.waitsAll && j.waits.length ? " and " : "", ...j.waits.map((n) => (jobByName.has(n) ? ref("job", n) : n)).flatMap((x, i) => (i ? [", ", x] : [x]))].filter((x) => x !== "")), (!j.waitsAll && !j.waits.length) ? el("p", {}, "nothing") : "",
+      el("h3", {}, `Runs these modules (${j.runs.length + j.runsOther.length})`), listOf([...j.runs.map((id) => ref("module", id, id.replace(/^cypmode\./, ""))), ...j.runsOther.map((x) => el("code", {}, x))]),
+      el("h3", {}, `Writes these logs (${j.logs.length})`), j.logs.length ? el("div", { class: "list" }, j.logs.map((l) => el("code", {}, l))) : el("p", {}, "none"),
+      el("h3", {}, "Taught in the notebook"), j.taught.length ? el("div", { class: "list" }, j.taught.map((t) => section(t.label, t))) : el("p", {}, "not named in the text"));
+  } else if (s.type === "stage") {
+    const st = DATA.flow.stages.find((x) => x.id === s.id);
+    p.append(el("h2", {}, st.title), el("p", {}, st.text), ...(st.items.length ? [el("h3", {}, st.itemsTitle), el("div", { class: "list" }, st.items.map((it) => (it.job ? ref("job", it.job, it.job) : it.module ? ref("module", it.module, it.module.replace(/^cypmode\./, "")) : el("code", {}, it.text))))] : []));
+  } else if (s.type === "kind") {
+    const k = DATA.evidence.find((x) => x.kind === s.id);
+    p.append(el("h2", {}, k.kind), el("p", {}, k.what), el("h3", {}, `Families (${k.families.length})`), el("div", { class: "list" }, k.families.map((f) => el("code", {}, f))));
+  }
+}
+
+// ---- the code view: the graph ----
+function drawCode(stage) {
+  const W = 1200, H = 800;
+  const nodes = modules.map((m) => ({ id: m.id, group: packages.indexOf(m.package) }));
+  const index = new Map(nodes.map((n, i) => [n.id, i]));
+  const edges = []; modules.forEach((m) => m.imports.forEach((t) => edges.push([index.get(m.id), index.get(t)])));
+  if (!positions) positions = layout(nodes, edges, packages, W, H);
+  const root = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Graph of the modules of the project, coloured by package" });
+  const view = svg("g", { id: "vp" }); root.append(view);
+  const degree = modules.map((m) => m.imports.length + m.importedBy.length);
+  packages.forEach((pk, gi) => {
+    const mem = positions.filter((_, i) => nodes[i].group === gi); if (mem.length < 10) return;
+    view.append(svg("text", { class: "pklabel", x: mem.reduce((s, q) => s + q[0], 0) / mem.length, y: mem.reduce((s, q) => s + q[1], 0) / mem.length }, pk));
+  });
+  edgeEls = edges.map(([a, b]) => { const e = svg("line", { class: "edge", x1: positions[a][0], y1: positions[a][1], x2: positions[b][0], y2: positions[b][1] }); view.append(e); return e; });
+  nodeEls = new Map(); labelEls = new Map();
+  modules.forEach((m, i) => {
+    const c = svg("circle", { class: "node pk" + (nodes[i].group % 7), cx: positions[i][0], cy: positions[i][1], r: 3.2 + Math.sqrt(degree[i]) * 1.15, "data-id": m.id, tabindex: 0 });
+    c.append(svg("title", {}, m.id.replace(/^cypmode\./, "") + ": " + m.summary));
+    c.addEventListener("click", (ev) => { ev.stopPropagation(); go("module", m.id); });
+    c.addEventListener("keydown", (ev) => { if (ev.key === "Enter") go("module", m.id); });
+    view.append(c); nodeEls.set(m.id, c);
+    const l = svg("text", { class: "label", x: positions[i][0] + 6, y: positions[i][1] - 6, visibility: "hidden" }, m.id.split(".").pop()); view.append(l); labelEls.set(m.id, l);
+  });
+  let drag = null;
+  const apply = () => view.setAttribute("transform", `translate(${state.cam.x} ${state.cam.y}) scale(${state.cam.k})`);
+  const toUser = (ev) => { const pt = root.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; return pt.matrixTransform(root.getScreenCTM().inverse()); };
+  root.addEventListener("wheel", (ev) => { ev.preventDefault(); const q = toUser(ev), k = Math.max(0.4, Math.min(8, state.cam.k * Math.exp(-ev.deltaY * 0.0015))); state.cam.x = q.x - (q.x - state.cam.x) * (k / state.cam.k); state.cam.y = q.y - (q.y - state.cam.y) * (k / state.cam.k); state.cam.k = k; apply(); }, { passive: false });
+  root.addEventListener("pointerdown", (ev) => { drag = { x: ev.clientX, y: ev.clientY, cx: state.cam.x, cy: state.cam.y, moved: false }; root.classList.add("dragging"); });
+  root.addEventListener("pointermove", (ev) => { if (!drag) return; const s = root.getScreenCTM().a; if (Math.abs(ev.clientX - drag.x) + Math.abs(ev.clientY - drag.y) > 3) drag.moved = true; state.cam.x = drag.cx + (ev.clientX - drag.x) / s; state.cam.y = drag.cy + (ev.clientY - drag.y) / s; apply(); });
+  const end = () => { root.classList.remove("dragging"); };
+  root.addEventListener("pointerup", end); root.addEventListener("pointerleave", end);
+  root.addEventListener("click", () => { if (drag && drag.moved) { drag = null; return; } drag = null; if (state.sel) { state.sel = null; render(); } });
+  if (!state.fitted) { const xs = positions.map((q) => q[0]), ys = positions.map((q) => q[1]), x0 = Math.min(...xs) - 50, x1 = Math.max(...xs) + 50, y0 = Math.min(...ys) - 60, y1 = Math.max(...ys) + 50, k = Math.min(W / (x1 - x0), H / (y1 - y0)); state.cam = { k, x: (W - k * (x1 - x0)) / 2 - k * x0, y: (H - k * (y1 - y0)) / 2 - k * y0 }; state.fitted = true; }
+  apply();
+  const legend = el("div", { class: "legend" }, el("b", {}, "Packages"), packages.map((pk, gi) => el("label", {}, el("input", { type: "checkbox", checked: !state.hidden.has(pk), onchange: (ev) => { if (ev.target.checked) state.hidden.delete(pk); else state.hidden.add(pk); paintCode(); } }), el("i", { style: `background: var(--pk${gi % 7})` }), `${pk} (${modules.filter((m) => m.package === pk).length})`)));
+  stage.append(root, legend, el("div", { class: "hint" }, "wheel: zoom, drag: move, click: select"));
+}
+function paintCode() {
+  const { mods } = matches(), s = state.sel && state.sel.type === "module" ? modById.get(state.sel.id) : null;
+  const near = s ? new Set([s.id, ...s.imports, ...s.importedBy]) : null;
+  const rank = s ? new Set([...near].sort((a, b) => (modById.get(b).imports.length + modById.get(b).importedBy.length) - (modById.get(a).imports.length + modById.get(a).importedBy.length)).slice(0, 14)) : null;
+  modules.forEach((m, i) => {
+    const c = nodeEls.get(m.id), hidden = state.hidden.has(m.package);
+    c.style.display = hidden ? "none" : "";
+    const dim = (near && !near.has(m.id)) || (mods && !mods.has(m.id));
+    c.classList.toggle("dim", !!dim); c.classList.toggle("sel", !!s && s.id === m.id); c.classList.toggle("hit", !!mods && mods.has(m.id) && !(s && s.id === m.id));
+    const show = !hidden && ((s && (near.size <= 26 || m.id === s.id || rank.has(m.id))) || (mods && mods.has(m.id) && mods.size <= 25));
+    labelEls.get(m.id).setAttribute("visibility", show ? "visible" : "hidden");
+    labelEls.get(m.id).classList.toggle("dim", false);
+  });
+  let e = 0;
+  modules.forEach((m) => m.imports.forEach((t) => {
+    const line = edgeEls[e++], hid = state.hidden.has(m.package) || state.hidden.has(modById.get(t).package);
+    line.style.display = hid ? "none" : "";
+    const out = s && s.id === m.id, inn = s && s.id === t;
+    line.setAttribute("class", "edge" + (out ? " out" : inn ? " in" : "") + (s && !out && !inn ? " dim" : "") + (mods && !s && !(mods.has(m.id) && mods.has(t)) ? " dim" : ""));
+  }));
+}
+
+// ---- the queue view ----
+function drawQueue(stage) {
+  const page = el("div", { class: "page" }, el("h2", {}, `The queue: ${jobs.length} jobs`),
+    el("p", { class: "lead" }, "Every experiment and every build step of the project is a script of queue/jobs. The runner takes them in the order of their numbers. A square is a job; a green edge on the left means that the job runs a module of the project. Click one to see what it waits for, which modules it runs and which logs it writes; the orange outline marks the jobs that run the module selected in the graph."));
+  const chain = jobs.filter((j) => Number(j.id) >= 900);
+  page.append(el("h2", { style: "font-size:15px;margin-top:16px" }, `The chain that closes the project (${chain.length} jobs, from ${chain[0].id} to ${chain[chain.length - 1].id})`),
+    el("div", { class: "chain", id: "chain" }, chain.flatMap((j, i) => [i && j.waitsAll ? el("span", { class: "arrow" }, "→") : i ? el("span", { class: "arrow" }, "·") : "", jobButton(j)])));
+  const fams = [...new Set(jobs.map((j) => j.family))].sort();
+  fams.forEach((f) => page.append(el("div", { class: "family" }, el("b", {}, f), el("div", { class: "jobs" }, jobs.filter((j) => j.family === f).map(jobButton)))));
+  stage.append(page);
+}
+function jobButton(j) { return el("button", { class: "job" + (j.runs.length ? " runs" : ""), type: "button", "data-name": j.name, title: j.name + ": " + j.summary, onclick: () => go("job", j.name) }, j.id); }
+function paintQueue() {
+  const { jobs: hits } = matches(), s = state.sel;
+  const runs = s && s.type === "module" ? new Set(modById.get(s.id).runBy) : null;
+  document.querySelectorAll(".job").forEach((b) => {
+    const n = b.dataset.name;
+    b.classList.toggle("sel", !!s && s.type === "job" && s.id === n);
+    b.classList.toggle("hit", !!hits && hits.has(n));
+    b.classList.toggle("dim", !!hits && !hits.has(n));
+    b.classList.toggle("rel", !!runs && runs.has(n));
+  });
+}
+
+// ---- the flow view and the evidence view ----
+function drawFlow(stage) {
+  const page = el("div", { class: "page" }, el("h2", {}, "The flow of the data"), el("p", { class: "lead" }, "The data go one way: the inputs of a track enter the jobs of the queue, the jobs write logs, the ledger reads the lines of the gates in the logs, and the reports, the figures, the notebook and the submission files are built from them. Click a stage."));
+  const row = el("div", { class: "stages" });
+  DATA.flow.stages.forEach((st, i) => { if (i) row.append(el("span", { class: "arrow" }, "→")); row.append(el("div", { class: "card", "data-id": st.id, tabindex: 0, onclick: () => go("stage", st.id) }, el("h3", {}, st.title), el("p", {}, st.count))); });
+  page.append(row); stage.append(page);
+}
+function drawEvidence(stage) {
+  const page = el("div", { class: "page" }, el("h2", {}, "The evidence"), el("p", { class: "lead" }, "Every idea that the project tried passed through a gate written before its result. The ledger collects the lines of the gates (MET or NOT MET) from the logs and groups them by the kind of idea. Click a kind to see its families."));
+  page.append(el("div", { class: "cards" }, DATA.evidence.map((k) => el("div", { class: "card", "data-id": k.kind, tabindex: 0, onclick: () => go("kind", k.kind) }, el("h3", {}, k.kind), el("p", {}, `${k.families.length} families`), el("p", {}, k.what)))));
+  stage.append(page);
+}
+function paintCards() { document.querySelectorAll(".card").forEach((c) => c.classList.toggle("sel", !!state.sel && state.sel.id === c.dataset.id)); }
+
+// ---- the page ----
+function render() {
+  const stage = $("#stage"), keep = state.view;
+  if (stage.dataset.view !== keep || !stage.firstChild) {
+    stage.replaceChildren(); stage.dataset.view = keep;
+    ({ code: drawCode, queue: drawQueue, flow: drawFlow, evidence: drawEvidence })[keep](stage);
+  }
+  $("#tabs").querySelectorAll("button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === keep)));
+  if (keep === "code") paintCode(); else if (keep === "queue") paintQueue(); else paintCards();
+  const { mods, jobs: jobHits } = matches();
+  $("#count").textContent = mods ? `${mods.size} modules, ${jobHits.size} jobs match` : "";
+  renderPanel();
+}
+function start() {
+  const tabs = $("#tabs");
+  TABS.forEach(([id, name]) => tabs.append(el("button", { type: "button", role: "tab", "data-view": id, onclick: () => { state.view = id; state.sel = null; render(); } }, name)));
+  $("#q").addEventListener("input", (ev) => { state.query = ev.target.value; render(); });
+  $("#q").addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape") { ev.target.value = ""; state.query = ""; state.sel = null; render(); }
+    if (ev.key === "Enter") { const { mods, jobs: j } = matches(); const first = mods && [...mods].sort()[0], firstJob = j && [...j].sort()[0]; if (state.view === "queue" && firstJob) go("job", firstJob); else if (first) go("module", first); else if (firstJob) go("job", firstJob); }
+  });
+  render();
+}
+if (typeof document !== "undefined") start();
+</script>
+</body>
+</html>

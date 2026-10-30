@@ -127,7 +127,7 @@ flowchart LR
   explorer -->|1| top_level
 ```
 
-The pages list every module with what it does and what it imports, and every job of the queue with what it waits for.
+The pages list every module with what it does and what it imports, and every job of the queue with what it waits for. [`docs/map/explorer.html`](docs/map/explorer.html) draws the same four views as one page that can be explored: a graph of the modules, a grid of the jobs, a search box, and for each module and job what it imports, what imports it, which job runs it, which test imports it and which section of the notebook names it. It is one file with its data inside, so it opens in a browser without a network (GitHub shows an HTML file as text, so download it or open it on the Pages site).
 <!-- generated:project-map end -->
 
 <!-- held-back:film
