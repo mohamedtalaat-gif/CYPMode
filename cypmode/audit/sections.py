@@ -574,8 +574,10 @@ def structure(ctx: Context) -> Section:
 
 def readiness(ctx: Context) -> Section:
     s = Section("11. Submission-file readiness")
-    f = ROOT / "submissions/tdi_track/tdi_track_submission.csv"
-    if f.exists():
+    tdi_files = sorted((ROOT / "submissions/tdi_track").glob("*.csv"))
+    manifest_file = ROOT / "submissions/manifest.json"
+    recorded = {e["file"]: e["sha256"] for e in json.loads(manifest_file.read_text()).get("tdi_track", [])} if manifest_file.exists() else {}
+    for f in tdi_files:
         d = pd.read_csv(f)
         test = ctx.test
         cols = ["SMILES", "Molecule_Name", "CYP2D6_is_TDI", "CYP3A4_is_TDI"]
@@ -587,11 +589,14 @@ def readiness(ctx: Context) -> Section:
             "Molecule_Name order equals the test file": d["Molecule_Name"].tolist() == test["Molecule_Name"].tolist() if "Molecule_Name" in d.columns else False,
             "SMILES equal the test file": d["SMILES"].tolist() == test["SMILES"].tolist() if "SMILES" in d.columns else False,
         }
+        if recorded:
+            checks["SHA-256 equals the one recorded in the manifest"] = recorded.get(f.name) == sha256(f, 64)
         for name, ok in checks.items():
-            s.add(f"TDI file: {name}", ok)
+            s.add(f"TDI file {f.name}: {name}", ok)
         rates = {c: float(d[c].astype(int).mean()) for c in ("CYP2D6_is_TDI", "CYP3A4_is_TDI") if c in d.columns}
         s.body.append(f"`{f.relative_to(ROOT)}` (sha256 {sha256(f)}): " + ", ".join(f"called rate {c} = {fmt(v)}" for c, v in rates.items()) + " (test prevalence estimates: " + ", ".join(f"{iso} {fmt(ctx.prevalence(iso))}" for iso in ISOFORMS) + ")")
-        s.body.append("\nThis is the file currently on disk; it is a candidate, not evidence that anything was submitted.")
+    if tdi_files:
+        s.body.append("\nThese are the files currently on disk; they are candidates, not evidence that anything was submitted.")
     else:
         s.body.append("No TDI submission file on disk.")
         s.add("TDI submission file present", None, "none")

@@ -28,3 +28,52 @@ def test_the_report_names_the_tests_that_failed_or_errored_and_nothing_when_all_
     red = "..F.E\n=== short test summary info ===\nFAILED tests/test_a.py::test_one - assert 1 == 2\nERROR tests/test_video.py::test_last - subprocess.TimeoutExpired\n2 failed, 5 passed\n"
     assert failed_test_names(red) == ["FAILED tests/test_a.py::test_one", "ERROR tests/test_video.py::test_last"]
     assert failed_test_names("........\n970 passed, 1 skipped in 130.72s\n") == []
+
+
+def _tdi_submission_tree(root, name, flip_hash=False):
+    import hashlib
+    import json
+
+    import pandas as pd
+
+    test = pd.DataFrame({"Molecule_Name": [f"m{i}" for i in range(750)], "SMILES": ["C" * (1 + i % 5) for i in range(750)]})
+    calls = test.assign(CYP2D6_is_TDI=[i % 17 == 0 for i in range(750)], CYP3A4_is_TDI=[i % 3 == 0 for i in range(750)])
+    folder = root / "submissions/tdi_track"
+    folder.mkdir(parents=True)
+    calls.to_csv(folder / name, index=False)
+    digest = hashlib.sha256((folder / name).read_bytes()).hexdigest()
+    (root / "submissions/manifest.json").write_text(json.dumps({"tdi_track": [{"file": name, "sha256": ("0" * 64) if flip_hash else digest}]}))
+    return test
+
+
+def test_the_readiness_section_checks_the_tdi_files_whatever_they_are_called(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    from cypmode.audit import sections
+
+    test = _tdi_submission_tree(tmp_path, "any_name_at_all.csv")
+    monkeypatch.setattr(sections, "ROOT", tmp_path)
+    section = sections.readiness(SimpleNamespace(test=test, prevalence=lambda iso: 0.3))
+    names = [c.name for c in section.checks if "any_name_at_all.csv" in c.name]
+    assert len(names) == 7 and all(c.status == "PASS" for c in section.checks if "any_name_at_all.csv" in c.name)
+
+
+def test_the_readiness_section_fails_a_tdi_file_whose_hash_differs_from_the_manifest(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    from cypmode.audit import sections
+
+    test = _tdi_submission_tree(tmp_path, "file.csv", flip_hash=True)
+    monkeypatch.setattr(sections, "ROOT", tmp_path)
+    section = sections.readiness(SimpleNamespace(test=test, prevalence=lambda iso: 0.3))
+    assert [c.name.rsplit(": ", 1)[1] for c in section.checks if c.status == "FAIL"] == ["SHA-256 equals the one recorded in the manifest"]
+
+
+def test_the_readiness_section_says_so_when_there_is_no_tdi_file(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    from cypmode.audit import sections
+
+    monkeypatch.setattr(sections, "ROOT", tmp_path)
+    section = sections.readiness(SimpleNamespace(test=None, prevalence=lambda iso: 0.3))
+    assert "No TDI submission file on disk." in section.body and not any(c.status == "FAIL" for c in section.checks)
