@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from cypmode import data_record
 from cypmode.audit import sections
 from cypmode.audit.core import ROOT, Context, md_table
 
@@ -49,6 +50,9 @@ def main() -> None:
     parser.add_argument("--skip-tests", action="store_true", help="skip the (slow) test-suite section")
     parser.add_argument("--n-jobs", type=int, default=2)
     args = parser.parse_args()
+    gone = data_record.missing(ROOT)
+    if gone:
+        raise SystemExit(data_record.message_for(gone))  # the inputs are named before the first one is read
     text = build(args.skip_tests, args.n_jobs)
     out = Path(args.out) if Path(args.out).is_absolute() else ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)

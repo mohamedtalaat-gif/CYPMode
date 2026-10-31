@@ -1,0 +1,33 @@
+{
+  "archive_suffix": ".tar.gz",
+  "record": {"doi": "", "base_url": "", "url_suffix": "?download=1"},
+  "groups": [
+    {
+      "name": "tdi-track-outputs",
+      "paths": ["data/tdi_track/outputs"],
+      "description": "the feature store, the prediction caches, the nested cross-validation outputs and the final outputs of the TDI track"
+    },
+    {
+      "name": "structure-track-boltz-2-outputs",
+      "paths": ["data/structure_track/outputs/out"],
+      "description": "the raw Boltz-2 outputs of the structure track"
+    },
+    {
+      "name": "structure-track-openfold3-outputs",
+      "paths": ["data/structure_track/outputs/openfold3"],
+      "description": "the raw OpenFold3 outputs of the structure track"
+    },
+    {
+      "name": "structure-track-results",
+      "paths": ["data/structure_track/outputs"],
+      "exclude": ["data/structure_track/outputs/out", "data/structure_track/outputs/openfold3"],
+      "description": "the tables, logs, submitted structures and other results of the structure track"
+    }
+  ],
+  "not_in_the_record": [
+    {
+      "paths": ["data/tdi_track/inputs", "data/structure_track/inputs"],
+      "reason": "files downloaded from their own sources or supplied by the organisers; they are redistributed only after the licence of each has been read, and until then they are fetched by name and checksum from their source"
+    }
+  ]
+}
