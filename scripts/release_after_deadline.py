@@ -6,8 +6,8 @@
 
 Until the challenge closes (2026-11-03 23:59 UTC) the repository carries the code and the reports but no result for a blinded compound: the HELD BACK block of ``.gitignore`` keeps the
 predictions, the submitted structures, the pictures and the film that show them, and the notebook exports on the local machine, and the film section and the full card of the README are commented out, while the public card (crystal structures of the PDB only) is shown. This script,
-which refuses to run before the deadline, removes that block, removes the public edition of the notebook (the complete one replaces it), replaces the public card by the full card, restores the film section and (with ``--rebuild-card``) rebuilds the README card with the submitted structures. It changes nothing
-else and never commits or pushes; it prints what becomes visible so that it can be reviewed first.
+which refuses to run before the deadline, removes that block, removes the public edition of the notebook (the complete one replaces it), replaces the public card by the full card, restores the film section and (with ``--rebuild-card``) rebuilds the README card with the submitted structures. A held-back folder that carries a repository of its own (the explorer) is first written to a verified
+bundle and loses its ``.git``, because git would otherwise record the folder as a link and leave its files out. It changes nothing else and never commits or pushes; it prints what becomes visible so that it can be reviewed first.
 """
 
 import argparse
@@ -51,9 +51,35 @@ def remove_public_edition(root: Path = ROOT) -> bool:
     return False
 
 
+def held_back_directories(gitignore: str) -> list[str]:
+    """The folders that the HELD BACK block lists (entries that end with a slash and hold no wildcard)."""
+    block = BLOCK.search(gitignore)
+    lines = [line.strip() for line in block.group(0).splitlines()] if block else []
+    return [line for line in lines if line.endswith("/") and not line.startswith("#") and not re.search(r"[*?\[]", line)]
+
+
+def nested_repositories(root: Path, gitignore: str) -> list[Path]:
+    """The held-back folders that carry a repository of their own: once the block is gone, git would record such a folder as a link to that repository and leave its files out of the commit."""
+    return [root / folder for folder in held_back_directories(gitignore) if (root / folder / ".git").exists()]
+
+
+def detach_repository(folder: Path, backup_dir: Path, root: Path = ROOT) -> Path:
+    """Write the history of the repository in `folder` to a bundle in `backup_dir`, verify the bundle, then remove the `.git` of the folder; its files stay. Returns the bundle. Nothing is removed unless the bundle verifies."""
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    bundle = backup_dir / (folder.relative_to(root).as_posix().replace("/", "_") + ".bundle")
+    staged = bundle.with_name(bundle.name + ".new")
+    subprocess.run(["git", "-C", str(folder), "bundle", "create", str(staged), "--all"], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(folder), "bundle", "verify", str(staged)], check=True, capture_output=True)
+    staged.replace(bundle)
+    entry = folder / ".git"
+    shutil.rmtree(entry) if entry.is_dir() else entry.unlink()
+    return bundle
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true", help="show what would change and write nothing")
+    parser.add_argument("--backup-dir", type=Path, default=None, help="where the bundle of a held-back repository goes before its .git is removed (default: the folder next to the repository, named after it with -backup)")
     parser.add_argument("--rebuild-card", action="store_true", help="rebuild the README card in its full mode (PyMOL and Chrome needed)")
     args = parser.parse_args()
     now = datetime.now(timezone.utc)
@@ -64,8 +90,14 @@ def main() -> int:
     new_ignore, new_readme = strip_held_back(gitignore.read_text()), restore_film(remove_public_card(readme.read_text()))
     print(f"HELD BACK block {'found' if new_ignore != gitignore.read_text() else 'not found'}; held-back sections {'found' if new_readme != readme.read_text() else 'not found'}")
     print(f"the public edition of the notebook {'is there and would be removed: the complete edition replaces it' if (ROOT / 'notebooks/public').exists() else 'is not there'}")
+    nested = nested_repositories(ROOT, gitignore.read_text())
+    backup_dir = args.backup_dir or ROOT.parent / f"{ROOT.name}-backup"
+    for folder in nested:
+        print(f"{folder.relative_to(ROOT)} has a repository of its own: its history {'would be' if args.dry_run else 'is'} written to a bundle in {backup_dir} and its .git removed, so that git records its files")
     if args.dry_run:
         return 0
+    for folder in nested:
+        print(f"bundle of {folder.relative_to(ROOT)}: {detach_repository(folder, backup_dir)}")
     remove_public_edition()
     gitignore.write_text(new_ignore)
     readme.write_text(new_readme)

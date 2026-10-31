@@ -99,3 +99,48 @@ def test_the_zenodo_record_is_described_as_the_citation_file_describes_it_and_th
     assert f'version = "{version}"' in Path("pyproject.toml").read_text()
     for name in ("README.md", "USE_AND_CITATION.md"):
         assert f"version = {{{version}}}" in Path(name).read_text(), name
+
+
+def _repository_with_a_commit(folder):
+    import subprocess
+
+    folder.mkdir(parents=True)
+    (folder / "app.py").write_text("print('x')\n")
+    env = {"GIT_AUTHOR_NAME": "a", "GIT_AUTHOR_EMAIL": "a@example.org", "GIT_COMMITTER_NAME": "a", "GIT_COMMITTER_EMAIL": "a@example.org", "PATH": __import__("os").environ["PATH"], "HOME": str(folder)}
+    for command in (["init", "-q"], ["add", "app.py"], ["commit", "-q", "-m", "first"]):
+        subprocess.run(["git", "-C", str(folder), *command], check=True, capture_output=True, env=env)
+
+
+def test_the_folders_of_the_held_back_block_are_read_and_wildcards_and_files_are_left_out():
+    text = "x\n# >>> HELD BACK UNTIL AFTER THE DEADLINE (d)\n# a comment/\nexplorer/full/\nsubmissions/*.csv\nsubmissions/manifest.json\ndata/outputs/\n# <<< HELD BACK\nexplorer/other/\n"
+    assert release.held_back_directories(text) == ["explorer/full/", "data/outputs/"]
+
+
+def test_a_held_back_folder_with_its_own_repository_is_bundled_and_loses_its_git_but_keeps_its_files(tmp_path):
+    import subprocess
+
+    _repository_with_a_commit(tmp_path / "repo/explorer/full")
+    _repository_with_a_commit(tmp_path / "repo/third_party/vendored")  # not in the block: never touched
+    gitignore = "x\n# >>> HELD BACK UNTIL AFTER THE DEADLINE (d)\nexplorer/full/\n# <<< HELD BACK\n"
+    root = tmp_path / "repo"
+    found = release.nested_repositories(root, gitignore)
+    assert found == [root / "explorer/full"]
+    bundle = release.detach_repository(found[0], tmp_path / "backup", root)
+    assert bundle.name == "explorer_full.bundle" and bundle.parent == tmp_path / "backup"
+    assert subprocess.run(["git", "-C", str(tmp_path / "repo/third_party/vendored"), "bundle", "list-heads", str(bundle)], capture_output=True, check=False).returncode == 0  # a bundle that git can read
+    assert not (root / "explorer/full/.git").exists() and (root / "explorer/full/app.py").exists()
+    assert (root / "third_party/vendored/.git").exists()
+    assert release.nested_repositories(root, gitignore) == []
+
+
+def test_nothing_is_removed_when_the_bundle_cannot_be_made(tmp_path):
+    import subprocess
+
+    import pytest
+
+    folder = tmp_path / "repo/explorer/full"
+    folder.mkdir(parents=True)
+    subprocess.run(["git", "-C", str(folder), "init", "-q"], check=True, capture_output=True)  # no commit: git refuses an empty bundle
+    with pytest.raises(subprocess.CalledProcessError):
+        release.detach_repository(folder, tmp_path / "backup", tmp_path / "repo")
+    assert (folder / ".git").exists()
