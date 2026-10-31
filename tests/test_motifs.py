@@ -30,7 +30,7 @@ def test_vardenafil_matches_a_motif():
     # Confirmed false positive (README's Validation section): this hits
     # imidazole_Nsub inside a fused pyrazolo-pyrimidinone core, not a
     # discrete azole ring -- Boltz-2 structural validation puts the closest
-    # motif-matched nitrogen 10.54 A from the heme iron, well outside
+    # motif-matched nitrogen 10.53 A from the heme iron, well outside
     # coordination range.
     assert detect_motifs(VARDENAFIL)
 

@@ -206,7 +206,10 @@ def motif_nitrogen_distances(structure, ligand_smiles: str, fe_atom) -> list[dic
     II motif, tagged with which motif matched. Sorted closest first.
     """
     mol, pdb_atom_names = _ligand_mol_3d(structure, ligand_smiles)
-    conf = mol.GetConformer()
+    # The distance is read from the coordinates of the file, as in all_ligand_nitrogen_distances: the conformer of
+    # `mol` was written through PDB text and can differ from them by a few 1e-4 A, enough to round the same atom
+    # to two different values in the two lists.
+    atoms_by_name = {atom.get_name(): atom for atom in _ligand_atoms(structure)}
 
     results = []
     for motif_name, pattern in _COMPILED_MOTIFS.items():
@@ -214,14 +217,8 @@ def motif_nitrogen_distances(structure, ligand_smiles: str, fe_atom) -> list[dic
             for atom_idx in match:
                 if mol.GetAtomWithIdx(atom_idx).GetSymbol() != "N":
                     continue
-                pos = conf.GetAtomPosition(atom_idx)
-                dx = pos.x - float(fe_atom.coord[0])
-                dy = pos.y - float(fe_atom.coord[1])
-                dz = pos.z - float(fe_atom.coord[2])
-                distance = (dx**2 + dy**2 + dz**2) ** 0.5
-                results.append(
-                    {"atom": pdb_atom_names[atom_idx], "motif": motif_name, "distance_angstrom": round(distance, 2)}
-                )
+                name = pdb_atom_names[atom_idx]
+                results.append({"atom": name, "motif": motif_name, "distance_angstrom": round(float(atoms_by_name[name] - fe_atom), 2)})
     return sorted(results, key=lambda r: r["distance_angstrom"])
 
 

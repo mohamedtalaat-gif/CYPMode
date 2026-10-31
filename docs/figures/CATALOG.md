@@ -98,7 +98,7 @@ Absorption, distribution, metabolism and excretion in one line. The project pred
 
 ### bio_motif_screen: The heme-binding motif screen on four real drugs
 
-The motif screen on the four drugs whose structures bound to CYP3A4 were solved by cryo-EM. Each structure is drawn from its SMILES; the atoms of the first heme-coordinating motif the screen finds (imidazole, triazole, pyridine or thiazole rings, defined in cypmode/metrics/motifs.py) are highlighted. Below each, the distance from the heme iron to the nearest motif nitrogen in the complex Boltz-2 predicted without any restraint: ketoconazole 2.05 A (on the iron); ritonavir 2.19 A (on the iron); azamulin 13.41 A (not on the iron); vardenafil 10.54 A (not on the iron). Two drugs put the nitrogen on the iron, two do not, although all four match a motif.
+The motif screen on the four drugs whose structures bound to CYP3A4 were solved by cryo-EM. Each structure is drawn from its SMILES; the atoms of the first heme-coordinating motif the screen finds (imidazole, triazole, pyridine or thiazole rings, defined in cypmode/metrics/motifs.py) are highlighted. Below each, the distance from the heme iron to the nearest motif nitrogen in the complex Boltz-2 predicted without any restraint: ketoconazole 2.05 A (on the iron); ritonavir 2.19 A (on the iron); azamulin 13.41 A (not on the iron); vardenafil 10.53 A (not on the iron). Two drugs put the nitrogen on the iron, two do not, although all four match a motif.
 
 - notebook section: 5.1
 - data: data/structure_track/outputs/cyp3a4/validation_summary.json, data/structure_track/inputs/cyp3a4_ketoconazole.yaml

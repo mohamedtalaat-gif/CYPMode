@@ -294,3 +294,15 @@ def test_load_structure_still_raises_for_other_missing_columns(tmp_path):
     cif.write_text(OPENFOLD3_STYLE_CIF.replace("_atom_site.Cartn_x \n", "_atom_site.Cartn_x_renamed \n"))
     with pytest.raises(KeyError):
         load_structure(cif)
+
+
+def test_a_nitrogen_has_the_same_distance_in_the_motif_list_and_in_the_list_of_all_nitrogens():
+    import json
+    from pathlib import Path
+
+    summary = json.loads((Path(__file__).resolve().parents[1] / "data/structure_track/outputs/cyp3a4/validation_summary.json").read_text())
+    assert summary
+    for name, record in summary.items():
+        every = {row["atom"]: row["distance_angstrom"] for row in record["all_ligand_nitrogen_distances"]}
+        for row in record["motif_nitrogen_distances"]:
+            assert every[row["atom"]] == row["distance_angstrom"], (name, row["atom"])

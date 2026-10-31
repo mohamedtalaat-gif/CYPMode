@@ -38,9 +38,9 @@
     ],
     "closest_motif_nitrogen_distance_angstrom": 13.41,
     "coordinated": false,
+    "confidence_score": 0.9328819513320923,
     "affinity_pred_value": -0.49237340688705444,
-    "affinity_probability_binary": 0.7270935773849487,
-    "confidence_score": 0.9328819513320923
+    "affinity_probability_binary": 0.7270935773849487
   },
   "ketoconazole": {
     "compound": "cyp3a4_ketoconazole",
@@ -76,9 +76,9 @@
     ],
     "closest_motif_nitrogen_distance_angstrom": 2.05,
     "coordinated": true,
+    "confidence_score": 0.9225853085517883,
     "affinity_pred_value": -0.9618289470672607,
-    "affinity_probability_binary": 0.855082094669342,
-    "confidence_score": 0.9225853085517883
+    "affinity_probability_binary": 0.855082094669342
   },
   "ritonavir": {
     "compound": "cyp3a4_ritonavir",
@@ -122,9 +122,9 @@
     ],
     "closest_motif_nitrogen_distance_angstrom": 2.19,
     "coordinated": true,
+    "confidence_score": 0.9235350489616394,
     "affinity_pred_value": -0.9611287713050842,
-    "affinity_probability_binary": 0.40203016996383667,
-    "confidence_score": 0.9235350489616394
+    "affinity_probability_binary": 0.40203016996383667
   },
   "vardenafil": {
     "compound": "cyp3a4_vardenafil",
@@ -132,7 +132,7 @@
       {
         "atom": "N53",
         "motif": "imidazole_Nsub",
-        "distance_angstrom": 10.54
+        "distance_angstrom": 10.53
       },
       {
         "atom": "N36",
@@ -166,10 +166,10 @@
         "distance_angstrom": 11.81
       }
     ],
-    "closest_motif_nitrogen_distance_angstrom": 10.54,
+    "closest_motif_nitrogen_distance_angstrom": 10.53,
     "coordinated": false,
+    "confidence_score": 0.9266602396965027,
     "affinity_pred_value": -1.1870265007019043,
-    "affinity_probability_binary": 0.4188699424266815,
-    "confidence_score": 0.9266602396965027
+    "affinity_probability_binary": 0.4188699424266815
   }
 }

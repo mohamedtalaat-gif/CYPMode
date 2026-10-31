@@ -59,11 +59,16 @@ def discover_compounds(target: str = "cyp3a4") -> list[str]:
     return names
 
 
-def main(target: str = "cyp3a4", summary_path: Path | None = None) -> None:
+def main(target: str = "cyp3a4", summary_path: Path | None = None, only: list[str] | None = None) -> None:
     from cypmode.validation.structures import summarize_compound
 
     target_out_dir = OUT_DIR / target
     compounds = discover_compounds(target)
+    if only:
+        unknown = sorted(set(only) - set(compounds))
+        if unknown:
+            raise SystemExit(f"no finished Boltz-2 run and input YAML for: {', '.join(unknown)}")
+        compounds = [name for name in compounds if name in only]
     if not compounds:
         raise SystemExit(f"no finished Boltz-2 runs found under {target_out_dir} for target={target!r}")
 
@@ -94,5 +99,11 @@ if __name__ == "__main__":
         default=None,
         help="defaults to data/structure_track/outputs/{target}/validation_summary.json",
     )
+    parser.add_argument(
+        "--compound",
+        action="append",
+        default=None,
+        help="summarize only this compound (repeat for several); by default every finished run under outputs/out/{target} is summarized",
+    )
     args = parser.parse_args()
-    main(target=args.target, summary_path=args.summary_path)
+    main(target=args.target, summary_path=args.summary_path, only=args.compound)
