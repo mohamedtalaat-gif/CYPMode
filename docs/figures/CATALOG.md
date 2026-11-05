@@ -432,7 +432,7 @@ How much the selection-aware CYP2D6 model gains depends on how many never-promot
 
 ### eng_queue_timeline: The job queue as a timeline
 
-Each bar is one run of one job of the queue, from the runner's own log (172 jobs, 485 runs: 430 finished, 33 stopped and retried, 22 failed after their attempts). The runs add up to 242 hours of wall-clock time between 08 Oct and 05 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
+Each bar is one run of one job of the queue, from the runner's own log (179 jobs, 526 runs: 469 finished, 35 stopped and retried, 22 failed after their attempts). The runs add up to 247 hours of wall-clock time between 08 Oct and 05 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.2 GB on a 16 GB machine).
 
 - notebook section: 12.2
 - data: queue/logs/queue_stage.txt
@@ -448,7 +448,7 @@ Every time the machine entered sleep between 30 Oct and 05 Nov, by the cause its
 
 ### eng_tests_by_module: The test suite by module
 
-Test functions per test module of the repository: 1053 test functions in 150 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
+Test functions per test module of the repository: 1085 test functions in 156 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
 
 - notebook section: 12.5
 - data: tests/test_*.py
@@ -456,7 +456,7 @@ Test functions per test module of the repository: 1053 test functions in 150 mod
 
 ### eng_commit_timeline: The history of the repository
 
-The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-05: 289 commits on 16 days, the busiest day with 41 (2026-10-25). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
+The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-05: 316 commits on 16 days, the busiest day with 41 (2026-10-25). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
 
 - notebook section: 12.4
 - data: git log
@@ -464,7 +464,7 @@ The history of the repository as the number of commits of each day, from the fir
 
 ### eng_repository_map: The repository by folder
 
-The repository by top-level folder: the number of files that git tracks (3407 in all, 533 MB) and their size. The three folders with the most files are data (2029), docs (530), cypmode (182). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
+The repository by top-level folder: the number of files that git tracks (3461 in all, 534 MB) and their size. The three folders with the most files are data (2065), docs (531), cypmode (189). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
 
 - notebook section: 12.5
 - data: git ls-files
