@@ -39,7 +39,8 @@
       ],
       "exclude": [
         "data/structure_track/outputs/out",
-        "data/structure_track/outputs/openfold3"
+        "data/structure_track/outputs/openfold3",
+        "data/structure_track/outputs/cyp3a4/final/structure_track_results.before_affinity_retry.json"
       ],
       "description": "the tables, logs, submitted structures and other results of the structure track"
     }
@@ -69,6 +70,12 @@
         "data/tdi_track/outputs/caches/chemberta_embedding_cache.csv"
       ],
       "reason": "embeddings of the ChemBERTa checkpoint seyonec/ChemBERTa-zinc-base-v1, whose card states no licence"
+    },
+    {
+      "paths": [
+        "data/structure_track/outputs/cyp3a4/final/structure_track_results.before_affinity_retry.json"
+      ],
+      "reason": "a snapshot of the structure results from before the retry of the affinity head: its error messages carry the paths of the machine that ran it, and the results after the retry are in the record"
     }
   ],
   "terms_read": [
