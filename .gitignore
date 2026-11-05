@@ -141,3 +141,4 @@ data_record/downloads/
 
 # The files that the organisers released after the deadline (cypmode/post_deadline/released.py); their checksums are in data/post_deadline/released_manifest.json.
 data/post_deadline/inputs/
+data/post_deadline/work/
