@@ -22,7 +22,7 @@ A use of the code in a product or a service that cannot be released under these 
 ## How to cite
 
 Cite the archive by the DOI that stands for all its versions, 10.5281/zenodo.23816450, or a release by its own DOI (release 0.3.0: 10.5281/zenodo.23822983). Release 0.2.0 (10.5281/zenodo.23816451) held what could be published while the challenge was open; release 0.3.0 holds the full set of results, figures
-and the notebook. A ready entry for release 0.3.0:
+and the notebook. Release 0.3.0 is also kept in the Software Heritage archive, under the identifier [swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd](https://archive.softwareheritage.org/swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd). A ready entry for release 0.3.0:
 
 ```bibtex
 @software{talaat_cypmode,
