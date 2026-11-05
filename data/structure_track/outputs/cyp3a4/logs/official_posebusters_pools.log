@@ -1,0 +1,24 @@
+      ligand  poses  pass  safe  chosen_margin  best_margin
+OCNT-2312554      9     7     3          0.813        0.813
+OCNT-2312966      9     6     6          0.832        0.883
+OCNT-2313038      9     7     7          0.807        0.865
+OCNT-2313300      9     7     5          0.801        0.871
+OCNT-2313397      9     9     8          0.813        0.841
+OCNT-2313429      9     6     5          0.896        0.899
+OCNT-2315379      9     7     7          0.838        0.921
+OCNT-2395328      9     7     2          0.839        0.839
+OCNT-2395342     14    12     8          0.875        0.898
+OCNT-2395415      9     9     6          0.857        0.872
+OCNT-2395436     14    14    13          0.803        0.871
+OCNT-2395457      9     9     8          0.831        0.869
+OCNT-2395460      9     8     4          0.804        0.881
+OCNT-2395464      9     9     8          0.808        0.870
+OCNT-2395503     14    14    12          0.837        0.871
+OCNT-2395645      9     8     7          0.859        0.928
+OCNT-2395712     14    11     8          0.806        0.957
+OCNT-2395789      9     9     7          0.806        0.858
+OCNT-2535422      9     9     8          0.822        0.948
+OCNT-2535519      9     8     7          0.857        0.861
+
+200 poses audited; 176 pass all checks, 139 pass with a relative distance of at least 0.8
+ligands whose chosen pose is below the margin floor: 0; of these with a safe valid alternative in the pool: 0

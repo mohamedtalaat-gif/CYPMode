@@ -1,0 +1,5 @@
+compound,smiles,coordinated,closest_motif_nitrogen_distance_angstrom,closest_motif,closest_motif_atom,confidence_score,affinity_pred_value,affinity_probability_binary,error
+OCNT-2395645-ex1,CC1=CC=C(S(=O)(=O)NC2=CC=CC(O)=C2)C(C)=C1,False,,,,0.9477049708366394,,,
+OCNT-2395789-ex1,CC(C)(C)NS(=O)(=O)C1(CNC2=CC=NC=C2C#N)CCC1,True,2.18,pyridine,N27,0.9394171833992004,,,
+OCNT-2395457-ex1,COC1=CC=CC=C1C1=CN(CCC2=CN=CN2C)N=N1,True,2.13,imidazole_Nsub,N19,0.9327365159988403,,,
+OCNT-2312554-ex1,O=C(NC[C@@H]1CCC2=CC=CC=C21)C1=CC=NC(N2C=CN=C2)=C1,True,2.11,imidazole_Nsub,N21,0.9487389326095581,,,

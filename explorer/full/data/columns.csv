@@ -1,0 +1,39 @@
+file,column,type,compounds with a value,of,first value
+training file,Molecule_Name,str,6145,6145,OCNT-0000422
+training file,SMILES,str,6145,6145,CC1=C(O)C(C=O)=C(CO)C=N1
+training file,CYP2D6_is_TDI,object,1497,6145,True
+training file,CYP3A4_is_TDI,object,3584,6145,False
+training file,CYP1A2_pIC50_TDI_condition,float64,1413,6145,5.739094973
+training file,CYP2C9_pIC50_TDI_condition,float64,1285,6145,2.026651913
+training file,CYP2D6_pIC50_TDI_condition,float64,1497,6145,5.315580657
+training file,CYP3A4_pIC50_TDI_condition,float64,3583,6145,2.004111803
+training file,CYP1A2_pIC50_TDI_condition_conf_high,float64,1413,6145,5.86376175
+training file,CYP2C9_pIC50_TDI_condition_conf_high,float64,1285,6145,3.1963435
+training file,CYP2D6_pIC50_TDI_condition_conf_high,float64,1497,6145,5.4114455
+training file,CYP3A4_pIC50_TDI_condition_conf_high,float64,3583,6145,3.3099295
+training file,CYP1A2_pIC50_TDI_condition_conf_low,float64,1413,6145,5.59861775
+training file,CYP2C9_pIC50_TDI_condition_conf_low,float64,1285,6145,1.0599255
+training file,CYP2D6_pIC50_TDI_condition_conf_low,float64,1497,6145,5.18083775
+training file,CYP3A4_pIC50_TDI_condition_conf_low,float64,3583,6145,1.04638825
+training file,CYP1A2_pIC50_TDI_condition_std,float64,1413,6145,0.06771313986
+training file,CYP2C9_pIC50_TDI_condition_std,float64,1285,6145,0.6291989748
+training file,CYP2D6_pIC50_TDI_condition_std,float64,1497,6145,0.05564188229
+training file,CYP3A4_pIC50_TDI_condition_std,float64,3583,6145,0.6519833739
+training file,CYP1A2_pIC50_direct_inhibition,float64,1412,6145,5.783014945
+training file,CYP2C9_pIC50_direct_inhibition,float64,1285,6145,2.169687087
+training file,CYP2D6_pIC50_direct_inhibition,float64,1493,6145,4.615706783
+training file,CYP3A4_pIC50_direct_inhibition,float64,2335,6145,2.101240007
+training file,CYP1A2_pIC50_direct_inhibition_conf_high,float64,1412,6145,5.880482
+training file,CYP2C9_pIC50_direct_inhibition_conf_high,float64,1285,6145,3.2269215
+training file,CYP2D6_pIC50_direct_inhibition_conf_high,float64,1493,6145,4.795599
+training file,CYP3A4_pIC50_direct_inhibition_conf_high,float64,2335,6145,3.4523925
+training file,CYP1A2_pIC50_direct_inhibition_conf_low,float64,1412,6145,5.68250125
+training file,CYP2C9_pIC50_direct_inhibition_conf_low,float64,1285,6145,1.0699735
+training file,CYP2D6_pIC50_direct_inhibition_conf_low,float64,1493,6145,4.4761265
+training file,CYP3A4_pIC50_direct_inhibition_conf_low,float64,2335,6145,1.0483375
+training file,CYP1A2_pIC50_direct_inhibition_std,float64,1412,6145,0.04955124269
+training file,CYP2C9_pIC50_direct_inhibition_std,float64,1285,6145,0.6401651452
+training file,CYP2D6_pIC50_direct_inhibition_std,float64,1493,6145,0.08106933771
+training file,CYP3A4_pIC50_direct_inhibition_std,float64,2335,6145,0.6962576872
+blinded test file,Molecule_Name,str,750,750,OCNT-0010024
+blinded test file,SMILES,str,750,750,O=C(O)C1=CC(CN2C=CN=C2)=CC=C1

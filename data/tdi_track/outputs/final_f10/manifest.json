@@ -1,0 +1,123 @@
+{
+  "environment": {
+    "python": "3.13.13",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "lightgbm": "4.7.0",
+    "rdkit": "2026.03.6",
+    "pandas": "3.0.5"
+  },
+  "seeds": {
+    "nested plan seed": 0,
+    "repeats": 3,
+    "outer": 10,
+    "inner": 4
+  },
+  "gate_verdicts": {
+    "physics|CYP3A4": {
+      "stacked": false
+    },
+    "physics_compact|CYP3A4": {
+      "stacked": false
+    },
+    "physics_b|CYP3A4": {
+      "stacked": false
+    },
+    "neural|CYP3A4": {
+      "stacked": true
+    },
+    "physics|CYP2D6": {
+      "stacked": false
+    },
+    "physics_compact|CYP2D6": {
+      "stacked": false
+    },
+    "physics_b|CYP2D6": {
+      "stacked": false
+    }
+  },
+  "isoforms": {
+    "CYP3A4": {
+      "isoform": "CYP3A4",
+      "stack": "default+neural",
+      "n_candidates": 26,
+      "surviving_groups": [
+        "neural"
+      ],
+      "target_prevalence": 0.3096528282281229,
+      "called_rate": 0.34,
+      "call_rate_multiplier": 1.1,
+      "rate_before_cap_rule": 0.468,
+      "threshold": -0.6238813235266881,
+      "stack_weights": {
+        "mlp_multitask_shift": 0.192,
+        "lgbm_A+fps+ext+alerts_deep": 0.146,
+        "lgbm_A+fps+ext_deep": 0.138,
+        "chemprop_mt_shift": 0.127,
+        "lgbm_A+fps_deep": 0.121
+      },
+      "leakage_audit": {
+        "external rows are exactly the test file rows": true,
+        "no test row in the labelled pool": true,
+        "no label stored for any test row": true
+      }
+    },
+    "CYP2D6": {
+      "isoform": "CYP2D6",
+      "stack": "default",
+      "n_candidates": 23,
+      "surviving_groups": [],
+      "target_prevalence": 0.059117573198105,
+      "called_rate": 0.058666666666666666,
+      "call_rate_multiplier": 1.0,
+      "rate_before_cap_rule": 0.08266666666666667,
+      "threshold": 0.005426596980529464,
+      "stack_weights": {
+        "knn_tanimoto_k5": -0.0,
+        "lgbm_A+fps_deep": 0.0,
+        "lgbm_A+fps_deep_knnfeat": 0.0,
+        "lgbm_A+fps_shallow": 0.0,
+        "lgbm_A+fps+ext_deep": 0.0
+      },
+      "leakage_audit": {
+        "external rows are exactly the test file rows": true,
+        "no test row in the labelled pool": true,
+        "no label stored for any test row": true
+      }
+    }
+  },
+  "selection_aware": {
+    "n_candidates": 8,
+    "with_physics": false,
+    "with_screen": false,
+    "fit_weight": 1.0,
+    "called_rate": 0.058666666666666666,
+    "call_rate_multiplier": 1.0,
+    "stack_weights": {
+      "popgate_A+fps_deep": 0.01,
+      "popgate_A_deep": 0.009,
+      "poptwo_A+fps_deep": 0.009,
+      "pop_A_deep": 0.008,
+      "pop_A+fps_deep": 0.008
+    }
+  },
+  "files": [
+    {
+      "file": "candidate_A_hits_only.csv",
+      "sha256": "2e280f5604aa713e7093d93cc5e80eddde02339d81b017bb8ede644cb2ae62ae",
+      "rows": 750,
+      "CYP3A4_positive_rate": 0.34,
+      "CYP2D6_positive_rate": 0.058666666666666666
+    },
+    {
+      "file": "candidate_B_selection_aware.csv",
+      "sha256": "202d43a10d58cca6ab08fae210b293b25edbb88694e9f5d96594a3f7441f913c",
+      "rows": 750,
+      "CYP3A4_positive_rate": 0.34,
+      "CYP2D6_positive_rate": 0.058666666666666666
+    }
+  ],
+  "hedged_blend_adopted": false
+}

@@ -1,0 +1,103 @@
+{
+  "OCNT-2313038-ex1": {
+    "compound": "cyp3a4_OCNT-2313038-ex1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N26",
+        "motif": "pyridine",
+        "distance_angstrom": 2.22
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N26",
+        "distance_angstrom": 2.22
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 8.96
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.22,
+    "coordinated": true,
+    "confidence_score": 0.9484688639640808
+  },
+  "OCNT-2313300-ex1": {
+    "compound": "cyp3a4_OCNT-2313300-ex1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N18",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.07
+      },
+      {
+        "atom": "N35",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 4.07
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N18",
+        "distance_angstrom": 2.07
+      },
+      {
+        "atom": "N35",
+        "distance_angstrom": 4.07
+      },
+      {
+        "atom": "N33",
+        "distance_angstrom": 9.26
+      },
+      {
+        "atom": "N34",
+        "distance_angstrom": 13.41
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.07,
+    "coordinated": true,
+    "confidence_score": 0.9467763900756836
+  },
+  "OCNT-2395460-ex1": {
+    "compound": "cyp3a4_OCNT-2395460-ex1",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N39",
+        "distance_angstrom": 5.14
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 12.55
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.946568489074707
+  },
+  "OCNT-2315379-ex1": {
+    "compound": "cyp3a4_OCNT-2315379-ex1",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N41",
+        "distance_angstrom": 5.08
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 6.86
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 7.27
+      },
+      {
+        "atom": "N42",
+        "distance_angstrom": 9.23
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.9286946058273315
+  }
+}

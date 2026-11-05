@@ -1,0 +1,26 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+OCNT-2395415.pdb: energy 318 -> -193 kJ/mol, ligand moved 0.45 A
+OCNT-2312554.pdb: energy 591 -> -137 kJ/mol, ligand moved 0.39 A
+OCNT-2312966.pdb: energy 909 -> -89 kJ/mol, ligand moved 0.53 A
+3 of 3 poses relaxed
+OCNT-2395436: pass True -> True, margin 0.803 -> 0.856, moved 0.43 A, Fe-N 1.90 -> 2.03: adopted
+OCNT-2395503: pass True -> True, margin 0.837 -> 0.893, moved 0.25 A, Fe-N 2.00 -> 2.06: adopted
+OCNT-2395342: pass True -> True, margin 0.875 -> 0.948, moved 0.52 A, Fe-N nan -> nan: adopted
+OCNT-2395712: pass True -> True, margin 0.806 -> 0.867, moved 0.76 A, Fe-N 2.42 -> 2.45: adopted
+OCNT-2313429: pass True -> True, margin 0.896 -> 0.951, moved 0.40 A, Fe-N nan -> nan: adopted
+OCNT-2395464: pass True -> True, margin 0.808 -> 0.858, moved 0.36 A, Fe-N 1.98 -> 2.09: adopted
+OCNT-2313397: pass True -> True, margin 0.813 -> 0.903, moved 0.47 A, Fe-N 2.09 -> 2.16: adopted
+OCNT-2395415: pass True -> True, margin 0.854 -> 0.877, moved 0.45 A, Fe-N 2.20 -> 2.29: adopted
+OCNT-2395645: pass True -> True, margin 0.859 -> 0.895, moved 0.45 A, Fe-N nan -> nan: adopted
+OCNT-2395789: pass True -> True, margin 0.806 -> 0.860, moved 0.60 A, Fe-N 1.92 -> 2.04: adopted
+OCNT-2312554: pass True -> True, margin 0.812 -> 0.849, moved 0.39 A, Fe-N 1.95 -> 2.04: adopted
+OCNT-2395457: pass True -> True, margin 0.831 -> 0.881, moved 0.48 A, Fe-N 1.96 -> 2.02: adopted
+OCNT-2313038: pass True -> True, margin 0.807 -> 0.871, moved 0.57 A, Fe-N 1.93 -> 2.05: adopted
+OCNT-2313300: pass True -> True, margin 0.801 -> 0.866, moved 0.49 A, Fe-N 1.93 -> 2.03: adopted
+OCNT-2395460: pass True -> True, margin 0.804 -> 0.930, moved 0.54 A, Fe-N nan -> nan: adopted
+OCNT-2315379: pass True -> True, margin 0.838 -> 0.931, moved 0.69 A, Fe-N nan -> nan: adopted
+OCNT-2535422: pass True -> True, margin 0.822 -> 0.947, moved 0.42 A, Fe-N nan -> nan: adopted
+OCNT-2535519: pass True -> True, margin 0.857 -> 0.879, moved 0.29 A, Fe-N 2.04 -> 2.11: adopted
+OCNT-2395328: pass True -> True, margin 0.839 -> 0.911, moved 0.59 A, Fe-N nan -> nan: adopted
+OCNT-2312966: pass True -> True, margin 0.855 -> 0.918, moved 0.53 A, Fe-N nan -> nan: adopted
+STRUCTURE RELAXATION applied to 20 of 20 poses (rule of relax_final.py); smallest relative distance 0.801 -> 0.849; mean movement of the adopted poses 0.48 A; zip sha256 966c034c25373772

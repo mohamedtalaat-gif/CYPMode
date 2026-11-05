@@ -1,0 +1,8 @@
+ligands with specified stereochemistry: 4 of 20 (OCNT-2395415, OCNT-2312554, OCNT-2313038, OCNT-2312966)
+STEREO CHECK official file has no unspecified stereo element: PASS
+STEREO CHECK structures_final.zip: PASS (20 of 20 poses reproduce the official stereochemistry)
+  OCNT-2395415: 6 of 9 pool poses reproduce the official stereochemistry
+  OCNT-2312554: 8 of 9 pool poses reproduce the official stereochemistry
+  OCNT-2313038: 8 of 9 pool poses reproduce the official stereochemistry
+  OCNT-2312966: 1 of 9 pool poses reproduce the official stereochemistry
+STEREO POOLS share of the pool poses of the 4 chiral ligands that reproduce the official stereochemistry: 0.639 (23 of 36)

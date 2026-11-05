@@ -1,0 +1,19 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+OCNT-2395415: 4 stale runs (OCNT-2395415, OCNT-2395415-u, OCNT-2395415-rs, OCNT-2395415-ex1)
+OCNT-2312554: 3 stale runs (OCNT-2312554, OCNT-2312554-rs, OCNT-2312554-ex1)
+OCNT-2312966: 4 stale runs (OCNT-2312966, OCNT-2312966-u, OCNT-2312966-rs, OCNT-2312966-ex1)
+STEREO RERUN 14 output folders set aside in data/structure_track/outputs/out/superseded_racemic; 11 checkpoint entries removed from 6 files
+  boltz run OCNT-2395415 of OCNT-2395415
+  boltz run OCNT-2395415-u of OCNT-2395415
+  boltz run OCNT-2395415-rs of OCNT-2395415
+  boltz run OCNT-2395415-ex1 of OCNT-2395415
+  openfold3 samples of OCNT-2395415
+  boltz run OCNT-2312554 of OCNT-2312554
+  boltz run OCNT-2312554-rs of OCNT-2312554
+  boltz run OCNT-2312554-ex1 of OCNT-2312554
+  openfold3 samples of OCNT-2312554
+  boltz run OCNT-2312966 of OCNT-2312966
+  boltz run OCNT-2312966-u of OCNT-2312966
+  boltz run OCNT-2312966-rs of OCNT-2312966
+  boltz run OCNT-2312966-ex1 of OCNT-2312966
+  openfold3 samples of OCNT-2312966

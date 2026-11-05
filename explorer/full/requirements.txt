@@ -1,0 +1,12 @@
+# The packages of the complete explorer, pinned. The launcher (scripts/explorer.sh, run_cypmode.bat) installs them into .venv-marimo on the first start and again whenever this file changes.
+marimo==0.25.2
+altair==6.3.0
+pandas==3.0.6
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.9.1
+PyYAML==6.0.3
+pillow==13.0.0
+rdkit==2026.9.1
+tblite==0.8.0
+chembl_structure_pipeline==1.2.4

@@ -1,0 +1,23 @@
+    compound  passes  checks  min_distance  safe failed
+OCNT-2312554    True      22         0.813  True      -
+OCNT-2312966    True      22         0.832  True      -
+OCNT-2313038    True      22         0.807  True      -
+OCNT-2313300    True      22         0.801  True      -
+OCNT-2313397    True      22         0.813  True      -
+OCNT-2313429    True      22         0.896  True      -
+OCNT-2315379    True      22         0.838  True      -
+OCNT-2395328    True      22         0.839  True      -
+OCNT-2395342    True      22         0.875  True      -
+OCNT-2395415    True      22         0.857  True      -
+OCNT-2395436    True      22         0.803  True      -
+OCNT-2395457    True      22         0.831  True      -
+OCNT-2395460    True      22         0.804  True      -
+OCNT-2395464    True      22         0.808  True      -
+OCNT-2395503    True      22         0.837  True      -
+OCNT-2395645    True      22         0.859  True      -
+OCNT-2395712    True      22         0.806  True      -
+OCNT-2395789    True      22         0.806  True      -
+OCNT-2535422    True      22         0.822  True      -
+OCNT-2535519    True      22         0.857  True      -
+
+20 structures; 20 pass all 22 checks; 0 below the margin floor 0.8; official ligands without a structure: none

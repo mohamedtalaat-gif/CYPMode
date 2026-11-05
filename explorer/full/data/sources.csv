@@ -1,0 +1,10 @@
+source,what is measured,records,distinct compounds,connectivity keys shared with the challenge
+TDC / NCATS qHTS panel (five enzymes),yes/no inhibitor call per enzyme,62794,16366,163
+"ChEMBL, CYP3A4","pChEMBL value (-log10 of IC50, Ki, ...) from the literature",29405,16477,149
+"ChEMBL, CYP2D6","pChEMBL value (-log10 of IC50, Ki, ...) from the literature",12853,8854,130
+"BindingDB, CYP3A4","Ki / IC50 / EC50 in micromolar, from the literature",8712,8712,59
+"BindingDB, CYP2D6","Ki / IC50 / EC50 in micromolar, from the literature",6235,6235,39
+"PubChem AID 1851 (NCATS qHTS, five enzymes)",active / inactive and a potency per enzyme,16560,16559,185
+"PubChem single-enzyme screen, CYP2D6",active / inactive,9385,9384,184
+"PubChem single-enzyme screen, CYP3A4",active / inactive,13076,13073,224
+Octant diversity-library screen (CYP3A4),pIC50 after a 30-minute pre-incubation,1340,1340,-

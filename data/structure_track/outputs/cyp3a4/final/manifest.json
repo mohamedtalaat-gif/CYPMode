@@ -1,0 +1,482 @@
+{
+  "decision": {
+    "gates": {
+      "mbr_selection": false,
+      "engine_consensus": false,
+      "heme_frame_prior": false,
+      "ei_sampling": false,
+      "restraint_bond": true,
+      "restraint_contact": true,
+      "pilot_conformers": false,
+      "pilot_cryoem": false,
+      "pilot_seeds": false,
+      "pose_physics": false,
+      "pose_pharmacophore": false,
+      "pose_combined": false,
+      "series_consensus": false,
+      "restraint_bond_expansion": false,
+      "restraint_bond_harm": false
+    },
+    "recipe": {
+      "restraint": "bond",
+      "levers": [],
+      "openfold3": false,
+      "selection": "first_valid",
+      "terms": [],
+      "ei_allocation": false,
+      "extra_per_ligand": 2,
+      "reasons": [
+        "restraint 'bond': gate MET",
+        "diversity levers: none (no pilot gate MET)",
+        "Boltz only: engine_consensus not MET",
+        "selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)",
+        "extra samples allocated uniformly: ei_sampling not MET",
+        "margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)"
+      ]
+    },
+    "existing_samples": {
+      "OCNT-2395436": 1,
+      "OCNT-2395503": 1,
+      "OCNT-2395342": 1,
+      "OCNT-2395712": 1,
+      "OCNT-2313429": 5,
+      "OCNT-2395464": 1,
+      "OCNT-2313397": 1,
+      "OCNT-2395415": 1,
+      "OCNT-2395645": 1,
+      "OCNT-2395789": 1,
+      "OCNT-2312554": 1,
+      "OCNT-2395457": 1,
+      "OCNT-2313038": 1,
+      "OCNT-2313300": 5,
+      "OCNT-2395460": 1,
+      "OCNT-2315379": 1,
+      "OCNT-2535422": 1,
+      "OCNT-2535519": 1,
+      "OCNT-2395328": 1,
+      "OCNT-2312966": 1
+    },
+    "estimated_hours": 20.6,
+    "ligands": [
+      {
+        "ligand": "OCNT-2395436",
+        "type_ii_donor": true,
+        "analog": "OCNT-2395789",
+        "analog_tanimoto": 0.6727272727,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.963552567,
+        "cyp3a4_tdi_pic50": 5.96460702
+      },
+      {
+        "ligand": "OCNT-2395503",
+        "type_ii_donor": true,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.184632385,
+        "cyp3a4_tdi_pic50": 5.147280933
+      },
+      {
+        "ligand": "OCNT-2395342",
+        "type_ii_donor": false,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.341886632,
+        "cyp3a4_tdi_pic50": 6.07897292
+      },
+      {
+        "ligand": "OCNT-2395712",
+        "type_ii_donor": true,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.291723665,
+        "cyp3a4_tdi_pic50": 6.18485982
+      },
+      {
+        "ligand": "OCNT-2313429",
+        "type_ii_donor": false,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 6.120009353,
+        "cyp3a4_tdi_pic50": 6.213209362
+      },
+      {
+        "ligand": "OCNT-2395464",
+        "type_ii_donor": true,
+        "analog": "OCNT-2395789",
+        "analog_tanimoto": 0.914893617,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.450628942,
+        "cyp3a4_tdi_pic50": 5.454280707
+      },
+      {
+        "ligand": "OCNT-2313397",
+        "type_ii_donor": true,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": false,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": null,
+        "cyp3a4_tdi_pic50": null
+      },
+      {
+        "ligand": "OCNT-2395415",
+        "type_ii_donor": true,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": false,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": null,
+        "cyp3a4_tdi_pic50": null
+      },
+      {
+        "ligand": "OCNT-2395645",
+        "type_ii_donor": false,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.912842905,
+        "cyp3a4_tdi_pic50": 6.27221094
+      },
+      {
+        "ligand": "OCNT-2395789",
+        "type_ii_donor": true,
+        "analog": "OCNT-2395464",
+        "analog_tanimoto": 0.914893617,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.536836112,
+        "cyp3a4_tdi_pic50": 5.549343785
+      },
+      {
+        "ligand": "OCNT-2312554",
+        "type_ii_donor": true,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": false,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": null,
+        "cyp3a4_tdi_pic50": null
+      },
+      {
+        "ligand": "OCNT-2395457",
+        "type_ii_donor": true,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.856038895,
+        "cyp3a4_tdi_pic50": 5.795704705
+      },
+      {
+        "ligand": "OCNT-2313038",
+        "type_ii_donor": true,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": false,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": null,
+        "cyp3a4_tdi_pic50": null
+      },
+      {
+        "ligand": "OCNT-2313300",
+        "type_ii_donor": true,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 6.296327448,
+        "cyp3a4_tdi_pic50": 6.277963955
+      },
+      {
+        "ligand": "OCNT-2395460",
+        "type_ii_donor": false,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.29994507,
+        "cyp3a4_tdi_pic50": 6.530726178
+      },
+      {
+        "ligand": "OCNT-2315379",
+        "type_ii_donor": false,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.21404602,
+        "cyp3a4_tdi_pic50": 6.360567965
+      },
+      {
+        "ligand": "OCNT-2535422",
+        "type_ii_donor": false,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": false,
+        "in_tdi_test": true,
+        "cyp3a4_direct_pic50": null,
+        "cyp3a4_tdi_pic50": null
+      },
+      {
+        "ligand": "OCNT-2535519",
+        "type_ii_donor": true,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": false,
+        "in_tdi_test": true,
+        "cyp3a4_direct_pic50": null,
+        "cyp3a4_tdi_pic50": null
+      },
+      {
+        "ligand": "OCNT-2395328",
+        "type_ii_donor": false,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": true,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": 5.526844937,
+        "cyp3a4_tdi_pic50": 6.067198793
+      },
+      {
+        "ligand": "OCNT-2312966",
+        "type_ii_donor": false,
+        "analog": null,
+        "analog_tanimoto": null,
+        "in_tdi_train": false,
+        "in_tdi_test": false,
+        "cyp3a4_direct_pic50": null,
+        "cyp3a4_tdi_pic50": null
+      }
+    ]
+  },
+  "zip": "data/structure_track/outputs/cyp3a4/final/structures_final.zip",
+  "sha256": "966c034c2537377210bf42cec69eb855a095e183d3c05e27aa712e586802ea55",
+  "posebusters_failures": [],
+  "ligands": [
+    {
+      "compound": "OCNT-2395436",
+      "pool": 14,
+      "valid_in_pool": 14,
+      "run": "OCNT-2395436-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395436-rs/predictions/cyp3a4_OCNT-2395436-rs/cyp3a4_OCNT-2395436-rs_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8032
+    },
+    {
+      "compound": "OCNT-2395503",
+      "pool": 14,
+      "valid_in_pool": 14,
+      "run": "OCNT-2395503-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395503-rs/predictions/cyp3a4_OCNT-2395503-rs/cyp3a4_OCNT-2395503-rs_model_2.cif",
+      "valid": true,
+      "distance_margin": 0.8373
+    },
+    {
+      "compound": "OCNT-2395342",
+      "pool": 14,
+      "valid_in_pool": 12,
+      "run": "OCNT-2395342",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395342/predictions/cyp3a4_OCNT-2395342/cyp3a4_OCNT-2395342_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8755
+    },
+    {
+      "compound": "OCNT-2395712",
+      "pool": 14,
+      "valid_in_pool": 11,
+      "run": "OCNT-2395712-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395712-rs/predictions/cyp3a4_OCNT-2395712-rs/cyp3a4_OCNT-2395712-rs_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8059
+    },
+    {
+      "compound": "OCNT-2313429",
+      "pool": 9,
+      "valid_in_pool": 6,
+      "run": "OCNT-2313429",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2313429/predictions/cyp3a4_OCNT-2313429/cyp3a4_OCNT-2313429_model_1.cif",
+      "valid": true,
+      "distance_margin": 0.8963
+    },
+    {
+      "compound": "OCNT-2395464",
+      "pool": 9,
+      "valid_in_pool": 9,
+      "run": "OCNT-2395464-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395464-rs/predictions/cyp3a4_OCNT-2395464-rs/cyp3a4_OCNT-2395464-rs_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8081
+    },
+    {
+      "compound": "OCNT-2313397",
+      "pool": 9,
+      "valid_in_pool": 9,
+      "run": "OCNT-2313397-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2313397-rs/predictions/cyp3a4_OCNT-2313397-rs/cyp3a4_OCNT-2313397-rs_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8131
+    },
+    {
+      "compound": "OCNT-2395415",
+      "pool": 9,
+      "valid_in_pool": 6,
+      "run": "OCNT-2395415",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395415/predictions/cyp3a4_OCNT-2395415/cyp3a4_OCNT-2395415_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8535
+    },
+    {
+      "compound": "OCNT-2395645",
+      "pool": 9,
+      "valid_in_pool": 8,
+      "run": "OCNT-2395645",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395645/predictions/cyp3a4_OCNT-2395645/cyp3a4_OCNT-2395645_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8591
+    },
+    {
+      "compound": "OCNT-2395789",
+      "pool": 9,
+      "valid_in_pool": 9,
+      "run": "OCNT-2395789-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395789-rs/predictions/cyp3a4_OCNT-2395789-rs/cyp3a4_OCNT-2395789-rs_model_2.cif",
+      "valid": true,
+      "distance_margin": 0.8056
+    },
+    {
+      "compound": "OCNT-2312554",
+      "pool": 9,
+      "valid_in_pool": 5,
+      "run": "OCNT-2312554-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2312554-rs/predictions/cyp3a4_OCNT-2312554-rs/cyp3a4_OCNT-2312554-rs_model_2.cif",
+      "valid": true,
+      "distance_margin": 0.8125
+    },
+    {
+      "compound": "OCNT-2395457",
+      "pool": 9,
+      "valid_in_pool": 9,
+      "run": "OCNT-2395457-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395457-rs/predictions/cyp3a4_OCNT-2395457-rs/cyp3a4_OCNT-2395457-rs_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8311
+    },
+    {
+      "compound": "OCNT-2313038",
+      "pool": 9,
+      "valid_in_pool": 6,
+      "run": "OCNT-2313038-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2313038-rs/predictions/cyp3a4_OCNT-2313038-rs/cyp3a4_OCNT-2313038-rs_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8065
+    },
+    {
+      "compound": "OCNT-2313300",
+      "pool": 9,
+      "valid_in_pool": 7,
+      "run": "OCNT-2313300-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2313300-rs/predictions/cyp3a4_OCNT-2313300-rs/cyp3a4_OCNT-2313300-rs_model_2.cif",
+      "valid": true,
+      "distance_margin": 0.8015
+    },
+    {
+      "compound": "OCNT-2395460",
+      "pool": 9,
+      "valid_in_pool": 8,
+      "run": "OCNT-2395460",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395460/predictions/cyp3a4_OCNT-2395460/cyp3a4_OCNT-2395460_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8043
+    },
+    {
+      "compound": "OCNT-2315379",
+      "pool": 9,
+      "valid_in_pool": 7,
+      "run": "OCNT-2315379",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2315379/predictions/cyp3a4_OCNT-2315379/cyp3a4_OCNT-2315379_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8379
+    },
+    {
+      "compound": "OCNT-2535422",
+      "pool": 9,
+      "valid_in_pool": 9,
+      "run": "OCNT-2535422",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2535422/predictions/cyp3a4_OCNT-2535422/cyp3a4_OCNT-2535422_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8215
+    },
+    {
+      "compound": "OCNT-2535519",
+      "pool": 9,
+      "valid_in_pool": 8,
+      "run": "OCNT-2535519-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2535519-rs/predictions/cyp3a4_OCNT-2535519-rs/cyp3a4_OCNT-2535519-rs_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8573
+    },
+    {
+      "compound": "OCNT-2395328",
+      "pool": 9,
+      "valid_in_pool": 7,
+      "run": "OCNT-2395328-u",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2395328-u/predictions/cyp3a4_OCNT-2395328-u/cyp3a4_OCNT-2395328-u_model_1.cif",
+      "valid": true,
+      "distance_margin": 0.8395
+    },
+    {
+      "compound": "OCNT-2312966",
+      "pool": 9,
+      "valid_in_pool": 1,
+      "run": "OCNT-2312966-rs",
+      "engine": "boltz",
+      "chosen_cif": "data/structure_track/outputs/out/cyp3a4/boltz_results_cyp3a4_OCNT-2312966-rs/predictions/cyp3a4_OCNT-2312966-rs/cyp3a4_OCNT-2312966-rs_model_0.cif",
+      "valid": true,
+      "distance_margin": 0.8555
+    }
+  ],
+  "recipe_zip_sha256": "614fee9dc20517770958b24815bfce29b3915771bae5672ec4df5560aae5af66",
+  "relaxation": {
+    "adopted": 20,
+    "of": 20,
+    "rule": {
+      "max_movement_A": 1.0,
+      "max_fe_n_change_A": 0.2,
+      "margin_floor": 0.8
+    },
+    "unrelaxed_sha256": "614fee9dc20517770958b24815bfce29b3915771bae5672ec4df5560aae5af66",
+    "final_sha256": "966c034c2537377210bf42cec69eb855a095e183d3c05e27aa712e586802ea55",
+    "smallest_margin_before": 0.80146181869878,
+    "smallest_margin_after": 0.849319178169344
+  }
+}

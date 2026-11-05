@@ -1,0 +1,136 @@
+{
+  "OCNT-2395436-ex6": {
+    "compound": "cyp3a4_OCNT-2395436-ex6",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N27",
+        "motif": "pyridine",
+        "distance_angstrom": 2.18
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N27",
+        "distance_angstrom": 2.18
+      },
+      {
+        "atom": "N22",
+        "distance_angstrom": 5.91
+      },
+      {
+        "atom": "N33",
+        "distance_angstrom": 6.26
+      },
+      {
+        "atom": "N34",
+        "distance_angstrom": 8.93
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.18,
+    "coordinated": true,
+    "confidence_score": 0.9235368967056274
+  },
+  "OCNT-2395503-ex6": {
+    "compound": "cyp3a4_OCNT-2395503-ex6",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N20",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 2.12
+      },
+      {
+        "atom": "N32",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.19
+      },
+      {
+        "atom": "N21",
+        "motif": "triazole_1_2_4",
+        "distance_angstrom": 4.21
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N20",
+        "distance_angstrom": 2.12
+      },
+      {
+        "atom": "N32",
+        "distance_angstrom": 4.19
+      },
+      {
+        "atom": "N21",
+        "distance_angstrom": 4.21
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 7.22
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.12,
+    "coordinated": true,
+    "confidence_score": 0.954371452331543
+  },
+  "OCNT-2395342-ex6": {
+    "compound": "cyp3a4_OCNT-2395342-ex6",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N43",
+        "distance_angstrom": 5.02
+      },
+      {
+        "atom": "N42",
+        "distance_angstrom": 5.92
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.9460113644599915
+  },
+  "OCNT-2395712-ex6": {
+    "compound": "cyp3a4_OCNT-2395712-ex6",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N25",
+        "motif": "triazole_1_2_3",
+        "distance_angstrom": 8.04
+      },
+      {
+        "atom": "N38",
+        "motif": "triazole_1_2_3",
+        "distance_angstrom": 9.1
+      },
+      {
+        "atom": "N26",
+        "motif": "triazole_1_2_3",
+        "distance_angstrom": 9.22
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N36",
+        "distance_angstrom": 4.74
+      },
+      {
+        "atom": "N37",
+        "distance_angstrom": 5.14
+      },
+      {
+        "atom": "N25",
+        "distance_angstrom": 8.04
+      },
+      {
+        "atom": "N38",
+        "distance_angstrom": 9.1
+      },
+      {
+        "atom": "N26",
+        "distance_angstrom": 9.22
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 8.04,
+    "coordinated": false,
+    "confidence_score": 0.9341392517089844
+  }
+}

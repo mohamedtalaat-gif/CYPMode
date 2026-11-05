@@ -1,0 +1,13 @@
+{
+  "adopted": 20,
+  "of": 20,
+  "rule": {
+    "max_movement_A": 1.0,
+    "max_fe_n_change_A": 0.2,
+    "margin_floor": 0.8
+  },
+  "unrelaxed_sha256": "614fee9dc20517770958b24815bfce29b3915771bae5672ec4df5560aae5af66",
+  "final_sha256": "966c034c2537377210bf42cec69eb855a095e183d3c05e27aa712e586802ea55",
+  "smallest_margin_before": 0.80146181869878,
+  "smallest_margin_after": 0.849319178169344
+}

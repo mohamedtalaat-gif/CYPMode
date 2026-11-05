@@ -1,0 +1,8 @@
+question,what it says
+"Field:** Overview
+
+*Where this section sits:* the limitations say what the project does not know. This section names the questions whose answers would change what it would do next, with what would settle each.
+
+**Where do the entries land?","The step from the cross-validated estimates to the leaderboard is the largest unknown, and it is not the project's to settle: it is settled by the scores, which are the organisers'. The relationship between the baseline's cross-validated score and its board score (limitation on evaluation) is the only calibration available, and it is a single point."
+How many compounds in the scored CYP2D6 set were never promoted by the screen?,"The selection-aware model gains much when they are many and loses a little when they are few, and the public metrics of the baseline are consistent with hundreds of different shares. Two entries that differ only in the CYP2D6 model, submitted on the same hidden compounds, identify the regime; the rule that decides between them was written before either was submitted (the difference in MCC must exceed twice the spread of the board). Which regime holds is a fact about the challenge's design that this project could measure only in this way."
+Is the near miss real?,"The Atom-JEPA readout added a small gain to the CYP3A4 stack, in most folds, that did not reach the registered gate and lies below what the design can detect (9.10). An exploratory replicate on a different split of the folds was run with the rule that it could not change the model."

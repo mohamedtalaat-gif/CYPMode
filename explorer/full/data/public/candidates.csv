@@ -1,0 +1,114 @@
+candidate,family,blocks
+atomjepa_head,Atom-JEPA readout,atomjepa
+chemeleon_minimol_mt_shift,"cached, made in the torch environment",
+chemeleon_surrogate_mt_shift,"cached, made in the torch environment",
+chemprop_mt_shift,"Chemprop, multitask",
+committee_ei_A+fps,arm_committee,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+committee_m_A+fps,arm_committee,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+committee_p_A+fps,arm_committee,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+emxblk_A+fps_deep,lgbm_aux,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+emxblk_A_deep,lgbm_aux,morgan_c2+rdkit_desc
+extratrees_A,extratrees,morgan_c2+rdkit_desc
+gs_A+fps_deep,lgbm_gate_shift,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+gs_A_deep,lgbm_gate_shift,morgan_c2+rdkit_desc
+knn_tanimoto_k15,knn_tanimoto,
+knn_tanimoto_k40,knn_tanimoto,
+knn_tanimoto_k5,knn_tanimoto,
+lgbm_A+ad_deep,lgbm_clf,morgan_c2+rdkit_desc+ext_adme
+lgbm_A+aj_deep,lgbm_clf,morgan_c2+rdkit_desc+atomjepa
+lgbm_A+bc_deep,lgbm_clf,morgan_c2+rdkit_desc+basic_centre
+lgbm_A+chem_deep,lgbm_clf,morgan_c2+rdkit_desc+chemeleon
+lgbm_A+ctx_deep,lgbm_clf,morgan_c2+rdkit_desc+tdi_alert_context
+lgbm_A+ctx_deep_cdrop10,lgbm_clf,morgan_c2+rdkit_desc+tdi_alert_context
+lgbm_A+ext+xc_deep,lgbm_clf,morgan_c2+rdkit_desc+ext_activity+ext_cont
+lgbm_A+ext+xt_deep,lgbm_clf,morgan_c2+rdkit_desc+ext_activity+ext_tox
+lgbm_A+ext_deep,lgbm_clf,morgan_c2+rdkit_desc+ext_activity
+lgbm_A+fps+ad_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+ext_adme
+lgbm_A+fps+aj_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+atomjepa
+lgbm_A+fps+bc_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+basic_centre
+lgbm_A+fps+chem_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+chemeleon
+lgbm_A+fps+ctx_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+tdi_alert_context
+lgbm_A+fps+ctx_deep_cdrop10,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+tdi_alert_context
+lgbm_A+fps+ext+alerts_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+ext_activity+tdi_alerts
+lgbm_A+fps+ext+xc_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+ext_activity+ext_cont
+lgbm_A+fps+ext+xt_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+ext_activity+ext_tox
+lgbm_A+fps+ext_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+ext_activity
+lgbm_A+fps+hyp_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_A+fps+hypperm_deep,"lgbm_clf, permuted-label control of the hypothesis model",morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_A+fps+mon_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+monroe
+lgbm_A+fps+physB_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+physics_b
+lgbm_A+fps+phys_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+physics
+lgbm_A+fps+physk20_deep,lgbm_clf_select,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+physics
+lgbm_A+fps+pp2d6_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+pp2d6
+lgbm_A+fps+pp3a4_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+pp3a4
+lgbm_A+fps+st2d6_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+st2d6
+lgbm_A+fps+st3a4_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg+st3a4
+lgbm_A+fps_deep,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_A+fps_deep_cdrop10,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_A+fps_deep_csoft,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_A+fps_deep_knnfeat,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_A+fps_deep_testlike0.5,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_A+fps_deep_testlike1.0,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_A+fps_shallow,lgbm_clf,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_A+hyp_deep,lgbm_clf,morgan_c2+rdkit_desc
+lgbm_A+hypperm_deep,"lgbm_clf, permuted-label control of the hypothesis model",morgan_c2+rdkit_desc
+lgbm_A+mon_deep,lgbm_clf,morgan_c2+rdkit_desc+monroe
+lgbm_A+phys+physB_deep,lgbm_clf,morgan_c2+rdkit_desc+physics+physics_b
+lgbm_A+physB_deep,lgbm_clf,morgan_c2+rdkit_desc+physics_b
+lgbm_A+phys_deep,lgbm_clf,morgan_c2+rdkit_desc+physics
+lgbm_A+physk20_deep,lgbm_clf_select,morgan_c2+rdkit_desc+physics
+lgbm_A+pp2d6_deep,lgbm_clf,morgan_c2+rdkit_desc+pp2d6
+lgbm_A+pp3a4_deep,lgbm_clf,morgan_c2+rdkit_desc+pp3a4
+lgbm_A+st2d6_deep,lgbm_clf,morgan_c2+rdkit_desc+st2d6
+lgbm_A+st3a4_deep,lgbm_clf,morgan_c2+rdkit_desc+st3a4
+lgbm_A_deep,lgbm_clf,morgan_c2+rdkit_desc
+lgbm_A_deep_cdrop10,lgbm_clf,morgan_c2+rdkit_desc
+lgbm_A_deep_csoft,lgbm_clf,morgan_c2+rdkit_desc
+lgbm_A_deep_knnfeat,lgbm_clf,morgan_c2+rdkit_desc
+lgbm_A_deep_testlike0.5,lgbm_clf,morgan_c2+rdkit_desc
+lgbm_A_deep_testlike1.0,lgbm_clf,morgan_c2+rdkit_desc
+lgbm_A_shallow,lgbm_clf,morgan_c2+rdkit_desc
+lgbm_aj_deep,lgbm_clf,atomjepa
+lgbm_chem_deep,lgbm_clf,chemeleon
+lgbm_desc_deep,lgbm_clf,rdkit_desc
+lgbm_desc_shallow,lgbm_clf,rdkit_desc
+lgbm_mmp_A,lgbm_mmp,morgan_c2+rdkit_desc
+lgbm_mmp_A+fps,lgbm_mmp,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_mon_deep,lgbm_clf,monroe
+lgbm_physB_deep,lgbm_clf,physics_b
+lgbm_phys_deep,lgbm_clf,physics
+lgbm_reg_arms_A,lgbm_reg_arms,morgan_c2+rdkit_desc
+lgbm_reg_arms_A+fps,lgbm_reg_arms,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_reg_arms_clip_A,lgbm_reg_arms_clip,morgan_c2+rdkit_desc
+lgbm_reg_arms_clip_A+fps,lgbm_reg_arms_clip,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+lgbm_reg_shift_A,lgbm_reg_shift,morgan_c2+rdkit_desc
+lgbm_reg_shift_A+fps,lgbm_reg_shift,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+mlp_multitask_aux_label,"cached, made in the torch environment",
+mlp_multitask_aux_shift,"cached, made in the torch environment",
+mlp_multitask_label,"cached, made in the torch environment",
+mlp_multitask_shift,"cached, made in the torch environment",
+ndneg_A+fps_deep,lgbm_nodirect,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+ndneg_A_deep,lgbm_nodirect,morgan_c2+rdkit_desc
+ndsoft_A+fps_deep,lgbm_nodirect,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+ndsoft_A_deep,lgbm_nodirect,morgan_c2+rdkit_desc
+pair_desc,pair_lgbm,rdkit_desc
+pair_desc+phys,SAR pairs,rdkit_desc+physics
+pxrblk_A+fps_deep,pxr block experiment,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+pxrblk_A_deep,pxr block experiment,morgan_c2+rdkit_desc
+rf_A,rf,morgan_c2+rdkit_desc
+scrblk_A+fps_deep,lgbm_aux,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+scrblk_A_deep,lgbm_aux,morgan_c2+rdkit_desc
+svm_tanimoto_C0.3,svm_tanimoto,
+svm_tanimoto_C1,svm_tanimoto,
+svm_tanimoto_C3,svm_tanimoto,
+tabicl_chemeleon,"cached, made in the torch environment",
+tabicl_monroe,"cached, made in the torch environment",
+tabicl_svd,"cached, made in the torch environment",
+tabpfn_chemeleon,"cached, made in the torch environment",
+tabpfn_svd,"cached, made in the torch environment",
+tgate_A+fps_deep,lgbm_gate_shift,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+tgate_A_deep,lgbm_gate_shift,morgan_c2+rdkit_desc
+tshift_A+fps_deep,lgbm_gate_shift,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+tshift_A_deep,lgbm_gate_shift,morgan_c2+rdkit_desc
+xiso_A+fps_deep,lgbm_xiso,morgan_c2+rdkit_desc+motif+maccs+avalon+torsion_c+fmorgan_c2+erg
+xiso_A_deep,lgbm_xiso,morgan_c2+rdkit_desc

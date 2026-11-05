@@ -1,0 +1,5 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode
+STEREO RERUN picks: 3 of 20 ligands changed pose (OCNT-2395415, OCNT-2312554, OCNT-2312966)
+  OCNT-2395415: ligand RMSD between the picks 4.42 A, iron-nitrogen distance 2.27 -> 2.20 A
+  OCNT-2312554: ligand RMSD between the picks 0.05 A, iron-nitrogen distance 1.95 -> 1.95 A
+  OCNT-2312966: ligand RMSD between the picks 5.63 A, iron-nitrogen distance nan -> nan A

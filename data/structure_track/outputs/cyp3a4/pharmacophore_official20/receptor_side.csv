@@ -1,0 +1,192 @@
+family,index,protein_atoms_within_6A,buried,partner,partner_distance,contacts,unsatisfied,ligand
+Donor,0,15,False,,,,False,OCNT-2395436
+Donor,1,18,False,,,,False,OCNT-2395436
+Acceptor,0,22,False,,,,False,OCNT-2395436
+Acceptor,1,15,False,,,,False,OCNT-2395436
+Acceptor,2,42,True,HEM1:FE,2.033610892678176,,False,OCNT-2395436
+Aromatic,0,38,True,,,HEM1(3.4) ALA305(4.0),False,OCNT-2395436
+Hydrophobe,0,15,False,,,,False,OCNT-2395436
+Hydrophobe,1,38,True,,,HEM1(4.1) THR309(4.2),False,OCNT-2395436
+Hydrophobe,2,39,True,,,ALA305(3.5) HEM1(4.0),False,OCNT-2395436
+Acceptor,0,27,True,SER119:OG,2.9151610483517523,,False,OCNT-2395503
+Acceptor,1,42,True,HEM1:FE,2.059955931916212,,False,OCNT-2395503
+Acceptor,2,40,True,ARG212:NH1,3.1402843805589864,,False,OCNT-2395503
+Aromatic,0,44,True,,,HEM1(3.2) ALA305(3.7) ARG212(4.1) THR309(4.4),False,OCNT-2395503
+Aromatic,1,15,False,,,ARG212(4.3),False,OCNT-2395503
+Hydrophobe,0,24,False,,,ARG105(4.3) HEM1(4.4),False,OCNT-2395503
+Hydrophobe,1,11,False,,,ARG212(4.3),False,OCNT-2395503
+Hydrophobe,2,23,False,,,ARG212(3.0) PHE304(3.5),False,OCNT-2395503
+Acceptor,0,23,False,,,,False,OCNT-2395342
+Acceptor,1,19,False,SER119:O,3.251665761471674,,False,OCNT-2395342
+Acceptor,2,24,False,ARG212:NE,3.393248739791352,,False,OCNT-2395342
+Aromatic,0,27,True,,,HEM1(4.0),False,OCNT-2395342
+Aromatic,1,16,False,,,,False,OCNT-2395342
+Hydrophobe,0,32,True,,,HEM1(3.6),False,OCNT-2395342
+Hydrophobe,1,23,False,,,SER119(4.2),False,OCNT-2395342
+Hydrophobe,2,12,False,,,,False,OCNT-2395342
+Hydrophobe,3,35,True,,,PHE304(4.2) HEM1(4.4),False,OCNT-2395342
+Acceptor,0,32,True,SER119:OG,3.077252112767606,,False,OCNT-2395712
+Acceptor,1,37,True,HEM1:ND,2.7759712286991767,,False,OCNT-2395712
+Acceptor,2,38,True,HEM1:FE,2.4535431383052537,,False,OCNT-2395712
+Aromatic,0,35,True,,,HEM1(3.5) ALA305(3.7),False,OCNT-2395712
+Aromatic,1,19,False,,,ARG105(4.0),False,OCNT-2395712
+Hydrophobe,0,10,False,,,ARG105(4.2),False,OCNT-2395712
+Hydrophobe,1,39,True,,,HEM1(3.4) ALA370(4.0) ILE369(4.4) ARG212(4.4) THR309(4.5),False,OCNT-2395712
+Donor,0,25,True,ARG106:O,3.493174073708077,,False,OCNT-2313429
+Donor,1,27,True,,,,True,OCNT-2313429
+Acceptor,0,35,True,,,,True,OCNT-2313429
+Acceptor,1,35,True,SER119:O,3.0578623298657654,,False,OCNT-2313429
+Acceptor,2,27,True,,,,True,OCNT-2313429
+Acceptor,3,27,True,,,,True,OCNT-2313429
+Aromatic,0,16,False,,,ARG105(4.3) SER119(4.4),False,OCNT-2313429
+Aromatic,1,27,True,,,GLU374(3.8) PHE215(4.2) ARG106(4.2),False,OCNT-2313429
+Hydrophobe,0,21,False,,,ARG105(4.0) SER119(4.0),False,OCNT-2313429
+Donor,0,22,False,,,,False,OCNT-2395464
+Donor,1,19,False,,,,False,OCNT-2395464
+Acceptor,0,23,False,,,,False,OCNT-2395464
+Acceptor,1,20,False,,,,False,OCNT-2395464
+Acceptor,2,41,True,HEM1:FE,2.0892891098786004,,False,OCNT-2395464
+Aromatic,0,34,True,,,HEM1(3.5) ALA305(4.2) THR309(4.3),False,OCNT-2395464
+Hydrophobe,0,15,False,,,PHE304(3.6),False,OCNT-2395464
+Hydrophobe,1,37,True,,,THR309(3.8) HEM1(4.2),False,OCNT-2395464
+Donor,0,23,False,,,,False,OCNT-2313397
+Acceptor,0,15,False,,,,False,OCNT-2313397
+Acceptor,1,24,False,SER119:OG,3.1548938313761874,,False,OCNT-2313397
+Acceptor,2,39,True,HEM1:FE,2.1619706551480036,,False,OCNT-2313397
+Aromatic,0,36,True,,,HEM1(3.3) ALA305(4.2) THR309(4.5),False,OCNT-2313397
+Aromatic,1,14,False,,,,False,OCNT-2313397
+Aromatic,2,36,True,,,THR309(4.0),False,OCNT-2313397
+Hydrophobe,0,9,False,,,,False,OCNT-2313397
+Hydrophobe,1,19,False,,,SER119(4.4),False,OCNT-2313397
+PosIonizable,0,36,True,,,,False,OCNT-2313397
+Donor,0,21,False,,,,False,OCNT-2395415
+Acceptor,0,28,True,,,,True,OCNT-2395415
+Acceptor,1,42,True,HEM1:FE,2.2908937697031737,,False,OCNT-2395415
+Aromatic,0,14,False,,,,False,OCNT-2395415
+Aromatic,1,42,True,,,ALA305(3.5) HEM1(3.7) ARG212(4.1),False,OCNT-2395415
+Hydrophobe,0,24,False,,,ARG372(3.7),False,OCNT-2395415
+Hydrophobe,1,17,False,,,,False,OCNT-2395415
+Hydrophobe,2,34,True,,,ALA305(3.8) HEM1(4.2) ARG212(4.4),False,OCNT-2395415
+Donor,0,20,False,,,,False,OCNT-2395645
+Donor,1,13,False,,,,False,OCNT-2395645
+Acceptor,0,25,True,SER119:OG,2.7744786510945803,,False,OCNT-2395645
+Acceptor,1,22,False,,,,False,OCNT-2395645
+Acceptor,2,13,False,,,,False,OCNT-2395645
+Aromatic,0,25,True,,,,False,OCNT-2395645
+Aromatic,1,16,False,,,,False,OCNT-2395645
+Hydrophobe,0,30,True,,,,False,OCNT-2395645
+Hydrophobe,1,15,False,,,PHE304(4.1),False,OCNT-2395645
+Hydrophobe,2,27,True,,,ALA305(4.1) HEM1(4.4),False,OCNT-2395645
+Donor,0,15,False,,,,False,OCNT-2395789
+Donor,1,17,False,,,,False,OCNT-2395789
+Acceptor,0,17,False,,,,False,OCNT-2395789
+Acceptor,1,31,True,,,,True,OCNT-2395789
+Acceptor,2,42,True,HEM1:FE,2.039179655634002,,False,OCNT-2395789
+Aromatic,0,39,True,,,HEM1(3.4) ALA305(4.1),False,OCNT-2395789
+Hydrophobe,0,14,False,,,,False,OCNT-2395789
+Hydrophobe,1,37,True,,,HEM1(4.1) THR309(4.1) ARG212(4.1),False,OCNT-2395789
+Donor,0,19,False,,,,False,OCNT-2312554
+Acceptor,0,26,True,,,,True,OCNT-2312554
+Acceptor,1,34,True,,,,True,OCNT-2312554
+Acceptor,2,43,True,HEM1:FE,2.035605563605107,,False,OCNT-2312554
+Aromatic,0,40,True,,,HEM1(3.1) ALA305(4.1),False,OCNT-2312554
+Aromatic,1,18,False,,,ARG105(4.2),False,OCNT-2312554
+Aromatic,2,28,True,,,PHE304(4.1) SER119(4.1),False,OCNT-2312554
+Hydrophobe,0,13,False,,,PHE215(4.3),False,OCNT-2312554
+Hydrophobe,1,13,False,,,,False,OCNT-2312554
+Hydrophobe,2,13,False,,,ARG105(4.3),False,OCNT-2312554
+Hydrophobe,3,20,False,,,PHE304(3.5),False,OCNT-2312554
+PosIonizable,0,40,True,,,,False,OCNT-2312554
+Acceptor,0,16,False,,,,False,OCNT-2395457
+Acceptor,1,39,True,HEM1:FE,2.018720288963298,,False,OCNT-2395457
+Acceptor,2,35,True,,,,True,OCNT-2395457
+Acceptor,3,31,True,,,,True,OCNT-2395457
+Aromatic,0,28,True,,,SER119(3.6) HEM1(4.0),False,OCNT-2395457
+Aromatic,1,41,True,,,HEM1(3.2) ALA305(4.0) THR309(4.4),False,OCNT-2395457
+Aromatic,2,19,False,,,ARG105(3.9) HEM1(4.4),False,OCNT-2395457
+Hydrophobe,0,22,False,,,ARG105(4.0) HEM1(4.5),False,OCNT-2395457
+Hydrophobe,1,35,True,,,PHE304(3.4) ARG212(3.5) ALA305(3.8),False,OCNT-2395457
+PosIonizable,0,41,True,,,,False,OCNT-2395457
+Donor,0,5,False,,,,False,OCNT-2313038
+Acceptor,0,12,False,,,,False,OCNT-2313038
+Acceptor,1,40,True,HEM1:FE,2.047524018223932,,False,OCNT-2313038
+Aromatic,0,21,False,,,ALA370(4.1) HEM1(4.4),False,OCNT-2313038
+Aromatic,1,37,True,,,HEM1(3.4) ALA305(4.0),False,OCNT-2313038
+Hydrophobe,0,28,True,,,ILE120(3.9) SER119(4.0) ILE301(4.3) PHE108(4.4),False,OCNT-2313038
+Hydrophobe,1,13,False,,,,False,OCNT-2313038
+Hydrophobe,2,21,False,,,ALA370(4.1),False,OCNT-2313038
+Hydrophobe,3,38,True,,,THR309(4.1) HEM1(4.2),False,OCNT-2313038
+Hydrophobe,4,33,True,,,THR309(3.8) ARG212(3.9) ILE369(4.2),False,OCNT-2313038
+Donor,0,18,False,,,,False,OCNT-2313300
+Donor,1,29,True,ARG106:O,2.7391681068658946,,False,OCNT-2313300
+Acceptor,0,27,True,SER119:O,3.37190059707896,,False,OCNT-2313300
+Acceptor,1,43,True,HEM1:FE,2.025569778485465,,False,OCNT-2313300
+Aromatic,0,27,True,,,PHE108(3.7) ARG106(3.8),False,OCNT-2313300
+Aromatic,1,39,True,,,HEM1(3.1) ALA305(4.0) ARG212(4.3),False,OCNT-2313300
+Aromatic,2,16,False,,,ARG212(3.4) PHE304(4.4),False,OCNT-2313300
+Hydrophobe,0,22,False,,,PHE108(4.1),False,OCNT-2313300
+Hydrophobe,1,38,True,,,SER119(3.1) ARG105(3.8) ARG106(3.9) ILE120(4.0) PHE108(4.0),False,OCNT-2313300
+PosIonizable,0,39,True,,,,False,OCNT-2313300
+Donor,0,39,True,PHE213:N,3.1274359153144955,,False,OCNT-2395460
+Acceptor,0,31,True,PHE213:O,3.4263351245571996,,False,OCNT-2395460
+Acceptor,1,29,True,ARG212:NH1,2.9307162270531704,,False,OCNT-2395460
+Acceptor,2,31,True,,,,True,OCNT-2395460
+Aromatic,0,17,False,,,PHE304(3.4),False,OCNT-2395460
+Aromatic,1,36,True,,,ARG212(3.4) HEM1(3.8),False,OCNT-2395460
+Hydrophobe,0,16,False,,,PHE304(3.8),False,OCNT-2395460
+Hydrophobe,1,13,False,,,PHE304(3.6) SER119(4.3),False,OCNT-2395460
+Hydrophobe,2,22,False,,,ARG212(3.6) HEM1(3.9),False,OCNT-2395460
+Hydrophobe,3,19,False,,,PHE215(3.6) ARG212(4.2),False,OCNT-2395460
+Donor,0,35,True,,,,True,OCNT-2315379
+Donor,1,26,True,,,,True,OCNT-2315379
+Acceptor,0,21,False,,,,False,OCNT-2315379
+Acceptor,1,22,False,SER119:OG,2.8890996131294955,,False,OCNT-2315379
+Aromatic,0,14,False,,,ARG105(4.0),False,OCNT-2315379
+Hydrophobe,0,22,False,,,SER119(3.9),False,OCNT-2315379
+Donor,0,33,True,HEM1:ND,3.4512476051441103,,False,OCNT-2535422
+Donor,1,31,True,ARG212:NH2,3.191916157900181,,False,OCNT-2535422
+Acceptor,0,29,True,,,,True,OCNT-2535422
+Acceptor,1,34,True,,,,True,OCNT-2535422
+Aromatic,0,21,False,,,PHE304(3.6),False,OCNT-2535422
+Aromatic,1,25,True,,,HEM1(3.7) ALA370(4.4) ARG212(4.4),False,OCNT-2535422
+Hydrophobe,0,31,True,,,HEM1(3.6) ARG212(4.5),False,OCNT-2535422
+Hydrophobe,1,19,False,,,PHE304(4.3),False,OCNT-2535422
+Hydrophobe,2,12,False,,,PHE304(4.1),False,OCNT-2535422
+Hydrophobe,3,18,False,,,SER119(4.2),False,OCNT-2535422
+Donor,0,18,False,,,,False,OCNT-2535519
+Acceptor,0,19,False,SER119:OG,3.0189213506484194,,False,OCNT-2535519
+Acceptor,1,38,True,HEM1:FE,2.1093861393670856,,False,OCNT-2535519
+Acceptor,2,9,False,,,,False,OCNT-2535519
+Aromatic,0,37,True,,,HEM1(3.3) ALA305(4.2) THR309(4.2),False,OCNT-2535519
+Aromatic,1,13,False,,,PHE304(3.5),False,OCNT-2535519
+Aromatic,2,19,False,,,HEM1(4.3),False,OCNT-2535519
+Hydrophobe,0,10,False,,,PHE304(3.8),False,OCNT-2535519
+Hydrophobe,1,19,False,,,PHE304(3.4),False,OCNT-2535519
+Hydrophobe,2,16,False,,,ARG105(3.9),False,OCNT-2535519
+PosIonizable,0,37,True,,,,False,OCNT-2535519
+Donor,0,16,False,,,,False,OCNT-2395328
+Acceptor,0,10,False,,,,False,OCNT-2395328
+Acceptor,1,35,True,,,,True,OCNT-2395328
+Acceptor,2,31,True,SER119:OG,3.358470035144436,,False,OCNT-2395328
+Acceptor,3,26,True,,,,True,OCNT-2395328
+Acceptor,4,25,True,SER119:O,3.3341400056251898,,False,OCNT-2395328
+Aromatic,0,12,False,,,,False,OCNT-2395328
+Aromatic,1,30,True,,,HEM1(4.3),False,OCNT-2395328
+Hydrophobe,0,34,True,,,ALA305(4.2),False,OCNT-2395328
+Hydrophobe,1,39,True,,,ARG212(4.0) HEM1(4.1) THR309(4.2),False,OCNT-2395328
+Hydrophobe,2,29,True,,,ALA305(3.9) ARG212(4.2) THR309(4.5),False,OCNT-2395328
+Hydrophobe,3,20,False,,,,False,OCNT-2395328
+Donor,0,21,False,,,,False,OCNT-2312966
+Donor,1,28,True,SER119:OG,2.9702439494254813,,False,OCNT-2312966
+Acceptor,0,28,True,SER119:OG,2.9746587414027545,,False,OCNT-2312966
+Acceptor,1,35,True,ARG372:O,2.8470997853028286,,False,OCNT-2312966
+Acceptor,2,33,True,SER119:O,3.2912053098664575,,False,OCNT-2312966
+Acceptor,3,19,False,SER119:O,3.451008420931183,,False,OCNT-2312966
+Aromatic,0,29,True,,,ARG212(4.1),False,OCNT-2312966
+Aromatic,1,20,False,,,ARG105(4.1),False,OCNT-2312966
+Hydrophobe,0,14,False,,,PHE304(4.0) ARG212(4.3),False,OCNT-2312966
+Hydrophobe,1,24,False,,,ARG212(3.4) HEM1(4.3),False,OCNT-2312966
+Hydrophobe,2,13,False,,,PHE215(4.3),False,OCNT-2312966
+Hydrophobe,3,24,False,,,ARG212(3.4) HEM1(3.8) ALA370(3.9),False,OCNT-2312966
+Hydrophobe,4,28,True,,,HEM1(3.7) ALA370(3.9) ARG372(4.4),False,OCNT-2312966
+Hydrophobe,5,20,False,,,ARG372(3.8) ALA370(4.0) ARG212(4.4),False,OCNT-2312966

@@ -1,0 +1,261 @@
+{
+  "gates": {
+    "mbr_selection": false,
+    "engine_consensus": false,
+    "heme_frame_prior": false,
+    "ei_sampling": false,
+    "restraint_bond": true,
+    "restraint_contact": true,
+    "pilot_conformers": false,
+    "pilot_cryoem": false,
+    "pilot_seeds": false,
+    "pose_physics": false,
+    "pose_pharmacophore": false,
+    "pose_combined": false,
+    "series_consensus": false,
+    "restraint_bond_expansion": false,
+    "restraint_bond_harm": false
+  },
+  "recipe": {
+    "restraint": "bond",
+    "levers": [],
+    "openfold3": false,
+    "selection": "first_valid",
+    "terms": [],
+    "ei_allocation": false,
+    "extra_per_ligand": 2,
+    "reasons": [
+      "restraint 'bond': gate MET",
+      "diversity levers: none (no pilot gate MET)",
+      "Boltz only: engine_consensus not MET",
+      "selection 'first_valid': mbr_selection not MET, so the model's own ranking among valid poses is kept; for a ligand with a Type II donor the restrained run is read first (the pick the restraint gate measured)",
+      "extra samples allocated uniformly: ei_sampling not MET",
+      "margin: among valid poses only those with a relative distance to the receptor of at least 0.8 under the scorer's own PoseBusters call are eligible (else the largest margin)"
+    ]
+  },
+  "existing_samples": {
+    "OCNT-2395436": 1,
+    "OCNT-2395503": 1,
+    "OCNT-2395342": 1,
+    "OCNT-2395712": 1,
+    "OCNT-2313429": 5,
+    "OCNT-2395464": 1,
+    "OCNT-2313397": 1,
+    "OCNT-2395415": 1,
+    "OCNT-2395645": 1,
+    "OCNT-2395789": 1,
+    "OCNT-2312554": 1,
+    "OCNT-2395457": 1,
+    "OCNT-2313038": 1,
+    "OCNT-2313300": 5,
+    "OCNT-2395460": 1,
+    "OCNT-2315379": 1,
+    "OCNT-2535422": 1,
+    "OCNT-2535519": 1,
+    "OCNT-2395328": 1,
+    "OCNT-2312966": 1
+  },
+  "estimated_hours": 20.6,
+  "ligands": [
+    {
+      "ligand": "OCNT-2395436",
+      "type_ii_donor": true,
+      "analog": "OCNT-2395789",
+      "analog_tanimoto": 0.6727272727,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.963552567,
+      "cyp3a4_tdi_pic50": 5.96460702
+    },
+    {
+      "ligand": "OCNT-2395503",
+      "type_ii_donor": true,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.184632385,
+      "cyp3a4_tdi_pic50": 5.147280933
+    },
+    {
+      "ligand": "OCNT-2395342",
+      "type_ii_donor": false,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.341886632,
+      "cyp3a4_tdi_pic50": 6.07897292
+    },
+    {
+      "ligand": "OCNT-2395712",
+      "type_ii_donor": true,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.291723665,
+      "cyp3a4_tdi_pic50": 6.18485982
+    },
+    {
+      "ligand": "OCNT-2313429",
+      "type_ii_donor": false,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 6.120009353,
+      "cyp3a4_tdi_pic50": 6.213209362
+    },
+    {
+      "ligand": "OCNT-2395464",
+      "type_ii_donor": true,
+      "analog": "OCNT-2395789",
+      "analog_tanimoto": 0.914893617,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.450628942,
+      "cyp3a4_tdi_pic50": 5.454280707
+    },
+    {
+      "ligand": "OCNT-2313397",
+      "type_ii_donor": true,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": false,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": null,
+      "cyp3a4_tdi_pic50": null
+    },
+    {
+      "ligand": "OCNT-2395415",
+      "type_ii_donor": true,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": false,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": null,
+      "cyp3a4_tdi_pic50": null
+    },
+    {
+      "ligand": "OCNT-2395645",
+      "type_ii_donor": false,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.912842905,
+      "cyp3a4_tdi_pic50": 6.27221094
+    },
+    {
+      "ligand": "OCNT-2395789",
+      "type_ii_donor": true,
+      "analog": "OCNT-2395464",
+      "analog_tanimoto": 0.914893617,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.536836112,
+      "cyp3a4_tdi_pic50": 5.549343785
+    },
+    {
+      "ligand": "OCNT-2312554",
+      "type_ii_donor": true,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": false,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": null,
+      "cyp3a4_tdi_pic50": null
+    },
+    {
+      "ligand": "OCNT-2395457",
+      "type_ii_donor": true,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.856038895,
+      "cyp3a4_tdi_pic50": 5.795704705
+    },
+    {
+      "ligand": "OCNT-2313038",
+      "type_ii_donor": true,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": false,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": null,
+      "cyp3a4_tdi_pic50": null
+    },
+    {
+      "ligand": "OCNT-2313300",
+      "type_ii_donor": true,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 6.296327448,
+      "cyp3a4_tdi_pic50": 6.277963955
+    },
+    {
+      "ligand": "OCNT-2395460",
+      "type_ii_donor": false,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.29994507,
+      "cyp3a4_tdi_pic50": 6.530726178
+    },
+    {
+      "ligand": "OCNT-2315379",
+      "type_ii_donor": false,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.21404602,
+      "cyp3a4_tdi_pic50": 6.360567965
+    },
+    {
+      "ligand": "OCNT-2535422",
+      "type_ii_donor": false,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": false,
+      "in_tdi_test": true,
+      "cyp3a4_direct_pic50": null,
+      "cyp3a4_tdi_pic50": null
+    },
+    {
+      "ligand": "OCNT-2535519",
+      "type_ii_donor": true,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": false,
+      "in_tdi_test": true,
+      "cyp3a4_direct_pic50": null,
+      "cyp3a4_tdi_pic50": null
+    },
+    {
+      "ligand": "OCNT-2395328",
+      "type_ii_donor": false,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": true,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": 5.526844937,
+      "cyp3a4_tdi_pic50": 6.067198793
+    },
+    {
+      "ligand": "OCNT-2312966",
+      "type_ii_donor": false,
+      "analog": null,
+      "analog_tanimoto": null,
+      "in_tdi_train": false,
+      "in_tdi_test": false,
+      "cyp3a4_direct_pic50": null,
+      "cyp3a4_tdi_pic50": null
+    }
+  ]
+}

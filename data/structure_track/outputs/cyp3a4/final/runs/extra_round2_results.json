@@ -1,0 +1,142 @@
+{
+  "OCNT-2395645-ex1": {
+    "compound": "cyp3a4_OCNT-2395645-ex1",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N31",
+        "distance_angstrom": 7.61
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.9477049708366394
+  },
+  "OCNT-2395789-ex1": {
+    "compound": "cyp3a4_OCNT-2395789-ex1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N27",
+        "motif": "pyridine",
+        "distance_angstrom": 2.18
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N27",
+        "distance_angstrom": 2.18
+      },
+      {
+        "atom": "N33",
+        "distance_angstrom": 6.13
+      },
+      {
+        "atom": "N23",
+        "distance_angstrom": 6.33
+      },
+      {
+        "atom": "N34",
+        "distance_angstrom": 8.81
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.18,
+    "coordinated": true,
+    "confidence_score": 0.9394171833992004
+  },
+  "OCNT-2395457-ex1": {
+    "compound": "cyp3a4_OCNT-2395457-ex1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N19",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.13
+      },
+      {
+        "atom": "N34",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 4.24
+      },
+      {
+        "atom": "N20",
+        "motif": "triazole_1_2_3",
+        "distance_angstrom": 5.49
+      },
+      {
+        "atom": "N33",
+        "motif": "triazole_1_2_3",
+        "distance_angstrom": 5.95
+      },
+      {
+        "atom": "N18",
+        "motif": "triazole_1_2_3",
+        "distance_angstrom": 5.99
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N19",
+        "distance_angstrom": 2.13
+      },
+      {
+        "atom": "N34",
+        "distance_angstrom": 4.24
+      },
+      {
+        "atom": "N20",
+        "distance_angstrom": 5.49
+      },
+      {
+        "atom": "N33",
+        "distance_angstrom": 5.95
+      },
+      {
+        "atom": "N18",
+        "distance_angstrom": 5.99
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.13,
+    "coordinated": true,
+    "confidence_score": 0.9327365159988403
+  },
+  "OCNT-2312554-ex1": {
+    "compound": "cyp3a4_OCNT-2312554-ex1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N21",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.11
+      },
+      {
+        "atom": "N38",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 4.2
+      },
+      {
+        "atom": "N20",
+        "motif": "pyridine",
+        "distance_angstrom": 6.5
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N21",
+        "distance_angstrom": 2.11
+      },
+      {
+        "atom": "N38",
+        "distance_angstrom": 4.2
+      },
+      {
+        "atom": "N20",
+        "distance_angstrom": 6.5
+      },
+      {
+        "atom": "N37",
+        "distance_angstrom": 8.94
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.11,
+    "coordinated": true,
+    "confidence_score": 0.9487389326095581
+  }
+}

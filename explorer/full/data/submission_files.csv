@@ -1,0 +1,4 @@
+track,file,rows,CYP3A4 positive rate,CYP2D6 positive rate,SHA-256
+TDI,tdi_track_candidate_A_hits_only.csv,750,0.4026666666666667,0.058666666666666666,4776089ea44347c4db1935793d0e767eef9f36bc53d96974eea3fdd1f86e847c
+TDI,tdi_track_candidate_B_selection_aware.csv,750,0.4026666666666667,0.058666666666666666,2d51eea29ec529d49feb471c78de890ad859eecc2e5b27e24903fb4d29931a6e
+structure,structure_track_submission.zip,20,,,966c034c2537377210bf42cec69eb855a095e183d3c05e27aa712e586802ea55

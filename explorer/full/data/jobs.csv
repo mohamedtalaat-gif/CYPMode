@@ -1,0 +1,172 @@
+number,job,title
+10,010_pop_2d6_15fold,"Selection-aware CYP2D6 (panel-block pool): 3 repeats x 5 folds, the gate for the pre-registered decision."
+12,012_pop_2d6_sensitivity,Same caches: sensitivity to the share of non-hits in the scored set.
+13,013_test_nonhit_share,Label-shift estimate of how hit-like the blinded test structures are (input to the CYP2D6 A/B decision).
+14,014_hedged_blend,"Rank blend of hits-only and selection-aware CYP2D6 stacks, judged by the worst case across regimes (cache-only, fast)."
+15,015_pop_3a4_control,"CYP3A4 control: the test is analogs of 3A4 hits, so no selection-aware gain is expected here."
+16,016_selection_decision,"The decision procedure for the final CYP2D6 entry (cypmode/challenge/selection_decision.py, fixed on 2026-10-25 before any upload): the deployment table of the hits-only file, the selection-aware file and their blend with"
+30,030_calibration,Runs the calibration experiment (calibration_experiment.py); the log is calibration.log.
+40,040_selection_aware_v2,"Stronger selection-aware model: cross-isoform hit-profile gate, Heckman-style correction term, gated vs the v1 sets."
+45,045_block_holdout,Most test-like validation available: hold out the analog-expansion block of the training ids and score the stack on it.
+46,046_pair_conditional_transfer,SAR-aware pair-conditional label transfer (descriptor deltas); the physics-delta variant runs in job 075.
+47,047_mmp_transfer,"SAR made explicit: matched-molecular-pair transformation features, gated against the base stack."
+50,050_frozen_embeddings,"Frozen CheMeleon embeddings: chemprop extraction in .venv-ml (no LightGBM), evaluation in .venv (no torch)."
+60,060_test_likeness_training,Importance-weighted training from the unlabeled test structures; gated alone and stacked.
+70,070_physics_xtb_block,"GFN2-xTB atom/site/pharmacophore physics block: tblite-only extraction first, then the LightGBM evaluation in"
+71,071_population_physics,"Physics block inside the selection-aware CYP2D6 model (P(hit) and P(label | hit)), panel-block pool."
+72,072_physics_compact,Compact physics: the 20 most useful physics columns chosen inside every task.
+73,073_physics_tierb_extract,"Tier-B physics extraction (tblite only, own process): Boltzmann conformers and relaxed hydrogen abstraction."
+74,074_physics_tierb_experiment,"The tier-B physics block for both isoforms, alone and added to the stack (3 repeats); the gate lines are in physics_tierb_<isoform>.log."
+75,075_pair_transfer_physics,Physics-aware SAR: the pair model whose deltas include the xTB block (needs job 070's cache).
+76,076_xiso_arm_transfer,"Arms of the other isoforms, predicted from structure (cross-fitted), as features of the target-isoform classifier; alone and stacked."
+78,078_arm_variants,"Floor-clipped two-arm regressors vs the raw-arm ones, alone and stacked."
+80,080_committee_ei_model,Probabilistic label-process model: noise-aware committee of two-arm regressors -> P(label) and expected improvement.
+81,081_replicate_grid_f10,"10-outer-fold replicate: the default candidate grid on its own plan (outer 10, inner 4, 3 repeats), deployment fits included."
+82,082_replicate_physics_f10,"The physics comparisons again on the 10-outer-fold plan (tier A, compact, tier B)."
+83,083_replicate_verdict,"The verdict of the 10-outer-fold replicate for both isoforms (replicate_verdict.py), written to replicate_verdict_<isoform>.log."
+84,084_tdi_stack_reevaluation,"Every comparison that goes through the stack (StackedLogit) again, after its logistic meta-learner was made deterministic"
+90,090_final_tdi_build,"Gate-driven TDI candidate files, once per design (5 outer folds, then the 10-fold replicate). Never submits."
+96,096_applicability_domain,"The applicability domain of the 750 blinded compounds, generated from the final build: the reliability of the final stack by nearest-training similarity (held-out outer folds of the nested validation)"
+97,097_why_no_gain,"Diagnostics of why each idea that did not join the final stack added nothing: paired change with its corrected p value, redundancy with the final stack, the weight the stack gave it and the"
+100,100_boltz_unguided_resume,"Boltz-2 on the ligands of the crystal-anchored benchmark without a restraint (5 diffusion samples each, one sample at a time), resuming after the failed entries are cleared."
+110,110_boltz_restraint_bond,"Boltz-2 on the benchmark ligands with the iron-nitrogen bond restraint (3 samples each); exits non-zero when a ligand failed, so that the runner tries again."
+120,120_boltz_restraint_contact,"Boltz-2 on the benchmark ligands with the iron-nitrogen contact restraint (3 samples each); exits non-zero when a ligand failed, so that the runner tries again."
+130,130_boltz_diversity_pilot,"Boltz-2 on the ligands of the diversity pilot, one sample at a time; exits non-zero when a ligand failed, so that the runner tries again."
+133,133_series_benchmark_runs,"Boltz-2 on three crystal-anchored analog pairs (6 ligands, 4 samples each): the benchmark of the series-consensus rule."
+135,135_boltz_cryoem_pilot,"S3: Boltz-2 with the cryo-EM CYP3A4 entries as protein templates, on the three pilot ligands (3 templates each, 1 sample each)."
+140,140_score_restraint_and_pilot,"Scores the poses of the unrestrained, bond-restraint, contact-restraint and diversity-pilot runs on the crystal-anchored benchmark and writes the comparison of the restraints and the pilot report."
+142,142_series_scoring,True ligand RMSD of every series pose against its crystal pose.
+144,144_score_cryoem_pilot,"S3: true ligand RMSD of the cryo-EM template runs, then the pool comparison against the unguided pools (same thresholds as the other pilot levers)."
+149,149_openfold3_memory_probe,"OpenFold3 memory probe. The largest benchmark ligand (bench-YNV, 46 heavy atoms; its first run stopped with ""Invalid buffer size: 9.27 GiB"")"
+150,150_openfold3_benchmark,"OpenFold3 on the 10 benchmark ligands, 3 samples each, in the memory mode the probe (job 149) found. Ligands that already have structures are"
+160,160_score_all_and_report,Scores every pose of the crystal-anchored benchmark and writes the table of selection outcomes.
+165,165_structure_gate_verdicts,Machine-readable restraint and pilot verdicts (STRUCTURE GATE lines) from the scored pose tables of job 140.
+168,168_pose_awareness,"Physics, molecule and pharmacophore terms of the pose pools, judged on the pooled crystal-anchored benchmark."
+169,169_series_consensus,SAR-aware selection: poses that agree with the poses of the ligand's analogs.
+170,170_mbr_selection_validation,Validation of the minimum-Bayes-risk selection on the scored benchmark poses (selection_validation.py).
+172,172_ei_sampling,Expected-improvement sampling: extra Boltz samples go to the ligands whose pose pool disagrees most (needs the pooled benchmark poses).
+173,173_mbr_lddt_reevaluation,Minimum Bayes risk and the restraint re-scored with LDDT-PLI against the crystal (exploratory: the registered gate used RMSD). No compute beyond scoring.
+175,175_heme_frame_prior,The heme-frame prior on the scored benchmark poses (heme_frame_prior.py).
+176,176_restraint_expansion_prepare,The confirmation of the restraint on crystal ligands that were not used to decide it (plan registered in data/structure_track/inputs/restraint_expansion_plan.json).
+177,177_boltz_restraint_expansion_primary,"Boltz-2 on the primary stratum of the confirmation ligands, both conditions, two samples each (about 13 minutes per sample on this Mac)."
+178,178_score_restraint_expansion,"Scores the confirmation runs (RMSD with the existing rescoring harness, LDDT-PLI with lddt_to_crystal) and writes the registered verdicts the final recipe reads."
+179,179_requeue_final_recipe,"Once the restraint confirmation is scored (178), the final recipe and its update (180, 185) must run again so that the structures follow the confirmed (or withdrawn) restraint:"
+180,180_structure_final_recipe_run,Run the frozen recipe on the 20 official ligands and validate every structure. Needs the recipe module.
+185,185_structure_recipe_update,"The final recipe once more after the engine-consensus and selection verdicts exist (jobs 149-170): it reads the verdicts again, adds what they call"
+186,186_boltz_restraint_expansion_secondary,"The secondary stratum of the confirmation ligands (31 to 34 heavy atoms): reported next to the primary one, never used for the decision, so it runs after the final recipe."
+187,187_score_restraint_expansion_secondary,The scoring again with the secondary stratum included (the verdicts of the primary stratum do not change).
+188,188_requeue_final_chain,"After the confirmation, the final recipe and the secondary stratum are finished (180 to 187): the chain that describes and packages the final state runs again, in order, on a quiet repository"
+189,189_nodirect_labels,"The 1,249 CYP3A4 compounds without a direct curve, used through what their TDI-arm pIC50 implies (194 certain negatives; soft labels for the rest from a first-stage model on the pool rows of each task), alone and inside the stack."
+190,190_official_extra_audit,"The official files the first release did not read (single-concentration screen, Emax, direct inhibition, reaction phenotyping): identifiers, overlap with the"
+191,191_basic_centre_extract,"Basic-centre block (Dimorphite-DL protonation states, centre classes, charge-to-ring geometry) for the training and blinded test compounds."
+192,192_structure_margin_aware_zip,"Margin-aware pose choice: every pool pose is checked with the organisers' own PoseBusters call, the final recipe keeps only valid poses whose relative"
+193,193_nonneg_stack,"Non-negative stacking as an alternative selector, from the cached predictions of the default stack (same folds, same yardstick)."
+194,194_gate_shift,"The two-part form of the label, P(t > 4.301) x P(t - d > log10 2): the gate reads every compound with a TDI-arm curve. Validated alone and inside the stack."
+195,195_screen_block,"The official single-concentration screen as a predicted block (cross-fitted inside every task); validated alone and inside the stack, both isoforms."
+196,196_screen_selection_2d6,"The real screen inside the selection-aware CYP2D6 model (gate learned from the screen; predicted screen in the end-to-end classifier), on the panel-block pool."
+197,197_emax_block,"The official Emax readings of both arms as a predicted block, validated alone and inside the stack."
+198,198_mlp_addition,"The multitask network (cache complete) added to the default stack, both isoforms."
+199,199_basic_centre_experiment,"The basic-centre block added to feature sets A and A+fps, validated alone and inside the stack (it matters most for CYP2D6), both isoforms."
+200,200_permutation_control,Negative control of the whole nested pipeline: the pool labels are permuted at random and the procedure is repeated; the outer AUC must be 0.5.
+201,201_tabicl_CYP3A4,"TabICL candidate completed for every task of the nested plan (time-boxed chunks, resumable; the memory guard stays on)."
+202,202_chemeleon_speed,"The speed test and the decision on the fine-tuned CheMeleon (cypmode/challenge/chemeleon_speed.py, decided 2026-10-16 before any measurement): one task that is already in the cache from the processor is trained again"
+202,202_tabicl_CYP2D6,"TabICL candidate completed for every task of the nested plan (time-boxed chunks, resumable; the memory guard stays on)."
+203,203_chemprop_CYP3A4,"CheMeleon, stage 1 of its staged design (cypmode/challenge/chemeleon_stage.py): the 25 cross-validation tasks of repeat 0 for CYP3A4, time-boxed chunks, resumable. The plain Chemprop cache is complete. Whether it runs, and on"
+204,204_chemprop_CYP2D6,"CheMeleon stage 1 for CYP2D6 is not run: the enzyme was dropped from the CheMeleon design on 2026-10-16 (plain Chemprop is at chance on CYP2D6, outer AUC 0.54 and 0.53; the frozen CheMeleon block reaches 0.63; see"
+205,205_tabicl_addition,TabICL added to the default stack once its cache is complete (jobs 201 and 202).
+206,206_chemprop_addition,"Plain Chemprop (cache complete on the nested plan) added to the default stack, both enzymes; CheMeleon has its own staged jobs (203, 204, 236 to 239)."
+207,207_ost_vs_ours,"OpenStructure's own LDDT-PLI (the organisers' scorer, in the conda environment `ost`) against the local values, pose by pose, on the confirmation ligands."
+208,208_mlp_aux_CYP3A4,"Multitask network with the official screen and Emax readings as auxiliary heads, completed for every task of the nested plan (time-boxed chunks, resumable)."
+209,209_mlp_aux_CYP2D6,"Multitask network with the official screen and Emax readings as auxiliary heads, completed for every task of the nested plan (time-boxed chunks, resumable)."
+210,210_mlp_aux_addition,The multitask network with auxiliary heads added to the default stack once its cache is complete (jobs 208 and 209).
+211,211_monroe_extract,"Frozen Monroe (GRIT) embeddings of the training and blinded test compounds, in the isolated environment .venv-monroe (weights read as plain tensors)."
+212,212_monroe_block_experiment,"The Monroe embedding block added to feature sets A and A+fps (and alone), validated alone and inside the stack, both isoforms."
+213,213_tabicl_monroe_CYP3A4,"TabICL on the frozen Monroe embedding, completed for every task of the nested plan (time-boxed chunks, resumable)."
+214,214_tabicl_monroe_CYP2D6,"TabICL on the frozen Monroe embedding, completed for every task of the nested plan (time-boxed chunks, resumable)."
+215,215_tabicl_monroe_addition,TabICL on Monroe embeddings added to the default stack once its cache is complete (jobs 213 and 214).
+217,217_pxr_block,"The PXR-induction readings of the same compound library (pEC50 and Emax; training set and the two unblinded test phases of the PXR challenge) as a predicted block, alone and inside the stack."
+218,218_relaxation_gate,"Force-field relaxation of predicted ligand poses in the frozen pocket (OpenMM, in the conda environment openmm), tested on the poses of the crystal-anchored ligands before any use on the official ones:"
+219,219_ext_cont_extract,The continuous responses and potencies of the NCATS qHTS panel (PubChem AID 1851) and of the Tox21 CYP screen as label-free blocks: models trained on external compounds only predict them for every challenge compound.
+220,220_ext_cont_experiment,"The continuous external block, and then the Tox21 block as a separate test, added to the feature sets that carry the binary external block, alone and inside the stack (pre-registered gate of addition_experiment), both isoforms."
+221,221_tabpfn_CYP3A4,"TabPFN (Prior Labs) completed for every task of the nested plan (time-boxed chunks, resumable; the memory guard stays on). The weights are under Prior Labs' non-commercial licence and are fetched by the"
+222,222_tabpfn_CYP2D6,"TabPFN (Prior Labs) completed for every task of the nested plan (time-boxed chunks, resumable; the memory guard stays on). The weights are under Prior Labs' non-commercial licence and are fetched by the"
+223,223_tabpfn_addition,TabPFN added to the default stack once its cache is complete (jobs 221 and 222); the pre-registered gate of addition_experiment decides.
+227,227_openadmet_surrogates,"logD and mouse brain protein binding predicted for every challenge compound by OpenADMET's surrogate Chemprop models (two label-free columns), then the gated test of adding them to feature sets A and A+fps, both isoforms."
+228,228_atomjepa_extract,"Frozen Atom-JEPA embeddings (all 8 blocks, mean over atoms) of every challenge compound, in chunks that are saved as they finish (an interrupted run resumes), then the gated test of adding them to feature sets"
+229,229_atomjepa_head_CYP3A4,"A small attention readout trained on the cached per-atom features of the frozen Atom-JEPA encoder, completed for every task of the nested plan (time-boxed chunks, resumable). The encoder does not run again."
+230,230_atomjepa_head_CYP2D6,"A small attention readout trained on the cached per-atom features of the frozen Atom-JEPA encoder, completed for every task of the nested plan (time-boxed chunks, resumable). The encoder does not run again."
+231,231_atomjepa_head_addition,The Atom-JEPA attention readout added to the default stack once its cache is complete (jobs 229 and 230); the pre-registered gate decides.
+232,232_neural_f10_fill_CYP3A4,"Confirmatory replicate of the neural pair on CYP3A4 (group neural): plain Chemprop and the multitask network on the 10-outer-fold plan (155 tasks each, deployment fits included),"
+233,233_neural_addition,"The neural pair (multitask network and plain Chemprop, caches complete) added to the default stack on the nested plan, both enzymes; the ledger rows of the 15-fold design."
+234,234_neural_addition_f10,"The neural pair on the 10-outer-fold plan (CYP3A4): the confirmatory comparison against the default stack, declared before any 10-fold result existed."
+235,235_neural_replicate_verdict,"The replicate verdicts again, now with the neural pair (CYP3A4 only; the physics lines are recomputed from the same logs)."
+236,236_chemeleon_stage1_screen,Stage 1 of CheMeleon: the stacked comparison on repeat 0 (5 outer folds) for CYP3A4. Written to a .txt file on purpose: a stage 1 screen is not a pre-registered gate and must not enter the ledger.
+237,237_chemeleon_stage2_CYP3A4,"Stage 2 of CheMeleon (CYP3A4): repeats 1 and 2 and the deployment fits, only if the rule of cypmode/challenge/chemeleon_stage.py asks for it after stage 1; otherwise nothing is run."
+238,238_chemeleon_stage2_CYP2D6,"Stage 2 of CheMeleon (CYP2D6; the enzyme was dropped from the design on 2026-10-16, so no stage 1 file exists and the rule below always says stop): repeats 1 and 2 and the deployment fits, only if the rule of cypmode/challenge/chemeleon_stage.py asks for it after stage 1; otherwise nothing is run."
+239,239_chemeleon_addition,"CheMeleon added to the default stack (15 folds, the ordinary gate) for each enzyme whose stage 2 ran; the others stay ""screened on 5 folds, not continued""."
+240,240_softmax_selector,"The softmax-temperature selector (T small: the best model, T large: an equal-weight committee) against the logistic blend, from the cached predictions of the default stack; also the exploration-exploitation curve."
+241,241_ost_regate,"The registered consequence of job 207's verdict: the confirmatory restraint gates repeated with OpenStructure's LDDT-PLI (a few seconds, no model run)."
+242,242_data_checker,"The organisers' data checker (OpenADMET/challenge-data-checker, Apache-2.0, in its own environment .venv-checker with Python 3.12): the official training, Emax and direct-inhibition files against the blinded test file."
+243,243_structure_relaxation_final,"The force-field relaxation (gate of job 218, MET) applied to the 20 poses of the final recipe under the rule registered in cypmode/validation/relax_final.py, and the final zip rebuilt from the poses that"
+244,244_ost_pools_score,"OpenStructure's LDDT-PLI and BiSyRMSD for the 167 poses that the gates of the pools were judged on (about 4 s per pose, measured on three poses), in time-boxed chunks, resumable. The registered consequence of the verdict of job 207."
+245,245_ost_pool_gates,The gates of the pools repeated on OpenStructure's yardstick (after a check that the same code reproduces every original verdict on unchanged tables); nothing the gates wrote before is touched.
+246,246_tabicl_chemeleon_CYP3A4,"TabICL on the frozen CheMeleon embedding (128 label-free principal components next to the quantile-transformed descriptors), completed for every task of the nested plan (time-boxed chunks, resumable)."
+247,247_tabicl_chemeleon_CYP2D6,"TabICL on the frozen CheMeleon embedding (128 label-free principal components next to the quantile-transformed descriptors), completed for every task of the nested plan (time-boxed chunks, resumable)."
+248,248_tabicl_chemeleon_addition,TabICL on the frozen CheMeleon embedding added to the default stack once its cache is complete (jobs 246 and 247); the pre-registered gate of addition_experiment decides.
+249,249_tabpfn_chemeleon_CYP3A4,"TabPFN on the same frozen CheMeleon representation as job 246/247, completed for every task of the nested plan (time-boxed chunks, resumable; the licence marker of job 221 is needed, see there)."
+250,250_tabpfn_chemeleon_CYP2D6,"TabPFN on the same frozen CheMeleon representation as job 246/247, completed for every task of the nested plan (time-boxed chunks, resumable; the licence marker of job 221 is needed, see there)."
+251,251_tabpfn_chemeleon_addition,TabPFN on the frozen CheMeleon embedding added to the default stack once its cache is complete (jobs 249 and 250); the pre-registered gate of addition_experiment decides.
+252,252_atomjepa_head_f10_fill_CYP3A4,"Exploratory replicate of the Atom-JEPA readout on CYP3A4 (declared 2026-10-17, after the registered 5-fold gate was NOT MET): the cached readout completed for every task of the 10-outer-fold plan"
+253,253_atomjepa_head_f10_exploratory,"The exploratory comparison of the Atom-JEPA readout with the default stack on the 10-outer-fold plan (CYP3A4 only), declared before any 10-fold number of the readout existed. It cannot bring the group into the stack:"
+254,254_all_in_one_comparison,"The all-in-one comparison (cypmode/challenge/all_in_one.py, declared 2026-10-22 before any result): the final stack of each isoform against one stack of every cached candidate, on the experiments' plan, from the prediction caches"
+255,255_openadmet_weights_stage1_CYP3A4,"The two OpenADMET pretraining weights (MiniMol embeddings and the Novartis ADMET surrogate predictions as pretraining targets), stage 1 of the two-stage design of chemeleon_stage.py applied unchanged (declared 2026-10-22 before any result):"
+256,256_openadmet_weights_stage1_screen,"Stage 1 of the OpenADMET pretraining weights: the stacked comparison on repeat 0 (5 outer folds) for CYP3A4, both starting points added to the default stack together. Written to a .txt file on purpose: a stage 1 screen is not a"
+257,257_openadmet_weights_stage2_CYP3A4,"Stage 2 of the OpenADMET pretraining weights (CYP3A4): repeats 1 and 2 and the deployment fits, only if the rule of cypmode/challenge/chemeleon_stage.py asks for it after stage 1 (and it can finish by 2026-10-29); otherwise nothing is run."
+258,258_openadmet_weights_addition,"The OpenADMET pretraining weights added to the default stack (15 folds, the ordinary gate) for CYP3A4 when stage 2 ran; otherwise they stay ""screened on 5 folds, not continued"" (or ""not run"" when job 202 decided so)."
+259,259_bioemu2_probe,"BioEmu2 timing probe in an exclusive window: one benchmark system (CYP3A4, ligand and heme, about 570 tokens), two samples, on the Apple GPU."
+260,260_bioemu2_benchmark,"BioEmu2 on the 10 benchmark ligands, 3 samples each (seeds 0 to 2, the first 256 rows of the alignment of Boltz-2, the Boltz-2 inputs, no contacts), registered on 2026-10-23 before any"
+261,261_bioemu2_gate,"Scores the BioEmu2 poses of the benchmark against the crystal poses with the yardstick of the other engines and runs the engine-consensus gate registered on 2026-10-23, with BioEmu2"
+262,262_pocket_pharmacophore_extract,"The pocket-level pharmacophore block (declared on 2026-10-23 before any result): the density fields of the CYP3A4 and CYP2D6 pockets from their public crystal ligands in the frame of the heme,"
+263,263_pocket_pharmacophore_CYP3A4,"CYP3A4: the gated test of the compound relative to the CYP3A4 pocket (pocket_cyp3a4, the addition), and the control with the pocket of the other enzyme (pocket_cyp2d6 on CYP3A4 data), whose log is"
+264,264_pocket_pharmacophore_CYP2D6,"CYP2D6: the gated test of the compound relative to the CYP2D6 pocket (pocket_cyp2d6, the addition), and the control with the pocket of CYP3A4 (pocket_cyp3a4 on CYP2D6 data), whose log is not a gate."
+265,265_pocket_pharmacophore_replicate,"The replicate rule declared with the pocket block: when the stacked gate of an enzyme's own pocket is MET on 3 repeats of 5 outer folds, the same comparison is made on 10 outer folds and the replicate"
+266,266_hypothesis_extract,"The ligand-based pharmacophore hypothesis model (checklist ""Pharmacophore modelling"", declared on 2026-10-23 before any result): the hypotheses (two- and three-feature pmapper signatures with binned"
+267,267_site_model_CYP3A4,"CYP3A4: the gated test of the structure-based site model of the CYP3A4 pocket (site_cyp3a4, the addition), and the control with the site model of the CYP2D6 pocket (site_cyp2d6 on CYP3A4 data), whose log is not a"
+268,268_site_model_CYP2D6,"CYP2D6: the gated test of the structure-based site model of the CYP2D6 pocket (site_cyp2d6, the addition), and the control with the site model of the CYP3A4 pocket (site_cyp3a4 on CYP2D6 data), whose log is not a gate."
+269,269_hypothesis_model_CYP3A4,"CYP3A4: the gated test of the ligand-based hypothesis model (hypothesis, fitted inside every task on the training rows of the task, out of fold for those rows), and its control, the same model on labels permuted"
+270,270_hypothesis_model_CYP2D6,"CYP2D6: the same gated test of the ligand-based hypothesis model, and its permuted-label control (see job 269)."
+271,271_pharmacophore_models_replicate,"The replicate rule declared with the two pharmacophore models: when the stacked gate of a group is MET on 3 repeats of 5 outer folds, the same comparison is made on 10 outer folds and the replicate verdicts are"
+272,272_pose_pharmacophore_gate,"The pharmacophore model of a predicted pose (declared 2026-10-23 before any code), judged on the same pooled crystal-anchored benchmark as the pose terms of job 168_pose_awareness. Each pose is put in the frame of its"
+273,273_conformer_bias,"The check of the conformational bias (declared 2026-10-23 before any code). For each of the 148 crystal ligand copies, 300 conformers, the nearest one to the crystal pose and the energy window that the bound state needs, and the coverage"
+274,274_site_representation,"The check of the binding-site representation (declared 2026-10-23 before any code): the variability of the pocket among the crystal entries, the pockets of the predicted complexes of the pools of job 272 against it, and the support of"
+275,275_stereo_official_rerun,"Three official ligands (OCNT-2395415, OCNT-2312554, OCNT-2312966) were first published as racemates and were predicted from the racemic SMILES; the organisers replaced them by the SMILES of the models used for"
+276,276_requeue_after_stereo,After the three official ligands have been predicted again from their corrected SMILES (job 275): the final chain of job 299 runs again from its start. The final TDI build reads the verdicts of the experiments
+277,277_affinity_base_runs,"The affinity step of the three base runs made again from the corrected SMILES (job 275) hit the memory cap of the guards (PYTORCH_MPS_HIGH_WATERMARK_RATIO=1.3: ""ran out of memory, skipping batch""), so no"
+278,278_requeue_notebook_build,"The first build of the notebook with the sections 9.13 to 9.15, 11.11 and 11.12 (job 942, 2026-10-25, two attempts) stopped at a Markdown cell that writes a number into the text before the cell that computes it"
+279,279_requeue_notebook_and_film,"The second build of the notebook (job 942, 2026-10-25) stopped at the paragraph of section 12.1 that read a log which the speed test of 2026-10-22 had overwritten; the cell now reads the two records of"
+280,280_requeue_after_wording,"The wording of the project was corrected (no text names a person by a role; cypmode/audit/prose_rules.py, audit section 18, tests/test_prose_rules.py), and two generated documents carried the old words: the method"
+281,281_requeue_film,The render of the film (job 945) lost its browser 31 to 33 seconds after every start of the browser and failed in all four attempts of 2026-10-25. The driver of the browser now starts a new one and opens the page again
+282,282_requeue_film_again,"The second render of the film (job 945, 2026-10-25) stopped after about 500 frames because another browser, started by a test, used the same debugging port while the render ran and the page of the new"
+283,283_requeue_final_sequence,"The order of the final sequence (decided 2026-10-25): the audit twice in a row (job 900), then everything that the audit, the code or the counts of the repository change (the explorer bundle, the method report, the documents, the"
+285,285_label_shift,"An estimate of the positive rate of the scored set that reads no leaderboard (label shift, cross-fitted soft adjusted classify-and-count), compared with the rate of the final build by a rule fixed before the first run."
+286,286_ligand_dynamics,"Ligand dynamics in the frozen pocket (the rule of docs/structure_track/structure_ligand_dynamics.md, committed before any number): the pools of the static pharmacophore gate, 20 ps of the ligand in its frozen pocket for every pose, the dynamic scores and the gate."
+295,295_lint_cleanup,"Lint cleanup of the Python modules (decided 2026-10-17). It runs after every experiment job and before the final chain (job 299), so that the audit and the test suite of the chain run on the cleaned code."
+299,299_requeue_final_chain,"After the experiments of jobs 190 to 206: the final TDI build reads every gate verdict again (a group whose gate is MET joins the stack), then the chain that"
+900,900_tests_and_audit,"The first audit of the final sequence: the full audit with the test suite, twice, byte-for-byte; only when every earlier job is finished (a frozen state), the notebook is written and the working tree is committed."
+905,905_recompute_paired_summaries,Older significance tables re-analysed from their saved per-fold scores with the paired corrected t (no refits).
+906,906_explorer_bundle,"The data bundle of the interactive explorer (explorer/public): the ledger, the paired comparisons, the selection rules, the benchmark poses, the log excerpts and the out-of-fold predictions of the"
+910,910_method_report,Method report and negative-results ledger regenerated from the final logs and audit (job 900 runs first).
+921,921_docs_state,"The generated blocks of README.md and CYPMode_Architecture_Specification.md (the final stack per isoform, the verdicts of the gates, the structure recipe): rewritten from the final build, the logs of the"
+925,925_official_pharmacophore,"The expected pharmacophore of the 20 official ligands (declared 2026-10-23 before any code), from the final submitted poses and the pools of their valid poses. HELD BACK: the folder pharmacophore_official20 and its log are in .gitignore, and"
+930,930_public_readiness,"Scan for private paths, credentials, foreign e-mail addresses, oversized files; findings go to the log."
+940,940_figures_build,"The illustrations (docs/figures/PLAN.md): every generator, the catalog check, light and dark SVG and PNG, the animations. Runs after every"
+941,941_card_build,"The README card, built after the figures from the final numbers and recorded in audit/artifacts.json (the pre-submission gate checks the record against the numbers)."
+942,942_build_notebook,"The notebook (notebooks/PLAN.md): execute every cell against the final files, run the checks (cells, glossary, coverage), write the .ipynb, then the HTML and PDF exports (the build writes them itself when every check passes, so a failed check fails this job)."
+943,943_blender_clips,The cinematic molecule clips of the film (docs/video/STORYBOARD.md): the CYP3A4 enzyme with its heme and a Type II ligand drawn by Blender with the Molecular Nodes add-on from the real
+944,944_pymol_clips,"The real-structure stills and turntables of the film (docs/video/STORYBOARD.md): the heme pocket of CYP3A4 and the pose pools of the official ligands, rendered with PyMOL from the coordinates."
+945,945_video_render,"The animation (docs/video/STORYBOARD.md): every frame drawn by code, encoded to mp4, plus a gif preview and a poster frame."
+946,946_interactive_card,"The interactive card (docs/card/interactive/index.html, one self-contained page with a rotatable structure, the six complexes, the iron-nitrogen distances measured on the loaded coordinates and the"
+947,947_notebook_public,"The public edition of the notebook (notebooks/public/cypmode_notebook_public.ipynb, .html, .pdf): the same cells run the same way, the outputs and figures that show results for the blinded compounds replaced"
+950,950_submissions_final_sync,"The very last job: submissions/ is rewritten from the final TDI candidates and the final structure zip, each checked with the portal's own rules (it never uploads anything)."
+955,955_final_audit,"The second audit of the final sequence: the full audit with the test suite, twice, byte-for-byte, on the state that is submitted. Job 900 ran the same audit before the method report, the documents, the explorer bundle, the notebook,"
+960,960_pre_submission_gate,"The last gate: whether the queue, the audit, the submission files, the documents, the notebook and the film are finished, consistent and fresh."

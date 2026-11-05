@@ -1,0 +1,25 @@
+{
+  "work": "CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge",
+  "authors": [
+    {
+      "name": "Muhammad Talaat",
+      "orcid": "https://orcid.org/0000-0002-9171-437X",
+      "affiliation": "Faculty of Pharmacy, Ain Shams University"
+    }
+  ],
+  "repository": "https://github.com/mohamedtalaat-gif/CYPMode",
+  "identifiers": {},
+  "licence": [
+    "AGPL-3.0-or-later"
+  ],
+  "cite_as": "Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.1.0. https://github.com/mohamedtalaat-gif/CYPMode",
+  "commit": "adbc81a85b1d07400f5f497a64bafde9c878c84d",
+  "generated_at": "2026-10-24T23:57:47Z",
+  "command": [
+    "cypmode/challenge/final_tdi_build.py",
+    "--design",
+    "10",
+    "--out-dir",
+    "data/tdi_track/outputs/final_f10"
+  ]
+}

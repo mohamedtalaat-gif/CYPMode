@@ -1,0 +1,531 @@
+kind,path,sections
+module,cypmode/audit/artifacts.py,12.5
+module,cypmode/audit/checklist.py,"12.5, Appendix A"
+module,cypmode/audit/core.py,"5.5, 7.8, 10.2, 10.4, 11.8, 11.11, 11.12, 12.3"
+module,cypmode/audit/docs_state.py,"0.5, 12.5"
+module,cypmode/audit/ledger_kinds.py,"0.5, 12.5"
+module,cypmode/audit/method_report.py,"0.7, 2.11, 11.5, 12.5, 12.6, Appendix A"
+module,cypmode/audit/pre_submission.py,"11.12, 12.6"
+module,cypmode/audit/project_map.py,12.5
+module,cypmode/audit/prose_rules.py,12.3
+module,cypmode/audit/public_readiness.py,"12.5, 12.6, Appendix A"
+module,cypmode/audit/report.py,"0.2, 0.3, 0.6, 0.7, 2.4, 5.8, Part VI, 6.7, 7.1, 7.2, 7.4, 8.3, 8.6, 8.7, 9.2, 9.8, 9.10, 9.11, 10.1, 10.4, 11.5, 11.10, 11.12, 11.13, Part XII, 12.1, 12.2, 12.3, 12.5, 12.6, Part XIII, 13.1, 13.2, 13.4, Appendix A, Appendix C"
+module,cypmode/audit/sections.py,"Front matter, 0.2, 0.5, 0.6, 0.7, 2.1, 2.4, 2.5, 3.2, 3.5, 3.7, 5.1, 5.2, 5.3, 5.7, 5.8, 6.3, Part VII, 7.1, 7.4, 7.9, 7.10, Part VIII, Part IX, 10.3, 11.3, 11.5, 11.9, 11.12, 12.2, 12.3, 12.5, 12.6, Appendix B"
+module,cypmode/audit/sections_extra.py,"9.11, 12.6"
+module,cypmode/challenge/addition_experiment.py,"6.7, 9.1, 9.2, 9.3, 9.4, 9.9, 10.6, Appendix A"
+module,cypmode/challenge/all_in_one.py,9.11
+module,cypmode/challenge/applicability_domain.py,8.7
+module,cypmode/challenge/architecture_significance.py,7.11
+module,cypmode/challenge/arms_experiment.py,"0.5, 9.6"
+module,cypmode/challenge/atomjepa_embeddings.py,9.10
+module,cypmode/challenge/aux_blocks.py,9.10
+module,cypmode/challenge/aux_experiments.py,"9.9, Appendix A"
+module,cypmode/challenge/basic_centre.py,"3.4, 9.10"
+module,cypmode/challenge/bindingdb_auxiliary.py,"2.8, 7.7, Appendix C"
+module,cypmode/challenge/block_holdout.py,6.8
+module,cypmode/challenge/cached_candidates.py,"6.7, 9.9, Appendix A"
+module,cypmode/challenge/calibration_experiment.py,"4.10, 8.5, 9.3, Appendix A"
+module,cypmode/challenge/chemberta_features.py,"4.8, 7.9"
+module,cypmode/challenge/chemberta_significance.py,7.9
+module,cypmode/challenge/chembl_auxiliary.py,"2.8, 7.7, Appendix C"
+module,cypmode/challenge/chemeleon_speed.py,"9.10, Appendix A"
+module,cypmode/challenge/chemeleon_stage.py,"9.10, Appendix A"
+module,cypmode/challenge/combined_features.py,7.7
+module,cypmode/challenge/committee_label_model.py,"0.5, 9.3"
+module,cypmode/challenge/committee_uncertainty.py,7.6
+module,cypmode/challenge/confidence_experiment.py,9.8
+module,cypmode/challenge/cyp2d6_tuning_significance.py,7.11
+module,cypmode/challenge/external_activity.py,"2.8, 2.10, 7.7"
+module,cypmode/challenge/external_auxiliary_significance.py,7.7
+module,cypmode/challenge/external_continuous.py,"9.10, Appendix C"
+module,cypmode/challenge/feature_store.py,"1.10, 3.4, 3.7, 6.1, 6.4, 6.8"
+module,cypmode/challenge/final_assembly.py,7.11
+module,cypmode/challenge/final_assembly_cyp2d6.py,7.11
+module,cypmode/challenge/final_tdi_build.py,"Part VIII, 8.1, 8.4, 8.5, 8.6, 9.9, 13.1, Appendix A"
+module,cypmode/challenge/foundation_weights.py,9.10
+module,cypmode/challenge/frozen_embeddings.py,"4.9, 9.4"
+module,cypmode/challenge/functional_groups.py,"9.14, 9.15"
+module,cypmode/challenge/grouping.py,"3.1, 3.6, 4.5, 12.3"
+module,cypmode/challenge/hedged_blend.py,"0.5, 9.1"
+module,cypmode/challenge/knn_features.py,7.3
+module,cypmode/challenge/label_confidence.py,"2.5, 6.4, 6.7, 8.1, 9.8"
+module,cypmode/challenge/label_shift.py,2.11
+module,cypmode/challenge/leaderboard_prior.py,"2.10, 6.4, 8.1, 9.1"
+module,cypmode/challenge/library_blocks.py,"2.6, 6.8, 9.1"
+module,cypmode/challenge/mmp_transfer.py,"0.5, 9.2, 9.14, 9.15"
+module,cypmode/challenge/model_comparison.py,"6.5, 6.6, 6.7, 7.2, 7.3, 7.7, 7.9, 7.10, 8.7, 12.6"
+module,cypmode/challenge/monroe_embeddings.py,"0.5, 9.10"
+module,cypmode/challenge/multiplicity.py,"9.11, 13.1, 13.2"
+module,cypmode/challenge/multitask.py,"4.7, 6.7, 7.9, 9.9, 9.10, 9.12, Appendix A"
+module,cypmode/challenge/nested.py,"Front matter, 0.6, 2.8, 3.6, 4.1, 4.7, 4.9, Part VI, 6.2, 6.3, 6.4, 6.6, 6.7, 6.8, Part VII, 7.3, 7.4, 7.6, 7.8, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 9.10, 9.14, 12.1, 12.2, 12.3, 12.4, 12.6, 12.7, 13.1, 13.4, Appendix A"
+module,cypmode/challenge/nested_deploy.py,6.3
+module,cypmode/challenge/nested_report.py,6.3
+module,cypmode/challenge/nested_runners.py,"2.7, 4.3, 4.6, 4.10, 6.1, 6.2, 6.3, 7.6, 8.1, 9.1, 9.3, 9.5, 9.6, 9.7, 9.14, Appendix A"
+module,cypmode/challenge/nested_runners_chemprop.py,"4.8, 8.1, 9.9, 9.10"
+module,cypmode/challenge/nested_runners_torch.py,"4.7, 4.9, 8.1, 9.9, Appendix A"
+module,cypmode/challenge/nonneg_stack.py,"0.5, 9.10"
+module,cypmode/challenge/official_extra.py,"5.4, 6.8, 9.10"
+module,cypmode/challenge/oof_bridge.py,7.4
+module,cypmode/challenge/openadmet_surrogates.py,9.10
+module,cypmode/challenge/pair_transfer.py,"0.5, 9.2, 10.6"
+module,cypmode/challenge/permutation_control.py,"0.5, 6.8, 9.10"
+module,cypmode/challenge/pharmacophore_fingerprint.py,"3.5, 6.6, 7.3, 7.8"
+module,cypmode/challenge/pharmacophore_hypotheses.py,9.14
+module,cypmode/challenge/physics_block.py,"10.1, 10.4, 10.5, 10.6"
+module,cypmode/challenge/physics_compact_experiment.py,10.6
+module,cypmode/challenge/physics_experiment.py,"0.5, 10.6"
+module,cypmode/challenge/physics_tierb.py,"0.5, 10.5, 10.6"
+module,cypmode/challenge/physics_tierb_experiment.py,10.6
+module,cypmode/challenge/pocket_pharmacophore.py,"9.13, 11.11"
+module,cypmode/challenge/population_experiment.py,9.1
+module,cypmode/challenge/population_physics.py,"0.5, 9.1, 10.6"
+module,cypmode/challenge/population_share.py,"2.10, 9.1"
+module,cypmode/challenge/pubchem_auxiliary.py,"2.8, 7.7, Appendix C"
+module,cypmode/challenge/qm_reactivity_features.py,"7.8, 10.6"
+module,cypmode/challenge/qm_reactivity_significance.py,7.8
+module,cypmode/challenge/quantum_pharmacophore.py,"6.6, 7.3, 7.8, 10.6"
+module,cypmode/challenge/quantum_pharmacophore_significance.py,"7.8, 10.6"
+module,cypmode/challenge/recompute_paired_summaries.py,6.6
+module,cypmode/challenge/reliability.py,"0.7, 6.8, 7.5, 7.6, 8.5, 12.3, Appendix A"
+module,cypmode/challenge/replicate_verdict.py,"0.5, 6.7, 9.9, Appendix A"
+module,cypmode/challenge/screen_selection.py,9.10
+module,cypmode/challenge/selection_aware_v2.py,"0.5, 9.1"
+module,cypmode/challenge/selection_decision.py,13.4
+module,cypmode/challenge/softmax_selector.py,"0.5, 9.10"
+module,cypmode/challenge/split_validity.py,"6.8, 7.7"
+module,cypmode/challenge/stacking_significance.py,"6.5, 6.6, 7.7, 7.8, 7.9, 7.11"
+module,cypmode/challenge/structure_standardization.py,"2.9, 2.10, 7.7"
+module,cypmode/challenge/structure_submission.py,11.10
+module,cypmode/challenge/submission.py,"0.3, 0.6, 6.4, 7.11, Part VIII, 8.4, 8.5, 8.6, 11.1, 11.4, 11.10, 11.12, 12.2, 12.3, 12.5, 12.6, Part XIII, 13.2, 13.4, Appendix A"
+module,cypmode/challenge/submissions_sync.py,8.6
+module,cypmode/challenge/tdi_ablation.py,"7.2, 7.3"
+module,cypmode/challenge/tdi_baseline.py,"7.1, 7.5, 8.4"
+module,cypmode/challenge/tdi_targets.py,"1.7, 1.10, 2.3, 4.6, 5.2, 6.1, 7.1, 7.11, 9.3, 9.6, 9.7, 9.14"
+module,cypmode/challenge/test_likeness_training.py,9.5
+module,cypmode/challenge/test_nonhit_share.py,9.1
+module,cypmode/challenge/threshold_tuning.py,"7.5, 7.9"
+module,cypmode/challenge/tier3_features.py,7.10
+module,cypmode/challenge/tier3_knn_significance.py,7.10
+module,cypmode/challenge/tier3_selection.py,7.10
+module,cypmode/challenge/validation_matching.py,"4.5, 6.4, 8.1, 8.4"
+module,cypmode/challenge/why_no_gain.py,9.12
+module,cypmode/challenge/xiso_transfer.py,"0.5, 9.7"
+module,cypmode/data/octant_benchmark.py,"2.8, 5.4, Appendix C"
+module,cypmode/data/panel.py,"Front matter, 0.2, 1.1, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 3.4, 5.1, 5.2, 5.3, 5.7, 7.5, 7.7, 7.11, 8.1, 8.6, 9.1, 9.10, 11.5, 11.10, 11.13, 12.3, 13.4, Appendix A, Appendix C"
+module,cypmode/data_record.py,12.1
+module,cypmode/explorer/data.py,"Front matter, 0.2, 0.3, 0.6, 1.2, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 2.4, 2.7, 2.8, 2.10, 3.1, 3.3, 3.4, 3.5, 3.6, 3.7, 4.1, 4.2, 4.3, 4.4, 4.5, 4.7, 4.9, Part V, 5.1, 5.2, 5.3, 5.4, 5.5, 5.7, 5.8, Part VI, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, Part VII, 7.1, 7.2, 7.4, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, Part IX, 9.1, 9.2, 9.4, 9.6, 9.9, 9.10, 9.11, 9.12, 9.13, 9.14, 9.15, 10.5, Part XI, 11.1, 11.2, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 11.13, 12.1, 12.2, 12.3, 12.5, 12.6, 12.7, 13.1, 13.2, 13.4, Appendix A, Appendix C"
+module,cypmode/metrics/amines.py,"0.6, 1.10, Part V, 5.2, 5.7, 7.2"
+module,cypmode/metrics/motifs.py,"0.2, 3.4, 5.1, 5.3, 5.4, 5.5, 5.7, 7.2"
+module,cypmode/provenance.py,"12.3, 12.5"
+module,cypmode/validation/affinity_retry.py,11.12
+module,cypmode/validation/batch.py,"3.5, 4.7, 5.5, 9.9, 9.10, 9.11, 11.2, 11.3, 11.5, 11.7, 11.9, 11.10, 11.12, 12.3"
+module,cypmode/validation/bioemu2.py,"11.9, Appendix C"
+module,cypmode/validation/bisy_rmsd.py,11.4
+module,cypmode/validation/boltz_cpu_fp32.py,11.12
+module,cypmode/validation/build_input.py,"1.3, 5.5, Part XI, 11.1, 11.3, 11.5, 11.6, Appendix A"
+module,cypmode/validation/build_summary.py,"5.5, 11.3"
+module,cypmode/validation/conformer_benchmark.py,11.7
+module,cypmode/validation/conformer_bias.py,"9.12, 11.11"
+module,cypmode/validation/conformers.py,"0.5, 3.5, 9.10, 9.13, 9.14, 9.15, 10.5, 10.6, 11.7, 11.8, 11.10, 11.11, 12.3, Appendix A"
+module,cypmode/validation/constants.py,"0.6, 1.3, 1.5, 1.6, 1.8, 2.5, 4.3, 5.5, 6.7, 10.1, 11.9, 11.10, 12.3"
+module,cypmode/validation/cryoem_templates.py,11.7
+module,cypmode/validation/diversity_pilot.py,11.7
+module,cypmode/validation/ei_sampling.py,"0.5, 11.8"
+module,cypmode/validation/final_recipe.py,"11.5, 11.9, 11.10, 11.12, Appendix A"
+module,cypmode/validation/heme_frame_prior.py,"0.5, 11.8, Appendix A"
+module,cypmode/validation/lddt_to_crystal.py,"11.4, 11.8, Appendix A"
+module,cypmode/validation/ligand_dynamics.py,"0.5, 11.13"
+module,cypmode/validation/mbr_lddt_reevaluation.py,"0.5, 11.6, 11.8"
+module,cypmode/validation/official_pharmacophore.py,"11.11, 11.12"
+module,cypmode/validation/official_posebusters.py,"11.4, 11.10"
+module,cypmode/validation/openfold3.py,"5.5, 11.2, 11.9, Appendix A, Appendix C"
+module,cypmode/validation/ost_official.py,11.4
+module,cypmode/validation/ost_pool_gates.py,"0.5, 11.8, 11.9"
+module,cypmode/validation/ost_pools.py,11.8
+module,cypmode/validation/ost_regate.py,"0.5, 11.6"
+module,cypmode/validation/ost_worker.py,11.4
+module,cypmode/validation/pipeline.py,"0.4, 0.5, 2.10, 5.5, 6.3, 6.8, 7.7, 7.10, 9.10, Part XI, 11.3, 11.4, 11.12, 12.3, Appendix A"
+module,cypmode/validation/pocket_geometry.py,5.6
+module,cypmode/validation/pose_awareness.py,"0.5, 11.8, 11.13"
+module,cypmode/validation/pose_comparison.py,11.4
+module,cypmode/validation/pose_consensus.py,11.9
+module,cypmode/validation/pose_margins.py,"11.4, 11.10, 11.12"
+module,cypmode/validation/pose_pharmacophore.py,"11.8, 11.11, 11.13"
+module,cypmode/validation/pose_pools.py,"11.4, 11.8"
+module,cypmode/validation/pose_rescoring.py,11.8
+module,cypmode/validation/pose_rescoring_validation.py,11.8
+module,cypmode/validation/pose_selection.py,"11.4, 11.8, Appendix A"
+module,cypmode/validation/pose_stereo.py,11.12
+module,cypmode/validation/pose_validity.py,11.4
+module,cypmode/validation/reference_ligands.py,"9.13, 11.1, 11.5, 11.8"
+module,cypmode/validation/relax.py,"10.3, 11.10, 11.13, 12.3"
+module,cypmode/validation/relax_final.py,"11.10, 11.12, Appendix A"
+module,cypmode/validation/relax_gate.py,"11.10, Appendix A"
+module,cypmode/validation/restraint_expansion.py,"0.5, 11.6"
+module,cypmode/validation/selection_validation.py,"0.5, 11.8, 11.9, Appendix A"
+module,cypmode/validation/series.py,"0.7, 1.7, 2.7, 2.8, 2.11, 3.1, 3.2, 3.6, 4.3, 8.7, 9.2, 9.5, 9.14, 9.15, 11.8, 11.10, 12.3, Appendix A"
+module,cypmode/validation/series_consensus.py,"0.5, 11.8"
+module,cypmode/validation/site_representation.py,11.11
+module,cypmode/validation/stereo_rerun.py,11.12
+module,cypmode/validation/structure_benchmark.py,11.5
+module,cypmode/validation/structure_benchmark_report.py,"11.5, 11.6, 11.8"
+module,cypmode/validation/structure_gates.py,"0.5, 11.6, 11.7"
+module,cypmode/validation/structures.py,"Front matter, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.3, 1.9, 2.7, 2.8, 2.9, 2.10, 2.11, 3.5, 3.7, 4.9, Part V, 5.1, 5.5, 5.7, 5.8, 6.8, Part VII, 7.3, 7.7, 7.10, 9.1, 9.3, 9.4, 9.5, 9.10, 9.13, 9.14, 9.15, 10.4, Part XI, 11.1, 11.2, 11.5, 11.6, 11.7, 11.10, 11.12, 12.3, 13.3, Appendix A, Appendix C"
+module,cypmode/validation/tdi_reference.py,"5.2, 5.7"
+script,scripts/audit.py,"0.4, 0.6, 0.7, 2.10, 7.4, 7.8, 7.9, 8.3, 8.5, 8.6, 9.10, 9.11, 11.10, 11.12, Part XII, 12.1, 12.2, 12.3, 12.5, 12.6, 13.1, 13.2, 13.4, Appendix A"
+script,scripts/bump_version.py,12.5
+script,scripts/chemprop_mps.sh,"9.10, 12.1"
+script,scripts/chemprop_warn_only.py,9.10
+script,scripts/clear_batch_errors.py,11.5
+script,scripts/explorer.sh,12.7
+script,scripts/fetch_data.py,12.1
+script,scripts/guards.sh,"12.4, 12.6"
+script,scripts/mirror_check.sh,12.1
+script,scripts/queue_runner.sh,"12.4, 12.6"
+script,scripts/queue_start.sh,Appendix A
+script,scripts/queue_status.sh,Appendix A
+script,scripts/release_after_deadline.py,12.6
+script,scripts/reproduce_tdi.sh,Appendix A
+script,scripts/run_audit.sh,"8.3, 12.2, Appendix A"
+script,scripts/run_diversity_pilot.sh,11.7
+script,scripts/run_openfold_lowmem.py,11.9
+script,scripts/run_structure_benchmark.sh,11.5
+script,scripts/run_tdi_context_then_structure.sh,9.8
+script,scripts/run_tdi_power_then_structure.sh,9.8
+script,scripts/run_tdi_then_structure.sh,9.8
+queue job,queue/jobs/010_pop_2d6_15fold.sh,Appendix A
+queue job,queue/jobs/012_pop_2d6_sensitivity.sh,Appendix A
+queue job,queue/jobs/013_test_nonhit_share.sh,Appendix A
+queue job,queue/jobs/014_hedged_blend.sh,Appendix A
+queue job,queue/jobs/015_pop_3a4_control.sh,Appendix A
+queue job,queue/jobs/016_selection_decision.sh,13.4
+queue job,queue/jobs/030_calibration.sh,Appendix A
+queue job,queue/jobs/040_selection_aware_v2.sh,Appendix A
+queue job,queue/jobs/045_block_holdout.sh,Appendix A
+queue job,queue/jobs/046_pair_conditional_transfer.sh,Appendix A
+queue job,queue/jobs/047_mmp_transfer.sh,Appendix A
+queue job,queue/jobs/050_frozen_embeddings.sh,"9.4, Appendix A"
+queue job,queue/jobs/060_test_likeness_training.sh,"9.5, Appendix A"
+queue job,queue/jobs/070_physics_xtb_block.sh,"10.5, 10.6, Appendix A"
+queue job,queue/jobs/071_population_physics.sh,"10.6, Appendix A"
+queue job,queue/jobs/072_physics_compact.sh,"10.6, Appendix A"
+queue job,queue/jobs/073_physics_tierb_extract.sh,"10.5, 10.6, Appendix A"
+queue job,queue/jobs/074_physics_tierb_experiment.sh,"10.6, Appendix A"
+queue job,queue/jobs/075_pair_transfer_physics.sh,"10.6, Appendix A"
+queue job,queue/jobs/076_xiso_arm_transfer.sh,"9.7, Appendix A"
+queue job,queue/jobs/078_arm_variants.sh,"9.6, Appendix A"
+queue job,queue/jobs/080_committee_ei_model.sh,Appendix A
+queue job,queue/jobs/081_replicate_grid_f10.sh,"10.6, Appendix A"
+queue job,queue/jobs/082_replicate_physics_f10.sh,"10.6, Appendix A"
+queue job,queue/jobs/083_replicate_verdict.sh,"10.6, Appendix A"
+queue job,queue/jobs/084_tdi_stack_reevaluation.sh,"9.4, 12.1, Appendix A"
+queue job,queue/jobs/090_final_tdi_build.sh,Appendix A
+queue job,queue/jobs/096_applicability_domain.sh,Appendix A
+queue job,queue/jobs/097_why_no_gain.sh,Appendix A
+queue job,queue/jobs/100_boltz_unguided_resume.sh,"11.5, Appendix A"
+queue job,queue/jobs/110_boltz_restraint_bond.sh,"11.6, Appendix A"
+queue job,queue/jobs/120_boltz_restraint_contact.sh,"11.6, Appendix A"
+queue job,queue/jobs/130_boltz_diversity_pilot.sh,"11.7, Appendix A"
+queue job,queue/jobs/133_series_benchmark_runs.sh,"11.8, Appendix A"
+queue job,queue/jobs/135_boltz_cryoem_pilot.sh,"11.7, Appendix A"
+queue job,queue/jobs/140_score_restraint_and_pilot.sh,"11.6, 11.7, Appendix A"
+queue job,queue/jobs/142_series_scoring.sh,"11.8, Appendix A"
+queue job,queue/jobs/144_score_cryoem_pilot.sh,"11.7, Appendix A"
+queue job,queue/jobs/149_openfold3_memory_probe.sh,"11.9, Appendix A"
+queue job,queue/jobs/150_openfold3_benchmark.sh,"11.9, Appendix A"
+queue job,queue/jobs/160_score_all_and_report.sh,"11.8, Appendix A"
+queue job,queue/jobs/165_structure_gate_verdicts.sh,"11.6, 11.7, 11.8, Appendix A"
+queue job,queue/jobs/168_pose_awareness.sh,"11.8, Appendix A"
+queue job,queue/jobs/169_series_consensus.sh,"11.8, Appendix A"
+queue job,queue/jobs/170_mbr_selection_validation.sh,"11.8, 11.9, Appendix A"
+queue job,queue/jobs/172_ei_sampling.sh,"11.8, Appendix A"
+queue job,queue/jobs/173_mbr_lddt_reevaluation.sh,"11.6, 11.8, Appendix A"
+queue job,queue/jobs/175_heme_frame_prior.sh,"11.8, Appendix A"
+queue job,queue/jobs/176_restraint_expansion_prepare.sh,"11.6, Appendix A"
+queue job,queue/jobs/177_boltz_restraint_expansion_primary.sh,"11.6, Appendix A"
+queue job,queue/jobs/178_score_restraint_expansion.sh,"11.6, Appendix A"
+queue job,queue/jobs/179_requeue_final_recipe.sh,"11.10, Appendix A"
+queue job,queue/jobs/180_structure_final_recipe_run.sh,"11.9, 11.10, Appendix A"
+queue job,queue/jobs/185_structure_recipe_update.sh,"11.10, Appendix A"
+queue job,queue/jobs/186_boltz_restraint_expansion_secondary.sh,"11.6, Appendix A"
+queue job,queue/jobs/187_score_restraint_expansion_secondary.sh,"11.6, Appendix A"
+queue job,queue/jobs/188_requeue_final_chain.sh,Appendix A
+queue job,queue/jobs/189_nodirect_labels.sh,Appendix A
+queue job,queue/jobs/190_official_extra_audit.sh,"9.10, Appendix A"
+queue job,queue/jobs/191_basic_centre_extract.sh,"9.10, Appendix A"
+queue job,queue/jobs/192_structure_margin_aware_zip.sh,"11.10, Appendix A"
+queue job,queue/jobs/193_nonneg_stack.sh,Appendix A
+queue job,queue/jobs/194_gate_shift.sh,Appendix A
+queue job,queue/jobs/195_screen_block.sh,Appendix A
+queue job,queue/jobs/196_screen_selection_2d6.sh,Appendix A
+queue job,queue/jobs/197_emax_block.sh,Appendix A
+queue job,queue/jobs/198_mlp_addition.sh,"9.9, Appendix A"
+queue job,queue/jobs/199_basic_centre_experiment.sh,"9.10, Appendix A"
+queue job,queue/jobs/200_permutation_control.sh,"9.10, Appendix A"
+queue job,queue/jobs/201_tabicl_CYP3A4.sh,Appendix A
+queue job,queue/jobs/202_chemeleon_speed.sh,"9.10, Appendix A"
+queue job,queue/jobs/202_tabicl_CYP2D6.sh,Appendix A
+queue job,queue/jobs/203_chemprop_CYP3A4.sh,Appendix A
+queue job,queue/jobs/204_chemprop_CYP2D6.sh,Appendix A
+queue job,queue/jobs/205_tabicl_addition.sh,Appendix A
+queue job,queue/jobs/206_chemprop_addition.sh,"9.9, Appendix A"
+queue job,queue/jobs/207_ost_vs_ours.sh,"11.4, Appendix A"
+queue job,queue/jobs/208_mlp_aux_CYP3A4.sh,Appendix A
+queue job,queue/jobs/209_mlp_aux_CYP2D6.sh,Appendix A
+queue job,queue/jobs/210_mlp_aux_addition.sh,Appendix A
+queue job,queue/jobs/211_monroe_extract.sh,Appendix A
+queue job,queue/jobs/212_monroe_block_experiment.sh,Appendix A
+queue job,queue/jobs/213_tabicl_monroe_CYP3A4.sh,Appendix A
+queue job,queue/jobs/214_tabicl_monroe_CYP2D6.sh,Appendix A
+queue job,queue/jobs/215_tabicl_monroe_addition.sh,Appendix A
+queue job,queue/jobs/217_pxr_block.sh,Appendix A
+queue job,queue/jobs/218_relaxation_gate.sh,"11.10, Appendix A"
+queue job,queue/jobs/219_ext_cont_extract.sh,Appendix A
+queue job,queue/jobs/220_ext_cont_experiment.sh,Appendix A
+queue job,queue/jobs/221_tabpfn_CYP3A4.sh,Appendix A
+queue job,queue/jobs/222_tabpfn_CYP2D6.sh,Appendix A
+queue job,queue/jobs/223_tabpfn_addition.sh,Appendix A
+queue job,queue/jobs/227_openadmet_surrogates.sh,Appendix A
+queue job,queue/jobs/228_atomjepa_extract.sh,Appendix A
+queue job,queue/jobs/229_atomjepa_head_CYP3A4.sh,Appendix A
+queue job,queue/jobs/230_atomjepa_head_CYP2D6.sh,Appendix A
+queue job,queue/jobs/231_atomjepa_head_addition.sh,Appendix A
+queue job,queue/jobs/232_neural_f10_fill_CYP3A4.sh,"9.9, Appendix A"
+queue job,queue/jobs/233_neural_addition.sh,"9.9, Appendix A"
+queue job,queue/jobs/234_neural_addition_f10.sh,"9.9, Appendix A"
+queue job,queue/jobs/235_neural_replicate_verdict.sh,"9.9, Appendix A"
+queue job,queue/jobs/236_chemeleon_stage1_screen.sh,Appendix A
+queue job,queue/jobs/237_chemeleon_stage2_CYP3A4.sh,Appendix A
+queue job,queue/jobs/238_chemeleon_stage2_CYP2D6.sh,Appendix A
+queue job,queue/jobs/239_chemeleon_addition.sh,Appendix A
+queue job,queue/jobs/240_softmax_selector.sh,Appendix A
+queue job,queue/jobs/241_ost_regate.sh,"11.4, 11.6, Appendix A"
+queue job,queue/jobs/242_data_checker.sh,Appendix A
+queue job,queue/jobs/243_structure_relaxation_final.sh,"11.10, Appendix A"
+queue job,queue/jobs/244_ost_pools_score.sh,"11.4, 11.8, Appendix A"
+queue job,queue/jobs/245_ost_pool_gates.sh,"11.4, 11.8, 11.9, Appendix A"
+queue job,queue/jobs/246_tabicl_chemeleon_CYP3A4.sh,Appendix A
+queue job,queue/jobs/247_tabicl_chemeleon_CYP2D6.sh,Appendix A
+queue job,queue/jobs/248_tabicl_chemeleon_addition.sh,Appendix A
+queue job,queue/jobs/249_tabpfn_chemeleon_CYP3A4.sh,Appendix A
+queue job,queue/jobs/250_tabpfn_chemeleon_CYP2D6.sh,Appendix A
+queue job,queue/jobs/251_tabpfn_chemeleon_addition.sh,Appendix A
+queue job,queue/jobs/252_atomjepa_head_f10_fill_CYP3A4.sh,"9.10, Appendix A"
+queue job,queue/jobs/253_atomjepa_head_f10_exploratory.sh,"9.10, Appendix A"
+queue job,queue/jobs/254_all_in_one_comparison.sh,9.11
+queue job,queue/jobs/255_openadmet_weights_stage1_CYP3A4.sh,9.10
+queue job,queue/jobs/256_openadmet_weights_stage1_screen.sh,9.10
+queue job,queue/jobs/257_openadmet_weights_stage2_CYP3A4.sh,9.10
+queue job,queue/jobs/258_openadmet_weights_addition.sh,9.10
+queue job,queue/jobs/259_bioemu2_probe.sh,11.9
+queue job,queue/jobs/260_bioemu2_benchmark.sh,11.9
+queue job,queue/jobs/261_bioemu2_gate.sh,11.9
+queue job,queue/jobs/262_pocket_pharmacophore_extract.sh,9.13
+queue job,queue/jobs/263_pocket_pharmacophore_CYP3A4.sh,9.13
+queue job,queue/jobs/264_pocket_pharmacophore_CYP2D6.sh,9.13
+queue job,queue/jobs/265_pocket_pharmacophore_replicate.sh,9.13
+queue job,queue/jobs/266_hypothesis_extract.sh,9.14
+queue job,queue/jobs/267_site_model_CYP3A4.sh,9.14
+queue job,queue/jobs/268_site_model_CYP2D6.sh,9.14
+queue job,queue/jobs/269_hypothesis_model_CYP3A4.sh,9.14
+queue job,queue/jobs/270_hypothesis_model_CYP2D6.sh,9.14
+queue job,queue/jobs/271_pharmacophore_models_replicate.sh,9.14
+queue job,queue/jobs/272_pose_pharmacophore_gate.sh,11.11
+queue job,queue/jobs/273_conformer_bias.sh,11.11
+queue job,queue/jobs/274_site_representation.sh,11.11
+queue job,queue/jobs/275_stereo_official_rerun.sh,11.12
+queue job,queue/jobs/276_requeue_after_stereo.sh,11.12
+queue job,queue/jobs/277_affinity_base_runs.sh,11.12
+queue job,queue/jobs/278_requeue_notebook_build.sh,12.3
+queue job,queue/jobs/279_requeue_notebook_and_film.sh,12.3
+queue job,queue/jobs/280_requeue_after_wording.sh,12.3
+queue job,queue/jobs/281_requeue_film.sh,12.3
+queue job,queue/jobs/282_requeue_film_again.sh,12.3
+queue job,queue/jobs/283_requeue_final_sequence.sh,12.3
+queue job,queue/jobs/285_label_shift.sh,Appendix A
+queue job,queue/jobs/286_ligand_dynamics.sh,"11.13, Appendix A"
+queue job,queue/jobs/295_lint_cleanup.sh,Appendix A
+queue job,queue/jobs/299_requeue_final_chain.sh,Appendix A
+queue job,queue/jobs/900_tests_and_audit.sh,"12.3, Appendix A"
+queue job,queue/jobs/905_recompute_paired_summaries.sh,Appendix A
+queue job,queue/jobs/906_explorer_bundle.sh,12.7
+queue job,queue/jobs/910_method_report.sh,Appendix A
+queue job,queue/jobs/921_docs_state.sh,"12.5, Appendix A"
+queue job,queue/jobs/925_official_pharmacophore.sh,11.11
+queue job,queue/jobs/930_public_readiness.sh,Appendix A
+queue job,queue/jobs/940_figures_build.sh,Appendix A
+queue job,queue/jobs/941_card_build.sh,Appendix A
+queue job,queue/jobs/942_build_notebook.sh,Appendix A
+queue job,queue/jobs/943_blender_clips.sh,Appendix A
+queue job,queue/jobs/944_pymol_clips.sh,Appendix A
+queue job,queue/jobs/945_video_render.sh,Appendix A
+queue job,queue/jobs/946_interactive_card.sh,12.5
+queue job,queue/jobs/947_notebook_public.sh,12.5
+queue job,queue/jobs/950_submissions_final_sync.sh,Appendix A
+queue job,queue/jobs/955_final_audit.sh,12.3
+queue job,queue/jobs/960_pre_submission_gate.sh,Appendix A
+queue job,queue/lib.sh,"0.6, 12.4, Appendix A"
+test,tests/test_addition_experiment.py,12.3
+test,tests/test_affinity_retry.py,11.12
+test,tests/test_alert_context.py,12.3
+test,tests/test_all_in_one.py,9.11
+test,tests/test_amines.py,12.3
+test,tests/test_app.py,"5.8, 12.3"
+test,tests/test_applicability_domain.py,12.3
+test,tests/test_artifacts.py,12.3
+test,tests/test_atomjepa_embeddings.py,12.3
+test,tests/test_atomjepa_head.py,12.3
+test,tests/test_audit_tree_state.py,12.2
+test,tests/test_aux_blocks.py,12.3
+test,tests/test_basic_centre.py,12.3
+test,tests/test_batch.py,12.3
+test,tests/test_bindingdb_auxiliary.py,12.3
+test,tests/test_bioemu2.py,"11.9, 12.3"
+test,tests/test_bisy_rmsd.py,12.3
+test,tests/test_boltz_cpu_fp32.py,11.12
+test,tests/test_build_input.py,12.3
+test,tests/test_build_summary.py,12.3
+test,tests/test_bump_version.py,12.5
+test,tests/test_card.py,12.3
+test,tests/test_chemberta_features.py,12.3
+test,tests/test_chemberta_significance.py,12.3
+test,tests/test_chemeleon_embedding_tabular.py,12.3
+test,tests/test_chemeleon_stage.py,12.3
+test,tests/test_chemprop_variants.py,12.3
+test,tests/test_combined_features.py,12.3
+test,tests/test_committee_uncertainty.py,12.3
+test,tests/test_conformer_bias.py,11.11
+test,tests/test_conformers.py,12.3
+test,tests/test_constants.py,12.3
+test,tests/test_cryoem_templates.py,12.3
+test,tests/test_data_record.py,12.1
+test,tests/test_diversity_pilot.py,12.3
+test,tests/test_docs_state.py,12.3
+test,tests/test_ei_sampling.py,12.3
+test,tests/test_explorer_data.py,"12.3, 12.7"
+test,tests/test_explorer_launcher.py,12.3
+test,tests/test_external_continuous.py,12.3
+test,tests/test_figures.py,12.3
+test,tests/test_film_chrome.py,12.3
+test,tests/test_final_assembly.py,12.3
+test,tests/test_final_assembly_cyp2d6.py,12.3
+test,tests/test_final_recipe.py,12.3
+test,tests/test_final_tdi_build.py,12.3
+test,tests/test_frozen_embeddings.py,12.3
+test,tests/test_functional_groups.py,9.15
+test,tests/test_grouping.py,12.3
+test,tests/test_hedged_blend.py,12.3
+test,tests/test_heme_frame_prior.py,12.3
+test,tests/test_interactive_card.py,"12.3, 12.5"
+test,tests/test_knn_features.py,12.3
+test,tests/test_label_confidence.py,12.3
+test,tests/test_label_shift.py,12.3
+test,tests/test_lddt_to_crystal.py,12.3
+test,tests/test_ledger_titles.py,12.3
+test,tests/test_library_blocks.py,12.3
+test,tests/test_licensing.py,12.3
+test,tests/test_ligand_dynamics.py,"11.13, 12.3"
+test,tests/test_method_report_sections.py,12.5
+test,tests/test_mmp_transfer.py,12.3
+test,tests/test_model_comparison.py,12.3
+test,tests/test_motifs.py,12.3
+test,tests/test_multiplicity.py,12.3
+test,tests/test_multitask.py,12.3
+test,tests/test_multitask_no_standardization_leak.py,"7.9, 12.3"
+test,tests/test_nested.py,"8.2, 8.3, 12.3"
+test,tests/test_nested_runners.py,12.3
+test,tests/test_nested_runners_torch.py,12.3
+test,tests/test_nonneg_stack.py,12.3
+test,tests/test_notebook_builder.py,12.3
+test,tests/test_notebook_public.py,"12.3, 12.5"
+test,tests/test_notebook_template_order.py,12.3
+test,tests/test_octant_benchmark.py,12.3
+test,tests/test_official_extra.py,12.3
+test,tests/test_official_pharmacophore.py,11.11
+test,tests/test_official_posebusters.py,12.3
+test,tests/test_oof_bridge.py,12.3
+test,tests/test_openfold3.py,"11.9, 12.3"
+test,tests/test_openfold3_lowmem.py,"11.9, 12.3"
+test,tests/test_ost_official.py,12.3
+test,tests/test_ost_pool_gates.py,12.3
+test,tests/test_pair_transfer.py,12.3
+test,tests/test_panel.py,12.3
+test,tests/test_pharmacophore_atlas.py,9.15
+test,tests/test_pharmacophore_fingerprint.py,12.3
+test,tests/test_pharmacophore_hypotheses.py,9.14
+test,tests/test_physics_block.py,12.3
+test,tests/test_physics_sites.py,12.3
+test,tests/test_physics_tierb.py,12.3
+test,tests/test_physics_tierb_pure.py,12.3
+test,tests/test_pipeline.py,12.3
+test,tests/test_pocket_geometry.py,12.3
+test,tests/test_pocket_pharmacophore.py,"9.13, 9.14"
+test,tests/test_pose_awareness.py,12.3
+test,tests/test_pose_comparison.py,12.3
+test,tests/test_pose_consensus.py,12.3
+test,tests/test_pose_pharmacophore.py,11.11
+test,tests/test_pose_pools_cross_engine.py,12.3
+test,tests/test_pose_rescoring.py,12.3
+test,tests/test_pose_rescoring_validation.py,12.3
+test,tests/test_pose_selection.py,12.3
+test,tests/test_pose_stereo.py,11.12
+test,tests/test_pose_validity.py,12.3
+test,tests/test_project_map.py,"12.3, 12.5"
+test,tests/test_prose_rules.py,12.3
+test,tests/test_provenance.py,12.5
+test,tests/test_pubchem_auxiliary.py,12.3
+test,tests/test_public_readiness.py,12.3
+test,tests/test_quantum_pharmacophore.py,12.3
+test,tests/test_queue_lib.py,12.3
+test,tests/test_recompute_paired_summaries.py,12.3
+test,tests/test_reference_ligands.py,12.3
+test,tests/test_relax.py,12.3
+test,tests/test_relax_final.py,"11.10, 12.3"
+test,tests/test_release_after_deadline.py,"12.3, 12.6"
+test,tests/test_reliability.py,12.3
+test,tests/test_replicate_verdict.py,12.3
+test,tests/test_restraint_expansion.py,12.3
+test,tests/test_selection_decision.py,12.3
+test,tests/test_selection_validation.py,12.3
+test,tests/test_series.py,12.3
+test,tests/test_site_representation.py,11.11
+test,tests/test_softmax_selector.py,12.3
+test,tests/test_split_validity.py,12.3
+test,tests/test_stacking_significance.py,12.3
+test,tests/test_stereo_rerun.py,11.12
+test,tests/test_structure_benchmark.py,"11.5, 12.3"
+test,tests/test_structure_benchmark_report.py,12.3
+test,tests/test_structure_gates.py,12.3
+test,tests/test_structure_pharmacophore_figures.py,11.11
+test,tests/test_structure_standardization.py,12.3
+test,tests/test_structure_submission.py,12.3
+test,tests/test_structures.py,12.3
+test,tests/test_submission.py,12.3
+test,tests/test_submissions_sync.py,12.3
+test,tests/test_tabpfn_registration.py,12.3
+test,tests/test_tdi_ablation.py,12.3
+test,tests/test_tdi_baseline.py,12.3
+test,tests/test_tdi_reference.py,12.3
+test,tests/test_tdi_targets.py,12.3
+test,tests/test_threshold_tuning.py,12.3
+test,tests/test_tier3_features.py,12.3
+test,tests/test_tier3_selection.py,12.3
+test,tests/test_validation_matching.py,12.3
+test,tests/test_video.py,12.3
+test,tests/test_video_facts.py,12.3
+test,tests/test_xiso_transfer.py,12.3
+other,.github/workflows/pages.yml,12.7
+other,.github/workflows/tests.yml,12.3
+other,app.py,"5.8, 12.3, 12.6, 12.7"
+other,audit/AUDIT_REPORT.md,"2.10, 12.1, 12.2"
+other,environment/SHA256SUMS,Appendix A
+other,environment/openmm-environment.yml,"11.10, Appendix A, Appendix C"
+other,environment/ost-environment.yml,"Appendix A, Appendix C"
+other,environment/requirements-lock-marimo.txt,"12.6, 12.7"
+other,environment/requirements-lock-ml.txt,"Appendix A, Appendix C"
+other,environment/requirements-lock.txt,"Appendix A, Appendix C"
+other,notebooks/build_exports.py,0.6
+other,notebooks/build_notebook.py,"0.6, 12.5, Appendix A"
+other,notebooks/facts.py,"Front matter, 0.3, 0.6, 3.4, 7.4, 7.9, 7.11, 9.4, 10.1, 12.3, 12.5"
+other,notebooks/notebook_builder.py,"Front matter, 0.6, 0.7, Appendix B"
+other,notebooks/notebook_cells.py,"0.6, 0.7, Appendix B"

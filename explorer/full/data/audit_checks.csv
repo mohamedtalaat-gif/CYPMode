@@ -1,0 +1,113 @@
+section,check,status,detail
+Check summary,training and test files present,PASS,
+Check summary,working tree clean (everything committed),PASS,"0 modified, 0 untracked"
+Check summary,all tests pass,PASS,"1044 passed, 0 failed"
+Check summary,feature block `rdkit_desc` computed twice,PASS,max
+Check summary,feature block `morgan_c2` computed twice,PASS,max
+Check summary,feature block `tdi_alerts` computed twice,PASS,max
+Check summary,feature block `tdi_alert_context` computed twice,PASS,max
+Check summary,CYP3A4 plan id rebuilt from raw files equals the saved plan,PASS,"saved 66a3fcaa4d, rebuilt 66a3fcaa4d"
+Check summary,CYP3A4 plan splits identical when rebuilt in-process,PASS,15 outer folds
+Check summary,CYP2D6 plan id rebuilt from raw files equals the saved plan,PASS,"saved de96866ac4, rebuilt de96866ac4"
+Check summary,CYP2D6 plan splits identical when rebuilt in-process,PASS,15 outer folds
+Check summary,"LightGBM, same seed and 1 thread, fitted twice",PASS,max
+Check summary,"LightGBM, same seed, 1 thread vs 4 threads",INFO,max
+Check summary,CYP3A4 cached `knn_tanimoto_k15` equals a fresh fit of the current code,PASS,max
+Check summary,CYP3A4 cached `svm_tanimoto_C1` equals a fresh fit of the current code,PASS,max
+Check summary,CYP2D6 cached `knn_tanimoto_k15` equals a fresh fit of the current code,PASS,max
+Check summary,CYP2D6 cached `svm_tanimoto_C1` equals a fresh fit of the current code,PASS,max
+Check summary,a plan task fitted twice with the runner (4 threads),PASS,max
+Check summary,no invalid SMILES,PASS,0 invalid
+Check summary,no train/test structure overlap,PASS,0 shared structures
+Check summary,test file carries no labels,PASS,0 label columns
+Check summary,CYP3A4: label rule reproduces every both-arms label,PASS,0 mismatches of 2334
+Check summary,CYP2D6: label rule reproduces every both-arms label,PASS,0 mismatches of 1493
+Check summary,CYP3A4: outer train/evaluation disjoint and covering the pool in every fold,PASS,
+Check summary,CYP3A4: inner folds stay inside the outer training rows,PASS,
+Check summary,CYP3A4: test (external) compounds never in the pool,PASS,
+Check summary,CYP2D6: outer train/evaluation disjoint and covering the pool in every fold,PASS,
+Check summary,CYP2D6: inner folds stay inside the outer training rows,PASS,
+Check summary,CYP2D6: test (external) compounds never in the pool,PASS,
+Check summary,official baseline reproduced from the raw file,PASS,24 rows computed
+Check summary,CYP3A4: committee backtest executed,PASS,6 components
+Check summary,CYP3A4: no component alters predictions without adding information AND improving MCC,PASS,policy check
+Check summary,CYP2D6: committee backtest executed,PASS,6 components
+Check summary,CYP2D6: no component alters predictions without adding information AND improving MCC,PASS,policy check
+Check summary,CYP3A4: calibration computed,PASS,"published ECE 0.0189, slope 0.9252; raw ECE 0.0431, slope 1.1813"
+Check summary,CYP3A4: published mean probability within 0.05 of the observed rate,PASS,gap 0.0081
+Check summary,CYP3A4: published probabilities usable as probabilities (slope between 0.8 and 1.2),PASS,slope 0.9252
+Check summary,"CYP3A4: raw blend sigmoid is a ranking score, not a probability (reported only)",INFO,"ECE 0.0431, slope 1.1813"
+Check summary,CYP2D6: calibration computed,PASS,"published ECE 0.0054, slope 0.8249; raw ECE 0.3592, slope -0.0164"
+Check summary,CYP2D6: published mean probability within 0.05 of the observed rate,PASS,gap 0.0021
+Check summary,CYP2D6: published probabilities usable as probabilities (slope between 0.8 and 1.2),PASS,slope 0.8249
+Check summary,"CYP2D6: raw blend sigmoid is a ranking score, not a probability (reported only)",INFO,"ECE 0.3592, slope -0.0164"
+Check summary,CYP3A4: SHAP importance agrees (rho > 0.2) with a second architecture,PASS,rho 0.6889
+Check summary,CYP2D6: SHAP importance agrees (rho > 0.2) with a second architecture,PASS,rho 0.5862
+Check summary,experiment logs parsed,PASS,12 log files with results
+Check summary,structure benchmark scores present,PASS,
+Check summary,TDI submission file present,INFO,none
+Check summary,structure zip holds 20 structure files,PASS,20 structure files
+Check summary,"non-hit share of the scored set versus the baseline's public metrics (a property of the public data, reported as limitation L9)",INFO,NOT identified: 538 of 775 grid points are consistent with the baseline's metrics; the hedged blend and the sensitivity table cover the whol
+Check summary,no occurrences of: leaderboard alias used as a credit,PASS,0 found
+Check summary,no occurrences of: words of the private list,PASS,0 found
+Check summary,no occurrences of: words of the private list in commit messages (all branches),PASS,0 found
+Check summary,no occurrences of: commit authors besides the project author (all branches),PASS,0 found
+Check summary,gate verdicts parsed,INFO,"11 met, 205 not met"
+Check summary,additions whose stacked gain survives the Holm adjustment over the batch,INFO,0 of 52
+Check summary,queue jobs name modules and scripts that exist,PASS,0 problems
+Check summary,.venv matches requirements-lock.txt,PASS,0 lines differ
+Check summary,.venv-ml matches requirements-lock-ml.txt,PASS,0 lines differ
+Check summary,fixed seeds present,PASS,14 entries
+Check summary,every feature block takes only structures,PASS,"label-free by construction (ext_activity uses external panels, tested separately)"
+Check summary,physics cache holds no label or measurement column,PASS,134 columns
+Check summary,matched-pair cache is label-free,PASS,"a, b, key, names, t"
+Check summary,CheMeleon cache is label-free,PASS,"embeddings, smiles"
+Check summary,source code comments are English only (no Arabic script in code),PASS,none found
+Check summary,public documents carry no private local paths,PASS,none found
+Check summary,candidate_A_hits_only.csv passes the portal checks and keeps the test-file order,PASS,ok
+Check summary,candidate_B_selection_aware.csv passes the portal checks and keeps the test-file order,PASS,ok
+Check summary,structures_final.zip passes the portal check (20 files),PASS,ok
+Check summary,structures_final.zip: every structure passes the scorer's own PoseBusters call,PASS,20 of 20 pass
+Check summary,structures_final.zip: every structure clears a relative distance of 0.8 to the receptor (the scorer's threshold is 0.75),PASS,smallest 0.849
+Check summary,structures_final.zip: every structure carries the stereochemistry of the official SMILES (the scorer's PoseBusters call does not check it),PASS,20 of 20
+Check summary,structures_unrelaxed.zip passes the portal check (20 files),PASS,ok
+Check summary,structures_unrelaxed.zip: every structure passes the scorer's own PoseBusters call,PASS,20 of 20 pass
+Check summary,structures_unrelaxed.zip: every structure clears a relative distance of 0.8 to the receptor (the scorer's threshold is 0.75),PASS,smallest 0.801
+Check summary,structures_unrelaxed.zip: every structure carries the stereochemistry of the official SMILES (the scorer's PoseBusters call does not check i,PASS,20 of 20
+Check summary,the base-run table of the 20 official ligands has no row in error (structure summary and affinity of every ligand),PASS,0 in error
+Check summary,"the citation file names an author, a repository, a licence and a version",PASS,Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.2.0
+Check summary,the README names the author and the repository,PASS,found
+Check summary,NOTICE names the author,PASS,found
+Check summary,the archive metadata (.zenodo.json) names the same author,PASS,Talaat
+Check summary,the DOI of the citation file is written in the README,PASS,10.5281/zenodo.23816451
+Check summary,"the licence of the code is the same in the citation file, LICENSE, pyproject.toml and the headers",PASS,citation file: AGPL-3.0-or-later
+Check summary,the texts of the licences are in LICENSES/,PASS,4 found
+Check summary,every Python file of the repository carries its SPDX licence header,PASS,all have one
+Check summary,the declaration of use and citation exists,PASS,USE_AND_CITATION.md
+Check summary,the scripts that generate data announce their origin,PASS,8 checked
+Check summary,no line matches the rule: role names as the actor of a decision or a step,PASS,0 lines
+Check summary,no line matches the rule: first-person singular verbs,PASS,0 lines
+Check summary,no line matches the rule: references to the working session or to a call of the reader,PASS,0 lines
+Check summary,no line matches the rule: first-person plural,PASS,0 lines
+Check summary,no line matches the rule: contractions,PASS,0 lines
+Check summary,no line matches the rule: notes of status or of unfinished work,PASS,0 lines
+Check summary,no line matches the rule: long dashes and decorative symbols,PASS,0 lines
+Check summary,no line matches the rule: intensifier words,PASS,0 lines
+Check summary,no line matches the rule: conversational openers and stock phrases,PASS,0 lines
+Check summary,every path that the text names exists or is allowed with a reason,PASS,0 missing
+Check summary,every limitation's evidence values were computed in this run,PASS,
+3. Determinism and cache consistency,feature block `rdkit_desc` computed twice,PASS,max
+3. Determinism and cache consistency,feature block `morgan_c2` computed twice,PASS,max
+3. Determinism and cache consistency,feature block `tdi_alerts` computed twice,PASS,max
+3. Determinism and cache consistency,feature block `tdi_alert_context` computed twice,PASS,max
+3. Determinism and cache consistency,CYP3A4 plan id rebuilt from raw files equals the saved plan,PASS,"saved 66a3fcaa4d, rebuilt 66a3fcaa4d"
+3. Determinism and cache consistency,CYP3A4 plan splits identical when rebuilt in-process,PASS,15 outer folds
+3. Determinism and cache consistency,CYP2D6 plan id rebuilt from raw files equals the saved plan,PASS,"saved de96866ac4, rebuilt de96866ac4"
+3. Determinism and cache consistency,CYP2D6 plan splits identical when rebuilt in-process,PASS,15 outer folds
+3. Determinism and cache consistency,"LightGBM, same seed and 1 thread, fitted twice",PASS,max
+3. Determinism and cache consistency,"LightGBM, same seed, 1 thread vs 4 threads",INFO,max
+3. Determinism and cache consistency,CYP3A4 cached `knn_tanimoto_k15` equals a fresh fit of the current code,PASS,max
+3. Determinism and cache consistency,CYP3A4 cached `svm_tanimoto_C1` equals a fresh fit of the current code,PASS,max
+3. Determinism and cache consistency,CYP2D6 cached `knn_tanimoto_k15` equals a fresh fit of the current code,PASS,max
+3. Determinism and cache consistency,CYP2D6 cached `svm_tanimoto_C1` equals a fresh fit of the current code,PASS,max
+3. Determinism and cache consistency,a plan task fitted twice with the runner (4 threads),PASS,max

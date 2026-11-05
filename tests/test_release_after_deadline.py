@@ -119,7 +119,7 @@ def _repository_with_a_commit(folder):
 
     folder.mkdir(parents=True)
     (folder / "app.py").write_text("print('x')\n")
-    env = {"GIT_AUTHOR_NAME": "a", "GIT_AUTHOR_EMAIL": "a@example.org", "GIT_COMMITTER_NAME": "a", "GIT_COMMITTER_EMAIL": "a@example.org", "PATH": __import__("os").environ["PATH"], "HOME": str(folder)}
+    env = {"GIT_AUTHOR_NAME": "a", "GIT_AUTHOR_EMAIL": "a@example.com", "GIT_COMMITTER_NAME": "a", "GIT_COMMITTER_EMAIL": "a@example.com", "PATH": __import__("os").environ["PATH"], "HOME": str(folder)}
     for command in (["init", "-q"], ["add", "app.py"], ["commit", "-q", "-m", "first"]):
         subprocess.run(["git", "-C", str(folder), *command], check=True, capture_output=True, env=env)
 

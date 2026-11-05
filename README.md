@@ -1,15 +1,3 @@
-<!-- public:card begin -->
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/card/cypmode_card-dark.gif">
-    <img src="docs/card/cypmode_card-light.gif" alt="CYPMode: the CYP3A4 enzyme turning once, with its heme and fluconazole, six public crystal complexes with their compounds and the headline numbers" width="100%">
-  </picture>
-</p>
-
-<p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/">Open the interactive card</a>: rotate the enzyme, load each of the six public crystal complexes and read the iron&ndash;nitrogen distance measured on the deposited coordinates. GitHub does not run scripts in a README, so the interactive version is a page of its own. The predicted structures of the project are published after the challenge closes.</p>
-<!-- public:card end -->
-
-<!-- held-back:card
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/card/cypmode_card_full-dark.gif">
@@ -17,7 +5,6 @@
   </picture>
 </p>
 <p align="center"><a href="https://mohamedtalaat-gif.github.io/CYPMode/card/">Open the interactive card</a>: rotate the enzyme, load each of the six complexes and read the iron&ndash;nitrogen distance measured on the coordinates. GitHub does not run scripts in a README, so the interactive version is a page of its own.</p>
-held-back:card-end -->
 
 ## What CYPMode is
 
@@ -76,7 +63,7 @@ fold is. A predicted structure is a model, not a measurement. The numbers report
 | What is this, in two minutes? | the section "What CYPMode is" above and [the interactive card](https://mohamedtalaat-gif.github.io/CYPMode/card/) |
 | What is the method, with every gate and number? | [METHOD_REPORT.md](METHOD_REPORT.md): "Summary and disclosures" and "Innovation summary" first, then section 3 (the two architectures step by step), section 4 (what was explored and how the number of attempts is accounted for) and section 5 (how validation is made to resemble the scored set) |
 | What did not work? | [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md), and sections 4.7 and 12 of the method report |
-| How does it all work, from first principles, with no background assumed? | <!-- public:notebook begin -->the public edition of the notebook, which opens in any browser as one page at [mohamedtalaat-gif.github.io/CYPMode/notebook](https://mohamedtalaat-gif.github.io/CYPMode/notebook/). The same notebook as a PDF ([download, 55 MB](https://github.com/mohamedtalaat-gif/CYPMode/raw/main/notebooks/public/cypmode_notebook_public.pdf)) and as a Jupyter file ([download, 35 MB](https://github.com/mohamedtalaat-gif/CYPMode/raw/main/notebooks/public/cypmode_notebook_public.ipynb)) is too large for GitHub to display and has to be downloaded; the three files are in `notebooks/public/`.<!-- public:notebook end --><!-- held-back:notebook the notebook, which opens in any browser as one page at [mohamedtalaat-gif.github.io/CYPMode/notebook](https://mohamedtalaat-gif.github.io/CYPMode/notebook/). The same notebook as a PDF ([download, about 60 MB](https://github.com/mohamedtalaat-gif/CYPMode/raw/main/notebooks/cypmode_notebook.pdf)) and as a Jupyter file ([download, about 40 MB](https://github.com/mohamedtalaat-gif/CYPMode/raw/main/notebooks/cypmode_notebook.ipynb)) is too large for GitHub to display and has to be downloaded; the three files are in `notebooks/`. held-back:notebook-end --> Part 0 (Orientation) comes first; then the part that is needed: the data (II), validation without selection bias (VI), the final model (VIII), the additions that were tested (IX), quantum chemistry and physics (X), the structure track (XI). Every section says where it sits in the story and teaches the science it uses; Appendix A is the practical walkthrough and Appendix D says which section explains which file. The full edition is released after the challenge closes |
+| How does it all work, from first principles, with no background assumed? | the notebook, which opens in any browser as one page at [mohamedtalaat-gif.github.io/CYPMode/notebook](https://mohamedtalaat-gif.github.io/CYPMode/notebook/). The same notebook as a PDF ([download, about 60 MB](https://github.com/mohamedtalaat-gif/CYPMode/raw/main/notebooks/cypmode_notebook.pdf)) and as a Jupyter file ([download, about 40 MB](https://github.com/mohamedtalaat-gif/CYPMode/raw/main/notebooks/cypmode_notebook.ipynb)) is too large for GitHub to display and has to be downloaded; the three files are in `notebooks/`. Part 0 (Orientation) comes first; then the part that is needed: the data (II), validation without selection bias (VI), the final model (VIII), the additions that were tested (IX), quantum chemistry and physics (X), the structure track (XI). Every section says where it sits in the story and teaches the science it uses; Appendix A is the practical walkthrough and Appendix D says which section explains which file. The full edition is released after the challenge closes |
 | How to explore the numbers? | the interactive explorer, a marimo notebook with a page for every section of the notebook: each page has a simulator that runs the project's own functions on small bundled data (a molecule, a pair of potencies, a noise level, a pocket in three dimensions) or replays what an engine produced, and it never trains one of the project's models or starts a job: `explorer/run_explorer.command` (macOS), `explorer/run_explorer.bat` (Windows) or `bash scripts/explorer.sh run`; the first start builds the environment `.venv-marimo` by itself (a few minutes, once), so nothing has to be installed or activated first |
 | Where is everything, and what depends on what? | the section "Map of the project" below and the four pages of [docs/map](docs/map/README.md), written from the files of the repository by `python -m cypmode.audit.project_map` |
 | How to check the claims? | [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md) (generated twice and compared byte for byte), the tests in `tests/` and `bash scripts/run_audit.sh` |
@@ -95,7 +82,6 @@ The pages of [docs/map](docs/map/README.md) show where everything is and what de
 The pages list every module with what it does and what it imports, and every job of the queue with what it waits for.
 <!-- generated:project-map end -->
 
-<!-- held-back:film
 ## The film
 
 A 6.5-minute animated film explains the project from the question to the results, scene by scene, with nine characters who each stand for one part of the work (the assay, the data scout, the
@@ -109,7 +95,6 @@ drawn from the coordinates, and the voices are synthesised (Kokoro-82M). Click t
   </a>
 </p>
 
-held-back:film-end -->
 
 ## Origin of the project and the two parts of this file
 
@@ -350,7 +335,7 @@ How the 20 poses of the submitted zip were chosen, from the verdicts of the gate
 | `cypmode/audit/` | automated audit report, gate ledger, checklist consistency check (`checklist.py`), method-report generator (`method_report.py`), public-readiness scan (`public_readiness.py`) |
 | `cypmode/metrics/`, `cypmode/data/` | the original motif screen and panel loaders |
 | `queue/`, `scripts/` | the permanent job queue (`queue/jobs/NNN_*.sh`, helpers in `queue/lib.sh`), runner, memory / battery guards (`scripts/guards.sh`), reproduction and audit scripts, the low-memory OpenFold3 launcher (`scripts/run_openfold_lowmem.py`) |
-| `notebooks/` | the notebook `cypmode_notebook`: the teaching text and the laboratory notebook of the project, built from `notebooks/parts/` by `python -m notebooks.build_notebook` (ipynb, html, pdf); <!-- public:nbfiles begin -->the public edition is in `notebooks/public/`, the full edition is released after the challenge closes<!-- public:nbfiles end --><!-- held-back:nbfiles the complete edition is in `notebooks/` held-back:nbfiles-end --> |
+| `notebooks/` | the notebook `cypmode_notebook`: the teaching text and the laboratory notebook of the project, built from `notebooks/parts/` by `python -m notebooks.build_notebook` (ipynb, html, pdf); the complete edition is in `notebooks/` |
 | `environment/` | pinned package lists for the Python environments (main, torch and explorer) with checksums |
 | `explorer/`, `cypmode/explorer/` | the interactive explorer. `explorer/full` is the notebook made interactive: a page with a simulator for each of its sections (the project's own functions run on small bundled data, the replays of the experiments of the ledger, the pockets of the predicted and of the submitted structures in three dimensions), the tables that the pages read in `explorer/full/data`, built by `explorer/full/build_data.py`, and its tests; `explorer/cypmode_explorer.py` is the compact browser of the finished results, a reactive marimo notebook that reads only a small public data bundle (`explorer/public`, built by `cypmode/explorer/data.py`): the gate ledger, what a different threshold would have let through, the selection rules fold by fold, the benchmark poses and the stored out-of-fold predictions |
 | `tests/` | test suite (the torch and tblite files run in their own processes, see below) |

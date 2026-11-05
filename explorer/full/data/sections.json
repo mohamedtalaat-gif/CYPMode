@@ -1,0 +1,1005 @@
+{
+ "parts": [
+  {
+   "label": "Part 0",
+   "title": "Orientation",
+   "heading": "Part 0: Orientation",
+   "anchor": "Part-0:-Orientation",
+   "sections": [
+    {
+     "number": "0.1",
+     "title": "The problem: medicines in the body and why their interactions matter",
+     "heading": "0.1 The problem: medicines in the body and why their interactions matter",
+     "anchor": "0.1-The-problem:-medicines-in-the-body-and-why-their-interactions-matter",
+     "field": "Pharmacology · Biology"
+    },
+    {
+     "number": "0.2",
+     "title": "How this project grew",
+     "heading": "0.2 How this project grew",
+     "anchor": "0.2-How-this-project-grew",
+     "field": "Overview"
+    },
+    {
+     "number": "0.3",
+     "title": "The challenge",
+     "heading": "0.3 The challenge",
+     "anchor": "0.3-The-challenge",
+     "field": "Overview · Statistics"
+    },
+    {
+     "number": "0.4",
+     "title": "The whole system on two pages",
+     "heading": "0.4 The whole system on two pages",
+     "anchor": "0.4-The-whole-system-on-two-pages",
+     "field": "Overview · Machine learning · Structural biology"
+    },
+    {
+     "number": "0.5",
+     "title": "The ledger in one table",
+     "heading": "0.5 The ledger in one table",
+     "anchor": "0.5-The-ledger-in-one-table",
+     "field": "Overview · Statistics"
+    },
+    {
+     "number": "0.6",
+     "title": "How this notebook is built and how to run it",
+     "heading": "0.6 How this notebook is built and how to run it",
+     "anchor": "0.6-How-this-notebook-is-built-and-how-to-run-it",
+     "field": "Software engineering"
+    },
+    {
+     "number": "0.7",
+     "title": "What the work adds, claim by claim",
+     "heading": "0.7 What the work adds, claim by claim",
+     "anchor": "0.7-What-the-work-adds,-claim-by-claim",
+     "field": "Overview · Statistics"
+    }
+   ]
+  },
+  {
+   "label": "Part I",
+   "title": "Biology and chemistry",
+   "heading": "Part I: Biology and chemistry",
+   "anchor": "Part-I:-Biology-and-chemistry",
+   "sections": [
+    {
+     "number": "1.1",
+     "title": "Drugs in the body: how fast a drug leaves",
+     "heading": "1.1 Drugs in the body: how fast a drug leaves",
+     "anchor": "1.1-Drugs-in-the-body:-how-fast-a-drug-leaves",
+     "field": "Pharmacology · Mathematics (differential equations)"
+    },
+    {
+     "number": "1.2",
+     "title": "Enzymes: what a catalyst does, and the Michaelis-Menten equation",
+     "heading": "1.2 Enzymes: what a catalyst does, and the Michaelis-Menten equation",
+     "anchor": "1.2-Enzymes:-what-a-catalyst-does,-and-the-Michaelis-Menten-equation",
+     "field": "Biochemistry · Mathematics (rate equations)"
+    },
+    {
+     "number": "1.3",
+     "title": "Cytochrome P450: the heme, the iron and the catalytic cycle",
+     "heading": "1.3 Cytochrome P450: the heme, the iron and the catalytic cycle",
+     "anchor": "1.3-Cytochrome-P450:-the-heme,-the-iron-and-the-catalytic-cycle",
+     "field": "Biochemistry · Chemistry (the iron of the heme)"
+    },
+    {
+     "number": "1.4",
+     "title": "Drug-drug interactions and why inhibition matters clinically",
+     "heading": "1.4 Drug-drug interactions and why inhibition matters clinically",
+     "anchor": "1.4-Drug-drug-interactions-and-why-inhibition-matters-clinically",
+     "field": "Pharmacology"
+    },
+    {
+     "number": "1.5",
+     "title": "Reversible inhibition: competitive, non-competitive and mixed",
+     "heading": "1.5 Reversible inhibition: competitive, non-competitive and mixed",
+     "anchor": "1.5-Reversible-inhibition:-competitive,-non-competitive-and-mixed",
+     "field": "Biochemistry · Mathematics (rate equations)"
+    },
+    {
+     "number": "1.6",
+     "title": "Time-dependent inhibition: the kinetics of switching an enzyme off",
+     "heading": "1.6 Time-dependent inhibition: the kinetics of switching an enzyme off",
+     "anchor": "1.6-Time-dependent-inhibition:-the-kinetics-of-switching-an-enzyme-off",
+     "field": "Biochemistry · Mathematics (kinetics)"
+    },
+    {
+     "number": "1.7",
+     "title": "How potency is measured: dose-response, the Hill equation, the IC50 and the pIC50 scale",
+     "heading": "1.7 How potency is measured: dose-response, the Hill equation, the IC50 and the pIC50 scale",
+     "anchor": "1.7-How-potency-is-measured:-dose-response,-the-Hill-equation,-the-IC50-and-the-pIC50-scale",
+     "field": "Pharmacology · Statistics (curve fitting)"
+    },
+    {
+     "number": "1.8",
+     "title": "The two assay arms of the challenge and the shift between them",
+     "heading": "1.8 The two assay arms of the challenge and the shift between them",
+     "anchor": "1.8-The-two-assay-arms-of-the-challenge-and-the-shift-between-them",
+     "field": "Biochemistry · Pharmacology"
+    },
+    {
+     "number": "1.9",
+     "title": "Heme chemistry: Type I and Type II binding, and why a nitrogen binds the iron",
+     "heading": "1.9 Heme chemistry: Type I and Type II binding, and why a nitrogen binds the iron",
+     "anchor": "1.9-Heme-chemistry:-Type-I-and-Type-II-binding,-and-why-a-nitrogen-binds-the-iron",
+     "field": "Chemistry · Biochemistry"
+    },
+    {
+     "number": "1.10",
+     "title": "Reactive metabolites and structural alerts",
+     "heading": "1.10 Reactive metabolites and structural alerts",
+     "anchor": "1.10-Reactive-metabolites-and-structural-alerts",
+     "field": "Chemistry · Pharmacology (toxicology)"
+    }
+   ]
+  },
+  {
+   "label": "Part II",
+   "title": "The data",
+   "heading": "Part II. The data",
+   "anchor": "Part-II.-The-data",
+   "sections": [
+    {
+     "number": "2.1",
+     "title": "A molecule as text and as a graph",
+     "heading": "2.1 A molecule as text and as a graph",
+     "anchor": "2.1-A-molecule-as-text-and-as-a-graph",
+     "field": "Cheminformatics · Chemistry"
+    },
+    {
+     "number": "2.2",
+     "title": "The training and blinded test files, column by column",
+     "heading": "2.2 The training and blinded test files, column by column",
+     "anchor": "2.2-The-training-and-blinded-test-files,-column-by-column",
+     "field": "Data science"
+    },
+    {
+     "number": "2.3",
+     "title": "The label rule: how $s = t - \\max(d, 4) > \\log_{10} 2$ was recovered and checked",
+     "heading": "2.3 The label rule: how $s = t - \\max(d, 4) > \\log_{10} 2$ was recovered and checked",
+     "anchor": "2.3-The-label-rule:-how-s-t-max-d-4-log-10-2-was-recovered-and-checked",
+     "field": "Data science · Pharmacology"
+    },
+    {
+     "number": "2.4",
+     "title": "The contamination found in the labels",
+     "heading": "2.4 The contamination found in the labels",
+     "anchor": "2.4-The-contamination-found-in-the-labels",
+     "field": "Data science"
+    },
+    {
+     "number": "2.5",
+     "title": "Measurement noise: the standard deviation, the confidence limits and the confidence $z$",
+     "heading": "2.5 Measurement noise: the standard deviation, the confidence limits and the confidence $z$",
+     "anchor": "2.5-Measurement-noise:-the-standard-deviation,-the-confidence-limits-and-the-confidence-z",
+     "field": "Statistics"
+    },
+    {
+     "number": "2.6",
+     "title": "Which compounds were measured on which enzyme: blocks and selection",
+     "heading": "2.6 Which compounds were measured on which enzyme: blocks and selection",
+     "anchor": "2.6-Which-compounds-were-measured-on-which-enzyme:-blocks-and-selection",
+     "field": "Data science · Statistics"
+    },
+    {
+     "number": "2.7",
+     "title": "How the test set differs from the training set",
+     "heading": "2.7 How the test set differs from the training set",
+     "anchor": "2.7-How-the-test-set-differs-from-the-training-set",
+     "field": "Statistics · Cheminformatics"
+    },
+    {
+     "number": "2.8",
+     "title": "Other data sources: what exists, what each one measures, and how it differs",
+     "heading": "2.8 Other data sources: what exists, what each one measures, and how it differs",
+     "anchor": "2.8-Other-data-sources:-what-exists,-what-each-one-measures,-and-how-it-differs",
+     "field": "Cheminformatics · Bioinformatics"
+    },
+    {
+     "number": "2.9",
+     "title": "Standardising structures: when two strings are the same compound",
+     "heading": "2.9 Standardising structures: when two strings are the same compound",
+     "anchor": "2.9-Standardising-structures:-when-two-strings-are-the-same-compound",
+     "field": "Cheminformatics"
+    },
+    {
+     "number": "2.10",
+     "title": "The public leaderboard as data: the positive rate of the scored set",
+     "heading": "2.10 The public leaderboard as data: the positive rate of the scored set",
+     "anchor": "2.10-The-public-leaderboard-as-data:-the-positive-rate-of-the-scored-set",
+     "field": "Statistics"
+    },
+    {
+     "number": "2.11",
+     "title": "A check of the positive rate that reads no board",
+     "heading": "2.11 A check of the positive rate that reads no board",
+     "anchor": "2.11-A-check-of-the-positive-rate-that-reads-no-board",
+     "field": "Statistics · Machine learning"
+    }
+   ]
+  },
+  {
+   "label": "Part III",
+   "title": "Molecules as numbers",
+   "heading": "Part III. Molecules as numbers",
+   "anchor": "Part-III.-Molecules-as-numbers",
+   "sections": [
+    {
+     "number": "3.1",
+     "title": "Morgan (circular) fingerprints",
+     "heading": "3.1 Morgan (circular) fingerprints",
+     "anchor": "3.1-Morgan-(circular)-fingerprints",
+     "field": "Cheminformatics · Mathematics (hashing)"
+    },
+    {
+     "number": "3.2",
+     "title": "Tanimoto similarity and why it suits fingerprints",
+     "heading": "3.2 Tanimoto similarity and why it suits fingerprints",
+     "anchor": "3.2-Tanimoto-similarity-and-why-it-suits-fingerprints",
+     "field": "Cheminformatics · Mathematics (set similarity)"
+    },
+    {
+     "number": "3.3",
+     "title": "Descriptors: a molecule as a few dozen physical quantities",
+     "heading": "3.3 Descriptors: a molecule as a few dozen physical quantities",
+     "anchor": "3.3-Descriptors:-a-molecule-as-a-few-dozen-physical-quantities",
+     "field": "Cheminformatics · Chemistry"
+    },
+    {
+     "number": "3.4",
+     "title": "The other fingerprint and descriptor blocks",
+     "heading": "3.4 The other fingerprint and descriptor blocks",
+     "anchor": "3.4-The-other-fingerprint-and-descriptor-blocks",
+     "field": "Cheminformatics"
+    },
+    {
+     "number": "3.5",
+     "title": "Three-point pharmacophore fingerprints",
+     "heading": "3.5 Three-point pharmacophore fingerprints",
+     "anchor": "3.5-Three-point-pharmacophore-fingerprints",
+     "field": "Cheminformatics · Structural biology"
+    },
+    {
+     "number": "3.6",
+     "title": "Chemical series, scaffolds and clusters",
+     "heading": "3.6 Chemical series, scaffolds and clusters",
+     "anchor": "3.6-Chemical-series,-scaffolds-and-clusters",
+     "field": "Cheminformatics · Statistics (clustering)"
+    },
+    {
+     "number": "3.7",
+     "title": "The feature store: all the blocks, computed once",
+     "heading": "3.7 The feature store: all the blocks, computed once",
+     "anchor": "3.7-The-feature-store:-all-the-blocks,-computed-once",
+     "field": "Software engineering · Cheminformatics"
+    }
+   ]
+  },
+  {
+   "label": "Part IV",
+   "title": "Machine learning from zero",
+   "heading": "Part IV. Machine learning from zero",
+   "anchor": "Part-IV.-Machine-learning-from-zero",
+   "sections": [
+    {
+     "number": "4.1",
+     "title": "Supervised learning, loss functions and the problem of generalisation",
+     "heading": "4.1 Supervised learning, loss functions and the problem of generalisation",
+     "anchor": "4.1-Supervised-learning,-loss-functions-and-the-problem-of-generalisation",
+     "field": "Machine learning · Statistics · Mathematics"
+    },
+    {
+     "number": "4.2",
+     "title": "Decision trees: impurity, and the search for the best question",
+     "heading": "4.2 Decision trees: impurity, and the search for the best question",
+     "anchor": "4.2-Decision-trees:-impurity,-and-the-search-for-the-best-question",
+     "field": "Machine learning"
+    },
+    {
+     "number": "4.3",
+     "title": "Gradient boosting: many small trees, each correcting the others",
+     "heading": "4.3 Gradient boosting: many small trees, each correcting the others",
+     "anchor": "4.3-Gradient-boosting:-many-small-trees,-each-correcting-the-others",
+     "field": "Machine learning · Mathematics (optimisation)"
+    },
+    {
+     "number": "4.4",
+     "title": "Random forests and extremely randomised trees: averaging many trees",
+     "heading": "4.4 Random forests and extremely randomised trees: averaging many trees",
+     "anchor": "4.4-Random-forests-and-extremely-randomised-trees:-averaging-many-trees",
+     "field": "Machine learning · Statistics"
+    },
+    {
+     "number": "4.5",
+     "title": "Nearest neighbours and support vector machines with the Tanimoto kernel",
+     "heading": "4.5 Nearest neighbours and support vector machines with the Tanimoto kernel",
+     "anchor": "4.5-Nearest-neighbours-and-support-vector-machines-with-the-Tanimoto-kernel",
+     "field": "Machine learning · Mathematics (kernels)"
+    },
+    {
+     "number": "4.6",
+     "title": "Regression for the two assay arms, and floor-clipping",
+     "heading": "4.6 Regression for the two assay arms, and floor-clipping",
+     "anchor": "4.6-Regression-for-the-two-assay-arms,-and-floor-clipping",
+     "field": "Machine learning · Pharmacology"
+    },
+    {
+     "number": "4.7",
+     "title": "Neural networks: the perceptron, backpropagation and shared-trunk networks for several tasks",
+     "heading": "4.7 Neural networks: the perceptron, backpropagation and shared-trunk networks for several tasks",
+     "anchor": "4.7-Neural-networks:-the-perceptron,-backpropagation-and-shared-trunk-networks-for-several-tasks",
+     "field": "Machine learning · Mathematics (calculus)"
+    },
+    {
+     "number": "4.8",
+     "title": "Message-passing networks on molecular graphs, and networks on text",
+     "heading": "4.8 Message-passing networks on molecular graphs, and networks on text",
+     "anchor": "4.8-Message-passing-networks-on-molecular-graphs,-and-networks-on-text",
+     "field": "Machine learning · Cheminformatics"
+    },
+    {
+     "number": "4.9",
+     "title": "Principal component analysis, and tabular in-context learning",
+     "heading": "4.9 Principal component analysis, and tabular in-context learning",
+     "anchor": "4.9-Principal-component-analysis,-and-tabular-in-context-learning",
+     "field": "Machine learning · Mathematics (linear algebra)"
+    },
+    {
+     "number": "4.10",
+     "title": "Metrics: how a model is judged",
+     "heading": "4.10 Metrics: how a model is judged",
+     "anchor": "4.10-Metrics:-how-a-model-is-judged",
+     "field": "Statistics · Machine learning"
+    }
+   ]
+  },
+  {
+   "label": "Part V",
+   "title": "The Type II motif screen",
+   "heading": "Part V. The Type II motif screen",
+   "anchor": "Part-V.-The-Type-II-motif-screen",
+   "sections": [
+    {
+     "number": "5.1",
+     "title": "The idea: a nitrogen that can bind the iron, written as a pattern",
+     "heading": "5.1 The idea: a nitrogen that can bind the iron, written as a pattern",
+     "anchor": "5.1-The-idea:-a-nitrogen-that-can-bind-the-iron,-written-as-a-pattern",
+     "field": "Chemistry · Cheminformatics"
+    },
+    {
+     "number": "5.2",
+     "title": "The trialkylamine alert, and the false positives it had to exclude",
+     "heading": "5.2 The trialkylamine alert, and the false positives it had to exclude",
+     "anchor": "5.2-The-trialkylamine-alert,-and-the-false-positives-it-had-to-exclude",
+     "field": "Chemistry · Cheminformatics"
+    },
+    {
+     "number": "5.3",
+     "title": "The panel data, and how a yes-or-no flag is compared with a yes-or-no label",
+     "heading": "5.3 The panel data, and how a yes-or-no flag is compared with a yes-or-no label",
+     "anchor": "5.3-The-panel-data,-and-how-a-yes-or-no-flag-is-compared-with-a-yes-or-no-label",
+     "field": "Cheminformatics · Statistics"
+    },
+    {
+     "number": "5.4",
+     "title": "Testing the screen against real potency: the Octant screen and the rank test",
+     "heading": "5.4 Testing the screen against real potency: the Octant screen and the rank test",
+     "anchor": "5.4-Testing-the-screen-against-real-potency:-the-Octant-screen-and-the-rank-test",
+     "field": "Statistics · Pharmacology"
+    },
+    {
+     "number": "5.5",
+     "title": "Checking the screen against predicted structures: the distance from the iron to the nitrogen",
+     "heading": "5.5 Checking the screen against predicted structures: the distance from the iron to the nitrogen",
+     "anchor": "5.5-Checking-the-screen-against-predicted-structures:-the-distance-from-the-iron-to-the-nitrogen",
+     "field": "Structural biology · Computational chemistry"
+    },
+    {
+     "number": "5.6",
+     "title": "Pocket geometry from a predicted structure: how buried the molecule is and how much room is left",
+     "heading": "5.6 Pocket geometry from a predicted structure: how buried the molecule is and how much room is left",
+     "anchor": "5.6-Pocket-geometry-from-a-predicted-structure:-how-buried-the-molecule-is-and-how-much-room-is-left",
+     "field": "Structural biology · Computational chemistry"
+    },
+    {
+     "number": "5.7",
+     "title": "Cross-checking the screen against time-dependent shift measurements",
+     "heading": "5.7 Cross-checking the screen against time-dependent shift measurements",
+     "anchor": "5.7-Cross-checking-the-screen-against-time-dependent-shift-measurements",
+     "field": "Pharmacology · Biochemistry"
+    },
+    {
+     "number": "5.8",
+     "title": "The Streamlit application and its figures",
+     "heading": "5.8 The Streamlit application and its figures",
+     "anchor": "5.8-The-Streamlit-application-and-its-figures",
+     "field": "Software engineering · Cheminformatics"
+    }
+   ]
+  },
+  {
+   "label": "Part VI",
+   "title": "Measuring without selection bias",
+   "heading": "Part VI. Measuring without selection bias",
+   "anchor": "Part-VI.-Measuring-without-selection-bias",
+   "sections": [
+    {
+     "number": "6.1",
+     "title": "Why a score on the training data lies",
+     "heading": "6.1 Why a score on the training data lies",
+     "anchor": "6.1-Why-a-score-on-the-training-data-lies",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "6.2",
+     "title": "Cross-validation, and what happens to its score when it is also used to choose",
+     "heading": "6.2 Cross-validation, and what happens to its score when it is also used to choose",
+     "anchor": "6.2-Cross-validation,-and-what-happens-to-its-score-when-it-is-also-used-to-choose",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "6.3",
+     "title": "Nested cross-validation: the construction, every loop, what is fitted where",
+     "heading": "6.3 Nested cross-validation: the construction, every loop, what is fitted where",
+     "anchor": "6.3-Nested-cross-validation:-the-construction,-every-loop,-what-is-fitted-where",
+     "field": "Statistics · Machine learning · Software engineering"
+    },
+    {
+     "number": "6.4",
+     "title": "Making validation resemble the test: similarity, prevalence and confident labels",
+     "heading": "6.4 Making validation resemble the test: similarity, prevalence and confident labels",
+     "anchor": "6.4-Making-validation-resemble-the-test:-similarity,-prevalence-and-confident-labels",
+     "field": "Statistics · Cheminformatics"
+    },
+    {
+     "number": "6.5",
+     "title": "Comparing two models: why folds are correlated, and the corrected resampled t",
+     "heading": "6.5 Comparing two models: why folds are correlated, and the corrected resampled t",
+     "anchor": "6.5-Comparing-two-models:-why-folds-are-correlated,-and-the-corrected-resampled-t",
+     "field": "Statistics"
+    },
+    {
+     "number": "6.6",
+     "title": "Why Tukey's HSD was dropped, and how the older results were recomputed",
+     "heading": "6.6 Why Tukey's HSD was dropped, and how the older results were recomputed",
+     "anchor": "6.6-Why-Tukey's-HSD-was-dropped,-and-how-the-older-results-were-recomputed",
+     "field": "Statistics"
+    },
+    {
+     "number": "6.7",
+     "title": "Pre-declared gates: the rule, the floor of the design, and the replicate",
+     "heading": "6.7 Pre-declared gates: the rule, the floor of the design, and the replicate",
+     "anchor": "6.7-Pre-declared-gates:-the-rule,-the-floor-of-the-design,-and-the-replicate",
+     "field": "Statistics · Data science"
+    },
+    {
+     "number": "6.8",
+     "title": "Checking that a split is informative, the test-like hold-out, and the leakage controls",
+     "heading": "6.8 Checking that a split is informative, the test-like hold-out, and the leakage controls",
+     "anchor": "6.8-Checking-that-a-split-is-informative,-the-test-like-hold-out,-and-the-leakage-controls",
+     "field": "Statistics · Cheminformatics"
+    }
+   ]
+  },
+  {
+   "label": "Part VII",
+   "title": "The first TDI models and what they taught",
+   "heading": "Part VII. The first TDI models and what they taught",
+   "anchor": "Part-VII.-The-first-TDI-models-and-what-they-taught",
+   "sections": [
+    {
+     "number": "7.1",
+     "title": "Reproducing the challenge's baseline from the raw file",
+     "heading": "7.1 Reproducing the challenge's baseline from the raw file",
+     "anchor": "7.1-Reproducing-the-challenge's-baseline-from-the-raw-file",
+     "field": "Machine learning · Data science"
+    },
+    {
+     "number": "7.2",
+     "title": "The staircase M0 to M3: adding one block of features at a time",
+     "heading": "7.2 The staircase M0 to M3: adding one block of features at a time",
+     "anchor": "7.2-The-staircase-M0-to-M3:-adding-one-block-of-features-at-a-time",
+     "field": "Machine learning · Cheminformatics"
+    },
+    {
+     "number": "7.3",
+     "title": "Reading across: the labels of a compound's nearest neighbours",
+     "heading": "7.3 Reading across: the labels of a compound's nearest neighbours",
+     "anchor": "7.3-Reading-across:-the-labels-of-a-compound's-nearest-neighbours",
+     "field": "Cheminformatics · Machine learning"
+    },
+    {
+     "number": "7.4",
+     "title": "The direct-inhibition bridge: a gain that was a shortcut",
+     "heading": "7.4 The direct-inhibition bridge: a gain that was a shortcut",
+     "anchor": "7.4-The-direct-inhibition-bridge:-a-gain-that-was-a-shortcut",
+     "field": "Data science · Machine learning"
+    },
+    {
+     "number": "7.5",
+     "title": "The decision threshold, the positive rate, and a first reliability score",
+     "heading": "7.5 The decision threshold, the positive rate, and a first reliability score",
+     "anchor": "7.5-The-decision-threshold,-the-positive-rate,-and-a-first-reliability-score",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "7.6",
+     "title": "Uncertainty by committee, tested against real mistakes",
+     "heading": "7.6 Uncertainty by committee, tested against real mistakes",
+     "anchor": "7.6-Uncertainty-by-committee,-tested-against-real-mistakes",
+     "field": "Machine learning · Statistics"
+    },
+    {
+     "number": "7.7",
+     "title": "Outside data as an auxiliary signal: PubChem, BindingDB, ChEMBL and the cytochrome panel",
+     "heading": "7.7 Outside data as an auxiliary signal: PubChem, BindingDB, ChEMBL and the cytochrome panel",
+     "anchor": "7.7-Outside-data-as-an-auxiliary-signal:-PubChem,-BindingDB,-ChEMBL-and-the-cytochrome-panel",
+     "field": "Cheminformatics · Data science"
+    },
+    {
+     "number": "7.8",
+     "title": "Electrons and pharmacophores: the quantum-chemical features and the three-point fingerprint",
+     "heading": "7.8 Electrons and pharmacophores: the quantum-chemical features and the three-point fingerprint",
+     "anchor": "7.8-Electrons-and-pharmacophores:-the-quantum-chemical-features-and-the-three-point-fingerprint",
+     "field": "Quantum chemistry · Cheminformatics"
+    },
+    {
+     "number": "7.9",
+     "title": "Learned representations: ChemBERTa embeddings and a shared-trunk network",
+     "heading": "7.9 Learned representations: ChemBERTa embeddings and a shared-trunk network",
+     "anchor": "7.9-Learned-representations:-ChemBERTa-embeddings-and-a-shared-trunk-network",
+     "field": "Machine learning · Cheminformatics"
+    },
+    {
+     "number": "7.10",
+     "title": "Does a predicted structure help a classifier? Boltz-2 for fifty compounds",
+     "heading": "7.10 Does a predicted structure help a classifier? Boltz-2 for fifty compounds",
+     "anchor": "7.10-Does-a-predicted-structure-help-a-classifier?-Boltz-2-for-fifty-compounds",
+     "field": "Structural biology · Machine learning"
+    },
+    {
+     "number": "7.11",
+     "title": "The first assembled models, the architecture test, and the decision to build the nested evaluation",
+     "heading": "7.11 The first assembled models, the architecture test, and the decision to build the nested evaluation",
+     "anchor": "7.11-The-first-assembled-models,-the-architecture-test,-and-the-decision-to-build-the-nested-evaluation",
+     "field": "Machine learning · Statistics"
+    }
+   ]
+  },
+  {
+   "label": "Part VIII",
+   "title": "The final TDI model",
+   "heading": "Part VIII. The final TDI model",
+   "anchor": "Part-VIII.-The-final-TDI-model",
+   "sections": [
+    {
+     "number": "8.1",
+     "title": "The candidate grid: 23 members and their feature sets",
+     "heading": "8.1 The candidate grid: 23 members and their feature sets",
+     "anchor": "8.1-The-candidate-grid:-23-members-and-their-feature-sets",
+     "field": "Machine learning · Cheminformatics"
+    },
+    {
+     "number": "8.2",
+     "title": "The stack: a logistic blend of the members, with its penalty chosen inside",
+     "heading": "8.2 The stack: a logistic blend of the members, with its penalty chosen inside",
+     "anchor": "8.2-The-stack:-a-logistic-blend-of-the-members,-with-its-penalty-chosen-inside",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "8.3",
+     "title": "A reproducibility bug in the stack: a solver that stops where it happens to be",
+     "heading": "8.3 A reproducibility bug in the stack: a solver that stops where it happens to be",
+     "anchor": "8.3-A-reproducibility-bug-in-the-stack:-a-solver-that-stops-where-it-happens-to-be",
+     "field": "Software engineering · Statistics"
+    },
+    {
+     "number": "8.4",
+     "title": "Turning scores into calls: a smoothed threshold, a share of calls, and a multiple",
+     "heading": "8.4 Turning scores into calls: a smoothed threshold, a share of calls, and a multiple",
+     "anchor": "8.4-Turning-scores-into-calls:-a-smoothed-threshold,-a-share-of-calls,-and-a-multiple",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "8.5",
+     "title": "Calibration: from a score to a probability",
+     "heading": "8.5 Calibration: from a score to a probability",
+     "anchor": "8.5-Calibration:-from-a-score-to-a-probability",
+     "field": "Statistics"
+    },
+    {
+     "number": "8.6",
+     "title": "The candidate files, the checks they pass, and the manifest",
+     "heading": "8.6 The candidate files, the checks they pass, and the manifest",
+     "anchor": "8.6-The-candidate-files,-the-checks-they-pass,-and-the-manifest",
+     "field": "Software engineering · Data science"
+    },
+    {
+     "number": "8.7",
+     "title": "Results with their uncertainty",
+     "heading": "8.7 Results with their uncertainty",
+     "anchor": "8.7-Results-with-their-uncertainty",
+     "field": "Statistics"
+    }
+   ]
+  },
+  {
+   "label": "Part IX",
+   "title": "Additions that were tested",
+   "heading": "Part IX. Additions that were tested",
+   "anchor": "Part-IX.-Additions-that-were-tested",
+   "sections": [
+    {
+     "number": "9.1",
+     "title": "The selection-aware CYP2D6 model: when the training labels come from a filtered population",
+     "heading": "9.1 The selection-aware CYP2D6 model: when the training labels come from a filtered population",
+     "anchor": "9.1-The-selection-aware-CYP2D6-model:-when-the-training-labels-come-from-a-filtered-population",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "9.2",
+     "title": "Making SAR explicit: pair models and compounds that differ by one change",
+     "heading": "9.2 Making SAR explicit: pair models and compounds that differ by one change",
+     "anchor": "9.2-Making-SAR-explicit:-pair-models-and-compounds-that-differ-by-one-change",
+     "field": "Cheminformatics · Machine learning"
+    },
+    {
+     "number": "9.3",
+     "title": "The label as a threshold of two noisy numbers: a committee that outputs a probability",
+     "heading": "9.3 The label as a threshold of two noisy numbers: a committee that outputs a probability",
+     "anchor": "9.3-The-label-as-a-threshold-of-two-noisy-numbers:-a-committee-that-outputs-a-probability",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "9.4",
+     "title": "A frozen foundation model: CheMeleon embeddings",
+     "heading": "9.4 A frozen foundation model: CheMeleon embeddings",
+     "anchor": "9.4-A-frozen-foundation-model:-CheMeleon-embeddings",
+     "field": "Machine learning · Cheminformatics"
+    },
+    {
+     "number": "9.5",
+     "title": "Test-likeness weighting: importance weights from structures alone",
+     "heading": "9.5 Test-likeness weighting: importance weights from structures alone",
+     "anchor": "9.5-Test-likeness-weighting:-importance-weights-from-structures-alone",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "9.6",
+     "title": "Floor-clipped arms: not spending capacity below the assay floor",
+     "heading": "9.6 Floor-clipped arms: not spending capacity below the assay floor",
+     "anchor": "9.6-Floor-clipped-arms:-not-spending-capacity-below-the-assay-floor",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "9.7",
+     "title": "Cross-isoform transfer of the assay arms",
+     "heading": "9.7 Cross-isoform transfer of the assay arms",
+     "anchor": "9.7-Cross-isoform-transfer-of-the-assay-arms",
+     "field": "Cheminformatics · Machine learning"
+    },
+    {
+     "number": "9.8",
+     "title": "Training on label confidence",
+     "heading": "9.8 Training on label confidence",
+     "anchor": "9.8-Training-on-label-confidence",
+     "field": "Statistics · Machine learning"
+    },
+    {
+     "number": "9.9",
+     "title": "The neural pair: a multitask network and plain Chemprop",
+     "heading": "9.9 The neural pair: a multitask network and plain Chemprop",
+     "anchor": "9.9-The-neural-pair:-a-multitask-network-and-plain-Chemprop",
+     "field": "Machine learning · Statistics"
+    },
+    {
+     "number": "9.10",
+     "title": "The other additions, tested the same way",
+     "heading": "9.10 The other additions, tested the same way",
+     "anchor": "9.10-The-other-additions,-tested-the-same-way",
+     "field": "Machine learning · Cheminformatics · Biology"
+    },
+    {
+     "number": "9.11",
+     "title": "The ledger of the gates, and what the correction for the number of attempts leaves",
+     "heading": "9.11 The ledger of the gates, and what the correction for the number of attempts leaves",
+     "anchor": "9.11-The-ledger-of-the-gates,-and-what-the-correction-for-the-number-of-attempts-leaves",
+     "field": "Statistics"
+    },
+    {
+     "number": "9.12",
+     "title": "Why the ideas that did not join added nothing",
+     "heading": "9.12 Why the ideas that did not join added nothing",
+     "anchor": "9.12-Why-the-ideas-that-did-not-join-added-nothing",
+     "field": "Statistics"
+    },
+    {
+     "number": "9.13",
+     "title": "The compound relative to the pocket",
+     "heading": "9.13 The compound relative to the pocket",
+     "anchor": "9.13-The-compound-relative-to-the-pocket",
+     "field": "Cheminformatics · Structural biology · Computational chemistry"
+    },
+    {
+     "number": "9.14",
+     "title": "Pharmacophore models: sites from the pocket, hypotheses from the ligands",
+     "heading": "9.14 Pharmacophore models: sites from the pocket, hypotheses from the ligands",
+     "anchor": "9.14-Pharmacophore-models:-sites-from-the-pocket,-hypotheses-from-the-ligands",
+     "field": "Cheminformatics · Structural biology · Statistics · Machine learning"
+    },
+    {
+     "number": "9.15",
+     "title": "Reading the pharmacophore on molecules: functional groups, structure-activity relationships and the pocket, in 2D and in 3D",
+     "heading": "9.15 Reading the pharmacophore on molecules: functional groups, structure-activity relationships and the pocket, in 2D and in 3D",
+     "anchor": "9.15-Reading-the-pharmacophore-on-molecules:-functional-groups,-structure-activity-relationships-and-the-pocket,-in-2D-and-in-3D",
+     "field": "Chemistry · Cheminformatics · Structural biology · Pharmacology"
+    }
+   ]
+  },
+  {
+   "label": "Part X",
+   "title": "Quantum chemistry and the physics features",
+   "heading": "Part X. Quantum chemistry and the physics features",
+   "anchor": "Part-X.-Quantum-chemistry-and-the-physics-features",
+   "sections": [
+    {
+     "number": "10.1",
+     "title": "The Schrödinger equation, the wavefunction and the Born-Oppenheimer approximation",
+     "heading": "10.1 The Schrödinger equation, the wavefunction and the Born-Oppenheimer approximation",
+     "anchor": "10.1-The-Schrödinger-equation,-the-wavefunction-and-the-Born-Oppenheimer-approximation",
+     "field": "Quantum chemistry · Mathematics"
+    },
+    {
+     "number": "10.2",
+     "title": "Hartree-Fock, the self-consistent field and basis sets",
+     "heading": "10.2 Hartree-Fock, the self-consistent field and basis sets",
+     "anchor": "10.2-Hartree-Fock,-the-self-consistent-field-and-basis-sets",
+     "field": "Quantum chemistry · Mathematics (linear algebra)"
+    },
+    {
+     "number": "10.3",
+     "title": "Density functional theory",
+     "heading": "10.3 Density functional theory",
+     "anchor": "10.3-Density-functional-theory",
+     "field": "Quantum chemistry · Physics"
+    },
+    {
+     "number": "10.4",
+     "title": "Semi-empirical and tight-binding methods: the energy of GFN2-xTB",
+     "heading": "10.4 Semi-empirical and tight-binding methods: the energy of GFN2-xTB",
+     "anchor": "10.4-Semi-empirical-and-tight-binding-methods:-the-energy-of-GFN2-xTB",
+     "field": "Quantum chemistry · Chemistry"
+    },
+    {
+     "number": "10.5",
+     "title": "The quantities of the physics block",
+     "heading": "10.5 The quantities of the physics block",
+     "anchor": "10.5-The-quantities-of-the-physics-block",
+     "field": "Quantum chemistry · Biochemistry"
+    },
+    {
+     "number": "10.6",
+     "title": "The physics block in the models: four levels, two refinements, and why none passed",
+     "heading": "10.6 The physics block in the models: four levels, two refinements, and why none passed",
+     "anchor": "10.6-The-physics-block-in-the-models:-four-levels,-two-refinements,-and-why-none-passed",
+     "field": "Machine learning · Quantum chemistry"
+    }
+   ]
+  },
+  {
+   "label": "Part XI",
+   "title": "The structure track",
+   "heading": "Part XI. The structure track",
+   "anchor": "Part-XI.-The-structure-track",
+   "sections": [
+    {
+     "number": "11.1",
+     "title": "Proteins, folding and the structure of CYP3A4; what a complex file contains",
+     "heading": "11.1 Proteins, folding and the structure of CYP3A4; what a complex file contains",
+     "anchor": "11.1-Proteins,-folding-and-the-structure-of-CYP3A4;-what-a-complex-file-contains",
+     "field": "Structural biology · Biochemistry"
+    },
+    {
+     "number": "11.2",
+     "title": "Co-folding models: how a structure is predicted from a sequence and a molecule",
+     "heading": "11.2 Co-folding models: how a structure is predicted from a sequence and a molecule",
+     "anchor": "11.2-Co-folding-models:-how-a-structure-is-predicted-from-a-sequence-and-a-molecule",
+     "field": "Machine learning · Structural biology"
+    },
+    {
+     "number": "11.3",
+     "title": "Building the input of a prediction",
+     "heading": "11.3 Building the input of a prediction",
+     "anchor": "11.3-Building-the-input-of-a-prediction",
+     "field": "Software engineering · Structural biology"
+    },
+    {
+     "number": "11.4",
+     "title": "How a pose is scored: RMSD, LDDT-PLI, BiSyRMSD and the PoseBusters checks",
+     "heading": "11.4 How a pose is scored: RMSD, LDDT-PLI, BiSyRMSD and the PoseBusters checks",
+     "anchor": "11.4-How-a-pose-is-scored:-RMSD,-LDDT-PLI,-BiSyRMSD-and-the-PoseBusters-checks",
+     "field": "Structural biology · Mathematics (linear algebra)"
+    },
+    {
+     "number": "11.5",
+     "title": "The reference ligands and the crystal-anchored benchmark",
+     "heading": "11.5 The reference ligands and the crystal-anchored benchmark",
+     "anchor": "11.5-The-reference-ligands-and-the-crystal-anchored-benchmark",
+     "field": "Structural biology · Statistics"
+    },
+    {
+     "number": "11.6",
+     "title": "The iron-nitrogen restraint: what it adds to the input and what the evidence shows",
+     "heading": "11.6 The iron-nitrogen restraint: what it adds to the input and what the evidence shows",
+     "anchor": "11.6-The-iron-nitrogen-restraint:-what-it-adds-to-the-input-and-what-the-evidence-shows",
+     "field": "Structural biology · Statistics"
+    },
+    {
+     "number": "11.7",
+     "title": "Levers that did not pass: seeds, crystal templates, cryo-EM templates and the step scale",
+     "heading": "11.7 Levers that did not pass: seeds, crystal templates, cryo-EM templates and the step scale",
+     "anchor": "11.7-Levers-that-did-not-pass:-seeds,-crystal-templates,-cryo-EM-templates-and-the-step-scale",
+     "field": "Structural biology · Statistics"
+    },
+    {
+     "number": "11.8",
+     "title": "Choosing among poses: minimum Bayes risk, a second engine, priors and the physics",
+     "heading": "11.8 Choosing among poses: minimum Bayes risk, a second engine, priors and the physics",
+     "anchor": "11.8-Choosing-among-poses:-minimum-Bayes-risk,-a-second-engine,-priors-and-the-physics",
+     "field": "Structural biology · Statistics"
+    },
+    {
+     "number": "11.9",
+     "title": "OpenFold3: the second engine, the memory failure and what the second engine bought",
+     "heading": "11.9 OpenFold3: the second engine, the memory failure and what the second engine bought",
+     "anchor": "11.9-OpenFold3:-the-second-engine,-the-memory-failure-and-what-the-second-engine-bought",
+     "field": "Software engineering · Structural biology"
+    },
+    {
+     "number": "11.10",
+     "title": "The final recipe: from the verdicts to the file that is submitted",
+     "heading": "11.10 The final recipe: from the verdicts to the file that is submitted",
+     "anchor": "11.10-The-final-recipe:-from-the-verdicts-to-the-file-that-is-submitted",
+     "field": "Structural biology · Software engineering"
+    },
+    {
+     "number": "11.11",
+     "title": "Pharmacophore models of poses, and two biases that such models carry",
+     "heading": "11.11 Pharmacophore models of poses, and two biases that such models carry",
+     "anchor": "11.11-Pharmacophore-models-of-poses,-and-two-biases-that-such-models-carry",
+     "field": "Computational chemistry · Structural biology · Cheminformatics · Statistics"
+    },
+    {
+     "number": "11.12",
+     "title": "The official set corrected: three ligands that came without their stereochemistry",
+     "heading": "11.12 The official set corrected: three ligands that came without their stereochemistry",
+     "anchor": "11.12-The-official-set-corrected:-three-ligands-that-came-without-their-stereochemistry",
+     "field": "Chemistry · Structural biology · Cheminformatics · Mathematics (vectors)"
+    },
+    {
+     "number": "11.13",
+     "title": "Ligand dynamics in the frozen pocket: a dynophore that the project can afford",
+     "heading": "11.13 Ligand dynamics in the frozen pocket: a dynophore that the project can afford",
+     "anchor": "11.13-Ligand-dynamics-in-the-frozen-pocket:-a-dynophore-that-the-project-can-afford",
+     "field": "Computational chemistry · Statistics"
+    }
+   ]
+  },
+  {
+   "label": "Part XII",
+   "title": "Engineering for trust",
+   "heading": "Part XII. Engineering for trust",
+   "anchor": "Part-XII.-Engineering-for-trust",
+   "sections": [
+    {
+     "number": "12.1",
+     "title": "Reproducibility: seeds, threads, solvers and archives",
+     "heading": "12.1 Reproducibility: seeds, threads, solvers and archives",
+     "anchor": "12.1-Reproducibility:-seeds,-threads,-solvers-and-archives",
+     "field": "Software engineering · Mathematics"
+    },
+    {
+     "number": "12.2",
+     "title": "The audit: what it checks and how it is itself checked",
+     "heading": "12.2 The audit: what it checks and how it is itself checked",
+     "anchor": "12.2-The-audit:-what-it-checks-and-how-it-is-itself-checked",
+     "field": "Software engineering"
+    },
+    {
+     "number": "12.3",
+     "title": "The test suite and the continuous-integration workflow",
+     "heading": "12.3 The test suite and the continuous-integration workflow",
+     "anchor": "12.3-The-test-suite-and-the-continuous-integration-workflow",
+     "field": "Software engineering"
+    },
+    {
+     "number": "12.4",
+     "title": "The job queue, the runner and the guards; what the hardware taught",
+     "heading": "12.4 The job queue, the runner and the guards; what the hardware taught",
+     "anchor": "12.4-The-job-queue,-the-runner-and-the-guards;-what-the-hardware-taught",
+     "field": "Software engineering"
+    },
+    {
+     "number": "12.5",
+     "title": "The documents that are generated, and the checks on them",
+     "heading": "12.5 The documents that are generated, and the checks on them",
+     "anchor": "12.5-The-documents-that-are-generated,-and-the-checks-on-them",
+     "field": "Software engineering · Data science"
+    },
+    {
+     "number": "12.6",
+     "title": "The rules that never change, and how each is enforced",
+     "heading": "12.6 The rules that never change, and how each is enforced",
+     "anchor": "12.6-The-rules-that-never-change,-and-how-each-is-enforced",
+     "field": "Software engineering"
+    },
+    {
+     "number": "12.7",
+     "title": "An explorer for the finished results",
+     "heading": "12.7 An explorer for the finished results",
+     "anchor": "12.7-An-explorer-for-the-finished-results",
+     "field": "Software engineering · Data science"
+    }
+   ]
+  },
+  {
+   "label": "Part XIII",
+   "title": "Closing",
+   "heading": "Part XIII. Closing",
+   "anchor": "Part-XIII.-Closing",
+   "sections": [
+    {
+     "number": "13.1",
+     "title": "What the project shows and what it does not",
+     "heading": "13.1 What the project shows and what it does not",
+     "anchor": "13.1-What-the-project-shows-and-what-it-does-not",
+     "field": "Overview · Statistics"
+    },
+    {
+     "number": "13.2",
+     "title": "Limitations",
+     "heading": "13.2 Limitations",
+     "anchor": "13.2-Limitations",
+     "field": "Statistics"
+    },
+    {
+     "number": "13.3",
+     "title": "Open questions",
+     "heading": "13.3 Open questions",
+     "anchor": "13.3-Open-questions",
+     "field": "Overview"
+    },
+    {
+     "number": "13.4",
+     "title": "Final results and the state of the submission files",
+     "heading": "13.4 Final results and the state of the submission files",
+     "anchor": "13.4-Final-results-and-the-state-of-the-submission-files",
+     "field": "Overview"
+    }
+   ]
+  },
+  {
+   "label": "Appendix A",
+   "title": "Practical walkthrough",
+   "heading": "Appendix A. Practical walkthrough",
+   "anchor": "Appendix-A.-Practical-walkthrough",
+   "sections": []
+  },
+  {
+   "label": "Appendix B",
+   "title": "Symbols, abbreviations and glossary",
+   "heading": "Appendix B. Symbols, abbreviations and glossary",
+   "anchor": "Appendix-B.-Symbols,-abbreviations-and-glossary",
+   "sections": []
+  },
+  {
+   "label": "Appendix C",
+   "title": "References",
+   "heading": "Appendix C. References",
+   "anchor": "Appendix-C.-References",
+   "sections": []
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+  "OCNT-2313429-ex1": {
+    "compound": "cyp3a4_OCNT-2313429-ex1",
+    "motif_nitrogen_distances": [],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N34",
+        "distance_angstrom": 5.58
+      },
+      {
+        "atom": "N35",
+        "distance_angstrom": 10.83
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": null,
+    "coordinated": false,
+    "confidence_score": 0.9381963014602661
+  },
+  "OCNT-2395464-ex1": {
+    "compound": "cyp3a4_OCNT-2395464-ex1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N25",
+        "motif": "pyridine",
+        "distance_angstrom": 2.23
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N25",
+        "distance_angstrom": 2.23
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 6.27
+      },
+      {
+        "atom": "N21",
+        "distance_angstrom": 6.47
+      },
+      {
+        "atom": "N32",
+        "distance_angstrom": 8.86
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.23,
+    "coordinated": true,
+    "confidence_score": 0.9435495138168335
+  },
+  "OCNT-2313397-ex1": {
+    "compound": "cyp3a4_OCNT-2313397-ex1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N23",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 2.47
+      },
+      {
+        "atom": "N40",
+        "motif": "imidazole_Nsub",
+        "distance_angstrom": 4.4
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N23",
+        "distance_angstrom": 2.47
+      },
+      {
+        "atom": "N40",
+        "distance_angstrom": 4.4
+      },
+      {
+        "atom": "N39",
+        "distance_angstrom": 6.65
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.47,
+    "coordinated": true,
+    "confidence_score": 0.9337953329086304
+  },
+  "OCNT-2395415-ex1": {
+    "compound": "cyp3a4_OCNT-2395415-ex1",
+    "motif_nitrogen_distances": [
+      {
+        "atom": "N18",
+        "motif": "pyridine",
+        "distance_angstrom": 2.27
+      }
+    ],
+    "all_ligand_nitrogen_distances": [
+      {
+        "atom": "N18",
+        "distance_angstrom": 2.27
+      },
+      {
+        "atom": "N31",
+        "distance_angstrom": 6.34
+      }
+    ],
+    "closest_motif_nitrogen_distance_angstrom": 2.27,
+    "coordinated": true,
+    "confidence_score": 0.9527839422225952
+  }
+}

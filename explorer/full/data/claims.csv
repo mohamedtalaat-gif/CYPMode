@@ -1,0 +1,22 @@
+claim,section,title
+"The label is a function of two measurements, so the models learn the measurements.",2.3,"The label rule: how $s = t - \max(d, 4) > \log_{10} 2$ was recovered and checked"
+"The label is a function of two measurements, so the models learn the measurements.",2.5,"Measurement noise: the standard deviation, the confidence limits and the confidence $z$"
+A selection-aware CYP2D6 model.,9.1,The selection-aware CYP2D6 model: when the training labels come from a filtered population
+Groups join a stack only through a gate.,6.7,"Pre-declared gates: the rule, the floor of the design, and the replicate"
+Groups join a stack only through a gate.,9.11,"The ledger of the gates, and what the correction for the number of attempts leaves"
+A contaminated slice of the labels was found and removed from the CYP3A4 pool.,2.3,"The label rule: how $s = t - \max(d, 4) > \log_{10} 2$ was recovered and checked"
+The evaluation reproduces the scored population.,6.4,"Making validation resemble the test: similarity, prevalence and confident labels"
+One aggregate number is recovered from the public leaderboards.,2.10,The public leaderboard as data: the positive rate of the scored set
+A check of that rate that reads no board.,2.11,A check of the positive rate that reads no board
+The official structure set was checked for stereochemistry.,11.12,The official set corrected: three ligands that came without their stereochemistry
+"Reliability by similarity to the training data, with intervals over chemical series.",8.7,Results with their uncertainty
+"Probabilities calibrated on the inner folds, with the failure reported.",8.5,Calibration: from a score to a probability
+A committee of models as an uncertainty signal was tested and did not help.,7.6,"Uncertainty by committee, tested against real mistakes"
+A restraint of the iron-nitrogen bond for Type II ligands.,11.6,The iron-nitrogen restraint: what it adds to the input and what the evidence shows
+The scorer's own validity call with a margin.,11.4,"How a pose is scored: RMSD, LDDT-PLI, BiSyRMSD and the PoseBusters checks"
+The scorer's own validity call with a margin.,11.10,The final recipe: from the verdicts to the file that is submitted
+A relaxation under a rule written before it was run.,11.10,The final recipe: from the verdicts to the file that is submitted
+"The pharmacophore of a pose read over a short trajectory, tested under a rule fixed before any number.",11.13,Ligand dynamics in the frozen pocket: a dynophore that the project can afford
+Negative results are results.,9.10,"The other additions, tested the same way"
+Negative results are results.,9.11,"The ledger of the gates, and what the correction for the number of attempts leaves"
+"Every number in the reports is copied by code from a log and checked by the audit,",12.2,The audit: what it checks and how it is itself checked
