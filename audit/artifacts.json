@@ -448,6 +448,17 @@
    "docs/card/interactive/index.html": "34552607fd4ac65e810ba7b36775e9f21b3dee8fc00881ed19979f8d0695d001"
   }
  },
+ "interactive_card_full": {
+  "built_utc": "2026-11-05 05:45:47",
+  "extra": {
+   "html_sha256": "93888df4ccfe93dab8ef6ccbee5fc9caaec603b7b4b009560365455227c842c9",
+   "mode": "full"
+  },
+  "fingerprint": "a267dfeff9b150f57a78bf6bde62bb4d5fc820cf7b8e6bf124fda4f22dabdbe0",
+  "outputs": {
+   "docs/card/interactive/full/index.html": "93888df4ccfe93dab8ef6ccbee5fc9caaec603b7b4b009560365455227c842c9"
+  }
+ },
  "poster": {
   "built_utc": "2026-10-30 09:08:09",
   "extra": {
@@ -473,6 +484,23 @@
    "docs/card/cypmode_card-dark.png": "75349cf5d181a36b8834dec5b04b560ba5d36b9d008168f34cec273b21e59c83",
    "docs/card/cypmode_card-light.gif": "4ea318b6a26f85509be857efd2ef0cb29a58d6527b8794904da2a4e167053ded",
    "docs/card/cypmode_card-light.png": "4abd49e4e10d825c1cee797a32548cca61048a7c56752174ef59e9859a5c2839"
+  }
+ },
+ "readme_card_full": {
+  "built_utc": "2026-11-05 05:45:29",
+  "extra": {
+   "html_sha256": {
+    "dark": "ea41aafb40e1e10cdeff8e35a6061f6b643190e6d5cbbe291eea34dd98b48e30",
+    "light": "16f82e3062df23b4cf8333ff260899578d540d64e87f50347ef54d283a934ebc"
+   },
+   "mode": "full"
+  },
+  "fingerprint": "a267dfeff9b150f57a78bf6bde62bb4d5fc820cf7b8e6bf124fda4f22dabdbe0",
+  "outputs": {
+   "docs/card/cypmode_card_full-dark.gif": "5a14e6be879d49105a4e5d212ced5f9e05baa2714b8c09f203d862de3c32ebc5",
+   "docs/card/cypmode_card_full-dark.png": "3197c93a6cf9c4c1e4b3f03629813a0745aa659b35efdde3eb62d62702f3b1c2",
+   "docs/card/cypmode_card_full-light.gif": "817cffcc5636afd846c38632edcb7799e64cef23bdfed3d4dca0508a61c62a94",
+   "docs/card/cypmode_card_full-light.png": "3c04d4b55598d4fbcb6ff0c775c3e6d72c959ac593dfb921816afc58ff27df06"
   }
  }
 }

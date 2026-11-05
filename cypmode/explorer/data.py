@@ -219,8 +219,10 @@ def tables(logs: Path = LOGS, nested: Path = NESTED, structure: Path = STRUCTURE
 
 
 def held_back_patterns(gitignore: Path = Path(".gitignore")) -> list[str]:
-    """The patterns of the HELD BACK block of ``.gitignore``."""
+    """The patterns of the HELD BACK block of ``.gitignore`` (none once the release script has removed the block)."""
     text = Path(gitignore).read_text()
+    if ">>> HELD BACK" not in text:
+        return []  # the challenge has closed and the release script has removed the block: nothing is held back
     block = text[text.index(">>> HELD BACK"):text.index("<<< HELD BACK")]
     return [line.strip() for line in block.splitlines()[1:] if line.strip() and not line.startswith("#")]  # the first line of the slice is the rest of the opening marker
 

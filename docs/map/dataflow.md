@@ -5,14 +5,14 @@ The data go one way: the inputs of a track enter the jobs of the queue, the jobs
 ```mermaid
 flowchart LR
   inputs["inputs<br/>data/*/inputs"] --> jobs
-  jobs["queue jobs<br/>161 of 174 write a log"] -->|"204 log names"| logs["logs"]
+  jobs["queue jobs<br/>161 of 174 write a log"] -->|"206 log names"| logs["logs"]
   logs -->|"every log, through gate_rows"| ledger["ledger<br/>cypmode/audit/ledger_kinds.py"]
   logs -->|"58 logs are read by name"| reports
   ledger --> reports["reports, figures, notebook<br/>built by the chain 900 to 960"]
   reports --> submissions["submission files"]
 ```
 
-A log is named by a module in 58 of the 157 cases in which a job writes it under a fixed name. The others are read through the folder, and 5 modules read every log of it that way:
+A log is named by a module in 58 of the 159 cases in which a job writes it under a fixed name. The others are read through the folder, and 5 modules read every log of it that way:
 
 - `cypmode/audit/method_report.py`
 - `cypmode/audit/sections.py`

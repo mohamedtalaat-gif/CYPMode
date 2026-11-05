@@ -1,12 +1,12 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge"
-version: 0.2.0
+version: 0.3.0
 doi: 10.5281/zenodo.23816450
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.23816451
-    description: "Release 0.2.0 of the archive on Zenodo"
+    value: 10.5281/zenodo.23822983
+    description: "Release 0.3.0 of the archive on Zenodo"
 abstract: "Reproducible predictors, with the evidence behind them, for two tasks of the OpenADMET CYP inhibition blind challenge: time-dependent inhibition of CYP3A4 and CYP2D6 (a label-process-aware, selection-corrected stack of label-free models, judged by nested cross-validation on the population the challenge scores and by pre-registered gates) and the CYP3A4 structure of 20 ligands (co-folding with an iron-nitrogen restraint, validity and margin rules, a registered relaxation). Every number in the reports is generated from the logs, the audit reproduces them byte for byte, and the experiments that failed their gates are part of the record."
 keywords:
   - cytochrome P450
@@ -15,7 +15,7 @@ keywords:
   - cheminformatics
   - protein-ligand structure
   - reproducible research
-date-released: 2026-10-30
+date-released: 2026-11-05
 url: "https://github.com/mohamedtalaat-gif/CYPMode"
 repository-code: "https://github.com/mohamedtalaat-gif/CYPMode"
 license: AGPL-3.0-or-later

@@ -220,7 +220,7 @@ flowchart LR
 | `285_label_shift` | An estimate of the positive rate of the scored set that reads no leaderboard (label shift, cross-fitted soft adjusted classify-and-count), compared with the rate of the final build by a rule fixed before the first run. | nothing |
 | `286_ligand_dynamics` | Ligand dynamics in the frozen pocket (the rule of docs/structure_track/structure_ligand_dynamics.md, committed before any number): the pools of the static pharmacophore gate, 20 ps of the ligand in its frozen pocket for every pose, the dynamic scores and the gate. | nothing |
 | `295_lint_cleanup` | Lint cleanup of the Python modules (decided 2026-10-17). | every job with a smaller number |
-| `296_release_unblock` | The release after the deadline: the held-back block is removed, one local commit holds what becomes visible, and the final chain 900 to 960 is queued again; it waits for the end of the challenge and for the version of the release. | every job with a smaller number |
+| `296_release_unblock` | The release after the deadline: the held-back block is removed, the full card is drawn, one local commit holds what becomes visible, and the final chain 900 to 975 is queued again; it waits for the end of the challenge and for the version of the release. | every job with a smaller number |
 | `299_requeue_final_chain` | After the experiments of jobs 190 to 206: the final TDI build reads every gate verdict again (a group whose gate is MET joins the stack), then the chain that describes and packages the final state runs again, in order, on a quiet repository, and the pre-submission gate closes it. | every job with a smaller number |
 
 ## Family 9xx (20 jobs)

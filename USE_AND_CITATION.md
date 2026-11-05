@@ -21,16 +21,16 @@ A use of the code in a product or a service that cannot be released under these 
 
 ## How to cite
 
-Cite the archive by the DOI that stands for all its versions, 10.5281/zenodo.23816450, or a release by its own DOI (release 0.2.0: 10.5281/zenodo.23816451). The version of the record that is made after the challenge has closed holds the full set of results, figures
-and the notebook; it has a DOI of its own, which `CITATION.cff` lists when it exists. A ready entry for release 0.2.0:
+Cite the archive by the DOI that stands for all its versions, 10.5281/zenodo.23816450, or a release by its own DOI (release 0.3.0: 10.5281/zenodo.23822983). Release 0.2.0 (10.5281/zenodo.23816451) held what could be published while the challenge was open; release 0.3.0 holds the full set of results, figures
+and the notebook. A ready entry for release 0.3.0:
 
 ```bibtex
 @software{talaat_cypmode,
   author  = {Talaat, Muhammad},
   title   = {CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge},
   year    = {2026},
-  version = {0.2.0},
-  doi     = {10.5281/zenodo.23816451},
+  version = {0.3.0},
+  doi     = {10.5281/zenodo.23822983},
   url     = {https://github.com/mohamedtalaat-gif/CYPMode}
 }
 ```

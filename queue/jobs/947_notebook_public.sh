@@ -4,6 +4,7 @@ source queue/lib.sh
 # by a note, built after the complete edition (job 942) from the final numbers; the build fails when a cell still names an official structure ligand or five or more blinded compounds. The complete edition
 # replaces it after the challenge closes.
 need_file notebooks/build_notebook.py
+grep -q "HELD BACK UNTIL AFTER THE DEADLINE" .gitignore || { echo "the challenge has closed: the complete edition is the notebook, there is no public edition to build"; exit 0; }
 need_done 942_build_notebook
 all_lower_done 947_notebook_public || defer "earlier jobs not finished"
 python3 -m notebooks.build_notebook --public > $L/notebook_public_build.log 2>&1

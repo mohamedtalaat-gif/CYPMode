@@ -16,8 +16,9 @@ def test_the_scripts_and_jobs_of_the_release_are_valid_shell():
 
 def test_the_release_job_waits_for_the_end_of_the_challenge_the_version_and_a_committed_tree_and_requeues_only_the_final_chain():
     text = (ROOT / "queue/jobs/296_release_unblock.sh").read_text()
-    assert "release_after_deadline.py" in text and "bump_version.py" in text and "tree_committed" in text and "queue/jobs/9[0-6]*.sh" in text
-    assert text.index("tree_committed") < text.index("release_after_deadline.py ") < text.index("git commit")  # nothing is released before the checks, nothing is committed before the release
+    assert "release_after_deadline.py" in text and "bump_version.py" in text and "tree_committed" in text and "queue/jobs/9[0-7]*.sh" in text
+    assert text.index("tree_committed") < text.index("release_after_deadline.py ") < text.index("build_card.py --full") < text.index("git commit")  # nothing is released before the checks, the full card is drawn before anything is committed
+    assert "build_interactive_card.py --full" in text and "HELD BACK UNTIL AFTER THE DEADLINE" in text  # a second attempt after a failed drawing does not release again
     assert "git push" not in text
 
 

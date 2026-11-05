@@ -9,6 +9,8 @@ from pathlib import Path
 
 import yaml
 
+RELEASED = "HELD BACK UNTIL AFTER THE DEADLINE" not in Path(".gitignore").read_text()  # the release script has removed the block: the tests then describe the released state
+
 SPEC = importlib.util.spec_from_file_location("release", Path("scripts/release_after_deadline.py"))
 release = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(release)
@@ -35,6 +37,10 @@ def test_the_public_card_gives_way_to_the_full_card():
 
 def test_the_readme_shows_the_public_card_and_holds_the_full_card_back():
     text = Path("README.md").read_text()
+    if RELEASED:
+        assert "cypmode_card_full-light.gif" in text and "cypmode_card-light.gif" not in text and "public:" not in text and "held-back" not in text
+        assert all(Path(f"docs/card/cypmode_card_full-{theme}.{kind}").exists() for theme in ("dark", "light") for kind in ("png", "gif"))
+        return
     public = text[text.index("<!-- public:card begin -->"):text.index("<!-- public:card end -->")]
     held = text[text.index("<!-- held-back:card"):text.index("held-back:card-end -->")]
     assert "cypmode_card-light.gif" in public and "cypmode_card_full" not in public  # the card that turns is the picture of the README
@@ -54,6 +60,10 @@ def test_the_commented_film_section_is_switched_on():
 
 def test_the_repository_holds_its_results_back_until_the_deadline():
     ignore = Path(".gitignore").read_text()
+    if RELEASED:  # after the release: the block is gone, the markers of the README are gone, and what was held back is in the working tree for git to record
+        assert "held-back:" not in Path("README.md").read_text() and not Path("notebooks/public").exists()
+        assert Path("submissions/manifest.json").exists() and Path("data/tdi_track/outputs/final").is_dir()
+        return
     assert "HELD BACK UNTIL AFTER THE DEADLINE" in ignore and "submissions/tdi_track/*.csv" in ignore and "data/tdi_track/outputs/final/" in ignore
     assert "<!-- held-back:film" in Path("README.md").read_text() and "<!-- held-back:card" in Path("README.md").read_text()
 
@@ -62,8 +72,8 @@ def test_nothing_that_names_blinded_results_would_be_pushed():
     from cypmode.audit import public_readiness as pr
 
     names = pr.blinded_names()
-    if not names:
-        return  # a checkout without the organisers' inputs has nothing to compare with
+    if not names or RELEASED:
+        return  # a checkout without the organisers' inputs has nothing to compare with, and after the release the results are meant to be pushed
     assert pr.prediction_findings(pr.candidate_files(), names) == []
 
 
@@ -78,6 +88,9 @@ def test_the_public_edition_of_the_notebook_is_removed_when_the_complete_one_is_
 
 def test_each_edition_of_the_readme_shows_its_card_turning():
     text = Path("README.md").read_text()
+    if RELEASED:
+        assert "docs/card/cypmode_card_full-light.gif" in text and "docs/card/cypmode_card-light.gif" not in text
+        return
     shown_now = re.sub(r"<!-- held-back:card.*?held-back:card-end -->", "", re.sub(r"<!-- held-back:film.*?held-back:film-end -->", "", text, flags=re.DOTALL), flags=re.DOTALL)
     complete = release.restore_film(release.remove_public_card(text))
     assert "docs/card/cypmode_card-light.gif" in shown_now and "cypmode_card_full" not in shown_now  # the public edition: the card of the public structures, turning
@@ -144,3 +157,18 @@ def test_nothing_is_removed_when_the_bundle_cannot_be_made(tmp_path):
     with pytest.raises(subprocess.CalledProcessError):
         release.detach_repository(folder, tmp_path / "backup", tmp_path / "repo")
     assert (folder / ".git").exists()
+
+
+def test_a_sentence_of_a_table_row_is_switched_from_the_public_edition_to_the_complete_one_on_the_same_line():
+    row = "| a question | <!-- public:notebook begin -->the public edition<!-- public:notebook end --><!-- held-back:notebook the complete edition held-back:notebook-end --> | more |\n"
+    out = release.restore_film(release.remove_public_card(row))
+    assert out == "| a question | the complete edition | more |\n"
+    assert release.restore_film(row).count("the public edition") == 1  # the two switches are done together by the script: only one of them alone leaves both
+
+
+def test_the_readme_names_the_public_edition_of_the_notebook_until_the_release_and_the_complete_one_after_it():
+    text = Path("README.md").read_text()
+    released = text if RELEASED else release.restore_film(release.remove_public_card(text))
+    assert RELEASED or "notebooks/public/" in text
+    assert "notebooks/public/" not in released and "notebooks/cypmode_notebook.pdf" in released and "notebooks/cypmode_notebook.ipynb" in released
+    assert "held-back" not in released and "public:" not in released

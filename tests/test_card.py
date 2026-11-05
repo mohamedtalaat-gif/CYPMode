@@ -38,10 +38,12 @@ def test_the_compounds_of_the_card_are_drawn_with_the_donor_nitrogen_marked(tmp_
 
 def test_the_readme_starts_with_the_card_in_both_colour_schemes():
     lines = Path("README.md").read_text().splitlines()
-    assert lines[0] == "<!-- public:card begin -->"  # the repository name is the title that GitHub shows, so the README opens with the card
+    released = "HELD BACK UNTIL AFTER THE DEADLINE" not in Path(".gitignore").read_text()  # after the release the card of the submitted structures replaces the public one
+    name = "cypmode_card_full" if released else "cypmode_card"
+    assert released or lines[0] == "<!-- public:card begin -->"  # the repository name is the title that GitHub shows, so the README opens with the card
     head = "\n".join(lines[:10])
-    assert "docs/card/cypmode_card-dark.gif" in head and "docs/card/cypmode_card-light.gif" in head  # the card of the README turns
-    assert all(Path(f"docs/card/cypmode_card-{theme}.{kind}").exists() for theme in ("dark", "light") for kind in ("png", "gif"))
+    assert f"docs/card/{name}-dark.gif" in head and f"docs/card/{name}-light.gif" in head  # the card of the README turns
+    assert all(Path(f"docs/card/{name}-{theme}.{kind}").exists() for theme in ("dark", "light") for kind in ("png", "gif"))
 
 
 def test_the_circled_nitrogen_is_the_one_nearest_the_iron_in_the_submitted_pose():
@@ -57,7 +59,8 @@ def test_the_circled_nitrogen_is_the_one_nearest_the_iron_in_the_submitted_pose(
 
 def test_the_readme_links_the_film_through_its_poster_and_the_small_copy():
     text = Path("README.md").read_text()
-    assert "<!-- held-back:film" in text and "## The film" in text  # commented out until the challenge closes: scripts/release_after_deadline.py switches it on and "docs/video/cypmode_overview_web.mp4" in text and "docs/video/cypmode_overview_poster.png" in text
+    released = "HELD BACK UNTIL AFTER THE DEADLINE" not in Path(".gitignore").read_text()
+    assert ("held-back" not in text if released else "<!-- held-back:film" in text) and "## The film" in text  # commented out until the challenge closes: scripts/release_after_deadline.py switches it on and "docs/video/cypmode_overview_web.mp4" in text and "docs/video/cypmode_overview_poster.png" in text
     assert Path("docs/video/cypmode_overview_poster.png").exists() or "docs/video/cypmode_overview_poster.png" in Path(".gitignore").read_text()  # held back: present where the film was drawn, listed in the ignore file in a clean checkout
     assert "docs/video/cypmode_overview.mp4" not in text  # the 1080p original is over GitHub's 100 MB limit and is not linked
 

@@ -22,6 +22,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DEADLINE = datetime(2026, 11, 3, 23, 59, tzinfo=timezone.utc)
 BLOCK = re.compile(r"\n# >>> HELD BACK UNTIL AFTER THE DEADLINE.*?# <<< HELD BACK\n", re.DOTALL)
 HELD_SECTIONS = (("<!-- held-back:film\n", "held-back:film-end -->\n"), ("<!-- held-back:card\n", "held-back:card-end -->\n"))  # the film section and the full card at the top of the README
+HELD_INLINE = re.compile(r"<!-- held-back:(\w+) (.*?) held-back:\1-end -->")  # a sentence of one line (a row of a table) that the complete edition shows
+PUBLIC_INLINE = re.compile(r"<!-- public:(\w+) begin -->.*?<!-- public:\1 end -->")  # the sentence of the same line that the public edition shows and the complete one replaces
 PUBLIC_CARD = re.compile(r"<!-- public:card begin -->\n.*?<!-- public:card end -->\n\n?", re.DOTALL)  # the public card, which the full card replaces
 
 
@@ -32,14 +34,14 @@ def strip_held_back(gitignore: str) -> str:
 
 def remove_public_card(readme: str) -> str:
     """The README without the public card, which the full card replaces."""
-    return PUBLIC_CARD.sub("", readme)
+    return PUBLIC_INLINE.sub("", PUBLIC_CARD.sub("", readme))
 
 
 def restore_film(readme: str) -> str:
     """The README with the commented-out film section and full card switched on."""
     for opening, closing in HELD_SECTIONS:
         readme = readme.replace(opening, "").replace(closing, "")
-    return readme
+    return HELD_INLINE.sub(lambda m: m.group(2), readme)
 
 
 def remove_public_edition(root: Path = ROOT) -> bool:

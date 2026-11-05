@@ -190,9 +190,7 @@ def summary_section() -> str:
         "  number about the hidden labels is recovered, the positive rate of the scored set (limitation L13). No label of any blinded compound and no probing submission is used.",
         "- **Components.** The programs, models and weights that the work uses and their licences are listed in section 14 and in Appendix C of the notebook.",
         f"- **Identifier.** {('DOI ' + ids['doi'] + '.') if 'doi' in ids else 'The archived release has no DOI yet; the citation file lists it when it has one.'} The text to cite is in `USE_AND_CITATION.md`.",
-        "- **What is published after the challenge closes.** This release is complete: the code, the method, the reports and the checks are all in it, and the code regenerates every submitted file. The only files that are not in it are the ones that show a",
-        "  result for a blinded compound: the submitted files, the predictions and the structures of the blinded compounds, and the figures, the film and the complete edition of the notebook that display them; the public edition of the notebook is in it. A full",
-        "  release with those files is published after the challenge has closed (2026-11-03 23:59 UTC). The SHA-256 of each submitted file is in the section *What is submitted*, so that each file can be matched to this report when it is published.",
+        *published_lines(),
         "- **Reproduction and checks.** `NEGATIVE_RESULTS.md` (every experiment that failed its gate), `audit/AUDIT_REPORT.md` (generated twice and compared byte for byte), `bash scripts/reproduce_tdi.sh`.",
         "",
     ]
@@ -1143,6 +1141,20 @@ def build_method_report() -> str:
         "",
         *data_terms_lines(),
     ])
+
+
+def published_lines() -> list[str]:
+    """What the release holds, said as it is: before the end of the challenge the files that show a result for a blinded compound are held back, after it they are in the release (decided by the block of the ignore file that holds them back)."""
+    if "HELD BACK UNTIL AFTER THE DEADLINE" in (ROOT / ".gitignore").read_text():
+        return [
+            "- **What is published after the challenge closes.** This release is complete: the code, the method, the reports and the checks are all in it, and the code regenerates every submitted file. The only files that are not in it are the ones that show a",
+            "  result for a blinded compound: the submitted files, the predictions and the structures of the blinded compounds, and the figures, the film and the complete edition of the notebook that display them; the public edition of the notebook is in it. A full",
+            "  release with those files is published after the challenge has closed (2026-11-03 23:59 UTC). The SHA-256 of each submitted file is in the section *What is submitted*, so that each file can be matched to this report when it is published.",
+        ]
+    return [
+        "- **What is published.** This release is complete, the challenge having closed on 2026-11-03 at 23:59 UTC: the code, the method, the reports and the checks, and the files that show a result for a blinded compound (the submitted files, their predictions and structures, the figures, the film and the complete edition of the notebook).",
+        "  The SHA-256 of each submitted file is in the section *What is submitted*, so that each file in the release can be matched to this report.",
+    ]
 
 
 def data_terms_lines() -> list[str]:
