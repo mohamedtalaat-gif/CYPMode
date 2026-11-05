@@ -210,9 +210,9 @@ The notebook runs on programs and data that others wrote and measured, and those
 
 The entries of this section are the record of what ran, not a second bibliography: the papers behind the models and the data are in C.1, and a version is the pin file's.
 """),
+    code(LICENCE_TERMS),
     md("""**Terms behind the data record.** The files that the repository does not hold are packed into archives (12.1), and the policy of the record names, for each source and model behind them, what its licence says and where that was read. The table below is that policy: {{=n_terms}} entries, of which {{=n_terms_left_out}} are left out of the record, because the terms of what produced the files do not allow them to be redistributed under the licence of the record, which is CC BY 4.0, or because the terms could not be read. Three things could not be read and are named here so that nothing is left to be found: the page of PubChem itself (it answered a program with a challenge page), the licence of the weights of TabICL (the card refused the request) and the licence of the parameter file that OpenFold3 uses by default (the pages read state none for it).
 """),
-    code(LICENCE_TERMS),
     md("""*On what actually ran.* The works of C.1 were resolved against the records named in the introduction on 17 October 2026, one record per work, and the link at the end of an entry is that record; the few works whose record is a catalogue or an archive have no DOI, and the entry says where the record is. The table of C.2 reads `environment/` when the appendix is built, so it describes the environment beside it and not an older one, and the section names no program, model or data set that the notebook does not use. The appendix adds nothing to the text that the text does not cite or name.
 """),
 ]

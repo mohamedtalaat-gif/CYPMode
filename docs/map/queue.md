@@ -1,15 +1,15 @@
 # The queue
 
-Every experiment and every build step of the project is a script of `queue/jobs`; the runner (`scripts/queue_runner.sh`) takes them in the order of their numbers. There are 171 jobs in 4 families, by the first digit of the number, and 46 of them wait until every job with a smaller number has finished.
+Every experiment and every build step of the project is a script of `queue/jobs`; the runner (`scripts/queue_runner.sh`) takes them in the order of their numbers. There are 174 jobs in 4 families, by the first digit of the number, and 49 of them wait until every job with a smaller number has finished.
 
 | family | jobs | first | last |
 | --- | --- | --- | --- |
 | 0xx | 29 | `010_pop_2d6_15fold` | `097_why_no_gain` |
 | 1xx | 39 | `100_boltz_unguided_resume` | `199_basic_centre_experiment` |
-| 2xx | 85 | `200_permutation_control` | `299_requeue_final_chain` |
-| 9xx | 18 | `900_tests_and_audit` | `960_pre_submission_gate` |
+| 2xx | 86 | `200_permutation_control` | `299_requeue_final_chain` |
+| 9xx | 20 | `900_tests_and_audit` | `975_clean_clone_check` |
 
-## The chain that closes the project (18 jobs)
+## The chain that closes the project (20 jobs)
 
 The jobs numbered 900 and above rebuild every report, figure, notebook and submission file from the logs and then check them. The runner takes the jobs in the order of their numbers; an arrow joins two consecutive jobs when the later one also waits, explicitly, for every job before it.
 
@@ -33,6 +33,8 @@ flowchart LR
   j950["950_submissions_final_sync"]
   j955["955_final_audit"]
   j960["960_pre_submission_gate"]
+  j970["970_data_record_build"]
+  j975["975_clean_clone_check"]
   j906 --> j910
   j910 --> j921
   j921 --> j925
@@ -48,6 +50,8 @@ flowchart LR
   j947 --> j950
   j950 --> j955
   j955 --> j960
+  j960 --> j970
+  j970 --> j975
 ```
 
 ## Family 0xx (29 jobs)
@@ -128,7 +132,7 @@ flowchart LR
 | `198_mlp_addition` | The multitask network (cache complete) added to the default stack, both isoforms. | nothing |
 | `199_basic_centre_experiment` | The basic-centre block added to feature sets A and A+fps, validated alone and inside the stack (it matters most for CYP2D6), both isoforms. | nothing |
 
-## Family 2xx (85 jobs)
+## Family 2xx (86 jobs)
 
 | job | what it does | waits for |
 | --- | --- | --- |
@@ -216,9 +220,10 @@ flowchart LR
 | `285_label_shift` | An estimate of the positive rate of the scored set that reads no leaderboard (label shift, cross-fitted soft adjusted classify-and-count), compared with the rate of the final build by a rule fixed before the first run. | nothing |
 | `286_ligand_dynamics` | Ligand dynamics in the frozen pocket (the rule of docs/structure_track/structure_ligand_dynamics.md, committed before any number): the pools of the static pharmacophore gate, 20 ps of the ligand in its frozen pocket for every pose, the dynamic scores and the gate. | nothing |
 | `295_lint_cleanup` | Lint cleanup of the Python modules (decided 2026-10-17). | every job with a smaller number |
+| `296_release_unblock` | The release after the deadline: the held-back block is removed, one local commit holds what becomes visible, and the final chain 900 to 960 is queued again; it waits for the end of the challenge and for the version of the release. | every job with a smaller number |
 | `299_requeue_final_chain` | After the experiments of jobs 190 to 206: the final TDI build reads every gate verdict again (a group whose gate is MET joins the stack), then the chain that describes and packages the final state runs again, in order, on a quiet repository, and the pre-submission gate closes it. | every job with a smaller number |
 
-## Family 9xx (18 jobs)
+## Family 9xx (20 jobs)
 
 | job | what it does | waits for |
 | --- | --- | --- |
@@ -240,3 +245,5 @@ flowchart LR
 | `950_submissions_final_sync` | The very last job: submissions/ is rewritten from the final TDI candidates and the final structure zip, each checked with the portal's own rules (it never uploads anything). | every job with a smaller number |
 | `955_final_audit` | The second audit of the final sequence: the full audit with the test suite, twice, byte-for-byte, on the state that is submitted. | every job with a smaller number |
 | `960_pre_submission_gate` | The last gate: whether the queue, the audit, the submission files, the documents, the notebook and the film are finished, consistent and fresh. | every job with a smaller number |
+| `970_data_record_build` | The data record: the files that git does not hold, packed into the archives of data_record/record.json next to the repository, with their manifest and lists of paths committed locally; it follows the final chain and the release. | every job with a smaller number |
+| `975_clean_clone_check` | One run from a clean clone: the repository is cloned at its last commit, the data record is restored from its archives, the audit is run there and its checks are compared with those of the committed report. | every job with a smaller number |

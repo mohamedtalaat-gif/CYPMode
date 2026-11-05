@@ -1,6 +1,6 @@
 # The code
 
-The project has 172 modules in 7 packages, and the modules hold 588 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
+The project has 173 modules in 7 packages, and the modules hold 590 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
 
 ```mermaid
 flowchart LR
@@ -9,17 +9,17 @@ flowchart LR
   audit["audit (13 modules)"]
   data["data (2 modules)"]
   metrics["metrics (2 modules)"]
+  top_level["top level (2 modules)"]
   explorer["explorer (1 module)"]
-  top_level["top level (1 module)"]
   audit -->|23| challenge
   challenge -->|18| top_level
   validation -->|16| challenge
   audit -->|12| validation
   validation -->|11| top_level
   challenge -->|7| metrics
+  audit -->|4| top_level
   challenge -->|3| validation
   validation -->|3| metrics
-  audit -->|2| top_level
   data -->|2| metrics
   explorer -->|2| audit
   audit -->|1| explorer
@@ -208,12 +208,12 @@ Automated audit: one script that regenerates a full report from the current code
 | `cypmode/audit/core.py` | Shared pieces of the audit: check/section containers, deterministic Markdown helpers, shared context. | `challenge.label_confidence`, `challenge.leaderboard_prior`, `challenge.nested`, `challenge.nested_runners`, `challenge.validation_matching` | `audit.report`, `audit.sections`, `audit.sections_extra` |
 | `cypmode/audit/docs_state.py` | The generated blocks of README.md and CYPMode_Architecture_Specification.md: the final stack, the verdicts of the gates, the structure recipe and the table of what the work adds. | `audit.ledger_kinds`, `audit.method_report`, `audit.project_map`, `challenge.nested_runners` | `audit.method_report` |
 | `cypmode/audit/ledger_kinds.py` | The kind of idea each row of the gate ledger tested, shared by the exploration figure and by the exploration section of the method report. | `audit.method_report` | `audit.docs_state`, `audit.method_report`, `audit.project_map`, `explorer.data` |
-| `cypmode/audit/method_report.py` | Generate METHOD_REPORT.md and NEGATIVE_RESULTS.md from the repository's own logs, tables and audit. | `audit.docs_state`, `audit.ledger_kinds`, `audit.project_map`, `challenge.final_tdi_build`, `challenge.multiplicity`, `challenge.nested` and 8 more | `audit.docs_state`, `audit.ledger_kinds`, `audit.project_map`, `explorer.data` |
+| `cypmode/audit/method_report.py` | Generate METHOD_REPORT.md and NEGATIVE_RESULTS.md from the repository's own logs, tables and audit. | `audit.docs_state`, `audit.ledger_kinds`, `audit.project_map`, `challenge.final_tdi_build`, `challenge.multiplicity`, `challenge.nested` and 9 more | `audit.docs_state`, `audit.ledger_kinds`, `audit.project_map`, `explorer.data` |
 | `cypmode/audit/pre_submission.py` | The last gate before a submission: one command that says whether everything is finished, consistent and fresh. | `audit.artifacts`, `audit.checklist`, `challenge.submission`, `validation.official_posebusters`, `validation.pose_stereo` | none |
 | `cypmode/audit/project_map.py` | The project map: `python -m cypmode.audit.project_map` writes `docs/map`, `--check` compares the files with the code. | `audit.ledger_kinds`, `audit.method_report` | `audit.docs_state`, `audit.method_report` |
 | `cypmode/audit/prose_rules.py` | Wording rules for the text files of the project, checked by the audit (section 21). | none | `audit.sections_extra` |
 | `cypmode/audit/public_readiness.py` | Scan the repository for content that should not be published. | none | none |
-| `cypmode/audit/report.py` | Generate the audit report: `python -m cypmode.audit.report --out audit/AUDIT_REPORT.md [--skip-tests]`. | `audit.core`, `audit.sections` | none |
+| `cypmode/audit/report.py` | Generate the audit report: `python -m cypmode.audit.report --out audit/AUDIT_REPORT.md [--skip-tests]`. | `audit.core`, `audit.sections`, `data_record` | none |
 | `cypmode/audit/sections.py` | The audit sections. | `audit.core`, `audit.sections_extra`, `challenge.calibration_experiment`, `challenge.committee_uncertainty`, `challenge.feature_store`, `challenge.label_confidence` and 6 more | `audit.report` |
 | `cypmode/audit/sections_extra.py` | Audit sections added with the gate-driven build: gate ledger, checklist consistency, environment and seeds, feature-block leakage, enforced rules, and the final candidate files. | `audit.checklist`, `audit.core`, `audit.prose_rules`, `challenge.feature_store`, `challenge.multiplicity`, `challenge.physics_block` and 5 more | `audit.sections` |
 
@@ -235,6 +235,15 @@ no package docstring
 | `cypmode/metrics/amines.py` | Trialkylamine detector -- a second, independent structural-alert screen alongside cypmode.metrics.motifs, for the mechanism-based (time-dependent) inactivation route that screen was never built to catch. | none | `challenge.feature_store`, `challenge.qm_reactivity_features`, `challenge.tdi_ablation` |
 | `cypmode/metrics/motifs.py` | Structural-alert screen for CYP450 Type II (heme-coordinating) inhibition. | none | `challenge.feature_store`, `challenge.functional_groups`, `challenge.tdi_ablation`, `challenge.tier3_selection`, `data.octant_benchmark`, `data.panel` and 3 more |
 
+## top level (2 modules)
+
+no package docstring
+
+| module | what it does | imports | imported by |
+| --- | --- | --- | --- |
+| `cypmode/data_record.py` | The data record: the files that the repository does not hold (the caches, the nested-validation outputs and the raw outputs of the structure engines) packed into a few archives, and the way back. | none | `audit.method_report`, `audit.report` |
+| `cypmode/provenance.py` | Who made the data and the software, written next to everything the code generates. | none | `audit.method_report`, `audit.sections_extra`, `challenge.all_in_one`, `challenge.atomjepa_embeddings`, `challenge.aux_experiments`, `challenge.external_continuous` and 26 more |
+
 ## explorer (1 module)
 
 The data behind the interactive explorer of the finished results (`explorer/cypmode_explorer.py`).
@@ -242,11 +251,3 @@ The data behind the interactive explorer of the finished results (`explorer/cypm
 | module | what it does | imports | imported by |
 | --- | --- | --- | --- |
 | `cypmode/explorer/data.py` | A snapshot of the public results for the explorer: eight small tables and the out-of-fold files in `explorer/public` and a manifest with the SHA-256 of each. | `audit.ledger_kinds`, `audit.method_report`, `challenge.nested`, `provenance` | `audit.method_report` |
-
-## top level (1 module)
-
-no package docstring
-
-| module | what it does | imports | imported by |
-| --- | --- | --- | --- |
-| `cypmode/provenance.py` | Who made the data and the software, written next to everything the code generates. | none | `audit.method_report`, `audit.sections_extra`, `challenge.all_in_one`, `challenge.atomjepa_embeddings`, `challenge.aux_experiments`, `challenge.external_continuous` and 26 more |
