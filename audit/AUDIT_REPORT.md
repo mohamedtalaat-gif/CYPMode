@@ -132,7 +132,7 @@ Counts: PASS = 104, FAIL = 0, INFO = 6, SKIP = 0
 | rdkit | 2026.3.6 |
 | PyYAML | 6.0.3 |
 
-Git HEAD `a1c9d82`; working tree: 0 modified, 0 deleted, 0 untracked entries.
+Git HEAD `8d34fa7`; working tree: 0 modified, 0 deleted, 0 untracked entries.
 
 Input files (size in bytes, sha256 prefix):
 
