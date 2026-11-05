@@ -1,0 +1,41 @@
+{
+  "record": {
+    "doi": "",
+    "base_url": "",
+    "url_suffix": "?download=1"
+  },
+  "archives": [
+    {
+      "name": "tdi-track-outputs",
+      "archive": "tdi-track-outputs.tar.gz",
+      "bytes": 1152648809,
+      "sha256": "c369e2e7403c0d6ba1f7bd0edce0aacb567925dcd8d86fee1fcbbba00471e254",
+      "files": 32775,
+      "files_bytes": 1206090974
+    },
+    {
+      "name": "structure-track-boltz-2-outputs",
+      "archive": "structure-track-boltz-2-outputs.tar.gz",
+      "bytes": 3144719810,
+      "sha256": "19593ae421229a9b9492e122425cc504cc2959c972bb5af0e4da7127bbe9e443",
+      "files": 6334,
+      "files_bytes": 4829122151
+    },
+    {
+      "name": "structure-track-openfold3-outputs",
+      "archive": "structure-track-openfold3-outputs.tar.gz",
+      "bytes": 736212236,
+      "sha256": "f8701288e136eba7dd5550c143dada5a59ca4c975efb01525b8534f158bdb62c",
+      "files": 1065,
+      "files_bytes": 1661086928
+    },
+    {
+      "name": "structure-track-results",
+      "archive": "structure-track-results.tar.gz",
+      "bytes": 7472691,
+      "sha256": "73af63a6705195e4a5b07d03559e24f1a15f9cfcb0240949b4aeebda80541dca",
+      "files": 226,
+      "files_bytes": 18318604
+    }
+  ]
+}
