@@ -1,0 +1,14 @@
+commit at the run: eaecd57eab9202839abcf003f7b3477fd7ca3f3a
+QUESTION 0 (TDI): macro MCC of A 0.3722973, of B 0.3724781; board 0.3722973
+  as registered (within 0.01): ['A', 'B'], NOT MET
+  exact match of the mean and the standard deviation (within 1e-06): ['A'], GATE: MET
+the submitted file is candidate A
+QUESTION 1: B minus A
+     endpoint  mean_difference      low     high             verdict
+CYP2D6_is_TDI        -0.003514 -0.09752 0.086695 no difference shown
+CYP3A4_is_TDI         0.000000  0.00000 0.000000 no difference shown
+        macro        -0.001757 -0.04876 0.043348 no difference shown
+QUESTION 3
+     endpoint  scored  mcc_submitted  call_rate_submitted  mcc_ceiling  call_rate_at_ceiling
+CYP3A4_is_TDI     750       0.468081             0.402667     0.517742              0.350667
+CYP2D6_is_TDI     748       0.275568             0.058824     0.293043              0.068182

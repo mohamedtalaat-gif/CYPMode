@@ -1,0 +1,27 @@
+{
+ "board": 0.3722973127856141,
+ "macro_mcc": {
+  "A": 0.3722973127856141,
+  "B": 0.3724780773970101
+ },
+ "registered": {
+  "tolerance": 0.01,
+  "within_tolerance": [
+   "A",
+   "B"
+  ],
+  "passed": false
+ },
+ "exact": {
+  "tolerance": 1e-06,
+  "match": [
+   "A"
+  ],
+  "difference_of_the_mean": {
+   "A": 0.0,
+   "B": 0.00018076461139598932
+  }
+ },
+ "passed": true,
+ "submitted": "A"
+}
