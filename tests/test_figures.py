@@ -14,9 +14,10 @@ sys.path[:0] = [str(FIGURES), str(FIGURES.parent.parent)]
 from catalog import REGISTRY, Figure, caption_text, figure
 
 
-def needs(path: str):
-    """Skip a test whose input is written by the chain or held back until the challenge closes, so that a clean checkout skips it and the machine of the build runs it."""
-    return pytest.mark.skipif(not Path(path).exists(), reason=f"{path} is not in a clean checkout")
+def needs(*paths: str):
+    """Skip a test whose inputs are written by the chain, held back until the challenge closes or kept in the data record, so that a clean checkout skips it and the machine of the build runs it."""
+    absent = [path for path in paths if not Path(path).exists()]
+    return pytest.mark.skipif(bool(absent), reason=f"{', '.join(absent)} is not in a clean checkout")
 
 
 FINAL = "data/tdi_track/outputs/final/manifest.json"
@@ -113,7 +114,7 @@ def test_a_message_reaches_exactly_the_atoms_within_k_bonds():
     assert reached[0] == 1 and reached == sorted(reached) and reached[3] < mol.GetNumAtoms()
 
 
-@needs(FINAL)
+@needs(FINAL, "data/tdi_track/outputs/caches/feature_store.npz")
 def test_the_confusion_matrix_of_the_default_stack_has_the_mcc_of_the_final_build_closely():
     from gen.ml_more import confusion_counts, table_mcc
 

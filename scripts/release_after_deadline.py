@@ -11,8 +11,10 @@ bundle and loses its ``.git``, because git would otherwise record the folder as 
 """
 
 import argparse
+import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -65,6 +67,14 @@ def nested_repositories(root: Path, gitignore: str) -> list[Path]:
     return [root / folder for folder in held_back_directories(gitignore) if (root / folder / ".git").exists()]
 
 
+def remove_tree(folder: Path) -> None:
+    """Remove a folder with all its files. Git writes its objects read-only, and Windows refuses to delete such a file, so every file is made writable first."""
+    for path in folder.rglob("*"):
+        if path.is_file() and not path.is_symlink():
+            os.chmod(path, path.stat().st_mode | stat.S_IWRITE)
+    shutil.rmtree(folder)
+
+
 def detach_repository(folder: Path, backup_dir: Path, root: Path = ROOT) -> Path:
     """Write the history of the repository in `folder` to a bundle in `backup_dir`, verify the bundle, then remove the `.git` of the folder; its files stay. Returns the bundle. Nothing is removed unless the bundle verifies."""
     backup_dir.mkdir(parents=True, exist_ok=True)
@@ -74,7 +84,7 @@ def detach_repository(folder: Path, backup_dir: Path, root: Path = ROOT) -> Path
     subprocess.run(["git", "-C", str(folder), "bundle", "verify", str(staged)], check=True, capture_output=True)
     staged.replace(bundle)
     entry = folder / ".git"
-    shutil.rmtree(entry) if entry.is_dir() else entry.unlink()
+    remove_tree(entry) if entry.is_dir() else entry.unlink()
     return bundle
 
 

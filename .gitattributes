@@ -11,3 +11,6 @@ docs/map/explorer.html linguist-generated=true
 # Libraries that were copied in whole.
 notebooks/_vendor/** linguist-vendored=true
 docs/card/vendor/** linguist-vendored=true
+
+# Shell scripts keep the line ending of Unix on every system: bash refuses a loop or a block whose lines end with a carriage return.
+*.sh text eol=lf

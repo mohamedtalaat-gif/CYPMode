@@ -80,6 +80,7 @@ def test_select_pose_skips_a_thin_pose_that_the_model_ranked_first():
 def test_the_scorer_exact_call_passes_a_submitted_pose_with_all_22_checks(tmp_path):
     import pandas as pd
 
+    pytest.importorskip("posebusters")  # the structure environment has it; the environment of the unit tests may not
     from cypmode.validation.official_posebusters import check_pdb
 
     official = pd.read_csv("data/structure_track/inputs/structure_track_test_blinded.csv")
