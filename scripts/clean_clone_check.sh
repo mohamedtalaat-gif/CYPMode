@@ -9,7 +9,13 @@ ARCHIVES=${1:?usage: bash scripts/clean_clone_check.sh ARCHIVE_DIR [WORK_DIR]}
 WORK=${2:-"$(mktemp -d)/clone"}
 git clone --quiet "$ROOT" "$WORK"
 cd "$WORK"
-ln -s "$ROOT/.venv" .venv
+# The environments of this machine are linked into the clone (the audit checks them against the pin files) and hidden from git there, because the ignore file names them as folders and a link is not a folder.
+for env in "$ROOT"/.venv*; do
+  [ -e "$env" ] && ln -s "$env" "$(basename "$env")"
+done
+echo ".venv*" >> .git/info/exclude
+# The list of private words is not part of any checkout; the clone reads the one of this machine, so that the scan of the credit section runs there as it does here.
+[ -f "$ROOT/.git/info/local_patterns" ] && cp "$ROOT/.git/info/local_patterns" .git/info/local_patterns
 .venv/bin/python scripts/fetch_data.py fetch --source "$ARCHIVES"
 for track in tdi_track structure_track; do
   mkdir -p "data/$track/inputs"

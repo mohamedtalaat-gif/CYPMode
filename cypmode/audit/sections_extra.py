@@ -259,6 +259,9 @@ PATH_ALLOWANCES = (
     (re.compile(r"^data/cyp_challenge(?:/|$)"), "the early folder of the files that were taken out of the history on 2026-10-16"),
     (re.compile(r"^submissions/_superseded/"), "files that the sync of the submissions moved aside; held back"),
     (re.compile(r"^notebooks/_math_cache$"), "a cache that the build of the notebook creates"),
+    (re.compile(r"^docs/video/anime/clips(?:/|$)"), "the clips that the jobs 943 and 944 render for the film: half a gigabyte that git does not hold, while the film made from them is in the repository"),
+    (re.compile(r"^queue/state(?:/|$)"), "the state that the runner of the queue writes while it runs; it is not versioned"),
+    (re.compile(r"^third_party/boltz-main(?:/|$)"), "the source of Boltz-2, a program of other authors that the structure track runs and that the repository does not hold"),
 )
 PATH_TOKEN = re.compile(r"`([A-Za-z0-9_./\-]+/[A-Za-z0-9_.\-/]*)`")
 PATH_ROOTS = {"cypmode", "tests", "scripts", "docs", "data", "notebooks", "queue", "explorer", "environment", "audit", "submissions", ".github", "backend", "evaluation", "hf_space", "final", "validation"}

@@ -39,7 +39,8 @@
       "exclude": [
         "data/structure_track/outputs/out",
         "data/structure_track/outputs/openfold3",
-        "data/structure_track/outputs/cyp3a4/final/structure_track_results.before_affinity_retry.json"
+        "data/structure_track/outputs/cyp3a4/final/structure_track_results.before_affinity_retry.json",
+        "data/structure_track/outputs/cyp3a4/logs/pre_submission_gate.log"
       ],
       "description": "the tables, logs, submitted structures and other results of the structure track"
     }
@@ -69,6 +70,12 @@
         "data/structure_track/outputs/cyp3a4/final/structure_track_results.before_affinity_retry.json"
       ],
       "reason": "a snapshot of the structure results from before the retry of the affinity head: its error messages carry the paths of the machine that ran it, and the results after the retry are in the record"
+    },
+    {
+      "paths": [
+        "data/structure_track/outputs/cyp3a4/logs/pre_submission_gate.log"
+      ],
+      "reason": "the log of the last run of the pre-submission gate, which reads files that exist only on the machine that ran it and is rewritten by every run; the checks of the gate that matter for the record are in the audit report"
     }
   ],
   "terms_read": [
