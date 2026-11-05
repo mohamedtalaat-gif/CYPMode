@@ -623,14 +623,14 @@ what the licence asks are in [USE_AND_CITATION.md](USE_AND_CITATION.md). A ready
   author  = {Talaat, Muhammad},
   title   = {CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge},
   year    = {2026},
-  version = {0.3.0},
-  doi     = {10.5281/zenodo.23822983},
+  version = {0.3.1},
+  doi     = {10.5281/zenodo.23816450},
   url     = {https://github.com/mohamedtalaat-gif/CYPMode},
   license = {AGPL-3.0-or-later}
 }
 ```
 
-The DOI that stands for every version of the archive on Zenodo is [10.5281/zenodo.23816450](https://doi.org/10.5281/zenodo.23816450); release 0.3.0 has its own DOI, [10.5281/zenodo.23822983](https://doi.org/10.5281/zenodo.23822983), which the entry above uses.
+The DOI that stands for every version of the archive on Zenodo is [10.5281/zenodo.23816450](https://doi.org/10.5281/zenodo.23816450), which the entry above uses; release 0.3.1 has no DOI of its own, and release 0.3.0, the last one that is deposited on Zenodo, has [10.5281/zenodo.23822983](https://doi.org/10.5281/zenodo.23822983).
 
 Release 0.3.0 is also kept in the Software Heritage archive, under the identifier [swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd](https://archive.softwareheritage.org/swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd).
 
