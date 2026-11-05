@@ -14,6 +14,7 @@ pose that unguided Boltz-2 ranks first and every pose of the pool of each compou
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -27,7 +28,8 @@ from scipy.stats import spearmanr
 from cypmode.post_deadline.released import DEST, ROOT
 from cypmode.validation.constants import COORDINATION_DISTANCE_CUTOFF_A
 
-OST_PYTHON = Path.home() / "miniforge3/envs/ost/bin/python"
+OST_ENV = os.environ.get("CYPMODE_OST_ENV", "ost2111")  # the environment with the version of OpenStructure that the organisers name (2.11.1)
+OST_PYTHON = Path.home() / "miniforge3/envs" / OST_ENV / "bin/python"
 WORKER = Path(__file__).with_name("structure_worker.py")
 OUT = ROOT / "data/post_deadline/outputs"
 WORK = ROOT / "data/post_deadline/work"
@@ -140,6 +142,9 @@ def resolution(pdb_text: str) -> float | None:
     return float(match.group(1)) if match else None
 
 
+VERSIONS: dict[str, str] = {}
+
+
 def _run_worker(job: dict) -> dict:
     WORK.mkdir(parents=True, exist_ok=True)
     job_path, out_path = WORK / "job.json", WORK / "result.json"
@@ -147,7 +152,9 @@ def _run_worker(job: dict) -> dict:
     done = subprocess.run([str(OST_PYTHON), str(WORKER), str(job_path), str(out_path), str(DEST / "organisers")], capture_output=True, text=True, check=False)
     if done.returncode != 0:
         raise RuntimeError(f"the scoring worker failed:\n{done.stderr[-2000:]}")
-    return json.loads(out_path.read_text())
+    result = json.loads(out_path.read_text())
+    VERSIONS.update(result.get("versions", {}))
+    return result
 
 
 def _smiles() -> dict[str, str]:
@@ -224,17 +231,19 @@ def score_poses(items: pd.DataFrame, cache: Path) -> pd.DataFrame:
     return merged
 
 
-def run(out: Path = OUT) -> int:
+def run(out: Path = OUT, gate_only: bool = False) -> int:
     out.mkdir(parents=True, exist_ok=True)
     per_compound, failures = score_submission()
+    (out / "structure_versions.json").write_text(json.dumps(VERSIONS, indent=1) + "\n")
+    print(f"scored with {VERSIONS}")
     per_compound.to_csv(out / "structure_submitted_per_compound.csv", index=False)
     summary = board_value(per_compound)
     summary.to_csv(out / "structure_board_scores.csv")
     verdict = gate(summary)
     (out / "structure_gate.json").write_text(json.dumps({**verdict, "posebusters_failures": failures}, indent=1) + "\n")
     print(f"QUESTION 0 (structure): LDDT-PLI {verdict['scored']['LDDT-PLI']:.7f} (board {BOARD['LDDT-PLI']:.7f}, difference {verdict['difference']['LDDT-PLI']:+.2e}); BiSyRMSD {verdict['scored']['BiSyRMSD']:.7f} (board {BOARD['BiSyRMSD']:.7f}, difference {verdict['difference']['BiSyRMSD']:+.2e}); GATE: {'MET' if verdict['passed'] else 'NOT MET'}")
-    if not verdict["passed"]:
-        return 1
+    if not verdict["passed"] or gate_only:
+        return 0 if verdict["passed"] else 1
     scored = score_poses(pose_items(), out / "structure_poses.csv")
     by_arm = {arm: frame.set_index("ligand") for arm, frame in scored.groupby("arm")}
     rows = [
@@ -256,16 +265,20 @@ def run(out: Path = OUT) -> int:
     table = table.merge(by_arm["submitted"][["LDDT-PLI", "BiSyRMSD"]].rename(columns={"LDDT-PLI": "submitted_lddt_pli", "BiSyRMSD": "submitted_bisyrmsd"}), left_on="ligand", right_index=True)
     table.to_csv(out / "structure_question5c.csv", index=False)
     counts.to_csv(out / "structure_question5c_counts.csv")
-    rho = spearmanr(table["resolution"], table["submitted_lddt_pli"])
-    (out / "structure_resolution.json").write_text(json.dumps({"spearman_rho": float(rho.statistic), "p_value": float(rho.pvalue), "compounds": len(table)}, indent=1) + "\n")
+    known = table.dropna(subset=["resolution"])  # a released file without a resolution in its header is left out of the correlation only
+    rho = spearmanr(known["resolution"], known["submitted_lddt_pli"])
+    (out / "structure_resolution.json").write_text(json.dumps({"spearman_rho": float(rho.statistic), "p_value": float(rho.pvalue), "compounds": len(known), "without_resolution": len(table) - len(known)}, indent=1) + "\n")
     print("QUESTION 5c: two-by-two table of the calls\n" + counts.to_string())
-    print(f"resolution against the LDDT-PLI of the submitted pose: rho {rho.statistic:+.3f} (n = {len(table)})")
+    print(f"resolution against the LDDT-PLI of the submitted pose: rho {rho.statistic:+.3f} (n = {len(known)}; {len(table) - len(known)} files record no resolution)")
     return 0
 
 
 def main() -> int:
-    argparse.ArgumentParser(description=__doc__).parse_args()
-    return run()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", type=Path, default=OUT, help="the folder for the tables (default: data/post_deadline/outputs)")
+    parser.add_argument("--gate-only", action="store_true", help="score the submitted archive, report question 0 and stop")
+    args = parser.parse_args()
+    return run(args.out, args.gate_only)
 
 
 if __name__ == "__main__":

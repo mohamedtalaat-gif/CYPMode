@@ -1,0 +1,23 @@
+{
+ "board": {
+  "LDDT-PLI": 0.4133490815684199,
+  "BiSyRMSD": 3.969566656285525,
+  "LDDT-LP": 0.8261987148956736
+ },
+ "scored": {
+  "LDDT-PLI": 0.4127756305426359,
+  "BiSyRMSD": 3.972440913015604,
+  "LDDT-LP": 0.8250911073078209
+ },
+ "difference": {
+  "LDDT-PLI": -0.0005734510257839887,
+  "BiSyRMSD": 0.0028742567300792388,
+  "LDDT-LP": -0.001107607587852777
+ },
+ "tolerance": {
+  "LDDT-PLI": 0.005,
+  "BiSyRMSD": 0.1
+ },
+ "passed": true,
+ "posebusters_failures": {}
+}

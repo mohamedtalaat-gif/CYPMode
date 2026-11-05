@@ -22,20 +22,24 @@ def main(job_path: str, out_path: str, organisers_dir: str) -> int:
     from loguru import logger
 
     logger.remove()
+    import ost
+    import posebusters
+    import rdkit
     from evaluation import evaluate_predictions as evaluate
     from evaluation.config import POSEBUSTERS_MAX_FAILURES
 
+    versions = {"openstructure": ost.__version__, "posebusters": posebusters.__version__, "rdkit": rdkit.__version__}
     with open(job_path) as handle:
         job = json.load(handle)
     if job["mode"] == "submission":
         per_compound, failures = evaluate.score_structure_predictions(job["predicted"], job["reference"], max_pb_failures=POSEBUSTERS_MAX_FAILURES, smiles_map=job["smiles"])
-        result = {"per_compound": per_compound.to_dict(orient="records"), "pb_failures": failures}
+        result = {"per_compound": per_compound.to_dict(orient="records"), "pb_failures": failures, "versions": versions}
     else:
         rows = []
         for item in job["items"]:
             scores, failed = evaluate.score_single_structure(item["model"], item["reference"], max_pb_failures=POSEBUSTERS_MAX_FAILURES, smiles=item["smiles"])
             rows.append({"key": item["key"], **{k: (None if math.isnan(v) else v) for k, v in scores.items()}, "pb_failed": failed})
-        result = {"rows": rows}
+        result = {"rows": rows, "versions": versions}
     with open(out_path, "w") as handle:
         json.dump(result, handle, indent=1)
     return 0

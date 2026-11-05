@@ -1,0 +1,3 @@
+commit at the run: 2964fe5c204df98a1e2e489eb118213ae571d246 (plus the uncommitted environment switch)
+scored with {'openstructure': '2.11.1', 'posebusters': '0.6.5', 'rdkit': '2026.03.1'}
+QUESTION 0 (structure): LDDT-PLI 0.4127756 (board 0.4133491, difference -5.73e-04); BiSyRMSD 3.9724409 (board 3.9695667, difference +2.87e-03); GATE: MET

@@ -1,0 +1,20 @@
+commit at the run: 2964fe5c204df98a1e2e489eb118213ae571d246
+QUESTION 0 (structure): LDDT-PLI 0.4127756 (board 0.4133491, difference -5.73e-04); BiSyRMSD 3.9724409 (board 3.9695667, difference +2.87e-03); GATE: MET
+QUESTION 5a (BiSyRMSD is negated, so that a positive difference is better for both metrics)
+                    comparison   metric  mean_difference       low     high             verdict  first_higher  compounds
+      submitted minus baseline LDDT-PLI        -0.006944 -0.068629 0.053319 no difference shown            11         20
+      submitted minus baseline BiSyRMSD         0.534731 -0.567584 2.223450 no difference shown             9         20
+submitted minus unguided_first LDDT-PLI        -0.009662 -0.094025 0.082753 no difference shown             9         20
+submitted minus unguided_first BiSyRMSD        -0.177415 -0.991638 0.724354 no difference shown             9         20
+QUESTION 5b
+best             0.525658
+random           0.371555
+submitted        0.412756
+gap_submitted    0.112902
+gap_random       0.154103
+QUESTION 5c: two-by-two table of the calls
+submitted_coordinated  False  True 
+truth_coordinated                  
+False                      8      8
+True                       0      4
+resolution against the LDDT-PLI of the submitted pose: rho +nan (n = 20)
