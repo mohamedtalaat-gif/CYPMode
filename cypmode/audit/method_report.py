@@ -1139,7 +1139,22 @@ def build_method_report() -> str:
         "doi 10.1186/s12874-019-0840-7); predicting which primary-screen hits yield dose-response potencies (arXiv 2608.26538);",
         "censored regression labels in drug discovery (arXiv 2409.04313); label noise and soft labels (arXiv 2104.02872).",
         "",
+        *data_terms_lines(),
     ])
+
+
+def data_terms_lines() -> list[str]:
+    """The terms of the sources and models behind the data record, as the policy of the record states them (section 14)."""
+    from cypmode import data_record
+
+    rows = data_record.terms_read()
+    intro = (
+        "**Terms behind the data record.** The files that the repository does not hold are packed by `scripts/fetch_data.py` (policy in `data_record/record.json`) and are under CC BY 4.0. The licence of every source and model behind them was read where it is published, "
+        "and what could not be read is said so; a file is left out of the record when the terms of what produced it do not allow it to be redistributed under that licence."
+    )
+    lines = [intro, "", "| source | terms as read | where read | in the data record |", "| --- | --- | --- | --- |"]
+    lines += [f"| {r['source']} | {r['terms']} | {r['read']} | {r['in the record']} |" for r in rows]
+    return [*lines, ""]
 
 
 def outputs() -> dict[Path, str]:

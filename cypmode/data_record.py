@@ -4,12 +4,13 @@
 
 """The data record: the files that the repository does not hold (the caches, the nested-validation outputs and the raw outputs of the structure engines) packed into a few archives, and the way back.
 
-``data_record/record.json`` is the policy: it names the groups of files that form the record (a folder, minus some sub-folders) and the folders that are left out until the licence of what they hold has been read.
+``data_record/record.json`` is the policy: it names the groups of files that form the record (a folder, minus some sub-folders) and the folders and patterns that are left out, each with the reason.
 ``build`` packs every group into one ``.tar.gz`` and writes ``data_record/MANIFEST.json`` (the size and SHA-256 of each archive) and, per group, the sorted list of its paths. ``fetch`` copies or downloads the archives, refuses any whose
 SHA-256 differs, extracts them where the code looks for them and checks that every listed path is there. ``missing`` is the cheap presence check that the audit runs before it reads a file. A file counts as part of the record when git
 does not track it, whether the ``.gitignore`` hides it or not, so the same policy holds before and after the held-back files are committed.
 """
 
+import fnmatch
 import gzip
 import hashlib
 import json
@@ -36,7 +37,15 @@ def untracked_files(root: Path, paths: list[str]) -> list[str]:
 
 
 def _under(path: str, folders: list[str]) -> bool:
-    return any(path == f.rstrip("/") or path.startswith(f.rstrip("/") + "/") for f in folders)
+    """Whether the path is one of the folders (or inside one) or matches a pattern with wildcards, which may stand for a folder as well as for a file."""
+    for entry in folders:
+        entry = entry.rstrip("/")
+        if "*" in entry or "?" in entry or "[" in entry:
+            if fnmatch.fnmatchcase(path, entry) or fnmatch.fnmatchcase(path, entry + "/*"):
+                return True
+        elif path == entry or path.startswith(entry + "/"):
+            return True
+    return False
 
 
 def group_files(root: Path, group: dict) -> list[str]:
@@ -46,9 +55,10 @@ def group_files(root: Path, group: dict) -> list[str]:
 def left_out(root: Path, policy: dict | None = None) -> list[str]:
     """Untracked files under the folders of the policy that belong to no group and to no left-out folder: nothing is dropped without being named."""
     policy = policy or load_policy(root)
-    folders = sorted({p for g in policy["groups"] for p in g["paths"]} | {p for e in policy["not_in_the_record"] for p in e["paths"]})
+    folders = sorted({p for g in policy["groups"] for p in g["paths"]} | {p for e in policy["not_in_the_record"] for p in e["paths"] if not any(c in p for c in "*?[")})
     named = set().union(*(set(group_files(root, g)) for g in policy["groups"]))
-    return [f for f in untracked_files(root, folders) if f not in named and not _under(f, [p for e in policy["not_in_the_record"] for p in e["paths"]])]
+    left = [p for e in policy["not_in_the_record"] for p in e["paths"]]
+    return [f for f in untracked_files(root, folders) if f not in named and not _under(f, left)]
 
 
 def sha256_of(path: Path) -> str:
@@ -137,3 +147,8 @@ def fetch(root: Path, source: str | None = None, only: list[str] | None = None, 
             raise SystemExit(f"{entry['name']}: {len(absent)} listed path(s) are not there after extraction, e.g. {absent[0]}")
         done.append(entry["name"])
     return done
+
+
+def terms_read(root: Path = ROOT) -> list[dict]:
+    """What was read of the licence of each source and model behind the files of the record, as the policy states it."""
+    return load_policy(root).get("terms_read", [])

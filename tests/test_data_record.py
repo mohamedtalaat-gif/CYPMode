@@ -110,3 +110,31 @@ def test_the_audit_names_the_missing_inputs_and_how_to_get_them_before_it_reads_
     with pytest.raises(SystemExit) as stopped:
         report.main()
     assert "data/out/a.csv" in str(stopped.value) and "fetch_data.py fetch" in str(stopped.value)
+
+
+def test_a_pattern_of_the_policy_stands_for_a_folder_and_for_a_file(tmp_path):
+    root = _repository(tmp_path)
+    (root / "data/out/cache/abc/tabpfn_x").mkdir(parents=True)
+    (root / "data/out/cache/abc/tabpfn_x/f.npy").write_text("1")
+    (root / "data/out/cache/abc/keep.npy").write_text("2")
+    group = {"name": "g", "paths": ["data/out"], "exclude": ["data/out/raw", "data/out/cache/*/tabpfn*"]}
+    assert dr.group_files(root, group) == ["data/out/a.csv", "data/out/b/c.csv", "data/out/cache/abc/keep.npy"]
+    policy = {**POLICY, "groups": [group], "not_in_the_record": [{"paths": ["data/out/raw", "data/out/cache/*/tabpfn*"], "reason": "r"}, *POLICY["not_in_the_record"]]}
+    assert dr.left_out(root, policy) == []
+
+
+def test_every_source_that_the_record_leaves_out_is_left_out_by_a_pattern_and_says_why():
+    policy = dr.load_policy()
+    excluded = " ".join(p for g in policy["groups"] for p in g.get("exclude", [])).lower()
+    left = [r for r in policy["terms_read"] if r["in the record"] == "not in the record"]
+    assert left and all(r["source"].split()[0].lower().strip("(") in excluded for r in left)
+    assert all(r["terms"] and r["read"] and r["in the record"] for r in policy["terms_read"])
+    assert all(e["reason"] for e in policy["not_in_the_record"])
+
+
+def test_nothing_of_the_real_data_is_dropped_without_a_name():
+    import pytest as _pytest
+
+    if not dr.untracked_files(dr.ROOT, ["data/tdi_track/outputs"]):
+        _pytest.skip("the data of the project is not on this machine")
+    assert dr.left_out(dr.ROOT) == []

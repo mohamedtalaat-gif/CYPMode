@@ -1,33 +1,181 @@
 {
   "archive_suffix": ".tar.gz",
-  "record": {"doi": "", "base_url": "", "url_suffix": "?download=1"},
+  "record": {
+    "doi": "",
+    "base_url": "",
+    "url_suffix": "?download=1"
+  },
   "groups": [
     {
       "name": "tdi-track-outputs",
-      "paths": ["data/tdi_track/outputs"],
-      "description": "the feature store, the prediction caches, the nested cross-validation outputs and the final outputs of the TDI track"
+      "paths": [
+        "data/tdi_track/outputs"
+      ],
+      "description": "the feature store, the prediction caches, the nested cross-validation outputs and the final outputs of the TDI track",
+      "exclude": [
+        "data/tdi_track/outputs/nested*/*/cache/*/tabpfn*",
+        "data/tdi_track/outputs/nested*/*/cache/*/tabicl*",
+        "data/tdi_track/outputs/caches/chemberta_embedding_cache.csv"
+      ]
     },
     {
       "name": "structure-track-boltz-2-outputs",
-      "paths": ["data/structure_track/outputs/out"],
+      "paths": [
+        "data/structure_track/outputs/out"
+      ],
       "description": "the raw Boltz-2 outputs of the structure track"
     },
     {
       "name": "structure-track-openfold3-outputs",
-      "paths": ["data/structure_track/outputs/openfold3"],
+      "paths": [
+        "data/structure_track/outputs/openfold3"
+      ],
       "description": "the raw OpenFold3 outputs of the structure track"
     },
     {
       "name": "structure-track-results",
-      "paths": ["data/structure_track/outputs"],
-      "exclude": ["data/structure_track/outputs/out", "data/structure_track/outputs/openfold3"],
+      "paths": [
+        "data/structure_track/outputs"
+      ],
+      "exclude": [
+        "data/structure_track/outputs/out",
+        "data/structure_track/outputs/openfold3"
+      ],
       "description": "the tables, logs, submitted structures and other results of the structure track"
     }
   ],
   "not_in_the_record": [
     {
-      "paths": ["data/tdi_track/inputs", "data/structure_track/inputs"],
+      "paths": [
+        "data/tdi_track/inputs",
+        "data/structure_track/inputs"
+      ],
       "reason": "files downloaded from their own sources or supplied by the organisers; they are redistributed only after the licence of each has been read, and until then they are fetched by name and checksum from their source"
+    },
+    {
+      "paths": [
+        "data/tdi_track/outputs/nested*/*/cache/*/tabpfn*"
+      ],
+      "reason": "predictions of TabPFN: the weights that the pinned package downloads are under non-commercial licences of Prior Labs that limit their outputs to non-commercial use, and the record is CC BY 4.0, which allows commercial use; they are rebuilt by the job that made them after the licence has been accepted"
+    },
+    {
+      "paths": [
+        "data/tdi_track/outputs/nested*/*/cache/*/tabicl*"
+      ],
+      "reason": "predictions of TabICL: the code is BSD 3-Clause but the licence of the weights could not be read (the Hugging Face card refused the request), so their outputs are left out until it has been read"
+    },
+    {
+      "paths": [
+        "data/tdi_track/outputs/caches/chemberta_embedding_cache.csv"
+      ],
+      "reason": "embeddings of the ChemBERTa checkpoint seyonec/ChemBERTa-zinc-base-v1, whose card states no licence"
+    }
+  ],
+  "terms_read": [
+    {
+      "source": "OpenADMET CYP challenge files",
+      "kind": "data",
+      "terms": "Apache-2.0 (the card of the dataset openadmet/cyp-challenge-train-test)",
+      "read": "recorded in the method report front matter",
+      "in the record": "features, predictions and structures of its compounds"
+    },
+    {
+      "source": "TDC / Veith CYP panel",
+      "kind": "data",
+      "terms": "CC BY 4.0 (the TDC page)",
+      "read": "recorded in the method report front matter",
+      "in the record": "features of challenge compounds from a block trained on it"
+    },
+    {
+      "source": "Octant CYP inhibition blog release",
+      "kind": "data",
+      "terms": "CC BY 4.0",
+      "read": "recorded in README.md",
+      "in the record": "aggregate statistics only"
+    },
+    {
+      "source": "OpenADMET PXR challenge data",
+      "kind": "data",
+      "terms": "CC BY 4.0",
+      "read": "recorded in Appendix C",
+      "in the record": "aggregate statistics only"
+    },
+    {
+      "source": "ChEMBL",
+      "kind": "data",
+      "terms": "CC BY-SA 3.0: use and adaptation with attribution, adaptations under the same licence; nothing is said about features or predictions",
+      "read": "2026-11-05, https://chembl.gitbook.io/chembl-interface-documentation/about and the FAQ of the same site",
+      "in the record": "aggregate ablation tables only; no ChEMBL record"
+    },
+    {
+      "source": "BindingDB",
+      "kind": "data",
+      "terms": "CC BY 3.0 for the data that it curates, CC BY-SA 3.0 for the data drawn from ChEMBL, none stated for the other subsets",
+      "read": "2026-11-05, https://www.bindingdb.org/rwd/bind/info.jsp",
+      "in the record": "aggregate ablation tables only; no BindingDB record"
+    },
+    {
+      "source": "PubChem",
+      "kind": "data",
+      "terms": "the NCBI policy places no restriction on the use or distribution of its molecular data, and a depositor may still claim rights; the page of PubChem itself could not be read by a program (a challenge page) and has to be read in a browser",
+      "read": "2026-11-05, https://www.ncbi.nlm.nih.gov/home/about/policies/",
+      "in the record": "aggregate ablation tables only; no PubChem record"
+    },
+    {
+      "source": "CheMeleon",
+      "kind": "model",
+      "terms": "MIT for the code and for the weights (the rights field of the Zenodo record 10.5281/zenodo.15426600)",
+      "read": "2026-11-05, https://github.com/JacksonBurns/chemeleon",
+      "in the record": "embeddings of challenge compounds"
+    },
+    {
+      "source": "Monroe",
+      "kind": "model",
+      "terms": "MIT",
+      "read": "recorded in cypmode/challenge/monroe_embeddings.py",
+      "in the record": "embeddings of challenge compounds"
+    },
+    {
+      "source": "Atom-JEPA",
+      "kind": "model",
+      "terms": "MIT for the code, CC BY 4.0 for the weights (credit required)",
+      "read": "recorded in cypmode/challenge/atomjepa_embeddings.py",
+      "in the record": "embeddings of challenge compounds"
+    },
+    {
+      "source": "Boltz-2",
+      "kind": "model",
+      "terms": "MIT for the code and the weights",
+      "read": "2026-11-05, https://github.com/jwohlwend/boltz",
+      "in the record": "predicted structures"
+    },
+    {
+      "source": "OpenFold3",
+      "kind": "model",
+      "terms": "Apache-2.0 for the code and for the weights of the preview; no licence is stated on the pages read for the parameter file that the package uses by default",
+      "read": "2026-11-05, https://github.com/aqlaboratory/openfold-3 and https://huggingface.co/OpenFold/OpenFold3",
+      "in the record": "predicted structures"
+    },
+    {
+      "source": "TabPFN",
+      "kind": "model",
+      "terms": "Apache-2.0 for the code; non-commercial licences of Prior Labs for the weights of the versions 2.5 to 3.5, which limit the outputs to non-commercial use (the version 2 weights are under the permissive Prior Labs License 1.1)",
+      "read": "2026-11-05, https://github.com/PriorLabs/TabPFN and the LICENSE files of its models on huggingface.co/Prior-Labs",
+      "in the record": "not in the record"
+    },
+    {
+      "source": "TabICL",
+      "kind": "model",
+      "terms": "BSD 3-Clause for the code; the licence of the weights was not read",
+      "read": "2026-11-05, https://github.com/soda-inria/tabicl/blob/main/LICENSE",
+      "in the record": "not in the record"
+    },
+    {
+      "source": "ChemBERTa (seyonec/ChemBERTa-zinc-base-v1)",
+      "kind": "model",
+      "terms": "none stated on the card or among its files",
+      "read": "2026-11-05, https://huggingface.co/seyonec/ChemBERTa-zinc-base-v1",
+      "in the record": "not in the record"
     }
   ]
 }

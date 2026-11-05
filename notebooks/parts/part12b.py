@@ -279,6 +279,25 @@ project_map_modules = project_map.module_paths()
 project_map_jobs = len(project_map.job_facts())
 """
 
+COMPLETE_FACTS = r"""
+# The complete explorer of 12.7: its sections, its simulators and its tests, counted from its files.
+complete_parts = json.loads((ROOT / "explorer/full/data/sections.json").read_text())["parts"]
+complete_n_sections = sum(len(part["sections"]) for part in complete_parts)
+complete_in_app = set(re.findall(r'"(\\d+\\.\\d+)": sim_', (ROOT / "explorer/full/app.py").read_text()))
+complete_in_parts = {number for path in sorted((ROOT / "explorer/full/simulators").glob("part_*.py")) for number in re.findall(r'"(\\d+\\.\\d+)": ', path.read_text().split("SIMS = {")[-1])}
+complete_n_live = len(complete_in_app | complete_in_parts)
+complete_n_modules = len(list((ROOT / "explorer/full/simulators").glob("*.py"))) - 1
+complete_n_tests = sum(len(re.findall(r"^def test_", path.read_text(), re.M)) for path in (ROOT / "explorer/full/tests").glob("test_*.py"))
+complete_data_mb = round(sum(path.stat().st_size for path in (ROOT / "explorer/full/data").rglob("*") if path.is_file()) / 1e6, 1)
+print(complete_n_sections, complete_n_live, complete_n_modules, complete_n_tests, complete_data_mb)
+"""
+
+MD_12_7_C = """
+**The complete explorer.** The folder `explorer/full` holds the explorer as this notebook made interactive: one page for each of the {{=complete_n_sections}} sections, in their order and under their parts, and a simulator on each of them ({{=complete_n_live}} are registered, in {{=complete_n_modules}} small modules of its folder `simulators`). A simulator runs the functions of the project itself (the label rule, the corrected resampled t, the patterns of the Type II motif, the blocks of the feature store, the function that builds the input of a prediction) on what the reader gives it, a molecule, a pair of potencies, a noise level or the strength of an inhibitor, and shows what the section shows for the real data. Where a section is told by experiments that took hours, such as the stacks of Part IX or the co-folding of Part XI, its page replays the stored verdicts and the paired differences of those experiments, with a control for the level of the gate, and says that it is a replay. The pages of Part XI hold viewers of the pockets of the predicted structures and of the twenty submitted ones. The tables that the pages read ({{=complete_data_mb}} MB in all) are built by `explorer/full/build_data.py` from the files of the repository, and for the sources and the rules the cells of this notebook are run again there, so that a table cannot disagree with the section it serves. A page is made only when its section is opened, so that a control of one section never recomputes another.
+
+**What stands behind it.** The tests of the folder ({{=complete_n_tests}} of them) check that every section has exactly one simulator, that each simulator makes its page with its default controls, and that the numbers of the physics and of the statistics are the textbook values (the energies of the box and of the oscillator, the broken-symmetry energy of the two-site model, the exchange of the hydrogen density). A control audit sets each control to another value in turn and compares the page with the page before: a control that changes nothing does nothing, and the audit fails on it. The models that some pages fit are small ones, on a few hundred compounds, made to teach an idea; no model of the project is trained, no engine is run and no job is started from the explorer.
+"""
+
 CELLS = [
     md(MD_12_4),
     code(QUEUE_HELPERS),
@@ -299,4 +318,6 @@ CELLS = [
     code(EXPLORER_FACTS),
     md(MD_12_7),
     md(MD_12_7_B),
+    code(COMPLETE_FACTS),
+    md(MD_12_7_C),
 ]
