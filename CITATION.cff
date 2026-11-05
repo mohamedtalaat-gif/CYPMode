@@ -3,6 +3,10 @@ message: "If you use this software, please cite it as below."
 title: "CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge"
 version: 0.3.1
 doi: 10.5281/zenodo.23816450
+identifiers:
+  - type: swh
+    value: swh:1:rel:ce73fbb97fdf73ec02a331f18a92067fb34d9763
+    description: "Release 0.3.1 in the Software Heritage archive"
 abstract: "Reproducible predictors, with the evidence behind them, for two tasks of the OpenADMET CYP inhibition blind challenge: time-dependent inhibition of CYP3A4 and CYP2D6 (a label-process-aware, selection-corrected stack of label-free models, judged by nested cross-validation on the population the challenge scores and by pre-registered gates) and the CYP3A4 structure of 20 ligands (co-folding with an iron-nitrogen restraint, validity and margin rules, a registered relaxation). Every number in the reports is generated from the logs, the audit reproduces them byte for byte, and the experiments that failed their gates are part of the record."
 keywords:
   - cytochrome P450

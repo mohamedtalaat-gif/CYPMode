@@ -632,7 +632,7 @@ what the licence asks are in [USE_AND_CITATION.md](USE_AND_CITATION.md). A ready
 
 The DOI that stands for every version of the archive on Zenodo is [10.5281/zenodo.23816450](https://doi.org/10.5281/zenodo.23816450), which the entry above uses; release 0.3.1 has no DOI of its own, and release 0.3.0, the last one that is deposited on Zenodo, has [10.5281/zenodo.23822983](https://doi.org/10.5281/zenodo.23822983).
 
-Release 0.3.0 is also kept in the Software Heritage archive, under the identifier [swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd](https://archive.softwareheritage.org/swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd).
+Release 0.3.1 is also kept in the Software Heritage archive, under the identifier [swh:1:rel:ce73fbb97fdf73ec02a331f18a92067fb34d9763](https://archive.softwareheritage.org/swh:1:rel:ce73fbb97fdf73ec02a331f18a92067fb34d9763), and release 0.3.0 under the identifier [swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd](https://archive.softwareheritage.org/swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd).
 
 ## Contributing
 
