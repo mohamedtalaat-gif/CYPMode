@@ -6,7 +6,13 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 ROOT=$PWD
 ARCHIVES=${1:?usage: bash scripts/clean_clone_check.sh ARCHIVE_DIR [WORK_DIR]}
-WORK=${2:-"$(mktemp -d)/clone"}
+if [ -n "${2:-}" ]; then
+  WORK=$2
+  KEEP=1
+else
+  WORK="$(mktemp -d)/clone"
+  KEEP=0
+fi
 git clone --quiet "$ROOT" "$WORK"
 cd "$WORK"
 # The environments of this machine are linked into the clone (the audit checks them against the pin files) and hidden from git there, because the ignore file names them as folders and a link is not a folder.
@@ -48,3 +54,8 @@ for key in changed:
 sys.exit(1 if (only_committed or only_clone or changed) else 0)
 PY
 echo "the clean clone gives the same checks as the committed report"
+# A clone that was made in a temporary folder holds about 10 GB; it is removed when the checks agree and kept, for the diagnosis, when they differ.
+if [ "$KEEP" -eq 0 ]; then
+  cd "$ROOT"
+  rm -rf "$(dirname "$WORK")"
+fi
