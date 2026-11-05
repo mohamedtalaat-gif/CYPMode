@@ -66,7 +66,7 @@ def v_4_7(mo, v):
 
 
 def c_4_8(mo):
-    return {"smiles": mo.ui.text(value="CC(C)Cc1ccc(cc1)C(C)C(=O)O", label="SMILES", full_width=True), "atom": mo.ui.slider(start=0, stop=29, step=1, value=0, label="the atom whose state we follow", show_value=True), "steps": mo.ui.slider(start=0, stop=6, step=1, value=2, label="message-passing steps T", show_value=True)}
+    return {"smiles": mo.ui.text(value="CC(C)Cc1ccc(cc1)C(C)C(=O)O", label="SMILES", full_width=True), "atom": mo.ui.slider(start=0, stop=29, step=1, value=0, label="the atom whose state is followed", show_value=True), "steps": mo.ui.slider(start=0, stop=6, step=1, value=2, label="message-passing steps T", show_value=True)}
 
 
 def v_4_8(mo, v):

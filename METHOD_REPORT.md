@@ -34,10 +34,9 @@ Nested cross-validated estimates of the final stacks (AUC at the stricter and at
   Biotechnology 2009; the TDC page states CC BY 4.0), used only to train a label-free block on compounds that are not challenge compounds; and the rows that the public leaderboards publish (accuracy, precision and recall of each entry), from which one
   number about the hidden labels is recovered, the positive rate of the scored set (limitation L13). No label of any blinded compound and no probing submission is used.
 - **Components.** The programs, models and weights that the work uses and their licences are listed in section 14 and in Appendix C of the notebook.
-- **Identifier.** DOI 10.5281/zenodo.23816451. The text to cite is in `USE_AND_CITATION.md`.
-- **What is published after the challenge closes.** This release is complete: the code, the method, the reports and the checks are all in it, and the code regenerates every submitted file. The only files that are not in it are the ones that show a
-  result for a blinded compound: the submitted files, the predictions and the structures of the blinded compounds, and the figures, the film and the complete edition of the notebook that display them; the public edition of the notebook is in it. A full
-  release with those files is published after the challenge has closed (2026-11-03 23:59 UTC). The SHA-256 of each submitted file is in the section *What is submitted*, so that each file can be matched to this report when it is published.
+- **Identifier.** DOI 10.5281/zenodo.23822983. The text to cite is in `USE_AND_CITATION.md`.
+- **What is published.** This release is complete, the challenge having closed on 2026-11-03 at 23:59 UTC: the code, the method, the reports and the checks, and the files that show a result for a blinded compound (the submitted files, their predictions and structures, the figures, the film and the complete edition of the notebook).
+  The SHA-256 of each submitted file is in the section *What is submitted*, so that each file in the release can be matched to this report.
 - **Reproduction and checks.** `NEGATIVE_RESULTS.md` (every experiment that failed its gate), `audit/AUDIT_REPORT.md` (generated twice and compared byte for byte), `bash scripts/reproduce_tdi.sh`.
 
 ## Innovation summary
@@ -202,7 +201,7 @@ pre-registered gate is therefore reported as a pass of the registered rule and n
 ### 4.4 The selection-corrected design and its audit
 
 The label rule reproduces every training label (0 and 0 mismatches); the plans are rebuilt from the raw files and compared; every feature block is checked for leakage; the audit
-is generated twice and compared byte for byte; the test suite has 1044 passing tests; the summary of the audit is 90 PASS and 0 FAIL (notebook Part XII).
+is generated twice and compared byte for byte; the test suite has (pending: job 900) passing tests; the summary of the audit is 99 PASS and 5 FAIL (notebook Part XII).
 
 ### 4.5 What the project built, and what it borrowed
 
@@ -673,7 +672,7 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 - **L4** (uncertainty): Committee disagreement adds information beyond the decision margin for 1 components on CYP3A4 and 2 on CYP2D6 under the permutation test; where the count is zero the committee is reported as a measured negative result and does not alter predictions.
 - **L5** (calibration): The probabilities the final build publishes (isotonic-calibrated) have calibration slopes of 0.9252 (CYP3A4) and 0.8249 (CYP2D6) on held-out folds. The sigmoid of the regularised blend as it comes out is a ranking score and not a probability (slopes 1.1813 and -0.0164); it is never published as one. Probabilities are calibrated to the weighted validation population, not to the unknown scored test population.
 - **L6** (structure): On the diverse crystal benchmark the model's first-pick pose is 4.1929 A from the crystal pose on average; the structure score depends on a handful of compounds and is noisy. The benchmark ligands come from the PDB, which co-folding models may have seen, so absolute accuracy is optimistic.
-- **L7** (reproducibility): The test suite has 1044 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
+- **L7** (reproducibility): The test suite has 1070 passing and 2 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
 - **L8** (repository): The working tree has 0 modified and 0 untracked entries: results in this report come from uncommitted code until the work is committed.
 - **L9** (population): The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). The selection-aware file gains AUC when they are numerous and loses both AUC and MCC when there are none, by more than it gains at the call rate of the final build (the table of job 016 in section 7), and neither the label-shift estimate nor the public metrics of the baseline identify their share (538 grid points are consistent with the metrics). The live board scores half of the test set and cannot separate the two files (job 016), so the entry is the hits-only file and the selection-aware file is kept, with its SHA-256, to be scored on the test labels if the organisers publish them: that comparison measures the share and tests the hypothesis on data that no choice of this project touched.
 - **L10** (calibration): The CYP2D6 blend as it comes out is close to a constant (weighted expected calibration error 0.3592 against 0.0431 for CYP3A4): it ranks and transfers a call rate but is not a probability. The probabilities that are published pass through an isotonic step fitted on inner out-of-fold scores, which brings the error to 0.0054 (CYP2D6) and 0.0189 (CYP3A4); a monotone step restores calibration and adds no discrimination.
@@ -689,14 +688,14 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 Reproduce the TDI candidates with `bash scripts/reproduce_tdi.sh`; the audit with `bash scripts/run_audit.sh` (two runs, byte-identical);
 the environment is pinned in `environment/`. The structure recipe runs through `python -m cypmode.validation.final_recipe`.
 
-**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all 172 modules with what each does and what it imports, all 171 jobs of the queue with what each waits for and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` and a test fail when a page differs from the code. The README carries a short loop of the interactive map, `docs/map/explorer.html`, which draws all four views as one page that can be explored, with a search box and, for every module and job, what it is connected to and which section of the notebook names it, and it links to the page on the Pages site and to the file.
+**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all 173 modules with what each does and what it imports, all 174 jobs of the queue with what each waits for and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` and a test fail when a page differs from the code. The README carries a short loop of the interactive map, `docs/map/explorer.html`, which draws all four views as one page that can be explored, with a search box and, for every module and job, what it is connected to and which section of the notebook names it, and it links to the page on the Pages site and to the file.
 
 The flow of the data, from the inputs to the submission files:
 
 ```mermaid
 flowchart LR
   inputs["inputs<br/>data/*/inputs"] --> jobs
-  jobs["queue jobs<br/>158 of 171 write a log"] -->|"200 log names"| logs["logs"]
+  jobs["queue jobs<br/>161 of 174 write a log"] -->|"206 log names"| logs["logs"]
   logs -->|"every log, through gate_rows"| ledger["ledger<br/>cypmode/audit/ledger_kinds.py"]
   logs -->|"58 logs are read by name"| reports
   ledger --> reports["reports, figures, notebook<br/>built by the chain 900 to 960"]
@@ -712,17 +711,17 @@ flowchart LR
   audit["audit (13 modules)"]
   data["data (2 modules)"]
   metrics["metrics (2 modules)"]
+  top_level["top level (2 modules)"]
   explorer["explorer (1 module)"]
-  top_level["top level (1 module)"]
   audit -->|23| challenge
   challenge -->|18| top_level
   validation -->|16| challenge
   audit -->|12| validation
   validation -->|11| top_level
   challenge -->|7| metrics
+  audit -->|4| top_level
   challenge -->|3| validation
   validation -->|3| metrics
-  audit -->|2| top_level
   data -->|2| metrics
   explorer -->|2| audit
   audit -->|1| explorer
@@ -733,10 +732,32 @@ flowchart LR
 
 Sources credited (published, linked): OpenADMET CYP blind challenge and its official LightGBM baseline; the OpenADMET blog post
 "Cofolding? I hardly know her!" for the co-folding accuracy figure; repository `openadmet-cyp-structure`
-(https://github.com/xX-its-amit-Xx/openadmet-cyp-structure) for the idea of a donor-nitrogen restraint, an idea stated as a plan
-there, not a measured gain; Boltz-2; OpenFold3; PoseBusters; RDKit; LightGBM; scikit-learn; tblite / GFN2-xTB; CheMeleon (Zenodo
+(commit 8161934f8bc9596ae4b820199c42bcc35890c659, https://github.com/xX-its-amit-Xx/openadmet-cyp-structure/tree/8161934f8bc9596ae4b820199c42bcc35890c659,
+read on 2026-11-05) for the idea of a donor-nitrogen restraint: its README calls a forced Fe-donor contact "the lever" and its plan of 2026-09-10 puts it first
+among the steps; a later note of the same repository reports that forcing the contact on 87 ligands was "a null, slightly negative" and drops it,
+and the measurements of the project are in section 11.6 of the notebook; Boltz-2; OpenFold3; PoseBusters; RDKit; LightGBM; scikit-learn; tblite / GFN2-xTB; CheMeleon (Zenodo
 10.5281/zenodo.15426600); Nadeau and Bengio, "Inference for the generalization error" (2003) for the corrected resampled t.
 Nearest published work for the selection-aware model: selection bias in compound testing and its effect on QSAR (SAR and QSAR in
 Environmental Research 2019, PubMed 31547686); Heckman selection models (BMC Medical Research Methodology 2019,
 doi 10.1186/s12874-019-0840-7); predicting which primary-screen hits yield dose-response potencies (arXiv 2608.26538);
 censored regression labels in drug discovery (arXiv 2409.04313); label noise and soft labels (arXiv 2104.02872).
+
+**Terms behind the data record.** The files that the repository does not hold are packed by `scripts/fetch_data.py` (policy in `data_record/record.json`) and are under CC BY 4.0. The licence of every source and model behind them was read where it is published, and what could not be read is said so; a file is left out of the record when the terms of what produced it do not allow it to be redistributed under that licence.
+
+| source | terms as read | where read | in the data record |
+| --- | --- | --- | --- |
+| OpenADMET CYP challenge files | Apache-2.0 (the card of the dataset openadmet/cyp-challenge-train-test) | recorded in the method report front matter | features, predictions and structures of its compounds |
+| TDC / Veith CYP panel | CC BY 4.0 (the TDC page) | recorded in the method report front matter | features of challenge compounds from a block trained on it |
+| Octant CYP inhibition blog release | CC BY 4.0 | recorded in README.md | aggregate statistics only |
+| OpenADMET PXR challenge data | CC BY 4.0 | recorded in Appendix C | aggregate statistics only |
+| ChEMBL | CC BY-SA 3.0: use and adaptation with attribution, adaptations under the same licence; nothing is said about features or predictions | 2026-11-05, https://chembl.gitbook.io/chembl-interface-documentation/about and the FAQ of the same site | aggregate ablation tables only; no ChEMBL record |
+| BindingDB | CC BY 3.0 for the data that it curates, CC BY-SA 3.0 for the data drawn from ChEMBL, none stated for the other subsets | 2026-11-05, https://www.bindingdb.org/rwd/bind/info.jsp | aggregate ablation tables only; no BindingDB record |
+| PubChem | the NCBI policy places no restriction on the use or distribution of its molecular data, and a depositor may still claim rights; the page of PubChem itself could not be read by a program (a challenge page) and has to be read in a browser | 2026-11-05, https://www.ncbi.nlm.nih.gov/home/about/policies/ | aggregate ablation tables only; no PubChem record |
+| CheMeleon | MIT for the code and for the weights (the rights field of the Zenodo record 10.5281/zenodo.15426600) | 2026-11-05, https://github.com/JacksonBurns/chemeleon | embeddings of challenge compounds |
+| Monroe | MIT | recorded in cypmode/challenge/monroe_embeddings.py | embeddings of challenge compounds |
+| Atom-JEPA | MIT for the code, CC BY 4.0 for the weights (credit required) | recorded in cypmode/challenge/atomjepa_embeddings.py | embeddings of challenge compounds |
+| Boltz-2 | MIT for the code and the weights | 2026-11-05, https://github.com/jwohlwend/boltz | predicted structures |
+| OpenFold3 | Apache-2.0 for the code and for the weights of the preview; no licence is stated on the pages read for the parameter file that the package uses by default | 2026-11-05, https://github.com/aqlaboratory/openfold-3 and https://huggingface.co/OpenFold/OpenFold3 | predicted structures |
+| TabPFN | Apache-2.0 for the code; non-commercial licences of Prior Labs for the weights of the versions 2.5 to 3.5, which limit the outputs to non-commercial use (the version 2 weights are under the permissive Prior Labs License 1.1) | 2026-11-05, https://github.com/PriorLabs/TabPFN and the LICENSE files of its models on huggingface.co/Prior-Labs | not in the record |
+| TabICL | BSD 3-Clause for the code; the licence of the weights was not read | 2026-11-05, https://github.com/soda-inria/tabicl/blob/main/LICENSE | not in the record |
+| ChemBERTa (seyonec/ChemBERTa-zinc-base-v1) | none stated on the card or among its files | 2026-11-05, https://huggingface.co/seyonec/ChemBERTa-zinc-base-v1 | not in the record |

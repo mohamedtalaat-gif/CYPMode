@@ -822,7 +822,7 @@ def exploration_section() -> str:
 ANALYSES = re.compile(r"^(?:confidence_.*|context_.*|data_checker_.*|why_no_gain|population_sensitivity_.*|population_panel_.*|selection_decision_.*|test_nonhit_share_.*|block_holdout|label_shift|calibration|applicability_domain|conformer_bias|site_representation)\.log$")  # logs that hold a result and carry no gate line: each is named in section 4.7
 INFRASTRUCTURE = re.compile(
     r"^(?:.*_(?:extract|build)|build_.*|lint_.*|audit_run|pre_submission_gate|figures_build|video_render|voices_.*|blender_clips|pymol_clips|explorer_bundle|interactive_card_.*|card_build|submissions_sync|"
-    r"method_report|docs_state|public_readiness|bench_.*|cryoem_.*|pilot_.*|series_.*|restraint_expansion_.*|stereo_.*|affinity_.*|bioemu2_benchmark|openfold3_.*|official_posebusters_.*|ost_pools|"
+    r"method_report|docs_state|public_readiness|public_readiness_after_deadline|release_after_deadline|clean_clone_check|bench_.*|cryoem_.*|pilot_.*|series_.*|restraint_expansion_.*|stereo_.*|affinity_.*|bioemu2_benchmark|openfold3_.*|official_posebusters_.*|ost_pools|"
     r"ligand_dynamics_prepare|ligand_dynamics_simulate_.*|final_recipe|final_recipe_.*|relax_final|pose_awareness_single|official_extra_audit|exploratory_.*|tabicl.*|tabpfn.*|atomjepa_head.*|chemprop_CYP.*|mlp_aux_.*|neural_f10_.*|grid_f10_.*|final_tdi_build_f10|recompute_paired_summaries|chemeleon_speed)\.log$"
 )  # builds, extractions and runs that feed a gate or a document; the exploratory second looks are listed by name in section 4.7
 
@@ -1131,7 +1131,7 @@ def build_method_report() -> str:
         "\"Cofolding? I hardly know her!\" for the co-folding accuracy figure; repository `openadmet-cyp-structure`",
         "(commit 8161934f8bc9596ae4b820199c42bcc35890c659, https://github.com/xX-its-amit-Xx/openadmet-cyp-structure/tree/8161934f8bc9596ae4b820199c42bcc35890c659,",
         "read on 2026-11-05) for the idea of a donor-nitrogen restraint: its README calls a forced Fe-donor contact \"the lever\" and its plan of 2026-09-10 puts it first",
-        "among the steps; a later file of the same repository (`CLAUDE.md`) reports that forcing the contact on 87 ligands was \"a null, slightly negative\" and drops it,",
+        "among the steps; a later note of the same repository reports that forcing the contact on 87 ligands was \"a null, slightly negative\" and drops it,",
         "and the measurements of the project are in section 11.6 of the notebook; Boltz-2; OpenFold3; PoseBusters; RDKit; LightGBM; scikit-learn; tblite / GFN2-xTB; CheMeleon (Zenodo",
         "10.5281/zenodo.15426600); Nadeau and Bengio, \"Inference for the generalization error\" (2003) for the corrected resampled t.",
         "Nearest published work for the selection-aware model: selection bias in compound testing and its effect on QSAR (SAR and QSAR in",
