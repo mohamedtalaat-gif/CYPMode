@@ -247,6 +247,7 @@ The same list again, written into the text rather than generated when the page i
 | `285_label_shift` | An estimate of the positive rate of the scored set that reads no leaderboard (label shift, cross-fitted soft adjusted classify-and-count), compared with the rate of the final build by a rule fixed before the first run. |
 | `286_ligand_dynamics` | Ligand dynamics in the frozen pocket (the rule of docs/structure_track/structure_ligand_dynamics.md, committed before any number): the pools of the static pharmacophore gate, 20 ps of the ligand in its frozen pocket for every pose, the dynamic scores and the gate. |
 | `295_lint_cleanup` | Lint cleanup of the Python modules (decided 2026-10-17). It runs after every experiment job and before the final chain (job 299), so that the audit and the test suite of the chain run on the cleaned code. |
+| `296_release_unblock` | The release after the deadline: the held-back block is removed, one local commit holds what becomes visible, and the final chain 900 to 960 is queued again; it waits for the end of the challenge and for the version of the release. |
 | `299_requeue_final_chain` | After the experiments of jobs 190 to 206: the final TDI build reads every gate verdict again (a group whose gate is MET joins the stack), then the chain that describes and packages the final state runs again, in order, on a quiet repository, and the pre-submission gate closes it. |
 | `900_tests_and_audit` | The full audit with the test suite, twice, byte-for-byte; only when every earlier job is finished (a frozen state) and the notebook is written. |
 | `905_recompute_paired_summaries` | Older significance tables re-analysed from their saved per-fold scores with the paired corrected t (no refits). |
@@ -261,6 +262,8 @@ The same list again, written into the text rather than generated when the page i
 | `945_video_render` | The animation (docs/video/STORYBOARD.md): every frame drawn by code, encoded to mp4, plus a gif preview and a poster frame. |
 | `950_submissions_final_sync` | The very last job: submissions/ is rewritten from the final TDI candidates and the final structure zip, each checked with the portal's own rules (it never uploads anything). |
 | `960_pre_submission_gate` | The last gate: whether the queue, the audit, the submission files, the documents, the notebook and the film are finished, consistent and fresh. |
+| `970_data_record_build` | The data record: the files that git does not hold, packed into the archives of data_record/record.json next to the repository, with their manifest and lists of paths committed locally; it follows the final chain and the release. |
+| `975_clean_clone_check` | One run from a clean clone: the repository is cloned at its last commit, the data record is restored from its archives, the audit is run there and its checks are compared with those of the committed report. |
 """
 
 CELLS = [
