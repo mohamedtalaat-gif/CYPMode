@@ -1,10 +1,6 @@
 restored: tdi-track-outputs, structure-track-boltz-2-outputs, structure-track-openfold3-outputs, structure-track-results
-wrote /private/var/folders/s1/rbbh3x4n34n_2nvyzxwq1z8w0000gn/T/tmp.XM059aA5gA/clone/audit/AUDIT_REPORT.md (1649 lines); failed checks: 2
-wrote /private/var/folders/s1/rbbh3x4n34n_2nvyzxwq1z8w0000gn/T/tmp.XM059aA5gA/clone/audit/AUDIT_REPORT.run2.md (1649 lines); failed checks: 2
-REPRODUCIBLE: two runs are byte-identical (c9f3aeb188865259)
+wrote /private/var/folders/s1/rbbh3x4n34n_2nvyzxwq1z8w0000gn/T/tmp.MEQv7YVxD6/clone/audit/AUDIT_REPORT.md (1643 lines); failed checks: 0
+wrote /private/var/folders/s1/rbbh3x4n34n_2nvyzxwq1z8w0000gn/T/tmp.MEQv7YVxD6/clone/audit/AUDIT_REPORT.run2.md (1643 lines); failed checks: 0
+REPRODUCIBLE: two runs are byte-identical (7337dbea19f530dc)
 checks: 125 in the committed report, 125 in the report of the clean clone
-  only in the committed report: [Check summary] no occurrences of: words of the private list
-  only in the clean clone: [Check summary] words of the private list
-  status differs: [Check summary] .venv-ml matches requirements-lock-ml.txt: PASS -> INFO
-  status differs: [Check summary] every path that the text names exists or is allowed with a reason: PASS -> FAIL
-  status differs: [Check summary] working tree clean (everything committed): PASS -> FAIL
+the clean clone gives the same checks as the committed report
