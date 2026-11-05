@@ -86,11 +86,11 @@ The pages list every module with what it does and what it imports, and every job
 
 A 6.5-minute animated film explains the project from the question to the results, scene by scene, with nine characters who each stand for one part of the work (the assay, the data scout, the
 features, the stack, the statistician, the physics, the pretrained models, the structure track and the audit). Every number on screen is read from this repository's own files, every molecule and pocket is
-drawn from the coordinates, and the voices are synthesised (Kokoro-82M). Click the picture to play the film (H.264, `docs/video/cypmode_overview_web.mp4`); the storyboard and the build are in
+drawn from the coordinates, and the voices are synthesised (Kokoro-82M). Click the picture to play the film on the pages of the project (H.264, 31 MB; the file is `docs/video/cypmode_overview_web.mp4`, which the viewer of GitHub does not show because of its size); the storyboard and the build are in
 [`docs/video/STORYBOARD.md`](docs/video/STORYBOARD.md).
 
 <p align="center">
-  <a href="docs/video/cypmode_overview_web.mp4">
+  <a href="https://mohamedtalaat-gif.github.io/CYPMode/film/">
     <img src="docs/video/cypmode_overview_poster.png" alt="The poster of the CYPMode film: the title, the question, four numbers and the whole team" width="90%">
   </a>
 </p>

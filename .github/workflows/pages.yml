@@ -5,7 +5,7 @@ name: Pages
 "on":
   push:
     branches: [main]
-    paths: ["explorer/**", "docs/card/interactive/**", "docs/map/**", "docs/brand/**", "notebooks/public/**", "notebooks/cypmode_notebook.html", "environment/requirements-lock-marimo.txt", ".github/workflows/pages.yml"]
+    paths: ["explorer/**", "docs/card/interactive/**", "docs/map/**", "docs/brand/**", "docs/video/cypmode_overview_web.mp4", "docs/video/cypmode_overview_poster.png", "notebooks/public/**", "notebooks/cypmode_notebook.html", "environment/requirements-lock-marimo.txt", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -49,6 +49,27 @@ jobs:
         run: |
           if [ -f notebooks/cypmode_notebook.html ]; then mkdir -p site/notebook && cp notebooks/cypmode_notebook.html site/notebook/index.html;
           elif [ -f notebooks/public/cypmode_notebook_public.html ]; then mkdir -p site/notebook && cp notebooks/public/cypmode_notebook_public.html site/notebook/index.html; fi
+
+      - name: Add the film, which the viewer of GitHub does not play because of its size
+        run: |
+          if [ -f docs/video/cypmode_overview_web.mp4 ]; then
+            mkdir -p site/film
+            cp docs/video/cypmode_overview_web.mp4 site/film/
+            cp docs/video/cypmode_overview_poster.png site/film/poster.png
+            python - <<'PY'
+          import pathlib
+          pathlib.Path("site/film/index.html").write_text("""<!doctype html>
+          <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>CYPMode film</title>
+          <style>:root{color-scheme:light dark}body{margin:0;font:16px/1.5 system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;padding:16px;box-sizing:border-box}
+          main{width:min(100%,1100px)}video{width:100%;height:auto;border-radius:6px;background:#000}p{margin:12px 0 0}a{color:inherit}</style></head>
+          <body><main>
+          <video controls preload="metadata" poster="poster.png" src="cypmode_overview_web.mp4"></video>
+          <p>The film of the project, 6.5 minutes. <a href="cypmode_overview_web.mp4" download>Download the file</a> (H.264, 31 MB) or <a href="https://github.com/mohamedtalaat-gif/CYPMode">go back to the repository</a>.</p>
+          </main></body></html>
+          """, encoding="utf-8")
+          PY
+          fi
 
       - name: Put the icon of the project on every page and at the root of the site
         run: |
