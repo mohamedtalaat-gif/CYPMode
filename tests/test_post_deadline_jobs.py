@@ -3,7 +3,10 @@
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
 import subprocess
+import sys
 from pathlib import Path
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 JOBS = ("907_post_deadline_released", "908_post_deadline_tdi", "909_post_deadline_structure")
@@ -13,6 +16,7 @@ def _text(job: str) -> str:
     return (ROOT / f"queue/jobs/{job}.sh").read_text()
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="the queue and the launchers are bash scripts of Linux and macOS; Windows has run_cypmode.bat instead")
 def test_the_jobs_of_the_analysis_after_the_deadline_are_valid_shell_and_run_before_the_method_report_that_reads_their_tables():
     for job in JOBS:
         assert subprocess.run(["bash", "-n", str(ROOT / f"queue/jobs/{job}.sh")], capture_output=True, check=False).returncode == 0, job
