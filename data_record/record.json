@@ -14,7 +14,6 @@
       "description": "the feature store, the prediction caches, the nested cross-validation outputs and the final outputs of the TDI track",
       "exclude": [
         "data/tdi_track/outputs/nested*/*/cache/*/tabpfn*",
-        "data/tdi_track/outputs/nested*/*/cache/*/tabicl*",
         "data/tdi_track/outputs/caches/chemberta_embedding_cache.csv"
       ]
     },
@@ -58,12 +57,6 @@
         "data/tdi_track/outputs/nested*/*/cache/*/tabpfn*"
       ],
       "reason": "predictions of TabPFN: the weights that the pinned package downloads are under non-commercial licences of Prior Labs that limit their outputs to non-commercial use, and the record is CC BY 4.0, which allows commercial use; they are rebuilt by the job that made them after the licence has been accepted"
-    },
-    {
-      "paths": [
-        "data/tdi_track/outputs/nested*/*/cache/*/tabicl*"
-      ],
-      "reason": "predictions of TabICL: the code is BSD 3-Clause but the licence of the weights could not be read (the Hugging Face card refused the request), so their outputs are left out until it has been read"
     },
     {
       "paths": [
@@ -124,9 +117,9 @@
     {
       "source": "PubChem",
       "kind": "data",
-      "terms": "the NCBI policy places no restriction on the use or distribution of its molecular data, and a depositor may still claim rights; the page of PubChem itself could not be read by a program (a challenge page) and has to be read in a browser",
-      "read": "2026-11-05, https://www.ncbi.nlm.nih.gov/home/about/policies/",
-      "in the record": "aggregate ablation tables only; no PubChem record"
+      "terms": "the NCBI policy places no restriction on the use or distribution of its molecular data, and a depositor may still claim rights; the Data Submission Policy of PubChem states that the information it holds, contributed and generated, is made available to the public without cost and without restriction, that some contributed information may be copyrighted and that compliance with such restrictions is the duty of the user; the Citation Guidelines recommend citing PubChem (Kim et al., Nucleic Acids Res. 2025, 53, D1516) and the original source of the data",
+      "read": "2026-11-05, https://www.ncbi.nlm.nih.gov/home/about/policies/ and https://pubchem.ncbi.nlm.nih.gov/docs/data-submission-policy and https://pubchem.ncbi.nlm.nih.gov/docs/citation-guidelines",
+      "in the record": "predictions for the challenge compounds of regressors trained on the readings of PubChem AID 1851 and of the Tox21 assays (the caches ext_continuous and ext_tox21); no PubChem record and no reading of it; aggregate ablation tables"
     },
     {
       "source": "CheMeleon",
@@ -150,6 +143,13 @@
       "in the record": "embeddings of challenge compounds"
     },
     {
+      "source": "OpenADMET foundation models (chemprop-foundation-pretraining-weights, logd-chemprop_foundation_surrogate-v1, mpbp-chemprop_foundation_surrogate-v1)",
+      "kind": "model",
+      "terms": "Apache-2.0 (the license field of the Hugging Face card of each of the three)",
+      "read": "2026-11-05, https://huggingface.co/openadmet/chemprop-foundation-pretraining-weights, https://huggingface.co/openadmet/logd-chemprop_foundation_surrogate-v1 and https://huggingface.co/openadmet/mpbp-chemprop_foundation_surrogate-v1",
+      "in the record": "embeddings and surrogate predictions for the challenge compounds"
+    },
+    {
       "source": "Boltz-2",
       "kind": "model",
       "terms": "MIT for the code and the weights",
@@ -159,8 +159,8 @@
     {
       "source": "OpenFold3",
       "kind": "model",
-      "terms": "Apache-2.0 for the code and for the weights of the preview; no licence is stated on the pages read for the parameter file that the package uses by default",
-      "read": "2026-11-05, https://github.com/aqlaboratory/openfold-3 and https://huggingface.co/OpenFold/OpenFold3",
+      "terms": "Apache-2.0 for the code and for the weights of the preview; the parameter file that the package uses by default (of3-ob-2025-06-30-174k.pt, OpenBind-0) is described by its authors as fully open source under the Apache 2.0 licence, with its training data, code, weights and recipes; the statement is that of the announcement, and no licence file of the parameter file was read",
+      "read": "2026-11-05, https://github.com/aqlaboratory/openfold-3, https://huggingface.co/OpenFold/OpenFold3 and https://openbind.uk/news/blog-openbind-0-advancing-open-molecular-structure-prediction/",
       "in the record": "predicted structures"
     },
     {
@@ -173,15 +173,15 @@
     {
       "source": "TabICL",
       "kind": "model",
-      "terms": "BSD 3-Clause for the code; the licence of the weights was not read",
-      "read": "2026-11-05, https://github.com/soda-inria/tabicl/blob/main/LICENSE",
-      "in the record": "not in the record"
+      "terms": "BSD 3-Clause for the code (the LICENSE file) and for the weights (the card of jingang/TabICL, which the package downloads, states license: bsd-3-clause)",
+      "read": "2026-11-05, https://github.com/soda-inria/tabicl/blob/main/LICENSE and https://huggingface.co/jingang/TabICL",
+      "in the record": "predictions for the challenge compounds"
     },
     {
       "source": "ChemBERTa (seyonec/ChemBERTa-zinc-base-v1)",
       "kind": "model",
-      "terms": "none stated on the card or among its files",
-      "read": "2026-11-05, https://huggingface.co/seyonec/ChemBERTa-zinc-base-v1",
+      "terms": "none stated on the card or among its files; the repository that the card points to (seyonechithrananda/bert-loves-chemistry) carries the MIT licence, which is that of its code and is not stated for the weights",
+      "read": "2026-11-05, https://huggingface.co/seyonec/ChemBERTa-zinc-base-v1 and https://github.com/seyonechithrananda/bert-loves-chemistry",
       "in the record": "not in the record"
     }
   ]
