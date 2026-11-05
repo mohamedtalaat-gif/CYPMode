@@ -70,6 +70,10 @@ For each of the 20 compounds, LDDT-PLI and BiSyRMSD are computed for these poses
 
 With 20 compounds the error bar of the LDDT-PLI of one entry is about 0.04, so a difference below that size is reported as not shown, whatever its sign.
 
+## Deviations from the plan
+
+Question 0, time-dependent inhibition track (written after its result was computed). The tolerance of 0.01 around the board value did not separate the two candidates: candidate A gave a macro MCC of 0.3723 and candidate B 0.3725, both inside the tolerance, so the gate as registered was not met and the analysis stopped. The two files differ only in some CYP2D6 calls. The bootstrap of the organisers has a fixed seed, and the file that was submitted reproduces the board value to the last digits: candidate A reproduces the mean and the standard deviation of all five metrics of the macro entry with a difference below 1e-15, and candidate B differs by 1.8e-4 in the MCC and by up to 7.6e-4 in the other metrics. The identification of the submitted file was therefore changed to an exact match (1e-6) of the mean and of the standard deviation of the macro MCC. Nothing else in the plan was changed. The result of the registered rule is kept in the output of the run, and questions 1 to 3 were computed after the change.
+
 ## What follows from the results
 
 Nothing in this plan changes a submitted file or a number of an earlier release. If a result points at a cause that an experiment could address, the experiment is written as a new section of this plan, with its rule, before it runs. It is judged by cross-validation on the training data, as every experiment of the project is. The test labels are used for it at most once, at the end, and the result is reported as obtained after the deadline and with knowledge of the labels.

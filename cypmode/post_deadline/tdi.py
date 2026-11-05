@@ -37,7 +37,9 @@ FINAL = ROOT / "data/tdi_track/outputs/final"
 ENDPOINTS = [label_column(iso) for iso in ("CYP2D6", "CYP3A4")]
 
 BOARD_MACRO_MCC = 0.3722973127856141  # the final leaderboard of the organisers, mean over 1,000 bootstrap samples
-BOARD_TOLERANCE = 0.01  # the gate of question 0
+BOARD_MACRO_MCC_STD = 0.037791222850103  # and the standard deviation over the same samples
+BOARD_TOLERANCE = 0.01  # the gate of question 0 as registered
+EXACT_TOLERANCE = 1e-6  # the identification of the submitted file after the first run (see the deviations of the plan)
 SEED = 42
 RESAMPLES = 1000
 Z_CUTS = (1.0, 1.96)  # the two cut-offs of the confidence rule in the final build
@@ -65,11 +67,24 @@ def board_scores(predictions: pd.DataFrame, truth: pd.DataFrame) -> pd.DataFrame
     return evaluate.average_bootstrap_results_by_endpoint(with_macro)
 
 
-def gate(scores: dict[str, pd.DataFrame], board: float = BOARD_MACRO_MCC, tolerance: float = BOARD_TOLERANCE) -> dict:
-    """Question 0: the submitted file is the candidate whose macro MCC lies within the tolerance of the board value; the gate passes when exactly one does."""
+def gate(scores: dict[str, pd.DataFrame], board: float = BOARD_MACRO_MCC, tolerance: float = BOARD_TOLERANCE, board_std: float = BOARD_MACRO_MCC_STD) -> dict:
+    """Question 0: which candidate is the file that the board scored.
+
+    The rule that the plan registered takes the candidate whose macro MCC lies within the tolerance of the board value and passes when exactly one does. The fixed seed of the organisers' bootstrap means that
+    the submitted file reproduces the mean and the standard deviation of the board to the last digits, and a candidate that differs in a few calls does not. The identification that the analysis uses is the
+    exact match of both numbers; the registered rule is kept in the result next to it.
+    """
     macro = {name: float(frame.loc["MA", "MCC_mean"]) for name, frame in scores.items()}
     near = sorted(name for name, value in macro.items() if abs(value - board) <= tolerance)
-    return {"board": board, "tolerance": tolerance, "macro_mcc": macro, "within_tolerance": near, "passed": len(near) == 1, "submitted": near[0] if len(near) == 1 else None}
+    exact = sorted(name for name, frame in scores.items() if abs(frame.loc["MA", "MCC_mean"] - board) <= EXACT_TOLERANCE and abs(frame.loc["MA", "MCC_std"] - board_std) <= EXACT_TOLERANCE)
+    return {
+        "board": board,
+        "macro_mcc": macro,
+        "registered": {"tolerance": tolerance, "within_tolerance": near, "passed": len(near) == 1},
+        "exact": {"tolerance": EXACT_TOLERANCE, "match": exact, "difference_of_the_mean": {name: macro[name] - board for name in macro}},
+        "passed": len(exact) == 1,
+        "submitted": exact[0] if len(exact) == 1 else None,
+    }
 
 
 def _scored(truth: pd.DataFrame, endpoint: str) -> np.ndarray:
@@ -188,7 +203,10 @@ def run(out: Path = OUT) -> int:
         frame.to_csv(out / f"tdi_board_scores_{name}.csv")
     verdict = gate(scores)
     (out / "tdi_gate.json").write_text(json.dumps(verdict, indent=1) + "\n")
-    print(f"QUESTION 0 (TDI): macro MCC of A {verdict['macro_mcc']['A']:.4f}, of B {verdict['macro_mcc']['B']:.4f}; board {verdict['board']:.4f} +- {verdict['tolerance']}; within tolerance: {verdict['within_tolerance']}; GATE: {'MET' if verdict['passed'] else 'NOT MET'}")
+    registered = verdict["registered"]
+    print(f"QUESTION 0 (TDI): macro MCC of A {verdict['macro_mcc']['A']:.7f}, of B {verdict['macro_mcc']['B']:.7f}; board {verdict['board']:.7f}")
+    print(f"  as registered (within {registered['tolerance']}): {registered['within_tolerance']}, {'MET' if registered['passed'] else 'NOT MET'}")
+    print(f"  exact match of the mean and the standard deviation (within {verdict['exact']['tolerance']}): {verdict['exact']['match']}, GATE: {'MET' if verdict['passed'] else 'NOT MET'}")
     if not verdict["passed"]:
         return 1
     print(f"the submitted file is candidate {verdict['submitted']}")

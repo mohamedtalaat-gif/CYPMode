@@ -31,14 +31,17 @@ def _calls(truth, flips=()):
     return frame
 
 
-def test_the_gate_names_the_candidate_that_lies_within_the_tolerance_and_fails_when_none_or_both_do():
-    def summary(value):
-        return pd.DataFrame({"MCC_mean": [value]}, index=pd.Index(["MA"], name="Endpoint"))
+def test_the_gate_identifies_the_candidate_that_matches_the_board_exactly_and_keeps_the_registered_rule_beside_it():
+    def summary(mean, std):
+        return pd.DataFrame({"MCC_mean": [mean], "MCC_std": [std]}, index=pd.Index(["MA"], name="Endpoint"))
 
-    one = tdi.gate({"A": summary(0.372), "B": summary(0.33)}, board=0.3723, tolerance=0.01)
-    assert one["passed"] and one["submitted"] == "A"
-    assert not tdi.gate({"A": summary(0.372), "B": summary(0.375)}, board=0.3723, tolerance=0.01)["passed"]  # both are near: the file cannot be told
-    assert not tdi.gate({"A": summary(0.30), "B": summary(0.33)}, board=0.3723, tolerance=0.01)["passed"]
+    board, board_std = 0.3723, 0.0378
+    near = tdi.gate({"A": summary(board, board_std), "B": summary(board + 0.0002, board_std + 0.00001)}, board=board, board_std=board_std)
+    assert near["passed"] and near["submitted"] == "A" and not near["registered"]["passed"] and near["registered"]["within_tolerance"] == ["A", "B"]  # the registered tolerance cannot tell them apart
+    far = tdi.gate({"A": summary(board, board_std), "B": summary(board - 0.05, board_std)}, board=board, board_std=board_std)
+    assert far["passed"] and far["submitted"] == "A" and far["registered"]["passed"]
+    assert not tdi.gate({"A": summary(board + 0.001, board_std), "B": summary(board - 0.001, board_std)}, board=board, board_std=board_std)["passed"]  # neither matches
+    assert not tdi.gate({"A": summary(board, board_std), "B": summary(board, board_std)}, board=board, board_std=board_std)["passed"]  # identical files cannot be told apart
 
 
 def test_two_identical_files_show_no_difference_and_a_better_file_is_named():
