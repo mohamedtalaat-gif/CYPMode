@@ -8,10 +8,10 @@
     {
       "name": "tdi-track-outputs",
       "archive": "tdi-track-outputs.tar.gz",
-      "bytes": 1151377821,
-      "sha256": "181f9dab1b2ac4455ddd9835fe3c5a3c18f01900df57e5dd5cd443e7c0578fee",
-      "files": 32104,
-      "files_bytes": 1203823026
+      "bytes": 1152078625,
+      "sha256": "febf1de173d2ead8d81e72f2cf9f086c96c9ffb122a1c168d86d298c78e741fd",
+      "files": 32584,
+      "files_bytes": 1204637250
     },
     {
       "name": "structure-track-boltz-2-outputs",
@@ -32,10 +32,10 @@
     {
       "name": "structure-track-results",
       "archive": "structure-track-results.tar.gz",
-      "bytes": 28293,
-      "sha256": "e074ed9e502714ea929bd9f8c1b586e71226efb5dea7d95ad62ecf4e2ec523c4",
-      "files": 59,
-      "files_bytes": 135085
+      "bytes": 26807,
+      "sha256": "6522f784a08d06f16305fcf4771c2537af21fec84034f7ad7c61d92bffe2cabb",
+      "files": 58,
+      "files_bytes": 129564
     }
   ]
 }
