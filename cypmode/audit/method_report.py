@@ -1164,7 +1164,7 @@ def data_terms_lines() -> list[str]:
     rows = data_record.terms_read()
     intro = (
         "**Terms behind the data record.** The files that the repository does not hold are packed by `scripts/fetch_data.py` (policy in `data_record/record.json`) and are under CC BY 4.0. The licence of every source and model behind them was read where it is published, "
-        "and what could not be read is said so; a file is left out of the record when the terms of what produced it do not allow it to be redistributed under that licence."
+        "and a statement that rests on the word of its authors and not on a licence file is said so; a file is left out of the record when the terms of what produced it do not allow it to be redistributed under that licence, or when none are stated."
     )
     lines = [intro, "", "| source | terms as read | where read | in the data record |", "| --- | --- | --- | --- |"]
     lines += [f"| {r['source']} | {r['terms']} | {r['read']} | {r['in the record']} |" for r in rows]
