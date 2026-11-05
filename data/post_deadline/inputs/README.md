@@ -1,0 +1,3 @@
+# Files released by the organisers after the deadline
+
+`python -m cypmode.post_deadline.released` fetches the files that the analysis of `docs/post_deadline/PLAN.md` reads into this folder: the unblinded TDI test file and the 20 released structures of the dataset of the challenge, the evaluation code of the tutorial repository of the organisers at a fixed commit, and the Boltz-2 baseline structures of the same repository. Their sources, sizes and SHA-256 values are in `data/post_deadline/released_manifest.json`, and `python -m cypmode.post_deadline.released --verify` checks the files against it. The files themselves are not tracked.
