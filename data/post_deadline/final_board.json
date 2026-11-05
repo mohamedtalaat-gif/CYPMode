@@ -1,0 +1,71 @@
+{
+ "source": "https://openadmet.ghost.io/take-me-heme-binding-modes-wrapping-up-the-cyp-inhibition-challenge/",
+ "tracks": {
+  "classification": {
+   "rank": 14,
+   "entries": 62,
+   "tier": 2,
+   "tiers": 5,
+   "first_tier_entries": 3,
+   "values": {
+    "MA-MCC": {
+     "mean": 0.3722973127856141,
+     "std": 0.037791222850103
+    },
+    "MA-Accuracy": {
+     "mean": 0.8341512959001783,
+     "std": 0.0094582177369871
+    },
+    "MA-Precision": {
+     "mean": 0.4463519918102455,
+     "std": 0.0381808404765167
+    },
+    "MA-Recall": {
+     "mean": 0.5336284344211732,
+     "std": 0.0390183883614244
+    },
+    "MA-F1 Score": {
+     "mean": 0.4829438307168637,
+     "std": 0.0350024385612188
+    }
+   },
+   "open_code": "Yes",
+   "first": {
+    "MA-MCC": 0.4979987129846435
+   },
+   "last_of_first_tier": {
+    "MA-MCC": 0.4197759803495077
+   },
+   "file_sha256": "d646bdff4a8f6d2e466f4b08ea1381e383de6e07e3cbabe19908566aa5710bc3"
+  },
+  "structure": {
+   "rank": 15,
+   "entries": 38,
+   "tier": 2,
+   "tiers": 4,
+   "first_tier_entries": 13,
+   "values": {
+    "LDDT-PLI": {
+     "mean": 0.4133490815684199,
+     "std": 0.030095607793652
+    },
+    "BiSyRMSD": {
+     "mean": 3.969566656285525,
+     "std": 0.2764430101454781
+    },
+    "LDDT-LP": {
+     "mean": 0.8261987148956736,
+     "std": 0.0136829355493163
+    }
+   },
+   "open_code": "Yes",
+   "first": {
+    "LDDT-PLI": 0.4814189480096101
+   },
+   "last_of_first_tier": {
+    "LDDT-PLI": 0.4147857896387577
+   },
+   "file_sha256": "260064e59272639c7d3faeb34b2101df0db7a5db8dd0f8974691a5703bbe0ab2"
+  }
+ }
+}

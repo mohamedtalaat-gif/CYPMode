@@ -1,15 +1,15 @@
 # The queue
 
-Every experiment and every build step of the project is a script of `queue/jobs`; the runner (`scripts/queue_runner.sh`) takes them in the order of their numbers. There are 174 jobs in 4 families, by the first digit of the number, and 49 of them wait until every job with a smaller number has finished.
+Every experiment and every build step of the project is a script of `queue/jobs`; the runner (`scripts/queue_runner.sh`) takes them in the order of their numbers. There are 177 jobs in 4 families, by the first digit of the number, and 52 of them wait until every job with a smaller number has finished.
 
 | family | jobs | first | last |
 | --- | --- | --- | --- |
 | 0xx | 29 | `010_pop_2d6_15fold` | `097_why_no_gain` |
 | 1xx | 39 | `100_boltz_unguided_resume` | `199_basic_centre_experiment` |
 | 2xx | 86 | `200_permutation_control` | `299_requeue_final_chain` |
-| 9xx | 20 | `900_tests_and_audit` | `975_clean_clone_check` |
+| 9xx | 23 | `900_tests_and_audit` | `975_clean_clone_check` |
 
-## The chain that closes the project (20 jobs)
+## The chain that closes the project (23 jobs)
 
 The jobs numbered 900 and above rebuild every report, figure, notebook and submission file from the logs and then check them. The runner takes the jobs in the order of their numbers; an arrow joins two consecutive jobs when the later one also waits, explicitly, for every job before it.
 
@@ -18,6 +18,9 @@ flowchart LR
   j900["900_tests_and_audit"]
   j905["905_recompute_paired_summaries"]
   j906["906_explorer_bundle"]
+  j907["907_post_deadline_released"]
+  j908["908_post_deadline_tdi"]
+  j909["909_post_deadline_structure"]
   j910["910_method_report"]
   j921["921_docs_state"]
   j925["925_official_pharmacophore"]
@@ -35,7 +38,10 @@ flowchart LR
   j960["960_pre_submission_gate"]
   j970["970_data_record_build"]
   j975["975_clean_clone_check"]
-  j906 --> j910
+  j906 --> j907
+  j907 --> j908
+  j908 --> j909
+  j909 --> j910
   j910 --> j921
   j921 --> j925
   j925 --> j930
@@ -223,13 +229,16 @@ flowchart LR
 | `296_release_unblock` | The release after the deadline: the held-back block is removed, the full card is drawn, one local commit holds what becomes visible, and the final chain 900 to 975 is queued again; it waits for the end of the challenge and for the version of the release. | every job with a smaller number |
 | `299_requeue_final_chain` | After the experiments of jobs 190 to 206: the final TDI build reads every gate verdict again (a group whose gate is MET joins the stack), then the chain that describes and packages the final state runs again, in order, on a quiet repository, and the pre-submission gate closes it. | every job with a smaller number |
 
-## Family 9xx (20 jobs)
+## Family 9xx (23 jobs)
 
 | job | what it does | waits for |
 | --- | --- | --- |
 | `900_tests_and_audit` | The first audit of the final sequence: the full audit with the test suite, twice, byte-for-byte; only when every earlier job is finished (a frozen state), the notebook is written and the working tree is committed. | every job with a smaller number |
 | `905_recompute_paired_summaries` | Older significance tables re-analysed from their saved per-fold scores with the paired corrected t (no refits). | nothing |
 | `906_explorer_bundle` | The data bundle of the interactive explorer (explorer/public): the ledger, the paired comparisons, the selection rules, the benchmark poses, the log excerpts and the out-of-fold predictions of the training compounds, rebuilt from the final logs and caches after the last verdict; the build fails when a table names a blinded compound, mentions a held-back path or has the size of a blinded set. | nothing |
+| `907_post_deadline_released` | The files that the organisers released after the deadline (the unblinded TDI test file, the 20 structures, the evaluation code and the Boltz-2 baseline of the tutorial repository at a fixed commit), fetched by name and checked against the SHA-256 values of data/post_deadline/released_manifest.json; the analysis of docs/post_deadline/PLAN.md reads them. | every job with a smaller number |
+| `908_post_deadline_tdi` | The questions of the plan of the analysis after the deadline (docs/post_deadline/PLAN.md) about the TDI track: the gate (the scoring of the organisers reproduces the board and names the submitted file), the two candidates, the label rule and the scored set, and the threshold. | every job with a smaller number |
+| `909_post_deadline_structure` | The questions of the plan of the analysis after the deadline (docs/post_deadline/PLAN.md) about the structure track: the gate (the scoring of the organisers, run with OpenStructure 2.11.1, reproduces the board), the submitted poses against the published Boltz-2 baseline and the unguided pose, the pool of each compound, and the heme iron. | every job with a smaller number |
 | `910_method_report` | Method report and negative-results ledger regenerated from the final logs and audit (job 900 runs first). | every job with a smaller number |
 | `921_docs_state` | The generated blocks of README.md and CYPMode_Architecture_Specification.md (the final stack per isoform, the verdicts of the gates, the structure recipe): rewritten from the final build, the logs of the gates and the recipe, then checked against their sources; the pages of docs/map are written and checked with them. | every job with a smaller number |
 | `925_official_pharmacophore` | The expected pharmacophore of the 20 official ligands (declared 2026-10-23 before any code), from the final submitted poses and the pools of their valid poses. | every job with a smaller number |

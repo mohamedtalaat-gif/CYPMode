@@ -12,7 +12,7 @@ import importlib
 
 from notebooks.parts.glossary import GLOSSARY
 
-MODULES = ["front", "part00", "part01", "part01b", "part02", "part02b", "part03", "part03b", "part04", "part04b", "part04c", "part05", "part05b", "part05c", "part05d", "part06", "part06b", "part06c", "part07", "part07b", "part07c", "part07d", "part07e", "part08", "part08b", "part09", "part09b", "part09c", "part09d", "part09e", "part10", "part10b", "part10c", "part11", "part11b", "part11c", "part11d", "part11e", "part11f", "part11g", "part11h", "part11i", "part11j", "part11k", "part12", "part12b", "part13", "appendix_a", "appendix_b", "appendix_c"]  # the parts written so far, in reading order; the plan in notebooks/PLAN.md lists the rest
+MODULES = ["front", "part00", "part01", "part01b", "part02", "part02b", "part03", "part03b", "part04", "part04b", "part04c", "part05", "part05b", "part05c", "part05d", "part06", "part06b", "part06c", "part07", "part07b", "part07c", "part07d", "part07e", "part08", "part08b", "part09", "part09b", "part09c", "part09d", "part09e", "part10", "part10b", "part10c", "part11", "part11b", "part11c", "part11d", "part11e", "part11f", "part11g", "part11h", "part11i", "part11j", "part11k", "part12", "part12b", "part13", "part13b", "appendix_a", "appendix_b", "appendix_c"]  # the parts written so far, in reading order; the plan in notebooks/PLAN.md lists the rest
 
 
 def collect() -> list[dict]:

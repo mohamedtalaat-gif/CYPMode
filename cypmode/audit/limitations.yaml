@@ -3,8 +3,9 @@
   area: evaluation
   uses: [CYP3A4_stack_auc_zNone, CYP3A4_stack_auc_z1_96, CYP2D6_stack_auc_zNone, CYP2D6_stack_auc_z1_96]
   text: >-
-    All performance figures are cross-validated estimates on the training data. No figure here uses the
-    hidden test labels. The stack AUC changes with the scored population: CYP3A4 {CYP3A4_stack_auc_zNone} on all rows
+    All performance figures of sections 1 to 14 are cross-validated estimates on the training data and none of them uses
+    the test labels; the scores of the submitted files on the labels that the organisers released afterwards are in section 15
+    and were used to choose nothing. The stack AUC changes with the scored population: CYP3A4 {CYP3A4_stack_auc_zNone} on all rows
     vs {CYP3A4_stack_auc_z1_96} on confident rows, CYP2D6 {CYP2D6_stack_auc_zNone} vs {CYP2D6_stack_auc_z1_96}.
     The leaderboard score of an entry is a separate measurement on the hidden labels, and the step from these estimates to it depends on the model (L2).
 - id: L2
@@ -19,8 +20,9 @@
   uses: [CYP3A4_label_rule_mismatches, CYP2D6_label_rule_mismatches]
   text: >-
     The label rule was recovered from the data (mismatches: CYP3A4 {CYP3A4_label_rule_mismatches}, CYP2D6
-    {CYP2D6_label_rule_mismatches}). The rule that decides which compounds count as confidently labeled in the
-    official score is not published; the confidence cut-off used here is a proxy and every analysis is repeated at two cut-offs.
+    {CYP2D6_label_rule_mismatches}). The released test labels showed that the organisers score nearly the whole test set (section 15,
+    question 2b), so the confidence cut-off used for the cross-validated estimates scores fewer compounds than the official score does;
+    every analysis was repeated at two cut-offs, and the estimates are those of a problem that is easier than the one that is scored.
 - id: L4
   area: uncertainty
   uses: [CYP3A4_committee_components_adding_info, CYP2D6_committee_components_adding_info]

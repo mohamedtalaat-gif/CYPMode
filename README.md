@@ -56,6 +56,17 @@ pose-validity and margin rules in which every lever was decided by a gate on cry
 **What it does not claim.** Cross-validation estimates are not the challenge score: the challenge scores hidden labels, and its test set is closer to the training set than a cross-validation
 fold is. A predicted structure is a model, not a measurement. The numbers reported here come from nested cross-validation on the training data and from checks of the predicted coordinates. One piece of aggregate information about the hidden labels is used: the positive rate of the scored set, which the public leaderboards make recoverable from the accuracy, precision and recall they publish (it weights the yardstick and sets the call rate); no label of any compound and no probing submission is used, and the method report lists it as a limitation.
 
+<!-- generated:post-deadline begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
+**After the deadline.** The final leaderboards, published on 5 November 2026, place the TDI entry 14 of 62 (tier 2 of 5; macro MCC 0.3723 ± 0.0378) and the structure entry 15 of 38 (tier 2 of 4; LDDT-PLI 0.4133 ± 0.0301, BiSyRMSD 3.970 angstroms). The organisers then released the test labels and the 20 structures. An analysis of the two entries against them, whose plan ([`docs/post_deadline/PLAN.md`](docs/post_deadline/PLAN.md)) was pushed before any of them was read, found:
+
+- The scoring of the organisers reproduces the TDI board to the last digit (0.3722973 against 0.3722973), and the file that was submitted is candidate A.
+- The label rule of the project gives the organisers' label for all 1488 compounds that it can be applied to, and the organisers score 750 (CYP3A4) and 748 (CYP2D6) of the 750 test compounds, nearly the whole test set and not a set that is filtered by the confidence of the label.
+- Another threshold on the stored scores would have added at most 0.034 to the macro MCC, against 0.126 between the entry and the first of the board.
+- On the 20 released structures the submitted poses (0.413 LDDT-PLI) cannot be told from the published Boltz-2 baseline (0.420): no difference shown. The pool of poses held better ones (the best of each pool gives 0.526 on average) than the choice among them, and the contact restraint found all 4 coordinated ligands and called 8 more ligands coordinated although the structures show no contact.
+
+The tables are in section 15 of [the method report](METHOD_REPORT.md) and in 13.5 to 13.8 of the notebook.
+<!-- generated:post-deadline end -->
+
 ## Reader's guide
 
 | Question | Where to read or open |

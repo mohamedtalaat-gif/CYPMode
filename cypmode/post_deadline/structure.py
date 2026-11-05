@@ -245,6 +245,7 @@ def run(out: Path = OUT, gate_only: bool = False) -> int:
     if not verdict["passed"] or gate_only:
         return 0 if verdict["passed"] else 1
     scored = score_poses(pose_items(), out / "structure_poses.csv")
+    scored.drop(columns=["model", "reference", "smiles"]).to_csv(out / "structure_poses_scored.csv", index=False)  # the scores of every pose with its compound, its arm and the penalties of the organisers applied
     by_arm = {arm: frame.set_index("ligand") for arm, frame in scored.groupby("arm")}
     rows = [
         {"comparison": f"submitted minus {arm}", "metric": metric, **paired_difference(oriented(by_arm["submitted"][metric], metric), oriented(by_arm[arm][metric], metric))}

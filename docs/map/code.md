@@ -1,15 +1,15 @@
 # The code
 
-The project has 175 modules in 8 packages, and the modules hold 593 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
+The project has 179 modules in 8 packages, and the modules hold 600 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
 
 ```mermaid
 flowchart LR
   challenge["challenge (98 modules)"]
   validation["validation (55 modules)"]
   audit["audit (13 modules)"]
+  post_deadline["post_deadline (6 modules)"]
   data["data (2 modules)"]
   metrics["metrics (2 modules)"]
-  post_deadline["post_deadline (2 modules)"]
   top_level["top level (2 modules)"]
   explorer["explorer (1 module)"]
   audit -->|23| challenge
@@ -20,14 +20,16 @@ flowchart LR
   challenge -->|7| metrics
   audit -->|4| top_level
   challenge -->|3| validation
+  post_deadline -->|3| challenge
   validation -->|3| metrics
+  audit -->|2| post_deadline
   data -->|2| metrics
   explorer -->|2| audit
-  post_deadline -->|2| challenge
   audit -->|1| explorer
   data -->|1| challenge
   explorer -->|1| challenge
   explorer -->|1| top_level
+  post_deadline -->|1| validation
 ```
 
 A module-level drawing of the largest packages would hold hundreds of arrows and say less than the tables, so each package below lists its modules with what they import and what imports them.
@@ -121,7 +123,7 @@ Code for the OpenADMET CYP Inhibition Blind Challenge -- reproducing the officia
 | `cypmode/challenge/split_validity.py` | Checks whether a train/test split is actually informative before trusting any MCC computed on it -- a validation set that is chemically close to training (near-duplicates/analogs) can make a CV split look far more reliable than performance on novel chemistry actually is, a known general risk in cheminformatics benchmarking. | `challenge.reliability`, `challenge.tdi_baseline` | none |
 | `cypmode/challenge/stacking_significance.py` | Statistical significance testing for feature-stacking comparisons -- repeated CV with the corrected resampled t of Nadeau and Bengio (Holm-adjusted over the pairs), not a single point-estimate MCC delta and not an unpaired test on correlated folds. | `challenge.bindingdb_auxiliary`, `challenge.knn_features`, `challenge.model_comparison`, `challenge.tdi_ablation`, `challenge.tdi_baseline` | `challenge.architecture_significance`, `challenge.chemberta_significance`, `challenge.cyp2d6_tuning_significance`, `challenge.external_auxiliary_significance`, `challenge.pharmacophore_fingerprint`, `challenge.qm_reactivity_significance` and 4 more |
 | `cypmode/challenge/structure_standardization.py` | Structure standardization for cross-dataset compound matching, via ChEMBL's own structure pipeline (chembl_structure_pipeline, pip-installable, rdkit-only dependency -- the same tool ChEMBL uses internally to curate its own structures). | none | `challenge.bindingdb_auxiliary`, `challenge.chembl_auxiliary`, `challenge.pubchem_auxiliary` |
-| `cypmode/challenge/structure_submission.py` | Builds the real Structure Track submission zip. | `validation.pose_validity`, `validation.structures` | `validation.final_recipe`, `validation.ligand_dynamics`, `validation.official_posebusters`, `validation.ost_official`, `validation.ost_pools`, `validation.pose_stereo` and 2 more |
+| `cypmode/challenge/structure_submission.py` | Builds the real Structure Track submission zip. | `validation.pose_validity`, `validation.structures` | `post_deadline.structure`, `validation.final_recipe`, `validation.ligand_dynamics`, `validation.official_posebusters`, `validation.ost_official`, `validation.ost_pools` and 3 more |
 | `cypmode/challenge/submission.py` | TDI submission formatting and validation against the official schema. | none | `audit.pre_submission`, `audit.sections_extra`, `challenge.all_in_one`, `challenge.applicability_domain`, `challenge.final_assembly`, `challenge.final_assembly_cyp2d6` and 7 more |
 | `cypmode/challenge/submissions_sync.py` | Brings `submissions/` to the state of the final results: the files that would be uploaded to the challenge portal, each checked with the portal's own rules, with checksums and a README per track. | `challenge.submission` | none |
 | `cypmode/challenge/tdi_ablation.py` | M0-M3 ablation: does CYPMode's Tier 2 evidence (motif + trialkylamine flags) actually help a real multivariate TDI classifier, beyond the plain RDKit-descriptor baseline? | `challenge.tdi_baseline`, `metrics.amines`, `metrics.motifs` | `challenge.architecture_significance`, `challenge.bindingdb_auxiliary`, `challenge.chemberta_significance`, `challenge.chembl_auxiliary`, `challenge.combined_features`, `challenge.external_auxiliary_significance` and 13 more |
@@ -153,7 +155,7 @@ Structural validation against Boltz-2 predictions.
 | `cypmode/validation/conformer_benchmark.py` | Batch input for the conformer-conditioning experiment on the crystal benchmark. | `validation.conformers`, `validation.pose_rescoring_validation`, `validation.reference_ligands` | none |
 | `cypmode/validation/conformer_bias.py` | Check of the conformational bias of the ligand ensembles (job 273_conformer_bias, declared on 2026-10-23 before any code ran). | `challenge.pocket_pharmacophore`, `provenance` | none |
 | `cypmode/validation/conformers.py` | Distinct crystal conformations of the CYP3A4 pocket, to condition co-folding on more than one of them. | `validation.pose_rescoring`, `validation.reference_ligands` | `validation.batch`, `validation.conformer_benchmark`, `validation.cryoem_templates`, `validation.diversity_pilot` |
-| `cypmode/validation/constants.py` | Shared constants with no heavy dependencies of their own. | none | `validation.pipeline`, `validation.pose_consensus`, `validation.structures` |
+| `cypmode/validation/constants.py` | Shared constants with no heavy dependencies of their own. | none | `post_deadline.structure`, `validation.pipeline`, `validation.pose_consensus`, `validation.structures` |
 | `cypmode/validation/cryoem_templates.py` | Cryo-EM protein templates for the pose pool (job 135_boltz_cryoem_pilot). | `validation.conformers`, `validation.pose_rescoring_validation`, `validation.reference_ligands` | `validation.final_recipe` |
 | `cypmode/validation/diversity_pilot.py` | Pilot: which lever makes Boltz-2's pose pool differ, and does the difference reach the right pose? | `validation.conformers`, `validation.pose_consensus`, `validation.pose_rescoring_validation`, `validation.reference_ligands`, `validation.structures` | `validation.final_recipe`, `validation.structure_gates` |
 | `cypmode/validation/ei_sampling.py` | Expected-improvement sampling: spend extra poses where the pool disagrees most (job 172_ei_sampling). | `validation.pose_pools`, `validation.selection_validation` | `validation.ost_pool_gates` |
@@ -208,9 +210,9 @@ Automated audit: one script that regenerates a full report from the current code
 | `cypmode/audit/artifacts.py` | Provenance of the files that present the results: the README card, the poster, the film and the figures. | none | `audit.pre_submission` |
 | `cypmode/audit/checklist.py` | Does the checklist match the repository? | none | `audit.pre_submission`, `audit.sections_extra` |
 | `cypmode/audit/core.py` | Shared pieces of the audit: check/section containers, deterministic Markdown helpers, shared context. | `challenge.label_confidence`, `challenge.leaderboard_prior`, `challenge.nested`, `challenge.nested_runners`, `challenge.validation_matching` | `audit.report`, `audit.sections`, `audit.sections_extra` |
-| `cypmode/audit/docs_state.py` | The generated blocks of README.md and CYPMode_Architecture_Specification.md: the final stack, the verdicts of the gates, the structure recipe and the table of what the work adds. | `audit.ledger_kinds`, `audit.method_report`, `audit.project_map`, `challenge.nested_runners` | `audit.method_report` |
+| `cypmode/audit/docs_state.py` | The generated blocks of README.md and CYPMode_Architecture_Specification.md: the final stack, the verdicts of the gates, the structure recipe and the table of what the work adds. | `audit.ledger_kinds`, `audit.method_report`, `audit.project_map`, `challenge.nested_runners`, `post_deadline.report` | `audit.method_report` |
 | `cypmode/audit/ledger_kinds.py` | The kind of idea each row of the gate ledger tested, shared by the exploration figure and by the exploration section of the method report. | `audit.method_report` | `audit.docs_state`, `audit.method_report`, `audit.project_map`, `explorer.data` |
-| `cypmode/audit/method_report.py` | Generate METHOD_REPORT.md and NEGATIVE_RESULTS.md from the repository's own logs, tables and audit. | `audit.docs_state`, `audit.ledger_kinds`, `audit.project_map`, `challenge.final_tdi_build`, `challenge.multiplicity`, `challenge.nested` and 9 more | `audit.docs_state`, `audit.ledger_kinds`, `audit.project_map`, `explorer.data` |
+| `cypmode/audit/method_report.py` | Generate METHOD_REPORT.md and NEGATIVE_RESULTS.md from the repository's own logs, tables and audit. | `audit.docs_state`, `audit.ledger_kinds`, `audit.project_map`, `challenge.final_tdi_build`, `challenge.multiplicity`, `challenge.nested` and 10 more | `audit.docs_state`, `audit.ledger_kinds`, `audit.project_map`, `explorer.data` |
 | `cypmode/audit/pre_submission.py` | The last gate before a submission: one command that says whether everything is finished, consistent and fresh. | `audit.artifacts`, `audit.checklist`, `challenge.submission`, `validation.official_posebusters`, `validation.pose_stereo` | none |
 | `cypmode/audit/project_map.py` | The project map: `python -m cypmode.audit.project_map` writes `docs/map`, `--check` compares the files with the code. | `audit.ledger_kinds`, `audit.method_report` | `audit.docs_state`, `audit.method_report` |
 | `cypmode/audit/prose_rules.py` | Wording rules for the text files of the project, checked by the audit (section 21). | none | `audit.sections_extra` |
@@ -218,6 +220,19 @@ Automated audit: one script that regenerates a full report from the current code
 | `cypmode/audit/report.py` | Generate the audit report: `python -m cypmode.audit.report --out audit/AUDIT_REPORT.md [--skip-tests]`. | `audit.core`, `audit.sections`, `data_record` | none |
 | `cypmode/audit/sections.py` | The audit sections. | `audit.core`, `audit.sections_extra`, `challenge.calibration_experiment`, `challenge.committee_uncertainty`, `challenge.feature_store`, `challenge.label_confidence` and 6 more | `audit.report` |
 | `cypmode/audit/sections_extra.py` | Audit sections added with the gate-driven build: gate ledger, checklist consistency, environment and seeds, feature-block leakage, enforced rules, and the final candidate files. | `audit.checklist`, `audit.core`, `audit.prose_rules`, `challenge.feature_store`, `challenge.multiplicity`, `challenge.physics_block` and 5 more | `audit.sections` |
+
+## post_deadline (6 modules)
+
+The analysis of the submitted entries against what the organisers released after the deadline (`docs/post_deadline/PLAN.md`).
+
+| module | what it does | imports | imported by |
+| --- | --- | --- | --- |
+| `cypmode/post_deadline/board.py` | The row of the submitted entries on the final leaderboards of the organisers, read from the two files that the Space of the challenge exports. | `post_deadline.released` | none |
+| `cypmode/post_deadline/released.py` | The files that the organisers released after the deadline, fetched by name and recorded by SHA-256. | none | `post_deadline.board`, `post_deadline.report`, `post_deadline.structure`, `post_deadline.tdi` |
+| `cypmode/post_deadline/report.py` | The section of the method report about the analysis after the deadline: every number is read from the tables and the logs that the analysis wrote (`docs/post_deadline/PLAN.md` is the plan). | `post_deadline.released` | `audit.docs_state`, `audit.method_report` |
+| `cypmode/post_deadline/structure.py` | The questions of `docs/post_deadline/PLAN.md` about the structure track: the scoring gate (question 0) and the compound by compound comparison (question 5). | `challenge.structure_submission`, `post_deadline.released`, `validation.constants` | none |
+| `cypmode/post_deadline/structure_worker.py` | The scoring of poses with the organisers' own functions, run in the environment that holds OpenStructure and PoseBusters. | none | none |
+| `cypmode/post_deadline/tdi.py` | The questions of `docs/post_deadline/PLAN.md` about the time-dependent inhibition track: the scoring gate (question 0), the two candidates (1), the label rule and the scored set (2) and the threshold (3). | `challenge.label_confidence`, `challenge.tdi_targets`, `post_deadline.released` | none |
 
 ## data (2 modules)
 
@@ -236,15 +251,6 @@ no package docstring
 | --- | --- | --- | --- |
 | `cypmode/metrics/amines.py` | Trialkylamine detector -- a second, independent structural-alert screen alongside cypmode.metrics.motifs, for the mechanism-based (time-dependent) inactivation route that screen was never built to catch. | none | `challenge.feature_store`, `challenge.qm_reactivity_features`, `challenge.tdi_ablation` |
 | `cypmode/metrics/motifs.py` | Structural-alert screen for CYP450 Type II (heme-coordinating) inhibition. | none | `challenge.feature_store`, `challenge.functional_groups`, `challenge.tdi_ablation`, `challenge.tier3_selection`, `data.octant_benchmark`, `data.panel` and 3 more |
-
-## post_deadline (2 modules)
-
-The analysis of the submitted entries against what the organisers released after the deadline (`docs/post_deadline/PLAN.md`).
-
-| module | what it does | imports | imported by |
-| --- | --- | --- | --- |
-| `cypmode/post_deadline/released.py` | The files that the organisers released after the deadline, fetched by name and recorded by SHA-256. | none | `post_deadline.tdi` |
-| `cypmode/post_deadline/tdi.py` | The questions of `docs/post_deadline/PLAN.md` about the time-dependent inhibition track: the scoring gate (question 0), the two candidates (1), the label rule and the scored set (2) and the threshold (3). | `challenge.label_confidence`, `challenge.tdi_targets`, `post_deadline.released` | none |
 
 ## top level (2 modules)
 

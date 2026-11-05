@@ -114,7 +114,7 @@ MD_13_1 = """
 
 > **Field:** Overview · Statistics
 
-*Where this section sits:* the project cannot see the labels of the compounds it is scored on, and it has said so from the first page. Everything it claims is therefore a claim about a procedure or about a measurement on the public data, and this section sorts the claims by how well they are supported.
+*Where this section sits:* while the challenge ran the project could not see the labels of the compounds it is scored on, and it said so from the first page. Everything it claims in 13.1 to 13.4 is therefore a claim about a procedure or about a measurement on the public data, and this section sorts those claims by how well they are supported; 13.5 to 13.8 then use the labels that the organisers released after the deadline, under a plan that was written before they were read.
 
 The next cell reads the evidence for what follows from the files that hold it.
 """
@@ -168,9 +168,9 @@ The table has {{=n_limits}} entries, over the areas {{=limit_areas}}.
 
 *The environments of the structure engines are not pinned.* The pin files of Appendix A cover the main environment, the neural environment and the two conda environments; Boltz-2 and OpenFold3 run in virtual environments that are not among them. The versions that ran are in the manifests of the structure track, but a reader who wants to reinstall them has to follow the instructions of the engines.
 
-*The cut-off proxy cannot be checked.* The confidence cut-off is a proxy for a rule that the organisers have not published. The two cut-offs bracket the likely values; nothing in the repository can say where the real one lies.
+*The cut-off proxy was checked once the labels were released.* The confidence cut-off is a proxy for a rule that the organisers did not publish. The released labels show that the organisers score nearly the whole test set (13.6), so the proxy scores fewer compounds than the official score does and the cross-validated estimates are those of an easier problem than the one that is scored.
 
-*The held-back results cannot be checked by a reader until the deadline has passed.* The files that name results for the blinded compounds are published with the release after the challenge closes; until then a reader can verify the code and the reports, and the hashes of the files, but not the files.
+*The held-back results were published with the release.* The files that name results for the blinded compounds came out with the release after the challenge closed, so a reader can now verify the files as well as the code, the reports and the hashes.
 """
 
 MD_13_3 = """

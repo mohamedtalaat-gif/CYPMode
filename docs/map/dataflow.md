@@ -5,7 +5,7 @@ The data go one way: the inputs of a track enter the jobs of the queue, the jobs
 ```mermaid
 flowchart LR
   inputs["inputs<br/>data/*/inputs"] --> jobs
-  jobs["queue jobs<br/>161 of 174 write a log"] -->|"206 log names"| logs["logs"]
+  jobs["queue jobs<br/>161 of 177 write a log"] -->|"206 log names"| logs["logs"]
   logs -->|"every log, through gate_rows"| ledger["ledger<br/>cypmode/audit/ledger_kinds.py"]
   logs -->|"58 logs are read by name"| reports
   ledger --> reports["reports, figures, notebook<br/>built by the chain 900 to 960"]
@@ -26,6 +26,9 @@ The jobs of the chain that run a module of the project (the others run scripts) 
 | --- | --- |
 | `905_recompute_paired_summaries` | `cypmode.challenge.recompute_paired_summaries` |
 | `906_explorer_bundle` | `cypmode.explorer.data` |
+| `907_post_deadline_released` | `cypmode.post_deadline.released` |
+| `908_post_deadline_tdi` | `cypmode.post_deadline.tdi` |
+| `909_post_deadline_structure` | `cypmode.post_deadline.structure` |
 | `910_method_report` | `cypmode.audit.method_report` |
 | `921_docs_state` | `cypmode.audit.docs_state` |
 | `921_docs_state` | `cypmode.audit.project_map` |

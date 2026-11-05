@@ -201,8 +201,14 @@ def map_block() -> str:
     return readme_block().rstrip("\n")
 
 
-BLOCKS = {"final-stack": final_stack_block, "gate-verdicts": gate_verdicts_block, "structure-recipe": structure_block, "innovation": innovation_block, "project-map": map_block}
-TARGETS = {"README.md": ("innovation", "final-stack", "gate-verdicts", "structure-recipe", "project-map"), "CYPMode_Architecture_Specification.md": ("innovation", "final-stack", "structure-recipe")}
+def post_deadline_block() -> str:
+    from cypmode.post_deadline.report import readme_block
+
+    return readme_block()
+
+
+BLOCKS = {"post-deadline": post_deadline_block, "final-stack": final_stack_block, "gate-verdicts": gate_verdicts_block, "structure-recipe": structure_block, "innovation": innovation_block, "project-map": map_block}
+TARGETS = {"README.md": ("post-deadline", "innovation", "final-stack", "gate-verdicts", "structure-recipe", "project-map"), "CYPMode_Architecture_Specification.md": ("innovation", "final-stack", "structure-recipe")}
 
 
 def pattern(name: str) -> re.Pattern:
