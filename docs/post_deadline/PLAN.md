@@ -34,6 +34,8 @@ The scoring is the organisers' own: their functions as published at the commit n
 
 For the classification track, each of the two candidate files is scored. The submitted file is the candidate whose macro MCC lies within 0.01 of 0.3723; if both or neither do, the analysis stops there and reports that. For the structure track, the submitted archive is scored; the gate is a mean LDDT-PLI within 0.005 of 0.4133 and a mean BiSyRMSD within 0.1 A of 3.970.
 
+The bootstrap of the organisers has a fixed seed, so the board value is expected to be reproduced to the digits when the labels and the predictions are the same; the tolerance is wider only for safety.
+
 If a gate fails, no later question is answered; the difference is investigated and written down first.
 
 ## Question 1: which TDI candidate is better on the released labels
@@ -44,11 +46,11 @@ Macro MCC and the MCC of each isoform for candidate A (hits only) and candidate 
 
 Question 2a. The rule recovered from the training data (a positive when the TDI-condition pIC50 exceeds the larger of the direct-inhibition pIC50 and 4 by more than 0.301) is applied to the values in the released test file and compared with the organisers' labels, compound by compound. The count of disagreements is reported with each disagreeing compound listed. The expectation is zero disagreements; any disagreement is a finding about the rule and is explained before it is used.
 
-Question 2b. The compounds that carry a label in the released file are the scored set. The confidence rule of the project, which was built without knowing that set, selects a set of its own; the two are compared in a table of agreement (both, only one, neither). The table closes the limitation of the report that the organisers' rule for the scored set was not published. No rule of the project is changed by it.
+Question 2b. The compounds that carry a label in the released file are the scored set. The confidence rule of the project, which was built without knowing that set, selects a set of its own at each of the two cut-offs of the final build, 1.0 and 1.96; the sets are compared with the organisers' set in a table of agreement (both, only one, neither). The table closes the limitation of the report that the organisers' rule for the scored set was not published. No rule of the project is changed by it.
 
 ## Question 3: how much of the distance to the leading entries is a matter of the threshold
 
-For the submitted file, the MCC at the threshold that was submitted is set beside the highest MCC that any threshold would give on the released labels. The second number is a ceiling that uses the labels and is labelled so; it is not a result and it is not used to change a file. The question measures how much of the gap to the entries of tier 1 could come from the call rate alone, given that the post reports 44 CYP2D6 positives among 748 test compounds (5.9%) against 21.6% in the training data.
+For the submitted file, the MCC at the threshold that was submitted is set beside the highest MCC that any threshold would give on the released labels. The second number is a ceiling that uses the labels and is labelled so; it is not a result and it is not used to change a file. The scores are those that the final build stored for the submitted candidate. The question measures how much of the gap to the entries of tier 1 could come from the call rate alone, given that the post reports 44 CYP2D6 positives among 748 test compounds (5.9%) against 21.6% in the training data.
 
 ## Question 4: was the submitted file chosen with the help of the live board
 

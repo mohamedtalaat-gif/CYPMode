@@ -1,0 +1,287 @@
+{
+ "tutorial_commit": "cc02086f735b8ce6398c48ea103cd5f0b2177962",
+ "files": [
+  {
+   "path": "dataset/cyp-challenge-TEST-UNBLINDED_TDI.csv",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/cyp-challenge-TEST-UNBLINDED_TDI.csv",
+   "bytes": 190159,
+   "sha256": "b88b67961a1ae839be9eec25d4edc608a1ccb748dc61a4af75bd36810b994a3c"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2312554.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2312554.pdb",
+   "bytes": 1795591,
+   "sha256": "723e82ba116c7d4956bb5c612151f632d354ca1f7a5a9ae605a43e142f9321cd"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2312966.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2312966.pdb",
+   "bytes": 614498,
+   "sha256": "56c987ef3502b4c39e894e86b3d65cb71b6f995f23428509e4e4ee9965dd9efb"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2313038.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2313038.pdb",
+   "bytes": 636016,
+   "sha256": "104393cec530d3e680c997c2bdc49a9d63a5a69c90b4fec4793075c66329d034"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2313300.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2313300.pdb",
+   "bytes": 1733106,
+   "sha256": "0562bed97255dff224a5650959f42fcdae9fd5f416ab60188c7c9afaf055a36c"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2313397.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2313397.pdb",
+   "bytes": 1828981,
+   "sha256": "d44afd9f486659f214f20d95cb5574bf2cefec03e8094d076c74a99068ebb48f"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2313429.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2313429.pdb",
+   "bytes": 618924,
+   "sha256": "3df907cf1b356aeb46afe68c2e640bbc60d523aee83998006e8660912bec720d"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2315379.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2315379.pdb",
+   "bytes": 610948,
+   "sha256": "32b05b993d445ecc9a4a735e8bdb0932d2f039bc3a06f46ffd9d6ef0ec663316"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395328.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395328.pdb",
+   "bytes": 1845192,
+   "sha256": "d80ca2580c0c64eb36746c9eb00ff8a9cf7fb31c3e9806168c4daaa466a96b07"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395342.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395342.pdb",
+   "bytes": 1803237,
+   "sha256": "990a78938d833dc1447d99d6c0e350deef7a9f263849806e6fab34508ba86694"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395415.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395415.pdb",
+   "bytes": 1783134,
+   "sha256": "ee14e7002d6778bfc45b5a2a69e49e31997db9ade8c3bdeaff5023fbaf969041"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395436.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395436.pdb",
+   "bytes": 913861,
+   "sha256": "e5e4bc64180e6008b87b106ba755abaea6a7974f8e4e1a4d057de4601aafb448"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395457.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395457.pdb",
+   "bytes": 300561,
+   "sha256": "a4ae351900694f957ce0816fa54356b28fd8a660610e79dd5f920ad92d8f4e95"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395460.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395460.pdb",
+   "bytes": 1836423,
+   "sha256": "852239d3c4362b10a9a2a9762af73396aba30eb70b1e8477545ad8868b8d7a26"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395464.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395464.pdb",
+   "bytes": 1828681,
+   "sha256": "4e265b1d8857640891c24a9dbad176aaf7e70f7f129c3dd9ecc1d96104f744c9"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395503.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395503.pdb",
+   "bytes": 1834290,
+   "sha256": "e822a7878d6ffc634926394ef47ec33baa825818362336195b3db64ec4e6cd81"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395645.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395645.pdb",
+   "bytes": 1803279,
+   "sha256": "2fbe991ee7cc76502303ebfb2e6f28bedc8c724affba358fe0732fc7bf73baf6"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395712.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395712.pdb",
+   "bytes": 1862599,
+   "sha256": "2e2fa8db82e3b11dd1a2cbb04dd5f8733be656a5756fa3934928b5aa338a23f4"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2395789.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2395789.pdb",
+   "bytes": 1807035,
+   "sha256": "76bd57736dad99927dfcc95426a2e815628ca99f17b2490920a666cb27152368"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2535422.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2535422.pdb",
+   "bytes": 1839277,
+   "sha256": "2ae979e6ab6c89be8483f86ff066befa997cc7c828b808c3ec126197fde4a10f"
+  },
+  {
+   "path": "dataset/structures_unblinded/OCNT-2535519.pdb",
+   "source": "https://huggingface.co/datasets/openadmet/cyp-challenge-train-test/resolve/main/structures_unblinded/OCNT-2535519.pdb",
+   "bytes": 1789036,
+   "sha256": "88dba9fde80c8031c1207c86f26029c30c1873e41857d06521352c82ee2c824f"
+  },
+  {
+   "path": "organisers/LICENSE",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/LICENSE",
+   "bytes": 11357,
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  {
+   "path": "organisers/evaluation/config.py",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/evaluation/config.py",
+   "bytes": 3230,
+   "sha256": "c1361d7c500fb1149e51b92e5af99583798768d26d93eea219c6b03eef993bbc"
+  },
+  {
+   "path": "organisers/evaluation/custom_scoring_functions.py",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/evaluation/custom_scoring_functions.py",
+   "bytes": 14174,
+   "sha256": "c0ee287c06c0301d4b3bfd74559b90eb1bd85db68b75b7d018ae92280c0e1dd3"
+  },
+  {
+   "path": "organisers/evaluation/evaluate_predictions.py",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/evaluation/evaluate_predictions.py",
+   "bytes": 47126,
+   "sha256": "c9ac717056669da4295f22de2ad0469527c08e20cfcaf01419b344700d8f5a49"
+  },
+  {
+   "path": "organisers/evaluation/posebusters_utils.py",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/evaluation/posebusters_utils.py",
+   "bytes": 15223,
+   "sha256": "e6bc3494888a0db3192c6e67ef47c6ff1d0d633fccf5ed027bf7549fb76f047b"
+  },
+  {
+   "path": "organisers/evaluation/utils.py",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/evaluation/utils.py",
+   "bytes": 1414,
+   "sha256": "c6ddfc1e8d8cf26c77567125680da8b9656bfa43fca31f62f0e333e21aba7cb6"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2312554_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2312554_model_0.cif",
+   "bytes": 362147,
+   "sha256": "35e7c71b0cd491a1a658e52d151f828ce703918309261a1568d74add93d60571"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2312966_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2312966_model_0.cif",
+   "bytes": 362759,
+   "sha256": "24aa2e3ec1fb9b53b73dbacf3fcb641e2959325eb75125a3d6f3102ed4aab22c"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2313038_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2313038_model_0.cif",
+   "bytes": 362556,
+   "sha256": "459f8e3674098ec5a0b77f97bc901c1fedb42016f55fcd48242b6a804afaae8b"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2313300_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2313300_model_0.cif",
+   "bytes": 362176,
+   "sha256": "c9ff87208681bbe4c4e76d730333b1ccd63cfc795f8742cce8b34a4de70d79dd"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2313397_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2313397_model_0.cif",
+   "bytes": 362221,
+   "sha256": "0cd22af9f43864e83c854a8d4cc20e246f8282194dc90e631946383728a24ace"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2313429_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2313429_model_0.cif",
+   "bytes": 362277,
+   "sha256": "ca2dd4dd0a902723a627aa827e4daf27a4ab0a34de4ea533d12c6716c2205570"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2315379_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2315379_model_0.cif",
+   "bytes": 361958,
+   "sha256": "f031baf5615f2ebc9b874650727d80fc0819a26b1f561f3839179b8618496e58"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395328_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395328_model_0.cif",
+   "bytes": 362273,
+   "sha256": "0b9c8c1eba91dc41fff5431d7dbcf60150f4f1da451ce3b3a435473db5267a00"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395342_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395342_model_0.cif",
+   "bytes": 362098,
+   "sha256": "3a3a269b021c02140c1055f552e0f4521c61cb2df20460772a32e2dab612761e"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395415_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395415_model_0.cif",
+   "bytes": 361488,
+   "sha256": "b2281b452b7ced6853d04d30b475df259c3bd16219fe39ce630a498b9677a856"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395436_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395436_model_0.cif",
+   "bytes": 362215,
+   "sha256": "9e69abf2036144a9b5c14a9d898a0898036d8684a4a9876b3e844d716bf6cc5d"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395457_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395457_model_0.cif",
+   "bytes": 361608,
+   "sha256": "663e6bddc8a9e557cc55c3505b8ed29b970f48ea9def6e40e98ecdd9d3597d87"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395460_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395460_model_0.cif",
+   "bytes": 362349,
+   "sha256": "c097037f61b08c17562d5a8e9fc9c9dd51a2b9cdb37e2d265815f2f4e3bb422c"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395464_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395464_model_0.cif",
+   "bytes": 361537,
+   "sha256": "e69515d129ba312141063acf4816185328f2bad8132dd1784b0a08495c66c468"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395503_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395503_model_0.cif",
+   "bytes": 362596,
+   "sha256": "51d84317d5e368fe608951dc1a326888889617ba5cd688401977c43a338519cd"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395645_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395645_model_0.cif",
+   "bytes": 362246,
+   "sha256": "b2d6e674e02ec74438cfe9c691c7e5a3370e0816b7dea8ef97c79b24938be9b0"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395712_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395712_model_0.cif",
+   "bytes": 362525,
+   "sha256": "db86d1b750fcef588843982b8c2298b9c131719b7126ffa57694e9f6a1d0acf1"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395789_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2395789_model_0.cif",
+   "bytes": 361620,
+   "sha256": "a3d31563129d7c90ea58c7dad3bba4f6f7fa2b454a13c9fe87857ce922f955dd"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2535422_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2535422_model_0.cif",
+   "bytes": 362343,
+   "sha256": "a3deb2283466ef4a9105606f83895eb58874859c46311f34787ae9b78b38d23c"
+  },
+  {
+   "path": "organisers/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2535519_model_0.cif",
+   "source": "https://github.com/OpenADMET/CYP-Challenge-Tutorial/blob/cc02086f735b8ce6398c48ea103cd5f0b2177962/inputs/boltz-2_cyp3a4_predictions/cyp3a4_ocnt-2535519_model_0.cif",
+   "bytes": 362663,
+   "sha256": "c45a864c7bbe73a32f30c2259805e47ffc8a0874c13e9eb5938fa1ca49e6e343"
+  }
+ ]
+}
