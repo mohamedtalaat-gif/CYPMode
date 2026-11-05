@@ -34,7 +34,7 @@ Nested cross-validated estimates of the final stacks (AUC at the stricter and at
   Biotechnology 2009; the TDC page states CC BY 4.0), used only to train a label-free block on compounds that are not challenge compounds; and the rows that the public leaderboards publish (accuracy, precision and recall of each entry), from which one
   number about the hidden labels is recovered, the positive rate of the scored set (limitation L13). No label of any blinded compound and no probing submission is used.
 - **Components.** The programs, models and weights that the work uses and their licences are listed in section 14 and in Appendix C of the notebook.
-- **Identifier.** DOI 10.5281/zenodo.23822983. Software Heritage [swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd](https://archive.softwareheritage.org/swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd). The text to cite is in `USE_AND_CITATION.md`.
+- **Identifier.** DOI 10.5281/zenodo.23816450. The text to cite is in `USE_AND_CITATION.md`.
 - **What is published.** This release is complete, the challenge having closed on 2026-11-03 at 23:59 UTC: the code, the method, the reports and the checks, and the files that show a result for a blinded compound (the submitted files, their predictions and structures, the figures, the film and the complete edition of the notebook).
   The SHA-256 of each submitted file is in the section *What is submitted*, so that each file in the release can be matched to this report.
 - **Reproduction and checks.** `NEGATIVE_RESULTS.md` (every experiment that failed its gate), `audit/AUDIT_REPORT.md` (generated twice and compared byte for byte), `bash scripts/reproduce_tdi.sh`.
