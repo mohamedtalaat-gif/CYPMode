@@ -189,7 +189,7 @@ def summary_section() -> str:
         "  Biotechnology 2009; the TDC page states CC BY 4.0), used only to train a label-free block on compounds that are not challenge compounds; and the rows that the public leaderboards publish (accuracy, precision and recall of each entry), from which one",
         "  number about the hidden labels is recovered, the positive rate of the scored set (limitation L13). No label of any blinded compound and no probing submission is used.",
         "- **Components.** The programs, models and weights that the work uses and their licences are listed in section 14 and in Appendix C of the notebook.",
-        f"- **Identifier.** {('DOI ' + ids['doi'] + '.') if 'doi' in ids else 'The archived release has no DOI yet; the citation file lists it when it has one.'}{(' Software Heritage ' + ids['swh'] + '.') if 'swh' in ids else ''} The text to cite is in `USE_AND_CITATION.md`.",
+        f"- **Identifier.** {('DOI ' + ids['doi'] + '.') if 'doi' in ids else 'The archived release has no DOI yet; the citation file lists it when it has one.'}{(' Software Heritage [' + ids['swh'] + '](https://archive.softwareheritage.org/' + ids['swh'] + ').') if 'swh' in ids else ''} The text to cite is in `USE_AND_CITATION.md`.",
         *published_lines(),
         "- **Reproduction and checks.** `NEGATIVE_RESULTS.md` (every experiment that failed its gate), `audit/AUDIT_REPORT.md` (generated twice and compared byte for byte), `bash scripts/reproduce_tdi.sh`.",
         "",

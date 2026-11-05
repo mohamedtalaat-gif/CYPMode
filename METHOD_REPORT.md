@@ -34,7 +34,7 @@ Nested cross-validated estimates of the final stacks (AUC at the stricter and at
   Biotechnology 2009; the TDC page states CC BY 4.0), used only to train a label-free block on compounds that are not challenge compounds; and the rows that the public leaderboards publish (accuracy, precision and recall of each entry), from which one
   number about the hidden labels is recovered, the positive rate of the scored set (limitation L13). No label of any blinded compound and no probing submission is used.
 - **Components.** The programs, models and weights that the work uses and their licences are listed in section 14 and in Appendix C of the notebook.
-- **Identifier.** DOI 10.5281/zenodo.23822983. Software Heritage swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd. The text to cite is in `USE_AND_CITATION.md`.
+- **Identifier.** DOI 10.5281/zenodo.23822983. Software Heritage [swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd](https://archive.softwareheritage.org/swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd). The text to cite is in `USE_AND_CITATION.md`.
 - **What is published.** This release is complete, the challenge having closed on 2026-11-03 at 23:59 UTC: the code, the method, the reports and the checks, and the files that show a result for a blinded compound (the submitted files, their predictions and structures, the figures, the film and the complete edition of the notebook).
   The SHA-256 of each submitted file is in the section *What is submitted*, so that each file in the release can be matched to this report.
 - **Reproduction and checks.** `NEGATIVE_RESULTS.md` (every experiment that failed its gate), `audit/AUDIT_REPORT.md` (generated twice and compared byte for byte), `bash scripts/reproduce_tdi.sh`.
@@ -688,7 +688,7 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 Reproduce the TDI candidates with `bash scripts/reproduce_tdi.sh`; the audit with `bash scripts/run_audit.sh` (two runs, byte-identical);
 the environment is pinned in `environment/`. The structure recipe runs through `python -m cypmode.validation.final_recipe`.
 
-**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all 173 modules with what each does and what it imports, all 174 jobs of the queue with what each waits for and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` and a test fail when a page differs from the code. The README carries a short loop of the interactive map, `docs/map/explorer.html`, which draws all four views as one page that can be explored, with a search box and, for every module and job, what it is connected to and which section of the notebook names it, and it links to the page on the Pages site and to the file.
+**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all 175 modules with what each does and what it imports, all 174 jobs of the queue with what each waits for and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` and a test fail when a page differs from the code. The README carries a short loop of the interactive map, `docs/map/explorer.html`, which draws all four views as one page that can be explored, with a search box and, for every module and job, what it is connected to and which section of the notebook names it, and it links to the page on the Pages site and to the file.
 
 The flow of the data, from the inputs to the submission files:
 
@@ -711,6 +711,7 @@ flowchart LR
   audit["audit (13 modules)"]
   data["data (2 modules)"]
   metrics["metrics (2 modules)"]
+  post_deadline["post_deadline (2 modules)"]
   top_level["top level (2 modules)"]
   explorer["explorer (1 module)"]
   audit -->|23| challenge
@@ -724,6 +725,7 @@ flowchart LR
   validation -->|3| metrics
   data -->|2| metrics
   explorer -->|2| audit
+  post_deadline -->|2| challenge
   audit -->|1| explorer
   data -->|1| challenge
   explorer -->|1| challenge

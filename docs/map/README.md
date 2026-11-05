@@ -4,7 +4,7 @@ Four views of one project, and one page that draws them so that they can be expl
 
 | page | what it shows | size |
 | --- | --- | --- |
-| [The code](code.md) | the packages and modules, what each module does and what it imports | 173 modules |
+| [The code](code.md) | the packages and modules, what each module does and what it imports | 175 modules |
 | [The queue](queue.md) | the jobs, what each waits for and the chain that rebuilds and checks the project | 174 jobs |
 | [The flow of the data](dataflow.md) | from the inputs through the jobs and the logs to the reports and the submission files | 5 stages |
 | [The evidence](evidence.md) | the kinds of idea that were tried and the ledger that counts the verdicts | one ledger |

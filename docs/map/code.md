@@ -1,6 +1,6 @@
 # The code
 
-The project has 173 modules in 7 packages, and the modules hold 590 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
+The project has 175 modules in 8 packages, and the modules hold 593 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
 
 ```mermaid
 flowchart LR
@@ -9,6 +9,7 @@ flowchart LR
   audit["audit (13 modules)"]
   data["data (2 modules)"]
   metrics["metrics (2 modules)"]
+  post_deadline["post_deadline (2 modules)"]
   top_level["top level (2 modules)"]
   explorer["explorer (1 module)"]
   audit -->|23| challenge
@@ -22,6 +23,7 @@ flowchart LR
   validation -->|3| metrics
   data -->|2| metrics
   explorer -->|2| audit
+  post_deadline -->|2| challenge
   audit -->|1| explorer
   data -->|1| challenge
   explorer -->|1| challenge
@@ -72,7 +74,7 @@ Code for the OpenADMET CYP Inhibition Blind Challenge -- reproducing the officia
 | `cypmode/challenge/grouping.py` | Group labels for group-aware validation: cluster compounds so that whole chemical series stay on one side of every split. | `challenge.validation_matching` | `challenge.applicability_domain`, `challenge.nested_runners` |
 | `cypmode/challenge/hedged_blend.py` | Hedged CYP2D6 model: a rank blend of the hits-only stack and the selection-aware stack, judged across regimes. | `challenge.feature_store`, `challenge.label_confidence`, `challenge.leaderboard_prior`, `challenge.model_comparison`, `challenge.nested`, `challenge.nested_runners` and 2 more | `challenge.population_physics`, `challenge.screen_selection`, `challenge.selection_decision` |
 | `cypmode/challenge/knn_features.py` | KNN-label (read-across) features: for each compound, the known TDI status of its K nearest chemical neighbors (by Tanimoto similarity on ECFP4), aggregated into a small feature set. | `challenge.tdi_ablation`, `challenge.tdi_baseline` | `challenge.chemberta_significance`, `challenge.combined_features`, `challenge.final_assembly`, `challenge.pharmacophore_fingerprint`, `challenge.qm_reactivity_significance`, `challenge.quantum_pharmacophore_significance` and 2 more |
-| `cypmode/challenge/label_confidence.py` | How confidently is a compound's TDI label assigned? -- the scored set only contains confident labels. | `challenge.tdi_targets` | `audit.core`, `audit.sections`, `challenge.addition_experiment`, `challenge.all_in_one`, `challenge.committee_label_model`, `challenge.confidence_experiment` and 12 more |
+| `cypmode/challenge/label_confidence.py` | How confidently is a compound's TDI label assigned? -- the scored set only contains confident labels. | `challenge.tdi_targets` | `audit.core`, `audit.sections`, `challenge.addition_experiment`, `challenge.all_in_one`, `challenge.committee_label_model`, `challenge.confidence_experiment` and 13 more |
 | `cypmode/challenge/label_shift.py` | An estimate of the positive rate of the scored test set that does not read a public leaderboard. | `challenge.nested`, `challenge.nested_runners`, `challenge.validation_matching` | none |
 | `cypmode/challenge/leaderboard_prior.py` | Positive rate of the blinded test set, recovered from the public leaderboard. | none | `audit.core`, `challenge.addition_experiment`, `challenge.all_in_one`, `challenge.applicability_domain`, `challenge.calibration_experiment`, `challenge.committee_label_model` and 13 more |
 | `cypmode/challenge/library_blocks.py` | The training set is not one library: find the block whose compounds went through the all-isoform panel. | none | `challenge.block_holdout`, `challenge.nested_runners` |
@@ -124,7 +126,7 @@ Code for the OpenADMET CYP Inhibition Blind Challenge -- reproducing the officia
 | `cypmode/challenge/submissions_sync.py` | Brings `submissions/` to the state of the final results: the files that would be uploaded to the challenge portal, each checked with the portal's own rules, with checksums and a README per track. | `challenge.submission` | none |
 | `cypmode/challenge/tdi_ablation.py` | M0-M3 ablation: does CYPMode's Tier 2 evidence (motif + trialkylamine flags) actually help a real multivariate TDI classifier, beyond the plain RDKit-descriptor baseline? | `challenge.tdi_baseline`, `metrics.amines`, `metrics.motifs` | `challenge.architecture_significance`, `challenge.bindingdb_auxiliary`, `challenge.chemberta_significance`, `challenge.chembl_auxiliary`, `challenge.combined_features`, `challenge.external_auxiliary_significance` and 13 more |
 | `cypmode/challenge/tdi_baseline.py` | Reproduces the OpenADMET CYP Blind Challenge tutorial's own TDI baseline: one LightGBM classifier per isoform (CYP3A4, CYP2D6) on RDKit descriptors, evaluated over repeated stratified splits. | none | `audit.sections`, `challenge.architecture_significance`, `challenge.bindingdb_auxiliary`, `challenge.chemberta_features`, `challenge.chemberta_significance`, `challenge.chembl_auxiliary` and 20 more |
-| `cypmode/challenge/tdi_targets.py` | The TDI label is a deterministic function of two measured pIC50 values, and the training file carries both of them -- this module makes that explicit so models can learn the continuous quantity instead of its thresholded shadow. | none | `audit.sections`, `challenge.aux_blocks`, `challenge.committee_label_model`, `challenge.label_confidence`, `challenge.nested_runners`, `challenge.nested_runners_chemprop` and 4 more |
+| `cypmode/challenge/tdi_targets.py` | The TDI label is a deterministic function of two measured pIC50 values, and the training file carries both of them -- this module makes that explicit so models can learn the continuous quantity instead of its thresholded shadow. | none | `audit.sections`, `challenge.aux_blocks`, `challenge.committee_label_model`, `challenge.label_confidence`, `challenge.nested_runners`, `challenge.nested_runners_chemprop` and 5 more |
 | `cypmode/challenge/test_likeness_training.py` | Test-likeness-weighted training (job 060_test_likeness_training). | `challenge.addition_experiment`, `challenge.nested_runners` | none |
 | `cypmode/challenge/test_nonhit_share.py` | How hit-like is the blinded test set? | `challenge.nested_runners` | none |
 | `cypmode/challenge/threshold_tuning.py` | CV-fold-internal, MCC-optimized decision thresholds -- per isoform, not a single threshold shared across CYP3A4 and CYP2D6, and never touching a validation/test fold's own labels to pick the threshold used on it. | `challenge.tdi_ablation`, `challenge.tdi_baseline` | `challenge.architecture_significance`, `challenge.final_assembly` |
@@ -234,6 +236,15 @@ no package docstring
 | --- | --- | --- | --- |
 | `cypmode/metrics/amines.py` | Trialkylamine detector -- a second, independent structural-alert screen alongside cypmode.metrics.motifs, for the mechanism-based (time-dependent) inactivation route that screen was never built to catch. | none | `challenge.feature_store`, `challenge.qm_reactivity_features`, `challenge.tdi_ablation` |
 | `cypmode/metrics/motifs.py` | Structural-alert screen for CYP450 Type II (heme-coordinating) inhibition. | none | `challenge.feature_store`, `challenge.functional_groups`, `challenge.tdi_ablation`, `challenge.tier3_selection`, `data.octant_benchmark`, `data.panel` and 3 more |
+
+## post_deadline (2 modules)
+
+The analysis of the submitted entries against what the organisers released after the deadline (`docs/post_deadline/PLAN.md`).
+
+| module | what it does | imports | imported by |
+| --- | --- | --- | --- |
+| `cypmode/post_deadline/released.py` | The files that the organisers released after the deadline, fetched by name and recorded by SHA-256. | none | `post_deadline.tdi` |
+| `cypmode/post_deadline/tdi.py` | The questions of `docs/post_deadline/PLAN.md` about the time-dependent inhibition track: the scoring gate (question 0), the two candidates (1), the label rule and the scored set (2) and the threshold (3). | `challenge.label_confidence`, `challenge.tdi_targets`, `post_deadline.released` | none |
 
 ## top level (2 modules)
 
