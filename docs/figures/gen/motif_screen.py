@@ -39,7 +39,7 @@ def motif_atoms(mol) -> tuple[str, tuple[int, ...]]:
 
 def motif_caption() -> str:
     summary = json.loads((ROOT / SUMMARY).read_text())
-    parts = [f"{name} {summary[name]['closest_motif_nitrogen_distance_angstrom']:.2f} A ({'on the iron' if summary[name]['coordinated'] else 'not on the iron'})" for name in DRUGS]
+    parts = [f"{name} {summary[name]['closest_motif_nitrogen_distance_angstrom']:.2f} Å ({'on the iron' if summary[name]['coordinated'] else 'not on the iron'})" for name in DRUGS]
     return ("The motif screen on the four drugs whose structures bound to CYP3A4 were solved by cryo-EM. Each structure is drawn from its SMILES; the atoms of the first heme-coordinating motif the screen finds "
             "(imidazole, triazole, pyridine or thiazole rings, defined in cypmode/metrics/motifs.py) are highlighted. Below each, the distance from the heme iron to the nearest motif nitrogen in the "
             "complex Boltz-2 predicted without any restraint: " + "; ".join(parts) + ". Two drugs put the nitrogen on the iron, two do not, although all four match a motif.")
@@ -58,7 +58,7 @@ def motif_screen(theme_name):
         entry = summary[name]
         bound = entry["coordinated"]
         ax.set_title(name, fontsize=13, fontweight="bold", color=th["text"])
-        ax.text(0.5, -0.04, f"motif: {motif or 'none'}\niron to nitrogen: {entry['closest_motif_nitrogen_distance_angstrom']:.2f} A",
+        ax.text(0.5, -0.04, f"motif: {motif or 'none'}\niron to nitrogen: {entry['closest_motif_nitrogen_distance_angstrom']:.2f} Å",
                 transform=ax.transAxes, ha="center", va="top", fontsize=10.5, color=th["green"] if bound else th["red"], fontweight="bold")
     fig.tight_layout()
     return fig

@@ -15,7 +15,7 @@ from catalog import figure
 from matplotlib.patches import Rectangle
 from style import apply
 
-from cypmode.audit.method_report import gate_rows
+from cypmode.audit.ledger_kinds import ledger_rows
 from gen._draw import arrow, box, canvas
 
 GROUP = "architecture"
@@ -35,7 +35,8 @@ def tdi_facts() -> dict:
 
     families = Counter(c.name.split("_")[0] for c in default_candidates())
     plan = NestedPlan.load(ROOT / NESTED / "CYP3A4/plan.npz")
-    verdicts = [v for _, name, v in gate_rows() if name.startswith("CYP")]  # the gates of the TDI track; the structure gates are drawn in the other pipeline
+    ledger = ledger_rows()
+    ledger = ledger[ledger["kind"] != "structure levers"]  # the TDI track; the structure levers are drawn in the other pipeline
     return {
         "n_train": len(pd.read_csv(ROOT / TRAIN, usecols=["Molecule_Name"])),
         "n_test": len(pd.read_csv(ROOT / TEST, usecols=["SMILES"])),
@@ -46,8 +47,8 @@ def tdi_facts() -> dict:
         "outer": len(plan.outer_folds()),
         "outer_splits": plan.outer_splits,
         "inner_splits": plan.inner_splits,
-        "gates": len(verdicts),
-        "gates_met": verdicts.count("MET"),
+        "gates": len(ledger),
+        "gates_met": int((ledger["verdict"] == "MET").sum()),
     }
 
 

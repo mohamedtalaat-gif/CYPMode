@@ -87,7 +87,7 @@ def mbr_pool(theme_name):
     tidy(b, th, grid=False)
     c.bar([str(s) for s in samples], rmsd, color=colors)
     c.axhline(2.0, color=th["muted"], ls=":", lw=1)
-    c.set(xlabel="sample", ylabel="RMSD to the crystal pose (A)", title="the truth, which the rule never sees")
+    c.set(xlabel="sample", ylabel="RMSD to the crystal pose (Å)", title="the truth, which the rule never sees")
     tidy(c, th, grid=False)
     fig.tight_layout()
     return fig

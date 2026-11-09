@@ -91,14 +91,14 @@ STAGES = [
         section="1.1")
 def adme_route(theme_name):
     th = apply(theme_name)
-    fig, ax = plt.subplots(figsize=(11, 3.4))
-    canvas(ax, (0, 12), (0, 4.4))
+    fig, ax = plt.subplots(figsize=(11, 3.6))
+    canvas(ax, (0, 12), (-0.35, 4.4))
     xs = [1.5, 4.5, 7.5, 10.5]
     for x, (name, text), highlight in zip(xs, STAGES, (False, False, True, False), strict=True):
         box(ax, x, 1.1, 2.5, 1.5, text, th["orange"] if highlight else th["panel"], th["text"], "#1A1A1A" if highlight else th["text"], size=8.4, wrap=26, title=name)
     for a, b in pairwise(xs):
         arrow(ax, (a + 1.3, 1.1), (b - 1.3, 1.1), th["text"])
-    ax.text(7.5, 0.18, "what CYPMode predicts", ha="center", fontsize=10, color=th["orange"], fontweight="bold")
+    ax.text(7.5, 0.2, "what CYPMode predicts", ha="center", va="top", fontsize=10, color=th["orange"], fontweight="bold")  # below the box, clear of its edge
     import pandas as pd
 
     from gen.molecules import (

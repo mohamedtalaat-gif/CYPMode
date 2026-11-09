@@ -300,7 +300,12 @@ def baselines(ctx: Context) -> Section:
                 if sel.name == "stack_logit":
                     ctx.metrics[f"{iso}_stack_auc_z{str(z0).replace('.', '_')}"] = float(table["outer_score"].mean())
     df = pd.DataFrame(rows, columns=["isoform", "model", "evaluation population", "n", "AUC", "MCC"])
-    s.body.append("AUC and MCC are not comparable across rows with different evaluation populations; compare within a population.\n\n" + md_table(df))
+    direct_only = {iso: int((raw[f"{iso}_is_TDI"].notna() & raw[f"{iso}_pIC50_direct_inhibition"].notna() & raw[f"{iso}_pIC50_TDI_condition"].isna()).sum()) for iso in ISOFORMS}
+    note = ""
+    if any(direct_only.values()):
+        note = ("\n\nThe line \"both-arms rows\" of this table holds the labelled rows that have a direct curve: " + "; ".join(f"{iso} {n} row(s) with a direct curve and no value in the TDI arm" for iso, n in direct_only.items() if n)
+                + ", which the pool of the stack and the check of the label rule do not count as having both arms.")
+    s.body.append("AUC and MCC are not comparable across rows with different evaluation populations; compare within a population.\n\n" + md_table(df) + note)
     s.add("official baseline reproduced from the raw file", True, f"{len(df)} rows computed")
     return s
 

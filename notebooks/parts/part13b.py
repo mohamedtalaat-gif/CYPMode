@@ -14,6 +14,8 @@ import re
 
 import pandas as pd
 
+from cypmode.post_deadline.report import describe_extra_calls
+
 post_dir = ROOT / "data/post_deadline/outputs"
 plan_text = (ROOT / "docs/post_deadline/PLAN.md").read_text()
 final_board = json.loads((ROOT / "data/post_deadline/final_board.json").read_text())["tracks"]  # the row of the entries on the final leaderboards of the organisers (cypmode/post_deadline/board.py)
@@ -59,6 +61,7 @@ n_compounds = len(coordination)
 n_truth_coordinated, n_submitted_coordinated = int(coordination["truth_coordinated"].sum()), int(coordination["submitted_coordinated"].sum())
 n_both, n_false_positive = int((coordination["truth_coordinated"] & coordination["submitted_coordinated"]).sum()), int((~coordination["truth_coordinated"] & coordination["submitted_coordinated"]).sum())
 n_missed = int((coordination["truth_coordinated"] & ~coordination["submitted_coordinated"]).sum())
+extra_calls = describe_extra_calls(post_dir)
 assert n_missed == 0 and n_false_positive > n_both, "the text says that the restraint found every coordinated compound and called more compounds coordinated than the structures show"
 resolution = json.loads((post_dir / "structure_resolution.json").read_text())
 n_in_training = int(coordination["in_training"].sum())
@@ -129,7 +132,7 @@ MD_13_7 = """
 
 **Where the limit lay.** The pool of a compound is the set of poses that the final recipe chose from, {{=n_pool_poses}} poses over the 20 compounds. Over the compounds, the best pose of the pool has a mean LDDT-PLI of {{=pool_best:.4f}} and a pose drawn at random from the pool {{=pool_random:.4f}}; the submitted pose, {{=pool_submitted:.4f}}, sits between them and recovers {{=recovered:.0f}}% of the distance from a random pose to the best one. The pool held good poses; the choice among them was the limit. 11.8 is the section that spent its effort on the choice among poses, and the released structures show that this was where most of the room lay, with the reference that the selection did not have.
 
-**The iron of the heme.** The restraint of 11.6 asks the model to place a nitrogen of the ligand next to the iron, because many inhibitors of CYP3A4 coordinate it. In the {{=n_compounds}} released structures, {{=n_truth_coordinated}} ligands have a nitrogen within the cut-off of the project of an iron; the submitted poses call {{=n_submitted_coordinated}} ligands coordinated. All {{=n_truth_coordinated}} of the true ones are among them, and {{=n_false_positive}} more are called coordinated although the structure shows no contact. The restraint therefore found every contact that exists and forced a contact on {{=n_false_positive}} compounds that do not make it, which is the cost of a restraint that applies to every ligand with a donor nitrogen. The rank correlation between the resolution of a map and the LDDT-PLI of the submitted pose is {{=resolution['spearman_rho']:+.3f}} over {{=resolution['compounds']}} compounds; the models of {{=resolution['without_resolution']}} compounds record no resolution.
+**The iron of the heme.** The restraint of 11.6 asks the model to place a nitrogen of the ligand next to the iron, because many inhibitors of CYP3A4 coordinate it. In the {{=n_compounds}} released structures, {{=n_truth_coordinated}} ligands have a nitrogen within the cut-off of the project of an iron; the submitted poses call {{=n_submitted_coordinated}} ligands coordinated. All {{=n_truth_coordinated}} of the true ones are among them, and {{=n_false_positive}} more are called coordinated that the structures place beyond the cut-off: {{=extra_calls}}. A distance within half an angstrom of the cut-off, in maps of this resolution, does not exclude a contact, so these compounds are not shown to make no contact. The restraint therefore found every contact that the structures show and called a contact on {{=n_false_positive}} more compounds, which is the cost of a restraint that applies to every ligand with a donor nitrogen. The rank correlation between the resolution of a map and the LDDT-PLI of the submitted pose is {{=resolution['spearman_rho']:+.3f}} over {{=resolution['compounds']}} compounds; the models of {{=resolution['without_resolution']}} compounds record no resolution.
 """
 
 MD_13_8 = """

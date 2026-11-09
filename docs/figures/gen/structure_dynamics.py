@@ -91,8 +91,8 @@ def drift_figure(theme_name):
     ax.scatter(x, y, s=22, color=th["blue"], alpha=0.8)
     ax.axhline(0, color=th["muted"], lw=0.8)
     ax.axvline(0, color=th["muted"], lw=0.8)
-    ax.set_xlabel("drift in 20 ps, minus the mean of the ligand (A)")
-    ax.set_ylabel("RMSD to the crystal pose, minus the mean of the ligand (A)")
+    ax.set_xlabel("drift in 20 ps, minus the mean of the ligand (Å)")
+    ax.set_ylabel("RMSD to the crystal pose, minus the mean of the ligand (Å)")
     tidy(ax, th)
     fig.tight_layout()
     return fig
@@ -143,7 +143,7 @@ def trace_figure(theme_name):
         colour = th["green"] if rmsd == best else th["red"] if rmsd == worst else th["muted"]
         ax.plot(np.arange(1, len(drift) + 1), drift, color=colour, lw=2.4 if thick else 1.0, alpha=1.0 if thick else 0.7)
         bx.plot(np.arange(1, len(field) + 1), field, color=colour, lw=2.4 if thick else 1.0, alpha=1.0 if thick else 0.7)
-    for axis, label in ((ax, "RMSD to the start pose (A)"), (bx, "field score of the pose")):
+    for axis, label in ((ax, "RMSD to the start pose (Å)"), (bx, "field score of the pose")):
         axis.axvspan(0.5, ld.EQUILIBRATION_FRAMES + 0.5, color=th["panel"], zorder=0)
         axis.set_xlabel("time (ps)")
         axis.set_ylabel(label)

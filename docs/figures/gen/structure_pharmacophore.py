@@ -67,7 +67,7 @@ def conformer_window(theme_name):
     for window in (5, 10, 20):
         ax.axvline(window, color=th["muted"], linestyle="--", linewidth=1)
         ax.text(window + 0.3, ax.get_ylim()[1] * 0.92, f"{window}", fontsize=8, color=th["muted"])
-    ax.set_xlabel("energy of the lowest conformer within 1.0 Å of the crystal pose (kcal/mol above the minimum)", fontsize=9)
+    ax.set_xlabel("energy of the lowest conformer within 1.0 Å of the crystal pose\n(kcal/mol above the minimum)", fontsize=9)
     ax.set_ylabel("crystal copies", fontsize=9)
     tidy(ax, th)
     return fig

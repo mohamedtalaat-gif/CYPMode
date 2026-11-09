@@ -318,7 +318,7 @@ def all20_gallery(theme_name):
         for side in ax.spines.values():
             side.set_color(th["teal"] if row["donor"] else th["muted"])
             side.set_linewidth(2 if row["donor"] else 1)
-        ax.set_title(f"{row['name']}\n{'Type II donor' if row['donor'] else 'no donor'}, nearest N to iron {row['distance']:.2f} A", fontsize=8)
+        ax.set_title(f"{row['name']}\n{'Type II donor' if row['donor'] else 'no donor'}, nearest N to iron {row['distance']:.2f} Å", fontsize=8)
     fig.tight_layout()
     return fig
 

@@ -130,7 +130,7 @@ def power_events_figure(theme_name):
     ax.set_yticks(range(1, len(causes) + 1), causes)
     ax.set_ylim(len(causes) + 0.7, -1.1)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%d %b"))
-    ax.xaxis.set_major_locator(mdates.DayLocator())
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=3))  # one label a day is wider than the day
     tidy(ax, th)
     fig.tight_layout()
     return fig

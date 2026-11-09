@@ -149,7 +149,7 @@ def rmsd_lddt(theme_name):
             ax.fill_between(x, x - tolerance, x + tolerance, color=th["green"], alpha=alpha, linewidth=0)
         ax.plot(x, x, color=th["muted"], lw=1)
         ax.scatter(pose["reference_d"], pose["model_d"], s=7, color=color, alpha=0.6, linewidths=0)
-        ax.set(xlim=(0, 6.2), ylim=(0, top), xlabel="ligand-protein distance in the crystal (A)", ylabel="in the prediction (A)", title=f"LDDT-PLI {pose['lddt']:.2f}")
+        ax.set(xlim=(0, 6.2), ylim=(0, top), xlabel="ligand-protein distance in the crystal (Å)", ylabel="in the prediction (Å)", title=f"LDDT-PLI {pose['lddt']:.2f}")
         tidy(ax, th)
     fig.tight_layout()
     return fig
@@ -183,7 +183,7 @@ def pose_pools(theme_name):
         ax.scatter(position, outcomes.loc[compound, "mbr_boltz"], s=70, marker="D", color=th["orange"], zorder=3)
     ax.axhline(SUCCESS_A, color=th["muted"], ls=":", lw=1.2)
     ax.set_xticks(range(len(order)), [short(c) for c in order], rotation=40, fontsize=8)
-    ax.set(ylabel="RMSD to the crystal pose (A)", title="one dot per sample of the pool")
+    ax.set(ylabel="RMSD to the crystal pose (Å)", title="one dot per sample of the pool")
     ax.scatter([], [], s=62, color=th["blue"], label="first sample (the model's choice)")
     ax.scatter([], [], s=130, facecolor="none", edgecolor=th["green"], linewidth=2, label="best sample of the pool")
     ax.scatter([], [], s=70, marker="D", color=th["orange"], label="minimum Bayes risk pick")

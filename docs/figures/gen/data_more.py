@@ -139,15 +139,17 @@ def nodirect_study() -> dict:
     for iso in ISOFORMS:
         labelled = train[train[f"{iso}_is_TDI"].notna()]
         direct = labelled[f"{iso}_pIC50_direct_inhibition"].notna()
-        rows[iso] = {"both": int(direct.sum()), "none": int((~direct).sum()), "rate_both": float(labelled.loc[direct, f"{iso}_is_TDI"].astype(float).mean()), "rate_none": float(labelled.loc[~direct, f"{iso}_is_TDI"].astype(float).mean()),
-                     "tdi_both": labelled.loc[direct, f"{iso}_pIC50_TDI_condition"].dropna().to_numpy(), "tdi_none": labelled.loc[~direct, f"{iso}_pIC50_TDI_condition"].dropna().to_numpy()}
+        both_arms = direct & labelled[f"{iso}_pIC50_TDI_condition"].notna()  # the population of the pool: a compound with a direct curve and no value in the TDI arm is in neither group
+        rows[iso] = {"both": int(both_arms.sum()), "none": int((~direct).sum()), "other": int((direct & ~both_arms).sum()),
+                     "rate_both": float(labelled.loc[both_arms, f"{iso}_is_TDI"].astype(float).mean()), "rate_none": float(labelled.loc[~direct, f"{iso}_is_TDI"].astype(float).mean()),
+                     "tdi_both": labelled.loc[both_arms, f"{iso}_pIC50_TDI_condition"].dropna().to_numpy(), "tdi_none": labelled.loc[~direct, f"{iso}_pIC50_TDI_condition"].dropna().to_numpy()}
     return rows
 
 
 def nodirect_caption() -> str:
     study = nodirect_study()
     a, d = study["CYP3A4"], study["CYP2D6"]
-    return (f"The labelled compounds that have no direct-inhibition curve. For CYP3A4, {a['none']} of {a['both'] + a['none']} labelled compounds were measured only in the TDI arm, and all of them are labelled negative ({a['rate_none']:.0%} positive, against {a['rate_both']:.1%} of the {a['both']} compounds that have both arms), "
+    return (f"The labelled compounds that have no direct-inhibition curve. For CYP3A4, {a['none']} of {a['both'] + a['none'] + a['other']} labelled compounds were measured only in the TDI arm, and all of them are labelled negative ({a['rate_none']:.0%} positive, against {a['rate_both']:.1%} of the {a['both']} compounds that have both arms; {a['other']} more has a direct curve and no value in the TDI arm and is in neither group), "
             f"although their TDI-arm potency is high (median pIC50 {np.median(a['tdi_none']):.1f}, against {np.median(a['tdi_both']):.1f} for the compounds with both arms): the label rule needs the direct value to compute a shift, and without it the convention assigns a negative. "
             f"The blinded test set was measured in both arms, so it has no such compounds; training on them and scoring on them mixes two populations, which is why they are excluded from the pool of CYP3A4 (section 2.4). For CYP2D6 only {d['none']} labelled compounds are in this group. "
             "Left: the counts and the share of positives in each group; right: the TDI-arm potency of the two groups of CYP3A4; the dashed line is 4.301, the potency above which the organisers infer a positive for a compound with a direct pIC50 of 4 or less.")

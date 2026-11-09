@@ -166,9 +166,15 @@ def commit_days() -> pd.Series:
     return pd.Series(Counter(log)).sort_index()
 
 
+@cache
+def history_head() -> str:
+    """The commit that the history was counted at, so that a count printed in a figure names the state it describes."""
+    return subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
+
+
 def timeline_caption() -> str:
     days = commit_days()
-    return (f"The history of the repository as the number of commits of each day, from the first commit on {days.index[0]} to the last on {days.index[-1]}: {int(days.sum())} commits on {len(days)} days, the busiest day with {int(days.max())} ({days.idxmax()}). "
+    return (f"The history of the repository as the number of commits of each day, from the first commit on {days.index[0]} to the last on {days.index[-1]}: {int(days.sum())} commits on {len(days)} days up to commit {history_head()}, the busiest day with {int(days.max())} ({days.idxmax()}). "
             "The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.")
 
 
@@ -182,7 +188,7 @@ def commit_timeline(theme_name):
     ax.bar(range(len(counts)), counts.to_numpy(), color=th["blue"], width=0.85)
     ticks = list(range(0, len(counts), max(1, len(counts) // 10)))
     ax.set_xticks(ticks, [counts.index[i][5:] for i in ticks], fontsize=8)
-    ax.set(xlabel="day (month-day)", ylabel="commits", title=f"{int(counts.sum())} commits")
+    ax.set(xlabel="day (month-day)", ylabel="commits", title=f"{int(counts.sum())} commits up to {history_head()}")
     tidy(ax, th)
     fig.tight_layout()
     return fig
@@ -576,7 +582,7 @@ def engine_comparison(theme_name):
             ax.scatter(x, rows["true_rmsd"].iloc[0], s=60, color=color, edgecolor=th["text"], linewidth=1.2, zorder=3)
     ax.axhline(2.0, color=th["muted"], ls=":", lw=1.2)
     ax.set_xticks(range(len(ligands)), [c.removeprefix("bench-") for c in ligands], rotation=40, fontsize=8)
-    ax.set(ylabel="RMSD to the crystal pose (A)", title="one dot per sample; the ringed dot is the first sample")
+    ax.set(ylabel="RMSD to the crystal pose (Å)", title="one dot per sample; the ringed dot is the first sample")
     for engine, color in (("Boltz-2", th["blue"]), ("OpenFold3", th["orange"]), ("BioEmu2", th["teal"])):
         ax.scatter([], [], color=color, label=engine)
     ax.legend(frameon=False, fontsize=8, loc="upper left")

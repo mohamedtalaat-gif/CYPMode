@@ -71,7 +71,14 @@ def test_the_readme_block_says_that_the_questions_are_pending_until_the_tables_e
     pd.DataFrame({"best": [0.6], "random": [0.4], "submitted": [0.5]}).to_csv(outputs / "structure_question5b.csv", index=False)
     pd.DataFrame({"truth_coordinated": [False, True], "False": [8, 0], "True": [8, 4]}).to_csv(outputs / "structure_question5c_counts.csv", index=False)
     pd.DataFrame({"arm": ["submitted", "baseline"], "LDDT-PLI": [0.41, 0.42]}).to_csv(outputs / "structure_poses_scored.csv", index=False)
+    without_distances = report.readme_block(outputs)
+    assert "angstroms from the iron" not in without_distances and without_distances.count("cut-off of 2.6 angstroms.") == 1  # no per-ligand table: the sentence ends at the cut-off
+    pd.DataFrame(
+        {"ligand": list("abcdefghij"), "truth_distance": [2.75, 2.8, 2.9, 3.0, 3.01, 3.02, 4.4, 4.9, 2.1, 1.9], "truth_coordinated": [False] * 8 + [True] * 2, "submitted_coordinated": [True] * 10, "resolution": [3.0, 3.6, 3.3, 3.0, 3.5, 3.0, 3.0, None, 3.0, 3.0]}
+    ).to_csv(outputs / "structure_question5c.csv", index=False)
     text = report.readme_block(outputs)
     assert "place the TDI entry 14 of 62 (tier 2 of 5" in text and "the structure entry 15 of 38" in text and "candidate A" in text
     assert "for all 1488 compounds" in text and "at most 0.040 to the macro MCC, against 0.126 between" in text
-    assert "all 4 coordinated ligands and called 8 more ligands coordinated although" in text and "no difference shown" in text
+    assert "all 4 coordinated ligands and called 8 more ligands coordinated that the released structures place beyond the cut-off of 2.6 angstroms" in text and "no difference shown" in text
+    assert "the nearest nitrogen of the ligand lies 2.75 to 4.90 angstroms from the iron, 6 of the 8 within 3.1 angstroms, in maps of 3.0 to 3.6 angstroms resolution" in text  # the eight ligands that are not coordinated in the structure
+    assert "although the structures show no contact" not in text

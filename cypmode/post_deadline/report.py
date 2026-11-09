@@ -36,6 +36,21 @@ def _json(folder: Path, name: str) -> dict | None:
     return json.loads(path.read_text()) if path.exists() else None
 
 
+def describe_extra_calls(folder: Path) -> str:
+    """The distance to the iron in the released structures of the ligands that the submitted poses call coordinated and the structures do not: the range, how many lie within 0.5 angstroms of the cut-off, and the resolution of their maps."""
+    from cypmode.validation.constants import COORDINATION_DISTANCE_CUTOFF_A
+
+    rows = _read(folder, "structure_question5c.csv")
+    if rows is None:
+        return ""
+    extra = rows[~rows["truth_coordinated"] & rows["submitted_coordinated"]]
+    if extra.empty:
+        return ""
+    near = int((extra["truth_distance"] <= COORDINATION_DISTANCE_CUTOFF_A + 0.5).sum())
+    resolutions = extra["resolution"].dropna()
+    return (f"the nearest nitrogen of the ligand lies {extra['truth_distance'].min():.2f} to {extra['truth_distance'].max():.2f} angstroms from the iron, {near} of the {len(extra)} within "
+            f"{COORDINATION_DISTANCE_CUTOFF_A + 0.5:.1f} angstroms, in maps of {resolutions.min():.1f} to {resolutions.max():.1f} angstroms resolution")
+
 def tdi_lines(folder: Path) -> list[str]:
     gate = _json(folder, "tdi_gate.json")
     if gate is None:
@@ -135,6 +150,9 @@ def structure_lines(folder: Path) -> list[str]:
             *_table(counts),
             "",
         ]
+        extra = describe_extra_calls(folder)
+        if extra:
+            lines += [f"Of the ligands that the submitted poses call coordinated and the released structures do not, {extra}. A distance within half an angstrom of the cut-off, in maps of this resolution, does not exclude a contact: the table counts the ligands beyond the cut-off and does not show that they make no contact.", ""]
         if resolution is not None:
             lines += [f"The rank correlation between the resolution of the released map and the LDDT-PLI of the submitted pose is {resolution['spearman_rho']:+.3f} over {resolution['compounds']} compounds ({resolution.get('without_resolution', 0)} files record no resolution).", ""]
     return lines
@@ -165,6 +183,8 @@ def readme_block(folder: Path = OUT) -> str:
     tdi, structure = board["classification"], board["structure"]
     mean = poses[poses["arm"].isin(["submitted", "baseline"])].groupby("arm")["LDDT-PLI"].mean()
     pool = b[["best", "random", "submitted"]].mean()
+    from cypmode.validation.constants import COORDINATION_DISTANCE_CUTOFF_A
+
     coordinated_true, called = int(counts.loc[counts["truth_coordinated"], "True"].sum()), int(counts["True"].sum())
     gap = tdi["first"]["MA-MCC"] - tdi["values"]["MA-MCC"]["mean"]
     labelled = [int(x) for x in agreement.set_index("isoform").loc[["CYP3A4", "CYP2D6"], "labelled"]]
@@ -184,7 +204,8 @@ def readme_block(folder: Path = OUT) -> str:
             f"- Another threshold on the stored scores would have added at most {macro_diff:.3f} to the macro MCC, against {gap:.3f} between the entry and the first of the board.",
             (f"- On the 20 released structures the submitted poses ({mean['submitted']:.3f} LDDT-PLI) cannot be told from the published Boltz-2 baseline ({mean['baseline']:.3f}): {verdict_a}. "
             f"The pool of poses held better ones (the best of each pool gives {pool['best']:.3f} on average) than the choice among them, and the contact restraint found all {coordinated_true} coordinated ligands "
-            f"and called {called - coordinated_true} more ligands coordinated although the structures show no contact."),
+            f"and called {called - coordinated_true} more ligands coordinated that the released structures place beyond the cut-off of {COORDINATION_DISTANCE_CUTOFF_A} angstroms"
+            + (f": {describe_extra_calls(folder)}." if describe_extra_calls(folder) else ".")),
             "",
             "The tables are in section 15 of [the method report](METHOD_REPORT.md) and in 13.5 to 13.8 of the notebook.",
         ]
