@@ -1,41 +1,142 @@
 {
   "record": {
-    "doi": "",
-    "base_url": "",
+    "doi": "10.5281/zenodo.24091837",
+    "base_url": "https://zenodo.org/records/24091837/files",
     "url_suffix": "?download=1"
   },
   "archives": [
     {
       "name": "tdi-track-outputs",
-      "archive": "tdi-track-outputs.tar.gz",
-      "bytes": 1152078625,
-      "sha256": "febf1de173d2ead8d81e72f2cf9f086c96c9ffb122a1c168d86d298c78e741fd",
-      "files": 32584,
-      "files_bytes": 1204637250
+      "archive": "tdi-track-outputs.tar.xz",
+      "bytes": 1149249296,
+      "sha256": "3bf23e65c0dd37f56e9077d00aacb7f034c5bfae62bc65e4c3c6df640edab837",
+      "files": 32567,
+      "files_bytes": 1204518398,
+      "parts": [
+        {
+          "name": "tdi-track-outputs.tar.xz.part-000",
+          "bytes": 250000000,
+          "sha256": "4fa63d2bf1d5bcd79c747ca49195933eb39b8adbe26fc920b2ff5fcc25baa087"
+        },
+        {
+          "name": "tdi-track-outputs.tar.xz.part-001",
+          "bytes": 250000000,
+          "sha256": "4fe6807ecc9ea1b94c69cd396d8e1aa9c4053fe97f0b787a10f4d5d3c016791c"
+        },
+        {
+          "name": "tdi-track-outputs.tar.xz.part-002",
+          "bytes": 250000000,
+          "sha256": "2f927e3756d78dd4721489d43359cf543a7036c748b41d9182f834c19f4d4130"
+        },
+        {
+          "name": "tdi-track-outputs.tar.xz.part-003",
+          "bytes": 250000000,
+          "sha256": "c8693d7b3ff2a84d7f9dc0d44032702285ec425f78091bcbbf1a5c72fd817aa3"
+        },
+        {
+          "name": "tdi-track-outputs.tar.xz.part-004",
+          "bytes": 149249296,
+          "sha256": "322e93686b5bffece92a8ce578430040be6aa33abf993e6509c7b3b3b24ad386"
+        }
+      ]
     },
     {
       "name": "structure-track-boltz-2-outputs",
-      "archive": "structure-track-boltz-2-outputs.tar.gz",
-      "bytes": 3144719810,
-      "sha256": "19593ae421229a9b9492e122425cc504cc2959c972bb5af0e4da7127bbe9e443",
-      "files": 6334,
-      "files_bytes": 4829122151
+      "archive": "structure-track-boltz-2-outputs.tar.xz",
+      "bytes": 2507068868,
+      "sha256": "42ba95ef30e76a0a54c18ad7113dfe1a932b29cdadb01daacca59fa27d7c8888",
+      "files": 6075,
+      "files_bytes": 4827447899,
+      "parts": [
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-000",
+          "bytes": 250000000,
+          "sha256": "ef9cadd08fe6d31f1c20c65e1a6ba9f13c751456544badb388b91b39d2846a48"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-001",
+          "bytes": 250000000,
+          "sha256": "9e23df9fbc1fa699641dce2053dacbfc2c0636f596e1b739ad8b2ac836c79de6"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-002",
+          "bytes": 250000000,
+          "sha256": "4702c0a22473fee1bb00cd4d8c7f75f712818910012010519c0ba369b4696eba"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-003",
+          "bytes": 250000000,
+          "sha256": "09f9cd8fa5cadb6b0e042e0635d90bbf45dbd37d43641d4fb70f991ee9e3fe71"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-004",
+          "bytes": 250000000,
+          "sha256": "968f845406252686ccc2057dcf5c84beac564747dbe73288e850ade0e1f85b0a"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-005",
+          "bytes": 250000000,
+          "sha256": "8beab73305c24c3f31219cb64501ee2d4a9b39a892ba6b5742d97bbc806ebeb9"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-006",
+          "bytes": 250000000,
+          "sha256": "097ee4488efd3de41b7947f4039288d2b4fa9ee73c4bbb29263fa4e04e81d7b4"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-007",
+          "bytes": 250000000,
+          "sha256": "792b23cae53efd6da7fc7f38481f94c361f50b1588cf0d1291886e98e747e2a9"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-008",
+          "bytes": 250000000,
+          "sha256": "796c1c09d5b738c067d07149b31e783b414a9f1cc87725b5903f68a1ac3de88b"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-009",
+          "bytes": 250000000,
+          "sha256": "6e7e6f0d3856fc65309c2febce5390b6a28311968c172363dbc303fbd8c6e1e4"
+        },
+        {
+          "name": "structure-track-boltz-2-outputs.tar.xz.part-010",
+          "bytes": 7068868,
+          "sha256": "1736fab8c202bc8ebe702777efa3a35fb6a6425132cf5aabccc64873e0e5608f"
+        }
+      ]
     },
     {
       "name": "structure-track-openfold3-outputs",
-      "archive": "structure-track-openfold3-outputs.tar.gz",
-      "bytes": 736212236,
-      "sha256": "f8701288e136eba7dd5550c143dada5a59ca4c975efb01525b8534f158bdb62c",
-      "files": 1065,
-      "files_bytes": 1661086928
+      "archive": "structure-track-openfold3-outputs.tar.xz",
+      "bytes": 539198952,
+      "sha256": "59d07ba7a305458185b0e03bab630fa8844f1465e1e4ced6d939f4c3272e0e9e",
+      "files": 998,
+      "files_bytes": 1660623812,
+      "parts": [
+        {
+          "name": "structure-track-openfold3-outputs.tar.xz.part-000",
+          "bytes": 250000000,
+          "sha256": "5eb905904960fc479e8763d443b73cb13ce6eb5d04b2583deba510bc34c28ec1"
+        },
+        {
+          "name": "structure-track-openfold3-outputs.tar.xz.part-001",
+          "bytes": 250000000,
+          "sha256": "f520574f855df337ba3d1ea416b99da006339a2f86446d7b81c373d6ac3152bb"
+        },
+        {
+          "name": "structure-track-openfold3-outputs.tar.xz.part-002",
+          "bytes": 39198952,
+          "sha256": "8c5d123af7d8c6984bf5739ca8d9a54619c6c175cb321458126653f5399e644a"
+        }
+      ]
     },
     {
       "name": "structure-track-results",
-      "archive": "structure-track-results.tar.gz",
-      "bytes": 26797,
-      "sha256": "91e034fbd1fa9aaf2632a0b44f108402db46796f175f17d79f7eaaad19dd48e2",
-      "files": 58,
-      "files_bytes": 129564
+      "archive": "structure-track-results.tar.xz",
+      "bytes": 16940,
+      "sha256": "ef6b25240e614770a478e0cd0079dc73d5cbeaffdc944765c5be620699ec6964",
+      "files": 49,
+      "files_bytes": 29176
     }
   ]
 }
