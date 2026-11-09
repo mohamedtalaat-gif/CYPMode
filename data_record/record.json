@@ -1,8 +1,9 @@
 {
-  "archive_suffix": ".tar.gz",
+  "archive_suffix": ".tar.xz",
+  "part_bytes": 250000000,
   "record": {
-    "doi": "",
-    "base_url": "",
+    "doi": "10.5281/zenodo.24091837",
+    "base_url": "https://zenodo.org/records/24091837/files",
     "url_suffix": "?download=1"
   },
   "groups": [
@@ -14,7 +15,8 @@
       "description": "the feature store, the prediction caches, the nested cross-validation outputs and the final outputs of the TDI track",
       "exclude": [
         "data/tdi_track/outputs/nested*/*/cache/*/tabpfn*",
-        "data/tdi_track/outputs/caches/chemberta_embedding_cache.csv"
+        "data/tdi_track/outputs/caches/chemberta_embedding_cache.csv",
+        "*/.DS_Store"
       ]
     },
     {
@@ -22,14 +24,20 @@
       "paths": [
         "data/structure_track/outputs/out"
       ],
-      "description": "the raw Boltz-2 outputs of the structure track"
+      "description": "the raw Boltz-2 outputs of the structure track",
+      "exclude": [
+        "*/.DS_Store"
+      ]
     },
     {
       "name": "structure-track-openfold3-outputs",
       "paths": [
         "data/structure_track/outputs/openfold3"
       ],
-      "description": "the raw OpenFold3 outputs of the structure track"
+      "description": "the raw OpenFold3 outputs of the structure track",
+      "exclude": [
+        "*/.DS_Store"
+      ]
     },
     {
       "name": "structure-track-results",
@@ -40,7 +48,8 @@
         "data/structure_track/outputs/out",
         "data/structure_track/outputs/openfold3",
         "data/structure_track/outputs/cyp3a4/final/structure_track_results.before_affinity_retry.json",
-        "data/structure_track/outputs/cyp3a4/logs/pre_submission_gate.log"
+        "data/structure_track/outputs/cyp3a4/logs/pre_submission_gate.log",
+        "*/.DS_Store"
       ],
       "description": "the tables, logs, submitted structures and other results of the structure track"
     }
@@ -76,6 +85,12 @@
         "data/structure_track/outputs/cyp3a4/logs/pre_submission_gate.log"
       ],
       "reason": "the log of the last run of the pre-submission gate, which reads files that exist only on the machine that ran it and is rewritten by every run; the checks of the gate that matter for the record are in the audit report"
+    },
+    {
+      "paths": [
+        "*/.DS_Store"
+      ],
+      "reason": "files that the Finder of macOS writes into a folder that it has shown; they hold nothing of the project"
     }
   ],
   "terms_read": [

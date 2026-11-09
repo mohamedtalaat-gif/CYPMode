@@ -10,7 +10,7 @@ import pytest
 from cypmode import data_record as dr
 
 POLICY = {
-    "archive_suffix": ".tar.gz",
+    "archive_suffix": ".tar.xz",
     "record": {"doi": "", "base_url": "", "url_suffix": ""},
     "groups": [
         {"name": "outputs", "paths": ["data/out"], "exclude": ["data/out/raw"]},
@@ -48,6 +48,13 @@ def test_the_build_writes_an_archive_per_group_and_the_manifest_with_their_sizes
         assert archive.stat().st_size == entry["bytes"] and dr.sha256_of(archive) == entry["sha256"]
     assert manifest["archives"][0]["files"] == 2 and dr.listed_paths(root, "outputs") == ["data/out/a.csv", "data/out/b/c.csv"]
     assert json.loads((root / dr.MANIFEST).read_text()) == manifest
+    assert all("parts" not in entry for entry in manifest["archives"])  # no part_bytes in the policy: one file per archive
+    (root / "data_record/record.json").write_text(json.dumps({**POLICY, "part_bytes": 100}))
+    cut = dr.build(root, tmp_path / "cut")["archives"][0]
+    parts = [tmp_path / "cut" / part["name"] for part in cut["parts"]]
+    assert len(parts) > 1 and not (tmp_path / "cut" / cut["archive"]).exists() and all(p.stat().st_size == part["bytes"] <= 100 for p, part in zip(parts, cut["parts"], strict=True))
+    assert all(dr.sha256_of(p) == part["sha256"] for p, part in zip(parts, cut["parts"], strict=True)) and sum(part["bytes"] for part in cut["parts"]) == cut["bytes"]
+    assert cut["bytes"] == manifest["archives"][0]["bytes"] and cut["sha256"] == manifest["archives"][0]["sha256"]  # the same archive, only cut
 
 
 def test_nothing_is_dropped_without_being_named(tmp_path):
@@ -69,16 +76,29 @@ def test_the_missing_files_are_named_per_group_and_fetch_restores_them_from_a_fo
     assert "python scripts/fetch_data.py fetch" in dr.message_for(gone)
     assert dr.fetch(root, str(tmp_path / "archives"), work=tmp_path / "work") == ["outputs", "raw"]
     assert dr.missing(root) == {} and (root / "data/out/a.csv").read_text() == "a"
+    (root / "data_record/record.json").write_text(json.dumps({**POLICY, "part_bytes": 100}))
+    dr.build(root, tmp_path / "cut")  # the archives as parts: the parts are joined, checked and extracted
+    (root / "data/out/a.csv").unlink()
+    (root / "data/out/raw/r.bin").unlink()
+    assert dr.fetch(root, str(tmp_path / "cut"), work=tmp_path / "work_cut") == ["outputs", "raw"]
+    assert dr.missing(root) == {} and (root / "data/out/raw/r.bin").read_text() == "raw" and sorted(p.name for p in (tmp_path / "work_cut").iterdir()) == []
 
 
 def test_an_archive_whose_hash_differs_from_the_manifest_is_refused_before_anything_is_extracted(tmp_path):
     root = _repository(tmp_path)
     dr.build(root, tmp_path / "archives")
     (root / "data/out/a.csv").unlink()
-    archive = tmp_path / "archives/outputs.tar.gz"
+    archive = tmp_path / "archives/outputs.tar.xz"
     archive.write_bytes(archive.read_bytes() + b"x")
     with pytest.raises(SystemExit, match="differs from the manifest"):
         dr.fetch(root, str(tmp_path / "archives"), work=tmp_path / "work")
+    assert not (root / "data/out/a.csv").exists()
+    (root / "data_record/record.json").write_text(json.dumps({**POLICY, "part_bytes": 100}))
+    dr.build(root, tmp_path / "cut")
+    part = next((tmp_path / "cut").glob("outputs.tar.xz.part-001"))
+    part.write_bytes(part.read_bytes()[:-1] + b"x")  # one byte of one part differs: the part is refused before anything is extracted
+    with pytest.raises(SystemExit, match="differs from the manifest"):
+        dr.fetch(root, str(tmp_path / "cut"), work=tmp_path / "work_cut")
     assert not (root / "data/out/a.csv").exists()
 
 

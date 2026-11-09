@@ -5,7 +5,7 @@
 """The data record: the files that the repository does not hold (the caches, the nested-validation outputs and the raw outputs of the structure engines) packed into a few archives, and the way back.
 
 ``data_record/record.json`` is the policy: it names the groups of files that form the record (a folder, minus some sub-folders) and the folders and patterns that are left out, each with the reason.
-``build`` packs every group into one ``.tar.gz`` and writes ``data_record/MANIFEST.json`` (the size and SHA-256 of each archive) and, per group, the sorted list of its paths. ``fetch`` copies or downloads the archives, refuses any whose
+``build`` packs every group into one ``.tar.xz``, cuts an archive larger than ``part_bytes`` of the policy into parts that can be sent one by one, and writes ``data_record/MANIFEST.json`` (the size and SHA-256 of each archive and of each part) and, per group, the sorted list of its paths. ``fetch`` copies or downloads the archives (the parts of a cut archive are joined), refuses any whose
 SHA-256 differs, extracts them where the code looks for them and checks that every listed path is there. ``missing`` is the cheap presence check that the audit runs before it reads a file. A file counts as part of the record when git
 does not track it, whether the ``.gitignore`` hides it or not, so the same policy holds before and after the held-back files are committed.
 """
@@ -14,6 +14,7 @@ import fnmatch
 import gzip
 import hashlib
 import json
+import shutil
 import subprocess
 import tarfile
 import urllib.request
@@ -75,25 +76,51 @@ def _normalised(info: tarfile.TarInfo) -> tarfile.TarInfo:
     return info
 
 
-def pack(root: Path, group: dict, out_dir: Path, suffix: str = ".tar.gz") -> dict:
-    """Write the archive of one group and the sorted list of its paths; return the manifest entry."""
+def _split(archive: Path, part_bytes: int) -> list[dict]:
+    """Cut the archive into parts of at most `part_bytes` bytes, remove the whole file and return the manifest entries of the parts."""
+    parts = []
+    with open(archive, "rb") as source:
+        while True:
+            name = f"{archive.name}.part-{len(parts):03d}"
+            digest, size = hashlib.sha256(), 0
+            with open(archive.parent / name, "wb") as part:
+                while size < part_bytes:
+                    block = source.read(min(1 << 20, part_bytes - size))
+                    if not block:
+                        break
+                    part.write(block)
+                    digest.update(block)
+                    size += len(block)
+            if size == 0:
+                (archive.parent / name).unlink()
+                break
+            parts.append({"name": name, "bytes": size, "sha256": digest.hexdigest()})
+    archive.unlink()
+    return parts
+
+
+def pack(root: Path, group: dict, out_dir: Path, suffix: str = ".tar.xz", part_bytes: int = 0) -> dict:
+    """Write the archive of one group and the sorted list of its paths; return the manifest entry. An archive larger than `part_bytes` (when that is not 0) is kept as parts, and the entry then lists them."""
     files = group_files(root, group)
     if not files:
         raise SystemExit(f"group {group['name']}: no untracked file under {group['paths']}")
     out_dir.mkdir(parents=True, exist_ok=True)
     archive = out_dir / f"{group['name']}{suffix}"
-    with open(archive, "wb") as raw, gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0, compresslevel=6) as gz, tarfile.open(fileobj=gz, mode="w") as tar:
+    with tarfile.open(archive, "w:xz", preset=6) as tar:
         for name in files:
             tar.add(root / name, arcname=name, recursive=False, filter=_normalised)
     (root / LISTS).mkdir(parents=True, exist_ok=True)
     with open(root / LISTS / f"{group['name']}.txt.gz", "wb") as raw, gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as gz:
         gz.write(("\n".join(files) + "\n").encode())
-    return {"name": group["name"], "archive": archive.name, "bytes": archive.stat().st_size, "sha256": sha256_of(archive), "files": len(files), "files_bytes": sum((root / f).stat().st_size for f in files)}
+    entry = {"name": group["name"], "archive": archive.name, "bytes": archive.stat().st_size, "sha256": sha256_of(archive), "files": len(files), "files_bytes": sum((root / f).stat().st_size for f in files)}
+    if part_bytes and entry["bytes"] > part_bytes:
+        entry["parts"] = _split(archive, part_bytes)
+    return entry
 
 
 def build(root: Path, out_dir: Path) -> dict:
     policy = load_policy(root)
-    manifest = {"record": policy.get("record", {}), "archives": [pack(root, g, out_dir, policy.get("archive_suffix", ".tar.gz")) for g in policy["groups"]]}
+    manifest = {"record": policy.get("record", {}), "archives": [pack(root, g, out_dir, policy.get("archive_suffix", ".tar.xz"), policy.get("part_bytes", 0)) for g in policy["groups"]]}
     (root / MANIFEST).write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest
 
@@ -125,6 +152,22 @@ def _obtain(source: str, entry: dict, work: Path, url_suffix: str = "") -> Path:
     return target
 
 
+def _assemble(source: str, entry: dict, work: Path, url_suffix: str = "") -> Path:
+    """The whole archive of an entry that was cut into parts: every part is obtained and checked, and the parts are joined in `work`."""
+    target = work / entry["archive"]
+    downloaded = source.startswith(("http://", "https://"))
+    with open(target, "wb") as whole:
+        for part in entry["parts"]:
+            path = _obtain(source, {"archive": part["name"]}, work, url_suffix)
+            if path.stat().st_size != part["bytes"] or sha256_of(path) != part["sha256"]:
+                raise SystemExit(f"{path}: the size or the SHA-256 differs from the manifest; nothing was extracted from it")
+            with open(path, "rb") as piece:
+                shutil.copyfileobj(piece, whole, 1 << 20)
+            if downloaded:
+                path.unlink()
+    return target
+
+
 def fetch(root: Path, source: str | None = None, only: list[str] | None = None, work: Path | None = None) -> list[str]:
     """Copy or download the archives, refuse any whose SHA-256 or size differs from the manifest, extract them under `root` and check the listed paths. Returns the names of the groups restored."""
     manifest = json.loads((root / MANIFEST).read_text())
@@ -137,11 +180,14 @@ def fetch(root: Path, source: str | None = None, only: list[str] | None = None, 
     for entry in manifest["archives"]:
         if only and entry["name"] not in only:
             continue
-        archive = _obtain(source, entry, work, manifest["record"].get("url_suffix", ""))
+        suffix = manifest["record"].get("url_suffix", "")
+        archive = _assemble(source, entry, work, suffix) if entry.get("parts") else _obtain(source, entry, work, suffix)
         if archive.stat().st_size != entry["bytes"] or sha256_of(archive) != entry["sha256"]:
             raise SystemExit(f"{archive}: the size or the SHA-256 differs from the manifest; nothing was extracted from it")
-        with tarfile.open(archive, "r:gz") as tar:
+        with tarfile.open(archive, "r:*") as tar:
             tar.extractall(root, filter="data")
+        if entry.get("parts"):
+            archive.unlink()  # the joined copy is not needed once it is extracted
         absent = [p for p in listed_paths(root, entry["name"]) if not (root / p).exists()]
         if absent:
             raise SystemExit(f"{entry['name']}: {len(absent)} listed path(s) are not there after extraction, e.g. {absent[0]}")
