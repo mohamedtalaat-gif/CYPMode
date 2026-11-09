@@ -287,6 +287,8 @@ AUC and MCC are not comparable across rows with different evaluation populations
 | CYP2D6 | nested best single candidate | similarity x prevalence x confident (z0 = 1.96) | 1493 | 0.7255 | 0.1834 |
 | CYP2D6 | nested stack (StackedLogit) | similarity x prevalence x confident (z0 = 1.96) | 1493 | 0.7536 | 0.2036 |
 
+The line "both-arms rows" of this table holds the labelled rows that have a direct curve: CYP3A4 1 row(s) with a direct curve and no value in the TDI arm, which the pool of the stack and the check of the label rule do not count as having both arms.
+
 ## 6. Final TDI stack (chosen by the pre-registered gate rule)
 
 Each isoform has the stack that the pre-registered rule selects, from the nested cross-validation on the population the challenge scores. CYP3A4: the final stack has 28 candidates (AUC 0.8338 at z0 = 1.0 and 0.8622 at z0 = 1.96, MCC 0.476 and 0.5388), above the default stack of 23 candidates (AUC 0.817 and 0.8443) by 0.0168 (p = 0.0002) and 0.0179 (p = 0.0009). CYP2D6: the final stack is the default stack of 23 candidates (AUC 0.7312 at z0 = 1.0 and 0.7536 at z0 = 1.96, MCC 0.1672 and 0.2036); no added group passed its gate. The positive calls are the top 40.3% of the test compounds for CYP3A4 and the top 5.9% for CYP2D6.
@@ -727,11 +729,11 @@ flowchart LR
   audit -->|2| post_deadline
   data -->|2| metrics
   explorer -->|2| audit
+  post_deadline -->|2| validation
   audit -->|1| explorer
   data -->|1| challenge
   explorer -->|1| challenge
   explorer -->|1| top_level
-  post_deadline -->|1| validation
 ```
 
 Sources credited (published, linked): OpenADMET CYP blind challenge and its official LightGBM baseline; the OpenADMET blog post
@@ -839,5 +841,7 @@ Taking the mean of the two isoforms, the submitted calls give 0.3718 and the bes
 | --- | --- | --- |
 | False | 8 | 8 |
 | True | 0 | 4 |
+
+Of the ligands that the submitted poses call coordinated and the released structures do not, the nearest nitrogen of the ligand lies 2.75 to 4.93 angstroms from the iron, 6 of the 8 within 3.1 angstroms, in maps of 3.0 to 3.6 angstroms resolution. A distance within half an angstrom of the cut-off, in maps of this resolution, does not exclude a contact: the table counts the ligands beyond the cut-off and does not show that they make no contact.
 
 The rank correlation between the resolution of the released map and the LDDT-PLI of the submitted pose is +0.285 over 17 compounds (3 files record no resolution).

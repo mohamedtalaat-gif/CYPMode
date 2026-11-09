@@ -132,7 +132,7 @@ Counts: PASS = 104, FAIL = 0, INFO = 6, SKIP = 0
 | rdkit | 2026.3.6 |
 | PyYAML | 6.0.3 |
 
-Git HEAD `8d34fa7`; working tree: 0 modified, 0 deleted, 0 untracked entries.
+Git HEAD `c1f5f79`; working tree: 0 modified, 0 deleted, 0 untracked entries.
 
 Input files (size in bytes, sha256 prefix):
 
@@ -232,6 +232,8 @@ AUC and MCC are not comparable across rows with different evaluation populations
 | CYP2D6 | nested stack (StackedLogit) | similarity x prevalence x confident (z0 = 1.0) | 1493 | 0.7312 | 0.1672 |
 | CYP2D6 | nested best single candidate | similarity x prevalence x confident (z0 = 1.96) | 1493 | 0.7255 | 0.1834 |
 | CYP2D6 | nested stack (StackedLogit) | similarity x prevalence x confident (z0 = 1.96) | 1493 | 0.7536 | 0.2036 |
+
+The line "both-arms rows" of this table holds the labelled rows that have a direct curve: CYP3A4 1 row(s) with a direct curve and no value in the TDI arm, which the pool of the stack and the check of the label rule do not count as having both arms.
 
 ## 6. Committee (query-by-committee) backtest against the margin baseline
 

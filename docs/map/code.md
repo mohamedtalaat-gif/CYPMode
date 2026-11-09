@@ -1,6 +1,6 @@
 # The code
 
-The project has 179 modules in 8 packages, and the modules hold 600 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
+The project has 179 modules in 8 packages, and the modules hold 601 imports of one another. Each arrow below goes from a package to a package whose modules it imports, and its label counts those imports.
 
 ```mermaid
 flowchart LR
@@ -25,11 +25,11 @@ flowchart LR
   audit -->|2| post_deadline
   data -->|2| metrics
   explorer -->|2| audit
+  post_deadline -->|2| validation
   audit -->|1| explorer
   data -->|1| challenge
   explorer -->|1| challenge
   explorer -->|1| top_level
-  post_deadline -->|1| validation
 ```
 
 A module-level drawing of the largest packages would hold hundreds of arrows and say less than the tables, so each package below lists its modules with what they import and what imports them.
@@ -155,7 +155,7 @@ Structural validation against Boltz-2 predictions.
 | `cypmode/validation/conformer_benchmark.py` | Batch input for the conformer-conditioning experiment on the crystal benchmark. | `validation.conformers`, `validation.pose_rescoring_validation`, `validation.reference_ligands` | none |
 | `cypmode/validation/conformer_bias.py` | Check of the conformational bias of the ligand ensembles (job 273_conformer_bias, declared on 2026-10-23 before any code ran). | `challenge.pocket_pharmacophore`, `provenance` | none |
 | `cypmode/validation/conformers.py` | Distinct crystal conformations of the CYP3A4 pocket, to condition co-folding on more than one of them. | `validation.pose_rescoring`, `validation.reference_ligands` | `validation.batch`, `validation.conformer_benchmark`, `validation.cryoem_templates`, `validation.diversity_pilot` |
-| `cypmode/validation/constants.py` | Shared constants with no heavy dependencies of their own. | none | `post_deadline.structure`, `validation.pipeline`, `validation.pose_consensus`, `validation.structures` |
+| `cypmode/validation/constants.py` | Shared constants with no heavy dependencies of their own. | none | `post_deadline.report`, `post_deadline.structure`, `validation.pipeline`, `validation.pose_consensus`, `validation.structures` |
 | `cypmode/validation/cryoem_templates.py` | Cryo-EM protein templates for the pose pool (job 135_boltz_cryoem_pilot). | `validation.conformers`, `validation.pose_rescoring_validation`, `validation.reference_ligands` | `validation.final_recipe` |
 | `cypmode/validation/diversity_pilot.py` | Pilot: which lever makes Boltz-2's pose pool differ, and does the difference reach the right pose? | `validation.conformers`, `validation.pose_consensus`, `validation.pose_rescoring_validation`, `validation.reference_ligands`, `validation.structures` | `validation.final_recipe`, `validation.structure_gates` |
 | `cypmode/validation/ei_sampling.py` | Expected-improvement sampling: spend extra poses where the pool disagrees most (job 172_ei_sampling). | `validation.pose_pools`, `validation.selection_validation` | `validation.ost_pool_gates` |
@@ -229,7 +229,7 @@ The analysis of the submitted entries against what the organisers released after
 | --- | --- | --- | --- |
 | `cypmode/post_deadline/board.py` | The row of the submitted entries on the final leaderboards of the organisers, read from the two files that the Space of the challenge exports. | `post_deadline.released` | none |
 | `cypmode/post_deadline/released.py` | The files that the organisers released after the deadline, fetched by name and recorded by SHA-256. | none | `post_deadline.board`, `post_deadline.report`, `post_deadline.structure`, `post_deadline.tdi` |
-| `cypmode/post_deadline/report.py` | The section of the method report about the analysis after the deadline: every number is read from the tables and the logs that the analysis wrote (`docs/post_deadline/PLAN.md` is the plan). | `post_deadline.released` | `audit.docs_state`, `audit.method_report` |
+| `cypmode/post_deadline/report.py` | The section of the method report about the analysis after the deadline: every number is read from the tables and the logs that the analysis wrote (`docs/post_deadline/PLAN.md` is the plan). | `post_deadline.released`, `validation.constants` | `audit.docs_state`, `audit.method_report` |
 | `cypmode/post_deadline/structure.py` | The questions of `docs/post_deadline/PLAN.md` about the structure track: the scoring gate (question 0) and the compound by compound comparison (question 5). | `challenge.structure_submission`, `post_deadline.released`, `validation.constants` | none |
 | `cypmode/post_deadline/structure_worker.py` | The scoring of poses with the organisers' own functions, run in the environment that holds OpenStructure and PoseBusters. | none | none |
 | `cypmode/post_deadline/tdi.py` | The questions of `docs/post_deadline/PLAN.md` about the time-dependent inhibition track: the scoring gate (question 0), the two candidates (1), the label rule and the scored set (2) and the threshold (3). | `challenge.label_confidence`, `challenge.tdi_targets`, `post_deadline.released` | none |
