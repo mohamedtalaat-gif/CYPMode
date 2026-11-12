@@ -15,6 +15,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+plt.rcParams["svg.hashsalt"] = "cypmode-figures"  # the same ids for the clip paths in every build
+
 ROOT = Path(__file__).resolve().parents[2]
 POSEBUSTERS_PATH = ROOT / "data" / "structure_track" / "outputs" / "cyp3a4" / "posebusters_validity.csv"
 OUT_DIR = Path(__file__).resolve().parent / "structure_track"
@@ -102,7 +104,7 @@ def render(theme_name: str, colors: dict, n_pass: int, n_total: int, check_failu
 
     out_path = OUT_DIR / f"posebusters_summary-{theme_name}.svg"
     fig.tight_layout(pad=2)
-    fig.savefig(out_path, format="svg", bbox_inches="tight", pad_inches=0.3, facecolor=colors["background"])
+    fig.savefig(out_path, format="svg", bbox_inches="tight", pad_inches=0.3, facecolor=colors["background"], metadata={"Date": None})
     plt.close(fig)
     return out_path
 

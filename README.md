@@ -80,7 +80,7 @@ The tables are in section 15 of [the method report](METHOD_REPORT.md), which is 
 | How to explore the numbers? | the interactive explorer, a marimo notebook with a page for every section of the notebook: each page has a simulator that runs the project's own functions on small bundled data (a molecule, a pair of potencies, a noise level, a pocket in three dimensions) or replays what an engine produced, and it never trains one of the project's models or starts a job: `explorer/run_explorer.command` (macOS), `explorer/run_explorer.bat` (Windows) or `bash scripts/explorer.sh run`; the first start builds the environment `.venv-marimo` by itself (a few minutes, once), so nothing has to be installed or activated first |
 | Where is everything, and what depends on what? | the section "Map of the project" below and the four pages of [docs/map](docs/map/README.md), written from the files of the repository by `python -m cypmode.audit.project_map` |
 | How to check the claims? | [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md) (generated twice and compared byte for byte), the tests in `tests/` and `bash scripts/run_audit.sh` |
-| How to reproduce it? | Quick start below, `bash scripts/reproduce_tdi.sh` and the jobs of `queue/jobs/` |
+| How to reproduce it? | Quick start below, `bash scripts/reproduce_tdi.sh` and the jobs of `queue/jobs/`; the files that git does not hold are the [data record on Zenodo](https://doi.org/10.5281/zenodo.24091837) (`python scripts/fetch_data.py fetch`) |
 | Where is the design record? | [CYPMode_Architecture_Specification.md](CYPMode_Architecture_Specification.md) and the architecture sections of this file |
 
 <!-- generated:project-map begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
@@ -360,6 +360,7 @@ How the 20 poses of the submitted zip were chosen, from the verdicts of the gate
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[challenge,validate]"
+python scripts/fetch_data.py fetch              # the files that git does not hold, from the data record on Zenodo (4.2 GB, checked by SHA-256); `check` lists what is missing
 python -m pytest tests -q                       # main suite
 python -m pytest tests/test_quantum_pharmacophore.py tests/test_physics_block.py tests/test_physics_tierb.py -q   # tblite, own process
 bash scripts/run_audit.sh                       # audit report, generated twice and compared byte for byte
@@ -372,6 +373,8 @@ bash scripts/mirror_check.sh                      # after a push: remote branch,
 python -m notebooks.build_notebook              # rebuild the notebook (ipynb, html, pdf)
 bash scripts/explorer.sh run                    # the interactive explorer; the first start builds .venv-marimo by itself; also edit, html, ipynb, wasm and plan
 ```
+
+The data record is the dataset [10.5281/zenodo.24091837](https://doi.org/10.5281/zenodo.24091837): 20 files that make up four archives of the feature store, the prediction caches, the outputs of the nested validation, and the raw outputs of Boltz-2 and OpenFold3, with their licences listed in section 14 of the method report. `scripts/fetch_data.py fetch` downloads the parts, joins them, refuses any part or archive whose SHA-256 differs from `data_record/MANIFEST.json`, and extracts the archives where the code looks for them; `fetch --source FOLDER` does the same from a folder that holds the downloaded files.
 
 Torch-based tests (`tests/test_multitask.py`, `tests/test_chemberta_features.py`) and the tblite tests must not share a process with
 LightGBM; the section "Contributing" at the end of this file explains why and how each is run.

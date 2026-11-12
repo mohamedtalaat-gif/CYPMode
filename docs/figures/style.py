@@ -21,7 +21,7 @@ THEMES = {
     "dark": {"background": "#0D1117", "text": "#E6EDF3", "muted": "#9198A1", "grid": "#30363D", "blue": "#58A6FF", "red": "#F85149", "green": "#3FB950",
              "orange": "#F0883E", "purple": "#BC8CFF", "teal": "#39C5CF", "gold": "#D29922", "panel": "#161B22", "edge": "#E6EDF3"},
 }
-RCPARAMS = {"font.family": "sans-serif", "font.size": 11, "axes.titlesize": 12, "axes.labelsize": 11, "svg.fonttype": "none"}
+RCPARAMS = {"font.family": "sans-serif", "font.size": 11, "axes.titlesize": 12, "axes.labelsize": 11, "svg.fonttype": "none", "svg.hashsalt": "cypmode-figures"}  # a fixed salt gives the same ids to the clip paths and the glyphs in every build
 ROOT = Path(__file__).resolve().parent
 
 
@@ -50,7 +50,7 @@ def save(make, group: str, figure_id: str) -> list[Path]:
     for name in ("light", "dark"):
         fig = make(name)
         path = out_dir / f"{figure_id}-{name}.svg"
-        fig.savefig(path, format="svg")
+        fig.savefig(path, format="svg", metadata={"Date": None})  # no build date in the file, so that the same figure is the same bytes
         written.append(path)
         png = out_dir / f"{figure_id}-{name}.png"
         fig.savefig(png, format="png", dpi=200)

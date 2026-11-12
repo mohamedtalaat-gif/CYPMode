@@ -25,17 +25,17 @@ KINDS = {  # the family of a ledger row (the stem of its log) -> the kind of ide
 }
 
 TRIED = {  # one line on what each kind tried (the numbers of the table next to it are generated)
-    "data usage": "the organisers' single-concentration screen and Emax, the PXR induction readings, the NCATS and Tox21 panels, predicted logD and protein binding, the compounds without a direct curve, the unlabeled test structures as weights",
+    "data usage": "the organisers' single-concentration screen and Emax, the PXR induction readings, the NCATS and Tox21 panels, predicted logD and protein binding, the compounds without a direct curve, and the unlabelled test structures as weights",
     "representation and physics": "frozen embeddings of pretrained networks (CheMeleon, Monroe, Atom-JEPA), semi-empirical quantum chemistry at four levels, the basic-centre block for CYP2D6",
-    "learners and stacking": "tabular foundation models (TabICL, TabPFN, alone and on the embeddings), a multitask network, plain and fine-tuned Chemprop, the OpenADMET pretraining weights, a non-negative and a softmax blend",
+    "learners and stacking": "tabular foundation models (TabICL, TabPFN, alone and on the embeddings), a multitask network, plain and fine-tuned Chemprop, the OpenADMET pretraining weights, a non-negative blend, and a softmax blend",
     "label process and selection": "a model of how the labels came to be (the arms, the gate, the selection-aware CYP2D6 model and its blends), matched molecular pairs, cross-isoform transfer, committees of label models",
-    "structure levers": "restraint of the iron-nitrogen contact, conformer, seed, template and step-scale levers, minimum-Bayes-risk and other rules for choosing a pose, a second co-folding engine, expected-improvement sampling, the heme-frame prior",
+    "structure levers": "restraint of the iron-nitrogen contact, conformer, seed, template, and step-scale levers, minimum-Bayes-risk and other rules for choosing a pose, a second co-folding engine, expected-improvement sampling, and the heme-frame prior",
     "replicates": "the same comparison on ten outer folds for the physics additions and for the neural pair",
 }
 
 
 def stem_of(log: str) -> str:
-    """The family of a log: its name without the isoform, the replicate suffix and the extension."""
+    """The family of a log: its name without the isoform, the replicate suffix, and the extension."""
     return re.sub(r"(_f10)?\.log$", "", re.sub(r"_(CYP3A4|CYP2D6)(?=(_f10)?\.log)", "", log))
 
 
@@ -46,7 +46,7 @@ def totals() -> tuple[int, int, int]:
 
 
 def ledger_rows() -> pd.DataFrame:
-    """One row per pre-registered verdict: the log it was found in, the name of the gate, the family (stem of the log), its kind and the verdict."""
+    """One row per pre-registered verdict: the log it was found in, the name of the gate, the family (stem of the log), its kind, and the verdict."""
     from cypmode.audit.method_report import gate_rows
 
     kind_of = {stem: kind for kind, stems in KINDS.items() for stem in stems}
@@ -60,5 +60,5 @@ def ledger_rows() -> pd.DataFrame:
 
 
 def ledger_by_kind() -> pd.DataFrame:
-    """One row per pre-registered verdict: the family (stem of the log), its kind and the verdict."""
+    """One row per pre-registered verdict: the family (stem of the log), its kind, and the verdict."""
     return ledger_rows()[["stem", "kind", "verdict"]]

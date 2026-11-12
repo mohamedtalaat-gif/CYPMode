@@ -83,6 +83,21 @@ Every order gives a different total ({{=number_of_distinct_totals}} different to
 The next cell reads the records of all this from the repository: the determinism section of the audit, whose checks are run again each time, the seed registry, and the log of one run where determinism could not be had.
 """
 
+DATA_RECORD_FACTS = r'''
+# The record of the data, read from its manifest and its policy: the sizes, the number of files and the DOI are not typed in.
+import json
+
+record_manifest = json.loads((ROOT / "data_record/MANIFEST.json").read_text())
+record_policy = json.loads((ROOT / "data_record/record.json").read_text())
+record_doi = record_manifest["record"]["doi"]
+record_files = sum(len(archive.get("parts") or [1]) for archive in record_manifest["archives"])
+record_archives = len(record_manifest["archives"])
+record_gb = sum(archive["bytes"] for archive in record_manifest["archives"]) / 1e9
+tree_gb = sum(archive["files_bytes"] for archive in record_manifest["archives"]) / 1e9
+part_mb = record_policy["part_bytes"] / 1e6
+print(record_doi, record_archives, record_files, round(record_gb, 2), round(tree_gb, 2), part_mb)
+'''
+
 MD_12_1_C = """
 The repair of the solver was followed by the work it required. Job 084 evaluated again, from the prediction caches (nothing was refitted), every comparison that goes through the stack: {{=n_recomputed}} stacked comparisons. No verdict changed, and the stacked numbers moved by less than a thousandth. The lesson drawn is the one the audit encodes: a comparison between two models is only as good as the repeatability of each of them, so repeatability is tested before the comparison is believed.
 
@@ -92,7 +107,7 @@ The determinism section of the audit has {{=n_determinism_checks}} lines and {{=
 
 **The record of the push.** A number is reproducible only if the repository that reaches a reader is the one the author had. `scripts/mirror_check.sh` checks that after a push: it fetches the remote branch and fails when the working tree differs from HEAD in any way (a modified, an untracked or a missing file), or when `origin/<branch>` is not at HEAD, and it prints the files that stay local on purpose, those listed in `.gitignore`. It is the other end of the chain that the pinned environments and the fixed seeds begin: the numbers can be produced again from the files, and the files are the ones that were pushed. The script is not run by the notebook, which is built before the push; its check is described here from the script itself.
 
-**The record of the data.** The repository does not hold the 8.7 GB of files that the engines produce or that the code takes hours to regenerate (the feature store, the prediction caches, the outputs of the nested validation, the raw outputs of Boltz-2 and OpenFold3), and a clone without them cannot run the audit. `data_record/record.json` names the groups of such files, `cypmode/data_record.py` packs each group into one archive and writes `data_record/MANIFEST.json` with the size and the SHA-256 of every archive, and `scripts/fetch_data.py` restores them: it copies or downloads each archive, refuses one whose SHA-256 differs from the manifest before it extracts anything, and checks afterwards that every path listed for the group is there. The audit makes the same check of presence before it reads a file and names what is missing and the command that gets it, so a clone that lacks the data stops with that message and not with a stack trace. A file belongs to the record when git does not track it, whether the `.gitignore` hides it or not, so the policy is the same before and after the held-back files are committed; the folders of downloaded or supplied inputs are left out by name until the licence of each has been read. `tests/test_data_record.py` builds a small repository, packs it, deletes files, restores them, and checks that a changed archive is refused. The whole path is run once from a clean clone by `scripts/clean_clone_check.sh`: it clones the repository at its last commit, restores the data record there, runs the audit in the clone and compares the checks of its report with those of the committed one; the jobs `970_data_record_build` and `975_clean_clone_check` of the queue make the archives and run that check after the release, and `296_release_unblock` is the job that makes the release itself (`tests/test_release_jobs.py` checks the order in which they wait).
+**The record of the data.** The repository does not hold the {{=tree_gb:.1f}} GB of files that the engines produce or that the code takes hours to regenerate (the feature store, the prediction caches, the outputs of the nested validation, the raw outputs of Boltz-2 and OpenFold3), and a clone without them cannot run the audit. `data_record/record.json` names the groups of such files, `cypmode/data_record.py` packs each group into one xz archive, cuts an archive of more than {{=part_mb:.0f}} MB into numbered parts, so that an interrupted upload sends again only the part that failed, and writes `data_record/MANIFEST.json` with the size and the SHA-256 of every archive and of every part, and `scripts/fetch_data.py` restores them: it copies or downloads each part, joins the parts of an archive, refuses a part or an archive whose SHA-256 differs from the manifest before it extracts anything, and checks afterwards that every path listed for the group is there. The audit makes the same check of presence before it reads a file and names what is missing and the command that gets it, so a clone that lacks the data stops with that message and not with a stack trace. The record is deposited on Zenodo under the DOI {{=record_doi}}, as {{=record_files}} files ({{=record_gb:.1f}} GB) that make up {{=record_archives}} archives, and `python scripts/fetch_data.py fetch` downloads it into a clone. A file belongs to the record when git does not track it, whether the `.gitignore` hides it or not, so the policy is the same before and after the held-back files are committed; the folders of downloaded or supplied inputs are left out by name until the licence of each has been read. `tests/test_data_record.py` builds a small repository, packs it, deletes files, restores them, and checks that a changed archive is refused. The whole path is run once from a clean clone by `scripts/clean_clone_check.sh`: it clones the repository at its last commit, restores the data record there, runs the audit in the clone and compares the checks of its report with those of the committed one; the jobs `970_data_record_build` and `975_clean_clone_check` of the queue make the archives and run that check after the release, and `296_release_unblock` is the job that makes the release itself (`tests/test_release_jobs.py` checks the order in which they wait).
 
 *On what actually ran.* The first cell is a toy made for the lesson. The second reads the audit report and the two records of the speed test.
 """
@@ -371,6 +386,7 @@ The reason for all of it is the one thing the project cannot do: while the chall
     code(FLOAT_TOY),
     md(MD_12_1_B),
     code(DETERMINISM_RECORD),
+    code(DATA_RECORD_FACTS),
     md(MD_12_1_C),
     md(MD_12_2),
     code(AUDIT_SECTIONS),

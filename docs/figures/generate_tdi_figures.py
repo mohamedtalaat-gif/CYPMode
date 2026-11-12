@@ -19,6 +19,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+plt.rcParams["svg.hashsalt"] = "cypmode-figures"  # the same ids for the clip paths in every build
+
 ROOT = Path(__file__).resolve().parents[2]
 TDI_DATA = ROOT / "data" / "tdi_track" / "outputs"
 COMPARISONS = TDI_DATA / "comparisons"
@@ -81,7 +83,7 @@ def generate_mcc_progression(theme_name: str):
 
     fig.tight_layout()
     fig.text(0.5, -0.01, "Population as first built (every labelled row); superseded by the corrected population of the specification.", ha="center", va="top", fontsize=8, style="italic", color=theme["muted"])
-    fig.savefig(OUT_DIR / f"tdi_mcc_progression-{theme_name}.svg", transparent=False, bbox_inches="tight")
+    fig.savefig(OUT_DIR / f"tdi_mcc_progression-{theme_name}.svg", transparent=False, bbox_inches="tight", metadata={"Date": None})
     plt.close(fig)
 
 
@@ -106,7 +108,7 @@ def generate_reliability_correlation(theme_name: str):
     ax.spines[["top", "right"]].set_visible(False)
 
     fig.tight_layout()
-    fig.savefig(OUT_DIR / f"tdi_reliability_correlation-{theme_name}.svg", transparent=False)
+    fig.savefig(OUT_DIR / f"tdi_reliability_correlation-{theme_name}.svg", transparent=False, metadata={"Date": None})
     plt.close(fig)
 
 
