@@ -5,7 +5,7 @@
 import marimo
 
 __generated_with = "0.25.2"
-app = marimo.App(width="medium", app_title="CYPMode: the notebook, interactive")
+app = marimo.App(width="medium", app_title="CYPMode: the notebook, interactive", html_head_file="head.html")
 
 
 @app.cell(hide_code=True)
