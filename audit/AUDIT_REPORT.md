@@ -97,7 +97,7 @@ Counts: PASS = 104, FAIL = 0, INFO = 6, SKIP = 0
 | structures_unrelaxed.zip: every structure clears a relative distance of 0.8 to the receptor (the scorer's threshold is 0.75) | PASS | smallest 0.801 |
 | structures_unrelaxed.zip: every structure carries the stereochemistry of the official SMILES (the scorer's PoseBusters call does not check it) | PASS | 20 of 20 |
 | the base-run table of the 20 official ligands has no row in error (structure summary and affinity of every ligand) | PASS | 0 in error |
-| the citation file names an author, a repository, a licence and a version | PASS | Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.3.2 |
+| the citation file names an author, a repository, a licence and a version | PASS | Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.3.3 |
 | the README names the author and the repository | PASS | found |
 | NOTICE names the author | PASS | found |
 | the archive metadata (.zenodo.json) names the same author | PASS | Talaat |
@@ -132,7 +132,7 @@ Counts: PASS = 104, FAIL = 0, INFO = 6, SKIP = 0
 | rdkit | 2026.3.6 |
 | PyYAML | 6.0.3 |
 
-Git HEAD `6c9e16f`; working tree: 0 modified, 0 deleted, 0 untracked entries.
+Git HEAD `fee712d`; working tree: 0 modified, 0 deleted, 0 untracked entries.
 
 Input files (size in bytes, sha256 prefix):
 
