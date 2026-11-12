@@ -2,7 +2,7 @@
   "title": "CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge",
   "upload_type": "software",
   "access_right": "open",
-  "description": "Reproducible predictors, with the evidence behind them, for two tasks of the OpenADMET CYP inhibition blind challenge: time-dependent inhibition of CYP3A4 and CYP2D6 (a label-process-aware, selection-corrected stack of label-free models, judged by nested cross-validation on the population the challenge scores and by pre-registered gates) and the CYP3A4 structure of 20 ligands (co-folding with an iron-nitrogen restraint, validity and margin rules, a registered relaxation). Every number in the reports is generated from the logs, the audit reproduces them byte for byte, and the experiments that failed their gates are part of the record.",
+  "description": "Reproducible predictors, with the evidence behind them, for two tasks of the OpenADMET CYP inhibition blind challenge: time-dependent inhibition of CYP3A4 and CYP2D6 (a label-process-aware, selection-corrected stack of label-free models, judged by nested cross-validation on the population the challenge scores and by pre-registered gates) and the CYP3A4 structure of 20 ligands (co-folding with an iron-nitrogen restraint, validity and margin rules, and a registered relaxation). Every number in the reports is generated from the logs, the audit reproduces them byte for byte, and the experiments that failed their gates are part of the record.",
   "creators": [
     {
       "name": "Talaat, Muhammad",

@@ -25,8 +25,25 @@ def test_a_family_belongs_to_one_kind_only():
 
 
 @needs_outputs
+def _rows_with_the_wrong_number_of_cells(text):
+    """The table rows of a Markdown text whose number of cells differs from that of the header (a bar inside a cell, not escaped, opens another cell)."""
+    wrong, lines, i = [], text.split("\n"), 0
+    while i < len(lines):
+        if lines[i].startswith("|") and i + 1 < len(lines) and re.match(r"^\|[ :\-|]+\|\s*$", lines[i + 1]):
+            width, j = len(re.split(r"(?<!\\)\|", lines[i].strip())) - 2, i + 2
+            while j < len(lines) and lines[j].startswith("|"):
+                if len(re.split(r"(?<!\\)\|", lines[j].strip())) - 2 != width:
+                    wrong.append(lines[j][:80])
+                j += 1
+            i = j
+        else:
+            i += 1
+    return wrong
+
+
 def test_the_report_holds_the_architecture_and_the_exploration_before_the_results():
     text = report.build_method_report()
+    assert not _rows_with_the_wrong_number_of_cells(text), _rows_with_the_wrong_number_of_cells(text)[:3]
     order = [text.index(h) for h in ("## 2. Data and the label rule", "## 3. Architecture of the two tracks", "## 4. Exploration: what was tried and with what result", "## 5. Scoring-set-aware yardstick")]
     assert order == sorted(order)
     assert "### 3.1 TDI track" in text and "### 3.2 Structure track" in text and "### 4.2 The accounting of the number of attempts" in text

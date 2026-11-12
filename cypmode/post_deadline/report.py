@@ -209,7 +209,7 @@ def section(folder: Path = OUT) -> list[str]:
         "## 15. After the deadline: the released labels and structures",
         "",
         ("The organisers released the test labels and the 20 structures after the challenge closed. The plan of this analysis, `docs/post_deadline/PLAN.md`, was committed and pushed before any of them was read; its questions, "
-        "measures and decision rules were fixed there, and every change made after a result was seen is written in its section on deviations. The scoring is the organisers' own: the evaluation code of their tutorial "
+        "measures, and decision rules were fixed there, and every change made after a result was seen is written in its section on deviations. The scoring is the organisers' own: the evaluation code of their tutorial "
         "repository at a named commit, called without change. The analysis only measures; it fits no model and changes no submitted file."),
         "",
         *tdi_lines(folder),

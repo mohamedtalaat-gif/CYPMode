@@ -4,7 +4,7 @@
 
 """Generate METHOD_REPORT.md and NEGATIVE_RESULTS.md from the repository's own logs, tables and audit.
 
-Every number in these two files is copied by code from a log, a result table or the audit report; the prose around them is
+Every number in these two files is copied by code from a log, a result table, or the audit report; the prose around them is
 fixed text. A value whose source does not exist yet is written as ``(pending: <job>)``, so the report can never contain a
 number nobody computed. ``python -m cypmode.audit.method_report --check`` regenerates both files in memory and fails if the
 files on disk differ, which is the claim-to-evidence check the audit runs: a hand-edited number is a difference.
@@ -51,7 +51,7 @@ def audit_section(prefix: str) -> str:
     if not m:
         return pending("job 900")
     first, _, rest = m.group(0).strip().partition("\n")
-    return "### Audit extract: " + re.sub(r"^## \d+[a-z]?\. ", "", first) + "\n" + rest
+    return "### Audit extract: " + re.sub(r"^## \d+[a-z]?\. ", "", first) + "\n" + _prepare_extract(rest)
 
 
 def gate_rows() -> list[tuple[str, str, str]]:
@@ -62,11 +62,22 @@ def gate_rows() -> list[tuple[str, str, str]]:
     return rows
 
 
+def _cell(value) -> str:
+    """A cell of a Markdown table: a bar inside the text is a character of the cell, so it is escaped and does not open another cell."""
+    return re.sub(r"(?<!\\)\|", r"\\|", str(value))
+
+
 def table(rows: list[tuple], columns: list[str]) -> str:
     if not rows:
         return "_(none yet)_"
     head = "| " + " | ".join(columns) + " |\n|" + "|".join(" --- " for _ in columns) + "|\n"
-    return head + "\n".join("| " + " | ".join(str(c) for c in r) + " |" for r in rows)
+    return head + "\n".join("| " + " | ".join(_cell(c) for c in r) + " |" for r in rows)
+
+
+def _prepare_extract(markdown: str) -> str:
+    """The audit report is copied as it is, with two changes: the bars of the absolute value |z| inside the cells of its tables are escaped, because in a Markdown table they would split the cell, and the American spelling of labelled is made British."""
+    markdown = re.sub(r"\blabeled\b", "labelled", re.sub(r"\bunlabeled\b", "unlabelled", markdown))
+    return "\n".join(re.sub(r"(?<!\\)\|z\|", r"\\|z\\|", line) if line.startswith("|") else line for line in markdown.split("\n"))
 
 
 def leaderboard_scores() -> str:
@@ -141,6 +152,14 @@ def npz_shapes(path: Path) -> dict[str, tuple[int, ...]]:
     return shapes
 
 
+ABBREVIATIONS = (
+    "**Abbreviations.** The report uses the area under the receiver operating characteristic curve (AUC), the Matthews correlation coefficient (MCC), absorption, distribution, metabolism, excretion, and toxicity (ADMET), "
+    "the pregnane X receptor (PXR), the Therapeutics Data Commons (TDC), the National Center for Advancing Translational Sciences (NCATS), structure-activity relationship (SAR) models, quantitative "
+    "structure-activity relationship (QSAR) models, out-of-fold (OOF) predictions, the local distance difference test for protein-ligand interactions (LDDT-PLI), the simplified molecular-input line-entry system (SMILES), "
+    "the Secure Hash Algorithm (SHA), and the joint-embedding predictive architecture (JEPA)."
+)
+
+
 def summary_section() -> str:
     """The stand-alone summary and the disclosures that the submission form asks for, read from the final manifests and from the files that state the licences."""
     import json
@@ -171,6 +190,8 @@ def summary_section() -> str:
         "",
         f"{cff['abstract']}",
         "",
+        ABBREVIATIONS,
+        "",
         "### What is submitted",
         "",
         table(file_rows, ["file", "SHA-256", "contents"]) if file_rows else pending("job 950"),
@@ -183,12 +204,12 @@ def summary_section() -> str:
         "",
         f"- **Open source.** The code is open source and public at {cff['repository-code']}, under {cff.get('license')} with the additional term of `NOTICE` that the attribution and the citation notice stay with every copy and every output. The",
         "  documents (this report, the notebook, the figures, the film) are under CC BY-NC-SA 4.0 and the data that the code generates under CC BY 4.0 (`LICENSES/`, `REUSE.toml`).",
-        "- **Proprietary data.** None of the data is proprietary: every input is public. One point is stated here so that nothing is left to be found: the CYP3A4 stack holds two Chemprop networks that start from the public weights of OpenADMET (Apache-2.0). The pretraining targets of one of them are",
+        "- **Proprietary data.** None of the data are proprietary: every input is public. One point is stated here so that nothing is left to be found: the CYP3A4 stack holds two Chemprop networks that start from the public weights of OpenADMET (Apache-2.0). The pretraining targets of one of them are",
         "  predictions of a surrogate model that Novartis trained on its internal corpus, as the OpenADMET post of 4 August 2026 explains (https://doi.org/10.5281/zenodo.21828040). No proprietary measurement is in the project, and the weights are available to every participant, but they carry what that surrogate learned.",
         "- **Sources of the data of the final stacks.** The OpenADMET challenge files (training file and blinded structures; the dataset `openadmet/cyp-challenge-train-test`, whose card states Apache-2.0); the TDC / Veith CYP panel (Veith et al., Nature",
-        "  Biotechnology 2009; the TDC page states CC BY 4.0), used only to train a label-free block on compounds that are not challenge compounds; and the rows that the public leaderboards publish (accuracy, precision and recall of each entry), from which one",
+        "  Biotechnology 2009; the TDC page states CC BY 4.0), used only to train a label-free block on compounds that are not challenge compounds; and the rows that the public leaderboards publish (accuracy, precision, and recall of each entry), from which one",
         "  number about the hidden labels is recovered, the positive rate of the scored set (limitation L13). No label of any blinded compound and no probing submission is used.",
-        "- **Components.** The programs, models and weights that the work uses and their licences are listed in section 14 and in Appendix C of the notebook.",
+        "- **Components.** The programs, models, and weights that the work uses and their licences are listed in section 14 and in Appendix C of the notebook.",
         f"- **Identifier.** {('DOI ' + ids['doi'] + '.') if 'doi' in ids else 'The archived release has no DOI yet; the citation file lists it when it has one.'}{(' Software Heritage [' + ids['swh'] + '](https://archive.softwareheritage.org/' + ids['swh'] + ').') if 'swh' in ids else ''} The text to cite is in `USE_AND_CITATION.md`.",
         *published_lines(),
         "- **Reproduction and checks.** `NEGATIVE_RESULTS.md` (every experiment that failed its gate), `audit/AUDIT_REPORT.md` (generated twice and compared byte for byte), `bash scripts/reproduce_tdi.sh`.",
@@ -294,7 +315,7 @@ def holdout_lead() -> str:
     rows, rate = first_number(text, r"held-out block rows (\d+)"), first_number(text, r"positive rate ([\d.]+)")
     if not (rows and rate):
         return pending("job 045")
-    return (f"The highest block of identifiers of the training file is an analog-expansion round built like the blinded test set. Holding the whole block out ({rows} CYP3A4 compounds, positive rate {rate}) and training on the rest measures the candidates in a regime that matches the test better than a random or a similarity-weighted fold. "
+    return (f"The highest block of identifiers of the training file is an analogue-expansion round built like the blinded test set. Holding the whole block out ({rows} CYP3A4 compounds, positive rate {rate}) and training on the rest measures the candidates in a regime that matches the test better than a random or a similarity-weighted fold. "
             "It exists for CYP3A4 only, and the candidates and the best of them are chosen from cross-validation, never from the block. The AUC of each candidate on the block is listed next to its cross-validated AUC, so that the agreement of the two yardsticks is itself a result.")
 
 
@@ -303,7 +324,7 @@ def additions_lead() -> str:
 
     frame = ledger_rows()
     part = frame[frame["log"].str.contains(r"physics|pair_transfer|mmp|committee|embeddings|test_likeness|arms|selection_aware_v2|xiso")]
-    return (f"The additions of the physics, SAR, committee, embedding, cross-isoform and weighting families gave {len(part)} pre-registered verdicts in {part['stem'].nunique()} families, {int((part['verdict'] == 'MET').sum())} of them MET. "
+    return (f"The additions of the physics, SAR, committee, embedding, cross-isoform, and weighting families gave {len(part)} pre-registered verdicts in {part['stem'].nunique()} families, {int((part['verdict'] == 'MET').sum())} of them MET. "
             "A near miss is not tuned until it passes: the verdicts below are those of the first test, and the ones that were repeated on ten outer folds are listed after them.")
 
 
@@ -332,10 +353,10 @@ def benchmark_paragraph() -> str:
     return (
         f"**The crystal ligands of the gates.** The 20 official ligands have no public answer, so every gate of the structure track was measured on ligands whose crystal pose is public. The benchmark is {len(ligands)} ligands "
         f"picked from the {distinct} distinct CYP3A4 ligands of the PDB (`cypmode/validation/reference_ligands.py`) by a rule fixed in advance (`cypmode/validation/structure_benchmark.py`): {sb.MIN_HEAVY} to {sb.MAX_HEAVY} heavy atoms, "
-        f"resolution at most {sb.MAX_RESOLUTION} A, organic atoms only and one fragment ({eligible} of the {distinct} pass), then the most mutually dissimilar by a maximin pick on Morgan fingerprints that starts from the panel "
+        f"resolution at most {sb.MAX_RESOLUTION} A, organic atoms only, and one fragment ({eligible} of the {distinct} pass), then the most mutually dissimilar by a maximin pick on Morgan fingerprints that starts from the panel "
         f"compounds already predicted ({', '.join(sb.PANEL_SEEDS)}). The pick is deterministic and the list is not written by hand; with those seeds the function returns exactly these ligands (`tests/test_structure_benchmark.py`). "
         f"They are, with the PDB entry of the copy used: {listing}. Two cautions apply. The models may have seen these entries in training, so the absolute accuracy on the benchmark is optimistic and it serves to compare "
-        "settings and selection rules, not to forecast a score. And the benchmark was chosen for diversity and not for likeness to the official ligands, which are not near the reference set (notebook section 11.5, limitation L15). "
+        "settings and selection rules, not to forecast a score. The benchmark was also chosen for diversity and not for likeness to the official ligands, which are not near the reference set (notebook section 11.5, limitation L15). "
         f"The gate of the relaxation used {len(relaxed)} ligands: these {len(ligands)} and the {int(relaxed.str.startswith('exp-').sum())} ligands of the restraint-expansion plan registered on {plan['registered']} (every crystal ligand with a Type II donor, "
         f"organic, one fragment, {stratum['min_heavy_atoms']} to {stratum['max_heavy_atoms']} heavy atoms, resolution at most {plan['eligibility']['max_resolution_angstrom']} A and not in the benchmark; every eligible ligand was run and none was picked)."
     )
@@ -378,7 +399,7 @@ def label_rows() -> dict[str, tuple[str, str, str]]:
 
 
 def tier_counts() -> dict[str, tuple[str, str, str]]:
-    """Per isoform from the applicability-domain log: blinded compounds in the supported, weak and unsupported tier at the primary confidence cut."""
+    """Per isoform from the applicability-domain log: blinded compounds in the supported, weak, and unsupported tier at the primary confidence cut."""
     path = LOGS / "applicability_domain.log"
     text = path.read_text(errors="ignore") if path.exists() else ""
     found = {}
@@ -433,7 +454,7 @@ def innovation_section() -> str:
     lines = [
         "## Innovation summary",
         "",
-        "This section lists what the work adds, one claim at a time, with the evidence that stands next to it. Each row is a claim that the logs can check; the cross-validated numbers are estimates on the training data and not scores on the hidden labels (limitations L1, L2 and L13). Where an idea was tried and failed its gate, that is stated with the idea. Each claim ends with the section of the notebook that explains it from first principles and computes its number.",
+        "This section lists what the work adds, one claim at a time, with the evidence that stands next to it. Each row is a claim that the logs can check; the cross-validated numbers are estimates on the training data and not scores on the hidden labels (limitations L1, L2, and L13). Where an idea was tried and failed its gate, that is stated with the idea. Each claim ends with the section of the notebook that explains it from first principles and computes its number.",
         "",
         "### Architecture: the label is modelled through its process",
         "",
@@ -445,7 +466,7 @@ def innovation_section() -> str:
         "",
         f"- **A contaminated slice of the labels was found and removed from the CYP3A4 pool.** {labels['CYP3A4'][2] if 'CYP3A4' in labels else '?'} CYP3A4 rows have no direct-inhibition measurement and follow a different label convention than the blinded set; the pool keeps the {labels['CYP3A4'][0] if 'CYP3A4' in labels else '?'} rows with both arms, and every CYP3A4 number is computed on that population (section 2).",
         f"- **The evaluation reproduces the scored population.** The outer folds are weighted by similarity to the blinded structures and by the estimated prevalence, and only confidently labelled compounds are evaluated; {build.REPEATS} repeats of {build.DESIGN['outer']} outer folds ({build.REPEATS * build.DESIGN['outer']} outer evaluations) with every selection step inside the inner folds (section 5).",
-        f"- **One aggregate number is recovered from the public leaderboards.** The accuracy, precision and recall that the boards publish for every entry fix the positive rate of the scored set: {manifest['isoforms']['CYP3A4']['target_prevalence']:.3f} for CYP3A4 and {manifest['isoforms']['CYP2D6']['target_prevalence']:.3f} for CYP2D6. It sets the call rate (a multiple of the prevalence: {manifest['isoforms']['CYP3A4']['call_rate_multiplier']} and {manifest['isoforms']['CYP2D6']['call_rate_multiplier']}); no label of any compound and no probing submission is used (limitation L13)." if manifest else f"- **One aggregate number is recovered from the public leaderboards.** {pending('job 090')}",
+        f"- **One aggregate number is recovered from the public leaderboards.** The accuracy, precision, and recall that the boards publish for every entry fix the positive rate of the scored set: {manifest['isoforms']['CYP3A4']['target_prevalence']:.3f} for CYP3A4 and {manifest['isoforms']['CYP2D6']['target_prevalence']:.3f} for CYP2D6. It sets the call rate (a multiple of the prevalence: {manifest['isoforms']['CYP3A4']['call_rate_multiplier']} and {manifest['isoforms']['CYP2D6']['call_rate_multiplier']}); no label of any compound and no probing submission is used (limitation L13)." if manifest else f"- **One aggregate number is recovered from the public leaderboards.** {pending('job 090')}",
         (
             "- **A check of that rate that reads no board.** Black-box label-shift estimation (a classifier that scores held-out compounds and the blinded structures on one scale, folds that keep chemical series whole, "
             + "the held-out compounds weighted by structure similarity only) estimates the positive rate of the scored set from the training data. At z0 = 1.0 it gives "
@@ -462,7 +483,7 @@ def innovation_section() -> str:
         "### Uncertainty",
         "",
         "- **Reliability by similarity to the training data, with intervals over chemical series.** Held-out compounds of the outer folds are cut by the nearest-training similarity; the interval of each bin resamples whole Butina clusters, so a bin is called supported only when the lower end of its interval reaches 0.60 (`applicability_domain.py`, `applicability_domain.log`). "
-        + (f"For CYP3A4 the 750 blinded compounds fall into {tiers['CYP3A4'][0]} supported, {tiers['CYP3A4'][1]} weak and {tiers['CYP3A4'][2]} unsupported compounds; for CYP2D6 into {tiers['CYP2D6'][0]} supported, {tiers['CYP2D6'][1]} weak and {tiers['CYP2D6'][2]} unsupported compounds, so the CYP2D6 predictions carry the weaker reliability." if "CYP3A4" in tiers and "CYP2D6" in tiers else pending("job 270")),
+        + (f"For CYP3A4 the 750 blinded compounds fall into {tiers['CYP3A4'][0]} supported, {tiers['CYP3A4'][1]} weak, and {tiers['CYP3A4'][2]} unsupported compounds; for CYP2D6 into {tiers['CYP2D6'][0]} supported, {tiers['CYP2D6'][1]} weak, and {tiers['CYP2D6'][2]} unsupported compounds, so the CYP2D6 predictions carry the weaker reliability." if "CYP3A4" in tiers and "CYP2D6" in tiers else pending("job 270")),
         f"- **Probabilities calibrated on the inner folds, with the failure reported.** The expected calibration error after isotonic regression is {ece.get(('CYP3A4', 'isotonic'), '?')} (CYP3A4) and {ece.get(('CYP2D6', 'isotonic'), '?')} (CYP2D6); the raw CYP2D6 blend has {ece.get(('CYP2D6', 'raw'), '?')} and is a ranking, not a probability (limitation L10).",
         "- **A committee of models as an uncertainty signal was tested and did not help.** " + (
             f"Added to the stack it moves the AUC by {committee_row('CYP3A4')[0]} (p = {committee_row('CYP3A4')[1]}) for CYP3A4 and {committee_row('CYP2D6')[0]} (p = {committee_row('CYP2D6')[1]}) for CYP2D6 at z0 = 1.0; its probability is miscalibrated as it comes out (expected calibration error {committee_row('CYP3A4')[2]} and {committee_row('CYP2D6')[2]}). It is reported with the predictions and never alters one."
@@ -473,7 +494,7 @@ def innovation_section() -> str:
         "",
         f"- **A restraint of the iron-nitrogen bond for Type II ligands.** One extra constraint in the Boltz-2 input; the gates `restraint_bond` and `restraint_contact` are {gates.get('restraint_bond', '?')} and {gates.get('restraint_contact', '?')} on the crystal-anchored benchmark, and the same gates under the OpenStructure scorer give {gates.get('restraint_bond_ost', '?')} and {gates.get('restraint_contact_ost', '?')}.",
         f"- **The scorer's own validity call with a margin.** Every pose is checked by the 22 PoseBusters checks of the scorer, and a pose is eligible only when its smallest relative distance to the receptor is at least {structure_margin()}; a pose that fails a check scores zero, so validity is treated as a constraint and not as a feature.",
-        (f"- **A relaxation under a rule written before it was run.** The force-field relaxation of the ligand in the fixed pocket replaces a pose only when both pass the checks, the margin rises, the ligand moves at most {structure['relaxation']['rule']['max_movement_A']} A and the iron-nitrogen distance changes at most {structure['relaxation']['rule']['max_fe_n_change_A']} A; it was adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']} ligands and raised the smallest margin from {structure['relaxation']['smallest_margin_before']:.3f} to {structure['relaxation']['smallest_margin_after']:.3f}." if structure else f"- **A relaxation under a rule written before it was run.** {pending('job 243')}"),
+        (f"- **A relaxation under a rule written before it was run.** The force-field relaxation of the ligand in the fixed pocket replaces a pose only when both pass the checks, the margin rises, the ligand moves at most {structure['relaxation']['rule']['max_movement_A']} A, and the iron-nitrogen distance changes at most {structure['relaxation']['rule']['max_fe_n_change_A']} A; it was adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']} ligands and raised the smallest margin from {structure['relaxation']['smallest_margin_before']:.3f} to {structure['relaxation']['smallest_margin_after']:.3f}." if structure else f"- **A relaxation under a rule written before it was run.** {pending('job 243')}"),
         "",
         "### Rigor",
         "",
@@ -484,7 +505,7 @@ def innovation_section() -> str:
         "### What is not claimed",
         "",
         "- The cross-validated AUC and MCC are estimates on the training data. The portal scores hidden labels, its test set sits closer to the training data than a random fold does, and the live board scores a part of it.",
-        "- The structure recipe does not claim a better pose choice: every rule for choosing among predicted poses is NOT MET. What it adds is the restraint, the validity margin, the stereochemistry check and the relaxation.",
+        "- The structure recipe does not claim a better pose choice: every rule for choosing among predicted poses is NOT MET. What it adds is the restraint, the validity margin, the stereochemistry check, and the relaxation.",
         "- The positive rates come from the public boards. The attempt to estimate them without a board is reported above with the verdict of its rule; limitation L13 states what depends on them.",
         "",
     ]
@@ -633,7 +654,7 @@ def lessons_lead() -> list[str]:
         "- *The direct-inhibition bridge.* A predicted direct-inhibition potency looked like the largest gain of the project and was retracted: it read the availability of a measurement, which the blinded test set never shows.",
         "- *The population of the CYP3A4 labels.* A third of the labelled rows follow a convention that the scored test set does not have; every earlier CYP3A4 number mixed the two populations, and the evaluation was rebuilt on the population the challenge scores.",
         "- *The amine flag and the structural features of Tier 3.* Two mechanistically motivated additions that the data neither supported nor refuted; one was left out and the other could never reach the test rows.",
-        "- *Choosing a pose.* Every rule tried for choosing among predicted poses failed its gate, which is why the recipe keeps the model's own ranking and spends its effort on the restraint, the validity margin and the relaxation.",
+        "- *Choosing a pose.* Every rule tried for choosing among predicted poses failed its gate, which is why the recipe keeps the model's own ranking and spends its effort on the restraint, the validity margin, and the relaxation.",
         "- *Uncertainty by a committee of models.* It adds no information beyond the decision margin for the final stacks, so it is reported and never alters a prediction.",
         "",
     ]
@@ -741,7 +762,7 @@ def architecture_section() -> str:
             f"3. **The pool.** Boltz-2 samples per ligand (the unguided and the restrained runs and {recipe['recipe']['extra_per_ligand']} extra samples), {len(structure['ligands'])} ligands, {sum(x['pool'] for x in structure['ligands'])} poses in all; no second engine (engine consensus is NOT MET).",
             f"4. **Validity and margin.** Every pose is checked by the scorer's own PoseBusters call (22 checks); among the valid poses only those whose smallest relative distance to the receptor is at least {MARGIN_FLOOR} are eligible (notebook 11.4 and 11.10).",
             f"5. **The pick.** `{recipe['recipe']['selection']}`: the model's own ranking among the eligible poses; for a ligand with a Type II donor the restrained run is read first. Every rule for choosing a pose that was tested is NOT MET.",
-            f"6. **Relaxation under a registered rule.** A force-field relaxation of the ligand in the fixed pocket replaces a pose only if both pass the 22 checks, the margin rises and is at least the floor, the ligand moves at most {structure['relaxation']['rule']['max_movement_A']} A and the iron-nitrogen distance changes at most {structure['relaxation']['rule']['max_fe_n_change_A']} A; adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']} (notebook 11.10).",
+            f"6. **Relaxation under a registered rule.** A force-field relaxation of the ligand in the fixed pocket replaces a pose only if both pass the 22 checks, the margin rises and is at least the floor, the ligand moves at most {structure['relaxation']['rule']['max_movement_A']} A, and the iron-nitrogen distance changes at most {structure['relaxation']['rule']['max_fe_n_change_A']} A; adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']} (notebook 11.10).",
             f"7. **The archive.** A deterministic zip of {len(structure['ligands'])} complexes (the time of every entry fixed), SHA-256 `{structure['sha256'][:16]}...`.",
         ]
     else:
@@ -856,7 +877,7 @@ ANALYSIS_TEXT = [  # log pattern, what the log holds, and where its result is de
     (r"context_.*", "the alert-in-context block added to two deep LightGBM feature sets, alone and with the rows of |z| < 1 dropped (notebook 9.8)", "paired"),
     (r"data_checker_.*", "check of the training file against the blinded file with the challenge data checker", "checker"),
     (r"why_no_gain", "diagnostics of why each idea that did not join added nothing; the table is `why_no_gain.csv`", "described in notebook 9.12"),
-    (r"block_holdout", "the test-like hold-out of the analog-expansion block", "described in section 10"),
+    (r"block_holdout", "the test-like hold-out of the analogue-expansion block", "described in section 10"),
     (r"population_sensitivity_.*", "dependence of the selection-aware model on the share of never-promoted compounds", "described in section 7"),
     (r"population_panel_.*", "the panel experiments of the selection-aware model", "described in section 7"),
     (r"selection_decision_.*", "the registered choice of the CYP2D6 file", "described in section 7"),
@@ -923,7 +944,7 @@ def ungated_section() -> str:
         "",
         table(rows, ["log", "what it holds", "result"]),
         "",
-        f"The logs of the exploratory second looks of section 4.3 are {exploratory or pending('the exploratory jobs')}. Every other log of the folder is a build, an extraction or a run that feeds a gate or a document, and a test fails when a log has none of these roles (`log_roles`).",
+        f"The logs of the exploratory second looks of section 4.3 are {exploratory or pending('the exploratory jobs')}. Every other log of the folder is a build, an extraction, or a run that feeds a gate or a document, and a test fails when a log has none of these roles (`log_roles`).",
         "",
     ])
 
@@ -993,7 +1014,7 @@ def build_method_report() -> str:
     return "\n".join([
         "# Method report: label-process, selection-aware, physics-aware CYP TDI classification and CYP3A4 structure prediction",
         "",
-        "Generated by `cypmode/audit/method_report.py`; every number is copied from a log, a result table or the audit report,",
+        "Generated by `cypmode/audit/method_report.py`; every number is copied from a log, a result table, or the audit report,",
         "and a value without a source reads `(pending: <job>)`. Sections 1 to 14 make no claim about the test labels; section 15 reports the scores of the submitted files on the labels that the organisers released after the deadline.",
         "",
         "What the work adds is listed in the section *Innovation summary*, claim by claim; each claim names the section of the notebook that explains it from first principles and computes its number. The public edition of the notebook opens in a browser at https://mohamedtalaat-gif.github.io/CYPMode/notebook/ (the files are too large for GitHub to display).",
@@ -1023,10 +1044,10 @@ def build_method_report() -> str:
         "",
         "## 5. Scoring-set-aware yardstick",
         "",
-        "Only confidently labeled compounds are scored. The confidence z = |s - log10 2| / sd(s) from the arms' posterior standard",
+        "Only confidently labelled compounds are scored. The confidence z = |s - log10 2| / sd(s) from the arms' posterior standard",
         "deviations is used to restrict evaluation at two cut-offs (1.0 and 1.96), and evaluation weights follow similarity to the",
-        "unlabeled test structures and the estimated test prevalence. That prevalence is the one piece of information about the hidden",
-        "labels that the project uses: it is recovered from the accuracy, precision and recall that the public leaderboards publish for every",
+        "unlabelled test structures and the estimated test prevalence. That prevalence is the one piece of information about the hidden",
+        "labels that the project uses: it is recovered from the accuracy, precision, and recall that the public leaderboards publish for every",
         "entry (see limitation L13 and the figure `data_prevalence_recovery`); no label of any compound and no probing submission is used.",
         "Selection among models happens inside nested cross-validation and",
         "models are compared by the corrected resampled t of Nadeau and Bengio (never by bootstrapping fixed predictions).",
@@ -1062,7 +1083,7 @@ def build_method_report() -> str:
         log_lines("selection_decision_CYP2D6.log", r".", "job 016", 70),
         "",
         leaderboard_scores(),
-        "## 8. Physics-, SAR-, committee-, embedding-, cross-isoform and weighting-based additions",
+        "## 8. Physics-, SAR-, committee-, embedding-, cross-isoform, and weighting-based additions",
         "",
         "Each addition is a block or candidate group tested alone and inside the assembled stack; the rule is corrected p < 0.05 at both",
         "confidence cut-offs. " + additions_lead(),
@@ -1120,7 +1141,7 @@ def build_method_report() -> str:
         "",
         audit_section("13."),
         "",
-        "## 14. Reproduction, credits and prior art",
+        "## 14. Reproduction, credits, and prior art",
         "",
         "Reproduce the TDI candidates with `bash scripts/reproduce_tdi.sh`; the audit with `bash scripts/run_audit.sh` (two runs, byte-identical);",
         "the environment is pinned in `environment/`. The structure recipe runs through `python -m cypmode.validation.final_recipe`.",
@@ -1156,12 +1177,12 @@ def published_lines() -> list[str]:
     """What the release holds, said as it is: before the end of the challenge the files that show a result for a blinded compound are held back, after it they are in the release (decided by the block of the ignore file that holds them back)."""
     if "HELD BACK UNTIL AFTER THE DEADLINE" in (ROOT / ".gitignore").read_text():
         return [
-            "- **What is published after the challenge closes.** This release is complete: the code, the method, the reports and the checks are all in it, and the code regenerates every submitted file. The only files that are not in it are the ones that show a",
-            "  result for a blinded compound: the submitted files, the predictions and the structures of the blinded compounds, and the figures, the film and the complete edition of the notebook that display them; the public edition of the notebook is in it. A full",
+            "- **What is published after the challenge closes.** This release is complete: the code, the method, the reports, and the checks are all in it, and the code regenerates every submitted file. The only files that are not in it are the ones that show a",
+            "  result for a blinded compound: the submitted files, the predictions and the structures of the blinded compounds, and the figures, the film, and the complete edition of the notebook that display them; the public edition of the notebook is in it. A full",
             "  release with those files is published after the challenge has closed (2026-11-03 23:59 UTC). The SHA-256 of each submitted file is in the section *What is submitted*, so that each file can be matched to this report when it is published.",
         ]
     return [
-        "- **What is published.** This release is complete, the challenge having closed on 2026-11-03 at 23:59 UTC: the code, the method, the reports and the checks, and the files that show a result for a blinded compound (the submitted files, their predictions and structures, the figures, the film and the complete edition of the notebook).",
+        "- **What is published.** This release is complete, the challenge having closed on 2026-11-03 at 23:59 UTC: the code, the method, the reports, and the checks, and the files that show a result for a blinded compound (the submitted files, their predictions and structures, the figures, the film, and the complete edition of the notebook).",
         "  The SHA-256 of each submitted file is in the section *What is submitted*, so that each file in the release can be matched to this report.",
     ]
 
