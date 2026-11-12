@@ -540,8 +540,12 @@ submission describe the same state of the work. To rebuild it, run the following
 
 ```bash
 python -m notebooks.build_notebook     # run every cell, check, write notebooks/cypmode_notebook.ipynb
-python -m notebooks.build_exports      # write the single-file HTML and the PDF from the executed notebook
+python -m notebooks.build_exports      # write the single-file HTML, the PDF, and the web edition from the executed notebook
+python -m notebooks.build_exports --web   # write only the web edition, notebooks/web/index.html
 ```
+
+The web edition is the same text for reading on a screen: a dark and a light theme, a contents beside the text with a search of the whole notebook, code and long outputs that open on request, and
+each figure of the catalogue in both themes as a file of its own that is fetched when it comes into view.
 
 The equations in the HTML and the PDF are typeset by KaTeX, a mathematics typesetting library included in `notebooks/_vendor/katex/` with its licence, so that no network connection is
 needed. The cells can also be run in an ordinary Jupyter session started in the repository root: the first code cell imports the helpers that put figures and tables into a cell's output.

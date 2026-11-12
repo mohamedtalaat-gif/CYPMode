@@ -138,6 +138,8 @@ data/tdi_track/inputs/tabpfn_licence_accepted.txt
 __marimo__/
 explorer/_export/
 data_record/downloads/
+# The figures that the web edition of the notebook shows are copies of docs/figures; the Pages workflow copies them again
+notebooks/web/figures/
 
 # The files that the organisers released after the deadline (cypmode/post_deadline/released.py); their checksums are in data/post_deadline/released_manifest.json.
 data/post_deadline/inputs/*

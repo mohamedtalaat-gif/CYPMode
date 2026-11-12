@@ -102,6 +102,9 @@ def main() -> int:
         if Path(build_exports.CHROME).exists():
             pdf = build_exports.build_pdf(page)
             print(f"{pdf.name}: {pdf.stat().st_size / 1e6:.1f} MB")
+        if not args.public:
+            web = build_exports.build_web(target)
+            print(f"{web.parent.name}/{web.name}: {web.stat().st_size / 1e6:.1f} MB")
     return 0
 
 

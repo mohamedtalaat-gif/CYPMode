@@ -23,7 +23,7 @@ EXEMPT = (
 )
 EXEMPT_NAMES = ("LICENSE", "LICENCE", "COPYING", "CODE_OF_CONDUCT")  # licence texts and the standard code of conduct, which are not ours
 RULE_EXEMPT = {"notebooks/parts/appendix_c.py": ("first-person plural", "contractions")}  # the titles of the references are quoted as published
-EXEMPT_PARTS = ("third_party/", "data/", "_vendor/", "LICENSES/", "docs/card/vendor/", "docs/card/interactive/", "notebooks/public/", "notebooks/cypmode_notebook.")  # vendored libraries (the pages of the card and of the notebook hold them inline, with images as base64 text) and licence texts that are not ours; the prose of the notebook is scanned in its parts
+EXEMPT_PARTS = ("third_party/", "data/", "_vendor/", "LICENSES/", "docs/card/vendor/", "docs/card/interactive/", "notebooks/public/", "notebooks/cypmode_notebook.", "notebooks/web/")  # vendored libraries (the pages of the card and of the notebook, in both editions, hold them inline, with images as base64 text) and licence texts that are not ours; the prose of the notebook is scanned in its parts
 EXEMPT_SUFFIXES = (".min.js", "-min.js")  # minified libraries
 
 ROLE = "own" + "er"

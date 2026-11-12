@@ -157,11 +157,38 @@ def test_a_heading_with_an_equation_is_reached_by_its_entry_of_the_contents():
     assert dangling_anchors(page) == []
 
 
-def test_a_link_without_a_target_and_a_percent_encoded_target_are_told_apart():
-    from notebooks.build_exports import dangling_anchors
+def test_the_exports_tell_links_apart_and_the_web_edition_keeps_both_themes_of_a_figure(tmp_path):
+    from notebooks.build_exports import (
+        build_web,
+        dangling_anchors,
+        markdown_engine,
+        web_outputs,
+    )
 
     page = '<h2 id="10.1-Schr\u00f6dinger">x</h2><a href="#10.1-Schr%C3%B6dinger">ok</a><a href="#missing">lost</a>'
     assert dangling_anchors(page) == ["missing"]
+
+    figure = {"output_type": "display_data", "data": {"image/png": "iVBORw0KGgo="}, "metadata": {"figure": "bio_adme_route", "title": "A route"}}
+    caption = {"output_type": "display_data", "data": {"text/markdown": "**Figure: A route.** The text."}, "metadata": {"caption": "bio_adme_route"}}
+    outputs, shown = web_outputs([figure, caption], markdown_engine())
+    assert shown == ["bio_adme_route"]
+    assert 'class="fig-light"' in outputs and 'class="fig-dark"' in outputs and "<figcaption><p><strong>Figure: A route.</strong>" in outputs
+    assert "base64" not in outputs  # a catalogued figure is a file that is fetched when it comes into view, not a part of the page
+    folded = web_outputs([{"output_type": "stream", "text": ["a line\n"] * 30}], markdown_engine())[0]
+    assert '<details class="out"><summary>output, 31 lines</summary>' in folded
+
+    cells = [
+        md("# Part I. One\nText with $x^2$."),
+        {**code('show_figure("bio_adme_route")'), "metadata": {"jupyter": {"source_hidden": True}}, "outputs": [figure, caption]},
+        {**code("print(1)"), "outputs": [{"output_type": "stream", "text": ["1\n"]}]},
+    ]
+    source = tmp_path / "small.ipynb"
+    source.write_text(json.dumps({"cells": cells, "metadata": {}, "nbformat": 4, "nbformat_minor": 5}))
+    written = build_web(source, tmp_path / "web")
+    text = written.read_text()
+    assert 'data-theme="dark"' in text and 'id="main"' in text and '<details class="src">' in text and 'src="figures/bio_adme_route-light.png"' in text
+    assert (tmp_path / "web" / "figures.txt").read_text() == "bio_adme_route\n"
+    assert (tmp_path / "web" / "figures" / "bio_adme_route-dark.png").is_file()
 
 
 def test_a_hidden_file_is_not_an_item_that_the_notebook_must_explain(tmp_path):

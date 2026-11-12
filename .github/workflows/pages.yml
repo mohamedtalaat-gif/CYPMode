@@ -5,7 +5,7 @@ name: Pages
 "on":
   push:
     branches: [main]
-    paths: ["explorer/**", "docs/card/interactive/**", "docs/map/**", "docs/brand/**", "docs/video/cypmode_overview_web.mp4", "docs/video/cypmode_overview_poster.png", "notebooks/public/**", "notebooks/cypmode_notebook.html", "environment/requirements-lock-marimo.txt", ".github/workflows/pages.yml"]
+    paths: ["explorer/**", "docs/card/interactive/**", "docs/map/**", "docs/brand/**", "docs/video/cypmode_overview_web.mp4", "docs/video/cypmode_overview_poster.png", "notebooks/public/**", "notebooks/web/**", "notebooks/cypmode_notebook.html", "environment/requirements-lock-marimo.txt", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -45,9 +45,16 @@ jobs:
         run: |
           if [ -f docs/map/explorer.html ]; then mkdir -p site/map && cp docs/map/explorer.html site/map/index.html; fi
 
-      - name: Add the notebook (the complete edition once it is in the repository, the public one before)
+      - name: Add the notebook (the web edition with its figures, and the complete page of one file beside it; the public edition before the complete one is in the repository)
         run: |
-          if [ -f notebooks/cypmode_notebook.html ]; then mkdir -p site/notebook && cp notebooks/cypmode_notebook.html site/notebook/index.html;
+          if [ -f notebooks/web/index.html ]; then
+            mkdir -p site/notebook/figures
+            cp notebooks/web/index.html site/notebook/index.html
+            while read -r id; do
+              for theme in light dark; do cp docs/figures/*/"$id-$theme.png" site/notebook/figures/; done
+            done < notebooks/web/figures.txt
+            if [ -f notebooks/cypmode_notebook.html ]; then mkdir -p site/notebook/standalone && cp notebooks/cypmode_notebook.html site/notebook/standalone/index.html; fi
+          elif [ -f notebooks/cypmode_notebook.html ]; then mkdir -p site/notebook && cp notebooks/cypmode_notebook.html site/notebook/index.html;
           elif [ -f notebooks/public/cypmode_notebook_public.html ]; then mkdir -p site/notebook && cp notebooks/public/cypmode_notebook_public.html site/notebook/index.html; fi
 
       - name: Add the film, which the viewer of GitHub does not play because of its size
