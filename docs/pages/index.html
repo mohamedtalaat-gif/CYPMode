@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CYPMode</title>
+<meta name="description" content="CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. The notebook, the explorer, the map, the card, the film, and the reports.">
+<style>
+  :root { color-scheme: dark light; --bg: #0f1826; --bg-deep: #0a111c; --panel: #162234; --rule: #2b3d57; --text: #e1e8f2; --muted: #93a3ba; --fe: #e5773d; --n: #6c97ff; }
+  @media (prefers-color-scheme: light) { :root { --bg: #f2f5f9; --bg-deep: #e6ecf3; --panel: #ffffff; --rule: #cdd6e3; --text: #0e1726; --muted: #51627b; --fe: #b4511a; --n: #2c54c9; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 'Source Serif 4 Variable', Charter, 'Iowan Old Style', Georgia, serif; }
+  main { max-width: 52rem; margin: 0 auto; padding: 3.5rem 1.2rem 5rem; }
+  h1, h2, .label { font-family: 'Barlow Semi Condensed', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; }
+  h1 { margin: 0 0 0.3em; font-size: clamp(2.4rem, 7vw, 3.6rem); line-height: 1.1; }
+  .lede { margin: 0 0 2.4rem; color: var(--muted); font-size: 1.2rem; }
+  h2 { margin: 2.4rem 0 0.2rem; font-size: 1.15rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { display: grid; grid-template-columns: 11rem 1fr; gap: 0.3rem 1.6rem; padding: 1rem 0; border-top: 1px solid var(--rule); }
+  ul li:last-child { border-bottom: 1px solid var(--rule); }
+  .label { font-size: 1.25rem; font-weight: 600; }
+  a { color: var(--n); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .label a { color: var(--text); }
+  .label a:hover { color: var(--n); }
+  p { margin: 0; }
+  .note { color: var(--muted); font-size: 0.95rem; }
+  footer { margin-top: 3rem; color: var(--muted); font-size: 0.95rem; }
+  @media (max-width: 40rem) { li { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>CYPMode</h1>
+  <p class="lede">Time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge, with the evidence behind every number.</p>
+
+  <h2>Read</h2>
+  <ul>
+    <li><span class="label"><a href="https://mohamedtalaat-gif.github.io/blog/cypmode-interactive-notebook/">Notebook</a></span><p>The whole project from first principles, with a contents, a search, and the theme of the site.</p></li>
+    <li><span class="label"><a href="https://mohamedtalaat-gif.github.io/blog/cypmode-interactive-method-report/">Method report</a></span><p>What is submitted, what was tried, and every result, in sections that open and close.</p></li>
+    <li><span class="label"><a href="https://mohamedtalaat-gif.github.io/validation/">Validation reports</a></span><p>The reports on how well the models hold up, with charts and tables that can be explored.</p></li>
+  </ul>
+
+  <h2>Explore</h2>
+  <ul>
+    <li><span class="label"><a href="explorer/">Explorer</a></span><p>The ledger of gates, the selection rules, the poses of the benchmark, and the out-of-fold predictions, in the browser.</p></li>
+    <li><span class="label"><a href="map/">Map</a></span><p>The modules, the queue, the flow of the data, and the kinds of idea that were tried.</p></li>
+    <li><span class="label"><a href="card/">Card</a></span><p>The interactive card of the project.</p></li>
+    <li><span class="label"><a href="film/">Film</a></span><p>The film of the project, 6.5 minutes.</p></li>
+  </ul>
+
+  <h2>Use</h2>
+  <ul>
+    <li><span class="label"><a href="https://github.com/mohamedtalaat-gif/CYPMode">Repository</a></span><p>The code, the tests, the audit, and the documents. The latest release is under <a href="https://github.com/mohamedtalaat-gif/CYPMode/releases/latest">Releases</a>.</p></li>
+    <li><span class="label"><a href="https://doi.org/10.5281/zenodo.24091837">Data record</a></span><p>The files that git does not hold, as four archives with a manifest, under CC BY 4.0.</p></li>
+  </ul>
+
+  <footer>Muhammad Talaat. The code is licensed under AGPL-3.0-or-later with an additional term, and the documents under CC BY-NC-SA 4.0.</footer>
+</main>
+</body>
+</html>

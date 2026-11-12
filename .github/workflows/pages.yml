@@ -5,7 +5,7 @@ name: Pages
 "on":
   push:
     branches: [main]
-    paths: ["explorer/**", "docs/card/interactive/**", "docs/map/**", "docs/brand/**", "docs/video/cypmode_overview_web.mp4", "docs/video/cypmode_overview_poster.png", "notebooks/public/**", "notebooks/web/**", "notebooks/cypmode_notebook.html", "environment/requirements-lock-marimo.txt", ".github/workflows/pages.yml"]
+    paths: ["explorer/**", "docs/card/interactive/**", "docs/map/**", "docs/brand/**", "docs/pages/**", "docs/video/cypmode_overview_web.mp4", "docs/video/cypmode_overview_poster.png", "notebooks/public/**", "notebooks/web/**", "notebooks/cypmode_notebook.html", "environment/requirements-lock-marimo.txt", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -35,6 +35,9 @@ jobs:
           mkdir -p site/explorer
           marimo export html-wasm explorer/cypmode_explorer.py -o site/explorer --mode run
           find site/explorer -maxdepth 1 -name '*.md' -delete
+
+      - name: Add the front page of the project
+        run: cp docs/pages/index.html site/index.html
 
       - name: Add the interactive card when it is in the repository
         run: |
