@@ -15,7 +15,9 @@ import shutil
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
+from sklearn.metrics import matthews_corrcoef
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -34,6 +36,7 @@ from cypmode.challenge.tdi_targets import (
 )
 
 OUT = Path(__file__).parent / "data"
+POST = ROOT / "data/post_deadline/outputs"  # the tables of the analysis after the deadline (cypmode/post_deadline), read by the simulators of 13.5 to 13.9
 
 
 def label_points(train: pd.DataFrame) -> pd.DataFrame:
@@ -322,6 +325,61 @@ def open_questions() -> pd.DataFrame:
     return pd.DataFrame([{"question": m.group(1), "what it says": m.group(2).strip().replace("\n", " ")[:600]} for m in re.finditer(r"\*\*(.+?\?)\*\* (.+?)(?=\n\n\*\*|\Z)", section, re.DOTALL)])
 
 
+def post_deadline_gate() -> pd.DataFrame:
+    """The scores of the entries against their board values (13.5 and 13.9): the two TDI candidates, the submitted structure archive and the published poses of the entry first on the structure board."""
+    tdi = json.loads((POST / "tdi_gate.json").read_text())
+    structure = json.loads((POST / "structure_gate.json").read_text())
+    external = json.loads((POST / "structure_external_gate.json").read_text())
+    rows = [("TDI", f"candidate {name}", "macro MCC", tdi["macro_mcc"][name], tdi["board"]) for name in ("A", "B")]
+    rows += [("structure", "submitted archive", metric, structure["scored"][metric], structure["board"][metric]) for metric in ("LDDT-PLI", "BiSyRMSD")]
+    rows += [("structure", "published poses of the first entry", metric, external["scored"][metric], external["board"][metric]) for metric in ("LDDT-PLI", "BiSyRMSD")]
+    return pd.DataFrame(rows, columns=["track", "entry", "metric", "scored", "board"])
+
+
+def post_deadline_threshold() -> pd.DataFrame:
+    """The MCC of the submitted TDI scores on the released labels at each call rate (13.6), and the two marked points: the submitted calls and the best threshold (a ceiling that uses the labels)."""
+    from cypmode.post_deadline import tdi
+
+    truth = pd.read_csv(tdi.TRUTH)
+    submitted = json.loads((POST / "tdi_gate.json").read_text())["submitted"]
+    ceilings = pd.read_csv(POST / "tdi_question3_ceiling.csv").set_index("endpoint")
+    sources = {"CYP3A4": ("CYP3A4_is_TDI", tdi.FINAL / "CYP3A4_hits_only_scores.csv"), "CYP2D6": ("CYP2D6_is_TDI", tdi.FINAL / ("CYP2D6_hits_only_scores.csv" if submitted == "A" else "CYP2D6_selection_aware_scores.csv"))}
+    rows = []
+    for enzyme, (endpoint, path) in sources.items():
+        joined = truth.loc[tdi._scored(truth, endpoint), ["Molecule_Name", endpoint]].merge(pd.read_csv(path)[["Molecule_Name", "score", "call"]], on="Molecule_Name")
+        y, score = joined[endpoint].astype(bool).to_numpy(), joined["score"].to_numpy()
+        for rate in np.arange(0.02, 0.61, 0.01):
+            calls = score > np.quantile(score, 1 - rate)
+            rows.append((enzyme, "curve", float(calls.mean()), float(matthews_corrcoef(y, calls))))
+        row = ceilings.loc[endpoint]
+        rows += [(enzyme, "submitted calls", float(row["call_rate_submitted"]), float(row["mcc_submitted"])), (enzyme, "best threshold", float(row["call_rate_at_ceiling"]), float(row["mcc_ceiling"]))]
+    return pd.DataFrame(rows, columns=["enzyme", "kind", "call_rate", "mcc"])
+
+
+def post_deadline_ligands() -> pd.DataFrame:
+    """The 20 released structures, one row each and numbered without their names (13.7 to 13.9): the scores of the published poses, of the submitted poses and of the published baseline, the best and the mean pose of the pool of the project, and the iron-nitrogen distances."""
+    external = pd.read_csv(POST / "structure_external_ligands.csv").set_index("ligand").sort_index()
+    own = pd.read_csv(POST / "structure_external_per_compound.csv").rename(columns={"Molecule_Name": "ligand"}).set_index("ligand").sort_index()
+    poses = pd.read_csv(POST / "structure_poses_scored.csv")
+    arms = {arm: frame.set_index("ligand").sort_index() for arm, frame in poses.groupby("arm")}
+    table = pd.DataFrame({"ligand": range(1, len(external) + 1)})
+    for name, frame in (("external", own), ("submitted", arms["submitted"]), ("baseline", arms["baseline"])):
+        for key, column in (("pli", "LDDT-PLI"), ("bisy", "BiSyRMSD"), ("lp", "LDDT-LP")):
+            table[f"{name}_{key}"] = frame[column].to_numpy()
+    for column in ("pool_best", "pool_mean", "pool_poses", "truth_distance", "submitted_distance", "external_distance"):
+        table[column] = external[column].to_numpy()
+    return table
+
+
+def post_deadline_pool() -> pd.DataFrame:
+    """Every pose of the pool of the project with its LDDT-PLI, by ligand number (13.7)."""
+    names = sorted(pd.read_csv(POST / "structure_external_ligands.csv")["ligand"])
+    number = {name: i + 1 for i, name in enumerate(names)}
+    pool = pd.read_csv(POST / "structure_poses_scored.csv")
+    pool = pool[pool["arm"] == "pool"]
+    return pd.DataFrame({"ligand": pool["ligand"].map(number), "lddt_pli": pool["LDDT-PLI"], "bisy_rmsd": pool["BiSyRMSD"]}).sort_values("ligand").reset_index(drop=True)
+
+
 def final_stacks() -> pd.DataFrame:
     """The nested cross-validated estimates of the final stacks, as the method report states them (section 13.4)."""
     rows = []
@@ -367,6 +425,10 @@ if __name__ == "__main__":
     open_questions().to_csv(OUT / "open_questions.csv", index=False)
     final_stacks().to_csv(OUT / "final_stacks.csv", index=False)
     submission_files().to_csv(OUT / "submission_files.csv", index=False)
+    post_deadline_gate().to_csv(OUT / "pd_gate.csv", index=False)
+    post_deadline_threshold().to_csv(OUT / "pd_threshold.csv", index=False)
+    post_deadline_ligands().to_csv(OUT / "pd_ligands.csv", index=False)
+    post_deadline_pool().to_csv(OUT / "pd_pool.csv", index=False)
     (OUT / "cyp3a4_sequence.txt").write_text(sequence_text() + "\n")
     audit_checks().to_csv(OUT / "audit_checks.csv", index=False)
     tests_table().to_csv(OUT / "tests.csv", index=False)

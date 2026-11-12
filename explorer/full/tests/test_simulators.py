@@ -166,3 +166,22 @@ def test_the_out_of_fold_simulator_reads_the_stored_bundle_and_its_auc_is_a_rank
     result = oof.confusion(frame["y"].to_numpy(), frame[f"{best}|0"].to_numpy(), 0.3)
     assert result["TP"] + result["FP"] == result["called positive"] and result["TP"] + result["FN"] == int(frame["y"].sum())
     assert len(oof.fold_table(tables, "CYP3A4", best)) == oof.folds_of(frame)
+
+
+def test_the_simulators_after_the_deadline_reproduce_the_numbers_of_the_method_report():
+    from simulators import part_13, store
+
+    ligands = store.table("pd_ligands")
+    mean, low, high = part_13.paired_interval((ligands["external_pli"] - ligands["submitted_pli"]).to_numpy(), 10_000, 42)
+    assert (round(mean, 4), round(low, 4), round(high, 4)) == (0.0687, 0.0052, 0.1336)  # question 6, the same seed and draw as the analysis
+    assert int((ligands["external_pli"] > ligands["pool_best"]).sum()) == 9 and len(ligands) == 20
+    gate = store.table("pd_gate")
+    candidate_a = gate[gate["entry"] == "candidate A"].iloc[0]
+    candidate_b = gate[gate["entry"] == "candidate B"].iloc[0]
+    assert abs(candidate_a["scored"] - candidate_a["board"]) < 1e-12 and 1e-4 < abs(candidate_b["scored"] - candidate_b["board"]) < 1e-3
+    threshold = store.table("pd_threshold")
+    best = threshold[(threshold["enzyme"] == "CYP3A4") & (threshold["kind"] == "best threshold")].iloc[0]
+    assert round(best["mcc"], 4) == 0.5177 and len(threshold[threshold["kind"] == "curve"]) == 118  # 59 call rates for each enzyme
+    contact = (ligands["truth_distance"] <= 2.6) & (ligands["submitted_distance"] <= 2.6)
+    assert int(contact.sum()) == 4 and int(((ligands["truth_distance"] > 2.6) & (ligands["submitted_distance"] <= 2.6)).sum()) == 8
+    assert part_13.verdict(0.005, 0.13) == "the first is better" and part_13.verdict(-0.01, 0.02) == "no difference shown"

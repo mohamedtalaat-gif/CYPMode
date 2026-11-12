@@ -23,7 +23,7 @@ def test_every_live_section_runs_and_the_page_has_no_error(tmp_path):
     for needle in ("Traceback", "MarimoExceptionRaisedError", "NameError", "KeyError", "ModuleNotFoundError"):
         assert needle not in text, needle
     live = len(__import__("re").findall(r"\bLIVE\b", html.unescape(text)))
-    assert live >= 124  # every section of the notebook has a simulator
+    assert live >= 129  # every section of the notebook has a simulator
 
 
 def test_the_sections_follow_the_notebook_and_every_one_has_exactly_one_simulator():
@@ -37,5 +37,5 @@ def test_the_sections_follow_the_notebook_and_every_one_has_exactly_one_simulato
     in_app = set(__import__("re").findall(r'"(\d+\.\d+)": sim_', source))
     registered = [set(importlib.import_module(f"simulators.{path.stem}").SIMS) for path in sorted((HERE / "simulators").glob("part_*.py"))]
     in_parts = set().union(*registered)
-    assert len(numbers) == 124 and sum(len(r) for r in registered) == len(in_parts)  # no section is registered twice among the parts
+    assert len(numbers) == 129 and sum(len(r) for r in registered) == len(in_parts)  # no section is registered twice among the parts
     assert not (in_app & in_parts) and in_app | in_parts == numbers
