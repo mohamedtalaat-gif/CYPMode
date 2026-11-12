@@ -1,28 +1,3 @@
-<!-- The theme of a page that frames the explorer (the project site): it is given in the address (?theme=dark or ?theme=light) and changed by a message of the frame that holds the page ({cypmodeTheme: "light"}). -->
-<script>
-  (function () {
-    var wanted = null;
-    try {
-      var asked = new URLSearchParams(location.search).get("theme");
-      if (asked === "light" || asked === "dark") wanted = asked;
-    } catch (e) {}
-    function apply() {
-      if (!wanted || !document.body) return;
-      var classes = document.body.classList;
-      var other = wanted === "dark" ? "light" : "dark";
-      if (classes.contains(wanted + "-theme") && !classes.contains(other + "-theme")) return;
-      classes.remove("light", "light-theme", "dark", "dark-theme");
-      classes.add(wanted, wanted + "-theme");
-      document.documentElement.style.colorScheme = wanted;
-    }
-    window.addEventListener("message", function (event) {
-      var value = event.data && event.data.cypmodeTheme;
-      if (event.source === window.parent && (value === "light" || value === "dark")) { wanted = value; apply(); }
-    });
-    new MutationObserver(apply).observe(document.documentElement, { subtree: true, attributes: true, attributeFilter: ["class"] });
-    document.addEventListener("DOMContentLoaded", apply);
-  })();
-</script>
 <!-- The icon of the site in the tab, in place of the icon of the application (which sets its own icon again when its state changes, so the link is kept). -->
 <script>
   (function () {
