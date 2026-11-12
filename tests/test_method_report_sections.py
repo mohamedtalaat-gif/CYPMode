@@ -144,7 +144,7 @@ def test_the_innovation_summary_stands_between_the_disclosures_and_section_one_a
     claims = [line for line in section.splitlines() if line.startswith("- **")]
     assert len(claims) == len(report.NOTEBOOK_OF_CLAIM) and all(re.search(r" Notebook sections? [\d.]+( and [\d.]+)?\.$", line) for line in claims), "a claim of the innovation summary names no section of the notebook"
     assert text.index("*Innovation summary*") < text.index("## Summary and disclosures")  # the first lines of the report point to the section
-    assert "https://mohamedtalaat-gif.github.io/CYPMode/notebook/" in text[:text.index("## Summary and disclosures")]  # and to the page where the notebook opens
+    assert "CYPMode/notebook/" not in text[:text.index("## Summary and disclosures")]  # the opening of the report names no address of the notebook; the README points at the page where it opens
 
 
 @needs_outputs
