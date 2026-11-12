@@ -57,7 +57,7 @@ pose-validity and margin rules in which every lever was decided by a gate on cry
 fold is. A predicted structure is a model, not a measurement. The numbers reported here come from nested cross-validation on the training data and from checks of the predicted coordinates. One piece of aggregate information about the hidden labels is used: the positive rate of the scored set, which the public leaderboards make recoverable from the accuracy, precision and recall they publish (it weights the yardstick and sets the call rate); no label of any compound and no probing submission is used, and the method report lists it as a limitation.
 
 <!-- generated:post-deadline begin (python -m cypmode.audit.docs_state; the text between the markers is rewritten) -->
-**After the deadline.** The final leaderboards, published on 5 November 2026, place the TDI entry 14 of 62 (tier 2 of 5; macro MCC 0.3723 ± 0.0378) and the structure entry 15 of 38 (tier 2 of 4; LDDT-PLI 0.4133 ± 0.0301, BiSyRMSD 3.970 angstroms). The organisers then released the test labels and the 20 structures. An analysis of the two entries against them, whose plan ([`docs/post_deadline/PLAN.md`](docs/post_deadline/PLAN.md)) was pushed before any of them was read, found:
+**After the deadline.** The final leaderboards, published on 5 November 2026 on [the Hugging Face space of the challenge](https://huggingface.co/spaces/openadmet/cyp-challenge) and discussed in [the wrap-up article of OpenADMET](https://openadmet.ghost.io/take-me-heme-binding-modes-wrapping-up-the-cyp-inhibition-challenge/), place the TDI entry 14 of 62 (tier 2 of 5; macro MCC 0.3723 ± 0.0378) and the structure entry 15 of 38 (tier 2 of 4; LDDT-PLI 0.4133 ± 0.0301, BiSyRMSD 3.970 angstroms). The organisers then released the test labels and the 20 structures. An analysis of the two entries against them, whose plan ([`docs/post_deadline/PLAN.md`](docs/post_deadline/PLAN.md)) was pushed before any of them was read, found:
 
 - The scoring of the organisers reproduces the TDI board to the last digit (0.3722973 against 0.3722973), and the file that was submitted is candidate A.
 - The label rule of the project gives the organisers' label for all 1488 compounds that it can be applied to, and the organisers score 750 (CYP3A4) and 748 (CYP2D6) of the 750 test compounds, nearly the whole test set and not a set that is filtered by the confidence of the label.
@@ -65,7 +65,7 @@ fold is. A predicted structure is a model, not a measurement. The numbers report
 - On the 20 released structures the submitted poses (0.413 LDDT-PLI) cannot be told from the published Boltz-2 baseline (0.420): no difference shown. The pool of poses held better ones (the best of each pool gives 0.526 on average) than the choice among them, and the contact restraint found all 4 coordinated ligands and called 8 more ligands coordinated that the released structures place beyond the cut-off of 2.6 angstroms: the nearest nitrogen of the ligand lies 2.75 to 4.93 angstroms from the iron, 6 of the 8 within 3.1 angstroms, in maps of 3.0 to 3.6 angstroms resolution.
 - An exploratory comparison with the 20 poses that the first-ranked structure entry publishes with [its report](https://aetherark.com/articles/admet-cyp-structure/), whose score reproduces its board value: its LDDT-PLI is higher than that of the submitted poses by 0.069 (interval +0.005 to +0.134; BiSyRMSD: no difference shown, LDDT-LP: no difference shown), and on 9 of the 20 ligands its pose lies above the best pose of the pool of the project.
 
-The tables are in section 15 of [the method report](METHOD_REPORT.md) and in 13.5 to 13.9 of the notebook.
+The tables are in section 15 of [the method report](METHOD_REPORT.md), which is also published as [the interactive method report](https://mohamedtalaat-gif.github.io/blog/cypmode-interactive-method-report/), and in 13.5 to 13.9 of the notebook.
 <!-- generated:post-deadline end -->
 
 ## Reader's guide
@@ -73,7 +73,7 @@ The tables are in section 15 of [the method report](METHOD_REPORT.md) and in 13.
 | Question | Where to read or open |
 | --- | --- |
 | What is this, in two minutes? | the section "What CYPMode is" above and [the interactive card](https://mohamedtalaat-gif.github.io/CYPMode/card/) |
-| What is the method, with every gate and number? | [METHOD_REPORT.md](METHOD_REPORT.md): "Summary and disclosures" and "Innovation summary" first, then section 3 (the two architectures step by step), section 4 (what was explored and how the number of attempts is accounted for) and section 5 (how validation is made to resemble the scored set) |
+| What is the method, with every gate and number? | [METHOD_REPORT.md](METHOD_REPORT.md), also as [the interactive method report](https://mohamedtalaat-gif.github.io/blog/cypmode-interactive-method-report/): "Summary and disclosures" and "Innovation summary" first, then section 3 (the two architectures step by step), section 4 (what was explored and how the number of attempts is accounted for) and section 5 (how validation is made to resemble the scored set) |
 | Where can the method report be read as one searchable page? | [The interactive method report](https://mohamedtalaat-gif.github.io/blog/cypmode-interactive-method-report/) on the personal site of Muhammad Talaat: the sections open and close, the tables can be filtered and sorted, and the text follows METHOD_REPORT.md at every build of the site |
 | What did not work? | [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md), and sections 4.7 and 12 of the method report |
 | How does it all work, from first principles, with no background assumed? | the notebook, which opens in any browser as one page at [mohamedtalaat-gif.github.io/CYPMode/notebook](https://mohamedtalaat-gif.github.io/CYPMode/notebook/). The same notebook as a PDF ([download, about 60 MB](https://github.com/mohamedtalaat-gif/CYPMode/raw/main/notebooks/cypmode_notebook.pdf)) and as a Jupyter file ([download, about 40 MB](https://github.com/mohamedtalaat-gif/CYPMode/raw/main/notebooks/cypmode_notebook.ipynb)) is too large for GitHub to display and has to be downloaded (GitHub shows "too big to display" for all three files, so the notebook is read on the project site above and not in the file tree); the three files are in `notebooks/`. Part 0 (Orientation) comes first; then the part that is needed: the data (II), validation without selection bias (VI), the final model (VIII), the additions that were tested (IX), quantum chemistry and physics (X), the structure track (XI). Every section says where it sits in the story and teaches the science it uses; Appendix A is the practical walkthrough and Appendix D says which section explains which file. The full edition is released after the challenge closes |
@@ -119,7 +119,7 @@ this file). It now also contains an entry for the OpenADMET CYP blind challenge:
 - **CYP3A4 structure prediction**: Boltz-2 (and optionally OpenFold3) co-folding with a gated pose-selection recipe.
 
 Every addition to a model passes through a pre-registered gate (corrected resampled t, both confidence cut-offs, alone and inside the
-assembled stack). Results are generated by code from the run logs: [METHOD_REPORT.md](METHOD_REPORT.md),
+assembled stack). Results are generated by code from the run logs: [METHOD_REPORT.md](METHOD_REPORT.md) (also [the interactive method report](https://mohamedtalaat-gif.github.io/blog/cypmode-interactive-method-report/)),
 [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md) and [audit/AUDIT_REPORT.md](audit/AUDIT_REPORT.md). The queue (`queue/jobs/`) holds the job that runs each experiment, `bash scripts/queue_status.sh` prints what is done, running and waiting, and
 `python -m cypmode.audit.checklist` checks that every job names modules and scripts that exist.
 
@@ -378,7 +378,7 @@ LightGBM; the section "Contributing" at the end of this file explains why and ho
 
 ## Credits and sources
 
-Published sources are listed in [CITATION.cff](CITATION.cff) and in section 14 of [METHOD_REPORT.md](METHOD_REPORT.md).
+Published sources are listed in [CITATION.cff](CITATION.cff) and in section 14 of [METHOD_REPORT.md](METHOD_REPORT.md) ([interactive edition](https://mohamedtalaat-gif.github.io/blog/cypmode-interactive-method-report/)).
 How to cite this work, what counts as using it and what the licence can and cannot do are in [USE_AND_CITATION.md](USE_AND_CITATION.md).
 
 ---

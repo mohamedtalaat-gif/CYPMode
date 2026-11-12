@@ -249,7 +249,7 @@ def readme_block(folder: Path = OUT) -> str:
         ]
     return "\n".join(
         [
-            ("**After the deadline.** The final leaderboards, published on 5 November 2026, place the TDI entry "
+            ("**After the deadline.** The final leaderboards, published on 5 November 2026 on [the Hugging Face space of the challenge](https://huggingface.co/spaces/openadmet/cyp-challenge) and discussed in [the wrap-up article of OpenADMET](https://openadmet.ghost.io/take-me-heme-binding-modes-wrapping-up-the-cyp-inhibition-challenge/), place the TDI entry "
             f"{tdi['rank']} of {tdi['entries']} (tier {tdi['tier']} of {tdi['tiers']}; macro MCC {tdi['values']['MA-MCC']['mean']:.4f} ± {tdi['values']['MA-MCC']['std']:.4f}) and the structure entry "
             f"{structure['rank']} of {structure['entries']} (tier {structure['tier']} of {structure['tiers']}; LDDT-PLI {structure['values']['LDDT-PLI']['mean']:.4f} ± {structure['values']['LDDT-PLI']['std']:.4f}, "
             f"BiSyRMSD {structure['values']['BiSyRMSD']['mean']:.3f} angstroms). The organisers then released the test labels and the 20 structures. An analysis of the two entries against them, whose plan "
@@ -265,6 +265,6 @@ def readme_block(folder: Path = OUT) -> str:
             + (f": {describe_extra_calls(folder)}." if describe_extra_calls(folder) else ".")),
             *external_bullet,
             "",
-            f"The tables are in section 15 of [the method report](METHOD_REPORT.md) and in 13.5 to 13.{9 if external_bullet else 8} of the notebook.",
+            f"The tables are in section 15 of [the method report](METHOD_REPORT.md), which is also published as [the interactive method report](https://mohamedtalaat-gif.github.io/blog/cypmode-interactive-method-report/), and in 13.5 to 13.{9 if external_bullet else 8} of the notebook.",
         ]
     )
