@@ -382,10 +382,10 @@ L 360.976266 29.826346
    </g>
    <g id="FillBetweenPolyCollection_1">
     <defs>
-     <path id="m38d09f7bd4" d="M 71.924376 -113.7957 
+     <path id="m2e74c849ab" d="M 71.924376 -113.7957 
 L 71.924376 -57.475636 
 L 107.938595 -91.05658 
-L 155.546804 -163.994072 
+L 155.546804 -163.999629 
 L 191.561023 -186.857879 
 L 227.575243 -203.267491 
 L 275.183451 -202.000496 
@@ -397,14 +397,14 @@ L 311.197671 -260.216686
 L 275.183451 -253.140512 
 L 227.575243 -241.604135 
 L 191.561023 -230.311718 
-L 155.546804 -216.639323 
+L 155.546804 -216.640375 
 L 107.938595 -166.147955 
 L 71.924376 -113.7957 
 z
 " style="stroke: #0f4d92; stroke-opacity: 0.15"/>
     </defs>
     <g clip-path="url(#p7e6d254ea1)">
-     <use xlink:href="#m38d09f7bd4" x="0" y="302.4" style="fill: #0f4d92; fill-opacity: 0.15; stroke: #0f4d92; stroke-opacity: 0.15"/>
+     <use xlink:href="#m2e74c849ab" x="0" y="302.4" style="fill: #0f4d92; fill-opacity: 0.15; stroke: #0f4d92; stroke-opacity: 0.15"/>
     </g>
    </g>
    <g id="FillBetweenPolyCollection_2">
@@ -437,7 +437,7 @@ z
    <g id="line2d_42">
     <path d="M 71.924376 216.764332 
 L 107.938595 173.797732 
-L 155.546804 112.083303 
+L 155.546804 112.079998 
 L 191.561023 93.815201 
 L 227.575243 79.964187 
 L 275.183451 74.829496 
@@ -460,7 +460,7 @@ z
     <g clip-path="url(#p7e6d254ea1)">
      <use xlink:href="#m250d88202e" x="71.924376" y="216.764332" style="fill: #0f4d92; stroke: #0f4d92"/>
      <use xlink:href="#m250d88202e" x="107.938595" y="173.797732" style="fill: #0f4d92; stroke: #0f4d92"/>
-     <use xlink:href="#m250d88202e" x="155.546804" y="112.083303" style="fill: #0f4d92; stroke: #0f4d92"/>
+     <use xlink:href="#m250d88202e" x="155.546804" y="112.079998" style="fill: #0f4d92; stroke: #0f4d92"/>
      <use xlink:href="#m250d88202e" x="191.561023" y="93.815201" style="fill: #0f4d92; stroke: #0f4d92"/>
      <use xlink:href="#m250d88202e" x="227.575243" y="79.964187" style="fill: #0f4d92; stroke: #0f4d92"/>
      <use xlink:href="#m250d88202e" x="275.183451" y="74.829496" style="fill: #0f4d92; stroke: #0f4d92"/>

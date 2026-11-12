@@ -1,7 +1,7 @@
 section,check,status,detail
 Check summary,training and test files present,PASS,
 Check summary,working tree clean (everything committed),PASS,"0 modified, 0 untracked"
-Check summary,all tests pass,PASS,"1104 passed, 0 failed"
+Check summary,all tests pass,FAIL,"1103 passed, 1 failed"
 Check summary,feature block `rdkit_desc` computed twice,PASS,max
 Check summary,feature block `morgan_c2` computed twice,PASS,max
 Check summary,feature block `tdi_alerts` computed twice,PASS,max
@@ -88,7 +88,7 @@ Check summary,structures_unrelaxed.zip: every structure passes the scorer's own 
 Check summary,structures_unrelaxed.zip: every structure clears a relative distance of 0.8 to the receptor (the scorer's threshold is 0.75),PASS,smallest 0.801
 Check summary,structures_unrelaxed.zip: every structure carries the stereochemistry of the official SMILES (the scorer's PoseBusters call does not check i,PASS,20 of 20
 Check summary,the base-run table of the 20 official ligands has no row in error (structure summary and affinity of every ligand),PASS,0 in error
-Check summary,"the citation file names an author, a repository, a licence and a version",PASS,Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.3.1
+Check summary,"the citation file names an author, a repository, a licence and a version",PASS,Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.3.2
 Check summary,the README names the author and the repository,PASS,found
 Check summary,NOTICE names the author,PASS,found
 Check summary,the archive metadata (.zenodo.json) names the same author,PASS,Talaat

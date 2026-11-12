@@ -170,5 +170,5 @@ def test_the_readme_names_the_public_edition_of_the_notebook_until_the_release_a
     text = Path("README.md").read_text()
     released = text if RELEASED else release.restore_film(release.remove_public_card(text))
     assert RELEASED or "notebooks/public/" in text
-    assert "notebooks/public/" not in released and "notebooks/cypmode_notebook.pdf" in released and "notebooks/cypmode_notebook.ipynb" in released
+    assert "notebooks/public/" not in released and "blog/cypmode-interactive-notebook/" in released  # the README keeps one address for the notebook: its interactive page on the project site
     assert "held-back" not in released and "public:" not in released
