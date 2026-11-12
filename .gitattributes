@@ -1,10 +1,11 @@
 # The vector icon is text, and a checkout on Windows would give it other line endings than the ones that the page of the map embeds.
 *.svg text eol=lf
 
-# Files that a program writes do not count in the language bar of GitHub and are folded in its diffs: the exports of the notebook, the interactive card and the interactive map.
+# Files that a program writes do not count in the language bar of GitHub and are folded in its diffs: the exports of the notebook (the page of one file and the web edition), the interactive card and the interactive map.
 notebooks/public/*.html linguist-generated=true
 notebooks/public/*.ipynb linguist-generated=true
 notebooks/cypmode_notebook.html linguist-generated=true
+notebooks/web/index.html linguist-generated=true
 notebooks/cypmode_notebook.ipynb linguist-generated=true
 docs/card/interactive/**/*.html linguist-generated=true
 docs/map/explorer.html linguist-generated=true

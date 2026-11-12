@@ -266,5 +266,5 @@ def app():
 
 
 if __name__ == "__main__":
-    st.set_page_config(page_title="CYPMode", layout="wide")
+    st.set_page_config(page_title="CYPMode", page_icon=str(Path(__file__).resolve().parent / "docs/brand/favicon-32.png"), layout="wide")  # the icon of the site, as on the pages of the project
     app()
