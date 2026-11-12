@@ -845,3 +845,20 @@ Taking the mean of the two isoforms, the submitted calls give 0.3718 and the bes
 Of the ligands that the submitted poses call coordinated and the released structures do not, the nearest nitrogen of the ligand lies 2.75 to 4.93 angstroms from the iron, 6 of the 8 within 3.1 angstroms, in maps of 3.0 to 3.6 angstroms resolution. A distance within half an angstrom of the cut-off, in maps of this resolution, does not exclude a contact: the table counts the ligands beyond the cut-off and does not show that they make no contact.
 
 The rank correlation between the resolution of the released map and the LDDT-PLI of the submitted pose is +0.285 over 17 compounds (3 files record no resolution).
+
+**Question 6, exploratory: the published poses of the entry that is first on the final board.** The question was added after the labels were read and after its result was computed; it is not in the plan (its section on deviations says so). The entry (user name `dargason`) publishes the 20 poses of its submission with its report (https://aetherark.com/articles/admet-cyp-structure/; its code is at https://github.com/saltzberg/ADMET-CYP-structure and carries no licence). The file (SHA-256 `426c2285797587682785392f6637b085ef68fa98430dd48de2fff9a71286bb0e`) is not stored in the repository; it is fetched by size and checksum and scored with the function that scored the submitted archive. The score reproduces the board value of the entry: a mean LDDT-PLI of 0.48147 against 0.48142 and a mean BiSyRMSD of 3.4375 against 3.4375, with 0 poses failing PoseBusters. The report describes a pool of poses from several co-folding methods that is filtered and clustered, and a choice of the cluster and of the pose of each ligand by its author; it states no score for any step.
+
+Mean paired difference over the 20 ligands, external poses minus the poses named in the row (the sign of the BiSyRMSD is reversed, so that a positive value is better for both), with a 95% interval from a paired bootstrap of 10,000 resamples:
+
+| comparison | metric | mean difference | 2.5% | 97.5% | verdict | ligands in which the external pose is higher | compounds |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| external minus submitted | LDDT-PLI | +0.0687 | +0.0052 | +0.1336 | first better | 13 | 20 |
+| external minus submitted | BiSyRMSD | +0.5365 | -0.0090 | +1.1011 | no difference shown | 13 | 20 |
+| external minus submitted | LDDT-LP | -0.0177 | -0.0628 | +0.0190 | no difference shown | 12 | 20 |
+| external minus baseline | LDDT-PLI | +0.0618 | +0.0088 | +0.1170 | first better | 13 | 20 |
+| external minus baseline | BiSyRMSD | +1.0712 | +0.0893 | +2.6334 | first better | 13 | 20 |
+| external minus baseline | LDDT-LP | +0.0245 | -0.0455 | +0.1211 | no difference shown | 12 | 20 |
+
+Against the submitted poses the LDDT-PLI of the external poses is higher by 0.0687 (interval +0.0052 to +0.1336; higher in 13 of 20 ligands). On 9 of the 20 ligands the external pose has a higher LDDT-PLI than the best pose of the pool of the project (9 to 14 Boltz-2 poses per ligand, 200 in all), so that no choice among those poses could have given it; the three ligands with the largest difference give 73% of the mean difference. At the cut-off of the project the external poses call 11 ligands coordinated, 4 of them coordinated in the released structure, and the submitted poses call 12; the two sets of calls differ in 1 ligand (4.41 angstroms in the released structure, 4.87 in the external pose, 2.45 in the submitted pose; LDDT-PLI 0.645 against 0.307).
+
+The comparison is exploratory: the labels were known, the six paired comparisons are not corrected for their number, and the lower bound of the interval of the LDDT-PLI difference is +0.0052. Whether a ligand lies above the best pose of the pool depends on the score of the external pose, so the count describes a limit of the pool of the project and does not divide the difference into the generation of poses and the choice among them.

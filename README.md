@@ -63,8 +63,9 @@ fold is. A predicted structure is a model, not a measurement. The numbers report
 - The label rule of the project gives the organisers' label for all 1488 compounds that it can be applied to, and the organisers score 750 (CYP3A4) and 748 (CYP2D6) of the 750 test compounds, nearly the whole test set and not a set that is filtered by the confidence of the label.
 - Another threshold on the stored scores would have added at most 0.034 to the macro MCC, against 0.126 between the entry and the first of the board.
 - On the 20 released structures the submitted poses (0.413 LDDT-PLI) cannot be told from the published Boltz-2 baseline (0.420): no difference shown. The pool of poses held better ones (the best of each pool gives 0.526 on average) than the choice among them, and the contact restraint found all 4 coordinated ligands and called 8 more ligands coordinated that the released structures place beyond the cut-off of 2.6 angstroms: the nearest nitrogen of the ligand lies 2.75 to 4.93 angstroms from the iron, 6 of the 8 within 3.1 angstroms, in maps of 3.0 to 3.6 angstroms resolution.
+- An exploratory comparison with the 20 poses that the first-ranked structure entry publishes with [its report](https://aetherark.com/articles/admet-cyp-structure/), whose score reproduces its board value: its LDDT-PLI is higher than that of the submitted poses by 0.069 (interval +0.005 to +0.134; BiSyRMSD: no difference shown, LDDT-LP: no difference shown), and on 9 of the 20 ligands its pose lies above the best pose of the pool of the project.
 
-The tables are in section 15 of [the method report](METHOD_REPORT.md) and in 13.5 to 13.8 of the notebook.
+The tables are in section 15 of [the method report](METHOD_REPORT.md) and in 13.5 to 13.9 of the notebook.
 <!-- generated:post-deadline end -->
 
 ## Reader's guide
