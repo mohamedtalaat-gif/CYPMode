@@ -4,7 +4,7 @@
 
 """The overview figures that the plan listed and that the project lacked: the ledger of every idea as one heat map, the final results on one page, the history of the repository, Butina clusters, the evaluation weights,
 the rule of the gate as a flow chart, the staircase M0 to M3, the calibration methods, the sensitivity of the selection-aware model, the correlation of the assay arms, the label as a Gaussian, the three structure engines, the composition of
-the pool of the final recipe (held back) and the map of the repository. Each is drawn from the repository's own files and logs."""
+the pool of the final recipe (held back), the map of the repository, the flow of the data and the packages of the code. Each is drawn from the repository's own files and logs."""
 
 import re
 import subprocess
@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 from catalog import figure
 from matplotlib.colors import ListedColormap
-from matplotlib.patches import Patch
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Patch
 from scipy.stats import norm, spearmanr
 from style import apply, tidy
 
@@ -677,4 +677,175 @@ def repository_map(theme_name):
     for ax in axes:
         tidy(ax, th)
     fig.tight_layout()
+    return fig
+
+
+# -- the flow of the data and the packages of the code (the two diagrams of the project map, drawn as figures) --------------------------------------------
+
+DATAFLOW_TITLE = "The flow of the data, from the inputs to the submission files"
+CODE_TITLE = "The packages of the code; an arrow goes from a package to a package whose modules it imports, and its label counts those imports"
+
+
+def _node(ax, centre, size, title, detail, theme, accent):
+    """A rounded box with a bold title and a muted line of detail; returns the patch, so that an arrow can start and end on its border."""
+    (x, y), (w, h) = centre, size
+    patch = FancyBboxPatch((x - w / 2, y - h / 2), w, h, boxstyle="round,pad=0.02,rounding_size=0.16", linewidth=2.0, edgecolor=accent, facecolor=theme["panel"], zorder=3)
+    ax.add_patch(patch)
+    if detail:
+        ax.text(x, y + h * 0.17, title, ha="center", va="center", fontsize=13, fontweight="bold", color=theme["text"], zorder=4)
+        ax.text(x, y - h * 0.22, detail, ha="center", va="center", fontsize=10.5, color=theme["muted"], zorder=4)
+    else:
+        ax.text(x, y, title, ha="center", va="center", fontsize=13, fontweight="bold", color=theme["text"], zorder=4)
+    return patch
+
+
+def _inside(patch, point) -> bool:
+    x0, y0, w, h = patch.get_x(), patch.get_y(), patch.get_width(), patch.get_height()
+    return x0 <= point[0] <= x0 + w and y0 <= point[1] <= y0 + h
+
+
+def _link(ax, a, b, theme, color, label=None, rad=0.0, width=2.2, at=0.5, dy=0.0, shift_end=(0.0, 0.0), shift_start=(0.0, 0.0)):
+    """An arrow from the patch ``a`` to the patch ``b``, clipped on their borders; the label sits on the visible part of the curve (``at`` is the share of it)."""
+    start = (a.get_x() + a.get_width() / 2 + shift_start[0], a.get_y() + a.get_height() / 2 + shift_start[1])
+    end = (b.get_x() + b.get_width() / 2 + shift_end[0], b.get_y() + b.get_height() / 2 + shift_end[1])
+    ax.add_patch(FancyArrowPatch(start, end, patchA=a, patchB=b, arrowstyle="-|>", mutation_scale=18, linewidth=width, color=color, connectionstyle=f"arc3,rad={rad}",
+                                 shrinkA=1, shrinkB=2, zorder=2))
+    if label is None:
+        return
+    control = ((start[0] + end[0]) / 2 + rad * (end[1] - start[1]), (start[1] + end[1]) / 2 - rad * (end[0] - start[0]))  # the control point of the arc3 curve
+    curve = [((1 - t) ** 2 * start[0] + 2 * t * (1 - t) * control[0] + t * t * end[0], (1 - t) ** 2 * start[1] + 2 * t * (1 - t) * control[1] + t * t * end[1])
+             for t in np.linspace(0, 1, 401)]
+    visible = [q for q in curve if not _inside(a, q) and not _inside(b, q)]
+    x, y = visible[int(at * (len(visible) - 1))]
+    ax.text(x, y + dy, label, ha="center", va="center", fontsize=11.5, fontweight="bold", color=theme["text"], zorder=5,
+            bbox={"boxstyle": "round,pad=0.22", "facecolor": theme["background"], "edgecolor": color, "linewidth": 1.1})
+
+
+def _heading(fig, text, theme, wrap):
+    import textwrap
+
+    fig.suptitle("\n".join(textwrap.wrap(text, wrap)), fontsize=15, fontweight="bold", color=theme["text"], y=0.985)
+
+
+def dataflow_caption() -> str:
+    from cypmode.audit import project_map
+
+    facts = project_map.dataflow_facts()
+    return (f"{DATAFLOW_TITLE}. The inputs of a track enter the jobs of the queue, and {facts['writers']} of the {len(facts['jobs'])} jobs write a log. The jobs write {len(facts['written'])} log names. The ledger reads "
+            f"the lines of the gates in every log, and {len(facts['named'])} logs are also read by name. The reports, the figures, and the notebook are built from the logs and the ledger by the chain 900 to 960, "
+            "and the submission files follow from them. The same diagram, written in Mermaid, is `docs/map/dataflow.md`.")
+
+
+@figure("eng_data_flow", "engineering", "The flow of the data, from the inputs to the submission files", dataflow_caption, data=("queue/jobs", "cypmode/audit/project_map.py"), section="12.5")
+def data_flow(theme_name):
+    from cypmode.audit import project_map
+
+    th = apply(theme_name)
+    facts = project_map.dataflow_facts()
+    fig, ax = plt.subplots(figsize=(18, 5.6))
+    canvas(ax, (0, 25.2), (-0.3, 7.0))
+    ax.set_aspect("auto")
+    inputs = _node(ax, (1.5, 3.2), (2.6, 1.9), "inputs", "data/*/inputs", th, th["green"])
+    jobs = _node(ax, (5.9, 3.2), (3.4, 1.9), "queue jobs", f"{facts['writers']} of {len(facts['jobs'])} write a log", th, th["blue"])
+    logs = _node(ax, (11.3, 3.2), (2.2, 1.9), "logs", "", th, th["orange"])
+    ledger = _node(ax, (18.1, 5.6), (4.6, 1.9), "ledger", "cypmode/audit/ledger_kinds.py", th, th["purple"])
+    reports = _node(ax, (18.1, 1.0), (4.6, 1.9), "reports, figures, notebook", "built by the chain 900 to 960", th, th["teal"])
+    submissions = _node(ax, (23.3, 1.0), (3.0, 1.9), "submission files", "", th, th["red"])
+    _link(ax, inputs, jobs, th, th["muted"])
+    _link(ax, jobs, logs, th, th["muted"], f"{len(facts['written'])}\nlog names")
+    _link(ax, logs, ledger, th, th["muted"], "every log,\nthrough gate_rows", at=0.5)
+    _link(ax, logs, reports, th, th["muted"], f"{len(facts['named'])} logs are\nread by name", at=0.5)
+    _link(ax, ledger, reports, th, th["muted"])
+    _link(ax, reports, submissions, th, th["muted"])
+    _heading(fig, DATAFLOW_TITLE, th, 90)
+    fig.subplots_adjust(left=0.02, right=0.98, top=0.9, bottom=0.04)
+    return fig
+
+
+def code_caption() -> str:
+    from collections import Counter
+
+    from cypmode.audit import project_map
+
+    facts = project_map.code_facts()
+    packages = Counter(project_map.package_of(m) for m in facts["paths"])
+    edges = sum(len(t) for t in facts["graph"].values())
+    return (f"{CODE_TITLE}. The project has {len(facts['paths'])} modules in {len(packages)} packages, and the modules hold {edges} imports of one another, of which {sum(facts['cross'].values())} cross from one package "
+            "to another. The width of an arrow follows its count. The same diagram, written in Mermaid, is `docs/map/code.md`, which also lists the modules of every package.")
+
+
+CODE_POSITIONS = {"audit": (2.2, 6.0), "explorer": (8.0, 9.0), "post_deadline": (8.0, 3.0), "data": (8.0, 1.0), "challenge": (14.0, 6.0), "validation": (19.6, 6.0),
+                  "top level": (24.8, 9.0), "metrics": (24.8, 3.0)}
+CODE_COLOURS = {"audit": "blue", "challenge": "orange", "validation": "teal", "explorer": "purple", "post_deadline": "gold", "data": "green", "metrics": "red", "top level": "muted"}
+# Every arrow runs along horizontal and vertical lines. The points are the corners of its path, from the border of the box it leaves to the border of the box it enters;
+# the last pair gives the label the segment that carries it and the share of that segment where it sits.
+CODE_ROUTES = {
+    ("audit", "challenge"): ([(3.8, 6.0), (12.4, 6.0)], 0, 0.49),
+    ("challenge", "validation"): ([(15.6, 5.7), (18.0, 5.7)], 0, 0.5),
+    ("validation", "challenge"): ([(18.0, 6.3), (15.6, 6.3)], 0, 0.5),
+    ("challenge", "top level"): ([(14.4, 6.6), (14.4, 8.6), (23.2, 8.6)], 1, 0.3),
+    ("challenge", "metrics"): ([(14.8, 5.4), (14.8, 2.2), (22.4, 2.2), (22.4, 2.8), (23.2, 2.8)], 1, 0.5),
+    ("audit", "validation"): ([(1.6, 6.6), (1.6, 10.4), (19.0, 10.4), (19.0, 6.6)], 1, 0.4),
+    ("audit", "top level"): ([(1.0, 6.6), (1.0, 11.2), (24.8, 11.2), (24.8, 9.6)], 1, 0.5),
+    ("audit", "explorer"): ([(2.2, 6.6), (2.2, 9.4), (6.4, 9.4)], 1, 0.5),
+    ("explorer", "audit"): ([(6.4, 9.0), (3.2, 9.0), (3.2, 6.6)], 1, 0.5),
+    ("audit", "post_deadline"): ([(2.2, 5.4), (2.2, 3.2), (6.4, 3.2)], 1, 0.5),
+    ("explorer", "challenge"): ([(9.6, 8.6), (11.0, 8.6), (11.0, 6.4), (12.4, 6.4)], 1, 0.5),
+    ("explorer", "top level"): ([(9.6, 9.4), (23.2, 9.4)], 0, 0.3),
+    ("post_deadline", "challenge"): ([(9.6, 3.4), (11.4, 3.4), (11.4, 5.65), (12.4, 5.65)], 1, 0.5),
+    ("post_deadline", "validation"): ([(9.6, 2.9), (19.2, 2.9), (19.2, 5.4)], 0, 0.75),
+    ("data", "challenge"): ([(9.6, 1.2), (13.2, 1.2), (13.2, 5.4)], 1, 0.75),
+    ("data", "metrics"): ([(9.6, 0.8), (24.8, 0.8), (24.8, 2.4)], 0, 0.5),
+    ("validation", "top level"): ([(21.2, 6.3), (22.2, 6.3), (22.2, 9.0), (23.2, 9.0)], 1, 0.5),
+    ("validation", "metrics"): ([(20.4, 5.4), (20.4, 3.3), (23.2, 3.3)], 1, 0.5),
+}
+
+
+def _route(ax, points, theme, width, label, which, share):
+    """An arrow along the corners ``points`` (rounded at every corner), an arrow head at the last point and a label on one of its segments."""
+    from matplotlib.patches import PathPatch, Polygon
+    from matplotlib.path import Path as MplPath
+
+    head, radius = 0.34, 0.28
+    pts = [np.array(q, dtype=float) for q in points]
+    direction = (pts[-1] - pts[-2]) / np.linalg.norm(pts[-1] - pts[-2])
+    tip = pts[-1]
+    pts[-1] = tip - direction * head
+    vertices, codes = [tuple(pts[0])], [MplPath.MOVETO]
+    for i in range(1, len(pts) - 1):
+        before, after = pts[i - 1], pts[i + 1]
+        r = min(radius, np.linalg.norm(pts[i] - before) / 2, np.linalg.norm(after - pts[i]) / 2)
+        vertices += [tuple(pts[i] - (pts[i] - before) / np.linalg.norm(pts[i] - before) * r), tuple(pts[i]), tuple(pts[i] + (after - pts[i]) / np.linalg.norm(after - pts[i]) * r)]
+        codes += [MplPath.LINETO, MplPath.CURVE3, MplPath.CURVE3]
+    vertices.append(tuple(pts[-1]))
+    codes.append(MplPath.LINETO)
+    ax.add_patch(PathPatch(MplPath(vertices, codes), facecolor="none", edgecolor=theme["muted"], linewidth=width, capstyle="butt", joinstyle="round", zorder=2))
+    side = np.array([-direction[1], direction[0]]) * 0.15
+    ax.add_patch(Polygon([tip, pts[-1] + side, pts[-1] - side], closed=True, facecolor=theme["muted"], edgecolor=theme["muted"], linewidth=0.5, zorder=2))
+    start, end = np.array(points[which], dtype=float), np.array(points[which + 1], dtype=float)
+    x, y = start + (end - start) * share
+    ax.text(x, y, label, ha="center", va="center", fontsize=11.5, fontweight="bold", color=theme["text"], zorder=5,
+            bbox={"boxstyle": "round,pad=0.22", "facecolor": theme["background"], "edgecolor": theme["muted"], "linewidth": 1.1})
+
+
+@figure("eng_code_packages", "engineering", "The packages of the code", code_caption, data=("cypmode/**/*.py", "cypmode/audit/project_map.py"), section="12.5")
+def code_packages(theme_name):
+    from collections import Counter
+
+    from cypmode.audit import project_map
+
+    th = apply(theme_name)
+    facts = project_map.code_facts()
+    packages = Counter(project_map.package_of(m) for m in facts["paths"])
+    fig, ax = plt.subplots(figsize=(17, 7.8))
+    canvas(ax, (0, 27.4), (0, 12.0))
+    for name, count in packages.items():
+        _node(ax, CODE_POSITIONS[name], (3.2, 1.2), name, f"{count} module{'s' if count != 1 else ''}", th, th[CODE_COLOURS[name]])
+    biggest = max(facts["cross"].values())
+    assert set(facts["cross"]) == set(CODE_ROUTES), "the routes of the arrows are drawn for exactly the edges that the code has"
+    for (a, b), count in sorted(facts["cross"].items(), key=lambda item: -item[1]):
+        points, which, share = CODE_ROUTES[(a, b)]
+        _route(ax, points, th, 1.5 + 2.8 * (count / biggest) ** 0.6, str(count), which, share)
+    _heading(fig, CODE_TITLE, th, 100)
+    fig.subplots_adjust(left=0.01, right=0.99, top=0.93, bottom=0.01)
     return fig

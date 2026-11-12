@@ -1,7 +1,7 @@
 section,check,status,detail
 Check summary,training and test files present,PASS,
 Check summary,working tree clean (everything committed),PASS,"0 modified, 0 untracked"
-Check summary,all tests pass,FAIL,"1103 passed, 1 failed"
+Check summary,all tests pass,PASS,"1104 passed, 0 failed"
 Check summary,feature block `rdkit_desc` computed twice,PASS,max
 Check summary,feature block `morgan_c2` computed twice,PASS,max
 Check summary,feature block `tdi_alerts` computed twice,PASS,max

@@ -62,6 +62,8 @@ ok   data_label_gaussian
 ok   struct_engine_comparison
 ok   struct_official20_recipe
 ok   eng_repository_map
+ok   eng_data_flow
+ok   eng_code_packages
 ok   pharm_pocket_fields
 ok   pharm_site_model
 ok   pharm_hypotheses

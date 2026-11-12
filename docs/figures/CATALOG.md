@@ -432,7 +432,7 @@ How much the selection-aware CYP2D6 model gains depends on how many never-promot
 
 ### eng_queue_timeline: The job queue as a timeline
 
-Each bar is one run of one job of the queue, from the runner's own log (179 jobs, 568 runs: 505 finished, 39 stopped and retried, 24 failed after their attempts). The runs add up to 253 hours of wall-clock time between 08 Oct and 12 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.3 GB on a 16 GB machine).
+Each bar is one run of one job of the queue, from the runner's own log (179 jobs, 575 runs: 510 finished, 40 stopped and retried, 25 failed after their attempts). The runs add up to 254 hours of wall-clock time between 08 Oct and 12 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.3 GB on a 16 GB machine).
 
 - notebook section: 12.2
 - data: queue/logs/queue_stage.txt
@@ -456,7 +456,7 @@ Test functions per test module of the repository: 1085 test functions in 156 mod
 
 ### eng_commit_timeline: The history of the repository
 
-The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-12: 365 commits on 19 days up to commit a15a6ec, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
+The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-12: 368 commits on 19 days up to commit e761927, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
 
 - notebook section: 12.4
 - data: git log
@@ -469,6 +469,22 @@ The repository by top-level folder: the number of files that git tracks (3475 in
 - notebook section: 12.5
 - data: git ls-files
 - files: eng_repository_map-light.svg, eng_repository_map-light.png, eng_repository_map-dark.svg, eng_repository_map-dark.png
+
+### eng_data_flow: The flow of the data, from the inputs to the submission files
+
+The flow of the data, from the inputs to the submission files. The inputs of a track enter the jobs of the queue, and 161 of the 177 jobs write a log. The jobs write 206 log names. The ledger reads the lines of the gates in every log, and 58 logs are also read by name. The reports, the figures, and the notebook are built from the logs and the ledger by the chain 900 to 960, and the submission files follow from them. The same diagram, written in Mermaid, is `docs/map/dataflow.md`.
+
+- notebook section: 12.5
+- data: queue/jobs, cypmode/audit/project_map.py
+- files: eng_data_flow-light.svg, eng_data_flow-light.png, eng_data_flow-dark.svg, eng_data_flow-dark.png
+
+### eng_code_packages: The packages of the code
+
+The packages of the code; an arrow goes from a package to a package whose modules it imports, and its label counts those imports. The project has 179 modules in 8 packages, and the modules hold 601 imports of one another, of which 112 cross from one package to another. The width of an arrow follows its count. The same diagram, written in Mermaid, is `docs/map/code.md`, which also lists the modules of every package.
+
+- notebook section: 12.5
+- data: cypmode/**/*.py, cypmode/audit/project_map.py
+- files: eng_code_packages-light.svg, eng_code_packages-light.png, eng_code_packages-dark.svg, eng_code_packages-dark.png
 
 ## structure
 
