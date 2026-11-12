@@ -2,12 +2,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Part XIII (second part): after the deadline. The plan written before the labels were read and the gates (13.5), the TDI track on the released labels (13.6), the structure track on the released structures (13.7) and what the analysis does and does not show (13.8). Every number is read from the tables that the analysis wrote."""
+"""Part XIII (second part): after the deadline. The plan written before the labels were read and the gates (13.5), the TDI track on the released labels (13.6), the structure track on the released structures (13.7) what the analysis does and does not show (13.8) and an exploratory comparison with the poses that the first entry of the structure board published (13.9). Every number is read from the tables that the analysis wrote."""
 
 from notebooks.notebook_builder import code, md
 
 FACTS = r'''
-# The numbers of 13.5 to 13.8, read from the tables, the logs and the plan of the analysis after the deadline (cypmode/post_deadline/): the gates, the TDI questions and the structure questions. Nothing is typed in; an assertion stands
+# The numbers of 13.5 to 13.9, read from the tables, the logs and the plan of the analysis after the deadline (cypmode/post_deadline/): the gates, the TDI questions and the structure questions. Nothing is typed in; an assertion stands
 # wherever the text below reads a direction or a verdict, so that a different result fails the build and the text is rewritten.
 import json
 import re
@@ -77,6 +77,23 @@ gate_table = pd.DataFrame(
         {"track": "structure, mean BiSyRMSD (angstroms)", "scored here": structure_gate["scored"]["BiSyRMSD"], "board": structure_gate["board"]["BiSyRMSD"], "difference": structure_gate["difference"]["BiSyRMSD"]},
     ]
 )
+
+external_gate = json.loads((post_dir / "structure_external_gate.json").read_text())
+external_paired = pd.read_csv(post_dir / "structure_external_paired.csv")
+external_ligands = pd.read_csv(post_dir / "structure_external_ligands.csv")
+external_counts = pd.read_csv(post_dir / "structure_external_counts.csv")
+vs_submitted = external_paired[external_paired["comparison"] == "external minus submitted"].set_index("metric")
+vs_baseline = external_paired[external_paired["comparison"] == "external minus baseline"].set_index("metric")
+assert external_gate["passed"] and not external_gate["posebusters_failures"], "the text says that the score of the published poses reproduces the board value of their entry and that no pose fails PoseBusters"
+assert vs_submitted.loc["LDDT-PLI", "verdict"] == "first better" and vs_submitted.loc["BiSyRMSD", "verdict"] == "no difference shown" and vs_submitted.loc["LDDT-LP", "verdict"] == "no difference shown", "the text says that only the LDDT-PLI separates the published poses from the submitted ones"
+assert vs_baseline.loc["LDDT-PLI", "verdict"] == "first better" and vs_baseline.loc["BiSyRMSD", "verdict"] == "first better", "the text says that the published poses are better than the plain Boltz-2 pose in LDDT-PLI and BiSyRMSD"
+n_above_pool = int(external_ligands["external_above_pool_best"].sum())
+pool_low, pool_high, pool_total = int(external_ligands["pool_poses"].min()), int(external_ligands["pool_poses"].max()), int(external_ligands["pool_poses"].sum())
+top3_share = float(external_ligands["external_minus_submitted"].nlargest(3).sum() / external_ligands["external_minus_submitted"].sum())
+n_external_called, n_external_true = int(external_counts["True"].sum()), int(external_counts.loc[external_counts["truth_coordinated"], "True"].sum())
+n_differ_calls = int((external_ligands["external_coordinated"] != external_ligands["submitted_coordinated"]).sum())
+assert 0 < vs_submitted.loc["LDDT-PLI", "low"] < 0.01 and n_above_pool > len(external_ligands) / 3, "the text says that the lower end of the interval lies just above zero and that the published pose lies above the best pose of the pool in more than a third of the ligands"
+external_table = external_paired.rename(columns={"mean_difference": "mean difference", "low": "2.5%", "high": "97.5%", "first_higher": "ligands higher"})[["comparison", "metric", "mean difference", "2.5%", "97.5%", "verdict", "ligands higher"]]
 '''
 
 GATE_TABLE = r'''
@@ -151,6 +168,30 @@ MD_13_8 = """
 *On what actually ran.* `cypmode/post_deadline/released.py` (`fetch`, `verify`) fetches the files that the organisers released and records their SHA-256 values; `cypmode/post_deadline/tdi.py` (`board_scores`, `gate`, `paired_difference`, `rule_agreement`, `scored_set_agreement`, `threshold_ceiling`) answers the questions of 13.6 with the organisers' scoring; `cypmode/post_deadline/structure.py` (`score_submission`, `pose_items`, `score_poses`, `paired_difference`, `pool_gaps`, `iron_nitrogen_distance`, `coordination_table`) and `cypmode/post_deadline/structure_worker.py`, which runs in the environment that holds OpenStructure and PoseBusters, answer the questions of 13.7; `cypmode/post_deadline/board.py` (`track_entry`, `build`) reads the row of the entries from the leaderboard files of the organisers into `data/post_deadline/final_board.json`; `cypmode/post_deadline/report.py` writes section 15 of the method report and the block of the README from the tables. The queue jobs `907_post_deadline_released`, `908_post_deadline_tdi` and `909_post_deadline_structure` run them before the method report, and the tests are in `tests/test_post_deadline_board.py`, `tests/test_post_deadline_released.py`, `tests/test_post_deadline_tdi.py`, `tests/test_post_deadline_structure.py`, `tests/test_post_deadline_report.py` and `tests/test_post_deadline_jobs.py`. The plan, with its deviations, is `docs/post_deadline/PLAN.md`.
 """
 
+EXTERNAL_TABLE = r'''
+show_table(external_table, floatfmt="+.4f")
+'''
+
+MD_13_9 = """
+## 13.9 The published poses of the first entry: an exploratory comparison
+
+> **Field:** Structural biology · Statistics · Data science
+
+*Where this section sits:* 13.7 compared the submitted poses with a plain Boltz-2 pose and found that the pool of poses held better ones than the choice among them. This section adds one comparison that the plan of 13.5 did not contain. The entry that ranks first on the structure board published the 20 poses of its submission with its report, and the function that reproduces the board for the submitted archive can be applied to them. The comparison is **exploratory**, which means that it is a measurement made after the answers were known. It can point at a cause but it cannot test one, because a question asked after the data were seen has had the data to shape it; for the same reason the plan records it in its section on deviations, and the six paired comparisons below are not corrected for their number.
+
+**The gate.** The file is fetched by size and checksum and is not stored in the repository, because the repository of the entry carries no licence. Scored with the function that scored the submitted archive, it gives a mean LDDT-PLI of {{=external_gate['scored']['LDDT-PLI']:.5f}} against {{=external_gate['board']['LDDT-PLI']:.5f}} on the board and a mean BiSyRMSD of {{=external_gate['scored']['BiSyRMSD']:.4f}} against {{=external_gate['board']['BiSyRMSD']:.4f}}, with no pose failing PoseBusters. The two sets of poses are therefore scored by one function, and that function is the one of the board. A **paired bootstrap** takes the 20 ligands, draws 20 of them with replacement 10,000 times, and records the mean difference of the two sets of poses each time; the 2.5th and the 97.5th percentiles of those means are the interval, and an interval that excludes zero says that the sign of the difference survives the resampling.
+"""
+
+MD_13_9_B = """
+**The comparison.** Against the submitted poses the LDDT-PLI of the published poses is higher by {{=vs_submitted.loc['LDDT-PLI', 'mean_difference']:.4f}}, with an interval of {{=vs_submitted.loc['LDDT-PLI', 'low']:+.4f}} to {{=vs_submitted.loc['LDDT-PLI', 'high']:+.4f}}, and it is higher in {{=int(vs_submitted.loc['LDDT-PLI', 'first_higher'])}} of the 20 ligands; the lower end lies only {{=vs_submitted.loc['LDDT-PLI', 'low']:.4f}} above zero, so the difference is thin. The BiSyRMSD and the LDDT-LP, the second a measure of the pocket and not of the ligand, show no difference. Against the plain Boltz-2 pose the published poses are better in the LDDT-PLI and in the BiSyRMSD, whereas 13.7 found that the submitted poses could not be told from that pose.
+
+**Where the difference sits.** On {{=n_above_pool}} of the 20 ligands the published pose scores higher than the best pose of the pool of the project for that ligand ({{=pool_low}} to {{=pool_high}} Boltz-2 poses per ligand, {{=pool_total}} in all), so that no choice among those poses could have given it: for those ligands the pool, and not the choice, was the limit. The three ligands with the largest difference give {{=100 * top3_share:.0f}}% of the mean difference. The iron contact does not separate the two sets of poses: the published poses call {{=n_external_called}} ligands coordinated, {{=n_external_true}} of them coordinated in the released structure, the submitted poses call {{=n_submitted_coordinated}}, and the two sets of calls differ in {{=n_differ_calls}} ligand. The count of ligands above the pool depends on the score of the published pose, so it describes a limit of the pool and does not divide the difference into the generation of poses and the choice among them; that division would need the pool from which the published poses were chosen and the score of each of its poses, which this analysis does not compute.
+
+**What the report of the entry says.** The report ({{=external_gate['source']['report']}}) describes a pool of poses from several co-folding methods that is filtered and clustered, and a choice of the cluster and of the pose of each ligand by its author, and it states no score for any step. The comparison above is a measurement by this project and not a result of that report.
+
+*On what actually ran.* `python -m cypmode.post_deadline.structure --external`, the second command of the job `909_post_deadline_structure`, fetches the file, checks it, scores it with the function of question 0 and writes the tables that this section reads (`structure_external_*` in `data/post_deadline/outputs/`).
+"""
+
 CELLS = [
     code(FACTS),
     md(MD_13_5),
@@ -159,4 +200,7 @@ CELLS = [
     md(MD_13_6),
     md(MD_13_7),
     md(MD_13_8),
+    md(MD_13_9),
+    code(EXTERNAL_TABLE),
+    md(MD_13_9_B),
 ]
