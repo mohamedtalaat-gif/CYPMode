@@ -21,15 +21,15 @@ A use of the code in a product or a service that cannot be released under these 
 
 ## How to cite
 
-Cite the archive by the DOI that stands for all its versions, 10.5281/zenodo.23816450, and name the version. Release 0.3.1 has no DOI of its own; the last release that is deposited on Zenodo, 0.3.0, has 10.5281/zenodo.23822983. Release 0.2.0 (10.5281/zenodo.23816451) held what could be published while the challenge was open; release 0.3.0 holds the full set of results, figures
-and the notebook, and release 0.3.1 adds the analysis of the entries against the labels and the structures that the organisers released after the deadline. Release 0.3.1 is also kept in the Software Heritage archive, under the identifier [swh:1:rel:ce73fbb97fdf73ec02a331f18a92067fb34d9763](https://archive.softwareheritage.org/swh:1:rel:ce73fbb97fdf73ec02a331f18a92067fb34d9763), and release 0.3.0 under the identifier [swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd](https://archive.softwareheritage.org/swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd). A ready entry for release 0.3.1:
+Cite the archive by the DOI that stands for all its versions, 10.5281/zenodo.23816450, and name the version. Release 0.3.2 has no DOI of its own; the last release that is deposited on Zenodo, 0.3.0, has 10.5281/zenodo.23822983. Release 0.2.0 (10.5281/zenodo.23816451) held what could be published while the challenge was open; release 0.3.0 holds the full set of results, figures
+and the notebook, and release 0.3.1 adds the analysis of the entries against the labels and the structures that the organisers released after the deadline. Release 0.3.1 is also kept in the Software Heritage archive, under the identifier [swh:1:rel:ce73fbb97fdf73ec02a331f18a92067fb34d9763](https://archive.softwareheritage.org/swh:1:rel:ce73fbb97fdf73ec02a331f18a92067fb34d9763), and release 0.3.0 under the identifier [swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd](https://archive.softwareheritage.org/swh:1:rel:e846d271dc9d63cf96c53bca2d142862e03ba9fd). A ready entry for release 0.3.2:
 
 ```bibtex
 @software{talaat_cypmode,
   author  = {Talaat, Muhammad},
   title   = {CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge},
   year    = {2026},
-  version = {0.3.1},
+  version = {0.3.2},
   doi     = {10.5281/zenodo.23816450},
   url     = {https://github.com/mohamedtalaat-gif/CYPMode}
 }

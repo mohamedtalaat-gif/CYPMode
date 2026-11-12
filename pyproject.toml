@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "cypmode"
-version = "0.3.1"
+version = "0.3.2"
 description = "Time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge"
 authors = [{name = "Muhammad Talaat"}]
 readme = "README.md"
