@@ -1,7 +1,7 @@
 section,check,status,detail
 Check summary,training and test files present,PASS,
 Check summary,working tree clean (everything committed),PASS,"0 modified, 0 untracked"
-Check summary,all tests pass,PASS,"1044 passed, 0 failed"
+Check summary,all tests pass,PASS,"1104 passed, 0 failed"
 Check summary,feature block `rdkit_desc` computed twice,PASS,max
 Check summary,feature block `morgan_c2` computed twice,PASS,max
 Check summary,feature block `tdi_alerts` computed twice,PASS,max
@@ -45,7 +45,20 @@ Check summary,CYP3A4: SHAP importance agrees (rho > 0.2) with a second architect
 Check summary,CYP2D6: SHAP importance agrees (rho > 0.2) with a second architecture,PASS,rho 0.5862
 Check summary,experiment logs parsed,PASS,12 log files with results
 Check summary,structure benchmark scores present,PASS,
-Check summary,TDI submission file present,INFO,none
+Check summary,TDI file tdi_track_candidate_A_hits_only.csv: 750 rows,PASS,
+Check summary,TDI file tdi_track_candidate_A_hits_only.csv: required columns present,PASS,
+Check summary,TDI file tdi_track_candidate_A_hits_only.csv: no missing values,PASS,
+Check summary,TDI file tdi_track_candidate_A_hits_only.csv: calls are boolean,PASS,
+Check summary,TDI file tdi_track_candidate_A_hits_only.csv: Molecule_Name order equals the test file,PASS,
+Check summary,TDI file tdi_track_candidate_A_hits_only.csv: SMILES equal the test file,PASS,
+Check summary,TDI file tdi_track_candidate_A_hits_only.csv: SHA-256 equals the one recorded in the manifest,PASS,
+Check summary,TDI file tdi_track_candidate_B_selection_aware.csv: 750 rows,PASS,
+Check summary,TDI file tdi_track_candidate_B_selection_aware.csv: required columns present,PASS,
+Check summary,TDI file tdi_track_candidate_B_selection_aware.csv: no missing values,PASS,
+Check summary,TDI file tdi_track_candidate_B_selection_aware.csv: calls are boolean,PASS,
+Check summary,TDI file tdi_track_candidate_B_selection_aware.csv: Molecule_Name order equals the test file,PASS,
+Check summary,TDI file tdi_track_candidate_B_selection_aware.csv: SMILES equal the test file,PASS,
+Check summary,TDI file tdi_track_candidate_B_selection_aware.csv: SHA-256 equals the one recorded in the manifest,PASS,
 Check summary,structure zip holds 20 structure files,PASS,20 structure files
 Check summary,"non-hit share of the scored set versus the baseline's public metrics (a property of the public data, reported as limitation L9)",INFO,NOT identified: 538 of 775 grid points are consistent with the baseline's metrics; the hedged blend and the sensitivity table cover the whol
 Check summary,no occurrences of: leaderboard alias used as a credit,PASS,0 found
@@ -75,11 +88,11 @@ Check summary,structures_unrelaxed.zip: every structure passes the scorer's own 
 Check summary,structures_unrelaxed.zip: every structure clears a relative distance of 0.8 to the receptor (the scorer's threshold is 0.75),PASS,smallest 0.801
 Check summary,structures_unrelaxed.zip: every structure carries the stereochemistry of the official SMILES (the scorer's PoseBusters call does not check i,PASS,20 of 20
 Check summary,the base-run table of the 20 official ligands has no row in error (structure summary and affinity of every ligand),PASS,0 in error
-Check summary,"the citation file names an author, a repository, a licence and a version",PASS,Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.2.0
+Check summary,"the citation file names an author, a repository, a licence and a version",PASS,Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.3.1
 Check summary,the README names the author and the repository,PASS,found
 Check summary,NOTICE names the author,PASS,found
 Check summary,the archive metadata (.zenodo.json) names the same author,PASS,Talaat
-Check summary,the DOI of the citation file is written in the README,PASS,10.5281/zenodo.23816451
+Check summary,the DOI of the citation file is written in the README,PASS,10.5281/zenodo.23816450
 Check summary,"the licence of the code is the same in the citation file, LICENSE, pyproject.toml and the headers",PASS,citation file: AGPL-3.0-or-later
 Check summary,the texts of the licences are in LICENSES/,PASS,4 found
 Check summary,every Python file of the repository carries its SPDX licence header,PASS,all have one

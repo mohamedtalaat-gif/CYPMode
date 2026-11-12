@@ -19,7 +19,7 @@ test_bisy_rmsd.py,5
 test_boltz_cpu_fp32.py,4
 test_build_input.py,15
 test_build_summary.py,2
-test_bump_version.py,4
+test_bump_version.py,7
 test_card.py,6
 test_chemberta_features.py,4
 test_chemberta_significance.py,3
@@ -32,7 +32,7 @@ test_conformer_bias.py,5
 test_conformers.py,7
 test_constants.py,3
 test_cryoem_templates.py,3
-test_data_record.py,9
+test_data_record.py,12
 test_diversity_pilot.py,3
 test_docs_state.py,4
 test_ei_sampling.py,3
@@ -104,6 +104,12 @@ test_pose_rescoring_validation.py,18
 test_pose_selection.py,4
 test_pose_stereo.py,7
 test_pose_validity.py,6
+test_post_deadline_board.py,3
+test_post_deadline_jobs.py,3
+test_post_deadline_released.py,3
+test_post_deadline_report.py,4
+test_post_deadline_structure.py,9
+test_post_deadline_tdi.py,7
 test_project_map.py,8
 test_prose_rules.py,9
 test_provenance.py,7
@@ -115,7 +121,8 @@ test_recompute_paired_summaries.py,1
 test_reference_ligands.py,19
 test_relax.py,7
 test_relax_final.py,6
-test_release_after_deadline.py,13
+test_release_after_deadline.py,15
+test_release_jobs.py,3
 test_reliability.py,11
 test_replicate_verdict.py,2
 test_restraint_expansion.py,12

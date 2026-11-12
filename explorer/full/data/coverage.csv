@@ -9,8 +9,8 @@ module,cypmode/audit/pre_submission.py,"11.12, 12.6"
 module,cypmode/audit/project_map.py,12.5
 module,cypmode/audit/prose_rules.py,12.3
 module,cypmode/audit/public_readiness.py,"12.5, 12.6, Appendix A"
-module,cypmode/audit/report.py,"0.2, 0.3, 0.6, 0.7, 2.4, 5.8, Part VI, 6.7, 7.1, 7.2, 7.4, 8.3, 8.6, 8.7, 9.2, 9.8, 9.10, 9.11, 10.1, 10.4, 11.5, 11.10, 11.12, 11.13, Part XII, 12.1, 12.2, 12.3, 12.5, 12.6, Part XIII, 13.1, 13.2, 13.4, Appendix A, Appendix C"
-module,cypmode/audit/sections.py,"Front matter, 0.2, 0.5, 0.6, 0.7, 2.1, 2.4, 2.5, 3.2, 3.5, 3.7, 5.1, 5.2, 5.3, 5.7, 5.8, 6.3, Part VII, 7.1, 7.4, 7.9, 7.10, Part VIII, Part IX, 10.3, 11.3, 11.5, 11.9, 11.12, 12.2, 12.3, 12.5, 12.6, Appendix B"
+module,cypmode/audit/report.py,12.2
+module,cypmode/audit/sections.py,"Front matter, 0.2, 0.5, 0.6, 0.7, 2.1, 2.4, 2.5, 3.2, 3.5, 3.7, 5.1, 5.2, 5.3, 5.7, 5.8, 6.3, Part VII, 7.1, 7.4, 7.9, 7.10, Part VIII, Part IX, 10.3, 11.3, 11.5, 11.9, 11.12, 12.2, 12.3, 12.5, 12.6, 12.7, Appendix B"
 module,cypmode/audit/sections_extra.py,"9.11, 12.6"
 module,cypmode/challenge/addition_experiment.py,"6.7, 9.1, 9.2, 9.3, 9.4, 9.9, 10.6, Appendix A"
 module,cypmode/challenge/all_in_one.py,9.11
@@ -57,7 +57,7 @@ module,cypmode/challenge/model_comparison.py,"6.5, 6.6, 6.7, 7.2, 7.3, 7.7, 7.9,
 module,cypmode/challenge/monroe_embeddings.py,"0.5, 9.10"
 module,cypmode/challenge/multiplicity.py,"9.11, 13.1, 13.2"
 module,cypmode/challenge/multitask.py,"4.7, 6.7, 7.9, 9.9, 9.10, 9.12, Appendix A"
-module,cypmode/challenge/nested.py,"Front matter, 0.6, 2.8, 3.6, 4.1, 4.7, 4.9, Part VI, 6.2, 6.3, 6.4, 6.6, 6.7, 6.8, Part VII, 7.3, 7.4, 7.6, 7.8, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 9.10, 9.14, 12.1, 12.2, 12.3, 12.4, 12.6, 12.7, 13.1, 13.4, Appendix A"
+module,cypmode/challenge/nested.py,"Front matter, 0.6, 2.8, 3.6, 4.1, 4.7, 4.9, Part VI, 6.2, 6.3, 6.4, 6.6, 6.7, 6.8, Part VII, 7.3, 7.4, 7.6, 7.8, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 9.10, 9.14, 12.1, 12.2, 12.3, 12.4, 12.6, 12.7, 13.1, 13.4, 13.6, Appendix A"
 module,cypmode/challenge/nested_deploy.py,6.3
 module,cypmode/challenge/nested_report.py,6.3
 module,cypmode/challenge/nested_runners.py,"2.7, 4.3, 4.6, 4.10, 6.1, 6.2, 6.3, 7.6, 8.1, 9.1, 9.3, 9.5, 9.6, 9.7, 9.14, Appendix A"
@@ -96,7 +96,7 @@ module,cypmode/challenge/split_validity.py,"6.8, 7.7"
 module,cypmode/challenge/stacking_significance.py,"6.5, 6.6, 7.7, 7.8, 7.9, 7.11"
 module,cypmode/challenge/structure_standardization.py,"2.9, 2.10, 7.7"
 module,cypmode/challenge/structure_submission.py,11.10
-module,cypmode/challenge/submission.py,"0.3, 0.6, 6.4, 7.11, Part VIII, 8.4, 8.5, 8.6, 11.1, 11.4, 11.10, 11.12, 12.2, 12.3, 12.5, 12.6, Part XIII, 13.2, 13.4, Appendix A"
+module,cypmode/challenge/submission.py,"0.3, 0.6, 6.4, 7.11, Part VIII, 8.4, 8.5, 8.6, 11.1, 11.4, 11.10, 11.12, 12.2, 12.3, 12.5, 12.6, Part XIII, 13.2, 13.4, 13.9, Appendix A"
 module,cypmode/challenge/submissions_sync.py,8.6
 module,cypmode/challenge/tdi_ablation.py,"7.2, 7.3"
 module,cypmode/challenge/tdi_baseline.py,"7.1, 7.5, 8.4"
@@ -112,10 +112,16 @@ module,cypmode/challenge/why_no_gain.py,9.12
 module,cypmode/challenge/xiso_transfer.py,"0.5, 9.7"
 module,cypmode/data/octant_benchmark.py,"2.8, 5.4, Appendix C"
 module,cypmode/data/panel.py,"Front matter, 0.2, 1.1, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 3.4, 5.1, 5.2, 5.3, 5.7, 7.5, 7.7, 7.11, 8.1, 8.6, 9.1, 9.10, 11.5, 11.10, 11.13, 12.3, 13.4, Appendix A, Appendix C"
-module,cypmode/data_record.py,12.1
-module,cypmode/explorer/data.py,"Front matter, 0.2, 0.3, 0.6, 1.2, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 2.4, 2.7, 2.8, 2.10, 3.1, 3.3, 3.4, 3.5, 3.6, 3.7, 4.1, 4.2, 4.3, 4.4, 4.5, 4.7, 4.9, Part V, 5.1, 5.2, 5.3, 5.4, 5.5, 5.7, 5.8, Part VI, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, Part VII, 7.1, 7.2, 7.4, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, Part IX, 9.1, 9.2, 9.4, 9.6, 9.9, 9.10, 9.11, 9.12, 9.13, 9.14, 9.15, 10.5, Part XI, 11.1, 11.2, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 11.13, 12.1, 12.2, 12.3, 12.5, 12.6, 12.7, 13.1, 13.2, 13.4, Appendix A, Appendix C"
+module,cypmode/data_record.py,"12.1, Appendix A, Appendix C"
+module,cypmode/explorer/data.py,"Front matter, 0.2, 0.3, 0.6, 1.2, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 2.4, 2.7, 2.8, 2.10, 3.1, 3.3, 3.4, 3.5, 3.6, 3.7, 4.1, 4.2, 4.3, 4.4, 4.5, 4.7, 4.9, Part V, 5.1, 5.2, 5.3, 5.4, 5.5, 5.7, 5.8, Part VI, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, Part VII, 7.1, 7.2, 7.4, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, Part IX, 9.1, 9.2, 9.4, 9.6, 9.9, 9.10, 9.11, 9.12, 9.13, 9.14, 9.15, 10.5, Part XI, 11.1, 11.2, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 11.13, 12.1, 12.2, 12.3, 12.5, 12.6, 12.7, 13.1, 13.2, 13.4, 13.5, 13.8, 13.9, Appendix A, Appendix C"
 module,cypmode/metrics/amines.py,"0.6, 1.10, Part V, 5.2, 5.7, 7.2"
 module,cypmode/metrics/motifs.py,"0.2, 3.4, 5.1, 5.3, 5.4, 5.5, 5.7, 7.2"
+module,cypmode/post_deadline/board.py,"2.11, 4.10, 7.1, 7.11, 8.7, 11.13, 12.3, 12.6, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A"
+module,cypmode/post_deadline/released.py,"2.8, 5.4, 11.1, 11.2, 11.7, 11.9, 12.3, 13.1, 13.2, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A"
+module,cypmode/post_deadline/report.py,"13.4, 13.8"
+module,cypmode/post_deadline/structure.py,"Front matter, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1.3, 1.4, 2.1, 2.2, 2.6, 2.7, 2.10, 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, Part V, 5.1, 5.3, 5.5, 5.6, 5.7, 5.8, 6.1, 6.3, 6.7, 7.3, 7.4, 7.6, 7.7, 7.8, 7.10, 7.11, Part IX, 9.1, 9.2, 9.7, 9.10, 9.14, 9.15, 10.1, 10.4, 10.6, Part XI, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.9, 11.10, 11.12, 11.13, 12.2, 12.3, 12.4, 12.5, 13.1, 13.2, 13.4, 13.5, 13.7, 13.8, 13.9, Appendix A, Appendix C"
+module,cypmode/post_deadline/structure_worker.py,13.8
+module,cypmode/post_deadline/tdi.py,"2.3, 2.4, 4.6, 13.8"
 module,cypmode/provenance.py,"12.3, 12.5"
 module,cypmode/validation/affinity_retry.py,11.12
 module,cypmode/validation/batch.py,"3.5, 4.7, 5.5, 9.9, 9.10, 9.11, 11.2, 11.3, 11.5, 11.7, 11.9, 11.10, 11.12, 12.3"
@@ -170,12 +176,13 @@ module,cypmode/validation/stereo_rerun.py,11.12
 module,cypmode/validation/structure_benchmark.py,11.5
 module,cypmode/validation/structure_benchmark_report.py,"11.5, 11.6, 11.8"
 module,cypmode/validation/structure_gates.py,"0.5, 11.6, 11.7"
-module,cypmode/validation/structures.py,"Front matter, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.3, 1.9, 2.7, 2.8, 2.9, 2.10, 2.11, 3.5, 3.7, 4.9, Part V, 5.1, 5.5, 5.7, 5.8, 6.8, Part VII, 7.3, 7.7, 7.10, 9.1, 9.3, 9.4, 9.5, 9.10, 9.13, 9.14, 9.15, 10.4, Part XI, 11.1, 11.2, 11.5, 11.6, 11.7, 11.10, 11.12, 12.3, 13.3, Appendix A, Appendix C"
+module,cypmode/validation/structures.py,"Front matter, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.3, 1.9, 2.7, 2.8, 2.9, 2.10, 2.11, 3.5, 3.7, 4.9, Part V, 5.1, 5.5, 5.7, 5.8, 6.8, Part VII, 7.3, 7.7, 7.10, 9.1, 9.3, 9.4, 9.5, 9.10, 9.13, 9.14, 9.15, 10.4, Part XI, 11.1, 11.2, 11.5, 11.6, 11.7, 11.10, 11.12, 12.3, 12.7, 13.3, 13.4, 13.5, 13.7, 13.8, Appendix A, Appendix C"
 module,cypmode/validation/tdi_reference.py,"5.2, 5.7"
-script,scripts/audit.py,"0.4, 0.6, 0.7, 2.10, 7.4, 7.8, 7.9, 8.3, 8.5, 8.6, 9.10, 9.11, 11.10, 11.12, Part XII, 12.1, 12.2, 12.3, 12.5, 12.6, 13.1, 13.2, 13.4, Appendix A"
+script,scripts/audit.py,"0.4, 0.6, 0.7, 2.10, 7.4, 7.8, 7.9, 8.3, 8.5, 8.6, 9.10, 9.11, 11.10, 11.12, Part XII, 12.1, 12.2, 12.3, 12.5, 12.6, 12.7, 13.1, 13.2, 13.4, Appendix A"
 script,scripts/bump_version.py,12.5
 script,scripts/chemprop_mps.sh,"9.10, 12.1"
 script,scripts/chemprop_warn_only.py,9.10
+script,scripts/clean_clone_check.sh,12.1
 script,scripts/clear_batch_errors.py,11.5
 script,scripts/explorer.sh,12.7
 script,scripts/fetch_data.py,12.1
@@ -345,10 +352,14 @@ queue job,queue/jobs/283_requeue_final_sequence.sh,12.3
 queue job,queue/jobs/285_label_shift.sh,Appendix A
 queue job,queue/jobs/286_ligand_dynamics.sh,"11.13, Appendix A"
 queue job,queue/jobs/295_lint_cleanup.sh,Appendix A
+queue job,queue/jobs/296_release_unblock.sh,"12.1, Appendix A"
 queue job,queue/jobs/299_requeue_final_chain.sh,Appendix A
 queue job,queue/jobs/900_tests_and_audit.sh,"12.3, Appendix A"
 queue job,queue/jobs/905_recompute_paired_summaries.sh,Appendix A
 queue job,queue/jobs/906_explorer_bundle.sh,12.7
+queue job,queue/jobs/907_post_deadline_released.sh,"13.8, Appendix A"
+queue job,queue/jobs/908_post_deadline_tdi.sh,"13.8, Appendix A"
+queue job,queue/jobs/909_post_deadline_structure.sh,"13.8, 13.9, Appendix A"
 queue job,queue/jobs/910_method_report.sh,Appendix A
 queue job,queue/jobs/921_docs_state.sh,"12.5, Appendix A"
 queue job,queue/jobs/925_official_pharmacophore.sh,11.11
@@ -364,6 +375,8 @@ queue job,queue/jobs/947_notebook_public.sh,12.5
 queue job,queue/jobs/950_submissions_final_sync.sh,Appendix A
 queue job,queue/jobs/955_final_audit.sh,12.3
 queue job,queue/jobs/960_pre_submission_gate.sh,Appendix A
+queue job,queue/jobs/970_data_record_build.sh,"12.1, Appendix A"
+queue job,queue/jobs/975_clean_clone_check.sh,"12.1, Appendix A"
 queue job,queue/lib.sh,"0.6, 12.4, Appendix A"
 test,tests/test_addition_experiment.py,12.3
 test,tests/test_affinity_retry.py,11.12
@@ -470,6 +483,12 @@ test,tests/test_pose_rescoring_validation.py,12.3
 test,tests/test_pose_selection.py,12.3
 test,tests/test_pose_stereo.py,11.12
 test,tests/test_pose_validity.py,12.3
+test,tests/test_post_deadline_board.py,"12.3, 13.8"
+test,tests/test_post_deadline_jobs.py,"12.3, 13.8"
+test,tests/test_post_deadline_released.py,"12.3, 13.8"
+test,tests/test_post_deadline_report.py,"12.3, 13.8"
+test,tests/test_post_deadline_structure.py,"12.3, 13.8"
+test,tests/test_post_deadline_tdi.py,"12.3, 13.8"
 test,tests/test_project_map.py,"12.3, 12.5"
 test,tests/test_prose_rules.py,12.3
 test,tests/test_provenance.py,12.5
@@ -482,6 +501,7 @@ test,tests/test_reference_ligands.py,12.3
 test,tests/test_relax.py,12.3
 test,tests/test_relax_final.py,"11.10, 12.3"
 test,tests/test_release_after_deadline.py,"12.3, 12.6"
+test,tests/test_release_jobs.py,12.1
 test,tests/test_reliability.py,12.3
 test,tests/test_replicate_verdict.py,12.3
 test,tests/test_restraint_expansion.py,12.3
