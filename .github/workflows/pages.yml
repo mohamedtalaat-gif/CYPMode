@@ -78,15 +78,13 @@ jobs:
           PY
           fi
 
-      - name: Put the icon of the project on every page and at the root of the site
+      - name: Put the icon of the site on every page and at the root of the site
         run: |
-          cp docs/brand/cypmode-icon.svg site/favicon.svg
           cp docs/brand/favicon-32.png docs/brand/apple-touch-icon.png docs/brand/favicon.ico site/
           python - <<'PY'
           import base64, pathlib, re
           encode = lambda name: base64.b64encode(pathlib.Path("docs/brand", name).read_bytes()).decode()
-          tags = (f'<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,{encode("cypmode-icon.svg")}">'
-                  f'<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,{encode("favicon-32.png")}">'
+          tags = (f'<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,{encode("favicon-32.png")}">'
                   f'<link rel="apple-touch-icon" href="data:image/png;base64,{encode("apple-touch-icon.png")}">')
           for page in pathlib.Path("site").rglob("*.html"):
               text = page.read_text(encoding="utf-8")

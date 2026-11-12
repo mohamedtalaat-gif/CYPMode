@@ -386,9 +386,9 @@ def explorer_data() -> dict:
 
 
 def icon_tags() -> str:
-    """The icon of the project as links inside the page (the picture is part of the file, so that it shows in a tab wherever the page is opened from)."""
-    svg, png = (base64.b64encode((BRAND / name).read_bytes()).decode() for name in ("cypmode-icon.svg", "favicon-32.png"))
-    return f'<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,{svg}">\n<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,{png}">'
+    """The icon of the site that the project belongs to (docs/brand), as a link inside the page: the picture is part of the file, so that it shows in a tab wherever the page is opened from."""
+    png = base64.b64encode((BRAND / "favicon-32.png").read_bytes()).decode()
+    return f'<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,{png}">'
 
 
 def render_explorer() -> str:
