@@ -29,6 +29,7 @@ def test_the_questions_wait_for_the_files_and_each_job_runs_its_own_module_and_w
     assert "post_deadline.released --verify" in _text(JOBS[0]) and "need_done 907_post_deadline_released" in _text(JOBS[1]) and "need_done 907_post_deadline_released" in _text(JOBS[2])
     assert "post_deadline.tdi" in _text(JOBS[1]) and "outputs/tdi.log" in _text(JOBS[1])
     assert "post_deadline.structure" in _text(JOBS[2]) and "outputs/structure.log" in _text(JOBS[2])
+    assert "post_deadline.structure --external" in _text(JOBS[2]) and "outputs/structure_external.log" in _text(JOBS[2])  # question 6, exploratory, runs after the questions of the plan
     assert all("git push" not in _text(job) and "git commit" not in _text(job) for job in JOBS)  # the analysis measures; it publishes nothing
 
 

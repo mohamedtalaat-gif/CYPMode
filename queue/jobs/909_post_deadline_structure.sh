@@ -5,3 +5,5 @@ need_file cypmode/post_deadline/structure.py
 need_done 907_post_deadline_released
 all_lower_done 909_post_deadline_structure || defer "earlier jobs not finished"
 python3 -m cypmode.post_deadline.structure > data/post_deadline/outputs/structure.log 2>&1 || exit 1
+# Question 6 (exploratory, added after the labels were read): the published poses of the entry first on the final board, scored with the same function and compared with the submitted ones; the file is fetched by size and SHA-256.
+python3 -m cypmode.post_deadline.structure --external > data/post_deadline/outputs/structure_external.log 2>&1 || exit 1

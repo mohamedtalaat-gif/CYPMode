@@ -31,6 +31,20 @@ def test_the_structure_lines_state_the_numbers_of_the_tables_and_the_share_of_th
     assert "OpenStructure 2.11.1" in text and "0.40000 against 0.41000" in text and "-0.01000" in text and "0 poses fail PoseBusters" in text
     assert "the selection recovered 33% of the distance" in text  # 1 - 0.1 / 0.15 of the mean gaps
     assert "over 17 compounds (3 files record no resolution)" in text and "| False | 8 | 8 |" in text
+    assert "Question 6" not in text  # the exploratory question is written only when its tables exist
+    pd.DataFrame({"comparison": ["external minus submitted"] * 3, "metric": ["LDDT-PLI", "BiSyRMSD", "LDDT-LP"], "mean_difference": [0.07, 0.5, -0.02], "low": [0.005, -0.01, -0.06], "high": [0.13, 1.1, 0.02], "verdict": ["first better", "no difference shown", "no difference shown"], "first_higher": [13, 13, 12], "compounds": [20, 20, 20]}).to_csv(tmp_path / "structure_external_paired.csv", index=False)
+    pd.DataFrame(
+        {"ligand": ["a", "b", "c"], "external": [0.8, 0.6, 0.3], "submitted": [0.4, 0.5, 0.4], "pool_best": [0.5, 0.7, 0.4], "pool_poses": [10, 10, 10], "external_minus_submitted": [0.4, 0.1, -0.1], "external_above_pool_best": [True, False, False],
+         "truth_distance": [2.7, 4.4, 6.0], "truth_coordinated": [False, False, False], "external_distance": [2.2, 4.9, 6.1], "external_coordinated": [True, False, False], "submitted_distance": [2.0, 2.4, 6.0], "submitted_coordinated": [True, True, False]}
+    ).to_csv(tmp_path / "structure_external_ligands.csv", index=False)
+    pd.DataFrame({"truth_coordinated": [False, True], "False": [9, 0], "True": [7, 4]}).to_csv(tmp_path / "structure_external_counts.csv", index=False)
+    source = {"user": "entry", "report": "https://example.org/report/", "repository": "https://example.org/code", "sha256": "ab" * 32}
+    (tmp_path / "structure_external_gate.json").write_text(json.dumps({"board": {"LDDT-PLI": 0.48, "BiSyRMSD": 3.4}, "scored": {"LDDT-PLI": 0.4801, "BiSyRMSD": 3.4001}, "posebusters_failures": {}, "source": source}))
+    text = "\n".join(report.structure_lines(tmp_path))
+    assert "Question 6, exploratory" in text and "user name `entry`" in text and "0.48010 against 0.48000" in text and "carries no licence" in text
+    assert "On 1 of the 20 ligands the external pose has a higher LDDT-PLI than the best pose of the pool of the project (10 Boltz-2 poses per ligand, 30 in all)" in text and "give 100% of the mean difference" in text
+    assert "the external poses call 11 ligands coordinated, 4 of them coordinated in the released structure, and the submitted poses call 12; the two sets of calls differ in 1 ligand (4.40 angstroms in the released structure, 4.90 in the external pose, 2.40 in the submitted pose" in text
+    assert "the lower bound of the interval of the LDDT-PLI difference is +0.0050" in text and "| external minus submitted | LDDT-PLI | +0.0700 |" in text
 
 
 def test_the_tdi_lines_name_the_file_that_the_exact_match_identifies_and_read_the_tables(tmp_path):

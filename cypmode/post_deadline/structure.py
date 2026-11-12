@@ -10,14 +10,19 @@ value of the submitted archive is formed as the board forms it.
 
 ``python -m cypmode.post_deadline.structure`` scores the submitted archive first and stops when the gate of question 0 is not met; it then scores the other poses (the published baseline of the organisers, the
 pose that unguided Boltz-2 ranks first and every pose of the pool of each compound) and answers questions 5a, 5b and 5c.
+
+``python -m cypmode.post_deadline.structure --external`` answers question 6, which is exploratory and was added after the labels were read: the 20 poses that the entry first on the final board publishes
+are fetched by size and SHA-256, scored with the same function, compared with the submitted poses ligand by ligand, and used only when their score reproduces the board value of that entry.
 """
 
 import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
+import urllib.request
 import zipfile
 from pathlib import Path
 
@@ -25,7 +30,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
-from cypmode.post_deadline.released import DEST, ROOT
+from cypmode.post_deadline.released import DEST, ROOT, sha256_of
 from cypmode.validation.constants import COORDINATION_DISTANCE_CUTOFF_A
 
 OST_ENV = os.environ.get("CYPMODE_OST_ENV", "ost2111")  # the environment with the version of OpenStructure that the organisers name (2.11.1)
@@ -42,6 +47,19 @@ TRAINING = ROOT / "data/tdi_track/inputs/cyp-challenge-TRAIN_TDI.csv"
 
 BOARD = {"LDDT-PLI": 0.4133490815684199, "BiSyRMSD": 3.969566656285525, "LDDT-LP": 0.8261987148956736}  # the final leaderboard of the organisers, mean over 1,000 bootstrap samples
 TOLERANCE = {"LDDT-PLI": 0.005, "BiSyRMSD": 0.1}  # the gate of question 0
+
+# Question 6 (exploratory, added after the labels were read): the 20 poses that the entry first on the final board publishes with its report. The file is fetched, checked against these values and
+# never stored in the repository: the repository of the entry carries no licence.
+EXTERNAL = {
+    "user": "dargason",
+    "report": "https://aetherark.com/articles/admet-cyp-structure/",
+    "repository": "https://github.com/saltzberg/ADMET-CYP-structure",
+    "source": "https://aetherark.com/articles/admet-cyp-structure/selected-models/cyp-selected20-minimized.zip",
+    "bytes": 1426671,
+    "sha256": "426c2285797587682785392f6637b085ef68fa98430dd48de2fff9a71286bb0e",
+}
+BOARD_EXTERNAL = {"LDDT-PLI": 0.4814189480096101, "BiSyRMSD": 3.437463089060784, "LDDT-LP": 0.8082020037198618}  # the row of that entry on the final leaderboard, mean over 1,000 bootstrap samples
+EXTERNAL_DIR = DEST / "external"
 SEED = 42
 RESAMPLES = 10_000
 METRICS = ("LDDT-PLI", "BiSyRMSD", "LDDT-LP")
@@ -274,12 +292,88 @@ def run(out: Path = OUT, gate_only: bool = False) -> int:
     return 0
 
 
+def fetch_external(folder: Path = EXTERNAL_DIR) -> dict[str, str]:
+    """The 20 published poses of the entry first on the final board, by ligand: downloaded when absent, checked against the size and the SHA-256 above, and extracted without trusting the names in the archive."""
+    folder.mkdir(parents=True, exist_ok=True)
+    archive = folder / "poses.zip"
+    if not archive.exists() or sha256_of(archive) != EXTERNAL["sha256"]:
+        request = urllib.request.Request(EXTERNAL["source"], headers={"User-Agent": "cypmode-post-deadline/1.0"})
+        with urllib.request.urlopen(request, timeout=120) as response, open(archive, "wb") as handle:
+            shutil.copyfileobj(response, handle)
+    if archive.stat().st_size != EXTERNAL["bytes"] or sha256_of(archive) != EXTERNAL["sha256"]:
+        raise RuntimeError(f"{archive} is not the file that the analysis was written for (size {archive.stat().st_size}, SHA-256 {sha256_of(archive)})")
+    target = folder / "poses"
+    with zipfile.ZipFile(archive) as bundle:
+        unsafe = [name for name in bundle.namelist() if Path(name).is_absolute() or ".." in Path(name).parts]
+        if unsafe:
+            raise RuntimeError(f"the archive holds paths that leave its folder: {unsafe[:3]}")
+        bundle.extractall(target)
+    return {path.stem: str(path) for path in sorted(target.glob("*.pdb"))}
+
+
+def external_tables(external: pd.DataFrame, scored: pd.DataFrame, poses: dict[str, str]) -> dict[str, pd.DataFrame]:
+    """Question 6: the paired differences between the external poses and the submitted and the baseline poses, the table by ligand, and the two-by-two table of the iron contact of the external poses.
+
+    `external` holds the per-compound scores of the external poses (index: ligand), `scored` the scores of every pose of question 5 and `poses` the files of the external poses.
+    """
+    by_arm = {arm: frame.set_index("ligand").sort_index() for arm, frame in scored.groupby("arm")}
+    rows = [
+        {"comparison": f"external minus {arm}", "metric": metric, **paired_difference(oriented(external[metric], metric), oriented(by_arm[arm][metric], metric))}
+        for arm in ("submitted", "baseline")
+        for metric in METRICS
+    ]
+    pool = scored[scored["arm"] == "pool"].groupby("ligand")["LDDT-PLI"].agg(pool_best="max", pool_mean="mean", pool_poses="size")
+    references = _references()
+    truth = {name: iron_nitrogen_distance(Path(path).read_text()) for name, path in references.items()}
+    external_distance = {name: iron_nitrogen_distance(Path(path).read_text()) for name, path in poses.items()}
+    submitted_distance = {name: iron_nitrogen_distance(Path(path).read_text()) for name, path in _submitted().items()}
+    contact, counts = coordination_table(truth, external_distance)
+    submitted_contact, _ = coordination_table(truth, submitted_distance)
+    ligands = pd.DataFrame({"external": external["LDDT-PLI"], "submitted": by_arm["submitted"]["LDDT-PLI"], "baseline": by_arm["baseline"]["LDDT-PLI"]}).join(pool)
+    ligands["external_minus_submitted"] = ligands["external"] - ligands["submitted"]
+    ligands["external_above_pool_best"] = ligands["external"] > ligands["pool_best"]
+    contact = contact.set_index("ligand").rename(columns={"submitted_distance": "external_distance", "submitted_coordinated": "external_coordinated"})
+    ligands = ligands.join(contact[["truth_distance", "truth_coordinated", "external_distance", "external_coordinated"]])
+    ligands = ligands.join(submitted_contact.set_index("ligand")[["submitted_distance", "submitted_coordinated"]])
+    ligands.index.name = "ligand"
+    return {"paired": pd.DataFrame(rows), "ligands": ligands.reset_index(), "counts": counts}
+
+
+def run_external(out: Path = OUT) -> int:
+    """Question 6, exploratory: score the published poses of the entry first on the final board with the function that scored the submitted archive, and compare them ligand by ligand.
+
+    The score of the poses reproduces the board value of that entry (the gate of this question, with the tolerances of question 0); the comparison is written only when it does. The labels were
+    read before this question was asked, so the tables are reported as exploratory.
+    """
+    out.mkdir(parents=True, exist_ok=True)
+    scored_path = out / "structure_poses_scored.csv"
+    if not scored_path.exists():
+        print(f"{scored_path} is missing: run the questions of the structure track first")
+        return 1
+    poses = fetch_external()
+    result = _run_worker({"mode": "submission", "predicted": poses, "reference": _references(), "smiles": _smiles()})
+    per_compound = pd.DataFrame(result["per_compound"])
+    per_compound.to_csv(out / "structure_external_per_compound.csv", index=False)
+    verdict = gate(board_value(per_compound), board=BOARD_EXTERNAL)
+    (out / "structure_external_gate.json").write_text(json.dumps({**verdict, "posebusters_failures": result["pb_failures"], "source": EXTERNAL}, indent=1) + "\n")
+    print(f"QUESTION 6 gate: LDDT-PLI {verdict['scored']['LDDT-PLI']:.7f} (board {BOARD_EXTERNAL['LDDT-PLI']:.7f}); BiSyRMSD {verdict['scored']['BiSyRMSD']:.7f} (board {BOARD_EXTERNAL['BiSyRMSD']:.7f}); passed: {verdict['passed']}")
+    if not verdict["passed"]:
+        return 1
+    tables = external_tables(per_compound.rename(columns={"Molecule_Name": "ligand"}).set_index("ligand").sort_index(), pd.read_csv(scored_path), poses)
+    tables["paired"].to_csv(out / "structure_external_paired.csv", index=False)
+    tables["ligands"].to_csv(out / "structure_external_ligands.csv", index=False)
+    tables["counts"].to_csv(out / "structure_external_counts.csv")
+    print("QUESTION 6 (exploratory)\n" + tables["paired"].round(4).to_string(index=False))
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=OUT, help="the folder for the tables (default: data/post_deadline/outputs)")
     parser.add_argument("--gate-only", action="store_true", help="score the submitted archive, report question 0 and stop")
+    parser.add_argument("--external", action="store_true", help="question 6 (exploratory): score the published poses of the entry first on the final board and compare them with the submitted ones")
     args = parser.parse_args()
-    return run(args.out, args.gate_only)
+    return run_external(args.out) if args.external else run(args.out, args.gate_only)
 
 
 if __name__ == "__main__":

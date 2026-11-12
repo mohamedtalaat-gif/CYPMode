@@ -155,6 +155,52 @@ def structure_lines(folder: Path) -> list[str]:
             lines += [f"Of the ligands that the submitted poses call coordinated and the released structures do not, {extra}. A distance within half an angstrom of the cut-off, in maps of this resolution, does not exclude a contact: the table counts the ligands beyond the cut-off and does not show that they make no contact.", ""]
         if resolution is not None:
             lines += [f"The rank correlation between the resolution of the released map and the LDDT-PLI of the submitted pose is {resolution['spearman_rho']:+.3f} over {resolution['compounds']} compounds ({resolution.get('without_resolution', 0)} files record no resolution).", ""]
+    lines += external_lines(folder, counts)
+    return lines
+
+
+def external_lines(folder: Path, contact_counts: pd.DataFrame | None) -> list[str]:
+    """Question 6, exploratory: the published poses of the entry first on the final board against the submitted poses; empty when its tables have not been written."""
+    gate, paired = _json(folder, "structure_external_gate.json"), _read(folder, "structure_external_paired.csv")
+    ligands, counts = _read(folder, "structure_external_ligands.csv"), _read(folder, "structure_external_counts.csv")
+    if gate is None or paired is None or ligands is None or counts is None:
+        return []
+    source = gate["source"]
+    submitted = paired[paired["comparison"] == "external minus submitted"].set_index("metric")
+    pli = submitted.loc["LDDT-PLI"]
+    above = int(ligands["external_above_pool_best"].sum())
+    pool_low, pool_high, pool_total = int(ligands["pool_poses"].min()), int(ligands["pool_poses"].max()), int(ligands["pool_poses"].sum())
+    pool_size = f"{pool_low}" if pool_low == pool_high else f"{pool_low} to {pool_high}"
+    share = ligands["external_minus_submitted"].nlargest(3).sum() / ligands["external_minus_submitted"].sum()
+    called_external, true_external = int(counts["True"].sum()), int(counts.loc[counts["truth_coordinated"], "True"].sum())
+    called_submitted = int(contact_counts["True"].sum()) if contact_counts is not None else None
+    differ = ligands[ligands["external_coordinated"] != ligands["submitted_coordinated"]]
+    lines = [
+        (f"**Question 6, exploratory: the published poses of the entry that is first on the final board.** The question was added after the labels were read and after its result was computed; it is not in the plan "
+         f"(its section on deviations says so). The entry (user name `{source['user']}`) publishes the 20 poses of its submission with its report ({source['report']}; its code is at {source['repository']} and carries no licence). "
+         f"The file (SHA-256 `{source['sha256']}`) is not stored in the repository; it is fetched by size and checksum and scored with the function that scored the submitted archive. The score reproduces the board value of the entry: "
+         f"a mean LDDT-PLI of {gate['scored']['LDDT-PLI']:.5f} against {gate['board']['LDDT-PLI']:.5f} and a mean BiSyRMSD of {gate['scored']['BiSyRMSD']:.4f} against {gate['board']['BiSyRMSD']:.4f}, "
+         f"with {len(gate['posebusters_failures'])} poses failing PoseBusters. The report describes a pool of poses from several co-folding methods that is filtered and clustered, and a choice of the cluster and of the pose of each ligand by its author; "
+         "it states no score for any step."),
+        "",
+        ("Mean paired difference over the 20 ligands, external poses minus the poses named in the row (the sign of the BiSyRMSD is reversed, so that a positive value is better for both), "
+         "with a 95% interval from a paired bootstrap of 10,000 resamples:"),
+        "",
+        *_table(paired.rename(columns={"mean_difference": "mean difference", "low": "2.5%", "high": "97.5%", "first_higher": "ligands in which the external pose is higher"}), {"mean difference": "+.4f", "2.5%": "+.4f", "97.5%": "+.4f"}),
+        "",
+        (f"Against the submitted poses the LDDT-PLI of the external poses is higher by {pli['mean_difference']:.4f} (interval {pli['low']:+.4f} to {pli['high']:+.4f}; higher in {int(pli['first_higher'])} of {int(pli['compounds'])} ligands). "
+         f"On {above} of the 20 ligands the external pose has a higher LDDT-PLI than the best pose of the pool of the project ({pool_size} Boltz-2 poses per ligand, {pool_total} in all), so that no choice among those poses could have given it; "
+         f"the three ligands with the largest difference give {100 * share:.0f}% of the mean difference. "
+         f"At the cut-off of the project the external poses call {called_external} ligands coordinated, {true_external} of them coordinated in the released structure"
+         + (f", and the submitted poses call {called_submitted}" if called_submitted is not None else "")
+         + f"; the two sets of calls differ in {len(differ)} ligand" + ("s" if len(differ) != 1 else "")
+         + ("".join(f" ({r.truth_distance:.2f} angstroms in the released structure, {r.external_distance:.2f} in the external pose, {r.submitted_distance:.2f} in the submitted pose; LDDT-PLI {r.external:.3f} against {r.submitted:.3f})" for r in differ.itertuples()))
+         + "."),
+        "",
+        (f"The comparison is exploratory: the labels were known, the six paired comparisons are not corrected for their number, and the lower bound of the interval of the LDDT-PLI difference is {pli['low']:+.4f}. "
+         "Whether a ligand lies above the best pose of the pool depends on the score of the external pose, so the count describes a limit of the pool of the project and does not divide the difference into the generation of poses and the choice among them."),
+        "",
+    ]
     return lines
 
 
@@ -190,6 +236,17 @@ def readme_block(folder: Path = OUT) -> str:
     labelled = [int(x) for x in agreement.set_index("isoform").loc[["CYP3A4", "CYP2D6"], "labelled"]]
     macro_diff = float((ceiling["mcc_ceiling"] - ceiling["mcc_submitted"]).mean())
     verdict_a = a[(a["comparison"] == "submitted minus baseline") & (a["metric"] == "LDDT-PLI")].iloc[0]["verdict"]
+    external_paired, external_gate, external_ligands = _read(folder, "structure_external_paired.csv"), _json(folder, "structure_external_gate.json"), _read(folder, "structure_external_ligands.csv")
+    external_bullet = []
+    if external_paired is not None and external_gate is not None and external_ligands is not None:
+        row = external_paired[external_paired["comparison"] == "external minus submitted"].set_index("metric")
+        pli = row.loc["LDDT-PLI"]
+        others = ", ".join(f"{metric}: {row.loc[metric, 'verdict']}" for metric in ("BiSyRMSD", "LDDT-LP"))
+        external_bullet = [
+            (f"- An exploratory comparison with the 20 poses that the first-ranked structure entry publishes with [its report]({external_gate['source']['report']}), whose score reproduces its board value: "
+             f"its LDDT-PLI is higher than that of the submitted poses by {pli['mean_difference']:.3f} (interval {pli['low']:+.3f} to {pli['high']:+.3f}; {others}), and on {int(external_ligands['external_above_pool_best'].sum())} of the 20 ligands "
+             "its pose lies above the best pose of the pool of the project.")
+        ]
     return "\n".join(
         [
             ("**After the deadline.** The final leaderboards, published on 5 November 2026, place the TDI entry "
@@ -206,7 +263,8 @@ def readme_block(folder: Path = OUT) -> str:
             f"The pool of poses held better ones (the best of each pool gives {pool['best']:.3f} on average) than the choice among them, and the contact restraint found all {coordinated_true} coordinated ligands "
             f"and called {called - coordinated_true} more ligands coordinated that the released structures place beyond the cut-off of {COORDINATION_DISTANCE_CUTOFF_A} angstroms"
             + (f": {describe_extra_calls(folder)}." if describe_extra_calls(folder) else ".")),
+            *external_bullet,
             "",
-            "The tables are in section 15 of [the method report](METHOD_REPORT.md) and in 13.5 to 13.8 of the notebook.",
+            f"The tables are in section 15 of [the method report](METHOD_REPORT.md) and in 13.5 to 13.{9 if external_bullet else 8} of the notebook.",
         ]
     )
