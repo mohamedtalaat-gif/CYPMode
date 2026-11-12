@@ -15,4 +15,4 @@ The complete explorer of [CYPMode](https://github.com/mohamedtalaat-gif/CYPMode)
 
 The Space builds from the folders `cypmode` and `explorer/full` of the main branch of the repository, with the packages pinned in `explorer/full/requirements.txt`. The files that build it are `explorer/space/Dockerfile` and `explorer/space/README.md` in the repository. The same explorer runs on a computer with the launcher of the repository, and the explorer that runs in the browser without a server, on the pages of the project site, shows the ledger of gates, the selection rules, the poses of the benchmark, and the out-of-fold predictions.
 
-The project site frames this Space in its post [CYPMode interactive explorer](https://mohamedtalaat-gif.github.io/blog/cypmode-interactive-explorer/). The notebook, the explorer, and the method report are licensed under CC BY-NC-SA 4.0 and the code under AGPL-3.0-or-later with an additional term (see the `NOTICE` file of the repository).
+The notebook, the explorer, and the method report are licensed under CC BY-NC-SA 4.0 and the code under AGPL-3.0-or-later with an additional term (see the `NOTICE` file of the repository).
