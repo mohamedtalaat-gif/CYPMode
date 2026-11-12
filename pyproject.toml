@@ -17,7 +17,9 @@ requires-python = ">=3.10"
 # major release silently changing that behavior on a plain `pip install -e .`
 # is a real risk worth guarding against, not just a normal version bump.
 dependencies = [
-    "rdkit>=2026.3.6,<2027",
+    # 2026.9.2 is excluded: its macOS wheel raises "bad any cast" in Chem.MurckoDecompose (the test of cypmode/challenge/grouping.py failed on the macOS runner),
+    # while 2026.9.1 and the Linux and Windows wheels of 2026.9.2 pass.
+    "rdkit>=2026.3.6,!=2026.9.2,<2027",
     "pandas>=3.0.5",
     "numpy>=2.5.3",
     "streamlit>=1.64.0",
