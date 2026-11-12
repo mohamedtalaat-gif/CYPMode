@@ -25,8 +25,9 @@ main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1
 #stage { position: relative; overflow: auto; min-height: 0; }
 #panel { border-left: 1px solid var(--line); background: var(--panel); padding: 14px 16px; overflow: auto; min-height: 0; }
 @media (max-width: 900px) { main { grid-template-columns: 1fr; grid-template-rows: 60vh auto; } #panel { border-left: 0; border-top: 1px solid var(--line); } }
-svg { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
-svg.dragging { cursor: grabbing; }
+svg { width: 100%; height: 100%; display: block; }
+svg.pan { touch-action: none; cursor: grab; }
+svg.pan.dragging { cursor: grabbing; }
 .node { stroke: var(--bg); stroke-width: 1.2; cursor: pointer; }
 .node:hover { stroke: var(--fg); }
 .pk0 { fill: var(--pk0); } .pk1 { fill: var(--pk1); } .pk2 { fill: var(--pk2); } .pk3 { fill: var(--pk3); } .pk4 { fill: var(--pk4); } .pk5 { fill: var(--pk5); } .pk6 { fill: var(--pk6); }
@@ -41,6 +42,10 @@ svg.dragging { cursor: grabbing; }
 .legend { position: absolute; left: 10px; bottom: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13px; display: flex; flex-direction: column; gap: 3px; }
 .legend label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
 .legend i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.tools { position: absolute; left: 10px; top: 10px; display: flex; gap: 4px; }
+.tools button { font: inherit; font-size: 13px; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.tools button:hover { border-color: var(--accent); }
+.tools button[aria-pressed="true"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 .hint { position: absolute; right: 10px; bottom: 10px; color: var(--muted); font-size: 12px; background: var(--bg); padding: 2px 6px; border-radius: 6px; }
 #panel h2 { font-size: 16px; margin: 0 0 4px; word-break: break-word; }
 #panel h3 { font-size: 13px; margin: 14px 0 5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
@@ -144,7 +149,7 @@ function layout(nodes, edges, groups, W, H) {
 const modules = DATA.modules, jobs = DATA.jobs;
 const modById = new Map(modules.map((m) => [m.id, m])), jobByName = new Map(jobs.map((j) => [j.name, j]));
 const packages = [...new Set(modules.map((m) => m.package))].sort((a, b) => modules.filter((m) => m.package === b).length - modules.filter((m) => m.package === a).length || (a < b ? -1 : 1));
-const state = { view: "code", sel: null, query: "", hidden: new Set(), cam: { x: 0, y: 0, k: 1 } };
+const state = { view: "code", sel: null, query: "", hidden: new Set(), cam: { x: 0, y: 0, k: 1 }, pan: false };
 const TABS = [["code", "The code"], ["queue", "The queue"], ["flow", "The flow of the data"], ["evidence", "The evidence"]];
 let positions = null, nodeEls = new Map(), edgeEls = [], labelEls = new Map();
 
@@ -178,7 +183,7 @@ function renderPanel() {
   if (!s) {
     p.append(el("h2", {}, "Start here"),
       el("p", {}, `${DATA.meta.modules} modules, ${DATA.meta.imports} imports between them, ${DATA.meta.jobs} queue jobs. Click a circle, a job or a card to see what it is, what it is connected to and which section of the notebook teaches it.`),
-      el("p", {}, "In the graph, a line is an import. For the selected module, blue lines go to the modules it imports and orange lines come from the modules that import it. The wheel zooms, a drag moves the picture, and the boxes at the bottom left hide a package."));
+      el("p", {}, "In the graph, a line is an import. For the selected module, blue lines go to the modules it imports and orange lines come from the modules that import it. The buttons at the top left zoom and fit the picture; press Pan / Zoom to move it with the mouse and to zoom with the wheel (until then the wheel scrolls the page), and the boxes at the bottom left hide a package."));
     if (mods) {
       p.append(el("h3", {}, "Matches"), listOf([...mods].sort().slice(0, 40).map((id) => ref("module", id, id.replace(/^cypmode\./, "")))), listOf([...jobHits].sort().slice(0, 40).map((n) => ref("job", n))));
     }
@@ -224,27 +229,54 @@ function drawCode(stage) {
   });
   edgeEls = edges.map(([a, b]) => { const e = svg("line", { class: "edge", x1: positions[a][0], y1: positions[a][1], x2: positions[b][0], y2: positions[b][1] }); view.append(e); return e; });
   nodeEls = new Map(); labelEls = new Map();
+  let drag = null, suppressClick = false;
   modules.forEach((m, i) => {
     const c = svg("circle", { class: "node pk" + (nodes[i].group % 7), cx: positions[i][0], cy: positions[i][1], r: 3.2 + Math.sqrt(degree[i]) * 1.15, "data-id": m.id, tabindex: 0 });
     c.append(svg("title", {}, m.id.replace(/^cypmode\./, "") + ": " + m.summary));
-    c.addEventListener("click", (ev) => { ev.stopPropagation(); go("module", m.id); });
+    c.addEventListener("click", (ev) => { ev.stopPropagation(); if (suppressClick) return; go("module", m.id); });
     c.addEventListener("keydown", (ev) => { if (ev.key === "Enter") go("module", m.id); });
     view.append(c); nodeEls.set(m.id, c);
     const l = svg("text", { class: "label", x: positions[i][0] + 6, y: positions[i][1] - 6, visibility: "hidden" }, m.id.split(".").pop()); view.append(l); labelEls.set(m.id, l);
   });
-  let drag = null;
   const apply = () => view.setAttribute("transform", `translate(${state.cam.x} ${state.cam.y}) scale(${state.cam.k})`);
   const toUser = (ev) => { const pt = root.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; return pt.matrixTransform(root.getScreenCTM().inverse()); };
-  root.addEventListener("wheel", (ev) => { ev.preventDefault(); const q = toUser(ev), k = Math.max(0.4, Math.min(8, state.cam.k * Math.exp(-ev.deltaY * 0.0015))); state.cam.x = q.x - (q.x - state.cam.x) * (k / state.cam.k); state.cam.y = q.y - (q.y - state.cam.y) * (k / state.cam.k); state.cam.k = k; apply(); }, { passive: false });
-  root.addEventListener("pointerdown", (ev) => { drag = { x: ev.clientX, y: ev.clientY, cx: state.cam.x, cy: state.cam.y, moved: false }; root.classList.add("dragging"); });
-  root.addEventListener("pointermove", (ev) => { if (!drag) return; const s = root.getScreenCTM().a; if (Math.abs(ev.clientX - drag.x) + Math.abs(ev.clientY - drag.y) > 3) drag.moved = true; state.cam.x = drag.cx + (ev.clientX - drag.x) / s; state.cam.y = drag.cy + (ev.clientY - drag.y) / s; apply(); });
-  const end = () => { root.classList.remove("dragging"); };
-  root.addEventListener("pointerup", end); root.addEventListener("pointerleave", end);
-  root.addEventListener("click", () => { if (drag && drag.moved) { drag = null; return; } drag = null; if (state.sel) { state.sel = null; render(); } });
+  const zoomAt = (q, factor) => { const k = Math.max(0.4, Math.min(8, state.cam.k * factor)); state.cam.x = q.x - (q.x - state.cam.x) * (k / state.cam.k); state.cam.y = q.y - (q.y - state.cam.y) * (k / state.cam.k); state.cam.k = k; apply(); };
+  // A drag ends on every way that it can end: the button is released (pointerup), the system takes the pointer (pointercancel, lostpointercapture), the pointer leaves before the capture (pointerleave),
+  // the window loses the focus, or a move arrives with no button pressed (the button was released where this page could not see it, for instance outside the frame that holds the page).
+  const stop = (moved) => {
+    const d = drag; drag = null; root.classList.remove("dragging");
+    if (d && d.captured) { try { root.releasePointerCapture(d.id); } catch (e) { /* the pointer is gone already */ } }
+    if (d && (moved || d.moved)) { suppressClick = true; setTimeout(() => { suppressClick = false; }, 60); }
+  };
+  root.classList.toggle("pan", state.pan);
+  root.addEventListener("wheel", (ev) => { if (!state.pan) return; ev.preventDefault(); zoomAt(toUser(ev), Math.exp(-ev.deltaY * 0.0015)); }, { passive: false });
+  root.addEventListener("pointerdown", (ev) => { if (!state.pan || ev.button !== 0 || !ev.isPrimary) return; drag = { id: ev.pointerId, x: ev.clientX, y: ev.clientY, cx: state.cam.x, cy: state.cam.y, moved: false, captured: false }; });
+  root.addEventListener("pointermove", (ev) => {
+    if (!drag || ev.pointerId !== drag.id) return;
+    if (ev.buttons === 0) { stop(); return; }
+    if (!drag.moved && Math.abs(ev.clientX - drag.x) + Math.abs(ev.clientY - drag.y) > 4) {
+      drag.moved = true;
+      try { root.setPointerCapture(ev.pointerId); drag.captured = true; } catch (e) { drag.captured = false; }
+      root.classList.add("dragging");
+    }
+    if (drag.moved) { const s = root.getScreenCTM().a; state.cam.x = drag.cx + (ev.clientX - drag.x) / s; state.cam.y = drag.cy + (ev.clientY - drag.y) / s; apply(); }
+  });
+  ["pointerup", "pointercancel", "lostpointercapture", "pointerleave"].forEach((t) => root.addEventListener(t, (ev) => { if (drag && ev.pointerId === drag.id && !(t === "pointerleave" && drag.captured)) stop(); }));
+  window.addEventListener("blur", () => stop());
+  root.addEventListener("click", () => { if (suppressClick) return; if (state.sel) { state.sel = null; render(); } });
   if (!state.fitted) { const xs = positions.map((q) => q[0]), ys = positions.map((q) => q[1]), x0 = Math.min(...xs) - 50, x1 = Math.max(...xs) + 50, y0 = Math.min(...ys) - 60, y1 = Math.max(...ys) + 50, k = Math.min(W / (x1 - x0), H / (y1 - y0)); state.cam = { k, x: (W - k * (x1 - x0)) / 2 - k * x0, y: (H - k * (y1 - y0)) / 2 - k * y0 }; state.fitted = true; }
   apply();
   const legend = el("div", { class: "legend" }, el("b", {}, "Packages"), packages.map((pk, gi) => el("label", {}, el("input", { type: "checkbox", checked: !state.hidden.has(pk), onchange: (ev) => { if (ev.target.checked) state.hidden.delete(pk); else state.hidden.add(pk); paintCode(); } }), el("i", { style: `background: var(--pk${gi % 7})` }), `${pk} (${modules.filter((m) => m.package === pk).length})`)));
-  stage.append(root, legend, el("div", { class: "hint" }, "wheel: zoom, drag: move, click: select"));
+  const hint = el("div", { class: "hint" });
+  const showHint = () => { hint.textContent = state.pan ? "wheel: zoom, drag: move, click: select" : "click: select; Pan / Zoom to move the picture"; };
+  const panButton = el("button", { type: "button", "aria-pressed": String(state.pan), title: "Move the picture with the mouse and zoom with the wheel", onclick: () => { state.pan = !state.pan; stop(); root.classList.toggle("pan", state.pan); panButton.setAttribute("aria-pressed", String(state.pan)); showHint(); } }, "Pan / Zoom");
+  const fit = () => { state.fitted = false; render(); };
+  const tools = el("div", { class: "tools" }, panButton,
+    el("button", { type: "button", title: "Zoom in", "aria-label": "Zoom in", onclick: () => zoomAt({ x: W / 2, y: H / 2 }, 1.4) }, "+"),
+    el("button", { type: "button", title: "Zoom out", "aria-label": "Zoom out", onclick: () => zoomAt({ x: W / 2, y: H / 2 }, 1 / 1.4) }, "\u2212"),
+    el("button", { type: "button", title: "Fit the whole graph", onclick: fit }, "Fit"));
+  showHint();
+  stage.append(root, tools, legend, hint);
 }
 function paintCode() {
   const { mods } = matches(), s = state.sel && state.sel.type === "module" ? modById.get(state.sel.id) : null;
