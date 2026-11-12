@@ -1,0 +1,7 @@
+comparison,metric,mean_difference,low,high,verdict,first_higher,compounds
+external minus submitted,LDDT-PLI,0.06874913051724436,0.005246416293084642,0.13356460288167,first better,13,20
+external minus submitted,BiSyRMSD,0.5364514410495758,-0.009019308388233182,1.1011245115101336,no difference shown,13,20
+external minus submitted,LDDT-LP,-0.01769534567021181,-0.06280484283316352,0.01900745077082868,no difference shown,12,20
+external minus baseline,LDDT-PLI,0.06180536746978761,0.008792870454490197,0.1169514668546617,first better,13,20
+external minus baseline,BiSyRMSD,1.0711825489997864,0.08926454901695248,2.6334471382200713,first better,13,20
+external minus baseline,LDDT-LP,0.02446305182924502,-0.04549013364974761,0.12112019639965604,no difference shown,12,20

@@ -1,0 +1,9 @@
+QUESTION 6 gate: LDDT-PLI 0.4814706 (board 0.4814189); BiSyRMSD 3.4374633 (board 3.4374631); passed: True
+QUESTION 6 (exploratory)
+              comparison   metric  mean_difference     low   high             verdict  first_higher  compounds
+external minus submitted LDDT-PLI           0.0687  0.0052 0.1336        first better            13         20
+external minus submitted BiSyRMSD           0.5365 -0.0090 1.1011 no difference shown            13         20
+external minus submitted  LDDT-LP          -0.0177 -0.0628 0.0190 no difference shown            12         20
+ external minus baseline LDDT-PLI           0.0618  0.0088 0.1170        first better            13         20
+ external minus baseline BiSyRMSD           1.0712  0.0893 2.6334        first better            13         20
+ external minus baseline  LDDT-LP           0.0245 -0.0455 0.1211 no difference shown            12         20

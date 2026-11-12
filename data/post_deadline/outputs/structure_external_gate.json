@@ -1,0 +1,31 @@
+{
+ "board": {
+  "LDDT-PLI": 0.4814189480096101,
+  "BiSyRMSD": 3.437463089060784,
+  "LDDT-LP": 0.8082020037198618
+ },
+ "scored": {
+  "LDDT-PLI": 0.4814705651164055,
+  "BiSyRMSD": 3.4374632632791995,
+  "LDDT-LP": 0.8082481661848807
+ },
+ "difference": {
+  "LDDT-PLI": 5.161710679540965e-05,
+  "BiSyRMSD": 1.7421841569387198e-07,
+  "LDDT-LP": 4.6162465018873e-05
+ },
+ "tolerance": {
+  "LDDT-PLI": 0.005,
+  "BiSyRMSD": 0.1
+ },
+ "passed": true,
+ "posebusters_failures": {},
+ "source": {
+  "user": "dargason",
+  "report": "https://aetherark.com/articles/admet-cyp-structure/",
+  "repository": "https://github.com/saltzberg/ADMET-CYP-structure",
+  "source": "https://aetherark.com/articles/admet-cyp-structure/selected-models/cyp-selected20-minimized.zip",
+  "bytes": 1426671,
+  "sha256": "426c2285797587682785392f6637b085ef68fa98430dd48de2fff9a71286bb0e"
+ }
+}
