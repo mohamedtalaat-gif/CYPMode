@@ -82,13 +82,16 @@ jobs:
           fi
 
       - name: Put the icon of the site on every page and at the root of the site
+        env:
+          BASE: /${{ github.event.repository.name }}
         run: |
           cp docs/brand/favicon-32.png docs/brand/apple-touch-icon.png docs/brand/favicon.ico site/
           python - <<'PY'
-          import base64, pathlib, re
-          encode = lambda name: base64.b64encode(pathlib.Path("docs/brand", name).read_bytes()).decode()
-          tags = (f'<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,{encode("favicon-32.png")}">'
-                  f'<link rel="apple-touch-icon" href="data:image/png;base64,{encode("apple-touch-icon.png")}">')
+          import os, pathlib, re
+          base = os.environ["BASE"]  # the icons are files at fixed addresses of the site, as on the pages of the site itself: a browser that does not read an icon written into the page still finds them
+          tags = (f'<link rel="icon" href="{base}/favicon.ico" sizes="any">'
+                  f'<link rel="icon" type="image/png" sizes="32x32" href="{base}/favicon-32.png">'
+                  f'<link rel="apple-touch-icon" href="{base}/apple-touch-icon.png">')
           for page in pathlib.Path("site").rglob("*.html"):
               text = page.read_text(encoding="utf-8")
               text = re.sub(r'<link[^>]*rel="(?:shortcut )?(?:icon|apple-touch-icon)"[^>]*>', "", text)
