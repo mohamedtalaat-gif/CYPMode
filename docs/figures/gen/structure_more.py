@@ -364,7 +364,7 @@ def official_caption() -> str:
     return (f"The pools of poses of the {pools['ligand'].nunique()} official ligands under the scorer's own PoseBusters call: {len(pools)} poses in all, {len(valid)} of them passing the 22 checks and {int((valid['distance_margin'] >= MARGIN_FLOOR).sum())} passing with a margin of at least {MARGIN_FLOOR}. "
             f"Left: for every ligand, how many poses of its pool fail a check (red), pass with a small margin (gold) and pass with a safe margin (green). Right: the margin of the pose that the recipe chose, before the force-field relaxation (open circle) and after it (filled), "
             f"for the same ligands in the same order; the dotted lines are the limit of the check (0.75) and the floor of the project ({MARGIN_FLOOR}); the relaxation raises the margin for {int((decisions['margin_after'] > decisions['margin_before']).sum())} of {len(decisions)} ligands. "
-            "This figure shows predictions for the blinded compounds and is held back until the challenge closes.")
+            "The figure shows predictions for the blinded compounds, whose structures the organisers have since released (Part XIII).")
 
 
 @figure("struct_official20_pools", GROUP, "The pose pools of the official ligands (held back)", official_caption, data=(OFFICIAL_POOLS, RELAXATION), section="11.10")

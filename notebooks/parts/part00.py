@@ -418,7 +418,7 @@ checks, for example, that no two atoms overlap and that bond lengths are sensibl
 
 The rules that matter for this project are these.
 
-- The test set has 750 molecules and its labels are withheld until the challenge closes. A submission may be made once every 12 hours for each track, and only the latest valid one counts.
+- The test set has 750 molecules, and its labels were withheld until the challenge closed; the organisers released them afterwards, and Part XIII reads them. A submission may be made once every 12 hours for each track, and only the latest valid one counts.
 - The final deadline is 3 November 2026, 23:59 UTC.
 - A submission carries a declaration of whether proprietary data were used. This project uses public data only.
 - Publishing the code is encouraged, and it is required for a separate award, the "Innovation in ML" award, which recognises architectural novelty, creative use of data, novel
@@ -470,7 +470,7 @@ from the repository's files, so the counts on them are the current ones.
 
 In plain words: every molecule is first turned into a long list of numbers that describe it. A **fingerprint**, one kind of such numbers, is a list of yes/no answers to the question "does
 the molecule contain this particular small group of atoms?". Many different models then each give a score for how likely the molecule is to be a time-dependent inhibitor, and a final
-blending step, called **stacking**, learns how much to trust each model. The molecules with the highest blended scores are called positive. Because the true test answers are hidden, the
+blending step, called **stacking**, learns how much to trust each model. The molecules with the highest blended scores are called positive. Because the true test answers were hidden when the model was built, the
 whole procedure is practised on the training molecules in a way that mimics the hidden test, and every idea that might improve it has to pass a gate first.
 
 **The structure system** turns a ligand into a validated pose.
@@ -564,7 +564,7 @@ A second table follows the first: for each claim it names the sections of this n
 """),
     code(INNOVATION),
     md("""
-Two things are deliberately absent from the table. It makes no claim about the score on the hidden labels, which is not known until the challenge closes, and it makes no claim that a rule for choosing among predicted poses works: every such rule
+Two things are deliberately absent from the table. It makes no claim about the score on the hidden labels, which the final board gives and Part XIII reads (the table states what the nested validation supports), and it makes no claim that a rule for choosing among predicted poses works: every such rule
 failed its gate (section 11.8), and the structure track keeps the model's own ranking among the poses that are valid.
 """),
 ]

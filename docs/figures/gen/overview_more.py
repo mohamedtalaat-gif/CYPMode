@@ -616,7 +616,7 @@ def recipe_caption() -> str:
     kinds = Counter(chosen.values())
     return ("What the pool of each of the 20 official ligands is made of (stacked bars: the base run, the unguided run, the restrained run that carries the iron-nitrogen restraint, and the extra samples) and which kind of run the final pose came from (the ringed segment). "
             "The poses are chosen by the recipe: among the valid poses with a margin of at least 0.8, the model's own ranking, the restrained run being read first for a ligand with a Type II donor. The final poses come from the " + ", ".join(f"{k} for {n}" for k, n in kinds.most_common()) + " ligands. "
-            "This figure shows predictions for the blinded compounds and is held back until the challenge closes.")
+            "The figure shows predictions for the blinded compounds, whose structures the organisers have since released (Part XIII).")
 
 
 @figure("struct_official20_recipe", "structure", "The pool of each official ligand and the run of its final pose (held back)", recipe_caption, data=(f"{OUT}/final/official_posebusters_pools.csv", f"{OUT}/final/manifest.json"), section="11.10")

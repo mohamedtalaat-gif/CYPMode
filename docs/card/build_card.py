@@ -176,7 +176,7 @@ def card_html(theme: str, mode: str = "public", spin: int | None = None) -> str:
              (f"{facts.gates}", f"ideas judged by a pre-registered gate, {facts.gates - facts.gates_not_met} met")]
     note = (f"Six of the {facts.poses} submitted poses, picked by hand: the circled nitrogen is the one nearest the heme iron in the submitted structure, and all {facts.poses - facts.pose_failures} poses pass the 22 PoseBusters checks."
             if full else "Public crystal structures of CYP3A4 from the PDB: the enzyme with fluconazole and six complexes with imidazole and pyridine ligands; the circled nitrogen is the Type II donor and the "
-            f"distance is the deposited one. The project's own {facts.poses} predicted structures are published after the challenge closes.")
+            f"distance is the deposited one. The project's own {facts.poses} predicted structures are published with the project.")
     stat_html = "".join(f'<div class="stat"><div class="num">{n}</div><div class="lab">{html.escape(t)}</div></div>' for n, t in stats)
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 *{{box-sizing:border-box}} html,body{{margin:0;background:#000}}

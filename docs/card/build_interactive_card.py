@@ -232,7 +232,7 @@ def page(mode: str = "public") -> str:
     note = (f"Six of the {facts.poses} submitted poses, picked by hand: the circled nitrogen of each drawing is the one nearest the heme iron in the submitted structure, the dashed line in the viewer joins it to the iron, "
             f"and all {facts.poses - facts.pose_failures} poses pass the PoseBusters checks."
             if full else "Public crystal structures of CYP3A4 from the PDB: the enzyme with fluconazole and six complexes with imidazole and pyridine ligands; the circled nitrogen of each drawing is the Type II donor, "
-            f"and the dashed line in the viewer joins it to the heme iron. The project's own {facts.poses} predicted structures are published after the challenge closes.")
+            f"and the dashed line in the viewer joins it to the heme iron. The project's own {facts.poses} predicted structures are published with the project.")
     payload = json.dumps([{k: v for k, v in e.items() if k not in ("sketch", "caption")} for e in data], separators=(",", ":")).replace("</", "<\\/")
     text = (PAGE.replace("__LIG__", LIGAND_NAME).replace("__STATS__", stat_html).replace("__TILES__", "".join(tile_html(e, i) for i, e in enumerate(data)))
             .replace("__NOTE__", note).replace("__DATA__", payload))

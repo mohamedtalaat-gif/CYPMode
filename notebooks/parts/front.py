@@ -9,6 +9,7 @@ from notebooks.notebook_builder import code, md
 FACTS = '''
 # Run the notebook from the repository root. F holds the numbers quoted in the running text, read from the repository's own files: a sentence such as
 # "{{=F.n_train:,}} molecules" is filled in from F when the notebook is built. The show_* helpers put figures, tables and equations into a cell's output.
+import json
 from pathlib import Path
 
 from notebooks.facts import load
@@ -16,6 +17,8 @@ from notebooks.notebook_builder import show_figure, show_markdown, show_math, sh
 
 ROOT = Path.cwd()
 F = load()
+board = json.loads((ROOT / "data/post_deadline/final_board.json").read_text())["tracks"]  # the final boards of the organisers, published on 5 November 2026 (read again in Part XIII)
+ordinal = lambda n: f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
 '''
 
 CELLS = [
@@ -46,12 +49,14 @@ Two tasks are solved. The first is classification: for each of {{=F.n_test}} mol
 switches off the enzyme CYP2D6, in the slow and lasting way called time-dependent inhibition. The second is structure prediction: for 20 molecules, predict where every atom sits
 when the molecule is bound inside CYP3A4.
 
-Because the answers stay hidden until the challenge closes, the central difficulty is to judge how good a model is without optimism. The project therefore evaluates every model by
+Because the answers were hidden until the challenge closed, the central difficulty was to judge how good a model is without optimism. The project therefore evaluates every model by
 nested cross-validation, in which no choice the model makes (which members to trust, how to blend them, where to put the yes/no threshold) is tested on the data it was chosen on,
 and it judges every proposed improvement by a rule written down before its result existed. {{=F.gates}} such rules were judged: {{=F.gates_not_met}} ended "not met" and {{=F.gates_met}}
 ended "met". The final classification model blends {{=F.n_final['CYP3A4']}} models for CYP3A4 and {{=F.n_final['CYP2D6']}} for CYP2D6, which read {{=F.n_columns:,}} numbers per molecule. In nested cross-validation it reaches an area under the ROC curve
 (a score that is 0.5 for guessing and 1 for a perfect ranking, defined in section 4.10) of {{=F.auc['CYP3A4']:.3f}} for CYP3A4 and {{=F.auc['CYP2D6']:.3f}} for CYP2D6. These are
-estimates made on the training data. The challenge score itself is not known until the challenge closes. The submitted structures number {{=F.poses}}, and {{=F.pose_failures}} of them fail the
+estimates made on the training data. The challenge has closed, and the organisers have published the final boards: the classification entry ranks {{=ordinal(board['classification']['rank'])}} of {{=board['classification']['entries']}}
+(macro MCC {{=board['classification']['values']['MA-MCC']['mean']:.4f}}) and the structure entry ranks {{=ordinal(board['structure']['rank'])}} of {{=board['structure']['entries']}} (LDDT-PLI {{=board['structure']['values']['LDDT-PLI']['mean']:.4f}}),
+both in the second tier; Part XIII reads them against the labels and the structures that the organisers released afterwards. The submitted structures number {{=F.poses}}, and {{=F.pose_failures}} of them fail the
 challenge's physical-validity checks.
 
 The notebook is also a record of what did not work. Every idea that was tried is described with the rule it had to pass, its numbers and the reason it did or did not help, and the
