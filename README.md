@@ -681,7 +681,7 @@ A browser that cannot open a local port makes those tests skip with the reason, 
 
 A Chrome that you install from its vendor is the better choice: Google signs it, and on Linux its package comes from a signed repository. Google publishes no checksum or signature for Chrome for Testing, so the
 SHA-256 values in `docs/video/anime/chrome.py` were computed from its files on 2026-11-26. They catch a file that changes after that day or a transfer that breaks, and they cannot show that a file was already altered
-at its source before that day. The continuous integration hides the Chrome of its runners with `CYPMODE_IGNORE_INSTALLED=1`, downloads Chrome for Testing on Linux, macOS, and Windows, and runs the browser tests on it.
+at its source before that day. The continuous integration hides the Chrome of its runners with `CYPMODE_IGNORE_INSTALLED=1`, downloads Chrome for Testing on Linux, macOS, and Windows, and runs the browser tests on it. On Linux, a Chrome that cannot use its sandbox (Ubuntu 23.10 and later restrict it for a browser that is not a package of the system) runs without it and says so, because it opens only the local pages of this project; `CYPMODE_NO_SANDBOX=1` asks for that.
 
 ### Checks before a pull request
 

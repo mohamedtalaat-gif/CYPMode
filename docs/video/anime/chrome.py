@@ -7,7 +7,7 @@
 The browser is found without any set-up. ``chrome_path`` takes, in this order: the file that the environment variable ``CYPMODE_CHROME`` names; a Chrome or Chromium that is installed on the machine;
 a Chrome for Testing that an earlier run has put into the cache (``~/.cache/cypmode``, or the folder of ``CYPMODE_CACHE``); and otherwise it downloads Chrome for Testing, Google's own channel of browsers that
 programs drive, once, checks the size and the SHA-256 of the file against the values that are written below, and unpacks it into the cache. ``CYPMODE_NO_DOWNLOAD=1`` forbids the download, and
-``CYPMODE_IGNORE_INSTALLED=1`` hides the browsers that are installed. ``python docs/video/anime/chrome.py`` finds or fetches the browser, starts it once, and says which one it is."""
+``CYPMODE_IGNORE_INSTALLED=1`` hides the browsers that are installed, and ``CYPMODE_NO_SANDBOX=1`` runs the browser without its sandbox. ``python docs/video/anime/chrome.py`` finds or fetches the browser, starts it once, and says which one it is."""
 
 import base64
 import functools
@@ -152,6 +152,39 @@ def chrome_path() -> str:
     return str(cached)
 
 
+def _probe_no_sandbox() -> bool:
+    """Linux: start the browser once with its sandbox on, in a scratch profile. When it ends and says that no sandbox is usable (Ubuntu 23.10 and later restrict the user namespaces that the sandbox needs for a browser that is
+    not a package of the system), start it once more without the sandbox. True only when that second start works; the browser opens only the local pages of this project, which is why it may run without."""
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as folder:
+        log = Path(folder) / "start.log"
+        try:
+            with Chrome(log=log, sandbox=True):
+                return False
+        except (RuntimeError, OSError):
+            pass
+        try:
+            said = log.read_text(errors="replace").lower()
+        except OSError:
+            said = ""
+        if "sandbox" not in said:
+            return False
+        try:
+            with Chrome(sandbox=False):
+                pass
+        except (RuntimeError, OSError):
+            return False
+    print("Chrome cannot use its sandbox on this system (unprivileged user namespaces are restricted), so it runs without it; it opens only the local pages of this project.", file=sys.stderr, flush=True)
+    return True
+
+
+@functools.cache
+def _needs_no_sandbox() -> bool:
+    """Whether the browser has to run without its sandbox here, decided once per process: ``CYPMODE_NO_SANDBOX=1`` says so, only Linux is ever asked, and there a start with the sandbox decides."""
+    if os.environ.get("CYPMODE_NO_SANDBOX", "0") not in ("", "0"):
+        return True
+    return sys.platform.startswith("linux") and _probe_no_sandbox()
+
+
 @functools.cache
 def unusable_reason() -> str | None:
     """None when a browser can be started here and opens a local debugging port; otherwise the reason, in a sentence that a test can print when it skips itself.
@@ -160,15 +193,12 @@ def unusable_reason() -> str | None:
         path = chrome_path()
     except ChromeUnavailable as error:
         return str(error)
-    handle, name = tempfile.mkstemp(prefix="chrome-start-", suffix=".log")
-    os.close(handle)
-    try:
-        with Chrome(log=Path(name)):
-            return None
-    except (RuntimeError, OSError) as error:
-        return f"Chrome ({path}) is on this machine but cannot open a local debugging port here ({error}); the tests that draw a page need it"
-    finally:
-        Path(name).unlink(missing_ok=True)
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as folder:  # a helper process of the browser may still hold the file when it is removed, which Windows refuses
+        try:
+            with Chrome(log=Path(folder) / "start.log"):
+                return None
+        except (RuntimeError, OSError) as error:
+            return f"Chrome ({path}) is on this machine but cannot open a local debugging port here ({error}); the tests that draw a page need it"
 
 
 def free_port() -> int:
@@ -179,8 +209,9 @@ def free_port() -> int:
 
 
 class Chrome:
-    def __init__(self, port: int | None = None, log: Path | None = None):
+    def __init__(self, port: int | None = None, log: Path | None = None, sandbox: bool | None = None):
         self.port = port  # None: a free port is taken for every start, so that no other browser on the machine shares it
+        self.sandbox = sandbox  # None: the sandbox is used unless the browser runs as root or cannot use it here (see _needs_no_sandbox); True and False force the choice
         self.log = log  # a file for what the browser writes to its error stream; only a check that a browser starts asks for it, so that the long runs of the film write nothing
         self._active_port = port
         self._id = 0
@@ -198,7 +229,7 @@ class Chrome:
         self._active_port = self.port or free_port()
         flags = ["--headless=new", f"--remote-debugging-port={self._active_port}", f"--user-data-dir={self._profile.name}", "--hide-scrollbars", f"--window-size={WIDTH},{HEIGHT}",
                  "--force-device-scale-factor=1", "--allow-file-access-from-files", "--disable-background-timer-throttling", "about:blank"]
-        if hasattr(os, "geteuid") and os.geteuid() == 0:  # the sandbox of Chrome refuses to start under root, which is how a container runs
+        if self.sandbox is False or (self.sandbox is None and (hasattr(os, "geteuid") and os.geteuid() == 0 or _needs_no_sandbox())):  # under root, which is how a container runs, the sandbox of Chrome refuses to start
             flags.insert(0, "--no-sandbox")
         command = [chrome_path(), *flags]
         if self.log:
