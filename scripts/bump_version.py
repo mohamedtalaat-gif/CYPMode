@@ -8,8 +8,8 @@ deposited on Zenodo and so has no DOI of its own, ``--no-doi`` instead of ``--do
 
 The files are ``pyproject.toml``, ``CITATION.cff``, ``.zenodo.json``, the BibTeX entry and the DOI sentence of ``README.md`` and the citation paragraph and entry of ``USE_AND_CITATION.md``. ``--doi`` is the DOI of this release (the
 version DOI that Zenodo reserves); the DOI that stands for all versions is not touched. ``--no-doi`` removes the identifiers of the previous release from the citation file, cites the DOI of all versions in the two entries and
-says in the two documents that the release has no DOI of its own and which release is the last one that is deposited. A release with a DOI cannot be set from the files of a release without one (the sentences differ), and the script
-says so. Each pattern must match exactly once, or nothing is written."""
+says in the two documents that the release has no DOI of its own and which release is the last one that is deposited. ``--doi`` also works on the files of a release that has no DOI of its own: the identifiers block returns to the
+citation file and the two sentences of the documents that name the last deposited release give way to the DOI of this one. Each pattern must match exactly once, or nothing is written."""
 
 import argparse
 import re
@@ -37,14 +37,21 @@ def bump(files: dict[str, str], version: str, date: str, doi: str) -> dict[str, 
     c = out["CITATION.cff"]
     c = _sub(c, r"^version: \S+$", f"version: {version}", "CITATION.cff version", re.MULTILINE)
     c = _sub(c, r"^date-released: \S+$", f"date-released: {date}", "CITATION.cff date-released", re.MULTILINE)
-    c = _sub(c, rf"(- type: doi\n    value: ){ZENODO}(\n    description: \")Release \S+( of the archive on Zenodo\")", f"\\g<1>{doi}\\g<2>Release {version}\\g<3>", "CITATION.cff identifier")
+    if re.search(r"^identifiers:", c, re.MULTILINE):
+        c = _sub(c, rf"(- type: doi\n    value: ){ZENODO}(\n    description: \")Release \S+( of the archive on Zenodo\")", f"\\g<1>{doi}\\g<2>Release {version}\\g<3>", "CITATION.cff identifier")
+    else:  # the files of a release without a DOI of its own carry no identifiers: the block returns right after the DOI of all versions
+        block = f'identifiers:\n  - type: doi\n    value: {doi}\n    description: "Release {version} of the archive on Zenodo"\n'
+        c = _sub(c, rf"^(doi: {ZENODO}\n)", f"\\g<1>{block}", "CITATION.cff identifier", re.MULTILINE)
     out["CITATION.cff"] = c
     out[".zenodo.json"] = _sub(out[".zenodo.json"], r'("version": ")[^"]+(")', f"\\g<1>{version}\\g<2>", ".zenodo.json version")
     link = f"[{doi}](https://doi.org/{doi})"
     r = bibtex(out["README.md"], version, doi, "README.md BibTeX entry")
-    out["README.md"] = _sub(r, rf"release \S+ has its own DOI, \[{ZENODO}\]\(https://doi\.org/{ZENODO}\)", f"release {version} has its own DOI, {link}", "README.md DOI sentence")
+    out["README.md"] = _sub(r, rf"(?:; release \S+ has its own DOI, \[{ZENODO}\]\(https://doi\.org/{ZENODO}\), which the entry above uses\.|, which the entry above uses; release \S+ has no DOI of its own, and release \S+, the last one that is deposited on Zenodo, has \[{ZENODO}\]\(https://doi\.org/{ZENODO}\)\.)", f"; release {version} has its own DOI, {link}, which the entry above uses.", "README.md DOI sentence")
     u = bibtex(out["USE_AND_CITATION.md"], version, doi, "USE_AND_CITATION.md BibTeX entry")
-    u = _sub(u, rf"\(release \S+: {ZENODO}\)", f"(release {version}: {doi})", "USE_AND_CITATION.md DOI of the release")
+    if re.search(r"and name the version\. Release \S+ has no DOI of its own;", u):  # the two sentences of a release without a DOI give way to the DOI of this one
+        u = _sub(u, rf"and name the version\. Release \S+ has no DOI of its own; the last release that is deposited on Zenodo, \S+, has {ZENODO}\.", f"or a release by its own DOI (release {version}: {doi}).", "USE_AND_CITATION.md DOI of the release")
+    else:
+        u = _sub(u, rf"\(release \S+: {ZENODO}\)", f"(release {version}: {doi})", "USE_AND_CITATION.md DOI of the release")
     out["USE_AND_CITATION.md"] = _sub(u, r"A ready entry for release \S+:", f"A ready entry for release {version}:", "USE_AND_CITATION.md entry heading")
     return out
 

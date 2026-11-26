@@ -33,6 +33,13 @@ def test_every_file_that_states_the_version_is_changed_and_the_old_release_is_le
         assert "version = {9.8.7}" in after[name] and "doi     = {10.5281/zenodo.99999999}" in after[name] and "version = {0.3.0}" not in after[name]
     assert "release 9.8.7 has its own DOI, [10.5281/zenodo.99999999](https://doi.org/10.5281/zenodo.99999999)" in after["README.md"]
     assert "(release 9.8.7: 10.5281/zenodo.99999999)" in after["USE_AND_CITATION.md"] and "A ready entry for release 9.8.7:" in after["USE_AND_CITATION.md"]
+    # a release that is deposited after one that is not: the identifiers return, the two sentences of the documents name the new DOI, and nothing of the release without a DOI is left
+    later = bump.bump(bump.bump_without_doi(WITH_DOI, "9.8.6", "2031-01-02"), "9.8.7", "2031-02-03", "10.5281/zenodo.99999999")
+    assert 'identifiers:\n  - type: doi\n    value: 10.5281/zenodo.99999999\n    description: "Release 9.8.7 of the archive on Zenodo"\n' in later["CITATION.cff"] and f"\ndoi: {CONCEPT}\nidentifiers:" in later["CITATION.cff"]
+    assert "; release 9.8.7 has its own DOI, [10.5281/zenodo.99999999](https://doi.org/10.5281/zenodo.99999999), which the entry above uses." in later["README.md"]
+    assert "or a release by its own DOI (release 9.8.7: 10.5281/zenodo.99999999)." in later["USE_AND_CITATION.md"] and "A ready entry for release 9.8.7:" in later["USE_AND_CITATION.md"]
+    assert all("no DOI of its own" not in later[n] and "version = {9.8.7}" in later[n] for n in ("README.md", "USE_AND_CITATION.md"))
+    assert bump.bump(later, "9.8.7", "2031-02-03", "10.5281/zenodo.99999999") == later
 
 
 def test_the_doi_of_all_versions_is_never_touched():
