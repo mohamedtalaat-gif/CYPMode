@@ -1,3 +1,3 @@
-wrote /Volumes/Data/CYPMode/audit/AUDIT_REPORT.md (1645 lines); failed checks: 0
-wrote /Volumes/Data/CYPMode/audit/AUDIT_REPORT.run2.md (1645 lines); failed checks: 0
-REPRODUCIBLE: two runs are byte-identical (134b73da07af7879)
+wrote /Volumes/Data/CYPMode/audit/AUDIT_REPORT.md (1649 lines); failed checks: 1
+wrote /Volumes/Data/CYPMode/audit/AUDIT_REPORT.run2.md (1649 lines); failed checks: 1
+REPRODUCIBLE: two runs are byte-identical (62067bd59cc0e08d)

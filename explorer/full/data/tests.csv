@@ -33,12 +33,14 @@ test_conformers.py,7
 test_constants.py,3
 test_cryoem_templates.py,3
 test_data_record.py,12
+test_descriptor_ratio.py,8
 test_diversity_pilot.py,3
 test_docs_state.py,4
 test_ei_sampling.py,3
 test_explorer_data.py,11
 test_explorer_launcher.py,3
 test_external_continuous.py,3
+test_external_dataset.py,9
 test_figures.py,28
 test_film_chrome.py,8
 test_final_assembly.py,4
@@ -74,6 +76,7 @@ test_notebook_builder.py,17
 test_notebook_public.py,5
 test_notebook_template_order.py,3
 test_octant_benchmark.py,5
+test_oecd_principles.py,6
 test_official_extra.py,6
 test_official_pharmacophore.py,6
 test_official_posebusters.py,6

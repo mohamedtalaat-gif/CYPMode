@@ -1,7 +1,7 @@
 section,check,status,detail
 Check summary,training and test files present,PASS,
 Check summary,working tree clean (everything committed),PASS,"0 modified, 0 untracked"
-Check summary,all tests pass,PASS,"1104 passed, 0 failed"
+Check summary,all tests pass,FAIL,"1126 passed, 1 failed"
 Check summary,feature block `rdkit_desc` computed twice,PASS,max
 Check summary,feature block `morgan_c2` computed twice,PASS,max
 Check summary,feature block `tdi_alerts` computed twice,PASS,max
@@ -70,7 +70,7 @@ Check summary,additions whose stacked gain survives the Holm adjustment over the
 Check summary,queue jobs name modules and scripts that exist,PASS,0 problems
 Check summary,.venv matches requirements-lock.txt,PASS,0 lines differ
 Check summary,.venv-ml matches requirements-lock-ml.txt,PASS,0 lines differ
-Check summary,fixed seeds present,PASS,14 entries
+Check summary,fixed seeds present,PASS,15 entries
 Check summary,every feature block takes only structures,PASS,"label-free by construction (ext_activity uses external panels, tested separately)"
 Check summary,physics cache holds no label or measurement column,PASS,134 columns
 Check summary,matched-pair cache is label-free,PASS,"a, b, key, names, t"
@@ -88,11 +88,11 @@ Check summary,structures_unrelaxed.zip: every structure passes the scorer's own 
 Check summary,structures_unrelaxed.zip: every structure clears a relative distance of 0.8 to the receptor (the scorer's threshold is 0.75),PASS,smallest 0.801
 Check summary,structures_unrelaxed.zip: every structure carries the stereochemistry of the official SMILES (the scorer's PoseBusters call does not check i,PASS,20 of 20
 Check summary,the base-run table of the 20 official ligands has no row in error (structure summary and affinity of every ligand),PASS,0 in error
-Check summary,"the citation file names an author, a repository, a licence and a version",PASS,Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.3.3
+Check summary,"the citation file names an author, a repository, a licence and a version",PASS,Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.3.4
 Check summary,the README names the author and the repository,PASS,found
 Check summary,NOTICE names the author,PASS,found
 Check summary,the archive metadata (.zenodo.json) names the same author,PASS,Talaat
-Check summary,the DOI of the citation file is written in the README,PASS,10.5281/zenodo.23816450
+Check summary,the DOI of the citation file is written in the README,PASS,10.5281/zenodo.24571611
 Check summary,"the licence of the code is the same in the citation file, LICENSE, pyproject.toml and the headers",PASS,citation file: AGPL-3.0-or-later
 Check summary,the texts of the licences are in LICENSES/,PASS,4 found
 Check summary,every Python file of the repository carries its SPDX licence header,PASS,all have one

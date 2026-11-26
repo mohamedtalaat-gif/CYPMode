@@ -389,6 +389,8 @@ collected in Appendix B. Section numbers refer to sections of this notebook.</li
 <li><a href="#6.6-Why-Tukey's-HSD-was-dropped,-and-how-the-older-results-were-recomputed">6.6 Why Tukey's HSD was dropped, and how the older results were recomputed</a></li>
 <li><a href="#6.7-Pre-declared-gates:-the-rule,-the-floor-of-the-design,-and-the-replicate">6.7 Pre-declared gates: the rule, the floor of the design, and the replicate</a></li>
 <li><a href="#6.8-Checking-that-a-split-is-informative,-the-test-like-hold-out,-and-the-leakage-controls">6.8 Checking that a split is informative, the test-like hold-out, and the leakage controls</a></li>
+<li><a href="#6.9-A-second-published-data-set">6.9 A second published data set</a></li>
+<li><a href="#6.10-Columns-and-compounds">6.10 Columns and compounds</a></li>
 </ul>
 </div>
 <div class="toc-part">
@@ -417,6 +419,7 @@ collected in Appendix B. Section numbers refer to sections of this notebook.</li
 <li><a href="#8.5-Calibration:-from-a-score-to-a-probability">8.5 Calibration: from a score to a probability</a></li>
 <li><a href="#8.6-The-candidate-files,-the-checks-they-pass,-and-the-manifest">8.6 The candidate files, the checks they pass, and the manifest</a></li>
 <li><a href="#8.7-Results-with-their-uncertainty">8.7 Results with their uncertainty</a></li>
+<li><a href="#8.8-The-five-OECD-principles">8.8 The five OECD principles</a></li>
 </ul>
 </div>
 <div class="toc-part">
@@ -1477,7 +1480,7 @@ files, at build time.</li>
 </ol>
 </section><div class="cell code"><details class="src"><summary>code<span>2 lines</span></summary><pre class="source"><span class="c1"># What the repository holds and what the build of this notebook enforces.</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">F</span><span class="o">.</span><span class="n">modules</span><span class="si">}</span><span class="s2"> modules in cypmode/, </span><span class="si">{</span><span class="n">F</span><span class="o">.</span><span class="n">scripts</span><span class="si">}</span><span class="s2"> files in scripts/, </span><span class="si">{</span><span class="n">F</span><span class="o">.</span><span class="n">jobs</span><span class="si">}</span><span class="s2"> queue jobs, </span><span class="si">{</span><span class="n">F</span><span class="o">.</span><span class="n">test_files</span><span class="si">}</span><span class="s2"> test files with </span><span class="si">{</span><span class="n">F</span><span class="o">.</span><span class="n">test_functions</span><span class="si">}</span><span class="s2"> test functions"</span><span class="p">)</span>
-</pre></details><div class=outputs><pre>179 modules in cypmode/, 23 files in scripts/, 177 queue jobs, 156 test files with 1085 test functions
+</pre></details><div class=outputs><pre>182 modules in cypmode/, 23 files in scripts/, 180 queue jobs, 159 test files with 1108 test functions
 </pre></div></div><section class="cell md"><p><strong>Where each science is taught.</strong> The notebook assumes no background, so every science that the project uses is taught from its first principles, in the section of the part where it is first needed, with a worked example: a cell that computes the idea on a small case or on the project's own data. The table below is the index. Each row names a science, the sections that teach it (every number is a link to the heading) and what the worked example computes, so that a reader who meets an unfamiliar subject anywhere in the text can look it up here. The build checks that every section named in the table exists and holds a code cell; the description of the example is written by hand.</p>
 </section><div class="cell code"><details class="src"><summary>code<span>99 lines</span></summary><pre class="source"><span class="c1"># Where each science of the project is taught: the sections, and the worked example (a cell that computes the idea on a small case or on the project's own data). The table is written by hand; the build checks that</span>
 <span class="c1"># every section it names exists and holds a code cell, and links each number to the heading exactly as the table of contents does.</span>
@@ -2083,7 +2086,7 @@ A second table follows the first: for each claim it names the sections of this n
 <span class="n">where_explained</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="s2">"Claim"</span><span class="p">:</span> <span class="n">claim</span><span class="p">,</span> <span class="s2">"Explained and computed in"</span><span class="p">:</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">number</span><span class="si">}</span><span class="s2">](#</span><span class="si">{</span><span class="n">slug</span><span class="p">(</span><span class="n">claim_titles</span><span class="p">[</span><span class="n">number</span><span class="p">])</span><span class="si">}</span><span class="s2">)"</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">sections</span><span class="o">.</span><span class="n">split</span><span class="p">())}</span> <span class="k">for</span> <span class="n">claim</span><span class="p">,</span> <span class="n">sections</span> <span class="ow">in</span> <span class="n">NOTEBOOK_OF_CLAIM</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">where_explained</span><span class="p">)</span><span class="si">}</span><span class="s2"> claims, explained in </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">claim_sections</span><span class="p">))</span><span class="si">}</span><span class="s2"> different sections of this notebook"</span><span class="p">)</span>
 <span class="n">show_table</span><span class="p">(</span><span class="n">where_explained</span><span class="p">)</span>
-</pre></details><div class=outputs><pre>17 claims, explained in 18 different sections of this notebook
+</pre></details><div class=outputs><pre>20 claims, explained in 21 different sections of this notebook
 </pre><div><table>
 <thead>
 <tr>
@@ -2137,6 +2140,16 @@ A second table follows the first: for each claim it names the sections of this n
 <td>The pharmacophore of a pose read over 20 ps of ligand dynamics in the frozen pocket, under a rule fixed before any number</td>
 <td>mean rho with minus the true RMSD over 10 ligands, dynamic pharmacophore -0.214, stability +0.042, dynamic combined -0.071 against -0.240 for the static model: gate NOT MET for all 3</td>
 <td><code>ligand_dynamics.log</code></td>
+</tr>
+<tr>
+<td>The generic part of the procedure on a second published data set, under its official protocol</td>
+<td>CYP2D6: test AUPRC 0.727 against a published median of 0.649 (19 entries), ABOVE THE MEDIAN, and 0.723 for the best single candidate; CYP3A4: test AUPRC 0.891 against a published median of 0.862 (19 entries), ABOVE THE MEDIAN, and 0.885 for the best single candidate</td>
+<td><code>external_dataset.log</code></td>
+</tr>
+<tr>
+<td>The ratio of columns to compounds, answered by measurements under a rule fixed before the run</td>
+<td>CYP3A4 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP3A4 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED; CYP3A4 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP3A4 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED</td>
+<td><code>descriptor_ratio.log</code></td>
 </tr>
 <tr>
 <td>Validity margin of the scorer's own call and a relaxation under a registered rule</td>
@@ -2212,6 +2225,18 @@ A second table follows the first: for each claim it names the sections of this n
 <tr>
 <td>The pharmacophore of a pose read over a short trajectory, tested under a rule fixed before any number.</td>
 <td><a href="#11.13-Ligand-dynamics-in-the-frozen-pocket:-a-dynophore-that-the-project-can-afford">11.13</a></td>
+</tr>
+<tr>
+<td>The generic part of the procedure was run on a second published data set, under the official protocol of its benchmark.</td>
+<td><a href="#6.9-A-second-published-data-set">6.9</a></td>
+</tr>
+<tr>
+<td>The ratio of columns to compounds was answered by measurements and not by argument.</td>
+<td><a href="#6.10-Columns-and-compounds">6.10</a></td>
+</tr>
+<tr>
+<td>The five OECD principles and the curation of the data are answered, cell by cell, from the files of the project.</td>
+<td><a href="#8.8-The-five-OECD-principles">8.8</a></td>
 </tr>
 <tr>
 <td>Negative results are results.</td>
@@ -3177,8 +3202,8 @@ atom of lowest rank and takes the branches in order of rank. Two strings that de
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"share of the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="si">}</span><span class="s2"> training strings written in Kekule style: </span><span class="si">{</span><span class="n">kekule_style</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">; share already in RDKit's canonical form: </span><span class="si">{</span><span class="n">as_given</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">; the example, as given: </span><span class="si">{</span><span class="n">example</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></details><div class=outputs><pre>canonical form: CC(C)(C)NS(=O)(=O)C1(CNc2c(Br)cncc2C#N)CCC1
 2000 random walks gave 925 different strings, for instance:
-    CC(C)(C)NS(=O)(=O)C1(CNc2c(Br)cncc2C#N)CCC1
-    O=S(C1(CNc2c(C#N)cncc2Br)CCC1)(=O)NC(C)(C)C
+    Brc1cncc(C#N)c1NCC1(S(=O)(NC(C)(C)C)=O)CCC1
+    CC(C)(C)NS(=O)(=O)C1(CNc2c(cncc2C#N)Br)CCC1
 every one of them has the canonical form above: True
 share of the 6145 training strings written in Kekule style: 100.0%; share already in RDKit&#x27;s canonical form: 1.1%; the example, as given: CC(C)(C)NS(=O)(=O)C1(CNC2=C(Br)C=NC=C2C#N)CCC1
 </pre></div></div><section class="cell md"><p>The strings of the file are not in the canonical form of the software used in this project (only 1.1% of them are), because they are written in the Kekule style; reading them with RDKit and writing them again gives the
@@ -6193,13 +6218,13 @@ reached, which gives a lopsided tree that reduces the loss faster than a balance
 <td>the booster written out above (100 rounds, eta 0.1, depth 3)</td>
 <td>0.736</td>
 <td>0.014</td>
-<td>2.837</td>
+<td>2.834</td>
 </tr>
 <tr>
 <td>LightGBM with matching settings</td>
 <td>0.733</td>
 <td>0.012</td>
-<td>0.342</td>
+<td>0.336</td>
 </tr>
 </tbody>
 </table>
@@ -6284,13 +6309,13 @@ source of randomness that decorrelates the trees (section 4.4) and speeds up the
 <td>deep</td>
 <td>0.752</td>
 <td>0.012</td>
-<td>4.659</td>
+<td>4.639</td>
 </tr>
 <tr>
 <td>shallow</td>
 <td>0.754</td>
 <td>0.012</td>
-<td>3.516</td>
+<td>3.335</td>
 </tr>
 </tbody>
 </table>
@@ -7605,7 +7630,7 @@ all six patterns, built into small graphs by the toolkit, and counts how many co
 </tbody>
 </table>
 </div></div></div><section class="cell md"><p><strong>What &quot;matches&quot; means.</strong> Let $x$ be a molecule, seen as a graph whose nodes are its atoms and whose edges are its bonds (section 2.1), and $p$ a pattern, a smaller graph of the same kind. The pattern $p$ <strong>matches</strong> $x$ when its atoms can be laid on a choice of atoms of $x$, no two on the
-same atom, so that every atom of $p$ lies on an atom of the kind it describes and every bond of $p$ lies on a bond of $x$ of the kind it describes. (The name in graph theory is <em>subgraph isomorphism</em>; the toolkit searches for such a laying-on by trying atom after atom and abandoning a try as soon as a bond fails, which for patterns of five or six atoms is fast: reading the 6,895 structures and applying the six patterns to each took 0.4 seconds in the cell above.)
+same atom, so that every atom of $p$ lies on an atom of the kind it describes and every bond of $p$ lies on a bond of $x$ of the kind it describes. (The name in graph theory is <em>subgraph isomorphism</em>; the toolkit searches for such a laying-on by trying atom after atom and abandoning a try as soon as a bond fails, which for patterns of five or six atoms is fast: reading the 6,895 structures and applying the six patterns to each took 0.5 seconds in the cell above.)
 The screen's call for a molecule $x$ is a single number $m(x)$, with $p_1, \dots, p_6$ the six patterns and the index $j$ running over them:</p>
 <p>$$m(x) \;=\; \max_{j=1,\dots,6}\; \mathbb{1}\bigl[\, p_j \text{ matches } x \,\bigr],$$</p>
 <p>where the symbol $\mathbb{1}[\cdot]$, the <strong>indicator</strong>, is 1 when the statement inside the brackets is true and 0 when it is false. In words: $m(x)=1$ when at least one of the six patterns matches. Of the 6,895 compounds of the challenge, 3,107
@@ -11113,6 +11138,172 @@ equal-weight rank committee of all 19 candidates: block AUC 0.7972 [0.754, 0.836
 </div></div></div><section class="cell md"><p>On the real pipeline, the control gives 0.801 AUC for the real labels at $z_0 = 1.0$ and 0.510 for permuted ones, and the recomputed verdict is MET, as the stored one is. All 28 feature blocks take only the structures: True. The guard keeps the rows of the other compounds and drops those of the blinded ones: True. Three limits belong with this. The parameter check is a necessary condition, since a function that takes only structures cannot read a label through its arguments, though it could read one from a global, and it is the permutation control that tests the whole pipeline, not the signature. The control was run for a few permutations (3 in the stored run), so its range is wide; the conclusion rests on the mean and on the tolerance, not on any one permutation. And the control cannot find leakage between the training file and the blinded test, a test compound that is also in the training file for example, because it never touches the test set; that is checked separately, by comparing the identifiers and the structures of the training file with those of the blinded test (section 8.6).</p>
 <p>Features that use labels are computed inside the folds. The nearest-neighbour label features of 7.3 are recomputed for every fold from the training part only (<code>add_knn_label_features_for_fold</code>), and in the nested plan every fit of every candidate happens inside a task (6.3), which sees only its own training rows. With the controls of this section, the weights of 6.4, the test of 6.5 and the gate of 6.7, the measurement chain of Part VI is complete: Part VII now applies it, from the first model.</p>
 <p><em>On what actually ran.</em> <code>cypmode/challenge/split_validity.py</code> computes the similarity profile (it uses <code>tanimoto_ood_distance</code> of <code>cypmode/challenge/reliability.py</code>); <code>cypmode/challenge/block_holdout.py</code> fits the candidates on the training part, scores them on the block, and prints the table and the agreement that this notebook reads back; <code>cypmode/challenge/permutation_control.py</code> runs the negative control on six candidates, one repeat of five outer folds and three permutations, with its caches in a temporary directory that is discarded; <code>cypmode/challenge/official_extra.py</code> holds <code>exclude_test_compounds</code>, the guard, and <code>cypmode/challenge/feature_store.py</code> the feature blocks. The toy leak above is computed in the notebook.</p>
+</section><section class="cell md"><h2 id="6.9-A-second-published-data-set">6.9 A second published data set</h2>
+<blockquote>
+<p><strong>Field:</strong> Statistics · Machine learning</p>
+</blockquote>
+<p>Everything so far was measured on one data set, the training file of the challenge. A procedure can score well on its own data and still be built around it, so the editors of this field's journal ask that a new modelling procedure be tried on at least one other well-known data set for which a study with another method has been published (Jorgensen, 2006). The training file of the challenge has no such partner, because the TDI label is the project's own reading of a measurement that few laboratories made. The inhibition data of Veith and colleagues (2009) are the nearest public partner: the same enzymes, a different assay, about twelve to thirteen thousand compounds each, and a benchmark in the Therapeutics Data Commons that fixes everything a comparison needs.</p>
+<p><strong>What the benchmark fixes.</strong> A test set of about a fifth of the compounds, chosen by scaffold: the <strong>scaffold</strong> of a molecule is the ring system that remains when the side chains are cut away (Bemis and Murcko, 1996), and the test compounds share no scaffold with the training compounds, which is harder than a random split because a new series is a bigger step than a new member of a known series. The benchmark fixes three more things: a metric, the area under the precision–recall curve (AUPRC), which scikit-learn computes as the average precision of section 4.10; five training and validation splits of the rest, made by the same scaffold rule with seeds 1 to 5; and a public leaderboard that lists, for each enzyme, the AUPRC of 19 published methods, read for this notebook on 2026-11-26.</p>
+<p><strong>What is run, and what is not.</strong> The stack of the final build, unchanged, on the 16 candidates that read only structures: the two regressors of the assay arms have no arms to read here, and the candidates that read a block trained on an external panel are left out because that panel contains these very compounds. Nothing of the label process, the selection-aware model, or the call-rate multiple applies to a yes/no inhibition label. This section therefore tests the generic part of the procedure (the features, the candidates, the stack, and the nested protocol) and says nothing about the label model; the label is direct inhibition, not time-dependent inhibition. Four things are measured. The official protocol: for each seed, the stack is selected on inner folds that keep every scaffold whole, refitted on the training split, and scores the validation split and the official test set. The nested design of section 6.3 on all the training compounds, to set the nested estimate against the score on the test set. The negative control of section 6.8: the labels of the training split are permuted and the protocol is repeated. Finally, the reliability of sections 8.5 and 8.7: the AUC of the deployed stack in bins of the similarity to the training compounds, and the calibration of its probabilities.</p>
+<p><strong>The rule, fixed before the first run.</strong> The mean test AUPRC of the five seeds is <em>at or above the median</em> of the published entries or it is <em>below</em> it, and no superiority over any entry is claimed whatever the rank. The negative control passes when the mean permuted test AUC is within 0.04 of 0.5, the tolerance of the control of section 6.8. The nested estimate, the AUC by similarity and the calibration carry no verdict.</p>
+</section><div class="cell code"><details class="src"><summary>code<span>23 lines</span></summary><pre class="source"><span class="c1"># The validation on the second data set (cypmode/challenge/external_dataset.py, job 287): the tables that the job wrote, read back.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">EXT</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"data/tdi_track/outputs/external_dataset"</span>
+<span class="n">ext_official</span><span class="p">,</span> <span class="n">ext_place</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">EXT</span> <span class="o">/</span> <span class="s2">"official_protocol.csv"</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">EXT</span> <span class="o">/</span> <span class="s2">"placement.csv"</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"isoform"</span><span class="p">)</span>
+<span class="n">ext_perm</span><span class="p">,</span> <span class="n">ext_nested</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">EXT</span> <span class="o">/</span> <span class="s2">"permutation_control.csv"</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">EXT</span> <span class="o">/</span> <span class="s2">"nested_design.csv"</span><span class="p">)</span>
+<span class="n">ext_cal</span><span class="p">,</span> <span class="n">ext_bins</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">EXT</span> <span class="o">/</span> <span class="s2">"calibration.csv"</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">EXT</span> <span class="o">/</span> <span class="s2">"similarity_bins.csv"</span><span class="p">)</span>
+<span class="n">ext_rows</span><span class="p">,</span> <span class="n">ext_t</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">iso</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"CYP3A4"</span><span class="p">,</span> <span class="s2">"CYP2D6"</span><span class="p">):</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="n">ext_official</span><span class="p">[(</span><span class="n">ext_official</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ext_official</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="s2">"stack"</span><span class="p">)]</span>
+    <span class="n">test</span><span class="p">,</span> <span class="n">valid</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[</span><span class="n">stack</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="s2">"test"</span><span class="p">],</span> <span class="n">stack</span><span class="p">[</span><span class="n">stack</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="s2">"valid"</span><span class="p">]</span>
+    <span class="n">nested</span> <span class="o">=</span> <span class="n">ext_nested</span><span class="p">[(</span><span class="n">ext_nested</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ext_nested</span><span class="o">.</span><span class="n">metric</span> <span class="o">==</span> <span class="s2">"ap"</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ext_nested</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="s2">"stack_logit"</span><span class="p">)]</span>
+    <span class="n">single</span> <span class="o">=</span> <span class="n">ext_official</span><span class="p">[(</span><span class="n">ext_official</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ext_official</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="s2">"best_single"</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ext_official</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="s2">"test"</span><span class="p">)]</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">ext_place</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">iso</span><span class="p">]</span>
+    <span class="n">ext_rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"enzyme"</span><span class="p">:</span> <span class="n">iso</span><span class="p">,</span> <span class="s2">"test AUPRC, mean of 5 seeds"</span><span class="p">:</span> <span class="n">test</span><span class="o">.</span><span class="n">auprc</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">"standard deviation"</span><span class="p">:</span> <span class="n">test</span><span class="o">.</span><span class="n">auprc</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="s2">"validation AUPRC"</span><span class="p">:</span> <span class="n">valid</span><span class="o">.</span><span class="n">auprc</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">"nested AUPRC"</span><span class="p">:</span> <span class="n">nested</span><span class="o">.</span><span class="n">outer_score</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                     <span class="s2">"median of the published"</span><span class="p">:</span> <span class="n">place</span><span class="o">.</span><span class="n">median_published</span><span class="p">,</span> <span class="s2">"best published"</span><span class="p">:</span> <span class="n">place</span><span class="o">.</span><span class="n">best_published</span><span class="p">,</span> <span class="s2">"place"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">place</span><span class="o">.</span><span class="n">rank_among_entries</span><span class="p">)</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">place</span><span class="o">.</span><span class="n">entries</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"test AUC, labels permuted"</span><span class="p">:</span> <span class="n">ext_perm</span><span class="p">[</span><span class="n">ext_perm</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">]</span><span class="o">.</span><span class="n">auc</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">"test AUPRC, best single candidate"</span><span class="p">:</span> <span class="n">single</span><span class="o">.</span><span class="n">auprc</span><span class="o">.</span><span class="n">mean</span><span class="p">()})</span>
+    <span class="n">populated</span> <span class="o">=</span> <span class="n">ext_bins</span><span class="p">[(</span><span class="n">ext_bins</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ext_bins</span><span class="o">.</span><span class="n">compounds</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ext_bins</span><span class="o">.</span><span class="n">bin</span> <span class="o">!=</span> <span class="s2">"all"</span><span class="p">)]</span>
+    <span class="n">isotonic</span><span class="p">,</span> <span class="n">raw</span> <span class="o">=</span> <span class="p">(</span><span class="n">ext_cal</span><span class="p">[(</span><span class="n">ext_cal</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ext_cal</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">method</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"isotonic"</span><span class="p">,</span> <span class="s2">"raw"</span><span class="p">))</span>
+    <span class="n">ext_t</span><span class="p">[</span><span class="n">iso</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"mean"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">test</span><span class="o">.</span><span class="n">auprc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"sd"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">test</span><span class="o">.</span><span class="n">auprc</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"median"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">place</span><span class="o">.</span><span class="n">median_published</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"best"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">place</span><span class="o">.</span><span class="n">best_published</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"place"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">place</span><span class="o">.</span><span class="n">rank_among_entries</span><span class="p">)</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">place</span><span class="o">.</span><span class="n">entries</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                  <span class="s2">"relation"</span><span class="p">:</span> <span class="s2">"at or above"</span> <span class="k">if</span> <span class="n">place</span><span class="o">.</span><span class="n">mean_test_auprc</span> <span class="o">&gt;=</span> <span class="n">place</span><span class="o">.</span><span class="n">median_published</span> <span class="k">else</span> <span class="s2">"below"</span><span class="p">,</span> <span class="s2">"perm"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ext_perm</span><span class="p">[</span><span class="n">ext_perm</span><span class="o">.</span><span class="n">isoform</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">iso</span><span class="p">]</span><span class="o">.</span><span class="n">auc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"nested"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">nested</span><span class="o">.</span><span class="n">outer_score</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                  <span class="s2">"bin_low"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">populated</span><span class="o">.</span><span class="n">auc</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"bin_high"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">populated</span><span class="o">.</span><span class="n">auc</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"n_low"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">populated</span><span class="o">.</span><span class="n">compounds</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">"n_high"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">populated</span><span class="o">.</span><span class="n">compounds</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="s2">"ece"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">isotonic</span><span class="o">.</span><span class="n">ece</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"ece_raw"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">ece</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"single"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">single</span><span class="o">.</span><span class="n">auprc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"gain"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">test</span><span class="o">.</span><span class="n">auprc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">single</span><span class="o">.</span><span class="n">auprc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">+.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">}</span>
+<span class="n">show_table</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">ext_rows</span><span class="p">),</span> <span class="n">floatfmt</span><span class="o">=</span><span class="s2">".3f"</span><span class="p">)</span>
+</pre></details><div class=outputs><div><table>
+<thead>
+<tr>
+<th>enzyme</th>
+<th>test AUPRC, mean of 5 seeds</th>
+<th>standard deviation</th>
+<th>validation AUPRC</th>
+<th>nested AUPRC</th>
+<th>median of the published</th>
+<th>best published</th>
+<th>place</th>
+<th>test AUC, labels permuted</th>
+<th>test AUPRC, best single candidate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CYP3A4</td>
+<td>0.891</td>
+<td>0.003</td>
+<td>0.875</td>
+<td>0.877</td>
+<td>0.862</td>
+<td>0.916</td>
+<td>4 of 20</td>
+<td>0.518</td>
+<td>0.885</td>
+</tr>
+<tr>
+<td>CYP2D6</td>
+<td>0.727</td>
+<td>0.006</td>
+<td>0.736</td>
+<td>0.724</td>
+<td>0.649</td>
+<td>0.790</td>
+<td>3 of 20</td>
+<td>0.501</td>
+<td>0.723</td>
+</tr>
+</tbody>
+</table>
+</div></div></div><section class="cell md"><p>For CYP3A4 the stack scores a test AUPRC of 0.891 (standard deviation 0.003 over the five seeds, population form, as the leaderboard prints it), against a median of 0.862 and a best of 0.916 among the published entries: it would stand 4 of 20, at or above the median. For CYP2D6 the numbers are 0.727 (standard deviation 0.006), 0.649 and 0.790: place 3 of 20, at or above the median. With the labels permuted the test AUC is 0.518 and 0.501. The nested estimate of the AUPRC, with the selection inside every outer fold, is 0.877 and 0.724; the table sets it beside the score on the official test set, so the gap between the two is the price of moving from a random-looking fold to a new scaffold. The AUC of the deployed stack rises with the similarity of a test compound to the training set, from 0.887 in the lowest populated bin (103 compounds) to 0.965 in the highest (506) for CYP3A4, and from 0.818 (291) to 0.968 (372) for CYP2D6; the expected calibration error of the probabilities on the test set is 0.027 after <strong>isotonic regression</strong> (a step function that never decreases, fitted on held-out scores to turn a score into a probability; section 8.5 derives it) against 0.028 for the raw blend (CYP3A4), and 0.014 against 0.030 (CYP2D6).</p>
+<p>The best single candidate scores a test AUPRC of 0.885 (CYP3A4) and 0.723 (CYP2D6), so the stack gains +0.007 and +0.005, against standard deviations over the five seeds of 0.003 and 0.006: on these two sets the stack is at most a small improvement over its best member.</p>
+<p>Three limits belong with these numbers. The leaderboard is written by the contacts of the entries, and this project did not rerun any of them; the placement says where the number falls among the published numbers, not that the methods were compared under one hand. The label is direct inhibition, so a good place here supports the features, the stack, and the protocol, and does not support the claim that time-dependent inhibition is predicted well. Third, the test sets of this benchmark are larger and the labels cleaner than those of the challenge, so the absolute numbers of the two data sets are not comparable.</p>
+<p><em>On what actually ran.</em> <code>cypmode/challenge/external_dataset.py</code> holds the whole analysis; it reads the four benchmark files in <code>data/tdi_track/inputs/tdc_cache/admet_group/</code> (whose <strong>SHA-256</strong> sums, 64-digit fingerprints of the bytes of a file that change when any byte changes, are stored beside them; section 8.6 explains them) and the leaderboard table there, and splits <code>train_val</code> with the function and the fractions that the benchmark's own <code>get_train_valid_split</code> uses. The labels of the calibration fit are read in the order of the inner folds through <code>inner_labels</code>, because the scores of the inner folds are in that order and not in the order of the pool; with the order of the pool the isotonic map is almost constant (a slope near 70 and a Brier score equal to that of a constant prediction), and <code>tests/test_external_dataset.py</code> checks the order. <code>queue/jobs/287_external_dataset.sh</code> runs it; <code>tests/test_external_dataset.py</code> checks the candidate grid, the checksums, the split sizes, the placement, and that no label of a validation or test compound reaches a candidate.</p>
+</section><section class="cell md"><h2 id="6.10-Columns-and-compounds">6.10 Columns and compounds</h2>
+<blockquote>
+<p><strong>Field:</strong> Statistics · Machine learning</p>
+</blockquote>
+<p>The editors of the journal discourage &quot;model development featuring high ratios of descriptors to data points&quot; (Jorgensen, 2006). The worry is old and well founded. If you screen many descriptors against a response for few compounds, some will correlate with it by chance, and an ordinary regression will use them and look better on its own data than it will on new data (Topliss and Costello, 1972; Hawkins, 2004). This section replaces the argument that tree ensembles are not regressions with five measurements.</p>
+</section><div class="cell code"><details class="src"><summary>code<span>25 lines</span></summary><pre class="source"><span class="c1"># The analysis of the ratio of columns to compounds (cypmode/challenge/descriptor_ratio.py, job 288): the tables that the job wrote, read back.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">CMP</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"data/tdi_track/outputs/comparisons"</span>
+<span class="n">dr_widths</span><span class="p">,</span> <span class="n">dr_spectrum</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CMP</span> <span class="o">/</span> <span class="s2">"descriptor_ratio_widths.csv"</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CMP</span> <span class="o">/</span> <span class="s2">"descriptor_ratio_spectrum.csv"</span><span class="p">)</span>
+<span class="n">dr_noise</span><span class="p">,</span> <span class="n">dr_stack</span><span class="p">,</span> <span class="n">dr_fraction</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CMP</span> <span class="o">/</span> <span class="s2">"descriptor_ratio_noise.csv"</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CMP</span> <span class="o">/</span> <span class="s2">"descriptor_ratio_stack.csv"</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CMP</span> <span class="o">/</span> <span class="s2">"descriptor_ratio_fraction.csv"</span><span class="p">)</span>
+<span class="n">dr_checks</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="s2">"CHECK "</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"data/structure_track/outputs/cyp3a4/logs/descriptor_ratio.log"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"CHECK "</span><span class="p">)]</span>
+<span class="n">dr_store</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"The feature store: (\d+) columns in (\d+) blocks for (\d+) compounds"</span><span class="p">,</span> <span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"data/structure_track/outputs/cyp3a4/logs/descriptor_ratio.log"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+<span class="n">dr_all_harmful</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">check</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"HARMFUL OR NOT RESOLVED"</span><span class="p">)</span> <span class="k">for</span> <span class="n">check</span> <span class="ow">in</span> <span class="n">dr_checks</span><span class="p">)</span>
+<span class="n">dr_reading</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"No candidate, and not the stack, is shown to be unharmed by columns without a signal, so a model of this kind loses accuracy when such columns are added. The verdicts do not show that the columns of the store carry no signal; the permutation control and the curve of the fewer-columns paragraph address that."</span> <span class="k">if</span> <span class="n">dr_all_harmful</span> <span class="k">else</span> <span class="s2">"At least one verdict is not harmful; the list above gives each of them."</span><span class="p">)</span>
+<span class="n">dr_rows</span><span class="p">,</span> <span class="n">dr_t</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">iso</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"CYP3A4"</span><span class="p">,</span> <span class="s2">"CYP2D6"</span><span class="p">):</span>
+    <span class="n">w</span><span class="p">,</span> <span class="n">sp</span> <span class="o">=</span> <span class="n">dr_widths</span><span class="p">[</span><span class="n">dr_widths</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">],</span> <span class="n">dr_spectrum</span><span class="p">[(</span><span class="n">dr_spectrum</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dr_spectrum</span><span class="o">.</span><span class="n">feature_set</span> <span class="o">==</span> <span class="s2">"A+fps"</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">dr_noise</span><span class="p">[(</span><span class="n">dr_noise</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dr_noise</span><span class="o">.</span><span class="n">candidate</span> <span class="o">==</span> <span class="s2">"lgbm_A_deep"</span><span class="p">)]</span>
+    <span class="n">base</span><span class="p">,</span> <span class="n">shuffled</span> <span class="o">=</span> <span class="n">noise</span><span class="p">[</span><span class="n">noise</span><span class="o">.</span><span class="n">multiple</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"auc_z1.0"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">noise</span><span class="p">[(</span><span class="n">noise</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">"shuffled"</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">multiple</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)][</span><span class="s2">"auc_z1.0"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">dr_stack</span><span class="p">[(</span><span class="n">dr_stack</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dr_stack</span><span class="o">.</span><span class="n">z0</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">)]</span>
+    <span class="n">frac</span> <span class="o">=</span> <span class="n">dr_fraction</span><span class="p">[</span><span class="n">dr_fraction</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"fraction"</span><span class="p">)[</span><span class="s2">"auc_z1.0"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">dr_rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"enzyme"</span><span class="p">:</span> <span class="n">iso</span><span class="p">,</span> <span class="s2">"rows of the pool"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">"widest candidate, columns"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">n_columns</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="s2">"columns per compound"</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">n_columns</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">w</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"components for 90</span><span class="si">% o</span><span class="s2">f the variance"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">components_for_90</span><span class="p">),</span>
+                    <span class="s2">"participation ratio"</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">participation_ratio</span><span class="p">,</span> <span class="s2">"AUC of lgbm_A_deep"</span><span class="p">:</span> <span class="n">base</span><span class="p">,</span> <span class="s2">"AUC with 4 times the columns shuffled"</span><span class="p">:</span> <span class="n">shuffled</span><span class="p">,</span>
+                    <span class="s2">"AUC of the stack"</span><span class="p">:</span> <span class="n">st</span><span class="p">[</span><span class="n">st</span><span class="o">.</span><span class="n">variant</span> <span class="o">==</span> <span class="s2">"plain"</span><span class="p">]</span><span class="o">.</span><span class="n">outer_auc</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">"AUC of the stack with extra columns"</span><span class="p">:</span> <span class="n">st</span><span class="p">[</span><span class="n">st</span><span class="o">.</span><span class="n">variant</span> <span class="o">==</span> <span class="s2">"extra columns"</span><span class="p">]</span><span class="o">.</span><span class="n">outer_auc</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">"AUC on 25</span><span class="si">% o</span><span class="s2">f the columns"</span><span class="p">:</span> <span class="n">frac</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mf">0.25</span><span class="p">],</span> <span class="s2">"AUC on all columns"</span><span class="p">:</span> <span class="n">frac</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mf">1.0</span><span class="p">]})</span>
+    <span class="n">dr_t</span><span class="p">[</span><span class="n">iso</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"ratio"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">w</span><span class="o">.</span><span class="n">n_columns</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">w</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"columns"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">n_columns</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="s2">"rows"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">"d90"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">components_for_90</span><span class="p">),</span> <span class="s2">"base"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">base</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"shuffled"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">shuffled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"loss"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">base</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">shuffled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                 <span class="s2">"stack_plain"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">st</span><span class="p">[</span><span class="n">st</span><span class="o">.</span><span class="n">variant</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">'plain'</span><span class="p">]</span><span class="o">.</span><span class="n">outer_auc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"stack_extra"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">st</span><span class="p">[</span><span class="n">st</span><span class="o">.</span><span class="n">variant</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">'extra columns'</span><span class="p">]</span><span class="o">.</span><span class="n">outer_auc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"f25"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">frac</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mf">0.25</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"f100"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">frac</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">}</span>
+</pre></details></div><section class="cell md"><p>The feature store of the project has 12,468 columns for 6,895 compounds.</p>
+<p><strong>What each model sees.</strong> No candidate reads the whole store. The widest set of the default grid, the fingerprints and descriptors of <code>A+fps</code>, has 5863 columns, which is 2.5 columns per compound for the 2334 compounds of the CYP3A4 pool and 3.9 for the 1493 compounds of the CYP2D6 pool. Both are above one, so the concern is not empty.</p>
+<p><strong>How many dimensions the data hold.</strong> Most of the columns are sparse bits and counts that move together. Standardise the columns, so that each has variance one, and ask how many principal components (section 4.9) are needed to hold 90% of the total variance: 1047 for CYP3A4 and 840 for CYP2D6. The <strong>participation ratio</strong> of the spectrum, the square of the sum of the eigenvalues divided by the sum of their squares, counts how many components carry the variance if it were spread evenly; the table gives it. The columns span many dimensions, which is a reason to measure what extra columns do and not to assume.</p>
+<p><strong>Extra columns that cannot carry a signal.</strong> Two candidates are refitted on every outer fold of the final design with 0, 1, and 4 times their own number of columns added, and scored on the yardstick of section 6.4. The added columns are copies of the design of other compounds (the rows of the design matrix permuted at random: the same kinds of column, the same distributions, and the same correlations among themselves, belonging to other compounds, so that they cannot carry the label of this one, which is what chance correlation is made of) or, as a harsher test, independent standard normal columns. A model that fits chance correlations loses AUC as they are added. The rule written before the run: adding four times the columns is <em>not harmful</em> when the paired loss in AUC is below 0.01 at both confidence cuts and a one-sided test of the corrected resampled t (section 6.5) rejects a loss of 0.01 or more; otherwise the verdict is <em>harmful or not resolved</em>. The cell prints the verdicts of the log, and the table gives, for <code>lgbm_A_deep</code>, the AUC with 0 and with 4 times the columns shuffled: 0.785 and 0.737 for CYP3A4 (a change of 0.048) and 0.696 and 0.613 for CYP2D6 (a change of 0.084).</p>
+</section><div class="cell code"><details class="src"><summary>code<span>2 lines</span></summary><pre class="source"><span class="c1"># The table of the analysis of the ratio of columns to compounds, one row per enzyme.</span>
+<span class="n">show_table</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dr_rows</span><span class="p">),</span> <span class="n">floatfmt</span><span class="o">=</span><span class="s2">".3f"</span><span class="p">)</span>
+</pre></details><div class=outputs><div><table>
+<thead>
+<tr>
+<th>enzyme</th>
+<th>rows of the pool</th>
+<th>widest candidate, columns</th>
+<th>columns per compound</th>
+<th>components for 90% of the variance</th>
+<th>participation ratio</th>
+<th>AUC of lgbm_A_deep</th>
+<th>AUC with 4 times the columns shuffled</th>
+<th>AUC of the stack</th>
+<th>AUC of the stack with extra columns</th>
+<th>AUC on 25% of the columns</th>
+<th>AUC on all columns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CYP3A4</td>
+<td>2334</td>
+<td>5863</td>
+<td>2.512</td>
+<td>1047</td>
+<td>422.902</td>
+<td>0.785</td>
+<td>0.737</td>
+<td>0.802</td>
+<td>0.778</td>
+<td>0.771</td>
+<td>0.803</td>
+</tr>
+<tr>
+<td>CYP2D6</td>
+<td>1493</td>
+<td>5863</td>
+<td>3.927</td>
+<td>840</td>
+<td>413.270</td>
+<td>0.696</td>
+<td>0.613</td>
+<td>0.746</td>
+<td>0.727</td>
+<td>0.723</td>
+<td>0.719</td>
+</tr>
+</tbody>
+</table>
+</div></div></div><section class="cell md"><p>The verdicts of the rule, as the log prints them: CYP3A4 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP3A4 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED; CYP3A4 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP3A4 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED. No candidate, and not the stack, is shown to be unharmed by columns without a signal, so a model of this kind loses accuracy when such columns are added. The verdicts do not show that the columns of the store carry no signal; the permutation control and the curve of the fewer-columns paragraph address that.</p>
+<p><strong>The stack, not only a candidate.</strong> A candidate that is hurt by useless columns can be weighted down by the blend. The 16 label-free candidates go through the whole nested procedure for the first repeat, once as they are and once with four times the columns of every candidate that reads columns added as shuffled columns: the AUC of the stack is 0.802 and 0.778 for CYP3A4 and 0.746 and 0.727 for CYP2D6 at the primary cut. With only five outer folds the test is conservative, so a loss that it cannot rule out is reported as not resolved and not as harmless.</p>
+<p><strong>Fewer columns.</strong> One candidate on a random 5%, 10%, 25%, 50% and 100% of its columns: at 25% the AUC is 0.771 for CYP3A4 and 0.723 for CYP2D6, against 0.803 and 0.719 on all of them. A curve that rises with the number of columns means that they carry signal; a curve that is flat means that few of them do.</p>
+<p><strong>What was measured before.</strong> The permutation control of section 6.8 applies the whole pipeline to permuted labels and gets an AUC of 0.5, which is the check that matters most against chance correlation, because it uses the same selection that the real run uses. Read the three results together: the permutation control says that the pipeline does not manufacture signal from noise; the extra columns say how much a model loses when it is given four times as many columns as it reads, none of them carrying a signal; the nested design says what the pipeline scores on compounds that it did not see, whatever its width.</p>
+<p><em>On what actually ran.</em> <code>cypmode/challenge/descriptor_ratio.py</code> computes all five; it reuses the plan and the caches of the final build, refits <code>lgbm_A_deep</code> and <code>lgbm_A+fps_deep</code> with the extra columns on the outer folds, and runs the stack on the first repeat with a cache of its own in <code>data/tdi_track/outputs/comparisons/descriptor_ratio_work</code> that git does not hold. <code>queue/jobs/288_descriptor_ratio.sh</code> runs it and <code>tests/test_descriptor_ratio.py</code> tests the spectrum, the widths, the extra columns, the one-sided rule, and the summaries.</p>
 </section><section class="cell md"><h1 id="Part-VII.-The-first-TDI-models-and-what-they-taught">Part VII. The first TDI models and what they taught</h1>
 <p>Part VI built the measurement. This part uses it, in the order in which the work happened, from the challenge's own baseline to the first assembled models, the work of the first weeks of the project. It has eleven sections. Section 7.1 reproduces the baseline; 7.2 adds the project's two nitrogen screens to it one block at a time; 7.3 gives each compound the labels of its nearest neighbours; 7.4 describes a feature that looked like the largest gain of the project and was retracted; 7.5 and 7.6 are about the yes/no threshold and about uncertainty; 7.7 to 7.9 bring in external data, quantum-chemical and pharmacophore features and learned embeddings; 7.10 asks whether predicted structures help a classifier; 7.11 assembles the first complete models and records the decision to build the nested evaluation of 6.3.</p>
 <p>Two things are worth knowing before reading it. The first is that the experiments of this part were run <em>before</em> the nested evaluation existed. They used five-fold cross-validation (later experiments repeat it five times), a threshold of 0.5 or one tuned inside the folds, and the MCC of section 4.10 as the score. The corrected resampled t of 6.5 was applied to them afterwards wherever the per-fold scores had been saved (6.6). Each section says which of its numbers are stored tables of the day and which are recomputed for this notebook, and when a recomputation disagrees with the stored table the section says why.
@@ -15501,7 +15692,141 @@ The second is the population. The early CYP3A4 numbers were computed on the <em>
 <p><em>On what actually ran.</em> <code>nested_evaluate</code> with <code>StackedLogit</code> and <code>BestSingle</code> (<code>cypmode/challenge/nested.py</code>), the weights of <code>confident_weights</code> and <code>SimilarityMatcher</code>, <code>corrected_resampled_t</code> and <code>plan_sizes</code> (<code>model_comparison.py</code>); the report of the build, <code>final_report.md</code>, holds the same AUC and MCC. The last cell reads <code>applicability_domain_compounds.csv</code> and <code>applicability_domain_bins.csv</code> from <code>data/tdi_track/outputs/final/</code>, written by <code>cypmode/challenge/applicability_domain.py</code> in queue job 096.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-arch_final_results"><img class="fig-light" loading="lazy" decoding="async" width="2600" height="840" src="figures/arch_final_results-light.png" alt="The final results on one page"><img class="fig-dark" loading="lazy" decoding="async" width="2600" height="840" src="figures/arch_final_results-dark.png" alt="The final results on one page"><figcaption><p><strong>Figure: The final results on one page.</strong> The results of the project on one page, all of them estimates on the training data and none a score on the hidden labels. Left and middle: the nested cross-validated AUC and MCC of the final stack of each enzyme next to the default stack, at the two confidence cuts of the labels (the MCC is at the rate transferred from the scored prevalence). CYP3A4: AUC 0.834 and MCC 0.476 at z0 = 1.0 (0.862 and 0.539 at z0 = 1.96), against 0.817 and 0.442 for the default stack; CYP2D6: AUC 0.731 and MCC 0.167 at z0 = 1.0 (0.754 and 0.204 at z0 = 1.96), against 0.731 and 0.167 for the default stack. Right: the structure track in numbers, 20 ligands, 20 poses passing all 22 PoseBusters checks and 20 with a margin of 0.8 or more, the relaxation adopted for 20 of 20 poses.</p>
 </figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-ml_applicability_domain"><img class="fig-light" loading="lazy" decoding="async" width="2100" height="780" src="figures/ml_applicability_domain-light.png" alt="Where the final stack can be trusted: reliability by similarity"><img class="fig-dark" loading="lazy" decoding="async" width="2100" height="780" src="figures/ml_applicability_domain-dark.png" alt="Where the final stack can be trusted: reliability by similarity"><figcaption><p><strong>Figure: Where the final stack can be trusted: reliability by similarity.</strong> How well the final stack ranks, by the similarity of each held-out compound to the rows its fold was trained on (ECFP4 Tanimoto), measured on the outer folds of the nested validation at the first confidence cut: AUC with its 95% interval from a bootstrap over chemical clusters. A bin is supported when the lower end of its interval is above 0.5. The blinded compounds fall in these tiers: CYP3A4: 750 supported; CYP2D6: 599 weak, 151 unsupported. CYP3A4 is supported everywhere; CYP2D6 ranks usefully only where the nearest training compound is at least moderately similar.</p>
-</figcaption></figure></div><section class="cell md"><h1 id="Part-IX.-Additions-that-were-tested">Part IX. Additions that were tested</h1>
+</figcaption></figure></div><section class="cell md"><h2 id="8.8-The-five-OECD-principles">8.8 The five OECD principles</h2>
+<blockquote>
+<p><strong>Field:</strong> Statistics · Cheminformatics</p>
+</blockquote>
+<p>A model that is meant to be trusted outside the laboratory that built it is judged against a short list that the Organisation for Economic Co-operation and Development (OECD) adopted for models of chemical properties, and that the editors of this field's journal use as a test of a modelling paper (Merz and colleagues, 2015). Each principle is a question that a reader may put to the final stacks of this part. The cell below puts all five, for both enzymes, and answers each from a file of the project, so that no answer is typed in.</p>
+<p><strong>1. A defined endpoint.</strong> What exactly is predicted? A compound is positive when the potency after pre-incubation exceeds the potency without it, floored at 4, by more than a factor of two (section 2.3), and the rule gives the given label for every compound of both pools and for every released test label that it can be applied to. <strong>2. An unambiguous algorithm.</strong> Could another laboratory repeat the computation exactly? Every member of each final stack, the columns it reads, its hyperparameters, the blend and its grid, the seeds, the call rule, and the versions of the packages are written as one machine-readable file; the networks that were trained in another environment are listed with the constants of their runners. <strong>3. A defined domain of applicability.</strong> For which compounds is the prediction to be trusted? The tiers of section 8.7. <strong>4. Appropriate measures of goodness of fit, robustness, and predictivity.</strong> Fit is how well the model reproduces the compounds that it was fitted on; robustness is how stable the performance is when the data are resampled or the labels are permuted; predictivity is the performance on compounds that the model did not see. Fit was not reported until this section: every candidate of the default grid is refitted on its whole pool and scored there, on the yardstick of section 6.4, and the difference between that score and the outer-fold score is the optimism that the nested design removes. <strong>5. A mechanistic interpretation, if possible.</strong> The enrichment of each structural alert among the positives is tested with Fisher's exact test (section 5.4), with the Holm adjustment over the alerts of the enzyme, and the share of the gain of one LightGBM model that each block of columns carries is listed.</p>
+</section><div class="cell code"><details class="src"><summary>code<span>16 lines</span></summary><pre class="source"><span class="c1"># The five OECD principles for the final stacks (cypmode/challenge/oecd_principles.py, job 289): the table that the job wrote, read back, and the checks on the data files.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">OECD</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"data/tdi_track/outputs/final"</span>
+<span class="n">oecd_rows</span><span class="p">,</span> <span class="n">oecd_cur</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">OECD</span> <span class="o">/</span> <span class="s2">"oecd_principles.csv"</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">OECD</span> <span class="o">/</span> <span class="s2">"data_curation.csv"</span><span class="p">)</span>
+<span class="n">oecd_gof</span><span class="p">,</span> <span class="n">oecd_alerts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">OECD</span> <span class="o">/</span> <span class="s2">"goodness_of_fit.csv"</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">OECD</span> <span class="o">/</span> <span class="s2">"alert_enrichment.csv"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">principle</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">oecd_rows</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"principle"</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">show_markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">"**</span><span class="si">{</span><span class="n">principle</span><span class="si">}</span><span class="s2">**</span><span class="se">\n\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">isoform</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">evidence</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">itertuples</span><span class="p">()))</span>
+<span class="n">show_table</span><span class="p">(</span><span class="n">oecd_cur</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"check"</span><span class="p">:</span> <span class="s2">"check on the data files"</span><span class="p">}),</span> <span class="n">floatfmt</span><span class="o">=</span><span class="s2">".4g"</span><span class="p">)</span>
+<span class="n">oecd_gain</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">OECD</span> <span class="o">/</span> <span class="s2">"block_gain.csv"</span><span class="p">)</span>
+<span class="n">oecd_enriched</span> <span class="o">=</span> <span class="p">{</span><span class="n">iso</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="n">oecd_alerts</span><span class="p">[(</span><span class="n">oecd_alerts</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">oecd_alerts</span><span class="o">.</span><span class="n">p_holm</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">oecd_alerts</span><span class="o">.</span><span class="n">odds_ratio</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">feature</span><span class="p">)</span> <span class="k">for</span> <span class="n">iso</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"CYP3A4"</span><span class="p">,</span> <span class="s2">"CYP2D6"</span><span class="p">)}</span>
+<span class="n">oecd_t</span> <span class="o">=</span> <span class="p">{</span><span class="n">iso</span><span class="p">:</span> <span class="p">{</span><span class="s2">"fit"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">oecd_gof</span><span class="p">[</span><span class="n">oecd_gof</span><span class="o">.</span><span class="n">isoform</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">iso</span><span class="p">][</span><span class="s1">'fit_auc_z1.0'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"outer"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">oecd_gof</span><span class="p">[</span><span class="n">oecd_gof</span><span class="o">.</span><span class="n">isoform</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">iso</span><span class="p">][</span><span class="s1">'outer_auc_z1.0'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"n_sig"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">oecd_enriched</span><span class="p">[</span><span class="n">iso</span><span class="p">]),</span> <span class="s2">"n_tested"</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">oecd_alerts</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+               <span class="s2">"n_dep"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(((</span><span class="n">oecd_alerts</span><span class="o">.</span><span class="n">isoform</span> <span class="o">==</span> <span class="n">iso</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">oecd_alerts</span><span class="o">.</span><span class="n">p_holm</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">oecd_alerts</span><span class="o">.</span><span class="n">odds_ratio</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+               <span class="s2">"motif"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">oecd_gain</span><span class="p">[(</span><span class="n">oecd_gain</span><span class="o">.</span><span class="n">isoform</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">iso</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">oecd_gain</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">'motif'</span><span class="p">)]</span><span class="o">.</span><span class="n">gain_share</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"desc"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">oecd_gain</span><span class="p">[(</span><span class="n">oecd_gain</span><span class="o">.</span><span class="n">isoform</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">iso</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">oecd_gain</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">'rdkit_desc'</span><span class="p">)]</span><span class="o">.</span><span class="n">gain_share</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span><span class="p">}</span> <span class="k">for</span> <span class="n">iso</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"CYP3A4"</span><span class="p">,</span> <span class="s2">"CYP2D6"</span><span class="p">)}</span>
+<span class="n">oecd_common</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">oecd_enriched</span><span class="p">[</span><span class="s2">"CYP3A4"</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">oecd_enriched</span><span class="p">[</span><span class="s2">"CYP2D6"</span><span class="p">])</span>
+<span class="n">oecd_common_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Enriched in both enzymes: "</span> <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">oecd_common</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"."</span><span class="p">)</span> <span class="k">if</span> <span class="n">oecd_common</span> <span class="k">else</span> <span class="s2">"No alert is enriched in both enzymes."</span>
+</pre></details><div class=outputs><div><p><strong>1. A defined endpoint</strong></p>
+<p>CYP3A4: time-dependent inhibition of CYP3A4: positive when the pIC50 after pre-incubation exceeds the direct-inhibition pIC50 (floored at 4) by more than log10 2; the rule gives the given label for 2334 of 2334 compounds of the pool and for all 747 of the 750 released test labels for which both potencies are given (0 disagree, 3 cannot be computed)</p>
+<p>CYP2D6: time-dependent inhibition of CYP2D6: positive when the pIC50 after pre-incubation exceeds the direct-inhibition pIC50 (floored at 4) by more than log10 2; the rule gives the given label for 1493 of 1493 compounds of the pool and for all 741 of the 748 released test labels for which both potencies are given (0 disagree, 7 cannot be computed)</p>
+</div><div><p><strong>2. An unambiguous algorithm</strong></p>
+<p>CYP3A4: 28 members (default+all_survivors), a logistic blend of the inner out-of-fold scores with the penalty and its strength chosen on the inner folds, isotonic calibration, a call rate of 1.3 times the prevalence; every member, column set, hyperparameter, seed, and package version is in algorithm_manifest.json; the code is open, and each submitted file has a SHA-256 hash</p>
+<p>CYP2D6: 23 members (default), a logistic blend of the inner out-of-fold scores with the penalty and its strength chosen on the inner folds, isotonic calibration, a call rate of 1.0 times the prevalence; every member, column set, hyperparameter, seed, and package version is in algorithm_manifest.json; the code is open, and each submitted file has a SHA-256 hash</p>
+</div><div><p><strong>3. A defined domain of applicability</strong></p>
+<p>CYP3A4: reliability by the nearest-training similarity of a compound (Tanimoto similarity of extended-connectivity fingerprints of diameter 4, ECFP4), bins supported when the lower end of a 95% interval over whole Butina clusters reaches AUC 0.60; 750 supported, 0 weak, 0 unsupported of 750 blinded compounds; &lt; 0.3: n 165, AUC 0.783, supported; 0.3 to 0.4: n 670, AUC 0.813, supported; 0.4 to 0.5: n 968, AUC 0.810, supported; 0.5 to 0.6: n 410, AUC 0.851, supported; 0.6 to 0.7: n 219, AUC 0.838, supported; &gt;= 0.7: n 116, AUC 0.887, supported</p>
+<p>CYP2D6: reliability by the nearest-training similarity of a compound (Tanimoto similarity of extended-connectivity fingerprints of diameter 4, ECFP4), bins supported when the lower end of a 95% interval over whole Butina clusters reaches AUC 0.60; 0 supported, 599 weak, 151 unsupported of 750 blinded compounds; &lt; 0.3: n 395, AUC 0.527, weak; 0.3 to 0.4: n 585, AUC 0.608, weak; 0.4 to 0.5: n 226, AUC 0.667, weak; 0.5 to 0.6: n 113, AUC 0.714, weak; 0.6 to 0.7: n 13, AUC not estimated, unsupported; &gt;= 0.7: n 15, AUC not estimated, unsupported</p>
+</div><div><p><strong>4. Goodness of fit, robustness, and predictivity</strong></p>
+<p>CYP3A4: goodness of fit: the 23 candidates refitted on the pool score a mean AUC of 0.978 on the pool against 0.758 on held-out folds (z0 1.0), an optimism of 0.219 that the nested design removes; robustness: nested outer AUC 0.8338 (z0 1.0) and 0.8622 (z0 1.96), MCC at the transferred rate 0.476 and 0.539; permuted labels: AUC 0.5096 (range 0.4802 to 0.5351), MCC +0.0020 (range -0.0376 to +0.0287) / AUC 0.5096 (range 0.4942 to 0.5201), MCC -0.0043 (range -0.0374 to +0.0404); ratio of columns to compounds: the widest candidate reads 5863 columns for 1493 to 2334 compounds; the extra-column, effective-dimension and fewer-column analyses are in descriptor_ratio.log; predictivity: on the labels released after the deadline, scored by the organisers' own code: MCC 0.467 (standard deviation 0.033) for CYP3A4; macro MCC 0.3723; on the second data set (TDC CYP3A4_Veith, official protocol) the test AUPRC is 0.891 against a published median of 0.862 (19 entries): ABOVE THE MEDIAN</p>
+<p>CYP2D6: goodness of fit: the 23 candidates refitted on the pool score a mean AUC of 0.992 on the pool against 0.684 on held-out folds (z0 1.0), an optimism of 0.308 that the nested design removes; robustness: nested outer AUC 0.7312 (z0 1.0) and 0.7536 (z0 1.96), MCC at the transferred rate 0.167 and 0.204; permuted labels: AUC 0.5012 (range 0.4770 to 0.5265), MCC +0.0196 (range -0.0069 to +0.0509) / AUC 0.4987 (range 0.4434 to 0.5392), MCC -0.0045 (range -0.0380 to +0.0602); ratio of columns to compounds: the widest candidate reads 5863 columns for 1493 to 2334 compounds; the extra-column, effective-dimension and fewer-column analyses are in descriptor_ratio.log; predictivity: on the labels released after the deadline, scored by the organisers' own code: MCC 0.277 (standard deviation 0.068) for CYP2D6; macro MCC 0.3723; on the second data set (TDC CYP2D6_Veith, official protocol) the test AUPRC is 0.727 against a published median of 0.649 (19 entries): ABOVE THE MEDIAN</p>
+</div><div><p><strong>5. A mechanistic interpretation, if possible</strong></p>
+<p>CYP3A4: 4 of 26 alerts and motifs are enriched among the positives and 0 are depleted (Fisher, Holm p &lt; 0.05); the largest odds ratios: terminal_alkene (6.23), methylenedioxyphenyl (5.17), cyclopropylamine (2.76), methoxy_aryl (1.87); depleted: none; share of the gain of one LightGBM model by block: rdkit_desc 46%, avalon 18%, erg 13%, morgan_c2 10%</p>
+<p>CYP2D6: 1 of 24 alerts and motifs is enriched among the positives and 1 is depleted (Fisher, Holm p &lt; 0.05); the largest odds ratios: methylenedioxyphenyl (4.89); depleted: imidazole_Nsub (0.54); share of the gain of one LightGBM model by block: rdkit_desc 39%, avalon 20%, erg 16%, morgan_c2 9%</p>
+</div><div><table>
+<thead>
+<tr>
+<th>check on the data files</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>compounds in the training file</td>
+<td>6145</td>
+</tr>
+<tr>
+<td>compounds in the blinded file</td>
+<td>750</td>
+</tr>
+<tr>
+<td>training SMILES that RDKit cannot parse</td>
+<td>0</td>
+</tr>
+<tr>
+<td>blinded SMILES that RDKit cannot parse</td>
+<td>0</td>
+</tr>
+<tr>
+<td>duplicated compound names in the training file</td>
+<td>0</td>
+</tr>
+<tr>
+<td>duplicated canonical SMILES in the training file</td>
+<td>0</td>
+</tr>
+<tr>
+<td>blinded compounds whose canonical SMILES is in the training file</td>
+<td>0</td>
+</tr>
+<tr>
+<td>blinded compounds whose name is in the training file</td>
+<td>0</td>
+</tr>
+<tr>
+<td>training compounds written as more than one fragment (salts, solvates)</td>
+<td>0</td>
+</tr>
+<tr>
+<td>blinded compounds written as more than one fragment</td>
+<td>0</td>
+</tr>
+<tr>
+<td>label columns in the blinded file</td>
+<td>0</td>
+</tr>
+<tr>
+<td>CYP3A4: labelled compounds with both arms measured (the pool of every model)</td>
+<td>2334</td>
+</tr>
+<tr>
+<td>CYP3A4: labelled compounds without a direct measurement (another labelling convention, left out of the pool)</td>
+<td>1249</td>
+</tr>
+<tr>
+<td>CYP3A4: compounds without a label</td>
+<td>2562</td>
+</tr>
+<tr>
+<td>CYP3A4: rows of the pool where the rule s = t - max(d, 4) &gt; log10 2 differs from the given label</td>
+<td>0</td>
+</tr>
+<tr>
+<td>CYP3A4: positive rate of the pool</td>
+<td>0.3273</td>
+</tr>
+<tr>
+<td>CYP2D6: labelled compounds with both arms measured (the pool of every model)</td>
+<td>1493</td>
+</tr>
+<tr>
+<td>CYP2D6: labelled compounds without a direct measurement (another labelling convention, left out of the pool)</td>
+<td>4</td>
+</tr>
+<tr>
+<td>CYP2D6: compounds without a label</td>
+<td>4648</td>
+</tr>
+<tr>
+<td>CYP2D6: rows of the pool where the rule s = t - max(d, 4) &gt; log10 2 differs from the given label</td>
+<td>0</td>
+</tr>
+<tr>
+<td>CYP2D6: positive rate of the pool</td>
+<td>0.217</td>
+</tr>
+</tbody>
+</table>
+</div></div></div><section class="cell md"><p>For CYP3A4 the candidates refitted on the pool score an AUC of 0.978 on average there, against 0.758 on held-out folds; for CYP2D6 the numbers are 0.992 and 0.684. The gap is large because trees, neighbours, and kernels can reproduce the compounds they were fitted on almost exactly, which is why a fit is never read as a forecast. Of the 26 alerts and motifs tested for CYP3A4, 4 are enriched among the positives after the adjustment and 0 are depleted; for CYP2D6, 1 of 24 is enriched and 1 is depleted. Enriched in both enzymes: methylenedioxyphenyl. The block of heme-binding motifs carries 0.1% of the gain of the LightGBM model for CYP3A4 and 0.2% for CYP2D6, against 46% and 39% for the descriptors. The enrichment says that some of the literature knowledge about structural alerts is visible in this data; it does not say that an alert explains a compound.</p>
+<p>The table of the data files is the curation that the editors ask for in a section of its own: the parsing of every structure, the duplicates, the overlap of the blinded set with the training set, the compounds written as salts, the rows that follow another labelling convention (section 2.4), and the check of the label rule.</p>
+<p><em>On what actually ran.</em> <code>cypmode/challenge/oecd_principles.py</code> writes <code>oecd_principles.md</code>, <code>algorithm_manifest.json</code>, <code>data_curation.csv</code>, <code>goodness_of_fit.csv</code>, <code>alert_enrichment.csv</code>, and <code>block_gain.csv</code> in <code>data/tdi_track/outputs/final</code>; it reuses the plan and the caches of the final build through <code>descriptor_ratio.Final</code>, and reads the networks' constants from the source of their runners without importing them. <code>queue/jobs/289_oecd_principles.sh</code> runs it after jobs 287 and 288 and <code>tests/test_oecd_principles.py</code> tests it.</p>
+</section><section class="cell md"><h1 id="Part-IX.-Additions-that-were-tested">Part IX. Additions that were tested</h1>
 <p>Part VIII described the default stack. This part describes what was proposed to be added to it, and what happened to each proposal. Every section has the same parts: the idea and where it came from, the exact construction with every formula built up, the gate written down before the result existed (6.7), the result alone and inside the stack with its corrected p-values, and the reason the idea did or did not help. The ideas are of two kinds. Some change <em>what the model is asked to predict</em> (the population of the scored set, the hidden structure of the label, the noise of the measurements); some change <em>what the model is given</em> (the structure of the neighbours, a pretrained representation, the other enzymes' measurements). None of them is a variation of a hyperparameter: each is a hypothesis about the data with a mechanism behind it.</p>
 <p>The sections are in the order in which the ideas arose. Section 9.1 is the longest, because its idea has the longest chain of reasoning and because it is the one the numbers alone cannot decide. Sections 9.2 to 9.8 each take one idea from a family; 9.9 the neural networks of the last queue; 9.10 the other late additions; 9.11 the ledger of all the gates, read from the logs.</p>
 </section><section class="cell md"><h2 id="9.1-The-selection-aware-CYP2D6-model:-when-the-training-labels-come-from-a-filtered-population">9.1 The selection-aware CYP2D6 model: when the training labels come from a filtered population</h2>
@@ -19084,7 +19409,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-13.553</td>
 <td>10.849</td>
 <td>2.133</td>
-<td>0.049</td>
+<td>0.055</td>
 </tr>
 <tr>
 <td>LDA (SVWN)</td>
@@ -19092,7 +19417,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-6.309</td>
 <td>12.732</td>
 <td>2.025</td>
-<td>0.181</td>
+<td>0.175</td>
 </tr>
 <tr>
 <td>GGA (PBE)</td>
@@ -19100,7 +19425,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-6.217</td>
 <td>12.381</td>
 <td>1.936</td>
-<td>0.276</td>
+<td>0.272</td>
 </tr>
 <tr>
 <td>hybrid (B3LYP)</td>
@@ -19108,7 +19433,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-7.943</td>
 <td>12.415</td>
 <td>1.982</td>
-<td>0.285</td>
+<td>0.287</td>
 </tr>
 </tbody>
 </table>
@@ -19426,7 +19751,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 </tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>The two methods order the molecules in nearly the same way (a Pearson correlation of 0.92 and a Spearman rank correlation of 0.88), but GFN2-xTB gives values that are higher than B3LYP by 5.0 eV on average, with a scatter of 0.6 eV around that offset. The offset is large and is not a defect of the code: the method was fitted to structures, frequencies and noncovalent interactions and not to the energies of charged molecules, and an ionisation potential taken from it is not an ionisation potential in the experimental sense. It is a number that increases when a molecule is harder to oxidise, which is what a tree model can use, since it splits on the ordering and a constant offset moves no split. The same holds for the other energies of 10.5. The price is that these features carry a role-dependent offset, as the docstring of the module says, which the tree learns from the other columns. The time: GFN2-xTB took 0.3 seconds for the twelve molecules (both charge states) and B3LYP 67, a ratio of about 190 for molecules of at most 15 atoms; the ratio grows with size, because the cost of the density functional method rises more steeply.</p>
+</div></div></div><section class="cell md"><p>The two methods order the molecules in nearly the same way (a Pearson correlation of 0.92 and a Spearman rank correlation of 0.88), but GFN2-xTB gives values that are higher than B3LYP by 5.0 eV on average, with a scatter of 0.6 eV around that offset. The offset is large and is not a defect of the code: the method was fitted to structures, frequencies and noncovalent interactions and not to the energies of charged molecules, and an ionisation potential taken from it is not an ionisation potential in the experimental sense. It is a number that increases when a molecule is harder to oxidise, which is what a tree model can use, since it splits on the ordering and a constant offset moves no split. The same holds for the other energies of 10.5. The price is that these features carry a role-dependent offset, as the docstring of the module says, which the tree learns from the other columns. The time: GFN2-xTB took 0.3 seconds for the twelve molecules (both charge states) and B3LYP 68, a ratio of about 195 for molecules of at most 15 atoms; the ratio grows with size, because the cost of the density functional method rises more steeply.</p>
 <p><em>On what actually ran.</em> <code>tblite</code> (the library that implements the GFN-xTB family, version 0.7.0, called from <code>cypmode/challenge/physics_block.py</code>) and PySCF, each in an isolated interpreter. The decomposition of the energy is the program's own report (verbosity 2); the sum is checked by the cell.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-phys_koopmans"><img class="fig-light" loading="lazy" decoding="async" width="2100" height="880" src="figures/phys_koopmans-light.png" alt="Orbital energies and ionisation potentials: Koopmans&#x27; relation on real compounds"><img class="fig-dark" loading="lazy" decoding="async" width="2100" height="880" src="figures/phys_koopmans-dark.png" alt="Orbital energies and ionisation potentials: Koopmans&#x27; relation on real compounds"><figcaption><p><strong>Figure: Orbital energies and ionisation potentials: Koopmans' relation on real compounds.</strong> Koopmans' approximation on the 6895 compounds of the physics cache: the ionisation potential computed from the energy of the cation (vertical, vertical axis) against minus the energy of the highest occupied orbital (horizontal). Pearson r = 0.858 for the ionisation potential and 0.912 for the electron affinity against minus the lowest unoccupied orbital; the cation-based value sits +2.07 eV from the orbital value on average. Koopmans' approximation ignores how the remaining orbitals relax when an electron is removed, so the two are expected to track each other without being equal. The dashed line is equality.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="10.5-The-quantities-of-the-physics-block">10.5 The quantities of the physics block</h2>
@@ -24252,7 +24577,7 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 <span class="nb">print</span><span class="p">(</span><span class="n">record_doi</span><span class="p">,</span> <span class="n">record_archives</span><span class="p">,</span> <span class="n">record_files</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">record_gb</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">tree_gb</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">part_mb</span><span class="p">)</span>
 </pre></details><div class=outputs><pre>10.5281/zenodo.24091837 4 20 4.2 7.69 250.0
 </pre></div></div><section class="cell md"><p>The repair of the solver was followed by the work it required. Job 084 evaluated again, from the prediction caches (nothing was refitted), every comparison that goes through the stack: 56 stacked comparisons. No verdict changed, and the stacked numbers moved by less than a thousandth. The lesson drawn is the one the audit encodes: a comparison between two models is only as good as the repeatability of each of them, so repeatability is tested before the comparison is believed.</p>
-<p>The determinism section of the audit has 15 lines and 14 of them are PASS; the others are information that the audit reports without requiring it. They cover the feature blocks computed twice, the folds rebuilt from the raw files, a model fitted twice with the same seed and with one and with four threads, and a cached prediction compared with a fresh fit of the current code (they agree to about the eighth decimal, the precision of the float32 numbers in the cache). The seed registry of the audit lists 14 distinct (file, kind, value) entries, and a seed that is not written where the audit can see it is not allowed.</p>
+<p>The determinism section of the audit has 15 lines and 14 of them are PASS; the others are information that the audit reports without requiring it. They cover the feature blocks computed twice, the folds rebuilt from the raw files, a model fitted twice with the same seed and with one and with four threads, and a cached prediction compared with a fresh fit of the current code (they agree to about the eighth decimal, the precision of the float32 numbers in the cache). The seed registry of the audit lists 15 distinct (file, kind, value) entries, and a seed that is not written where the audit can see it is not allowed.</p>
 <p><em>Where determinism had to be relaxed.</em> One of the experiments of Part IX asked for the strongest form of it, and the machine could not give it at first. The first speed test of the CheMeleon fine-tuning (9.10, 2026-10-17) trained with deterministic algorithms required, which makes the library refuse any operation that has no deterministic implementation; on the Apple GPU the operation <code>er_reduce_mps</code> has none, and the run stopped at once. No GPU time was measured, so the decision of that day, not to run the fine-tuning for cost, rested on the estimate of the processor alone. The test was made again on 2026-10-22 with the deterministic algorithms in warn-only mode (<code>scripts/chemprop_mps.sh</code>): the library warns about the operation instead of refusing it, the seed stays fixed, and only the order of the additions of that one operation may vary. One task took 781 s on the GPU against 2310 s on the processor; the scores of the two agreed (rank correlation 0.83, AUC 0.719 against 0.720), and the decision became to run the stage on the GPU: 3.9 h for the 18 missing tasks against 11.6 h on the processor, with a limit of 8 h. The two records are kept side by side (<code>chemeleon_speed_CYP3A4_2026-10-17.json</code> and <code>chemeleon_speed_CYP3A4.json</code>); the first is the evidence that the stop was about the operation and not about speed.</p>
 <p><strong>The record of the push.</strong> A number is reproducible only if the repository that reaches a reader is the one the author had. <code>scripts/mirror_check.sh</code> checks that after a push: it fetches the remote branch and fails when the working tree differs from HEAD in any way (a modified, an untracked or a missing file), or when <code>origin/&lt;branch&gt;</code> is not at HEAD, and it prints the files that stay local on purpose, those listed in <code>.gitignore</code>. It is the other end of the chain that the pinned environments and the fixed seeds begin: the numbers can be produced again from the files, and the files are the ones that were pushed. The script is not run by the notebook, which is built before the push; its check is described here from the script itself.</p>
 <p><strong>The record of the data.</strong> The repository does not hold the 7.7 GB of files that the engines produce or that the code takes hours to regenerate (the feature store, the prediction caches, the outputs of the nested validation, the raw outputs of Boltz-2 and OpenFold3), and a clone without them cannot run the audit. <code>data_record/record.json</code> names the groups of such files, <code>cypmode/data_record.py</code> packs each group into one xz archive, cuts an archive of more than 250 MB into numbered parts, so that an interrupted upload sends again only the part that failed, and writes <code>data_record/MANIFEST.json</code> with the size and the SHA-256 of every archive and of every part, and <code>scripts/fetch_data.py</code> restores them: it copies or downloads each part, joins the parts of an archive, refuses a part or an archive whose SHA-256 differs from the manifest before it extracts anything, and checks afterwards that every path listed for the group is there. The audit makes the same check of presence before it reads a file and names what is missing and the command that gets it, so a clone that lacks the data stops with that message and not with a stack trace. The record is deposited on Zenodo under the DOI 10.5281/zenodo.24091837, as 20 files (4.2 GB) that make up 4 archives, and <code>python scripts/fetch_data.py fetch</code> downloads it into a clone. A file belongs to the record when git does not track it, whether the <code>.gitignore</code> hides it or not, so the policy is the same before and after the held-back files are committed; the folders of downloaded or supplied inputs are left out by name until the licence of each has been read. <code>tests/test_data_record.py</code> builds a small repository, packs it, deletes files, restores them, and checks that a changed archive is refused. The whole path is run once from a clean clone by <code>scripts/clean_clone_check.sh</code>: it clones the repository at its last commit, restores the data record there, runs the audit in the clone and compares the checks of its report with those of the committed one; the jobs <code>970_data_record_build</code> and <code>975_clean_clone_check</code> of the queue make the archives and run that check after the release, and <code>296_release_unblock</code> is the job that makes the release itself (<code>tests/test_release_jobs.py</code> checks the order in which they wait).</p>
@@ -24288,7 +24613,8 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
     <span class="nb">print</span><span class="p">(</span><span class="s2">"checks that do not pass in the report:"</span><span class="p">)</span>
     <span class="n">show_table</span><span class="p">(</span><span class="n">failed_checks</span><span class="p">,</span> <span class="n">floatfmt</span><span class="o">=</span><span class="s2">".0f"</span><span class="p">)</span>
 <span class="n">fail_sentence</span> <span class="o">=</span> <span class="s2">"Every check passes."</span> <span class="k">if</span> <span class="n">n_fail</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n_fail</span><span class="si">}</span><span class="s2"> checks do not pass; they are printed above with their detail, and the report lists them first."</span>
-</pre></details><div class=outputs><div><table>
+</pre></details><div class=outputs><pre>checks that do not pass in the report:
+</pre><div><table>
 <thead>
 <tr>
 <th>section</th>
@@ -24302,7 +24628,7 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 </tr>
 <tr>
 <td>2. Test suite (executed now)</td>
-<td>1</td>
+<td>2</td>
 </tr>
 <tr>
 <td>3. Determinism and cache consistency</td>
@@ -24362,7 +24688,7 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 </tr>
 <tr>
 <td>16. Pinned environment and seed registry</td>
-<td>19</td>
+<td>20</td>
 </tr>
 <tr>
 <td>17. Feature-block leakage checks</td>
@@ -24390,17 +24716,33 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 </tr>
 <tr>
 <td>13. Limitations log</td>
-<td>16</td>
+<td>18</td>
 </tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>The report has 24 sections and 110 checks in its summary: 104 pass, 0 fail and 6 are information. Every check passes.</p>
+</div><div><table>
+<thead>
+<tr>
+<th>check</th>
+<th>status</th>
+<th>detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>all tests pass</td>
+<td>FAIL</td>
+<td>1126 passed, 1 failed</td>
+</tr>
+</tbody>
+</table>
+</div></div></div><section class="cell md"><p>The report has 24 sections and 110 checks in its summary: 103 pass, 1 fail and 6 are information. 1 checks do not pass; they are printed above with their detail, and the report lists them first.</p>
 <p><strong>Why a failing check is kept in view.</strong> A check that fails is a finding, not an embarrassment, and the audit is built so that it cannot be silenced: the summary lists every check with its status, a check is added when a mistake is found (so the same mistake cannot return unseen), and no check is removed because it fails. The check that the working tree is clean, for instance, fails whenever there are files that are not committed, which is true during the work; it is in the report because a result that was produced from files that nobody recorded cannot be reproduced.</p>
 <p><strong>A needed condition.</strong> The audit needs a quiescent state. It counts files, and the second run must find the same files as the first. A file created by another program between the two runs makes them differ, and the audit then reports a failure of reproducibility that is not a failure of the code; this happened once, and the queue therefore runs the audit alone, with nobody editing the repository while it runs.</p>
 <p>The count of the modified files is also part of the report. The report and the log of the queue job are files that git tracks, and the first run writes the report, so a count that included them would differ between the two runs. The audit therefore leaves its own files (the report, the second report and the log of the job) out of that count (<code>tree_state</code> in <code>cypmode/audit/sections.py</code>, tested in <code>tests/test_audit_tree_state.py</code>), so that the check can pass once everything else is committed and the audit of a committed project can be both reproducible and clean, which is the state that the pre-submission gate asks for.</p>
 <p><strong>What it found.</strong> Its byte-for-byte comparison is what showed that the stack was not deterministic (8.3, 12.1): the report recomputes the nested results of the stack, and two reports differed. It also holds the checks that keep each correction of the project from returning: the label rule, the leakage tests of the feature blocks, the check that the files submitted are the files built. 12.5 describes the other generated documents that read the same records.</p>
 <p><em>On what actually ran.</em> The cell reads <code>audit/AUDIT_REPORT.md</code> as the final chain left it; the audit itself is not run by the notebook, because it runs the test suite and takes longer than a notebook should.</p>
-</section><div class="cell shown"><figure class="figure" id="fig-eng_queue_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2300" height="6806" src="figures/eng_queue_timeline-light.png" alt="The job queue as a timeline"><img class="fig-dark" loading="lazy" decoding="async" width="2300" height="6806" src="figures/eng_queue_timeline-dark.png" alt="The job queue as a timeline"><figcaption><p><strong>Figure: The job queue as a timeline.</strong> Each bar is one run of one job of the queue, from the runner's own log (179 jobs, 580 runs: 515 finished, 40 stopped and retried, 25 failed after their attempts). The runs add up to 255 hours of wall-clock time between 08 Oct and 12 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.3 GB on a 16 GB machine).</p>
+</section><div class="cell shown"><figure class="figure" id="fig-eng_queue_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2300" height="6908" src="figures/eng_queue_timeline-light.png" alt="The job queue as a timeline"><img class="fig-dark" loading="lazy" decoding="async" width="2300" height="6908" src="figures/eng_queue_timeline-dark.png" alt="The job queue as a timeline"><figcaption><p><strong>Figure: The job queue as a timeline.</strong> Each bar is one run of one job of the queue, from the runner's own log (182 jobs, 605 runs: 540 finished, 40 stopped and retried, 25 failed after their attempts). The runs add up to 265 hours of wall-clock time between 08 Oct and 27 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.9 GB on a 16 GB machine).</p>
 </figcaption></figure></div><section class="cell md"><h2 id="12.3-The-test-suite-and-the-continuous-integration-workflow">12.3 The test suite and the continuous-integration workflow</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering</p>
@@ -24509,7 +24851,7 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 </tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>The suite has 1085 test functions in 156 files, the largest of them above, and the steps of the workflow are listed in the second table.</p>
+</div></div></div><section class="cell md"><p>The suite has 1108 test functions in 159 files, the largest of them above, and the steps of the workflow are listed in the second table.</p>
 <p><strong>Continuous integration</strong> is the practice of running the tests automatically on every change, on a machine other than the author's, so that a result that depends on something only the author's machine has is found. The workflow of the repository (<code>.github/workflows/tests.yml</code>) runs on ubuntu-latest, macos-latest, windows-latest and has 12 steps, listed above: it installs the package, runs the main group of tests, runs the consistency check of the queue (12.5), and then runs the files that cannot share a process with the others, one step each. A second job hides the Chrome that each system has, downloads Chrome for Testing for it, checks the file against its pinned SHA-256, and runs the tests that draw a page of the film on that browser, so that the download on which a machine without a Chrome relies is run on all three systems. The comments in the file record real failures: a missing package at collection time stopped the whole run, so that none of the other tests ran, and the workflow checked almost nothing without saying so. A test run that silently runs nothing is worse than none, which is why that comment is in the workflow.</p>
 <p><strong>The lesson about isolation.</strong> Two native libraries that each carry their own copy of the runtime for parallel loops (OpenMP) can disturb one another when both are loaded into one process. The suite found this the hard way, and <code>pyproject.toml</code> records it in its markers. Loading PyTorch and LightGBM together ends in a crash of the process (the status 139, a segmentation fault), every time; loading the quantum-chemistry package after a number of LightGBM-heavy tests ends in a <strong>deadlock</strong>, a state in which every part of the program waits for another and nothing moves, at no use of the processor. Because pytest imports every file it collects, even one it will later deselect, a marker is not enough: the files that load the second library are named in <code>--ignore</code> options (there are 9), and each is run on its own, in a process of its own, as the last steps of the workflow and the isolated runs of the queue do.</p>
 <p>The cost of getting this wrong was seen once more, late in the project. A test of the Atom-JEPA readout, which loads PyTorch, was not on the list, and a run of the suite on the queue stopped with no output and no use of the processor for hours, holding every later job behind it. The cause was the same, the file was added to the ignore list, and the audit's test run now has a time limit, because a hang that nobody sees is the worst failure of a long unattended run.</p>
@@ -25077,10 +25419,10 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 <span class="n">summary_line</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">run</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="s2">" passed"</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s2">" failed"</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s2">" error"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">summary_line</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
-</pre></details><div class=outputs><pre>3 passed in 0.12s
+</pre></details><div class=outputs><pre>3 passed in 0.11s
 </pre></div></div><section class="cell md"><p>The summary above is the line a developer reads. The suite is the cheapest of the checks of this part, and the one that runs most often: the queue runs it in the audit (job 900) and in the lint cleanup (job 295).</p>
 <p><em>On what actually ran.</em> The first cell counts the test functions by reading the files with Python's parser, reads the ignore list from <code>pyproject.toml</code> and the steps from the workflow file. The second cell runs <code>tests/test_constants.py</code> as a child process. The workflow itself runs on the hosting service, not in the notebook.</p>
-</section><div class="cell shown"><figure class="figure" id="fig-eng_power_events"><img class="fig-light" loading="lazy" decoding="async" width="2300" height="1060" src="figures/eng_power_events-light.png" alt="What the machine did while the queue ran"><img class="fig-dark" loading="lazy" decoding="async" width="2300" height="1060" src="figures/eng_power_events-dark.png" alt="What the machine did while the queue ran"><figcaption><p><strong>Figure: What the machine did while the queue ran.</strong> Every time the machine entered sleep between 18 Nov and 25 Nov, by the cause its own power log gives: 1386 x Maintenance Sleep, 193 x Sleep Service Back to Sleep, 9 x Software Sleep pid=611, 4 x Notification Wake Back to Sleep, 3 x Clamshell Sleep. The power log itself begins on 2026-11-18, so nothing is known about earlier days. Read from <code>pmset -g log</code> when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.</p>
+</section><div class="cell shown"><figure class="figure" id="fig-eng_power_events"><img class="fig-light" loading="lazy" decoding="async" width="2300" height="1160" src="figures/eng_power_events-light.png" alt="What the machine did while the queue ran"><img class="fig-dark" loading="lazy" decoding="async" width="2300" height="1160" src="figures/eng_power_events-dark.png" alt="What the machine did while the queue ran"><figcaption><p><strong>Figure: What the machine did while the queue ran.</strong> Every time the machine entered sleep between 20 Nov and 26 Nov, by the cause its own power log gives: 1151 x Maintenance Sleep, 180 x Sleep Service Back to Sleep, 9 x Software Sleep pid=611, 5 x Clamshell Sleep, 5 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-11-20, so nothing is known about earlier days. Read from <code>pmset -g log</code> when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="12.4-The-job-queue,-the-runner-and-the-guards;-what-the-hardware-taught">12.4 The job queue, the runner and the guards; what the hardware taught</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering</p>
@@ -25188,17 +25530,17 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <tr>
 <td>DONE</td>
 <td>a job finished</td>
-<td>525</td>
+<td>543</td>
 </tr>
 <tr>
 <td>RETRY</td>
 <td>a job failed once and was tried again</td>
-<td>40</td>
+<td>41</td>
 </tr>
 <tr>
 <td>FAILED</td>
 <td>a job failed twice and was recorded as failed</td>
-<td>25</td>
+<td>26</td>
 </tr>
 <tr>
 <td>GUARD</td>
@@ -25208,21 +25550,21 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <tr>
 <td>BATTERY</td>
 <td>a notification about the battery</td>
-<td>65</td>
+<td>68</td>
 </tr>
 <tr>
 <td>IDLE</td>
 <td>nothing could run</td>
-<td>98</td>
+<td>102</td>
 </tr>
 </tbody>
 </table>
 </div></div></div><section class="cell md"><p>Each guard is the answer to something that happened. The memory guard is the one that matters: five Boltz samples in parallel used up the memory and the swap file, and the machine took a <strong>kernel panic</strong>, which is the operating system stopping itself because it cannot continue. From then on one sample at a time, a ceiling on what the graphics unit may take, and a guard that kills the running structure engine when the free memory stays under a few percent. A hard ceiling of 0.9 times the memory, tried first, made every forward pass of the engines fail, so the allowance was loosened and the guard does the protecting. The battery guard asks nothing of the run: a flat battery once stopped a night's run, and the guard therefore sends a notification at two levels of charge and never waits or stops anything (the function that used to wait is kept as an empty one, so that older jobs still call it).</p>
 <p>The runner is started under <code>caffeinate</code>, which keeps the machine awake while it runs; a run that looks hung may turn out to be a machine that went to sleep, and that mistake was made once in this project, so the first question about a quiet job is whether the machine slept.</p>
-<p>The runner's own log shows what this meant in practice. It holds 17620 lines since 10-08 03:02:02. 525 DONE lines are jobs that finished, 40 are retries and 25 are failures that were recorded; the jobs that failed were repaired and queued again, and 0 of the 177 jobs are in the failed state as this notebook is built, while 173 are done. The memory guard acted 25 times, with the swap file as large as 9.2 gibibytes at the worst moment; each of these would otherwise have been a crash of the machine or of the run.</p>
+<p>The runner's own log shows what this meant in practice. It holds 17697 lines since 10-08 03:02:02. 543 DONE lines are jobs that finished, 41 are retries and 26 are failures that were recorded; the jobs that failed were repaired and queued again, and 0 of the 180 jobs are in the failed state as this notebook is built, while 175 are done. The memory guard acted 25 times, with the swap file as large as 9.2 gibibytes at the worst moment; each of these would otherwise have been a crash of the machine or of the run.</p>
 <p><strong>What the hardware taught, in six rules.</strong> A job that is not ready is not a failed job (the status 75). A long job works in chunks and remembers its place in files, so a restart costs a chunk and not a day. The state lives in the repository and not in a temporary folder, which the machine empties when it restarts. The memory of a laptop is shared between its parts, so a guard must watch the free memory and not only the load. Nothing is allowed to wait for a person (the battery), and everything that can hang is given a time limit (the tests, 12.3). And a quiet job is first suspected of sleeping, not of being broken.</p>
 <p><em>On what actually ran.</em> The first cell runs <code>defer</code> and <code>chunk_status</code> for real, in child processes and a temporary folder. The second reads the runner's log, the counters of <code>queue/state</code> and the header of <code>guards.sh</code>. The runner itself ran the jobs; the notebook only reads what it left.</p>
-</section><div class="cell shown"><figure class="figure" id="fig-eng_commit_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-light.png" alt="The history of the repository"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-dark.png" alt="The history of the repository"><figcaption><p><strong>Figure: The history of the repository.</strong> The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-25: 372 commits on 21 days up to commit 3df3540, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.</p>
+</section><div class="cell shown"><figure class="figure" id="fig-eng_commit_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-light.png" alt="The history of the repository"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-dark.png" alt="The history of the repository"><figcaption><p><strong>Figure: The history of the repository.</strong> The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-26: 388 commits on 22 days up to commit 234f3ce, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="12.5-The-documents-that-are-generated,-and-the-checks-on-them">12.5 The documents that are generated, and the checks on them</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering · Data science</p>
@@ -25254,7 +25596,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <span class="n">negative_gates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\| NOT MET \|"</span><span class="p">,</span> <span class="n">negative_report</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">check_line</span><span class="p">)</span>
 <span class="n">freshness_sentence</span> <span class="o">=</span> <span class="s2">"At the time of this build the check passes: the two files are what the code generates from the logs."</span> <span class="k">if</span> <span class="n">report_is_fresh</span> <span class="k">else</span> <span class="s2">"At the time of this build the check reports the files as stale, which is what it is for: the final chain regenerates them (job 910) before the notebook is built."</span>
-</pre></details><div class=outputs><pre>claim-to-evidence check: STALE or missing: [&#x27;METHOD_REPORT.md&#x27;]
+</pre></details><div class=outputs><pre>claim-to-evidence check: OK, both files equal a fresh generation
 </pre><div><table>
 <thead>
 <tr>
@@ -25371,18 +25713,18 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 
 <span class="n">project_map_modules</span> <span class="o">=</span> <span class="n">project_map</span><span class="o">.</span><span class="n">module_paths</span><span class="p">()</span>
 <span class="n">project_map_jobs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">project_map</span><span class="o">.</span><span class="n">job_facts</span><span class="p">())</span>
-</pre></details></div><section class="cell md"><p>At the time of this build the check reports the files as stale, which is what it is for: the final chain regenerates them (job 910) before the notebook is built. The method report has 15 numbered sections, 16 logged limitations and 2 value(s) still pending, and the ledger of negative results has 205 rows marked NOT MET. The README and the specification hold the generated blocks listed in the first table.</p>
+</pre></details></div><section class="cell md"><p>At the time of this build the check passes: the two files are what the code generates from the logs. The method report has 15 numbered sections, 18 logged limitations and 2 value(s) still pending, and the ledger of negative results has 205 rows marked NOT MET. The README and the specification hold the generated blocks listed in the first table.</p>
 <p><strong>The artifacts that present the results.</strong> The same discipline covers the files that show the results to a reader: the README card, the poster, the film and the figures. <code>cypmode/audit/artifacts.py</code> keeps the record <code>audit/artifacts.json</code>, written by the builders of those four artifacts: for each one the SHA-256 of every file it wrote, a fingerprint of the numbers it was built from (everything that the film's facts module reads from the final outputs, the ledger, the audit and the repository), and the builder's own digests. Its <code>verify</code>, called by the pre-submission gate, asks three questions of every artifact: whether each recorded output is still the file the builder wrote, whether the numbers it shows are the final ones (the recorded fingerprint equals the current one), and whether the artifact's own source still produces the same content. The card's HTML and the DOM of every frame of the film and of the poster are recomputed and compared exactly; the PNG and the H.264 files are not compared pixel by pixel, because rendering the same frame twice differs in a few dozen pixels by less than one level of 255 and the encoder adds its own differences. The gate fails an artifact that was edited after its build, one built from numbers that have changed since, and one whose source no longer reproduces it. The interactive card, one self-contained page built by <code>docs/card/build_interactive_card.py</code> in the queue job <code>946_interactive_card</code>, is recorded and checked the same way (its HTML is recomputed and compared exactly, <code>tests/test_interactive_card.py</code> checks that the iron–nitrogen distance measured on the coordinates it embeds equals the deposited one and that the page makes no request). The notebook itself has two editions for the same reason as the card: results for the blinded compounds must not be public before the challenge closes, and the notebook must be. A cell can be marked <code>held_back</code>; the public edition (the queue job <code>947_notebook_public</code>, <code>python -m notebooks.build_notebook --public</code>) runs it all the same, so that the variables of the later cells exist, but shows a note instead of its outputs and fails when any cell still names an official structure ligand or five or more blinded compounds (<code>tests/test_notebook_public.py</code>). The complete edition replaces it when the challenge has closed.</p>
-<p><strong>The queue is checked too.</strong> Every job of the queue is a shell script that calls modules and scripts of the repository, and a job can promise something that does not exist. <code>cypmode/audit/checklist.py</code> makes the ways in which a job drifts from the repository checkable by a script: a job that calls a module that does not exist, a job that waits for a code file that does not exist (which would make it answer &quot;not ready&quot; for ever), and a script that does not exist. The workflow of 12.3 runs it on every change. In this build it finds 0 problems in 177 jobs.</p>
+<p><strong>The queue is checked too.</strong> Every job of the queue is a shell script that calls modules and scripts of the repository, and a job can promise something that does not exist. <code>cypmode/audit/checklist.py</code> makes the ways in which a job drifts from the repository checkable by a script: a job that calls a module that does not exist, a job that waits for a code file that does not exist (which would make it answer &quot;not ready&quot; for ever), and a script that does not exist. The workflow of 12.3 runs it on every change. In this build it finds 0 problems in 180 jobs.</p>
 <p><strong>What must not be published.</strong> The public-readiness scan (<code>cypmode/audit/public_readiness.py</code>) looks at the files that git tracks or would add. Its detectors find private paths on the author's machine, strings shaped like credentials, e-mail addresses other than the public contact lines, files near the size limit of the hosting service, long verbatim runs from the books used while writing, and, until the challenge closes, results for the blinded compounds: a file that names five or more of them, or a table with one row per blinded compound (750 for the TDI test set, 20 for the structure set), is a prediction and must not be pushed. The files that are held back are the 0 patterns of the HELD BACK block of <code>.gitignore</code>, and the scan can also read every blob of the git history, because a push carries the history. The table shows three detectors firing on a sample that was made for the purpose.</p>
 <p><strong>The version.</strong> Five files state the version of a release: <code>pyproject.toml</code>, <code>CITATION.cff</code>, <code>.zenodo.json</code> and the citation entries of the README and of <code>USE_AND_CITATION.md</code>. <code>scripts/bump_version.py</code> sets the version, the date and the DOI of the release in all five, and in none of them if one of its patterns does not match exactly once, so that the files cannot disagree; the DOI that stands for all versions is not touched. A release that is not deposited on Zenodo and so has no DOI of its own is set with <code>--no-doi</code>: the identifiers of the previous release leave the citation file, the two entries cite the DOI of all versions, and the two documents say which release is the last one that is deposited. <code>tests/test_bump_version.py</code> runs both modes on small copies of the five files, so that a change in the files of the repository cannot break the test, and checks on the real files only that the three version fields agree.</p>
-<p><strong>A map of the project.</strong> A reader who opens the repository meets 179 modules and 177 jobs and needs to know where things are and what depends on what. The folder <code>docs/map</code> answers it with four pages: the code (every package and module, what it does and what it imports), the queue (every job, what it waits for, and the chain that rebuilds and checks the project), the flow of the data (from the inputs through the jobs and the logs to the reports) and the evidence (the kinds of idea that were tried). Each page has a diagram and a table. The diagrams are written in Mermaid, a text format for diagrams that GitHub draws when it shows a Markdown file, so a page is plain text that a version control system can compare. No page is written by hand: <code>cypmode/audit/project_map.py</code> writes them from the first sentence of each docstring, the header comment of each job and counts of the files, and it reads only tracked sources, never a log or a result, so that a copy of the repository regenerates the same pages. Job <code>921_docs_state</code> writes them with the other generated blocks and then runs <code>python -m cypmode.audit.project_map --check</code>, which fails when a page differs from the code. The tests in <code>tests/test_project_map.py</code> check that every module and every job appears exactly once, that the counts on the arrows equal an independent recount of the imports that cross a package, that every diagram is closed, that the wording rules of 12.6 hold for the pages, and that the committed pages are what the code writes. The same data are also written as one page that can be explored, <code>docs/map/explorer.html</code>: a graph of every module coloured by package, a grid of every job, the flow of the data and the kinds of idea, with a search box, and for each module and job what it imports, what imports it, which job runs it, which test imports it and which section of this notebook names it. It is one file with its data inside, so it opens in a browser without a network, and the Pages site publishes it; the tests check that it lists every module and every job once and that it loads nothing from elsewhere.</p>
+<p><strong>A map of the project.</strong> A reader who opens the repository meets 182 modules and 180 jobs and needs to know where things are and what depends on what. The folder <code>docs/map</code> answers it with four pages: the code (every package and module, what it does and what it imports), the queue (every job, what it waits for, and the chain that rebuilds and checks the project), the flow of the data (from the inputs through the jobs and the logs to the reports) and the evidence (the kinds of idea that were tried). Each page has a diagram and a table. The diagrams are written in Mermaid, a text format for diagrams that GitHub draws when it shows a Markdown file, so a page is plain text that a version control system can compare. No page is written by hand: <code>cypmode/audit/project_map.py</code> writes them from the first sentence of each docstring, the header comment of each job and counts of the files, and it reads only tracked sources, never a log or a result, so that a copy of the repository regenerates the same pages. Job <code>921_docs_state</code> writes them with the other generated blocks and then runs <code>python -m cypmode.audit.project_map --check</code>, which fails when a page differs from the code. The tests in <code>tests/test_project_map.py</code> check that every module and every job appears exactly once, that the counts on the arrows equal an independent recount of the imports that cross a package, that every diagram is closed, that the wording rules of 12.6 hold for the pages, and that the committed pages are what the code writes. The same data are also written as one page that can be explored, <code>docs/map/explorer.html</code>: a graph of every module coloured by package, a grid of every job, the flow of the data and the kinds of idea, with a search box, and for each module and job what it imports, what imports it, which job runs it, which test imports it and which section of this notebook names it. It is one file with its data inside, so it opens in a browser without a network, and the Pages site publishes it; the tests check that it lists every module and every job once and that it loads nothing from elsewhere.</p>
 </section><section class="cell md"><p>3 of the detectors fired on the sample, as they must. What the scan cannot do is find what it was not taught to look for: it is a net with a mesh, and the mesh is the list of patterns. The final chain runs it (job 930) and its findings that code can fix are fixed; the others are for a person to decide, and the push is not made before they are.</p>
 <p><em>On what actually ran.</em> The first cell runs the claim-to-evidence check as a child process and reads the two reports and the generated blocks. The second calls the queue check and the scan's <code>scan_text</code> in the notebook's process.</p>
-</section><div class="cell shown"><figure class="figure" id="fig-eng_tests_by_module"><img class="fig-light" loading="lazy" decoding="async" width="1720" height="1679" src="figures/eng_tests_by_module-light.png" alt="The test suite by module"><img class="fig-dark" loading="lazy" decoding="async" width="1720" height="1679" src="figures/eng_tests_by_module-dark.png" alt="The test suite by module"><figcaption><p><strong>Figure: The test suite by module.</strong> Test functions per test module of the repository: 1085 test functions in 156 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.</p>
-</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_repository_map"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="1280" src="figures/eng_repository_map-light.png" alt="The repository by folder"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="1280" src="figures/eng_repository_map-dark.png" alt="The repository by folder"><figcaption><p><strong>Figure: The repository by folder.</strong> The repository by top-level folder: the number of files that git tracks (3483 in all, 544 MB) and their size. The three folders with the most files are data (2072), docs (539), cypmode (189). The code is in <code>cypmode/</code> (the engines of the two tracks and the audit), the tests in <code>tests/</code>, the results and caches that are small enough for git in <code>data/</code>, the notebook in <code>notebooks/</code>, the figures, the card and the film in <code>docs/</code>, and the queue that runs the experiments in <code>queue/</code>; what is too large or must wait until the deadline is listed in <code>.gitignore</code>.</p>
-</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_data_flow"><img class="fig-light" loading="lazy" decoding="async" width="3600" height="1120" src="figures/eng_data_flow-light.png" alt="The flow of the data, from the inputs to the submission files"><img class="fig-dark" loading="lazy" decoding="async" width="3600" height="1120" src="figures/eng_data_flow-dark.png" alt="The flow of the data, from the inputs to the submission files"><figcaption><p><strong>Figure: The flow of the data, from the inputs to the submission files.</strong> The flow of the data, from the inputs to the submission files. The inputs of a track enter the jobs of the queue, and 161 of the 177 jobs write a log. The jobs write 206 log names. The ledger reads the lines of the gates in every log, and 58 logs are also read by name. The reports, the figures, and the notebook are built from the logs and the ledger by the chain 900 to 960, and the submission files follow from them. The same diagram, written in Mermaid, is <code>docs/map/dataflow.md</code>.</p>
-</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_code_packages"><img class="fig-light" loading="lazy" decoding="async" width="3400" height="1560" src="figures/eng_code_packages-light.png" alt="The packages of the code"><img class="fig-dark" loading="lazy" decoding="async" width="3400" height="1560" src="figures/eng_code_packages-dark.png" alt="The packages of the code"><figcaption><p><strong>Figure: The packages of the code.</strong> The packages of the code; an arrow goes from a package to a package whose modules it imports, and its label counts those imports. The project has 179 modules in 8 packages, and the modules hold 601 imports of one another, of which 112 cross from one package to another. The width of an arrow follows its count. The same diagram, written in Mermaid, is <code>docs/map/code.md</code>, which also lists the modules of every package.</p>
+</section><div class="cell shown"><figure class="figure" id="fig-eng_tests_by_module"><img class="fig-light" loading="lazy" decoding="async" width="1720" height="1679" src="figures/eng_tests_by_module-light.png" alt="The test suite by module"><img class="fig-dark" loading="lazy" decoding="async" width="1720" height="1679" src="figures/eng_tests_by_module-dark.png" alt="The test suite by module"><figcaption><p><strong>Figure: The test suite by module.</strong> Test functions per test module of the repository: 1108 test functions in 159 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.</p>
+</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_repository_map"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="1280" src="figures/eng_repository_map-light.png" alt="The repository by folder"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="1280" src="figures/eng_repository_map-dark.png" alt="The repository by folder"><figcaption><p><strong>Figure: The repository by folder.</strong> The repository by top-level folder: the number of files that git tracks (3523 in all, 546 MB) and their size. The three folders with the most files are data (2103), docs (539), cypmode (192). The code is in <code>cypmode/</code> (the engines of the two tracks and the audit), the tests in <code>tests/</code>, the results and caches that are small enough for git in <code>data/</code>, the notebook in <code>notebooks/</code>, the figures, the card and the film in <code>docs/</code>, and the queue that runs the experiments in <code>queue/</code>; what is too large or must wait until the deadline is listed in <code>.gitignore</code>.</p>
+</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_data_flow"><img class="fig-light" loading="lazy" decoding="async" width="3600" height="1120" src="figures/eng_data_flow-light.png" alt="The flow of the data, from the inputs to the submission files"><img class="fig-dark" loading="lazy" decoding="async" width="3600" height="1120" src="figures/eng_data_flow-dark.png" alt="The flow of the data, from the inputs to the submission files"><figcaption><p><strong>Figure: The flow of the data, from the inputs to the submission files.</strong> The flow of the data, from the inputs to the submission files. The inputs of a track enter the jobs of the queue, and 164 of the 180 jobs write a log. The jobs write 209 log names. The ledger reads the lines of the gates in every log, and 60 logs are also read by name. The reports, the figures, and the notebook are built from the logs and the ledger by the chain 900 to 960, and the submission files follow from them. The same diagram, written in Mermaid, is <code>docs/map/dataflow.md</code>.</p>
+</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_code_packages"><img class="fig-light" loading="lazy" decoding="async" width="3400" height="1560" src="figures/eng_code_packages-light.png" alt="The packages of the code"><img class="fig-dark" loading="lazy" decoding="async" width="3400" height="1560" src="figures/eng_code_packages-dark.png" alt="The packages of the code"><figcaption><p><strong>Figure: The packages of the code.</strong> The packages of the code; an arrow goes from a package to a package whose modules it imports, and its label counts those imports. The project has 182 modules in 8 packages, and the modules hold 627 imports of one another, of which 116 cross from one package to another. The width of an arrow follows its count. The same diagram, written in Mermaid, is <code>docs/map/code.md</code>, which also lists the modules of every package.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="12.6-The-rules-that-never-change,-and-how-each-is-enforced">12.6 The rules that never change, and how each is enforced</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering</p>
@@ -25480,7 +25822,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <span class="nb">print</span><span class="p">(</span><span class="n">test_summary</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dry_run_line</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">test_run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">dry_run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
-</pre></details><div class=outputs><pre>15 passed in 0.27s
+</pre></details><div class=outputs><pre>15 passed in 0.25s
 HELD BACK block not found; held-back sections not found
 </pre></div></div><section class="cell md"><p>The test file has passed and the dry run reports what the release script would change, without writing anything. After the deadline the script, run without the dry-run option, removes the HELD BACK block and switches on the parts of the README that were held back; before the deadline it refuses.</p>
 <p><strong>What the checks cannot do.</strong> They catch what they were taught to look for: the patterns of the scan, the files of the HELD BACK block, the numbers that the report copies. They do not decide whether a method is right, whether a gate was chosen fairly, or whether a sentence in a document is true. Those are the work of Parts VI and IX, and of the person who reads the text word by word. Engineering for trust is the part that makes the other parts checkable; it is not a substitute for them.</p>
@@ -25678,7 +26020,7 @@ HELD BACK block not found; held-back sections not found
 <tr>
 <td>L7</td>
 <td>reproducibility</td>
-<td>The test suite has 1103 passing and 1 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.</td>
+<td>The test suite has 1126 passing and 1 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.</td>
 </tr>
 <tr>
 <td>L8</td>
@@ -25725,9 +26067,19 @@ HELD BACK block not found; held-back sections not found
 <td>structure</td>
 <td>The ligand dynamics in the frozen pocket ran 20 ps for each of 104 predicted poses of 10 benchmark ligands, with the protein and the heme held at their predicted positions and without water. It is not a dynophore of the literature, which follows the whole complex in water over nanoseconds, and it cannot show that a pose is wrong because the pocket would open, that a bridging water molecule is missing, or that a slow motion of the ligand changes the pose. The stability of a pose measures its agreement with the force field that also relaxed it. 0 of its three scores met the gate registered before the result (the highest mean rho was +0.042 against the bar of +0.30); 10 ligands cannot detect a modest effect, so the result is that this cheap dynamics did not rank the predicted poses of these ligands and says nothing about a dynamics of the whole complex or about the 20 official ligands, which are chemically far from the benchmark ligands.</td>
 </tr>
+<tr>
+<td>L17</td>
+<td>data</td>
+<td>The validation on a second data set (the direct-inhibition panel of Veith et al. in the benchmark of the Therapeutics Data Commons, job 287) tests the generic part of the procedure, the features, the candidates, the stack, and the nested protocol, on a label that is direct inhibition and not time-dependent inhibition (TDI); it does not test the label process, the selection-aware model, or the call-rate rule of the TDI track. The published entries among which its result is placed are the numbers that their contacts reported to the leaderboard on 2026-11-26; this project did not rerun them, so the placement shows where the number falls among published numbers and not that the methods were compared under one protocol of the project.</td>
+</tr>
+<tr>
+<td>L18</td>
+<td>evaluation</td>
+<td>The ratio of columns to compounds (job 288) is answered by measurements and not by argument: the widest candidate reads more columns than the pool has compounds, and a candidate that reads columns can lose the area under the receiver operating characteristic curve (AUC) when columns that cannot carry a signal are added. The verdicts of the rule fixed before the run are in <code>descriptor_ratio.log</code>; every one of them is harmful or not resolved, because columns without a signal lowered the AUC of both candidates and the stack is not shown to be unharmed by them. The test on the stack uses the first repeat of five outer folds only, so a loss that it cannot rule out is reported as not resolved and not as harmless; the permutation control of the whole pipeline remains the check against chance correlation that uses the same selection as the real run.</td>
+</tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>The table has 16 entries, over the areas calibration, candidates, data, evaluation, labels, population, repository, reproducibility, structure, uncertainty.</p>
+</div></div></div><section class="cell md"><p>The table has 18 entries, over the areas calibration, candidates, data, evaluation, labels, population, repository, reproducibility, structure, uncertainty.</p>
 <p><strong>Read by area.</strong> The <em>evaluation</em> limitations say the same thing twice: the numbers are cross-validated estimates, they change with the population that is scored, and the baseline of the organisers scores differently on the board than in cross-validation, so the distance between the estimate and the score is not a constant. The <em>labels</em> limitation says that the rule that decides which compounds count as confidently labelled is not public, so the cut-off used here is a proxy, and every analysis was repeated at two cut-offs for that reason. The <em>uncertainty</em> and <em>calibration</em> limitations say what the committee and the calibration do not do: where the committee adds nothing beyond the margin it is reported as a negative result, and the CYP2D6 probabilities are close to a constant, so that the model ranks and transfers a call rate but does not give usable probabilities. The <em>structure</em> limitation says that the benchmark is small, noisy and made of ligands from the PDB, which the co-folding models may have seen, so that absolute accuracy is optimistic. The <em>reproducibility</em> and <em>repository</em> limitations are about the state of the work, and the audit refreshes them each time it runs. The <em>population</em> limitation is the central uncertainty of the CYP2D6 entry: the share of compounds in the scored set that the original screen would never have promoted is not identified by anything public, and only a submission can settle it.</p>
 <p><strong>What the report does not list.</strong></p>
 <p><em>The multiplicity of the search.</em> The registered gates were passed by few ideas, and none of the passes survives the correction for the number of attempts (13.1). The gates control the risk of adding an idea that does not help, one idea at a time; they do not control the risk that among many ideas one passed by chance. The pre-registration is what limits the damage, because it fixed the rule before the data were seen, and the Holm column is what measures what is left.</p>
@@ -26273,7 +26625,7 @@ HELD BACK block not found; held-back sections not found
 <tr>
 <td>cypmode/challenge</td>
 <td>the TDI track: labels, features, the nested evaluation, every candidate model, the gates, the final build</td>
-<td>99</td>
+<td>102</td>
 </tr>
 <tr>
 <td>cypmode/validation</td>
@@ -26303,12 +26655,12 @@ HELD BACK block not found; held-back sections not found
 <tr>
 <td>queue/jobs</td>
 <td>one shell script per experiment or build step, run in the order of its number</td>
-<td>177</td>
+<td>180</td>
 </tr>
 <tr>
 <td>tests</td>
 <td>the test suite</td>
-<td>156</td>
+<td>159</td>
 </tr>
 <tr>
 <td>notebooks/parts</td>
@@ -26322,7 +26674,7 @@ HELD BACK block not found; held-back sections not found
 </tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>The code of the five packages is 175 Python files, and the test suite is 156 files. The data are not in this table because they are not code: <code>data/tdi_track/inputs</code> and <code>data/structure_track/inputs</code> hold the files of the challenge and the public data that were added to it, the <code>outputs</code> folders hold what the jobs wrote (the caches of the nested evaluation, the logs the gates read, the final candidate files), and <code>submissions/</code> holds the files in the form the portal takes. Appendix D, printed by the builder, maps every one of these files to the section of this notebook that explains it.</p>
+</div></div></div><section class="cell md"><p>The code of the five packages is 178 Python files, and the test suite is 159 files. The data are not in this table because they are not code: <code>data/tdi_track/inputs</code> and <code>data/structure_track/inputs</code> hold the files of the challenge and the public data that were added to it, the <code>outputs</code> folders hold what the jobs wrote (the caches of the nested evaluation, the logs the gates read, the final candidate files), and <code>submissions/</code> holds the files in the form the portal takes. Appendix D, printed by the builder, maps every one of these files to the section of this notebook that explains it.</p>
 <h2 id="A.3-Every-stage-as-a-runnable-path">A.3 Every stage as a runnable path</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering</p>
@@ -27127,6 +27479,21 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <td>Ligand dynamics in the frozen pocket (the rule of docs/structure_track/structure_ligand_dynamics.md, committed before any number): the pools of the static pharmacophore gate, 20 ps of the ligand in its frozen pocket for every pose ...</td>
 </tr>
 <tr>
+<td>287</td>
+<td>external_dataset</td>
+<td>The selection-corrected stack on a second, published data set (the direct-inhibition panel of Veith et al. in the benchmark of the Therapeutics Data Commons), under the rule of cypmode/challenge/external_dataset.py written before  ...</td>
+</tr>
+<tr>
+<td>288</td>
+<td>descriptor_ratio</td>
+<td>The number of columns against the number of compounds (the practice that Jorgensen 2006 discourages): widths, effective dimension, extra columns without signal for the candidates and for the stack, fewer columns, under the rule of ...</td>
+</tr>
+<tr>
+<td>289</td>
+<td>oecd_principles</td>
+<td>The five OECD principles and the curation of the data, answered from the files of the project, with the goodness of fit and the enrichment of the structural alerts computed for the first time; it reads the results of the second da ...</td>
+</tr>
+<tr>
 <td>295</td>
 <td>lint_cleanup</td>
 <td>Lint cleanup of the Python modules (decided 2026-10-17). It runs after every experiment job and before the final chain (job 299), so that the audit and the test suite of the chain run on the cleaned code.</td>
@@ -27748,6 +28115,18 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <td>Ligand dynamics in the frozen pocket (the rule of docs/structure_track/structure_ligand_dynamics.md, committed before any number): the pools of the static pharmacophore gate, 20 ps of the ligand in its frozen pocket for every pose, the dynamic scores and the gate.</td>
 </tr>
 <tr>
+<td><code>287_external_dataset</code></td>
+<td>The selection-corrected stack on a second, published data set (the direct-inhibition panel of Veith et al. in the benchmark of the Therapeutics Data Commons), under the rule of cypmode/challenge/external_dataset.py written before the first run: the official protocol, the nested design, the negative control, the reliability by similarity, and the calibration.</td>
+</tr>
+<tr>
+<td><code>288_descriptor_ratio</code></td>
+<td>The number of columns against the number of compounds (the practice that Jorgensen 2006 discourages): widths, effective dimension, extra columns without signal for the candidates and for the stack, fewer columns, under the rule of cypmode/challenge/descriptor_ratio.py written before the first run.</td>
+</tr>
+<tr>
+<td><code>289_oecd_principles</code></td>
+<td>The five OECD principles and the curation of the data, answered from the files of the project, with the goodness of fit and the enrichment of the structural alerts computed for the first time; it reads the results of the second data set and of the ratio of columns to compounds, so it runs after jobs 287 and 288.</td>
+</tr>
+<tr>
 <td><code>295_lint_cleanup</code></td>
 <td>Lint cleanup of the Python modules (decided 2026-10-17). It runs after every experiment job and before the final chain (job 299), so that the audit and the test suite of the chain run on the cleaned code.</td>
 </tr>
@@ -27833,7 +28212,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 </tbody>
 </table>
-</section><section class="cell md"><p>The queue holds 177 jobs: 29 numbered below 100 (the TDI experiments and the final TDI build), 39 from 100 to 199 and 86 from 200 to 299 (the structure track, the additions of 9.9 and 9.10, the housekeeping jobs), and 23 from 900 (the final chain). A job that is finished leaves an empty file with its name in <code>queue/state/done</code>; a job that is not ready ends with the status 75 and is tried again in the next round; any other failure is tried once more and then recorded in <code>queue/state/failed</code>. 12.4 explains why the queue is built so.</p>
+</section><section class="cell md"><p>The queue holds 180 jobs: 29 numbered below 100 (the TDI experiments and the final TDI build), 39 from 100 to 199 and 89 from 200 to 299 (the structure track, the additions of 9.9 and 9.10, the housekeeping jobs), and 23 from 900 (the final chain). A job that is finished leaves an empty file with its name in <code>queue/state/done</code>; a job that is not ready ends with the status 75 and is tried again in the next round; any other failure is tried once more and then recorded in <code>queue/state/failed</code>. 12.4 explains why the queue is built so.</p>
 <h2 id="A.5-How-a-gate-reaches-the-final-build">A.5 How a gate reaches the final build</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering</p>
@@ -30385,6 +30764,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <li>Halgren, T. A. (1996). Merck molecular force field. I. Basis, form, scope, parameterization, and performance of MMFF94. Journal of Computational Chemistry, 17, 490–519. <a href="https://doi.org/10.1002/%28sici%291096-987x%28199604%2917%3A5/6%3C490%3A%3Aaid-jcc1%3E3.0.co%3B2-p"><code>10.1002/(sici)1096-987x(199604)17:5/6&lt;490::aid-jcc1&gt;3.0.co;2-p</code></a></li>
 <li>Hall, G. G. (1951). The molecular orbital theory of chemical valency VIII. A method of calculating ionization potentials. Proceedings of the Royal Society of London. Series A. Mathematical and Physical Sciences, 205, 541-552. <a href="https://doi.org/10.1098/rspa.1951.0048">doi:10.1098/rspa.1951.0048</a></li>
 <li>Hanley, J. A., and McNeil, B. J. (1982). The meaning and use of the area under a receiver operating characteristic (ROC) curve. Radiology, 143, 29-36. <a href="https://doi.org/10.1148/radiology.143.1.7063747">doi:10.1148/radiology.143.1.7063747</a></li>
+<li>Hawkins, D. M. (2004). The Problem of Overfitting. Journal of Chemical Information and Computer Sciences, 44, 1-12. <a href="https://doi.org/10.1021/ci0342472">doi:10.1021/ci0342472</a></li>
 <li>Heckman, J. J. (1979). Sample Selection Bias as a Specification Error. Econometrica, 47, 153. <a href="https://doi.org/10.2307/1912352">doi:10.2307/1912352</a></li>
 <li>Hill, A. V. (1910). The possible effects of the aggregation of the molecules of haemoglobin on its dissociation curves. The Journal of Physiology, 40 (Suppl.), iv–vii. <a href="https://doi.org/10.1113/jphysiol.1910.sp001386">doi:10.1113/jphysiol.1910.sp001386</a></li>
 <li>Hoerl, A. E., and Kennard, R. W. (1970). Ridge Regression: Biased Estimation for Nonorthogonal Problems. Technometrics, 12, 55-67. <a href="https://doi.org/10.1080/00401706.1970.10488634">doi:10.1080/00401706.1970.10488634</a></li>
@@ -30399,6 +30779,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <li>Janežič, M., Valjavec, K., Bergant Loboda, K., Herlah, B., Ogris, I., Kozorog, M., et al. (2021). Dynophore-Based Approach in Virtual Screening: A Case of Human DNA Topoisomerase IIα. International Journal of Molecular Sciences, 22, 13474. <a href="https://doi.org/10.3390/ijms222413474">doi:10.3390/ijms222413474</a></li>
 <li>Johnson, M. A., and Maggiora, G. M. (Eds.) (1990). Concepts and applications of molecular similarity. Wiley. <a href="https://openlibrary.org/works/OL19334471W">OpenLibrary OL19334471W</a></li>
 <li>Jones, D. R., Schonlau, M., and Welch, W. J. (1998). Efficient Global Optimization of Expensive Black-Box Functions. Journal of Global Optimization, 13, 455-492. <a href="https://doi.org/10.1023/a:1008306431147">doi:10.1023/a:1008306431147</a></li>
+<li>Jorgensen, W. L. (2006). QSAR/QSPR and Proprietary Data. Journal of Chemical Information and Modeling, 46, 937. <a href="https://doi.org/10.1021/ci0680079">doi:10.1021/ci0680079</a></li>
 <li>Jumper, J., Evans, R., Pritzel, A., Green, T., Figurnov, M., Ronneberger, O., et al. (2021). Highly accurate protein structure prediction with AlphaFold. Nature, 596, 583-589. <a href="https://doi.org/10.1038/s41586-021-03819-2">doi:10.1038/s41586-021-03819-2</a></li>
 <li>Kalgutkar, A. S., Obach, R. S., and Maurer, T. S. (2007). Mechanism-based inactivation of cytochrome P450 enzymes: chemical mechanisms, structure–activity relationships and relationship to clinical drug–drug interactions and idiosyncratic adverse drug reactions. Current Drug Metabolism, 8, 407–447. <a href="https://doi.org/10.2174/138920007780866807">doi:10.2174/138920007780866807</a></li>
 <li>Karras, T., Aittala, M., Aila, T., and Laine, S. (2022). Elucidating the Design Space of Diffusion-Based Generative Models. In Advances in Neural Information Processing Systems 35, pp. 26565-26577. <a href="https://doi.org/10.52202/068431-1926">doi:10.52202/068431-1926</a></li>
@@ -30418,6 +30799,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <li>Mann, H. B., and Whitney, D. R. (1947). On a Test of Whether one of Two Random Variables is Stochastically Larger than the Other. The Annals of Mathematical Statistics, 18, 50-60. <a href="https://doi.org/10.1214/aoms/1177730491">doi:10.1214/aoms/1177730491</a></li>
 <li>Mariani, V., Biasini, M., Barbato, A., and Schwede, T. (2013). lDDT: a local superposition-free score for comparing protein structures and models using distance difference tests. Bioinformatics, 29, 2722-2728. <a href="https://doi.org/10.1093/bioinformatics/btt473">doi:10.1093/bioinformatics/btt473</a></li>
 <li>Matthews, B. (1975). Comparison of the predicted and observed secondary structure of T4 phage lysozyme. Biochimica et Biophysica Acta (BBA) - Protein Structure, 405, 442-451. <a href="https://doi.org/10.1016/0005-2795(75)90109-9">doi:10.1016/0005-2795(75)90109-9</a></li>
+<li>Merz, K. M., Rarey, M., Tropsha, A., and Wahab, H. A. (2015). Letter from the Editors. Journal of Chemical Information and Modeling, 55, 719-720. <a href="https://doi.org/10.1021/acs.jcim.5b00180">doi:10.1021/acs.jcim.5b00180</a></li>
 <li>Michaelis, L., and Menten, M. L. (1913). Die Kinetik der Invertinwirkung. Biochemische Zeitschrift, 49, 333–369; English translation in Biochemistry, 50, 8264–8269 (2011). <a href="https://doi.org/10.1021/bi201284u">doi:10.1021/bi201284u</a></li>
 <li>Mirdita, M., Schütze, K., Moriwaki, Y., Heo, L., Ovchinnikov, S., and Steinegger, M. (2022). ColabFold: making protein folding accessible to all. Nature Methods, 19, 679-682. <a href="https://doi.org/10.1038/s41592-022-01488-1">doi:10.1038/s41592-022-01488-1</a></li>
 <li>Mobley, D. L., and Guthrie, J. P. (2014). FreeSolv: a database of experimental and calculated hydration free energies, with input files. Journal of Computer-Aided Molecular Design, 28, 711-720. <a href="https://doi.org/10.1007/s10822-014-9747-x">doi:10.1007/s10822-014-9747-x</a></li>
@@ -30454,6 +30836,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <li>Szabo, A., and Ostlund, N. S. (1989). Modern quantum chemistry: introduction to advanced electronic structure theory. McGraw-Hill (1989 edition; Dover reprint). <a href="https://openlibrary.org/works/OL3254911W">OpenLibrary OL3254911W</a></li>
 <li>Tanimoto, T. T. (1958). An elementary mathematical theory of classification and prediction. IBM technical report; NTIS PB167360, 12 pp. <a href="https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/PB167360.xhtml">ntrl.ntis.gov</a></li>
 <li>Tibshirani, R. (1996). Regression Shrinkage and Selection Via the Lasso. Journal of the Royal Statistical Society Series B: Statistical Methodology, 58, 267-288. <a href="https://doi.org/10.1111/j.2517-6161.1996.tb02080.x">doi:10.1111/j.2517-6161.1996.tb02080.x</a></li>
+<li>Topliss, J. G., and Costello, R. J. (1972). Chance correlations in structure-activity studies using multiple regression analysis. Journal of Medicinal Chemistry, 15, 1066-1068. <a href="https://doi.org/10.1021/jm00280a017">doi:10.1021/jm00280a017</a></li>
 <li>Tukey, J. W. (1949). Comparing Individual Means in the Analysis of Variance. Biometrics, 5, 99. <a href="https://doi.org/10.2307/3001913">doi:10.2307/3001913</a></li>
 <li>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., et al. (2017). Attention is all you need. arXiv preprint arXiv:1706.03762 (NeurIPS 2017). <a href="https://doi.org/10.48550/arXiv.1706.03762">arXiv:1706.03762</a></li>
 <li>Veith, H., Southall, N., Huang, R., James, T., Fayne, D., Artemenko, N., et al. (2009). Comprehensive characterization of cytochrome P450 isozyme selectivity across chemical libraries. Nature Biotechnology, 27, 1050-1055. <a href="https://doi.org/10.1038/nbt.1581">doi:10.1038/nbt.1581</a></li>
@@ -30472,7 +30855,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <span class="kn">from</span><span class="w"> </span><span class="nn">notebooks.parts.appendix_c</span><span class="w"> </span><span class="kn">import</span> <span class="n">WORKS</span>
 
 <span class="n">n_works</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">WORKS</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\d+\. "</span><span class="p">,</span> <span class="n">line</span><span class="p">)])</span>
-</pre></details></div><section class="cell md"><p>There are 116 entries. Each one is a work the text cites by author and year; the few works the text names without a year (Kenny and Sadowski; Hollmann and co-workers) are here as well, because the text asks the reader to consult them.</p>
+</pre></details></div><section class="cell md"><p>There are 120 entries. Each one is a work the text cites by author and year; the few works the text names without a year (Kenny and Sadowski; Hollmann and co-workers) are here as well, because the text asks the reader to consult them.</p>
 </section><section class="cell md"><h2 id="C.2-Software,-models-and-data">C.2 Software, models and data</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering · Data science</p>
@@ -30580,7 +30963,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </div></div></div><section class="cell md"><p>The table holds 12 programs, each with the pin file whose version it shows; the main lock file alone pins 132 entries.</p>
 <p><strong>Programs.</strong> <strong>RDKit</strong> supplies the descriptors, the fingerprints and the SMARTS matching, and <code>README.md</code> records its home as https://www.rdkit.org. <strong>LightGBM</strong> is the gradient-boosted model of most of the notebook: <code>README.md</code> credits it and the work of Ke and co-workers (2017). <strong>scikit-learn</strong> supplies the calibration, the isotonic regression and the metrics. <strong>Chemprop</strong> is the message-passing network of the neural models, credited in <code>README.md</code> to Yang and co-workers (2019). <strong>PyTorch</strong> runs the neural models. <strong>tblite</strong> implements the GFN2-xTB method of the physics block. <strong>OpenMM</strong> and <code>openmmforcefields</code> run the force-field relaxation of a pose, and <strong>OpenStructure</strong> the structural scoring; these two live in conda environments of their own, <code>environment/openmm-environment.yml</code> and <code>environment/ost-environment.yml</code>. <strong>PoseBusters</strong> is the set of pose checks of the structure track, and <strong>TabICL</strong> the in-context tabular model, each from its pin file; <strong>pandas</strong> and <strong>NumPy</strong> are the tabular and numerical base of every cell.</p>
 <p><strong>Models and weights.</strong> <strong>Boltz-2</strong> is the co-folding model of the structure track; <code>README.md</code> records it at https://github.com/jwohlwend/boltz under the MIT licence, and its paper is Passaro and co-workers (2025). <strong>OpenFold3</strong> is the OpenFold consortium's reimplementation of AlphaFold 3; <code>METHOD_REPORT.md</code> section 12 names it and the package is installed in <code>.venv-openfold3</code>. <strong>BioEmu2</strong> is the all-atom diffusion model that was examined as a third structure engine; the docstring of <code>cypmode/validation/bioemu2.py</code> records it as the model of Microsoft Research under the MIT licence, at https://github.com/microsoft/bioemu2, with its public checkpoint at https://huggingface.co/microsoft/bioemu2. <strong>CheMeleon</strong> supplies the frozen embeddings, and <code>METHOD_REPORT.md</code> section 12 records the weights at Zenodo, <a href="https://doi.org/10.5281/zenodo.15426600">doi:10.5281/zenodo.15426600</a>. <strong>ChemBERTa</strong> is the checkpoint <code>seyonec/ChemBERTa-zinc-base-v1</code> on Hugging Face, from Chithrananda and co-workers (2020), and <strong>TabPFN</strong> is the in-context tabular model of Hollmann and co-workers (2022). <strong>Kokoro-82M</strong> speaks the film: the docstring of <code>docs/video/voices.py</code> records it as hexgrad's model under the Apache-2.0 licence, at https://huggingface.co/hexgrad/Kokoro-82M, 24 kHz, trained on permissively licensed and synthetic audio, and the film reads it through the <code>kokoro</code> and <code>huggingface_hub</code> packages.</p>
-<p><strong>Data.</strong> The <strong>OpenADMET CYP blind challenge</strong> is the source of the training data, the blinded test set and the definition of the TDI task; <code>README.md</code> records the space at https://huggingface.co/spaces/openadmet/cyp-challenge and the changelog of the data at https://huggingface.co/datasets/openadmet/cyp-challenge-train-test. The <strong>Octant CYP inhibition blog release</strong> is the quantitative panel that the structure track cross-checks against, recorded in <code>README.md</code> at https://huggingface.co/datasets/openadmet/Octant_CYP_inhibition_reactivity_blog_release and https://github.com/OpenADMET/Octant_CYP_blog_post under CC BY 4.0, and loaded by <code>cypmode/data/octant_benchmark.py</code>. The <strong>Therapeutics Data Commons</strong> is the source of the five-isoform CYP panel, recorded in <code>README.md</code> at https://tdc.hub.biolib.com and loaded by <code>cypmode/data/panel.py</code>; its NCATS qHTS measurements are the panel of Veith and co-workers (2009), and its Tox21 readings are the counter-screen of 9.10. The auxiliary measurements are the <strong>ChEMBL</strong>, <strong>BindingDB</strong> and <strong>PubChem</strong> readings loaded by <code>cypmode/challenge/chembl_auxiliary.py</code>, <code>bindingdb_auxiliary.py</code> and <code>pubchem_auxiliary.py</code>, the NCATS continuous measurements of <code>cypmode/challenge/external_continuous.py</code>, and the PXR-induction readings of the OpenADMET PXR challenge, published as <code>openadmet/pxr-challenge-train-test</code> under CC BY 4.0. The hydration free energies quoted in 10.5 are from the <strong>FreeSolv</strong> database of Mobley and Guthrie (2014). The reference complexes of the structure track are the <strong>Protein Data Bank</strong> entries that its benchmark lists.</p>
+<p><strong>Data.</strong> The <strong>OpenADMET CYP blind challenge</strong> is the source of the training data, the blinded test set and the definition of the TDI task; <code>README.md</code> records the space at https://huggingface.co/spaces/openadmet/cyp-challenge and the changelog of the data at https://huggingface.co/datasets/openadmet/cyp-challenge-train-test. The <strong>Octant CYP inhibition blog release</strong> is the quantitative panel that the structure track cross-checks against, recorded in <code>README.md</code> at https://huggingface.co/datasets/openadmet/Octant_CYP_inhibition_reactivity_blog_release and https://github.com/OpenADMET/Octant_CYP_blog_post under CC BY 4.0, and loaded by <code>cypmode/data/octant_benchmark.py</code>. The <strong>Therapeutics Data Commons</strong> is the source of the five-isoform CYP panel, recorded in <code>README.md</code> at https://tdc.hub.biolib.com and loaded by <code>cypmode/data/panel.py</code>; its NCATS qHTS measurements are the panel of Veith and co-workers (2009), and its Tox21 readings are the counter-screen of 9.10. The benchmark files of its CYP3A4 and CYP2D6 inhibition sets are stored in <code>data/tdi_track/inputs/tdc_cache/admet_group/</code>, with their SHA-256 sums and the leaderboard table read on 2026-11-26, and are used by <code>cypmode/challenge/external_dataset.py</code> under CC BY 4.0, the licence that the page of the Therapeutics Data Commons gives for those data sets. The auxiliary measurements are the <strong>ChEMBL</strong>, <strong>BindingDB</strong> and <strong>PubChem</strong> readings loaded by <code>cypmode/challenge/chembl_auxiliary.py</code>, <code>bindingdb_auxiliary.py</code> and <code>pubchem_auxiliary.py</code>, the NCATS continuous measurements of <code>cypmode/challenge/external_continuous.py</code>, and the PXR-induction readings of the OpenADMET PXR challenge, published as <code>openadmet/pxr-challenge-train-test</code> under CC BY 4.0. The hydration free energies quoted in 10.5 are from the <strong>FreeSolv</strong> database of Mobley and Guthrie (2014). The reference complexes of the structure track are the <strong>Protein Data Bank</strong> entries that its benchmark lists.</p>
 <p>The entries of this section are the record of what ran, not a second bibliography: the papers behind the models and the data are in C.1, and a version is the pin file's.</p>
 </section><div class="cell code"><details class="src"><summary>code<span>8 lines</span></summary><pre class="source"><span class="c1"># The terms of the sources and models behind the data record, read from the policy of the record (data_record/record.json), where each licence is written as it was read.</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -30774,7 +31157,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/audit/sections.py</code></td>
-<td>Front matter, 0.2, 0.5, 0.6, 0.7, 2.1, 2.4, 2.5, 3.2, 3.5, 3.7, 5.1, 5.2, 5.3, 5.7, 5.8, 6.3, Part VII, 7.1, 7.4, 7.9, 7.10, Part VIII, Part IX, 10.3, 11.3, 11.5, 11.9, 11.12, 12.2, 12.3, 12.5, 12.6, 12.7, Appendix B</td>
+<td>Front matter, 0.2, 0.5, 0.6, 0.7, 2.1, 2.4, 2.5, 3.2, 3.5, 3.7, 5.1, 5.2, 5.3, 5.7, 5.8, 6.3, 6.9, Part VII, 7.1, 7.4, 7.9, 7.10, Part VIII, Part IX, 10.3, 11.3, 11.5, 11.9, 11.12, 12.2, 12.3, 12.5, 12.6, 12.7, Appendix B</td>
 </tr>
 <tr>
 <td><code>cypmode/audit/sections_extra.py</code></td>
@@ -30873,6 +31256,10 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <td>7.11</td>
 </tr>
 <tr>
+<td><code>cypmode/challenge/descriptor_ratio.py</code></td>
+<td>6.10, 8.8, Appendix A</td>
+</tr>
+<tr>
 <td><code>cypmode/challenge/external_activity.py</code></td>
 <td>2.8, 2.10, 7.7</td>
 </tr>
@@ -30883,6 +31270,10 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <tr>
 <td><code>cypmode/challenge/external_continuous.py</code></td>
 <td>9.10, Appendix C</td>
+</tr>
+<tr>
+<td><code>cypmode/challenge/external_dataset.py</code></td>
+<td>6.9, Appendix A, Appendix C</td>
 </tr>
 <tr>
 <td><code>cypmode/challenge/feature_store.py</code></td>
@@ -30962,7 +31353,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/challenge/nested.py</code></td>
-<td>Front matter, 0.6, 0.7, 2.8, 3.6, 4.1, 4.7, 4.9, Part VI, 6.2, 6.3, 6.4, 6.6, 6.7, 6.8, Part VII, 7.3, 7.4, 7.6, 7.8, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 9.10, 9.14, 12.1, 12.2, 12.3, 12.4, 12.6, 12.7, 13.1, 13.4, 13.6, Appendix A</td>
+<td>Front matter, 0.6, 0.7, 2.8, 3.6, 4.1, 4.7, 4.9, Part VI, 6.2, 6.3, 6.4, 6.6, 6.7, 6.8, 6.9, 6.10, Part VII, 7.3, 7.4, 7.6, 7.8, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 9.10, 9.14, 12.1, 12.2, 12.3, 12.4, 12.6, 12.7, 13.1, 13.4, 13.6, Appendix A</td>
 </tr>
 <tr>
 <td><code>cypmode/challenge/nested_deploy.py</code></td>
@@ -30989,6 +31380,10 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <td>0.5, 9.10</td>
 </tr>
 <tr>
+<td><code>cypmode/challenge/oecd_principles.py</code></td>
+<td>8.8</td>
+</tr>
+<tr>
 <td><code>cypmode/challenge/official_extra.py</code></td>
 <td>5.4, 6.8, 9.10</td>
 </tr>
@@ -31006,7 +31401,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/challenge/permutation_control.py</code></td>
-<td>0.5, 6.8, 9.10</td>
+<td>0.5, 6.8, 6.9, 9.10</td>
 </tr>
 <tr>
 <td><code>cypmode/challenge/pharmacophore_fingerprint.py</code></td>
@@ -31078,7 +31473,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/challenge/reliability.py</code></td>
-<td>0.7, 6.8, 7.5, 7.6, 8.5, 12.3, Appendix A</td>
+<td>0.7, 6.8, 6.9, 7.5, 7.6, 8.5, 12.3, Appendix A</td>
 </tr>
 <tr>
 <td><code>cypmode/challenge/replicate_verdict.py</code></td>
@@ -31178,7 +31573,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/data/panel.py</code></td>
-<td>Front matter, 0.2, 1.1, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 3.4, 5.1, 5.2, 5.3, 5.7, 7.5, 7.7, 7.11, 8.1, 8.6, 9.1, 9.10, 11.5, 11.10, 11.13, 12.3, 13.4, Appendix A, Appendix C</td>
+<td>Front matter, 0.2, 1.1, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 3.4, 5.1, 5.2, 5.3, 5.7, 6.9, 7.5, 7.7, 7.11, 8.1, 8.6, 9.1, 9.10, 11.5, 11.10, 11.13, 12.3, 13.4, Appendix A, Appendix C</td>
 </tr>
 <tr>
 <td><code>cypmode/data_record.py</code></td>
@@ -31186,7 +31581,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/explorer/data.py</code></td>
-<td>Front matter, 0.2, 0.3, 0.6, 1.2, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 2.4, 2.7, 2.8, 2.10, 3.1, 3.3, 3.4, 3.5, 3.6, 3.7, 4.1, 4.2, 4.3, 4.4, 4.5, 4.7, 4.9, Part V, 5.1, 5.2, 5.3, 5.4, 5.5, 5.7, 5.8, Part VI, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, Part VII, 7.1, 7.2, 7.4, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, Part IX, 9.1, 9.2, 9.4, 9.6, 9.9, 9.10, 9.11, 9.12, 9.13, 9.14, 9.15, 10.5, Part XI, 11.1, 11.2, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 11.13, 12.1, 12.2, 12.3, 12.5, 12.6, 12.7, 13.1, 13.2, 13.4, 13.5, 13.8, 13.9, Appendix A, Appendix C</td>
+<td>Front matter, 0.2, 0.3, 0.6, 1.2, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 2.4, 2.7, 2.8, 2.10, 3.1, 3.3, 3.4, 3.5, 3.6, 3.7, 4.1, 4.2, 4.3, 4.4, 4.5, 4.7, 4.9, Part V, 5.1, 5.2, 5.3, 5.4, 5.5, 5.7, 5.8, Part VI, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 6.10, Part VII, 7.1, 7.2, 7.4, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, Part IX, 9.1, 9.2, 9.4, 9.6, 9.9, 9.10, 9.11, 9.12, 9.13, 9.14, 9.15, 10.5, Part XI, 11.1, 11.2, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 11.13, 12.1, 12.2, 12.3, 12.5, 12.6, 12.7, 13.1, 13.2, 13.4, 13.5, 13.8, 13.9, Appendix A, Appendix C</td>
 </tr>
 <tr>
 <td><code>cypmode/metrics/amines.py</code></td>
@@ -31194,7 +31589,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/metrics/motifs.py</code></td>
-<td>0.2, 3.4, 5.1, 5.3, 5.4, 5.5, 5.7, 7.2</td>
+<td>0.2, 3.4, 5.1, 5.3, 5.4, 5.5, 5.7, 7.2, 8.8</td>
 </tr>
 <tr>
 <td><code>cypmode/post_deadline/board.py</code></td>
@@ -31202,7 +31597,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/post_deadline/released.py</code></td>
-<td>Front matter, 0.3, 2.8, 5.4, 11.1, 11.2, 11.7, 11.9, 12.3, 13.1, 13.2, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A</td>
+<td>Front matter, 0.3, 2.8, 5.4, 8.8, 11.1, 11.2, 11.7, 11.9, 12.3, 13.1, 13.2, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A</td>
 </tr>
 <tr>
 <td><code>cypmode/post_deadline/report.py</code></td>
@@ -31210,7 +31605,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/post_deadline/structure.py</code></td>
-<td>Front matter, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1.3, 1.4, 2.1, 2.2, 2.6, 2.7, 2.10, 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, Part V, 5.1, 5.3, 5.5, 5.6, 5.7, 5.8, 6.1, 6.3, 6.7, 7.3, 7.4, 7.6, 7.7, 7.8, 7.10, 7.11, Part IX, 9.1, 9.2, 9.7, 9.10, 9.14, 9.15, 10.1, 10.4, 10.6, Part XI, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.9, 11.10, 11.12, 11.13, 12.2, 12.3, 12.4, 12.5, 13.1, 13.2, 13.4, 13.5, 13.7, 13.8, 13.9, Appendix A, Appendix C</td>
+<td>Front matter, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1.3, 1.4, 2.1, 2.2, 2.6, 2.7, 2.10, 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, Part V, 5.1, 5.3, 5.5, 5.6, 5.7, 5.8, 6.1, 6.3, 6.7, 7.3, 7.4, 7.6, 7.7, 7.8, 7.10, 7.11, 8.8, Part IX, 9.1, 9.2, 9.7, 9.10, 9.14, 9.15, 10.1, 10.4, 10.6, Part XI, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.9, 11.10, 11.12, 11.13, 12.2, 12.3, 12.4, 12.5, 13.1, 13.2, 13.4, 13.5, 13.7, 13.8, 13.9, Appendix A, Appendix C</td>
 </tr>
 <tr>
 <td><code>cypmode/post_deadline/structure_worker.py</code></td>
@@ -31266,7 +31661,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/validation/constants.py</code></td>
-<td>0.6, 1.3, 1.5, 1.6, 1.8, 2.5, 4.3, 5.5, 6.7, 10.1, 11.9, 11.10, 12.3</td>
+<td>0.6, 1.3, 1.5, 1.6, 1.8, 2.5, 4.3, 5.5, 6.7, 8.8, 10.1, 11.9, 11.10, 12.3</td>
 </tr>
 <tr>
 <td><code>cypmode/validation/cryoem_templates.py</code></td>
@@ -31334,7 +31729,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/validation/pipeline.py</code></td>
-<td>0.4, 0.5, 2.10, 5.5, 6.3, 6.8, 7.7, 7.10, 9.10, Part XI, 11.3, 11.4, 11.12, 12.3, Appendix A</td>
+<td>0.4, 0.5, 2.10, 5.5, 6.3, 6.8, 6.10, 7.7, 7.10, 9.10, Part XI, 11.3, 11.4, 11.12, 12.3, Appendix A</td>
 </tr>
 <tr>
 <td><code>cypmode/validation/pocket_geometry.py</code></td>
@@ -31410,7 +31805,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/validation/series.py</code></td>
-<td>0.7, 1.7, 2.7, 2.8, 2.11, 3.1, 3.2, 3.6, 4.3, 8.7, 9.2, 9.5, 9.14, 9.15, 11.8, 11.10, 12.3, Appendix A</td>
+<td>0.7, 1.7, 2.7, 2.8, 2.11, 3.1, 3.2, 3.6, 4.3, 6.9, 8.7, 9.2, 9.5, 9.14, 9.15, 11.8, 11.10, 12.3, Appendix A</td>
 </tr>
 <tr>
 <td><code>cypmode/validation/series_consensus.py</code></td>
@@ -31438,7 +31833,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/validation/structures.py</code></td>
-<td>Front matter, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.3, 1.9, 2.7, 2.8, 2.9, 2.10, 2.11, 3.5, 3.7, 4.9, Part V, 5.1, 5.5, 5.7, 5.8, 6.8, Part VII, 7.3, 7.7, 7.10, 9.1, 9.3, 9.4, 9.5, 9.10, 9.13, 9.14, 9.15, 10.4, Part XI, 11.1, 11.2, 11.5, 11.6, 11.7, 11.10, 11.12, 12.3, 12.7, 13.3, 13.4, 13.5, 13.7, 13.8, Appendix A, Appendix C</td>
+<td>Front matter, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.3, 1.9, 2.7, 2.8, 2.9, 2.10, 2.11, 3.5, 3.7, 4.9, Part V, 5.1, 5.5, 5.7, 5.8, 6.8, 6.9, Part VII, 7.3, 7.7, 7.10, 9.1, 9.3, 9.4, 9.5, 9.10, 9.13, 9.14, 9.15, 10.4, Part XI, 11.1, 11.2, 11.5, 11.6, 11.7, 11.10, 11.12, 12.3, 12.7, 13.3, 13.4, 13.5, 13.7, 13.8, Appendix A, Appendix C</td>
 </tr>
 <tr>
 <td><code>cypmode/validation/tdi_reference.py</code></td>
@@ -32159,6 +32554,18 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <td>11.13, Appendix A</td>
 </tr>
 <tr>
+<td><code>queue/jobs/287_external_dataset.sh</code></td>
+<td>6.9, Appendix A</td>
+</tr>
+<tr>
+<td><code>queue/jobs/288_descriptor_ratio.sh</code></td>
+<td>6.10, Appendix A</td>
+</tr>
+<tr>
+<td><code>queue/jobs/289_oecd_principles.sh</code></td>
+<td>8.8, Appendix A</td>
+</tr>
+<tr>
 <td><code>queue/jobs/295_lint_cleanup.sh</code></td>
 <td>Appendix A</td>
 </tr>
@@ -32414,6 +32821,10 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <td>12.1</td>
 </tr>
 <tr>
+<td><code>tests/test_descriptor_ratio.py</code></td>
+<td>6.10</td>
+</tr>
+<tr>
 <td><code>tests/test_diversity_pilot.py</code></td>
 <td>12.3</td>
 </tr>
@@ -32436,6 +32847,10 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <tr>
 <td><code>tests/test_external_continuous.py</code></td>
 <td>12.3</td>
+</tr>
+<tr>
+<td><code>tests/test_external_dataset.py</code></td>
+<td>6.9</td>
 </tr>
 <tr>
 <td><code>tests/test_figures.py</code></td>
@@ -32576,6 +32991,10 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <tr>
 <td><code>tests/test_octant_benchmark.py</code></td>
 <td>12.3</td>
+</tr>
+<tr>
+<td><code>tests/test_oecd_principles.py</code></td>
+<td>8.8</td>
 </tr>
 <tr>
 <td><code>tests/test_official_extra.py</code></td>

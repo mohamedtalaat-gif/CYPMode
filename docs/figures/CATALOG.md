@@ -432,7 +432,7 @@ How much the selection-aware CYP2D6 model gains depends on how many never-promot
 
 ### eng_queue_timeline: The job queue as a timeline
 
-Each bar is one run of one job of the queue, from the runner's own log (179 jobs, 580 runs: 515 finished, 40 stopped and retried, 25 failed after their attempts). The runs add up to 255 hours of wall-clock time between 08 Oct and 12 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.3 GB on a 16 GB machine).
+Each bar is one run of one job of the queue, from the runner's own log (182 jobs, 605 runs: 540 finished, 40 stopped and retried, 25 failed after their attempts). The runs add up to 265 hours of wall-clock time between 08 Oct and 27 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.9 GB on a 16 GB machine).
 
 - notebook section: 12.2
 - data: queue/logs/queue_stage.txt
@@ -440,7 +440,7 @@ Each bar is one run of one job of the queue, from the runner's own log (179 jobs
 
 ### eng_power_events: What the machine did while the queue ran
 
-Every time the machine entered sleep between 18 Nov and 25 Nov, by the cause its own power log gives: 1386 x Maintenance Sleep, 193 x Sleep Service Back to Sleep, 9 x Software Sleep pid=611, 4 x Notification Wake Back to Sleep, 3 x Clamshell Sleep. The power log itself begins on 2026-11-18, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
+Every time the machine entered sleep between 20 Nov and 26 Nov, by the cause its own power log gives: 1151 x Maintenance Sleep, 180 x Sleep Service Back to Sleep, 9 x Software Sleep pid=611, 5 x Clamshell Sleep, 5 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-11-20, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
 
 - notebook section: 12.3
 - data: pmset -g log
@@ -448,7 +448,7 @@ Every time the machine entered sleep between 18 Nov and 25 Nov, by the cause its
 
 ### eng_tests_by_module: The test suite by module
 
-Test functions per test module of the repository: 1085 test functions in 156 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
+Test functions per test module of the repository: 1108 test functions in 159 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.
 
 - notebook section: 12.5
 - data: tests/test_*.py
@@ -456,7 +456,7 @@ Test functions per test module of the repository: 1085 test functions in 156 mod
 
 ### eng_commit_timeline: The history of the repository
 
-The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-25: 372 commits on 21 days up to commit 3df3540, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
+The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-26: 388 commits on 22 days up to commit 234f3ce, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
 
 - notebook section: 12.4
 - data: git log
@@ -464,7 +464,7 @@ The history of the repository as the number of commits of each day, from the fir
 
 ### eng_repository_map: The repository by folder
 
-The repository by top-level folder: the number of files that git tracks (3483 in all, 544 MB) and their size. The three folders with the most files are data (2072), docs (539), cypmode (189). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
+The repository by top-level folder: the number of files that git tracks (3523 in all, 546 MB) and their size. The three folders with the most files are data (2103), docs (539), cypmode (192). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
 
 - notebook section: 12.5
 - data: git ls-files
@@ -472,7 +472,7 @@ The repository by top-level folder: the number of files that git tracks (3483 in
 
 ### eng_data_flow: The flow of the data, from the inputs to the submission files
 
-The flow of the data, from the inputs to the submission files. The inputs of a track enter the jobs of the queue, and 161 of the 177 jobs write a log. The jobs write 206 log names. The ledger reads the lines of the gates in every log, and 58 logs are also read by name. The reports, the figures, and the notebook are built from the logs and the ledger by the chain 900 to 960, and the submission files follow from them. The same diagram, written in Mermaid, is `docs/map/dataflow.md`.
+The flow of the data, from the inputs to the submission files. The inputs of a track enter the jobs of the queue, and 164 of the 180 jobs write a log. The jobs write 209 log names. The ledger reads the lines of the gates in every log, and 60 logs are also read by name. The reports, the figures, and the notebook are built from the logs and the ledger by the chain 900 to 960, and the submission files follow from them. The same diagram, written in Mermaid, is `docs/map/dataflow.md`.
 
 - notebook section: 12.5
 - data: queue/jobs, cypmode/audit/project_map.py
@@ -480,7 +480,7 @@ The flow of the data, from the inputs to the submission files. The inputs of a t
 
 ### eng_code_packages: The packages of the code
 
-The packages of the code; an arrow goes from a package to a package whose modules it imports, and its label counts those imports. The project has 179 modules in 8 packages, and the modules hold 601 imports of one another, of which 112 cross from one package to another. The width of an arrow follows its count. The same diagram, written in Mermaid, is `docs/map/code.md`, which also lists the modules of every package.
+The packages of the code; an arrow goes from a package to a package whose modules it imports, and its label counts those imports. The project has 182 modules in 8 packages, and the modules hold 627 imports of one another, of which 116 cross from one package to another. The width of an arrow follows its count. The same diagram, written in Mermaid, is `docs/map/code.md`, which also lists the modules of every package.
 
 - notebook section: 12.5
 - data: cypmode/**/*.py, cypmode/audit/project_map.py

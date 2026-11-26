@@ -10,7 +10,7 @@ module,cypmode/audit/project_map.py,12.5
 module,cypmode/audit/prose_rules.py,12.3
 module,cypmode/audit/public_readiness.py,"12.5, 12.6, Appendix A"
 module,cypmode/audit/report.py,12.2
-module,cypmode/audit/sections.py,"Front matter, 0.2, 0.5, 0.6, 0.7, 2.1, 2.4, 2.5, 3.2, 3.5, 3.7, 5.1, 5.2, 5.3, 5.7, 5.8, 6.3, Part VII, 7.1, 7.4, 7.9, 7.10, Part VIII, Part IX, 10.3, 11.3, 11.5, 11.9, 11.12, 12.2, 12.3, 12.5, 12.6, 12.7, Appendix B"
+module,cypmode/audit/sections.py,"Front matter, 0.2, 0.5, 0.6, 0.7, 2.1, 2.4, 2.5, 3.2, 3.5, 3.7, 5.1, 5.2, 5.3, 5.7, 5.8, 6.3, 6.9, Part VII, 7.1, 7.4, 7.9, 7.10, Part VIII, Part IX, 10.3, 11.3, 11.5, 11.9, 11.12, 12.2, 12.3, 12.5, 12.6, 12.7, Appendix B"
 module,cypmode/audit/sections_extra.py,"9.11, 12.6"
 module,cypmode/challenge/addition_experiment.py,"6.7, 9.1, 9.2, 9.3, 9.4, 9.9, 10.6, Appendix A"
 module,cypmode/challenge/all_in_one.py,9.11
@@ -35,9 +35,11 @@ module,cypmode/challenge/committee_label_model.py,"0.5, 9.3"
 module,cypmode/challenge/committee_uncertainty.py,7.6
 module,cypmode/challenge/confidence_experiment.py,9.8
 module,cypmode/challenge/cyp2d6_tuning_significance.py,7.11
+module,cypmode/challenge/descriptor_ratio.py,"6.10, 8.8, Appendix A"
 module,cypmode/challenge/external_activity.py,"2.8, 2.10, 7.7"
 module,cypmode/challenge/external_auxiliary_significance.py,7.7
 module,cypmode/challenge/external_continuous.py,"9.10, Appendix C"
+module,cypmode/challenge/external_dataset.py,"6.9, Appendix A, Appendix C"
 module,cypmode/challenge/feature_store.py,"1.10, 3.4, 3.7, 6.1, 6.4, 6.8"
 module,cypmode/challenge/final_assembly.py,7.11
 module,cypmode/challenge/final_assembly_cyp2d6.py,7.11
@@ -57,18 +59,19 @@ module,cypmode/challenge/model_comparison.py,"6.5, 6.6, 6.7, 7.2, 7.3, 7.7, 7.9,
 module,cypmode/challenge/monroe_embeddings.py,"0.5, 9.10"
 module,cypmode/challenge/multiplicity.py,"9.11, 13.1, 13.2"
 module,cypmode/challenge/multitask.py,"4.7, 6.7, 7.9, 9.9, 9.10, 9.12, Appendix A"
-module,cypmode/challenge/nested.py,"Front matter, 0.6, 0.7, 2.8, 3.6, 4.1, 4.7, 4.9, Part VI, 6.2, 6.3, 6.4, 6.6, 6.7, 6.8, Part VII, 7.3, 7.4, 7.6, 7.8, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 9.10, 9.14, 12.1, 12.2, 12.3, 12.4, 12.6, 12.7, 13.1, 13.4, 13.6, Appendix A"
+module,cypmode/challenge/nested.py,"Front matter, 0.6, 0.7, 2.8, 3.6, 4.1, 4.7, 4.9, Part VI, 6.2, 6.3, 6.4, 6.6, 6.7, 6.8, 6.9, 6.10, Part VII, 7.3, 7.4, 7.6, 7.8, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 9.10, 9.14, 12.1, 12.2, 12.3, 12.4, 12.6, 12.7, 13.1, 13.4, 13.6, Appendix A"
 module,cypmode/challenge/nested_deploy.py,6.3
 module,cypmode/challenge/nested_report.py,6.3
 module,cypmode/challenge/nested_runners.py,"2.7, 4.3, 4.6, 4.10, 6.1, 6.2, 6.3, 7.6, 8.1, 9.1, 9.3, 9.5, 9.6, 9.7, 9.14, Appendix A"
 module,cypmode/challenge/nested_runners_chemprop.py,"4.8, 8.1, 9.9, 9.10"
 module,cypmode/challenge/nested_runners_torch.py,"4.7, 4.9, 8.1, 9.9, Appendix A"
 module,cypmode/challenge/nonneg_stack.py,"0.5, 9.10"
+module,cypmode/challenge/oecd_principles.py,8.8
 module,cypmode/challenge/official_extra.py,"5.4, 6.8, 9.10"
 module,cypmode/challenge/oof_bridge.py,7.4
 module,cypmode/challenge/openadmet_surrogates.py,9.10
 module,cypmode/challenge/pair_transfer.py,"0.5, 9.2, 10.6"
-module,cypmode/challenge/permutation_control.py,"0.5, 6.8, 9.10"
+module,cypmode/challenge/permutation_control.py,"0.5, 6.8, 6.9, 9.10"
 module,cypmode/challenge/pharmacophore_fingerprint.py,"3.5, 6.6, 7.3, 7.8"
 module,cypmode/challenge/pharmacophore_hypotheses.py,9.14
 module,cypmode/challenge/physics_block.py,"10.1, 10.4, 10.5, 10.6"
@@ -86,7 +89,7 @@ module,cypmode/challenge/qm_reactivity_significance.py,7.8
 module,cypmode/challenge/quantum_pharmacophore.py,"6.6, 7.3, 7.8, 10.6"
 module,cypmode/challenge/quantum_pharmacophore_significance.py,"7.8, 10.6"
 module,cypmode/challenge/recompute_paired_summaries.py,6.6
-module,cypmode/challenge/reliability.py,"0.7, 6.8, 7.5, 7.6, 8.5, 12.3, Appendix A"
+module,cypmode/challenge/reliability.py,"0.7, 6.8, 6.9, 7.5, 7.6, 8.5, 12.3, Appendix A"
 module,cypmode/challenge/replicate_verdict.py,"0.5, 6.7, 9.9, Appendix A"
 module,cypmode/challenge/screen_selection.py,9.10
 module,cypmode/challenge/selection_aware_v2.py,"0.5, 9.1"
@@ -111,15 +114,15 @@ module,cypmode/challenge/validation_matching.py,"4.5, 6.4, 8.1, 8.4"
 module,cypmode/challenge/why_no_gain.py,9.12
 module,cypmode/challenge/xiso_transfer.py,"0.5, 9.7"
 module,cypmode/data/octant_benchmark.py,"2.8, 5.4, Appendix C"
-module,cypmode/data/panel.py,"Front matter, 0.2, 1.1, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 3.4, 5.1, 5.2, 5.3, 5.7, 7.5, 7.7, 7.11, 8.1, 8.6, 9.1, 9.10, 11.5, 11.10, 11.13, 12.3, 13.4, Appendix A, Appendix C"
+module,cypmode/data/panel.py,"Front matter, 0.2, 1.1, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 3.4, 5.1, 5.2, 5.3, 5.7, 6.9, 7.5, 7.7, 7.11, 8.1, 8.6, 9.1, 9.10, 11.5, 11.10, 11.13, 12.3, 13.4, Appendix A, Appendix C"
 module,cypmode/data_record.py,"12.1, Appendix A, Appendix C"
-module,cypmode/explorer/data.py,"Front matter, 0.2, 0.3, 0.6, 1.2, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 2.4, 2.7, 2.8, 2.10, 3.1, 3.3, 3.4, 3.5, 3.6, 3.7, 4.1, 4.2, 4.3, 4.4, 4.5, 4.7, 4.9, Part V, 5.1, 5.2, 5.3, 5.4, 5.5, 5.7, 5.8, Part VI, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, Part VII, 7.1, 7.2, 7.4, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, Part IX, 9.1, 9.2, 9.4, 9.6, 9.9, 9.10, 9.11, 9.12, 9.13, 9.14, 9.15, 10.5, Part XI, 11.1, 11.2, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 11.13, 12.1, 12.2, 12.3, 12.5, 12.6, 12.7, 13.1, 13.2, 13.4, 13.5, 13.8, 13.9, Appendix A, Appendix C"
+module,cypmode/explorer/data.py,"Front matter, 0.2, 0.3, 0.6, 1.2, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 2.4, 2.7, 2.8, 2.10, 3.1, 3.3, 3.4, 3.5, 3.6, 3.7, 4.1, 4.2, 4.3, 4.4, 4.5, 4.7, 4.9, Part V, 5.1, 5.2, 5.3, 5.4, 5.5, 5.7, 5.8, Part VI, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 6.10, Part VII, 7.1, 7.2, 7.4, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, Part IX, 9.1, 9.2, 9.4, 9.6, 9.9, 9.10, 9.11, 9.12, 9.13, 9.14, 9.15, 10.5, Part XI, 11.1, 11.2, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 11.13, 12.1, 12.2, 12.3, 12.5, 12.6, 12.7, 13.1, 13.2, 13.4, 13.5, 13.8, 13.9, Appendix A, Appendix C"
 module,cypmode/metrics/amines.py,"0.6, 1.10, Part V, 5.2, 5.7, 7.2"
-module,cypmode/metrics/motifs.py,"0.2, 3.4, 5.1, 5.3, 5.4, 5.5, 5.7, 7.2"
+module,cypmode/metrics/motifs.py,"0.2, 3.4, 5.1, 5.3, 5.4, 5.5, 5.7, 7.2, 8.8"
 module,cypmode/post_deadline/board.py,"Front matter, 0.7, 2.11, 4.10, 7.1, 7.11, 8.7, 11.13, 12.3, 12.6, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A"
-module,cypmode/post_deadline/released.py,"Front matter, 0.3, 2.8, 5.4, 11.1, 11.2, 11.7, 11.9, 12.3, 13.1, 13.2, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A"
+module,cypmode/post_deadline/released.py,"Front matter, 0.3, 2.8, 5.4, 8.8, 11.1, 11.2, 11.7, 11.9, 12.3, 13.1, 13.2, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A"
 module,cypmode/post_deadline/report.py,"13.4, 13.8"
-module,cypmode/post_deadline/structure.py,"Front matter, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1.3, 1.4, 2.1, 2.2, 2.6, 2.7, 2.10, 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, Part V, 5.1, 5.3, 5.5, 5.6, 5.7, 5.8, 6.1, 6.3, 6.7, 7.3, 7.4, 7.6, 7.7, 7.8, 7.10, 7.11, Part IX, 9.1, 9.2, 9.7, 9.10, 9.14, 9.15, 10.1, 10.4, 10.6, Part XI, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.9, 11.10, 11.12, 11.13, 12.2, 12.3, 12.4, 12.5, 13.1, 13.2, 13.4, 13.5, 13.7, 13.8, 13.9, Appendix A, Appendix C"
+module,cypmode/post_deadline/structure.py,"Front matter, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1.3, 1.4, 2.1, 2.2, 2.6, 2.7, 2.10, 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, Part V, 5.1, 5.3, 5.5, 5.6, 5.7, 5.8, 6.1, 6.3, 6.7, 7.3, 7.4, 7.6, 7.7, 7.8, 7.10, 7.11, 8.8, Part IX, 9.1, 9.2, 9.7, 9.10, 9.14, 9.15, 10.1, 10.4, 10.6, Part XI, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.9, 11.10, 11.12, 11.13, 12.2, 12.3, 12.4, 12.5, 13.1, 13.2, 13.4, 13.5, 13.7, 13.8, 13.9, Appendix A, Appendix C"
 module,cypmode/post_deadline/structure_worker.py,13.8
 module,cypmode/post_deadline/tdi.py,"2.3, 2.4, 4.6, 13.8"
 module,cypmode/provenance.py,"12.3, 12.5"
@@ -133,7 +136,7 @@ module,cypmode/validation/build_summary.py,"5.5, 11.3"
 module,cypmode/validation/conformer_benchmark.py,11.7
 module,cypmode/validation/conformer_bias.py,"9.12, 11.11"
 module,cypmode/validation/conformers.py,"0.5, 3.5, 9.10, 9.13, 9.14, 9.15, 10.5, 10.6, 11.7, 11.8, 11.10, 11.11, 12.3, Appendix A"
-module,cypmode/validation/constants.py,"0.6, 1.3, 1.5, 1.6, 1.8, 2.5, 4.3, 5.5, 6.7, 10.1, 11.9, 11.10, 12.3"
+module,cypmode/validation/constants.py,"0.6, 1.3, 1.5, 1.6, 1.8, 2.5, 4.3, 5.5, 6.7, 8.8, 10.1, 11.9, 11.10, 12.3"
 module,cypmode/validation/cryoem_templates.py,11.7
 module,cypmode/validation/diversity_pilot.py,11.7
 module,cypmode/validation/ei_sampling.py,"0.5, 11.8"
@@ -150,7 +153,7 @@ module,cypmode/validation/ost_pool_gates.py,"0.5, 11.8, 11.9"
 module,cypmode/validation/ost_pools.py,11.8
 module,cypmode/validation/ost_regate.py,"0.5, 11.6"
 module,cypmode/validation/ost_worker.py,11.4
-module,cypmode/validation/pipeline.py,"0.4, 0.5, 2.10, 5.5, 6.3, 6.8, 7.7, 7.10, 9.10, Part XI, 11.3, 11.4, 11.12, 12.3, Appendix A"
+module,cypmode/validation/pipeline.py,"0.4, 0.5, 2.10, 5.5, 6.3, 6.8, 6.10, 7.7, 7.10, 9.10, Part XI, 11.3, 11.4, 11.12, 12.3, Appendix A"
 module,cypmode/validation/pocket_geometry.py,5.6
 module,cypmode/validation/pose_awareness.py,"0.5, 11.8, 11.13"
 module,cypmode/validation/pose_comparison.py,11.4
@@ -169,14 +172,14 @@ module,cypmode/validation/relax_final.py,"11.10, 11.12, Appendix A"
 module,cypmode/validation/relax_gate.py,"11.10, Appendix A"
 module,cypmode/validation/restraint_expansion.py,"0.5, 11.6"
 module,cypmode/validation/selection_validation.py,"0.5, 11.8, 11.9, Appendix A"
-module,cypmode/validation/series.py,"0.7, 1.7, 2.7, 2.8, 2.11, 3.1, 3.2, 3.6, 4.3, 8.7, 9.2, 9.5, 9.14, 9.15, 11.8, 11.10, 12.3, Appendix A"
+module,cypmode/validation/series.py,"0.7, 1.7, 2.7, 2.8, 2.11, 3.1, 3.2, 3.6, 4.3, 6.9, 8.7, 9.2, 9.5, 9.14, 9.15, 11.8, 11.10, 12.3, Appendix A"
 module,cypmode/validation/series_consensus.py,"0.5, 11.8"
 module,cypmode/validation/site_representation.py,11.11
 module,cypmode/validation/stereo_rerun.py,11.12
 module,cypmode/validation/structure_benchmark.py,11.5
 module,cypmode/validation/structure_benchmark_report.py,"11.5, 11.6, 11.8"
 module,cypmode/validation/structure_gates.py,"0.5, 11.6, 11.7"
-module,cypmode/validation/structures.py,"Front matter, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.3, 1.9, 2.7, 2.8, 2.9, 2.10, 2.11, 3.5, 3.7, 4.9, Part V, 5.1, 5.5, 5.7, 5.8, 6.8, Part VII, 7.3, 7.7, 7.10, 9.1, 9.3, 9.4, 9.5, 9.10, 9.13, 9.14, 9.15, 10.4, Part XI, 11.1, 11.2, 11.5, 11.6, 11.7, 11.10, 11.12, 12.3, 12.7, 13.3, 13.4, 13.5, 13.7, 13.8, Appendix A, Appendix C"
+module,cypmode/validation/structures.py,"Front matter, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.3, 1.9, 2.7, 2.8, 2.9, 2.10, 2.11, 3.5, 3.7, 4.9, Part V, 5.1, 5.5, 5.7, 5.8, 6.8, 6.9, Part VII, 7.3, 7.7, 7.10, 9.1, 9.3, 9.4, 9.5, 9.10, 9.13, 9.14, 9.15, 10.4, Part XI, 11.1, 11.2, 11.5, 11.6, 11.7, 11.10, 11.12, 12.3, 12.7, 13.3, 13.4, 13.5, 13.7, 13.8, Appendix A, Appendix C"
 module,cypmode/validation/tdi_reference.py,"5.2, 5.7"
 script,scripts/audit.py,"0.4, 0.6, 0.7, 2.10, 7.4, 7.8, 7.9, 8.3, 8.5, 8.6, 9.10, 9.11, 11.10, 11.12, Part XII, 12.1, 12.2, 12.3, 12.5, 12.6, 12.7, 13.1, 13.2, 13.4, Appendix A"
 script,scripts/bump_version.py,12.5
@@ -351,6 +354,9 @@ queue job,queue/jobs/282_requeue_film_again.sh,12.3
 queue job,queue/jobs/283_requeue_final_sequence.sh,12.3
 queue job,queue/jobs/285_label_shift.sh,Appendix A
 queue job,queue/jobs/286_ligand_dynamics.sh,"11.13, Appendix A"
+queue job,queue/jobs/287_external_dataset.sh,"6.9, Appendix A"
+queue job,queue/jobs/288_descriptor_ratio.sh,"6.10, Appendix A"
+queue job,queue/jobs/289_oecd_principles.sh,"8.8, Appendix A"
 queue job,queue/jobs/295_lint_cleanup.sh,Appendix A
 queue job,queue/jobs/296_release_unblock.sh,"12.1, Appendix A"
 queue job,queue/jobs/299_requeue_final_chain.sh,Appendix A
@@ -412,12 +418,14 @@ test,tests/test_conformers.py,12.3
 test,tests/test_constants.py,12.3
 test,tests/test_cryoem_templates.py,12.3
 test,tests/test_data_record.py,12.1
+test,tests/test_descriptor_ratio.py,6.10
 test,tests/test_diversity_pilot.py,12.3
 test,tests/test_docs_state.py,12.3
 test,tests/test_ei_sampling.py,12.3
 test,tests/test_explorer_data.py,"12.3, 12.7"
 test,tests/test_explorer_launcher.py,12.3
 test,tests/test_external_continuous.py,12.3
+test,tests/test_external_dataset.py,6.9
 test,tests/test_figures.py,12.3
 test,tests/test_film_chrome.py,12.3
 test,tests/test_final_assembly.py,12.3
@@ -453,6 +461,7 @@ test,tests/test_notebook_builder.py,12.3
 test,tests/test_notebook_public.py,"12.3, 12.5"
 test,tests/test_notebook_template_order.py,12.3
 test,tests/test_octant_benchmark.py,12.3
+test,tests/test_oecd_principles.py,8.8
 test,tests/test_official_extra.py,12.3
 test,tests/test_official_pharmacophore.py,11.11
 test,tests/test_official_posebusters.py,12.3
