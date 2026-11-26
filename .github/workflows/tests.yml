@@ -77,3 +77,40 @@ jobs:
       - name: Run tests (quantum-pharmacophore and physics blocks/tblite, isolated)
         if: runner.os != 'Windows'  # tblite is not installed there (no wheel), so the three files skip themselves and pytest ends with code 5, no test collected
         run: pytest -v tests/test_quantum_pharmacophore.py tests/test_physics_block.py tests/test_physics_tierb.py
+
+  # The browser tests need a Chrome. A machine that has none downloads Chrome for Testing (docs/video/anime/chrome.py), checked against its pinned SHA-256.
+  # Every runner has a Chrome of its own, so this job hides it and runs that download on each system, then runs the tests that draw a page on the browser it fetched.
+  chrome-download:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      PYTHONUTF8: "1"
+      CYPMODE_IGNORE_INSTALLED: "1"  # the Chrome of the runner is not used
+      CYPMODE_REQUIRE_CHROME: "1"  # a browser that cannot start is a failure here, not a skipped test
+      CYPMODE_CACHE: ${{ runner.temp }}/cypmode-cache
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install cypmode
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "macOS" ]; then brew install libomp; fi
+          pip install -e ".[dev,tdc,challenge]"
+
+      - name: Install PyTDC (no-deps)
+        run: pip install --no-deps "PyTDC==1.1.14"
+
+      - name: Download Chrome for Testing and start it
+        run: python docs/video/anime/chrome.py
+
+      - name: Run the browser tests on the downloaded Chrome
+        run: pytest -v -rs tests/test_video.py tests/test_artifacts.py tests/test_film_chrome.py

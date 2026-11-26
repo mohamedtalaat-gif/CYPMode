@@ -6,7 +6,8 @@
 
 The browser is found without any set-up. ``chrome_path`` takes, in this order: the file that the environment variable ``CYPMODE_CHROME`` names; a Chrome or Chromium that is installed on the machine;
 a Chrome for Testing that an earlier run has put into the cache (``~/.cache/cypmode``, or the folder of ``CYPMODE_CACHE``); and otherwise it downloads Chrome for Testing, Google's own channel of browsers that
-programs drive, once, checks the size and the SHA-256 of the file against the values that are written below, and unpacks it into the cache. ``CYPMODE_NO_DOWNLOAD=1`` forbids the download."""
+programs drive, once, checks the size and the SHA-256 of the file against the values that are written below, and unpacks it into the cache. ``CYPMODE_NO_DOWNLOAD=1`` forbids the download, and
+``CYPMODE_IGNORE_INSTALLED=1`` hides the browsers that are installed. ``python docs/video/anime/chrome.py`` finds or fetches the browser, starts it once, and says which one it is."""
 
 import base64
 import functools
@@ -59,7 +60,10 @@ def build_name() -> str | None:
 
 
 def installed_chrome() -> str | None:
-    """A Chrome or Chromium that is installed on the machine, the first that is found."""
+    """A Chrome or Chromium that is installed on the machine, the first that is found. ``CYPMODE_IGNORE_INSTALLED=1`` hides them, so that a run can show what a machine without a Chrome would do:
+    the continuous integration sets it to run the download on each system."""
+    if os.environ.get("CYPMODE_IGNORE_INSTALLED", "0") not in ("", "0"):
+        return None
     system, candidates = platform.system(), []
     if system == "Darwin":
         for base in (Path("/Applications"), Path.home() / "Applications"):
@@ -280,3 +284,17 @@ class Chrome:
     def screenshot(self, path: Path) -> None:
         data = self.call("Page.captureScreenshot", format="png")["data"]
         Path(path).write_bytes(base64.b64decode(data))
+
+
+def main() -> int:
+    """Find or fetch the browser, start it once, and say which one it is; the exit code is 1 when none can be used."""
+    reason = unusable_reason()
+    if reason:
+        print(reason, file=sys.stderr)
+        return 1
+    print(f"Chrome in use: {chrome_path()}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -677,7 +677,11 @@ cache, Boltz-2 outputs or the large caches skip cleanly when those are absent.
 
 The tests that draw the page of the film, and the builders of the film and the cards, drive a headless Chrome. An installed Chrome or Chromium is used; if there is none, the first run
 downloads Chrome for Testing (about 200 MB, checked by size and SHA-256) into `~/.cache/cypmode`, once. `CYPMODE_CHROME` names a browser of your own, and `CYPMODE_NO_DOWNLOAD=1` forbids the download.
-A browser that cannot open a local port makes those tests skip with the reason, and `CYPMODE_REQUIRE_CHROME=1` turns the skip into a failure.
+A browser that cannot open a local port makes those tests skip with the reason, and `CYPMODE_REQUIRE_CHROME=1` turns the skip into a failure. `python docs/video/anime/chrome.py` fetches and starts the browser once and says which one it is.
+
+A Chrome that you install from its vendor is the better choice: Google signs it, and on Linux its package comes from a signed repository. Google publishes no checksum or signature for Chrome for Testing, so the
+SHA-256 values in `docs/video/anime/chrome.py` were computed from its files on 2026-11-26. They catch a file that changes after that day or a transfer that breaks, and they cannot show that a file was already altered
+at its source before that day. The continuous integration hides the Chrome of its runners with `CYPMODE_IGNORE_INSTALLED=1`, downloads Chrome for Testing on Linux, macOS, and Windows, and runs the browser tests on it.
 
 ### Checks before a pull request
 
