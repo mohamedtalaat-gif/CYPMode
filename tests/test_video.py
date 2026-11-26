@@ -69,6 +69,25 @@ OVERFLOW = """
 """
 
 
+FONTS_OF_THE_FILM = """
+(() => {
+  const context = document.createElement('canvas').getContext('2d');
+  const width = (family, sample) => { context.font = `800 40px ${family}`; return context.measureText(sample).width; };
+  const sample = 'Hamburgefonstiv 0123 mmmmmmmm';
+  return [FONT_BODY, FONT_TITLE].map((stack) => stack.split(',')[0].trim()).filter((first) =>
+    width(`${first}, monospace`, sample) === width('monospace', sample) && width(`${first}, serif`, sample) === width('serif', sample)).map((first) => first.replace(/'/g, ''));
+})()
+"""
+
+
+def skip_without_the_fonts_of_the_film(page):
+    """The film is laid out with the fonts of the machine that draws it (Avenir Next on macOS). A machine that lacks them falls back to a wider font, and a text then leaves its box, which is a fact about
+    the fonts and not about the film; the layout tests are skipped there and say so. A font counts as missing when the browser draws it with the same width as the fallback that stands for it."""
+    missing = page.evaluate(FONTS_OF_THE_FILM)
+    if missing:
+        pytest.skip(f"the film is laid out with {', '.join(dict.fromkeys(missing))}, which this machine does not have, so the layout of its text is not checked here")
+
+
 def test_the_facts_reach_the_page_as_valid_javascript():
     text = facts_module.to_javascript(FACTS, STUB)
     assert text.startswith("window.FACTS = ") and "\nwindow.REAL = " in text and text.rstrip().endswith(";")
@@ -118,6 +137,7 @@ def test_a_frame_is_a_full_hd_picture(page, tmp_path):
 
 @needs_chrome
 def test_no_text_leaves_its_box_or_the_frame(page):
+    skip_without_the_fonts_of_the_film(page)
     scenes = page.evaluate("SCENES")
     starts = [s["start"] for s in scenes] + [next(s["start"] for s in scenes if s["id"] == "gate") + page.evaluate("CARD") + 16]  # the second card of the gate scene is the Quanta card
     problems = []
@@ -229,4 +249,5 @@ def test_the_poster_shows_the_title_the_team_and_real_numbers_inside_the_frame(p
     page.evaluate("poster()")
     html = page.evaluate("document.getElementById('stage').innerHTML")
     assert "CYPMode" in html and "0.817" in html and "0.731" in html and "20 poses" in html
+    skip_without_the_fonts_of_the_film(page)  # the content above does not depend on a font; where a text leaves the frame does
     assert page.evaluate(OVERFLOW) == []
