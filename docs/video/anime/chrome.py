@@ -159,11 +159,15 @@ def unusable_reason() -> str | None:
         path = chrome_path()
     except ChromeUnavailable as error:
         return str(error)
+    handle, name = tempfile.mkstemp(prefix="chrome-start-", suffix=".log")
+    os.close(handle)
     try:
-        with Chrome():
+        with Chrome(log=Path(name)):
             return None
     except (RuntimeError, OSError) as error:
         return f"Chrome ({path}) is on this machine but cannot open a local debugging port here ({error}); the tests that draw a page need it"
+    finally:
+        Path(name).unlink(missing_ok=True)
 
 
 def free_port() -> int:
@@ -174,8 +178,9 @@ def free_port() -> int:
 
 
 class Chrome:
-    def __init__(self, port: int | None = None):
+    def __init__(self, port: int | None = None, log: Path | None = None):
         self.port = port  # None: a free port is taken for every start, so that no other browser on the machine shares it
+        self.log = log  # a file for what the browser writes to its error stream; only a check that a browser starts asks for it, so that the long runs of the film write nothing
         self._active_port = port
         self._id = 0
         self._profile = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)  # a helper process of the browser may still write into it while it is removed
@@ -194,19 +199,38 @@ class Chrome:
                  "--force-device-scale-factor=1", "--allow-file-access-from-files", "--disable-background-timer-throttling", "about:blank"]
         if hasattr(os, "geteuid") and os.geteuid() == 0:  # the sandbox of Chrome refuses to start under root, which is how a container runs
             flags.insert(0, "--no-sandbox")
-        self._process = subprocess.Popen([chrome_path(), *flags], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        command = [chrome_path(), *flags]
+        if self.log:
+            with open(self.log, "wb") as errors:
+                self._process = subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=errors)
+        else:
+            self._process = subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        tabs = None
         for _ in range(100):
             try:
                 tabs = json.load(urllib.request.urlopen(f"http://127.0.0.1:{self._active_port}/json"))
                 break
             except OSError:
+                if self._process.poll() is not None:  # the browser has ended: nothing will ever answer
+                    break
                 time.sleep(0.2)
-        else:
-            raise RuntimeError("Chrome did not start")
+        if tabs is None:
+            raise RuntimeError("Chrome did not start" + self._why_it_did_not_start())
         page = next(t for t in tabs if t["type"] == "page")
         self._socket = connect(page["webSocketDebuggerUrl"], max_size=None)
         self.call("Page.enable")
         self.call("Emulation.setDeviceMetricsOverride", width=WIDTH, height=HEIGHT, deviceScaleFactor=1, mobile=False)
+
+    def _why_it_did_not_start(self) -> str:
+        """How the browser ended and the end of what it wrote to its error stream, when a log was asked for; empty otherwise."""
+        if self.log is None:
+            return ""
+        code = self._process.poll() if self._process is not None else None
+        try:
+            lines = Path(self.log).read_text(errors="replace").strip().splitlines()
+        except OSError:
+            lines = []
+        return ": " + (f"it ended with exit code {code}" if code is not None else "it did not answer on its port") + (" and wrote " + " | ".join(lines[-6:])[-700:] if lines else " and wrote nothing")
 
     def restart(self, attempts: int = 12) -> None:
         """Start a new browser after the first one has gone (the page that was open is opened again); every call of the film is a function of the time it is given, so no state is lost.
