@@ -87,7 +87,6 @@ jobs:
       PYTHONUTF8: "1"
       CYPMODE_IGNORE_INSTALLED: "1"  # the Chrome of the runner is not used
       CYPMODE_REQUIRE_CHROME: "1"  # a browser that cannot start is a failure here, not a skipped test
-      CYPMODE_CACHE: ${{ runner.temp }}/cypmode-cache
     strategy:
       fail-fast: false
       matrix:
