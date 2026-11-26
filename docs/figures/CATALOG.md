@@ -432,7 +432,7 @@ How much the selection-aware CYP2D6 model gains depends on how many never-promot
 
 ### eng_queue_timeline: The job queue as a timeline
 
-Each bar is one run of one job of the queue, from the runner's own log (179 jobs, 575 runs: 510 finished, 40 stopped and retried, 25 failed after their attempts). The runs add up to 254 hours of wall-clock time between 08 Oct and 12 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.3 GB on a 16 GB machine).
+Each bar is one run of one job of the queue, from the runner's own log (179 jobs, 580 runs: 515 finished, 40 stopped and retried, 25 failed after their attempts). The runs add up to 255 hours of wall-clock time between 08 Oct and 12 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.3 GB on a 16 GB machine).
 
 - notebook section: 12.2
 - data: queue/logs/queue_stage.txt
@@ -440,7 +440,7 @@ Each bar is one run of one job of the queue, from the runner's own log (179 jobs
 
 ### eng_power_events: What the machine did while the queue ran
 
-Every time the machine entered sleep between 05 Nov and 12 Nov, by the cause its own power log gives: 566 x Maintenance Sleep, 100 x Sleep Service Back to Sleep, 21 x Clamshell Sleep, 5 x Software Sleep pid=611, 1 x Notification Wake Back to Sleep. The power log itself begins on 2026-11-05, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
+Every time the machine entered sleep between 18 Nov and 25 Nov, by the cause its own power log gives: 1386 x Maintenance Sleep, 193 x Sleep Service Back to Sleep, 9 x Software Sleep pid=611, 4 x Notification Wake Back to Sleep, 3 x Clamshell Sleep. The power log itself begins on 2026-11-18, so nothing is known about earlier days. Read from `pmset -g log` when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.
 
 - notebook section: 12.3
 - data: pmset -g log
@@ -456,7 +456,7 @@ Test functions per test module of the repository: 1085 test functions in 156 mod
 
 ### eng_commit_timeline: The history of the repository
 
-The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-12: 368 commits on 19 days up to commit e761927, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
+The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-25: 372 commits on 21 days up to commit 3df3540, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.
 
 - notebook section: 12.4
 - data: git log
@@ -464,7 +464,7 @@ The history of the repository as the number of commits of each day, from the fir
 
 ### eng_repository_map: The repository by folder
 
-The repository by top-level folder: the number of files that git tracks (3475 in all, 542 MB) and their size. The three folders with the most files are data (2072), docs (531), cypmode (189). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
+The repository by top-level folder: the number of files that git tracks (3483 in all, 544 MB) and their size. The three folders with the most files are data (2072), docs (539), cypmode (189). The code is in `cypmode/` (the engines of the two tracks and the audit), the tests in `tests/`, the results and caches that are small enough for git in `data/`, the notebook in `notebooks/`, the figures, the card and the film in `docs/`, and the queue that runs the experiments in `queue/`; what is too large or must wait until the deadline is listed in `.gitignore`.
 
 - notebook section: 12.5
 - data: git ls-files
@@ -506,7 +506,7 @@ The three structure engines on the same crystal-anchored benchmark ligands: Bolt
 
 ### struct_official20_recipe: The pool of each official ligand and the run of its final pose (held back)
 
-What the pool of each of the 20 official ligands is made of (stacked bars: the base run, the unguided run, the restrained run that carries the iron-nitrogen restraint, and the extra samples) and which kind of run the final pose came from (the ringed segment). The poses are chosen by the recipe: among the valid poses with a margin of at least 0.8, the model's own ranking, the restrained run being read first for a ligand with a Type II donor. The final poses come from the restrained run for 12, base run for 7, unguided run for 1 ligands. This figure shows predictions for the blinded compounds and is held back until the challenge closes.
+What the pool of each of the 20 official ligands is made of (stacked bars: the base run, the unguided run, the restrained run that carries the iron-nitrogen restraint, and the extra samples) and which kind of run the final pose came from (the ringed segment). The poses are chosen by the recipe: among the valid poses with a margin of at least 0.8, the model's own ranking, the restrained run being read first for a ligand with a Type II donor. The final poses come from the restrained run for 12, base run for 7, unguided run for 1 ligands. The figure shows predictions for the blinded compounds, whose structures the organisers have since released (Part XIII).
 
 - notebook section: 11.10
 - data: data/structure_track/outputs/cyp3a4/final/official_posebusters_pools.csv, data/structure_track/outputs/cyp3a4/final/manifest.json
@@ -626,7 +626,7 @@ The triangle update of the Pairformer, the step of a co-folding model that makes
 
 ### struct_official20_pools: The pose pools of the official ligands (held back)
 
-The pools of poses of the 20 official ligands under the scorer's own PoseBusters call: 200 poses in all, 176 of them passing the 22 checks and 136 passing with a margin of at least 0.8. Left: for every ligand, how many poses of its pool fail a check (red), pass with a small margin (gold) and pass with a safe margin (green). Right: the margin of the pose that the recipe chose, before the force-field relaxation (open circle) and after it (filled), for the same ligands in the same order; the dotted lines are the limit of the check (0.75) and the floor of the project (0.8); the relaxation raises the margin for 20 of 20 ligands. This figure shows predictions for the blinded compounds and is held back until the challenge closes.
+The pools of poses of the 20 official ligands under the scorer's own PoseBusters call: 200 poses in all, 176 of them passing the 22 checks and 136 passing with a margin of at least 0.8. Left: for every ligand, how many poses of its pool fail a check (red), pass with a small margin (gold) and pass with a safe margin (green). Right: the margin of the pose that the recipe chose, before the force-field relaxation (open circle) and after it (filled), for the same ligands in the same order; the dotted lines are the limit of the check (0.75) and the floor of the project (0.8); the relaxation raises the margin for 20 of 20 ligands. The figure shows predictions for the blinded compounds, whose structures the organisers have since released (Part XIII).
 
 - notebook section: 11.10
 - data: data/structure_track/outputs/cyp3a4/final/official_posebusters_pools.csv, data/structure_track/outputs/cyp3a4/final/relaxation/decisions.csv

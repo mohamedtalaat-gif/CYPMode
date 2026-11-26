@@ -1,6 +1,6 @@
 {
  "figures": {
-  "built_utc": "2026-11-12 20:07:49",
+  "built_utc": "2026-11-25 13:54:04",
   "extra": {},
   "fingerprint": "5d0241a4fcb7dfb41a31b8c3e6f408db88b4a708bc855a5d1c37847c8ad24dd0",
   "outputs": {
@@ -81,29 +81,29 @@
    "docs/figures/data/data_shift_distribution-light.png": "f5fe1fbb37194747b1cc98a553f9cab36697b42c685b040d9a2cf379a0530605",
    "docs/figures/data/data_shift_distribution-light.svg": "3ade7ff27227d7bbada368417cdbb175f729f4282bd104f696a05f95aafa4eff",
    "docs/figures/engineering/eng_code_packages-dark.png": "8d4b1769dd9a927639f9395a5e68a62e8c2c35ce60f0661d98812465c7c4ea23",
-   "docs/figures/engineering/eng_code_packages-dark.svg": "66a3f02c2ae863fdb47939b953cb8bfec7bbe918e2526db40fd907a89b74fc82",
+   "docs/figures/engineering/eng_code_packages-dark.svg": "4621e4ce8e644f0496a33e500b15b3ef791a2b09fb88039883064382e2d61ce8",
    "docs/figures/engineering/eng_code_packages-light.png": "c437890c13c81f27c659623d49f244afa1554c8d72adef99e61cd22ef2c419c1",
-   "docs/figures/engineering/eng_code_packages-light.svg": "c7896bdf2913640ba3adc07fba6de631dbf60beab12cabae78df08aa077eb202",
-   "docs/figures/engineering/eng_commit_timeline-dark.png": "6503536d2acbae0f010fcbb65b0625f7a8dfdb254cddaecdd017d64e1b4373b8",
-   "docs/figures/engineering/eng_commit_timeline-dark.svg": "fe6803d78a7df7448cc0c5ab322da8be6a9f6e578cb5d1ed2e13a18ca9b9dc65",
-   "docs/figures/engineering/eng_commit_timeline-light.png": "e80a2a27782fa7c1e14a2df627759db60fef6afd7307d1bbd2bd610cd6f45a16",
-   "docs/figures/engineering/eng_commit_timeline-light.svg": "167663e396253e13a82eb2b70f42fd8cf90c284a2894a4449bd1575788083b9d",
+   "docs/figures/engineering/eng_code_packages-light.svg": "dca7a7768fbd86d4f925c580b57fc079774c37a73620abf6d8423ced357e2f68",
+   "docs/figures/engineering/eng_commit_timeline-dark.png": "47cfcc8c4c9b3567f6fbe3c3560451ec7dce386f0f583520c2f49206b878b910",
+   "docs/figures/engineering/eng_commit_timeline-dark.svg": "3031fd15bda8c6f1334546ce90b116f65f27153de337683957bf3fa5e1ddd5c2",
+   "docs/figures/engineering/eng_commit_timeline-light.png": "8da524840216b819a8301f85fb295082f5005f7b83500b3720c1673999bbbcd5",
+   "docs/figures/engineering/eng_commit_timeline-light.svg": "3499af2b30b9f7325fa26e43b90e0b06e6af4d83b801e62b5e4eb14aa7cdbf36",
    "docs/figures/engineering/eng_data_flow-dark.png": "0dd441a26f77f5c16cce9289a5649c4c6f32fa7d3ffe2deeb3df18c7a2dca94f",
    "docs/figures/engineering/eng_data_flow-dark.svg": "ae465c3cc3f3ae63587de36ce1138569ab511bb3faf67b271d40f279fd07c687",
    "docs/figures/engineering/eng_data_flow-light.png": "fdc1848471587a4b3da86990cd21aff897020a8ad472756a4d5b8f6cbe001c27",
    "docs/figures/engineering/eng_data_flow-light.svg": "d2682bae8f8c9386ade0271ecb1f52c758e52a54072ce7a358d3a6ef2f53dcf3",
-   "docs/figures/engineering/eng_power_events-dark.png": "df2ec7635922d6146e09c56751ade7f6b117549923fae66e1a8bf6149709a505",
-   "docs/figures/engineering/eng_power_events-dark.svg": "32716a81cdfc361f2adc5881764599632dbd2237dc10fd75ef0f6e8cbb4f02cd",
-   "docs/figures/engineering/eng_power_events-light.png": "e9e4283bb633d4ee3516ce955c915e2854f34b4295007ed4c5c97c978b67f8de",
-   "docs/figures/engineering/eng_power_events-light.svg": "ce42490f2a1056011713ee43ad0260311ee051ae7cbf1a95624e4228578c1cfe",
-   "docs/figures/engineering/eng_queue_timeline-dark.png": "d88b8514a09ba1fcf581a9345a7465b3f236cae3a8928f68aed541fa7a68e29e",
-   "docs/figures/engineering/eng_queue_timeline-dark.svg": "a0fb81aa91d581a1691b9c428897e9b01e7c80ec4d3a92206b2f7d351eb266ac",
-   "docs/figures/engineering/eng_queue_timeline-light.png": "3988eb042f6ece259e19b8f8015898c375ce9a9fa99bb77f19c5283bb205b67c",
-   "docs/figures/engineering/eng_queue_timeline-light.svg": "0e5b813f986aa8810243f535ffdfbaa5f5fca1d2e8b76c927257a1e8801d70f5",
-   "docs/figures/engineering/eng_repository_map-dark.png": "877984c4187f9a8b510933d9ee48d300f93f89a17c3676fb52e55c739d654789",
-   "docs/figures/engineering/eng_repository_map-dark.svg": "2e108bfbfe8a59881b582ae768c77bef9b53ade441d9da7dba7f0c6ee8ecbaa2",
-   "docs/figures/engineering/eng_repository_map-light.png": "e286bfb5611ef61dcc3eb265f22784cf9dc468fe84bc61c839bc5905aa4c1657",
-   "docs/figures/engineering/eng_repository_map-light.svg": "47962258656109224823f0c3153c4a9716c273358abdcbf6bbe563cfe7899d70",
+   "docs/figures/engineering/eng_power_events-dark.png": "dee8e6aaaf16cb21da7b91344372ad641c7f8609a5560069d795c3c25fa42364",
+   "docs/figures/engineering/eng_power_events-dark.svg": "d35ff820b654b9d3080062cc7d8af97932d2d040f51c48899e200b374fa3fe58",
+   "docs/figures/engineering/eng_power_events-light.png": "fd7c890ebe573272ad3ef903d322182ae6a8fa91564c0e7bc4b637e659a2c496",
+   "docs/figures/engineering/eng_power_events-light.svg": "bbefdf47b21f60b47481d895efb2bcb852cc5d01f7209f14a362291eb3d2c209",
+   "docs/figures/engineering/eng_queue_timeline-dark.png": "cf3a8b77db7b9a160a39c880b1b2360ad7502b1804c7164a057665bfd818e967",
+   "docs/figures/engineering/eng_queue_timeline-dark.svg": "cf0a990ca7e5af78759c8750c71f72508843756eee6ff44c755c606963fe7f9e",
+   "docs/figures/engineering/eng_queue_timeline-light.png": "c1fceb979a52aa45906491d84277f2699c0e6ed1de81dfdf83c41d7eb26f9bf5",
+   "docs/figures/engineering/eng_queue_timeline-light.svg": "c9a6b0f59be54874b32f3dbfcea02be5418c828c28922f405e4aa4ca97882001",
+   "docs/figures/engineering/eng_repository_map-dark.png": "af1ae24d2ace31083f6a8081c6f35f2b4a3237a032dcf748aef232b5c74575a1",
+   "docs/figures/engineering/eng_repository_map-dark.svg": "be81d6adf8449c9630711f20eb7e580d6f72bb32f2884648e3e36a3446588ffe",
+   "docs/figures/engineering/eng_repository_map-light.png": "351c98ff8864ef87049d15ebce0b1fa4a2f41273016ede8e1901c7bbc1e53de8",
+   "docs/figures/engineering/eng_repository_map-light.svg": "74b3f8024f1f1a41f92d165bcf7bc72e357f3cf35af44f3b6d5ab277b9ab2f8f",
    "docs/figures/engineering/eng_tests_by_module-dark.png": "25ad5dae5c5f8a6bcddc40d48e21ec665e5c751a8b65dcf9c3efd25db3e69cd5",
    "docs/figures/engineering/eng_tests_by_module-dark.svg": "11f3556ce9d7a6b396847b5af87f5874f2e85812ae116cfd59860b0cbbeb9bef",
    "docs/figures/engineering/eng_tests_by_module-light.png": "688afe81eb4f0a9e9399ceb65b33b2ad27e729a42bb6a45e647c74c33a9b63b5",
@@ -277,7 +277,7 @@
    "docs/figures/pharmacophore/pharm_forest-light.png": "ae1ecee982a9748d877f85070f459c3edea81ecf6c374f641f450573649d0f80",
    "docs/figures/pharmacophore/pharm_forest-light.svg": "5e6e2bed8bac5490d29973e00fe2646cabd783ac24afb456a50f07bdf47af6ba",
    "docs/figures/pharmacophore/pharm_functional_groups-dark.png": "c0d76006a6f6f3bda2aa2ab73a25754ce91abdbb4667a2559df24161cc92680f",
-   "docs/figures/pharmacophore/pharm_functional_groups-dark.svg": "c9350081d76d05e2bbd28b4709b486263cc3905f6c611ffd8711eca6f3fd5822",
+   "docs/figures/pharmacophore/pharm_functional_groups-dark.svg": "ae28dcc006f283867b396f1ee527b300e00f06533a56ff801138304da62b91e5",
    "docs/figures/pharmacophore/pharm_functional_groups-light.png": "9670a17f9e6b25b05321df8a10aba2359cfee8cbfe7a5d7a408bc7c3e4e8d00b",
    "docs/figures/pharmacophore/pharm_functional_groups-light.svg": "a5f5e5162c395305144d16c37ea94e8c7c4b973d4d06e89e7b137a419181e06c",
    "docs/figures/pharmacophore/pharm_hypotheses-dark.png": "6cd834166fd9d73e5f8f0f108e67cd96bfed5d79e9dd102b36d3d5c434f59061",
@@ -446,14 +446,14 @@
   }
  },
  "interactive_card": {
-  "built_utc": "2026-11-05 19:27:16",
+  "built_utc": "2026-11-25 14:12:29",
   "extra": {
-   "html_sha256": "34552607fd4ac65e810ba7b36775e9f21b3dee8fc00881ed19979f8d0695d001",
+   "html_sha256": "51c8f66b4e4170e157387b7266601930c4fd9ed2387ecf962754e83343bdf869",
    "mode": "public"
   },
   "fingerprint": "5d0241a4fcb7dfb41a31b8c3e6f408db88b4a708bc855a5d1c37847c8ad24dd0",
   "outputs": {
-   "docs/card/interactive/index.html": "34552607fd4ac65e810ba7b36775e9f21b3dee8fc00881ed19979f8d0695d001"
+   "docs/card/interactive/index.html": "51c8f66b4e4170e157387b7266601930c4fd9ed2387ecf962754e83343bdf869"
   }
  },
  "interactive_card_full": {
@@ -478,20 +478,20 @@
   }
  },
  "readme_card": {
-  "built_utc": "2026-11-05 18:24:48",
+  "built_utc": "2026-11-25 13:56:20",
   "extra": {
    "html_sha256": {
-    "dark": "1ab1a5a48818c45247357bed213ab9096ba61a212d15585f532b1863d9da2125",
-    "light": "64339ec7b1f5d8c39abe43952a0710e8c55efef0f1660dae813854b5232437ff"
+    "dark": "a0e3af219f26e1973ced59c47db10c0f720956d229c623a466f612a4ecf30874",
+    "light": "8aa461b4ca968f08e0a1e10aafe844b7f414a479b5c8a286657beda2d0af9535"
    },
    "mode": "public"
   },
   "fingerprint": "5d0241a4fcb7dfb41a31b8c3e6f408db88b4a708bc855a5d1c37847c8ad24dd0",
   "outputs": {
-   "docs/card/cypmode_card-dark.gif": "76d6119a0bc61fd002f0a795dcef8be501f5e41db1a70389694740bdbc5eb798",
-   "docs/card/cypmode_card-dark.png": "75349cf5d181a36b8834dec5b04b560ba5d36b9d008168f34cec273b21e59c83",
-   "docs/card/cypmode_card-light.gif": "3a3bba3eae42ff4d17761349472dfcf488f77f7ca1f1da1ffcfcf89ce6441e48",
-   "docs/card/cypmode_card-light.png": "4abd49e4e10d825c1cee797a32548cca61048a7c56752174ef59e9859a5c2839"
+   "docs/card/cypmode_card-dark.gif": "a3f8610c8643f29906ae75ab851cac33dc8e71f8d837fddde4ee5feb1d5e9eb6",
+   "docs/card/cypmode_card-dark.png": "a49572d6e93ba1c44b8f12f483b5f708c774360636e88ccdf64da1949eab8148",
+   "docs/card/cypmode_card-light.gif": "3dd0b4015e6c0f0677ceac5c474b52ac80addd7205e5cb82e53fb168dfd8411d",
+   "docs/card/cypmode_card-light.png": "5f11e534dbed94dcb4920b7178923dc03400dbd114d520e8055080dd221cad82"
   }
  },
  "readme_card_full": {

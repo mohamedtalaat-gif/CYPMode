@@ -259,12 +259,14 @@ it documents one complete attempt: the CYPMode project, an entry to the OpenADME
 <p>Two tasks are solved. The first is classification: for each of 750 molecules whose measurements are hidden, say whether it switches off the enzyme CYP3A4, and whether it
 switches off the enzyme CYP2D6, in the slow and lasting way called time-dependent inhibition. The second is structure prediction: for 20 molecules, predict where every atom sits
 when the molecule is bound inside CYP3A4.</p>
-<p>Because the answers stay hidden until the challenge closes, the central difficulty is to judge how good a model is without optimism. The project therefore evaluates every model by
+<p>Because the answers were hidden until the challenge closed, the central difficulty was to judge how good a model is without optimism. The project therefore evaluates every model by
 nested cross-validation, in which no choice the model makes (which members to trust, how to blend them, where to put the yes/no threshold) is tested on the data it was chosen on,
 and it judges every proposed improvement by a rule written down before its result existed. 187 such rules were judged: 178 ended &quot;not met&quot; and 9
 ended &quot;met&quot;. The final classification model blends 28 models for CYP3A4 and 23 for CYP2D6, which read 12,468 numbers per molecule. In nested cross-validation it reaches an area under the ROC curve
 (a score that is 0.5 for guessing and 1 for a perfect ranking, defined in section 4.10) of 0.817 for CYP3A4 and 0.731 for CYP2D6. These are
-estimates made on the training data. The challenge score itself is not known until the challenge closes. The submitted structures number 20, and 0 of them fail the
+estimates made on the training data. The challenge has closed, and the organisers have published the final boards: the classification entry ranks 14th of 62
+(macro MCC 0.3723) and the structure entry ranks 15th of 38 (LDDT-PLI 0.4133),
+both in the second tier; Part XIII reads them against the labels and the structures that the organisers released afterwards. The submitted structures number 20, and 0 of them fail the
 challenge's physical-validity checks.</p>
 <p>The notebook is also a record of what did not work. Every idea that was tried is described with the rule it had to pass, its numbers and the reason it did or did not help, and the
 code of the whole project is mapped to the sections that explain it (Appendix D). All numbers in the text are produced by code from the files of the repository when the notebook is
@@ -744,7 +746,7 @@ submitted structure that fails any of the physical-validity checks of the <stron
 checks, for example, that no two atoms overlap and that bond lengths are sensible (section 11.4).</p>
 <p>The rules that matter for this project are these.</p>
 <ul>
-<li>The test set has 750 molecules and its labels are withheld until the challenge closes. A submission may be made once every 12 hours for each track, and only the latest valid one counts.</li>
+<li>The test set has 750 molecules, and its labels were withheld until the challenge closed; the organisers released them afterwards, and Part XIII reads them. A submission may be made once every 12 hours for each track, and only the latest valid one counts.</li>
 <li>The final deadline is 3 November 2026, 23:59 UTC.</li>
 <li>A submission carries a declaration of whether proprietary data were used. This project uses public data only.</li>
 <li>Publishing the code is encouraged, and it is required for a separate award, the &quot;Innovation in ML&quot; award, which recognises architectural novelty, creative use of data, novel
@@ -936,7 +938,7 @@ from the repository's files, so the counts on them are the current ones.</p>
 </table>
 <p>In plain words: every molecule is first turned into a long list of numbers that describe it. A <strong>fingerprint</strong>, one kind of such numbers, is a list of yes/no answers to the question &quot;does
 the molecule contain this particular small group of atoms?&quot;. Many different models then each give a score for how likely the molecule is to be a time-dependent inhibitor, and a final
-blending step, called <strong>stacking</strong>, learns how much to trust each model. The molecules with the highest blended scores are called positive. Because the true test answers are hidden, the
+blending step, called <strong>stacking</strong>, learns how much to trust each model. The molecules with the highest blended scores are called positive. Because the true test answers were hidden when the model was built, the
 whole procedure is practised on the training molecules in a way that mimics the hidden test, and every idea that might improve it has to pass a gate first.</p>
 <p><strong>The structure system</strong> turns a ligand into a validated pose.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-arch_structure_pipeline"><img class="fig-light" loading="lazy" decoding="async" width="2480" height="919" src="figures/arch_structure_pipeline-light.png" alt="The structure track as a pipeline"><img class="fig-dark" loading="lazy" decoding="async" width="2480" height="919" src="figures/arch_structure_pipeline-dark.png" alt="The structure track as a pipeline"><figcaption><p><strong>Figure: The structure track as a pipeline.</strong> The structure track from a ligand to the submitted zip. Boltz-2 folds each ligand into CYP3A4 with the heme; when the ligand has a nitrogen that can reach the iron, a bond-length restraint is part of the input and its run is read first; the first pose that passes the validity checks is taken. OpenFold3 was run on the same benchmark and did not improve the poses, so it is not in the final recipe (dashed). The zip holds 20 poses, of which 0 fail any PoseBusters check, and its bytes are the same every time it is rebuilt.</p>
@@ -2221,7 +2223,7 @@ A second table follows the first: for each claim it names the sections of this n
 </tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>Two things are deliberately absent from the table. It makes no claim about the score on the hidden labels, which is not known until the challenge closes, and it makes no claim that a rule for choosing among predicted poses works: every such rule
+</div></div></div><section class="cell md"><p>Two things are deliberately absent from the table. It makes no claim about the score on the hidden labels, which the final board gives and Part XIII reads (the table states what the nested validation supports), and it makes no claim that a rule for choosing among predicted poses works: every such rule
 failed its gate (section 11.8), and the structure track keeps the model's own ranking among the poses that are valid.</p>
 </section><section class="cell md"><h1 id="Part-I:-Biology-and-chemistry">Part I: Biology and chemistry</h1>
 </section><div class="cell shown"></div><section class="cell md"><h2 id="1.1-Drugs-in-the-body:-how-fast-a-drug-leaves">1.1 Drugs in the body: how fast a drug leaves</h2>
@@ -3175,8 +3177,8 @@ atom of lowest rank and takes the branches in order of rank. Two strings that de
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"share of the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="si">}</span><span class="s2"> training strings written in Kekule style: </span><span class="si">{</span><span class="n">kekule_style</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">; share already in RDKit's canonical form: </span><span class="si">{</span><span class="n">as_given</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">; the example, as given: </span><span class="si">{</span><span class="n">example</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></details><div class=outputs><pre>canonical form: CC(C)(C)NS(=O)(=O)C1(CNc2c(Br)cncc2C#N)CCC1
 2000 random walks gave 925 different strings, for instance:
-    O=S(C1(CNc2c(C#N)cncc2Br)CCC1)(NC(C)(C)C)=O
-    CC(C)(NS(C1(CCC1)CNc1c(cncc1C#N)Br)(=O)=O)C
+    CC(C)(NS(=O)(=O)C1(CNc2c(Br)cncc2C#N)CCC1)C
+    N#Cc1cncc(Br)c1NCC1(S(NC(C)(C)C)(=O)=O)CCC1
 every one of them has the canonical form above: True
 share of the 6145 training strings written in Kekule style: 100.0%; share already in RDKit&#x27;s canonical form: 1.1%; the example, as given: CC(C)(C)NS(=O)(=O)C1(CNC2=C(Br)C=NC=C2C#N)CCC1
 </pre></div></div><section class="cell md"><p>The strings of the file are not in the canonical form of the software used in this project (only 1.1% of them are), because they are written in the Kekule style; reading them with RDKit and writing them again gives the
@@ -6191,13 +6193,13 @@ reached, which gives a lopsided tree that reduces the loss faster than a balance
 <td>the booster written out above (100 rounds, eta 0.1, depth 3)</td>
 <td>0.736</td>
 <td>0.014</td>
-<td>2.828</td>
+<td>2.755</td>
 </tr>
 <tr>
 <td>LightGBM with matching settings</td>
 <td>0.733</td>
 <td>0.012</td>
-<td>0.339</td>
+<td>0.335</td>
 </tr>
 </tbody>
 </table>
@@ -6282,13 +6284,13 @@ source of randomness that decorrelates the trees (section 4.4) and speeds up the
 <td>deep</td>
 <td>0.752</td>
 <td>0.012</td>
-<td>4.478</td>
+<td>4.410</td>
 </tr>
 <tr>
 <td>shallow</td>
 <td>0.754</td>
 <td>0.012</td>
-<td>3.196</td>
+<td>3.176</td>
 </tr>
 </tbody>
 </table>
@@ -19082,7 +19084,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-13.553</td>
 <td>10.849</td>
 <td>2.133</td>
-<td>0.066</td>
+<td>0.049</td>
 </tr>
 <tr>
 <td>LDA (SVWN)</td>
@@ -19090,7 +19092,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-6.309</td>
 <td>12.732</td>
 <td>2.025</td>
-<td>0.225</td>
+<td>0.176</td>
 </tr>
 <tr>
 <td>GGA (PBE)</td>
@@ -19098,7 +19100,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-6.217</td>
 <td>12.381</td>
 <td>1.936</td>
-<td>0.360</td>
+<td>0.271</td>
 </tr>
 <tr>
 <td>hybrid (B3LYP)</td>
@@ -19106,7 +19108,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-7.943</td>
 <td>12.415</td>
 <td>1.982</td>
-<td>0.335</td>
+<td>0.285</td>
 </tr>
 </tbody>
 </table>
@@ -19424,7 +19426,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 </tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>The two methods order the molecules in nearly the same way (a Pearson correlation of 0.92 and a Spearman rank correlation of 0.88), but GFN2-xTB gives values that are higher than B3LYP by 5.0 eV on average, with a scatter of 0.6 eV around that offset. The offset is large and is not a defect of the code: the method was fitted to structures, frequencies and noncovalent interactions and not to the energies of charged molecules, and an ionisation potential taken from it is not an ionisation potential in the experimental sense. It is a number that increases when a molecule is harder to oxidise, which is what a tree model can use, since it splits on the ordering and a constant offset moves no split. The same holds for the other energies of 10.5. The price is that these features carry a role-dependent offset, as the docstring of the module says, which the tree learns from the other columns. The time: GFN2-xTB took 0.4 seconds for the twelve molecules (both charge states) and B3LYP 92, a ratio of about 260 for molecules of at most 15 atoms; the ratio grows with size, because the cost of the density functional method rises more steeply.</p>
+</div></div></div><section class="cell md"><p>The two methods order the molecules in nearly the same way (a Pearson correlation of 0.92 and a Spearman rank correlation of 0.88), but GFN2-xTB gives values that are higher than B3LYP by 5.0 eV on average, with a scatter of 0.6 eV around that offset. The offset is large and is not a defect of the code: the method was fitted to structures, frequencies and noncovalent interactions and not to the energies of charged molecules, and an ionisation potential taken from it is not an ionisation potential in the experimental sense. It is a number that increases when a molecule is harder to oxidise, which is what a tree model can use, since it splits on the ordering and a constant offset moves no split. The same holds for the other energies of 10.5. The price is that these features carry a role-dependent offset, as the docstring of the module says, which the tree learns from the other columns. The time: GFN2-xTB took 0.3 seconds for the twelve molecules (both charge states) and B3LYP 66, a ratio of about 191 for molecules of at most 15 atoms; the ratio grows with size, because the cost of the density functional method rises more steeply.</p>
 <p><em>On what actually ran.</em> <code>tblite</code> (the library that implements the GFN-xTB family, version 0.7.0, called from <code>cypmode/challenge/physics_block.py</code>) and PySCF, each in an isolated interpreter. The decomposition of the energy is the program's own report (verbosity 2); the sum is checked by the cell.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-phys_koopmans"><img class="fig-light" loading="lazy" decoding="async" width="2100" height="880" src="figures/phys_koopmans-light.png" alt="Orbital energies and ionisation potentials: Koopmans&#x27; relation on real compounds"><img class="fig-dark" loading="lazy" decoding="async" width="2100" height="880" src="figures/phys_koopmans-dark.png" alt="Orbital energies and ionisation potentials: Koopmans&#x27; relation on real compounds"><figcaption><p><strong>Figure: Orbital energies and ionisation potentials: Koopmans' relation on real compounds.</strong> Koopmans' approximation on the 6895 compounds of the physics cache: the ionisation potential computed from the energy of the cation (vertical, vertical axis) against minus the energy of the highest occupied orbital (horizontal). Pearson r = 0.858 for the ionisation potential and 0.912 for the electron affinity against minus the lowest unoccupied orbital; the cation-based value sits +2.07 eV from the orbital value on average. Koopmans' approximation ignores how the remaining orbitals relax when an electron is removed, so the two are expected to track each other without being equal. The dashed line is equality.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="10.5-The-quantities-of-the-physics-block">10.5 The quantities of the physics block</h2>
@@ -23285,8 +23287,8 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 <p><strong>What is and is not claimed.</strong> The validity of the poses is checked, per pose, by the scorer's own code. Their accuracy is not known: it is measured only by the organisers, against crystal structures that nobody else has. What the project has instead is a set of verdicts on the levers on ten crystal-anchored ligands (11.5 to 11.9), a restraint whose gain was shown on those ligands and neither confirmed nor refuted on ligands that were not used to choose it (11.6), and a relaxation that was validated on 30 ligands with public crystals. The recipe is a conservative one: it adds to the model's own output only what a pre-declared gate passed, and where no gate passed it keeps the model's own first valid pose. The earlier archive of unrestrained Boltz-2 poses is kept as the fallback.</p>
 <p><em>On what actually ran.</em> <code>cypmode/validation/final_recipe.py</code> (<code>read_gates</code>, <code>decide</code>, <code>margin_candidates</code>, <code>select_pose</code>, and the constants of cost), <code>cypmode/validation/pose_margins.py</code> (the audit of every pool pose under the scorer's call), <code>cypmode/validation/official_posebusters.py</code> (the scorer's 22 checks and <code>MARGIN_FLOOR</code>), <code>cypmode/validation/relax.py</code> (the relaxation), <code>cypmode/validation/relax_gate.py</code> (the gate of job 218) and <code>cypmode/validation/relax_final.py</code> (the rule and the rebuild of the archive), <code>cypmode/challenge/structure_submission.py</code> (<code>write_deterministic_zip</code> and the conversion of a prediction to the portal's format), the tests <code>tests/test_relax_final.py</code>, and the queue jobs <code>179_requeue_final_recipe</code>, <code>180_structure_final_recipe_run</code>, <code>185_structure_recipe_update</code>, <code>192_structure_margin_aware_zip</code>, <code>218_relaxation_gate</code> and <code>243_structure_relaxation_final</code>. The environment of the relaxation is described in <code>environment/openmm-environment.yml</code>. The cells of this section read the records those jobs left; the one-dimensional relaxation and the small archives are written for the notebook. The force-field parameters are those of the Amber ff14SB, CHARMM and OpenFF 2.2.1 distributions, which the repository does not redistribute.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-struct_relaxation_margin"><img class="fig-light" loading="lazy" decoding="async" width="2100" height="880" src="figures/struct_relaxation_margin-light.png" alt="Pose margins and agreement before and after the relaxation"><img class="fig-dark" loading="lazy" decoding="async" width="2100" height="880" src="figures/struct_relaxation_margin-dark.png" alt="Pose margins and agreement before and after the relaxation"><figcaption><p><strong>Figure: Pose margins and agreement before and after the relaxation.</strong> The force-field relaxation of the ligand in the frozen pocket, on 90 Boltz-2 poses of 30 crystal-anchored ligands. Left: the smallest relative distance between the ligand and the receptor (the margin of the scorer's PoseBusters call: the check fails below 0.75 and the project calls a pose safe from 0.8), before and after the relaxation, for the 73 poses that pass the checks both times; the share of poses passing all 22 checks rises from 81.1% to 98.9%, and the median margin from 0.847 to 0.893. Right: the LDDT-PLI against the crystal pose before and after, for the 73 poses that have both: the relaxation moves the ligand by 0.46 A at the median and leaves the agreement with the crystal pose unchanged on average (change +0.0035).</p>
-</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-struct_official20_pools"><img class="fig-light" loading="lazy" decoding="async" width="2500" height="1200" src="figures/struct_official20_pools-light.png" alt="The pose pools of the official ligands (held back)"><img class="fig-dark" loading="lazy" decoding="async" width="2500" height="1200" src="figures/struct_official20_pools-dark.png" alt="The pose pools of the official ligands (held back)"><figcaption><p><strong>Figure: The pose pools of the official ligands (held back).</strong> The pools of poses of the 20 official ligands under the scorer's own PoseBusters call: 200 poses in all, 176 of them passing the 22 checks and 136 passing with a margin of at least 0.8. Left: for every ligand, how many poses of its pool fail a check (red), pass with a small margin (gold) and pass with a safe margin (green). Right: the margin of the pose that the recipe chose, before the force-field relaxation (open circle) and after it (filled), for the same ligands in the same order; the dotted lines are the limit of the check (0.75) and the floor of the project (0.8); the relaxation raises the margin for 20 of 20 ligands. This figure shows predictions for the blinded compounds and is held back until the challenge closes.</p>
-</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-struct_official20_recipe"><img class="fig-light" loading="lazy" decoding="async" width="2100" height="1200" src="figures/struct_official20_recipe-light.png" alt="The pool of each official ligand and the run of its final pose (held back)"><img class="fig-dark" loading="lazy" decoding="async" width="2100" height="1200" src="figures/struct_official20_recipe-dark.png" alt="The pool of each official ligand and the run of its final pose (held back)"><figcaption><p><strong>Figure: The pool of each official ligand and the run of its final pose (held back).</strong> What the pool of each of the 20 official ligands is made of (stacked bars: the base run, the unguided run, the restrained run that carries the iron-nitrogen restraint, and the extra samples) and which kind of run the final pose came from (the ringed segment). The poses are chosen by the recipe: among the valid poses with a margin of at least 0.8, the model's own ranking, the restrained run being read first for a ligand with a Type II donor. The final poses come from the restrained run for 12, base run for 7, unguided run for 1 ligands. This figure shows predictions for the blinded compounds and is held back until the challenge closes.</p>
+</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-struct_official20_pools"><img class="fig-light" loading="lazy" decoding="async" width="2500" height="1200" src="figures/struct_official20_pools-light.png" alt="The pose pools of the official ligands (held back)"><img class="fig-dark" loading="lazy" decoding="async" width="2500" height="1200" src="figures/struct_official20_pools-dark.png" alt="The pose pools of the official ligands (held back)"><figcaption><p><strong>Figure: The pose pools of the official ligands (held back).</strong> The pools of poses of the 20 official ligands under the scorer's own PoseBusters call: 200 poses in all, 176 of them passing the 22 checks and 136 passing with a margin of at least 0.8. Left: for every ligand, how many poses of its pool fail a check (red), pass with a small margin (gold) and pass with a safe margin (green). Right: the margin of the pose that the recipe chose, before the force-field relaxation (open circle) and after it (filled), for the same ligands in the same order; the dotted lines are the limit of the check (0.75) and the floor of the project (0.8); the relaxation raises the margin for 20 of 20 ligands. The figure shows predictions for the blinded compounds, whose structures the organisers have since released (Part XIII).</p>
+</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-struct_official20_recipe"><img class="fig-light" loading="lazy" decoding="async" width="2100" height="1200" src="figures/struct_official20_recipe-light.png" alt="The pool of each official ligand and the run of its final pose (held back)"><img class="fig-dark" loading="lazy" decoding="async" width="2100" height="1200" src="figures/struct_official20_recipe-dark.png" alt="The pool of each official ligand and the run of its final pose (held back)"><figcaption><p><strong>Figure: The pool of each official ligand and the run of its final pose (held back).</strong> What the pool of each of the 20 official ligands is made of (stacked bars: the base run, the unguided run, the restrained run that carries the iron-nitrogen restraint, and the extra samples) and which kind of run the final pose came from (the ringed segment). The poses are chosen by the recipe: among the valid poses with a margin of at least 0.8, the model's own ranking, the restrained run being read first for a ligand with a Type II donor. The final poses come from the restrained run for 12, base run for 7, unguided run for 1 ligands. The figure shows predictions for the blinded compounds, whose structures the organisers have since released (Part XIII).</p>
 </figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-struct_all20_gallery"><img class="fig-light" loading="lazy" decoding="async" width="2600" height="1920" src="figures/struct_all20_gallery-light.png" alt="Every submitted structure"><img class="fig-dark" loading="lazy" decoding="async" width="2600" height="1920" src="figures/struct_all20_gallery-dark.png" alt="Every submitted structure"><figcaption><p><strong>Figure: Every submitted structure.</strong> All 20 structures of the submitted zip, the pocket of each predicted complex with the heme (orange) and the ligand (teal). 12 ligands have a Type II donor nitrogen: the iron-nitrogen restraint was used for them and the nearest nitrogen is 1.90 to 2.42 angstrom from the iron. The other 8 ligands have no such donor and were run without the restraint; their nearest nitrogen is far from the iron, as it should be for ligands that do not bind it. All twenty pass the 22 PoseBusters checks under the organisers' own call. Nothing was left out of this picture.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="11.11-Pharmacophore-models-of-poses,-and-two-biases-that-such-models-carry">11.11 Pharmacophore models of poses, and two biases that such models carry</h2>
 <blockquote>
@@ -24398,7 +24400,7 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 <p>The count of the modified files is also part of the report. The report and the log of the queue job are files that git tracks, and the first run writes the report, so a count that included them would differ between the two runs. The audit therefore leaves its own files (the report, the second report and the log of the job) out of that count (<code>tree_state</code> in <code>cypmode/audit/sections.py</code>, tested in <code>tests/test_audit_tree_state.py</code>), so that the check can pass once everything else is committed and the audit of a committed project can be both reproducible and clean, which is the state that the pre-submission gate asks for.</p>
 <p><strong>What it found.</strong> Its byte-for-byte comparison is what showed that the stack was not deterministic (8.3, 12.1): the report recomputes the nested results of the stack, and two reports differed. It also holds the checks that keep each correction of the project from returning: the label rule, the leakage tests of the feature blocks, the check that the files submitted are the files built. 12.5 describes the other generated documents that read the same records.</p>
 <p><em>On what actually ran.</em> The cell reads <code>audit/AUDIT_REPORT.md</code> as the final chain left it; the audit itself is not run by the notebook, because it runs the test suite and takes longer than a notebook should.</p>
-</section><div class="cell shown"><figure class="figure" id="fig-eng_queue_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2300" height="6806" src="figures/eng_queue_timeline-light.png" alt="The job queue as a timeline"><img class="fig-dark" loading="lazy" decoding="async" width="2300" height="6806" src="figures/eng_queue_timeline-dark.png" alt="The job queue as a timeline"><figcaption><p><strong>Figure: The job queue as a timeline.</strong> Each bar is one run of one job of the queue, from the runner's own log (179 jobs, 575 runs: 510 finished, 40 stopped and retried, 25 failed after their attempts). The runs add up to 254 hours of wall-clock time between 08 Oct and 12 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.3 GB on a 16 GB machine).</p>
+</section><div class="cell shown"><figure class="figure" id="fig-eng_queue_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2300" height="6806" src="figures/eng_queue_timeline-light.png" alt="The job queue as a timeline"><img class="fig-dark" loading="lazy" decoding="async" width="2300" height="6806" src="figures/eng_queue_timeline-dark.png" alt="The job queue as a timeline"><figcaption><p><strong>Figure: The job queue as a timeline.</strong> Each bar is one run of one job of the queue, from the runner's own log (179 jobs, 580 runs: 515 finished, 40 stopped and retried, 25 failed after their attempts). The runs add up to 255 hours of wall-clock time between 08 Oct and 12 Nov (this includes any time the machine was asleep during a run); the longest are 186_boltz_restraint_expansion_secondary (47.6 h), 180_structure_final_recipe_run (24.1 h), 130_boltz_diversity_pilot (15.9 h). The line shows the swap in use at every runner event (peak 9.3 GB on a 16 GB machine).</p>
 </figcaption></figure></div><section class="cell md"><h2 id="12.3-The-test-suite-and-the-continuous-integration-workflow">12.3 The test suite and the continuous-integration workflow</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering</p>
@@ -25063,10 +25065,10 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 <span class="n">summary_line</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">run</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="s2">" passed"</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s2">" failed"</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s2">" error"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">summary_line</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
-</pre></details><div class=outputs><pre>3 passed in 0.12s
+</pre></details><div class=outputs><pre>3 passed in 0.11s
 </pre></div></div><section class="cell md"><p>The summary above is the line a developer reads. The suite is the cheapest of the checks of this part, and the one that runs most often: the queue runs it in the audit (job 900) and in the lint cleanup (job 295).</p>
 <p><em>On what actually ran.</em> The first cell counts the test functions by reading the files with Python's parser, reads the ignore list from <code>pyproject.toml</code> and the steps from the workflow file. The second cell runs <code>tests/test_constants.py</code> as a child process. The workflow itself runs on the hosting service, not in the notebook.</p>
-</section><div class="cell shown"><figure class="figure" id="fig-eng_power_events"><img class="fig-light" loading="lazy" decoding="async" width="2300" height="1060" src="figures/eng_power_events-light.png" alt="What the machine did while the queue ran"><img class="fig-dark" loading="lazy" decoding="async" width="2300" height="1060" src="figures/eng_power_events-dark.png" alt="What the machine did while the queue ran"><figcaption><p><strong>Figure: What the machine did while the queue ran.</strong> Every time the machine entered sleep between 05 Nov and 12 Nov, by the cause its own power log gives: 566 x Maintenance Sleep, 100 x Sleep Service Back to Sleep, 21 x Clamshell Sleep, 5 x Software Sleep pid=611, 1 x Notification Wake Back to Sleep. The power log itself begins on 2026-11-05, so nothing is known about earlier days. Read from <code>pmset -g log</code> when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.</p>
+</section><div class="cell shown"><figure class="figure" id="fig-eng_power_events"><img class="fig-light" loading="lazy" decoding="async" width="2300" height="1060" src="figures/eng_power_events-light.png" alt="What the machine did while the queue ran"><img class="fig-dark" loading="lazy" decoding="async" width="2300" height="1060" src="figures/eng_power_events-dark.png" alt="What the machine did while the queue ran"><figcaption><p><strong>Figure: What the machine did while the queue ran.</strong> Every time the machine entered sleep between 18 Nov and 25 Nov, by the cause its own power log gives: 1386 x Maintenance Sleep, 193 x Sleep Service Back to Sleep, 9 x Software Sleep pid=611, 4 x Notification Wake Back to Sleep, 3 x Clamshell Sleep. The power log itself begins on 2026-11-18, so nothing is known about earlier days. Read from <code>pmset -g log</code> when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="12.4-The-job-queue,-the-runner-and-the-guards;-what-the-hardware-taught">12.4 The job queue, the runner and the guards; what the hardware taught</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering</p>
@@ -25174,7 +25176,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <tr>
 <td>DONE</td>
 <td>a job finished</td>
-<td>511</td>
+<td>517</td>
 </tr>
 <tr>
 <td>RETRY</td>
@@ -25194,21 +25196,21 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <tr>
 <td>BATTERY</td>
 <td>a notification about the battery</td>
-<td>58</td>
+<td>65</td>
 </tr>
 <tr>
 <td>IDLE</td>
 <td>nothing could run</td>
-<td>93</td>
+<td>95</td>
 </tr>
 </tbody>
 </table>
 </div></div></div><section class="cell md"><p>Each guard is the answer to something that happened. The memory guard is the one that matters: five Boltz samples in parallel used up the memory and the swap file, and the machine took a <strong>kernel panic</strong>, which is the operating system stopping itself because it cannot continue. From then on one sample at a time, a ceiling on what the graphics unit may take, and a guard that kills the running structure engine when the free memory stays under a few percent. A hard ceiling of 0.9 times the memory, tried first, made every forward pass of the engines fail, so the allowance was loosened and the guard does the protecting. The battery guard asks nothing of the run: a flat battery once stopped a night's run, and the guard therefore sends a notification at two levels of charge and never waits or stops anything (the function that used to wait is kept as an empty one, so that older jobs still call it).</p>
 <p>The runner is started under <code>caffeinate</code>, which keeps the machine awake while it runs; a run that looks hung may turn out to be a machine that went to sleep, and that mistake was made once in this project, so the first question about a quiet job is whether the machine slept.</p>
-<p>The runner's own log shows what this meant in practice. It holds 16701 lines since 10-08 03:02:02. 511 DONE lines are jobs that finished, 40 are retries and 25 are failures that were recorded; the jobs that failed were repaired and queued again, and 0 of the 177 jobs are in the failed state as this notebook is built, while 173 are done. The memory guard acted 25 times, with the swap file as large as 9.2 gibibytes at the worst moment; each of these would otherwise have been a crash of the machine or of the run.</p>
+<p>The runner's own log shows what this meant in practice. It holds 16737 lines since 10-08 03:02:02. 517 DONE lines are jobs that finished, 40 are retries and 25 are failures that were recorded; the jobs that failed were repaired and queued again, and 0 of the 177 jobs are in the failed state as this notebook is built, while 172 are done. The memory guard acted 25 times, with the swap file as large as 9.2 gibibytes at the worst moment; each of these would otherwise have been a crash of the machine or of the run.</p>
 <p><strong>What the hardware taught, in six rules.</strong> A job that is not ready is not a failed job (the status 75). A long job works in chunks and remembers its place in files, so a restart costs a chunk and not a day. The state lives in the repository and not in a temporary folder, which the machine empties when it restarts. The memory of a laptop is shared between its parts, so a guard must watch the free memory and not only the load. Nothing is allowed to wait for a person (the battery), and everything that can hang is given a time limit (the tests, 12.3). And a quiet job is first suspected of sleeping, not of being broken.</p>
 <p><em>On what actually ran.</em> The first cell runs <code>defer</code> and <code>chunk_status</code> for real, in child processes and a temporary folder. The second reads the runner's log, the counters of <code>queue/state</code> and the header of <code>guards.sh</code>. The runner itself ran the jobs; the notebook only reads what it left.</p>
-</section><div class="cell shown"><figure class="figure" id="fig-eng_commit_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-light.png" alt="The history of the repository"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-dark.png" alt="The history of the repository"><figcaption><p><strong>Figure: The history of the repository.</strong> The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-12: 368 commits on 19 days up to commit e761927, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.</p>
+</section><div class="cell shown"><figure class="figure" id="fig-eng_commit_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-light.png" alt="The history of the repository"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-dark.png" alt="The history of the repository"><figcaption><p><strong>Figure: The history of the repository.</strong> The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-25: 372 commits on 21 days up to commit 3df3540, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="12.5-The-documents-that-are-generated,-and-the-checks-on-them">12.5 The documents that are generated, and the checks on them</h2>
 <blockquote>
 <p><strong>Field:</strong> Software engineering · Data science</p>
@@ -25366,7 +25368,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 </section><section class="cell md"><p>3 of the detectors fired on the sample, as they must. What the scan cannot do is find what it was not taught to look for: it is a net with a mesh, and the mesh is the list of patterns. The final chain runs it (job 930) and its findings that code can fix are fixed; the others are for a person to decide, and the push is not made before they are.</p>
 <p><em>On what actually ran.</em> The first cell runs the claim-to-evidence check as a child process and reads the two reports and the generated blocks. The second calls the queue check and the scan's <code>scan_text</code> in the notebook's process.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-eng_tests_by_module"><img class="fig-light" loading="lazy" decoding="async" width="1720" height="1679" src="figures/eng_tests_by_module-light.png" alt="The test suite by module"><img class="fig-dark" loading="lazy" decoding="async" width="1720" height="1679" src="figures/eng_tests_by_module-dark.png" alt="The test suite by module"><figcaption><p><strong>Figure: The test suite by module.</strong> Test functions per test module of the repository: 1085 test functions in 156 modules (parametrized cases count once). The audit runs the whole suite and the full report twice and requires the two reports to be byte-identical.</p>
-</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_repository_map"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="1280" src="figures/eng_repository_map-light.png" alt="The repository by folder"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="1280" src="figures/eng_repository_map-dark.png" alt="The repository by folder"><figcaption><p><strong>Figure: The repository by folder.</strong> The repository by top-level folder: the number of files that git tracks (3475 in all, 542 MB) and their size. The three folders with the most files are data (2072), docs (531), cypmode (189). The code is in <code>cypmode/</code> (the engines of the two tracks and the audit), the tests in <code>tests/</code>, the results and caches that are small enough for git in <code>data/</code>, the notebook in <code>notebooks/</code>, the figures, the card and the film in <code>docs/</code>, and the queue that runs the experiments in <code>queue/</code>; what is too large or must wait until the deadline is listed in <code>.gitignore</code>.</p>
+</figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_repository_map"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="1280" src="figures/eng_repository_map-light.png" alt="The repository by folder"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="1280" src="figures/eng_repository_map-dark.png" alt="The repository by folder"><figcaption><p><strong>Figure: The repository by folder.</strong> The repository by top-level folder: the number of files that git tracks (3483 in all, 544 MB) and their size. The three folders with the most files are data (2072), docs (539), cypmode (189). The code is in <code>cypmode/</code> (the engines of the two tracks and the audit), the tests in <code>tests/</code>, the results and caches that are small enough for git in <code>data/</code>, the notebook in <code>notebooks/</code>, the figures, the card and the film in <code>docs/</code>, and the queue that runs the experiments in <code>queue/</code>; what is too large or must wait until the deadline is listed in <code>.gitignore</code>.</p>
 </figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_data_flow"><img class="fig-light" loading="lazy" decoding="async" width="3600" height="1120" src="figures/eng_data_flow-light.png" alt="The flow of the data, from the inputs to the submission files"><img class="fig-dark" loading="lazy" decoding="async" width="3600" height="1120" src="figures/eng_data_flow-dark.png" alt="The flow of the data, from the inputs to the submission files"><figcaption><p><strong>Figure: The flow of the data, from the inputs to the submission files.</strong> The flow of the data, from the inputs to the submission files. The inputs of a track enter the jobs of the queue, and 161 of the 177 jobs write a log. The jobs write 206 log names. The ledger reads the lines of the gates in every log, and 58 logs are also read by name. The reports, the figures, and the notebook are built from the logs and the ledger by the chain 900 to 960, and the submission files follow from them. The same diagram, written in Mermaid, is <code>docs/map/dataflow.md</code>.</p>
 </figcaption></figure></div><div class="cell shown"><figure class="figure" id="fig-eng_code_packages"><img class="fig-light" loading="lazy" decoding="async" width="3400" height="1560" src="figures/eng_code_packages-light.png" alt="The packages of the code"><img class="fig-dark" loading="lazy" decoding="async" width="3400" height="1560" src="figures/eng_code_packages-dark.png" alt="The packages of the code"><figcaption><p><strong>Figure: The packages of the code.</strong> The packages of the code; an arrow goes from a package to a package whose modules it imports, and its label counts those imports. The project has 179 modules in 8 packages, and the modules hold 601 imports of one another, of which 112 cross from one package to another. The width of an arrow follows its count. The same diagram, written in Mermaid, is <code>docs/map/code.md</code>, which also lists the modules of every package.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="12.6-The-rules-that-never-change,-and-how-each-is-enforced">12.6 The rules that never change, and how each is enforced</h2>
@@ -25466,7 +25468,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <span class="nb">print</span><span class="p">(</span><span class="n">test_summary</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dry_run_line</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">test_run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">dry_run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
-</pre></details><div class=outputs><pre>15 passed in 1.53s
+</pre></details><div class=outputs><pre>15 passed in 0.25s
 HELD BACK block not found; held-back sections not found
 </pre></div></div><section class="cell md"><p>The test file has passed and the dry run reports what the release script would change, without writing anything. After the deadline the script, run without the dry-run option, removes the HELD BACK block and switches on the parts of the README that were held back; before the deadline it refuses.</p>
 <p><strong>What the checks cannot do.</strong> They catch what they were taught to look for: the patterns of the scan, the files of the HELD BACK block, the numbers that the report copies. They do not decide whether a method is right, whether a gate was chosen fairly, or whether a sentence in a document is true. Those are the work of Parts VI and IX, and of the person who reads the text word by word. Engineering for trust is the part that makes the other parts checkable; it is not a substitute for them.</p>
@@ -30948,7 +30950,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/challenge/nested.py</code></td>
-<td>Front matter, 0.6, 2.8, 3.6, 4.1, 4.7, 4.9, Part VI, 6.2, 6.3, 6.4, 6.6, 6.7, 6.8, Part VII, 7.3, 7.4, 7.6, 7.8, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 9.10, 9.14, 12.1, 12.2, 12.3, 12.4, 12.6, 12.7, 13.1, 13.4, 13.6, Appendix A</td>
+<td>Front matter, 0.6, 0.7, 2.8, 3.6, 4.1, 4.7, 4.9, Part VI, 6.2, 6.3, 6.4, 6.6, 6.7, 6.8, Part VII, 7.3, 7.4, 7.6, 7.8, 7.11, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 9.10, 9.14, 12.1, 12.2, 12.3, 12.4, 12.6, 12.7, 13.1, 13.4, 13.6, Appendix A</td>
 </tr>
 <tr>
 <td><code>cypmode/challenge/nested_deploy.py</code></td>
@@ -31184,11 +31186,11 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tr>
 <tr>
 <td><code>cypmode/post_deadline/board.py</code></td>
-<td>2.11, 4.10, 7.1, 7.11, 8.7, 11.13, 12.3, 12.6, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A</td>
+<td>Front matter, 0.7, 2.11, 4.10, 7.1, 7.11, 8.7, 11.13, 12.3, 12.6, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A</td>
 </tr>
 <tr>
 <td><code>cypmode/post_deadline/released.py</code></td>
-<td>2.8, 5.4, 11.1, 11.2, 11.7, 11.9, 12.3, 13.1, 13.2, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A</td>
+<td>Front matter, 0.3, 2.8, 5.4, 11.1, 11.2, 11.7, 11.9, 12.3, 13.1, 13.2, 13.5, 13.6, 13.7, 13.8, 13.9, Appendix A</td>
 </tr>
 <tr>
 <td><code>cypmode/post_deadline/report.py</code></td>
