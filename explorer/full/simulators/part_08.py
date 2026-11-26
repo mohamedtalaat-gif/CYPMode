@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Part VIII, the final TDI model: the grid of candidates (8.1), a solver that stops where it happens to be (8.3), the calibration of a score (8.5) and the checks of a file of calls (8.6)."""
+"""Part VIII, the final TDI model: the grid of candidates (8.1), a solver that stops where it happens to be (8.3), the calibration of a score (8.5), the checks of a file of calls (8.6) and the five principles of the OECD answered from the files (8.8)."""
 
 import io
 
@@ -69,4 +69,25 @@ def v_8_6(mo, v):
     return mo.vstack([mo.md(f"The audit makes six checks on every TDI file before it can be uploaded: the number of rows, the columns, no missing value, boolean calls and the names and the SMILES in the order of the test file. File: `{source}`. The calls themselves are not looked at."), mo.ui.table(checks, selection=None, pagination=False)])
 
 
-SIMS = {"8.1": (c_8_1, v_8_1), "8.3": (c_8_3, v_8_3), "8.5": (c_8_5, v_8_5), "8.6": (c_8_6, v_8_6)}
+def c_8_8(mo):
+    principles = list(dict.fromkeys(store.table("oecd")["principle"]))
+    return {"enzyme": mo.ui.radio(options=["CYP3A4", "CYP2D6"], value="CYP3A4", label="Enzyme", inline=True),
+            "principle": mo.ui.dropdown(options=principles, value=principles[0], label="Principle")}
+
+
+def _plain(text: str) -> str:
+    """Text that the markdown of a page shows as written: no emphasis, no maths."""
+    return text.replace("\\", "\\\\").replace("*", "\\*").replace("_", "\\_").replace("$", "\\$").replace("<", "&lt;")
+
+
+def v_8_8(mo, v):
+    table = store.table("oecd")
+    table = table[table["isoform"] == v["enzyme"]]
+    row = table[table["principle"] == v["principle"]].iloc[0]
+    overview = "\n".join(f"- **{r.principle}**: {_plain(r.evidence[:90])}..." for r in table.itertuples())
+    return mo.vstack([mo.md(f"The five principles of the OECD for a model that predicts a property of a compound, answered for {v['enzyme']} from the files of the project. **{_plain(row['principle'])}**\n\n"
+                            f"{_plain(row['evidence'])}\n\nSource: `{row['source']}`"),
+                      mo.md("All five at a glance:\n\n" + overview)])
+
+
+SIMS = {"8.1": (c_8_1, v_8_1), "8.3": (c_8_3, v_8_3), "8.5": (c_8_5, v_8_5), "8.6": (c_8_6, v_8_6), "8.8": (c_8_8, v_8_8)}

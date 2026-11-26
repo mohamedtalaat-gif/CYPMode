@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Part VI, measuring without selection bias: a score under the prevalence of the test set (6.4), why Tukey's HSD was dropped (6.6) and a hold-out chosen by similarity (6.8)."""
+"""Part VI, measuring without selection bias: a score under the prevalence of the test set (6.4), why Tukey's HSD was dropped (6.6), a hold-out chosen by similarity (6.8), the place of the stack on a second published data set (6.9) and the columns against the compounds (6.10)."""
 
 import altair as alt
 import numpy as np
@@ -74,4 +74,70 @@ def v_6_8(mo, v):
                             f"(0 would be identical; medians {r['median kept']:.2f} and {r['median test']:.2f}). Leakage check: **{shared}** connectivity keys are in both the training and the test file."), chart.properties(width=560, height=240)])
 
 
-SIMS = {"6.2": (c_6_2, v_6_2), "6.4": (c_6_4, v_6_4), "6.6": (c_6_6, v_6_6), "6.8": (c_6_8, v_6_8)}
+def c_6_9(mo):
+    return {"enzyme": mo.ui.radio(options=["CYP3A4", "CYP2D6"], value="CYP3A4", label="Enzyme", inline=True),
+            "auprc": mo.ui.slider(start=0.5, stop=1.0, step=0.005, value=0.8, label="the test AUPRC of a model of your own", show_value=True)}
+
+
+def v_6_9(mo, v):
+    board = store.table("ext_leaderboard")
+    board = board[board["isoform"] == v["enzyme"]]
+    entries, ours = board[~board["ours"]], board[board["ours"]].iloc[0]
+
+    def place(score: float) -> int:
+        return 1 + int((entries["auprc"] > score).sum())
+
+    bins = store.table("ext_similarity_bins")
+    bins = bins[bins["isoform"] == v["enzyme"]]
+    permuted = store.table("ext_permutation_control")
+    permuted = permuted[permuted["isoform"] == v["enzyme"]]
+    mine = float(v["auprc"])
+    bars = alt.Chart(entries).mark_bar(color="#9aa5b1").encode(x=alt.X("auprc:Q", scale=alt.Scale(domain=[0.5, 1.0]), title="test AUPRC"), y=alt.Y("entry:N", sort="-x", title=None))
+    rules = alt.Chart(pd.DataFrame({"auprc": [float(ours["auprc"]), mine], "mark": ["this stack", "your model"]})).mark_rule(strokeWidth=3).encode(x="auprc:Q", color=alt.Color("mark:N", legend=alt.Legend(title=None)))
+    by_bin = alt.Chart(bins)
+    curve = by_bin.mark_line(point=True).encode(x=alt.X("bin:N", sort=list(bins["bin"]), title="similarity to the training set"), y=alt.Y("auc:Q", scale=alt.Scale(domain=[0.5, 1.0])))
+    band = by_bin.mark_rule().encode(x=alt.X("bin:N", sort=list(bins["bin"])), y="auc_low:Q", y2="auc_high:Q")
+    return mo.vstack([mo.md(f"The Veith {v['enzyme']} inhibition set of the Therapeutics Data Commons has **{len(entries)}** published entries, with a median test AUPRC of **{entries['auprc'].median():.3f}** and a best of **{entries['auprc'].max():.3f}**. "
+                            f"This stack scores a mean of **{ours['auprc']:.3f}** over five seeds, which would stand **{place(float(ours['auprc']))}** among the published entries. A model of your own that scores {mine:.3f} would stand **{place(mine)}** (1 is the best). "
+                            f"With the labels permuted the test AUC is {permuted['auc'].mean():.3f} (mean of {len(permuted)} permutations; 0.5 is chance). The label of this set is direct inhibition, so a good place supports the features and the protocol, not the claim that time-dependent inhibition is predicted well."),
+                      (bars + rules).properties(width=520, height=max(160, 16 * len(entries))),
+                      mo.md("The AUC of the deployed stack by the similarity of a test compound to the training set, with its 95% interval:"), (curve + band).properties(width=520, height=200)])
+
+
+def c_6_10(mo):
+    return {"enzyme": mo.ui.radio(options=["CYP3A4", "CYP2D6"], value="CYP3A4", label="Enzyme", inline=True),
+            "cut": mo.ui.radio(options=["1.0", "1.96"], value="1.0", label="confidence cut z0 of the labels", inline=True),
+            "view": mo.ui.dropdown(options=["the 23 candidates by width", "keeping a fraction of the columns", "adding columns of noise"], value="the 23 candidates by width", label="What to look at")}
+
+
+def v_6_10(mo, v):
+    column = "auc_z1" if v["cut"] == "1.0" else "auc_z196"
+    spectrum = store.table("ratio_spectrum")
+    spectrum = spectrum[spectrum["isoform"] == v["enzyme"]]
+    rows = ", ".join(f"{r.feature_set}: {int(r.columns_read)} columns, rank {int(r['rank'])} of {int(r.rows)} compounds, {int(r.components_for_90)} components hold 90% of the variance" for _, r in spectrum.iterrows())
+    intro = f"The columns of one learner against the compounds that it is fitted on ({v['enzyme']}; labels at z0 = {v['cut']}). The matrix of the learners: {rows}."
+    if v["view"].startswith("the 23"):
+        c = store.table("ratio_candidates")
+        c = c[c["isoform"] == v["enzyme"]].assign(ratio=lambda d: d["n_columns"] / d["rows"], AUC=lambda d: d["auc_z1.0" if v["cut"] == "1.0" else "auc_z1.96"])
+        rho = c["ratio"].corr(c["AUC"], method="spearman")
+        chart = alt.Chart(c).mark_circle(size=70).encode(x=alt.X("ratio:Q", scale=alt.Scale(type="symlog"), title="columns per compound"), y=alt.Y("AUC:Q", scale=alt.Scale(zero=False), title="nested outer AUC"), color="family:N", tooltip=["candidate", "n_columns", "AUC"])
+        body = [mo.md(f"The {len(c)} candidates of the final stack use between {int(c['n_columns'].min())} and {int(c['n_columns'].max())} columns for {int(c['rows'].iloc[0])} compounds, so between {c['ratio'].min():.2f} and {c['ratio'].max():.2f} columns per compound. "
+                      f"The rank correlation between the ratio and the AUC is **{rho:+.2f}** across the seven families, which differ in width and in skill, so it describes the grid and does not test the effect of width alone."), chart.properties(width=520, height=260)]
+    elif v["view"].startswith("keeping"):
+        f = store.table("ratio_fraction")
+        f = f[f["isoform"] == v["enzyme"]]
+        chart = alt.Chart(f).mark_line(point=True).encode(x=alt.X("n_columns:Q", title="columns kept"), y=alt.Y(f"{column}:Q", scale=alt.Scale(zero=False), title="mean nested outer AUC"))
+        low, high = f.iloc[0], f.iloc[-1]
+        body = [mo.md(f"One boosted-tree learner on the widest block, fitted on a random fraction of its columns inside the same nested folds: from {int(low['n_columns'])} columns ({low['fraction']:.0%}) to {int(high['n_columns'])} ({high['fraction']:.0%}) "
+                      f"the mean AUC goes from **{low[column]:.3f}** to **{high[column]:.3f}**, over {int(low['folds'])} outer folds."), chart.properties(width=520, height=240)]
+    else:
+        n = store.table("ratio_noise")
+        n = n[n["isoform"] == v["enzyme"]].assign(label=lambda d: d["candidate"] + ", " + d["kind"] + " x" + d["multiple"].astype(str))
+        chart = alt.Chart(n).mark_bar().encode(y=alt.Y("label:N", sort="-x", title=None), x=alt.X(f"{column}:Q", scale=alt.Scale(domain=[0.5, 1.0]), title="mean nested outer AUC"), color="kind:N")
+        base = n[n["kind"] == "none"][column]
+        body = [mo.md(f"The same learners with columns of noise added (a copy of the columns with each shuffled, or Gaussian noise), up to four times the width: the unchanged learners score {', '.join(f'{x:.3f}' for x in base)}; "
+                      f"the worst case with noise scores **{n[column].min():.3f}**, over {int(n['folds'].iloc[0])} outer folds each."), chart.properties(width=520, height=max(160, 22 * len(n)))]
+    return mo.vstack([mo.md(intro), *body])
+
+
+SIMS = {"6.2": (c_6_2, v_6_2), "6.4": (c_6_4, v_6_4), "6.6": (c_6_6, v_6_6), "6.8": (c_6_8, v_6_8), "6.9": (c_6_9, v_6_9), "6.10": (c_6_10, v_6_10)}

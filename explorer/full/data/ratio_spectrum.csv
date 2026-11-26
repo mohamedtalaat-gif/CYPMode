@@ -1,0 +1,5 @@
+isoform,feature_set,columns_read,rows,columns_used,rank,participation_ratio,components_for_90,components_for_95
+CYP3A4,A,2265,2334.0,2241.0,2226.0,564.669445,886.0,1110.0
+CYP3A4,A+fps,5826,2334.0,5635.0,2333.0,422.901685,1047.0,1350.0
+CYP2D6,A,2265,1493.0,2238.0,1490.0,521.253626,758.0,931.0
+CYP2D6,A+fps,5826,1493.0,5590.0,1490.0,413.269892,840.0,1039.0

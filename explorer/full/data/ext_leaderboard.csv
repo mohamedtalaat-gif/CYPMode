@@ -1,0 +1,41 @@
+isoform,entry,auprc,ours
+CYP3A4,MapLight + GNN,0.916,False
+CYP3A4,ContextPred,0.904,False
+CYP3A4,AttrMasking,0.902,False
+CYP3A4,ADMETrix,0.884,False
+CYP3A4,MapLight,0.881,False
+CYP3A4,MiniMol,0.877,False
+CYP3A4,Chemprop-RDKit,0.876,False
+CYP3A4,ZairaChem,0.875,False
+CYP3A4,DeepMol (AutoML),0.867,False
+CYP3A4,Chemprop,0.862,False
+CYP3A4,CFA,0.855,False
+CYP3A4,AttentiveFP,0.851,False
+CYP3A4,NeuralFP,0.849,False
+CYP3A4,GCN,0.84,False
+CYP3A4,RDKit2D + MLP (DeepPurpose),0.829,False
+CYP3A4,Morgan + MLP (DeepPurpose),0.827,False
+CYP3A4,CNN (DeepPurpose),0.821,False
+CYP3A4,Euclia ML model,0.696,False
+CYP3A4,Basic ML,0.654,False
+CYP2D6,MapLight + GNN,0.79,False
+CYP2D6,ContextPred,0.739,False
+CYP2D6,MapLight,0.723,False
+CYP2D6,AttrMasking,0.721,False
+CYP2D6,MiniMol,0.719,False
+CYP2D6,ADMETrix,0.718,False
+CYP2D6,DeepMol (AutoML),0.685,False
+CYP2D6,Chemprop-RDKit,0.673,False
+CYP2D6,CFA,0.664,False
+CYP2D6,Chemprop,0.649,False
+CYP2D6,AttentiveFP,0.646,False
+CYP2D6,ZairaChem,0.644,False
+CYP2D6,NeuralFP,0.627,False
+CYP2D6,GCN,0.616,False
+CYP2D6,RDKit2D + MLP (DeepPurpose),0.616,False
+CYP2D6,Morgan + MLP (DeepPurpose),0.587,False
+CYP2D6,CNN (DeepPurpose),0.544,False
+CYP2D6,Basic ML,0.358,False
+CYP2D6,Euclia ML model,0.348,False
+CYP2D6,"this stack, mean of five seeds",0.727416,True
+CYP3A4,"this stack, mean of five seeds",0.891444,True

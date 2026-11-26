@@ -399,6 +399,30 @@ def submission_files() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+TDI_DATA = ROOT / "data/tdi_track"
+
+
+def ext_leaderboard() -> pd.DataFrame:
+    """The published entries of the second benchmark (the Veith inhibition sets of the Therapeutics Data Commons) and the stack of this project, one row each (section 6.9)."""
+    board = pd.read_csv(TDI_DATA / "inputs/tdc_cache/admet_group/leaderboard_veith.csv")
+    placement = pd.read_csv(TDI_DATA / "outputs/external_dataset/placement.csv")
+    rows = [{"isoform": r.dataset.split("_")[0], "entry": r.model, "auprc": r.auprc_mean, "ours": False} for r in board.itertuples()]
+    rows += [{"isoform": r.isoform, "entry": "this stack, mean of five seeds", "auprc": r.mean_test_auprc, "ours": True} for r in placement.itertuples()]
+    return pd.DataFrame(rows)
+
+
+def ratio_noise() -> pd.DataFrame:
+    """The mean AUC of one learner when columns of noise are added, per isoform, candidate, kind of noise and multiple of the width (section 6.10)."""
+    noise = pd.read_csv(TDI_DATA / "outputs/comparisons/descriptor_ratio_noise.csv")
+    return noise.groupby(["isoform", "candidate", "kind", "multiple", "extra_columns"], as_index=False).agg(auc_z1=("auc_z1.0", "mean"), auc_z196=("auc_z1.96", "mean"), folds=("auc_z1.0", "size"))
+
+
+def ratio_fraction() -> pd.DataFrame:
+    """The mean AUC of one learner when only a fraction of its columns is kept, per isoform, candidate and fraction (section 6.10)."""
+    fraction = pd.read_csv(TDI_DATA / "outputs/comparisons/descriptor_ratio_fraction.csv")
+    return fraction.groupby(["isoform", "candidate", "fraction", "n_columns"], as_index=False).agg(auc_z1=("auc_z1.0", "mean"), auc_z196=("auc_z1.96", "mean"), folds=("auc_z1.0", "size"))
+
+
 if __name__ == "__main__":
     train = pd.read_csv(ROOT / TDI_TRAIN_PATH)
     OUT.mkdir(exist_ok=True)
@@ -436,6 +460,14 @@ if __name__ == "__main__":
     limitations_table().to_csv(OUT / "limitations.csv", index=False)
     artifacts_table().to_csv(OUT / "artifacts.csv", index=False)
     jobs().to_csv(OUT / "jobs.csv", index=False)
+    ext_leaderboard().to_csv(OUT / "ext_leaderboard.csv", index=False)
+    for name in ("similarity_bins", "permutation_control", "calibration"):
+        pd.read_csv(TDI_DATA / f"outputs/external_dataset/{name}.csv").to_csv(OUT / f"ext_{name}.csv", index=False)
+    ratio_noise().to_csv(OUT / "ratio_noise.csv", index=False)
+    ratio_fraction().to_csv(OUT / "ratio_fraction.csv", index=False)
+    for name in ("candidates", "spectrum"):
+        pd.read_csv(TDI_DATA / f"outputs/comparisons/descriptor_ratio_{name}.csv").to_csv(OUT / f"ratio_{name}.csv", index=False)
+    pd.read_csv(TDI_DATA / "outputs/final/oecd_principles.csv").to_csv(OUT / "oecd.csv", index=False)
     coverage_table().to_csv(OUT / "coverage.csv", index=False)
     claims_table(json.loads((OUT / "sections.json").read_text())["parts"]).to_csv(OUT / "claims.csv", index=False)
     shutil.copytree(ROOT / "explorer/public", OUT / "public", dirs_exist_ok=True)  # the tables of the finished results that job 906 writes for the explorer of the public edition
