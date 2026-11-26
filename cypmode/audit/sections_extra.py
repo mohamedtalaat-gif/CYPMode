@@ -262,6 +262,7 @@ PATH_ALLOWANCES = (
     (re.compile(r"^docs/video/anime/clips(?:/|$)"), "the clips that the jobs 943 and 944 render for the film: half a gigabyte that git does not hold, while the film made from them is in the repository"),
     (re.compile(r"^queue/state(?:/|$)"), "the state that the runner of the queue writes while it runs; it is not versioned"),
     (re.compile(r"^third_party/boltz-main(?:/|$)"), "the source of Boltz-2, a program of other authors that the structure track runs and that the repository does not hold"),
+    (re.compile(r"^data/tdi_track/outputs/comparisons/descriptor_ratio_work(?:/|$)"), "the cache of the refits of job 288 (2 MB), which the job rebuilds and which git does not hold; the tables made from it are in the repository"),
 )
 PATH_TOKEN = re.compile(r"`([A-Za-z0-9_./\-]+/[A-Za-z0-9_.\-/]*)`")
 PATH_ROOTS = {"cypmode", "tests", "scripts", "docs", "data", "notebooks", "queue", "explorer", "environment", "audit", "submissions", ".github", "backend", "evaluation", "hf_space", "final", "validation"}
