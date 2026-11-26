@@ -112,6 +112,8 @@ of contents, bold terms, display equations rendered for the PDF, "On what actual
 - 6.6 Why Tukey's HSD was dropped and how the older results were recomputed.
 - 6.7 Pre-declared gates: the rule, why it is fixed before results, the 10-fold replicate and the reason for it.
 - 6.8 Checking that a split is informative; the test-like hold-out block; leakage controls.
+- 6.9 A second published data set: the direct-inhibition panel of the Therapeutics Data Commons under its official protocol, the nested design, the negative control, reliability by similarity, and calibration, set against the published entries.
+- 6.10 Columns and compounds: the width of every candidate, the effective dimension, extra columns that cannot carry a signal for a candidate and for the stack, and fewer columns.
 
 ## Part VII. The first TDI models and what they taught
 
@@ -136,6 +138,7 @@ of contents, bold terms, display equations rendered for the PDF, "On what actual
 - 8.5 Calibration: Platt scaling, isotonic regression (the pool-adjacent-violators algorithm), ECE and slope.
 - 8.6 The candidate files, the portal's own checks, the manifest and hashes, the leakage audit.
 - 8.7 Results with their uncertainty.
+- 8.8 The five OECD principles: the endpoint, the algorithm, the domain, goodness of fit, robustness, and predictivity, the interpretation, and the curation of the data.
 
 ## Part IX. Additions that were tested
 
@@ -207,9 +210,9 @@ it did or did not help.
 - Part III: `challenge/feature_store`, `grouping`, `pharmacophore_fingerprint`.
 - Part IV: `challenge/multitask`, `chemberta_features`, `nested_runners_torch`, `nested_runners_chemprop`.
 - Part V: `metrics/motifs`, `metrics/amines`, `data/panel`, `data/octant_benchmark`, `validation/structures`, `pocket_geometry`, `tdi_reference`, `app.py`.
-- Part VI: `challenge/nested`, `nested_runners`, `nested_deploy`, `nested_report`, `model_comparison`, `addition_experiment`, `validation_matching`, `split_validity`, `block_holdout`, `stacking_significance`, `recompute_paired_summaries`, `replicate_verdict`, `chemberta_significance`.
+- Part VI: `challenge/nested`, `nested_runners`, `nested_deploy`, `nested_report`, `model_comparison`, `addition_experiment`, `validation_matching`, `split_validity`, `block_holdout`, `stacking_significance`, `recompute_paired_summaries`, `replicate_verdict`, `chemberta_significance`, `external_dataset`, `descriptor_ratio`.
 - Part VII: `challenge/tdi_baseline`, `tdi_ablation`, `knn_features`, `oof_bridge`, `threshold_tuning`, `reliability`, `committee_uncertainty`, `external_auxiliary_significance`, `qm_reactivity_features`, `qm_reactivity_significance`, `combined_features`, `tier3_features`, `tier3_selection`, `tier3_knn_significance`, `architecture_significance`, `cyp2d6_tuning_significance`, `final_assembly`, `final_assembly_cyp2d6`, `confidence_experiment`.
-- Part VIII: `challenge/final_tdi_build`, `calibration_experiment`, `submission`.
+- Part VIII: `challenge/final_tdi_build`, `calibration_experiment`, `submission`, `oecd_principles`.
 - Part IX: `challenge/population_experiment`, `selection_aware_v2`, `hedged_blend`, `test_nonhit_share`, `pair_transfer`, `mmp_transfer`, `committee_label_model`, `frozen_embeddings`, `test_likeness_training`, `arms_experiment`, `xiso_transfer`, `aux_blocks`, `aux_experiments`, `cached_candidates`, `official_extra`, `external_continuous`, `openadmet_surrogates`, `monroe_embeddings`, `atomjepa_embeddings`, `chemeleon_stage`, `foundation_weights`, `basic_centre`, `screen_selection`, `nonneg_stack`, `softmax_selector`, `permutation_control`, `multiplicity`, `why_no_gain`, `confidence_experiment`, `label_confidence`.
 - Part X: `challenge/physics_block`, `physics_tierb`, `physics_experiment`, `physics_compact_experiment`, `physics_tierb_experiment`, `population_physics`, `quantum_pharmacophore`, `quantum_pharmacophore_significance`.
 - Part XI: `challenge/structure_submission`; `validation/batch`, `bisy_rmsd`, `build_input`, `build_summary`, `conformer_benchmark`, `conformers`, `constants`, `cryoem_templates`, `diversity_pilot`, `ei_sampling`, `final_recipe`, `heme_frame_prior`, `ligand_dynamics`, `openfold3`, `pipeline`, `pose_awareness`, `pose_comparison`, `pose_consensus`, `pose_pools`, `pose_rescoring`, `pose_rescoring_validation`, `pose_selection`, `pose_validity`, `reference_ligands`, `selection_validation`, `series`, `series_consensus`, `structure_benchmark`, `structure_benchmark_report`, `structure_gates`; `scripts/run_openfold_lowmem.py`.

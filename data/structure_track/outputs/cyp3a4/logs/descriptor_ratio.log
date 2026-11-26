@@ -1,0 +1,105 @@
+CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge | Muhammad Talaat | https://github.com/mohamedtalaat-gif/CYPMode | cite: Muhammad Talaat (2026). CYPMode: time-dependent CYP inhibition and CYP3A4 structure prediction for the OpenADMET CYP blind challenge. Version 0.3.3. https://doi.org/10.5281/zenodo.23816450
+2026-11-26 17:48:52,790 CYP3A4 lgbm_A_deep shuffled x0: AUC {1.0: 0.785, 1.96: 0.8192}
+2026-11-26 17:49:37,201 CYP3A4 lgbm_A_deep shuffled x1: AUC {1.0: 0.7712, 1.96: 0.8}
+2026-11-26 17:50:52,685 CYP3A4 lgbm_A_deep shuffled x4: AUC {1.0: 0.737, 1.96: 0.7647}
+2026-11-26 17:52:32,793 CYP3A4 lgbm_A_deep gaussian x1: AUC {1.0: 0.7155, 1.96: 0.7435}
+2026-11-26 17:58:16,832 CYP3A4 lgbm_A_deep gaussian x4: AUC {1.0: 0.7115, 1.96: 0.7397}
+2026-11-26 17:59:10,717 CYP3A4 lgbm_A+fps_deep shuffled x0: AUC {1.0: 0.8027, 1.96: 0.8354}
+2026-11-26 18:00:33,704 CYP3A4 lgbm_A+fps_deep shuffled x1: AUC {1.0: 0.7832, 1.96: 0.813}
+2026-11-26 18:03:10,925 CYP3A4 lgbm_A+fps_deep shuffled x4: AUC {1.0: 0.7543, 1.96: 0.7836}
+2026-11-26 18:04:14,415 CYP3A4 stack experiment: lgbm_desc_deep done
+2026-11-26 18:04:48,386 CYP3A4 stack experiment: lgbm_desc_shallow done
+2026-11-26 18:06:30,472 CYP3A4 stack experiment: lgbm_A_deep done
+2026-11-26 18:07:29,598 CYP3A4 stack experiment: lgbm_A_shallow done
+2026-11-26 18:11:12,791 CYP3A4 stack experiment: lgbm_A+fps_deep done
+2026-11-26 18:14:43,672 CYP3A4 stack experiment: lgbm_A+fps_shallow done
+2026-11-26 18:21:15,968 CYP3A4 stack experiment: extratrees_A done
+2026-11-26 18:24:07,291 CYP3A4 stack experiment: rf_A done
+2026-11-26 18:25:51,119 CYP3A4 stack experiment: lgbm_A_deep_knnfeat done
+2026-11-26 18:29:43,646 CYP3A4 stack experiment: lgbm_A+fps_deep_knnfeat done
+2026-11-26 18:30:11,797 CYP3A4 lgbm_A+fps_deep fraction 0.05: AUC {1.0: 0.7095, 1.96: 0.7267}
+2026-11-26 18:30:35,824 CYP3A4 lgbm_A+fps_deep fraction 0.10: AUC {1.0: 0.7514, 1.96: 0.7803}
+2026-11-26 18:31:06,840 CYP3A4 lgbm_A+fps_deep fraction 0.25: AUC {1.0: 0.7707, 1.96: 0.7988}
+2026-11-26 18:31:44,961 CYP3A4 lgbm_A+fps_deep fraction 0.50: AUC {1.0: 0.7825, 1.96: 0.8174}
+2026-11-26 18:32:37,897 CYP3A4 lgbm_A+fps_deep fraction 1.00: AUC {1.0: 0.8027, 1.96: 0.8354}
+2026-11-26 18:33:11,927 CYP2D6 lgbm_A_deep shuffled x0: AUC {1.0: 0.6964, 1.96: 0.7267}
+2026-11-26 18:33:49,585 CYP2D6 lgbm_A_deep shuffled x1: AUC {1.0: 0.649, 1.96: 0.6803}
+2026-11-26 18:34:46,674 CYP2D6 lgbm_A_deep shuffled x4: AUC {1.0: 0.6126, 1.96: 0.6144}
+2026-11-26 18:36:12,148 CYP2D6 lgbm_A_deep gaussian x1: AUC {1.0: 0.5352, 1.96: 0.5258}
+2026-11-26 18:41:29,709 CYP2D6 lgbm_A_deep gaussian x4: AUC {1.0: 0.5122, 1.96: 0.5198}
+2026-11-26 18:42:12,229 CYP2D6 lgbm_A+fps_deep shuffled x0: AUC {1.0: 0.7185, 1.96: 0.7396}
+2026-11-26 18:43:15,718 CYP2D6 lgbm_A+fps_deep shuffled x1: AUC {1.0: 0.6686, 1.96: 0.678}
+2026-11-26 18:45:08,919 CYP2D6 lgbm_A+fps_deep shuffled x4: AUC {1.0: 0.6276, 1.96: 0.6265}
+2026-11-26 18:46:03,294 CYP2D6 stack experiment: lgbm_desc_deep done
+2026-11-26 18:46:33,047 CYP2D6 stack experiment: lgbm_desc_shallow done
+2026-11-26 18:47:56,155 CYP2D6 stack experiment: lgbm_A_deep done
+2026-11-26 18:48:42,995 CYP2D6 stack experiment: lgbm_A_shallow done
+2026-11-26 18:51:41,637 CYP2D6 stack experiment: lgbm_A+fps_deep done
+2026-11-26 18:55:39,579 CYP2D6 stack experiment: lgbm_A+fps_shallow done
+2026-11-26 19:14:40,039 CYP2D6 stack experiment: extratrees_A done
+2026-11-26 19:46:34,734 CYP2D6 stack experiment: rf_A done
+2026-11-26 19:48:14,375 CYP2D6 stack experiment: lgbm_A_deep_knnfeat done
+2026-11-26 19:51:06,133 CYP2D6 stack experiment: lgbm_A+fps_deep_knnfeat done
+2026-11-26 19:51:27,189 CYP2D6 lgbm_A+fps_deep fraction 0.05: AUC {1.0: 0.652, 1.96: 0.6721}
+2026-11-26 19:51:47,490 CYP2D6 lgbm_A+fps_deep fraction 0.10: AUC {1.0: 0.6986, 1.96: 0.7137}
+2026-11-26 19:52:12,368 CYP2D6 lgbm_A+fps_deep fraction 0.25: AUC {1.0: 0.7234, 1.96: 0.7513}
+2026-11-26 19:52:41,199 CYP2D6 lgbm_A+fps_deep fraction 0.50: AUC {1.0: 0.7129, 1.96: 0.734}
+2026-11-26 19:53:18,312 CYP2D6 lgbm_A+fps_deep fraction 1.00: AUC {1.0: 0.7185, 1.96: 0.7396}
+
+The feature store: 12468 columns in 28 blocks for 6895 compounds; 12018 in the blocks that are not opt-in, 5863 in the widest candidate
+
+== CYP3A4: 2334 pool compounds, 15 outer folds
+  widest candidate 5863 columns: 2.51 columns per compound; narrowest 217: 0.09; median 2265: 0.97
+  effective dimension, A (2265 columns read, 2241 not constant): rank 2226, 886 components for 90% and 1110 for 95% of the variance, participation ratio 565
+  effective dimension, A+fps (5826 columns read, 5635 not constant): rank 2333, 1047 components for 90% and 1350 for 95% of the variance, participation ratio 423
+  outer AUC of each default candidate against its width (Spearman): z0=1.0: rho +0.77 (p=0.000, 23 candidates); z0=1.96: rho +0.74 (p=0.000, 23 candidates)
+    lgbm_desc_deep: 217 columns, outer AUC 0.7668 at z0=1.0 and 0.8013 at z0=1.96
+    lgbm_A_deep: 2265 columns, outer AUC 0.7850 at z0=1.0 and 0.8192 at z0=1.96
+    lgbm_A+fps_deep: 5826 columns, outer AUC 0.8027 at z0=1.0 and 0.8354 at z0=1.96
+  permutation control of the whole pipeline: z0=1.0  real labels: AUC 0.8007, MCC +0.4111 | permuted: AUC 0.5096 (range 0.4802 to 0.5351), MCC +0.0020 (range -0.0376 to +0.0287)
+  permutation control of the whole pipeline: z0=1.96 real labels: AUC 0.8282, MCC +0.4652 | permuted: AUC 0.5096 (range 0.4942 to 0.5201), MCC -0.0043 (range -0.0374 to +0.0404)
+  lgbm_A_deep      shuffled z0=1.0  AUC with 0 / 1 / 4 times the columns: 0.7850 / 0.7712 / 0.7370 | change at x4: -0.0480, one-sided p of a loss of 0.01 or more: 0.9983
+  lgbm_A_deep      shuffled z0=1.96 AUC with 0 / 1 / 4 times the columns: 0.8192 / 0.8000 / 0.7647 | change at x4: -0.0545, one-sided p of a loss of 0.01 or more: 0.9999
+CHECK CYP3A4 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED
+  lgbm_A_deep      gaussian z0=1.0  AUC with 0 / 1 / 4 times the columns: 0.7850 / 0.7155 / 0.7115 | change at x4: -0.0736, one-sided p of a loss of 0.01 or more: 1.0000
+  lgbm_A_deep      gaussian z0=1.96 AUC with 0 / 1 / 4 times the columns: 0.8192 / 0.7435 / 0.7397 | change at x4: -0.0795, one-sided p of a loss of 0.01 or more: 0.9998
+CHECK CYP3A4 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED
+  lgbm_A+fps_deep  shuffled z0=1.0  AUC with 0 / 1 / 4 times the columns: 0.8027 / 0.7832 / 0.7543 | change at x4: -0.0484, one-sided p of a loss of 0.01 or more: 0.9998
+  lgbm_A+fps_deep  shuffled z0=1.96 AUC with 0 / 1 / 4 times the columns: 0.8354 / 0.8130 / 0.7836 | change at x4: -0.0518, one-sided p of a loss of 0.01 or more: 0.9992
+CHECK CYP3A4 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED
+  stack of the 5 outer folds of the first repeat, z0=1.0  outer AUC 0.8022 as it is, 0.7775 with 4 times the columns of 10 candidates added | change -0.0247, one-sided p of a loss of 0.01 or more: 0.9243
+  stack of the 5 outer folds of the first repeat, z0=1.96 outer AUC 0.8315 as it is, 0.8040 with 4 times the columns of 10 candidates added | change -0.0275, one-sided p of a loss of 0.01 or more: 0.9516
+CHECK CYP3A4 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED
+  lgbm_A+fps_deep on 5% of its columns (291): AUC 0.7095 at z0=1.0, 0.7267 at z0=1.96
+  lgbm_A+fps_deep on 10% of its columns (583): AUC 0.7514 at z0=1.0, 0.7803 at z0=1.96
+  lgbm_A+fps_deep on 25% of its columns (1456): AUC 0.7707 at z0=1.0, 0.7988 at z0=1.96
+  lgbm_A+fps_deep on 50% of its columns (2913): AUC 0.7825 at z0=1.0, 0.8174 at z0=1.96
+  lgbm_A+fps_deep on 100% of its columns (5826): AUC 0.8027 at z0=1.0, 0.8354 at z0=1.96
+
+== CYP2D6: 1493 pool compounds, 15 outer folds
+  widest candidate 5863 columns: 3.93 columns per compound; narrowest 217: 0.15; median 2265: 1.52
+  effective dimension, A (2265 columns read, 2238 not constant): rank 1490, 758 components for 90% and 931 for 95% of the variance, participation ratio 521
+  effective dimension, A+fps (5826 columns read, 5590 not constant): rank 1490, 840 components for 90% and 1039 for 95% of the variance, participation ratio 413
+  outer AUC of each default candidate against its width (Spearman): z0=1.0: rho +0.50 (p=0.015, 23 candidates); z0=1.96: rho +0.45 (p=0.029, 23 candidates)
+    lgbm_desc_deep: 217 columns, outer AUC 0.6640 at z0=1.0 and 0.6982 at z0=1.96
+    lgbm_A_deep: 2265 columns, outer AUC 0.6964 at z0=1.0 and 0.7267 at z0=1.96
+    lgbm_A+fps_deep: 5826 columns, outer AUC 0.7185 at z0=1.0 and 0.7396 at z0=1.96
+  permutation control of the whole pipeline: z0=1.0  real labels: AUC 0.7514, MCC +0.1592 | permuted: AUC 0.5012 (range 0.4770 to 0.5265), MCC +0.0196 (range -0.0069 to +0.0509)
+  permutation control of the whole pipeline: z0=1.96 real labels: AUC 0.7790, MCC +0.2648 | permuted: AUC 0.4987 (range 0.4434 to 0.5392), MCC -0.0045 (range -0.0380 to +0.0602)
+  lgbm_A_deep      shuffled z0=1.0  AUC with 0 / 1 / 4 times the columns: 0.6964 / 0.6490 / 0.6126 | change at x4: -0.0839, one-sided p of a loss of 0.01 or more: 0.9582
+  lgbm_A_deep      shuffled z0=1.96 AUC with 0 / 1 / 4 times the columns: 0.7267 / 0.6803 / 0.6144 | change at x4: -0.1124, one-sided p of a loss of 0.01 or more: 0.9599
+CHECK CYP2D6 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED
+  lgbm_A_deep      gaussian z0=1.0  AUC with 0 / 1 / 4 times the columns: 0.6964 / 0.5352 / 0.5122 | change at x4: -0.1842, one-sided p of a loss of 0.01 or more: 0.9979
+  lgbm_A_deep      gaussian z0=1.96 AUC with 0 / 1 / 4 times the columns: 0.7267 / 0.5258 / 0.5198 | change at x4: -0.2070, one-sided p of a loss of 0.01 or more: 0.9961
+CHECK CYP2D6 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED
+  lgbm_A+fps_deep  shuffled z0=1.0  AUC with 0 / 1 / 4 times the columns: 0.7185 / 0.6686 / 0.6276 | change at x4: -0.0909, one-sided p of a loss of 0.01 or more: 0.9942
+  lgbm_A+fps_deep  shuffled z0=1.96 AUC with 0 / 1 / 4 times the columns: 0.7396 / 0.6780 / 0.6265 | change at x4: -0.1131, one-sided p of a loss of 0.01 or more: 0.9897
+CHECK CYP2D6 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED
+  stack of the 5 outer folds of the first repeat, z0=1.0  outer AUC 0.7463 as it is, 0.7271 with 4 times the columns of 10 candidates added | change -0.0192, one-sided p of a loss of 0.01 or more: 0.6593
+  stack of the 5 outer folds of the first repeat, z0=1.96 outer AUC 0.7757 as it is, 0.7605 with 4 times the columns of 10 candidates added | change -0.0152, one-sided p of a loss of 0.01 or more: 0.6263
+CHECK CYP2D6 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED
+  lgbm_A+fps_deep on 5% of its columns (291): AUC 0.6520 at z0=1.0, 0.6721 at z0=1.96
+  lgbm_A+fps_deep on 10% of its columns (583): AUC 0.6986 at z0=1.0, 0.7137 at z0=1.96
+  lgbm_A+fps_deep on 25% of its columns (1456): AUC 0.7234 at z0=1.0, 0.7513 at z0=1.96
+  lgbm_A+fps_deep on 50% of its columns (2913): AUC 0.7129 at z0=1.0, 0.7340 at z0=1.96
+  lgbm_A+fps_deep on 100% of its columns (5826): AUC 0.7185 at z0=1.0, 0.7396 at z0=1.96

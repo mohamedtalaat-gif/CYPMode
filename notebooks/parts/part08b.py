@@ -271,6 +271,25 @@ assert not applicability_table.isna().any().any()
 assert sum(n_supported.values()) + sum(n_weak.values()) + sum(n_unsupported.values()) == 2 * n_blinded_compounds
 """
 
+OECD_TABLE = '''
+# The five OECD principles for the final stacks (cypmode/challenge/oecd_principles.py, job 289): the table that the job wrote, read back, and the checks on the data files.
+import pandas as pd
+
+OECD = ROOT / "data/tdi_track/outputs/final"
+oecd_rows, oecd_cur = pd.read_csv(OECD / "oecd_principles.csv"), pd.read_csv(OECD / "data_curation.csv")
+oecd_gof, oecd_alerts = pd.read_csv(OECD / "goodness_of_fit.csv"), pd.read_csv(OECD / "alert_enrichment.csv")
+for principle, group in oecd_rows.groupby("principle", sort=True):
+    show_markdown(f"**{principle}**\\n\\n" + "\\n\\n".join(f"{r.isoform}: {r.evidence}" for r in group.itertuples()))
+show_table(oecd_cur.rename(columns={"check": "check on the data files"}), floatfmt=".4g")
+oecd_gain = pd.read_csv(OECD / "block_gain.csv")
+oecd_enriched = {iso: set(oecd_alerts[(oecd_alerts.isoform == iso) & (oecd_alerts.p_holm < 0.05) & (oecd_alerts.odds_ratio > 1)].feature) for iso in ("CYP3A4", "CYP2D6")}
+oecd_t = {iso: {"fit": f"{oecd_gof[oecd_gof.isoform == iso]['fit_auc_z1.0'].mean():.3f}", "outer": f"{oecd_gof[oecd_gof.isoform == iso]['outer_auc_z1.0'].mean():.3f}", "n_sig": len(oecd_enriched[iso]), "n_tested": int((oecd_alerts.isoform == iso).sum()),
+               "n_dep": int(((oecd_alerts.isoform == iso) & (oecd_alerts.p_holm < 0.05) & (oecd_alerts.odds_ratio < 1)).sum()),
+               "motif": f"{oecd_gain[(oecd_gain.isoform == iso) & (oecd_gain.name == 'motif')].gain_share.iloc[0]:.1%}", "desc": f"{oecd_gain[(oecd_gain.isoform == iso) & (oecd_gain.name == 'rdkit_desc')].gain_share.iloc[0]:.0%}"} for iso in ("CYP3A4", "CYP2D6")}
+oecd_common = sorted(oecd_enriched["CYP3A4"] & oecd_enriched["CYP2D6"])
+oecd_common_text = ("Enriched in both enzymes: " + ", ".join(oecd_common) + ".") if oecd_common else "No alert is enriched in both enzymes."
+'''
+
 CELLS = [
     md("""
 ## 8.4 Turning scores into calls: a smoothed threshold, a share of calls, and a multiple
@@ -367,4 +386,21 @@ What the number is, and is not. It is the expected quality of the procedure on c
 *On what actually ran.* `nested_evaluate` with `StackedLogit` and `BestSingle` (`cypmode/challenge/nested.py`), the weights of `confident_weights` and `SimilarityMatcher`, `corrected_resampled_t` and `plan_sizes` (`model_comparison.py`); the report of the build, `final_report.md`, holds the same AUC and MCC. The last cell reads `applicability_domain_compounds.csv` and `applicability_domain_bins.csv` from `data/tdi_track/outputs/final/`, written by `cypmode/challenge/applicability_domain.py` in queue job 096.
 """),
     figure("arch_final_results"),
+    md("""
+## 8.8 The five OECD principles
+
+> **Field:** Statistics · Cheminformatics
+
+A model that is meant to be trusted outside the laboratory that built it is judged against a short list that the Organisation for Economic Co-operation and Development (OECD) adopted for models of chemical properties, and that the editors of this field's journal use as a test of a modelling paper (Merz and colleagues, 2015). Each principle is a question that a reader may put to the final stacks of this part. The cell below puts all five, for both enzymes, and answers each from a file of the project, so that no answer is typed in.
+
+**1. A defined endpoint.** What exactly is predicted? A compound is positive when the potency after pre-incubation exceeds the potency without it, floored at 4, by more than a factor of two (section 2.3), and the rule gives the given label for every compound of both pools and for every released test label that it can be applied to. **2. An unambiguous algorithm.** Could another laboratory repeat the computation exactly? Every member of each final stack, the columns it reads, its hyperparameters, the blend and its grid, the seeds, the call rule, and the versions of the packages are written as one machine-readable file; the networks that were trained in another environment are listed with the constants of their runners. **3. A defined domain of applicability.** For which compounds is the prediction to be trusted? The tiers of section 8.7. **4. Appropriate measures of goodness of fit, robustness, and predictivity.** Fit is how well the model reproduces the compounds that it was fitted on; robustness is how stable the performance is when the data are resampled or the labels are permuted; predictivity is the performance on compounds that the model did not see. Fit was not reported until this section: every candidate of the default grid is refitted on its whole pool and scored there, on the yardstick of section 6.4, and the difference between that score and the outer-fold score is the optimism that the nested design removes. **5. A mechanistic interpretation, if possible.** The enrichment of each structural alert among the positives is tested with Fisher's exact test (section 5.4), with the Holm adjustment over the alerts of the enzyme, and the share of the gain of one LightGBM model that each block of columns carries is listed.
+"""),
+    code(OECD_TABLE),
+    md("""
+For CYP3A4 the candidates refitted on the pool score an AUC of {{=oecd_t['CYP3A4']['fit']}} on average there, against {{=oecd_t['CYP3A4']['outer']}} on held-out folds; for CYP2D6 the numbers are {{=oecd_t['CYP2D6']['fit']}} and {{=oecd_t['CYP2D6']['outer']}}. The gap is large because trees, neighbours, and kernels can reproduce the compounds they were fitted on almost exactly, which is why a fit is never read as a forecast. Of the {{=oecd_t['CYP3A4']['n_tested']}} alerts and motifs tested for CYP3A4, {{=oecd_t['CYP3A4']['n_sig']}} are enriched among the positives after the adjustment and {{=oecd_t['CYP3A4']['n_dep']}} are depleted; for CYP2D6, {{=oecd_t['CYP2D6']['n_sig']}} of {{=oecd_t['CYP2D6']['n_tested']}} {{='is' if oecd_t['CYP2D6']['n_sig'] == 1 else 'are'}} enriched and {{=oecd_t['CYP2D6']['n_dep']}} {{='is' if oecd_t['CYP2D6']['n_dep'] == 1 else 'are'}} depleted. {{=oecd_common_text}} The block of heme-binding motifs carries {{=oecd_t['CYP3A4']['motif']}} of the gain of the LightGBM model for CYP3A4 and {{=oecd_t['CYP2D6']['motif']}} for CYP2D6, against {{=oecd_t['CYP3A4']['desc']}} and {{=oecd_t['CYP2D6']['desc']}} for the descriptors. The enrichment says that some of the literature knowledge about structural alerts is visible in this data; it does not say that an alert explains a compound.
+
+The table of the data files is the curation that the editors ask for in a section of its own: the parsing of every structure, the duplicates, the overlap of the blinded set with the training set, the compounds written as salts, the rows that follow another labelling convention (section 2.4), and the check of the label rule.
+
+*On what actually ran.* `cypmode/challenge/oecd_principles.py` writes `oecd_principles.md`, `algorithm_manifest.json`, `data_curation.csv`, `goodness_of_fit.csv`, `alert_enrichment.csv`, and `block_gain.csv` in `data/tdi_track/outputs/final`; it reuses the plan and the caches of the final build through `descriptor_ratio.Final`, and reads the networks' constants from the source of their runners without importing them. `queue/jobs/289_oecd_principles.sh` runs it after jobs 287 and 288 and `tests/test_oecd_principles.py` tests it.
+"""),
 ]

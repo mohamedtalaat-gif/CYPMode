@@ -136,3 +136,19 @@
     with the force field that also relaxed it. {dynamics_n_met} of its three scores met the gate registered before the result (the highest mean rho was {dynamics_best_rho} against the bar
     of {dynamics_bar}); {dynamics_ligands} ligands cannot detect a modest effect, so the result is that this cheap dynamics did not rank the predicted poses of these ligands and says nothing
     about a dynamics of the whole complex or about the 20 official ligands, which are chemically far from the benchmark ligands.
+- id: L17
+  area: data
+  uses: []
+  text: >-
+    The validation on a second data set (the direct-inhibition panel of Veith et al. in the benchmark of the Therapeutics Data Commons, job 287) tests the generic part of the procedure, the features,
+    the candidates, the stack, and the nested protocol, on a label that is direct inhibition and not time-dependent inhibition (TDI); it does not test the label process, the selection-aware model, or
+    the call-rate rule of the TDI track. The published entries among which its result is placed are the numbers that their contacts reported to the leaderboard on 2026-11-26; this project did
+    not rerun them, so the placement shows where the number falls among published numbers and not that the methods were compared under one protocol of the project.
+- id: L18
+  area: evaluation
+  uses: []
+  text: >-
+    The ratio of columns to compounds (job 288) is answered by measurements and not by argument: the widest candidate reads more columns than the pool has compounds, and a candidate that reads
+    columns can lose the area under the receiver operating characteristic curve (AUC) when columns that cannot carry a signal are added. The verdicts of the rule fixed before the run are in `descriptor_ratio.log`; every one of them is harmful or not resolved, because columns without a signal lowered the AUC of both candidates and the stack is not shown to be unharmed by them. The test on the stack uses the first repeat
+    of five outer folds only, so a loss that it cannot rule out is reported as not resolved and not as harmless; the permutation control of the whole pipeline remains the check against chance
+    correlation that uses the same selection as the real run.

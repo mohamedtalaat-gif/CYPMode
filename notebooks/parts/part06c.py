@@ -323,6 +323,65 @@ compact_five, compact_ten = replicate_values["physics_compact"]
 '''
 
 
+EXTERNAL_DATASET = '''
+# The validation on the second data set (cypmode/challenge/external_dataset.py, job 287): the tables that the job wrote, read back.
+import numpy as np
+import pandas as pd
+
+EXT = ROOT / "data/tdi_track/outputs/external_dataset"
+ext_official, ext_place = pd.read_csv(EXT / "official_protocol.csv"), pd.read_csv(EXT / "placement.csv").set_index("isoform")
+ext_perm, ext_nested = pd.read_csv(EXT / "permutation_control.csv"), pd.read_csv(EXT / "nested_design.csv")
+ext_cal, ext_bins = pd.read_csv(EXT / "calibration.csv"), pd.read_csv(EXT / "similarity_bins.csv")
+ext_rows, ext_t = [], {}
+for iso in ("CYP3A4", "CYP2D6"):
+    stack = ext_official[(ext_official.isoform == iso) & (ext_official.selector == "stack")]
+    test, valid = stack[stack.part == "test"], stack[stack.part == "valid"]
+    nested = ext_nested[(ext_nested.isoform == iso) & (ext_nested.metric == "ap") & (ext_nested.selector == "stack_logit")]
+    single = ext_official[(ext_official.isoform == iso) & (ext_official.selector == "best_single") & (ext_official.part == "test")]
+    place = ext_place.loc[iso]
+    ext_rows.append({"enzyme": iso, "test AUPRC, mean of 5 seeds": test.auprc.mean(), "standard deviation": test.auprc.std(ddof=0), "validation AUPRC": valid.auprc.mean(), "nested AUPRC": nested.outer_score.mean(),
+                     "median of the published": place.median_published, "best published": place.best_published, "place": f"{int(place.rank_among_entries)} of {int(place.entries) + 1}", "test AUC, labels permuted": ext_perm[ext_perm.isoform == iso].auc.mean(), "test AUPRC, best single candidate": single.auprc.mean()})
+    populated = ext_bins[(ext_bins.isoform == iso) & (ext_bins.compounds >= 100) & (ext_bins.bin != "all")]
+    isotonic, raw = (ext_cal[(ext_cal.isoform == iso) & (ext_cal.method == method)].iloc[0] for method in ("isotonic", "raw"))
+    ext_t[iso] = {"mean": f"{test.auprc.mean():.3f}", "sd": f"{test.auprc.std(ddof=0):.3f}", "median": f"{place.median_published:.3f}", "best": f"{place.best_published:.3f}", "place": f"{int(place.rank_among_entries)} of {int(place.entries) + 1}",
+                  "relation": "at or above" if place.mean_test_auprc >= place.median_published else "below", "perm": f"{ext_perm[ext_perm.isoform == iso].auc.mean():.3f}", "nested": f"{nested.outer_score.mean():.3f}",
+                  "bin_low": f"{populated.auc.iloc[0]:.3f}", "bin_high": f"{populated.auc.iloc[-1]:.3f}", "n_low": int(populated.compounds.iloc[0]), "n_high": int(populated.compounds.iloc[-1]), "ece": f"{isotonic.ece:.3f}", "ece_raw": f"{raw.ece:.3f}", "single": f"{single.auprc.mean():.3f}", "gain": f"{test.auprc.mean() - single.auprc.mean():+.3f}"}
+show_table(pd.DataFrame(ext_rows), floatfmt=".3f")
+'''
+
+DESCRIPTOR_RATIO = '''
+# The analysis of the ratio of columns to compounds (cypmode/challenge/descriptor_ratio.py, job 288): the tables that the job wrote, read back.
+import re
+
+import numpy as np
+import pandas as pd
+
+CMP = ROOT / "data/tdi_track/outputs/comparisons"
+dr_widths, dr_spectrum = pd.read_csv(CMP / "descriptor_ratio_widths.csv"), pd.read_csv(CMP / "descriptor_ratio_spectrum.csv")
+dr_noise, dr_stack, dr_fraction = pd.read_csv(CMP / "descriptor_ratio_noise.csv"), pd.read_csv(CMP / "descriptor_ratio_stack.csv"), pd.read_csv(CMP / "descriptor_ratio_fraction.csv")
+dr_checks = [line.removeprefix("CHECK ").strip() for line in (ROOT / "data/structure_track/outputs/cyp3a4/logs/descriptor_ratio.log").read_text().splitlines() if line.startswith("CHECK ")]
+dr_store = re.search(r"The feature store: (\\d+) columns in (\\d+) blocks for (\\d+) compounds", (ROOT / "data/structure_track/outputs/cyp3a4/logs/descriptor_ratio.log").read_text()).groups()
+dr_all_harmful = all(check.endswith("HARMFUL OR NOT RESOLVED") for check in dr_checks)
+dr_reading = ("No candidate, and not the stack, is shown to be unharmed by columns without a signal, so a model of this kind loses accuracy when such columns are added. The verdicts do not show that the columns of the store carry no signal; the permutation control and the curve of the fewer-columns paragraph address that." if dr_all_harmful else "At least one verdict is not harmful; the list above gives each of them.")
+dr_rows, dr_t = [], {}
+for iso in ("CYP3A4", "CYP2D6"):
+    w, sp = dr_widths[dr_widths.isoform == iso], dr_spectrum[(dr_spectrum.isoform == iso) & (dr_spectrum.feature_set == "A+fps")].iloc[0]
+    noise = dr_noise[(dr_noise.isoform == iso) & (dr_noise.candidate == "lgbm_A_deep")]
+    base, shuffled = noise[noise.multiple == 0]["auc_z1.0"].mean(), noise[(noise.kind == "shuffled") & (noise.multiple == 4)]["auc_z1.0"].mean()
+    st = dr_stack[(dr_stack.isoform == iso) & (dr_stack.z0 == 1.0)]
+    frac = dr_fraction[dr_fraction.isoform == iso].groupby("fraction")["auc_z1.0"].mean()
+    dr_rows.append({"enzyme": iso, "rows of the pool": int(w.rows.iloc[0]), "widest candidate, columns": int(w.n_columns.max()), "columns per compound": w.n_columns.max() / w.rows.iloc[0], "components for 90% of the variance": int(sp.components_for_90),
+                    "participation ratio": sp.participation_ratio, "AUC of lgbm_A_deep": base, "AUC with 4 times the columns shuffled": shuffled,
+                    "AUC of the stack": st[st.variant == "plain"].outer_auc.mean(), "AUC of the stack with extra columns": st[st.variant == "extra columns"].outer_auc.mean(), "AUC on 25% of the columns": frac.loc[0.25], "AUC on all columns": frac.loc[1.0]})
+    dr_t[iso] = {"ratio": f"{w.n_columns.max() / w.rows.iloc[0]:.1f}", "columns": int(w.n_columns.max()), "rows": int(w.rows.iloc[0]), "d90": int(sp.components_for_90), "base": f"{base:.3f}", "shuffled": f"{shuffled:.3f}", "loss": f"{base - shuffled:.3f}",
+                 "stack_plain": f"{st[st.variant == 'plain'].outer_auc.mean():.3f}", "stack_extra": f"{st[st.variant == 'extra columns'].outer_auc.mean():.3f}", "f25": f"{frac.loc[0.25]:.3f}", "f100": f"{frac.loc[1.0]:.3f}"}
+'''
+
+DESCRIPTOR_RATIO_TABLE = '''
+# The table of the analysis of the ratio of columns to compounds, one row per enzyme.
+show_table(pd.DataFrame(dr_rows), floatfmt=".3f")
+'''
+
 CELLS = [
     md("""
 ## 6.6 Why Tukey's HSD was dropped, and how the older results were recomputed
@@ -432,5 +491,57 @@ On the real pipeline, the control gives {{=real_auc_control:.3f}} AUC for the re
 Features that use labels are computed inside the folds. The nearest-neighbour label features of 7.3 are recomputed for every fold from the training part only (`add_knn_label_features_for_fold`), and in the nested plan every fit of every candidate happens inside a task (6.3), which sees only its own training rows. With the controls of this section, the weights of 6.4, the test of 6.5 and the gate of 6.7, the measurement chain of Part VI is complete: Part VII now applies it, from the first model.
 
 *On what actually ran.* `cypmode/challenge/split_validity.py` computes the similarity profile (it uses `tanimoto_ood_distance` of `cypmode/challenge/reliability.py`); `cypmode/challenge/block_holdout.py` fits the candidates on the training part, scores them on the block, and prints the table and the agreement that this notebook reads back; `cypmode/challenge/permutation_control.py` runs the negative control on six candidates, one repeat of five outer folds and three permutations, with its caches in a temporary directory that is discarded; `cypmode/challenge/official_extra.py` holds `exclude_test_compounds`, the guard, and `cypmode/challenge/feature_store.py` the feature blocks. The toy leak above is computed in the notebook.
+"""),
+    md("""
+## 6.9 A second published data set
+
+> **Field:** Statistics · Machine learning
+
+Everything so far was measured on one data set, the training file of the challenge. A procedure can score well on its own data and still be built around it, so the editors of this field's journal ask that a new modelling procedure be tried on at least one other well-known data set for which a study with another method has been published (Jorgensen, 2006). The training file of the challenge has no such partner, because the TDI label is the project's own reading of a measurement that few laboratories made. The inhibition data of Veith and colleagues (2009) are the nearest public partner: the same enzymes, a different assay, about twelve to thirteen thousand compounds each, and a benchmark in the Therapeutics Data Commons that fixes everything a comparison needs.
+
+**What the benchmark fixes.** A test set of about a fifth of the compounds, chosen by scaffold: the **scaffold** of a molecule is the ring system that remains when the side chains are cut away (Bemis and Murcko, 1996), and the test compounds share no scaffold with the training compounds, which is harder than a random split because a new series is a bigger step than a new member of a known series. The benchmark fixes three more things: a metric, the area under the precision–recall curve (AUPRC), which scikit-learn computes as the average precision of section 4.10; five training and validation splits of the rest, made by the same scaffold rule with seeds 1 to 5; and a public leaderboard that lists, for each enzyme, the AUPRC of 19 published methods, read for this notebook on 2026-11-26.
+
+**What is run, and what is not.** The stack of the final build, unchanged, on the 16 candidates that read only structures: the two regressors of the assay arms have no arms to read here, and the candidates that read a block trained on an external panel are left out because that panel contains these very compounds. Nothing of the label process, the selection-aware model, or the call-rate multiple applies to a yes/no inhibition label. This section therefore tests the generic part of the procedure (the features, the candidates, the stack, and the nested protocol) and says nothing about the label model; the label is direct inhibition, not time-dependent inhibition. Four things are measured. The official protocol: for each seed, the stack is selected on inner folds that keep every scaffold whole, refitted on the training split, and scores the validation split and the official test set. The nested design of section 6.3 on all the training compounds, to set the nested estimate against the score on the test set. The negative control of section 6.8: the labels of the training split are permuted and the protocol is repeated. Finally, the reliability of sections 8.5 and 8.7: the AUC of the deployed stack in bins of the similarity to the training compounds, and the calibration of its probabilities.
+
+**The rule, fixed before the first run.** The mean test AUPRC of the five seeds is *at or above the median* of the published entries or it is *below* it, and no superiority over any entry is claimed whatever the rank. The negative control passes when the mean permuted test AUC is within 0.04 of 0.5, the tolerance of the control of section 6.8. The nested estimate, the AUC by similarity and the calibration carry no verdict.
+"""),
+    code(EXTERNAL_DATASET),
+    md("""
+For CYP3A4 the stack scores a test AUPRC of {{=ext_t['CYP3A4']['mean']}} (standard deviation {{=ext_t['CYP3A4']['sd']}} over the five seeds, population form, as the leaderboard prints it), against a median of {{=ext_t['CYP3A4']['median']}} and a best of {{=ext_t['CYP3A4']['best']}} among the published entries: it would stand {{=ext_t['CYP3A4']['place']}}, {{=ext_t['CYP3A4']['relation']}} the median. For CYP2D6 the numbers are {{=ext_t['CYP2D6']['mean']}} (standard deviation {{=ext_t['CYP2D6']['sd']}}), {{=ext_t['CYP2D6']['median']}} and {{=ext_t['CYP2D6']['best']}}: place {{=ext_t['CYP2D6']['place']}}, {{=ext_t['CYP2D6']['relation']}} the median. With the labels permuted the test AUC is {{=ext_t['CYP3A4']['perm']}} and {{=ext_t['CYP2D6']['perm']}}. The nested estimate of the AUPRC, with the selection inside every outer fold, is {{=ext_t['CYP3A4']['nested']}} and {{=ext_t['CYP2D6']['nested']}}; the table sets it beside the score on the official test set, so the gap between the two is the price of moving from a random-looking fold to a new scaffold. The AUC of the deployed stack rises with the similarity of a test compound to the training set, from {{=ext_t['CYP3A4']['bin_low']}} in the lowest populated bin ({{=ext_t['CYP3A4']['n_low']}} compounds) to {{=ext_t['CYP3A4']['bin_high']}} in the highest ({{=ext_t['CYP3A4']['n_high']}}) for CYP3A4, and from {{=ext_t['CYP2D6']['bin_low']}} ({{=ext_t['CYP2D6']['n_low']}}) to {{=ext_t['CYP2D6']['bin_high']}} ({{=ext_t['CYP2D6']['n_high']}}) for CYP2D6; the expected calibration error of the probabilities on the test set is {{=ext_t['CYP3A4']['ece']}} after isotonic regression against {{=ext_t['CYP3A4']['ece_raw']}} for the raw blend (CYP3A4), and {{=ext_t['CYP2D6']['ece']}} against {{=ext_t['CYP2D6']['ece_raw']}} (CYP2D6).
+
+The best single candidate scores a test AUPRC of {{=ext_t['CYP3A4']['single']}} (CYP3A4) and {{=ext_t['CYP2D6']['single']}} (CYP2D6), so the stack gains {{=ext_t['CYP3A4']['gain']}} and {{=ext_t['CYP2D6']['gain']}}, against standard deviations over the five seeds of {{=ext_t['CYP3A4']['sd']}} and {{=ext_t['CYP2D6']['sd']}}: on these two sets the stack is at most a small improvement over its best member.
+
+Three limits belong with these numbers. The leaderboard is written by the contacts of the entries, and this project did not rerun any of them; the placement says where the number falls among the published numbers, not that the methods were compared under one hand. The label is direct inhibition, so a good place here supports the features, the stack, and the protocol, and does not support the claim that time-dependent inhibition is predicted well. Third, the test sets of this benchmark are larger and the labels cleaner than those of the challenge, so the absolute numbers of the two data sets are not comparable.
+
+*On what actually ran.* `cypmode/challenge/external_dataset.py` holds the whole analysis; it reads the four benchmark files in `data/tdi_track/inputs/tdc_cache/admet_group/` (whose SHA-256 sums are stored beside them) and the leaderboard table there, and splits `train_val` with the function and the fractions that the benchmark's own `get_train_valid_split` uses. The labels of the calibration fit are read in the order of the inner folds through `inner_labels`, because the scores of the inner folds are in that order and not in the order of the pool; with the order of the pool the isotonic map is almost constant (a slope near 70 and a Brier score equal to that of a constant prediction), and `tests/test_external_dataset.py` checks the order. `queue/jobs/287_external_dataset.sh` runs it; `tests/test_external_dataset.py` checks the candidate grid, the checksums, the split sizes, the placement, and that no label of a validation or test compound reaches a candidate.
+"""),
+    md("""
+## 6.10 Columns and compounds
+
+> **Field:** Statistics · Machine learning
+
+The editors of the journal discourage "model development featuring high ratios of descriptors to data points" (Jorgensen, 2006). The worry is old and well founded. If you screen many descriptors against a response for few compounds, some will correlate with it by chance, and an ordinary regression will use them and look better on its own data than it will on new data (Topliss and Costello, 1972; Hawkins, 2004). This section replaces the argument that tree ensembles are not regressions with five measurements.
+"""),
+    code(DESCRIPTOR_RATIO),
+    md("""
+The feature store of the project has {{=int(dr_store[0]):,}} columns for {{=int(dr_store[2]):,}} compounds.
+
+**What each model sees.** No candidate reads the whole store. The widest set of the default grid, the fingerprints and descriptors of `A+fps`, has {{=dr_t['CYP3A4']['columns']}} columns, which is {{=dr_t['CYP3A4']['ratio']}} columns per compound for the {{=dr_t['CYP3A4']['rows']}} compounds of the CYP3A4 pool and {{=dr_t['CYP2D6']['ratio']}} for the {{=dr_t['CYP2D6']['rows']}} compounds of the CYP2D6 pool. Both are above one, so the concern is not empty.
+
+**How many dimensions the data hold.** Most of the columns are sparse bits and counts that move together. Standardise the columns, so that each has variance one, and ask how many principal components (section 4.9) are needed to hold 90% of the total variance: {{=dr_t['CYP3A4']['d90']}} for CYP3A4 and {{=dr_t['CYP2D6']['d90']}} for CYP2D6. The **participation ratio** of the spectrum, the square of the sum of the eigenvalues divided by the sum of their squares, counts how many components carry the variance if it were spread evenly; the table gives it. The columns span many dimensions, which is a reason to measure what extra columns do and not to assume.
+
+**Extra columns that cannot carry a signal.** Two candidates are refitted on every outer fold of the final design with 0, 1, and 4 times their own number of columns added, and scored on the yardstick of section 6.4. The added columns are copies of the design of other compounds (the rows of the design matrix permuted at random: the same kinds of column, the same distributions, and the same correlations among themselves, belonging to other compounds, so that they cannot carry the label of this one, which is what chance correlation is made of) or, as a harsher test, independent standard normal columns. A model that fits chance correlations loses AUC as they are added. The rule written before the run: adding four times the columns is *not harmful* when the paired loss in AUC is below 0.01 at both confidence cuts and a one-sided test of the corrected resampled t (section 6.5) rejects a loss of 0.01 or more; otherwise the verdict is *harmful or not resolved*. The cell prints the verdicts of the log, and the table gives, for `lgbm_A_deep`, the AUC with 0 and with 4 times the columns shuffled: {{=dr_t['CYP3A4']['base']}} and {{=dr_t['CYP3A4']['shuffled']}} for CYP3A4 (a change of {{=dr_t['CYP3A4']['loss']}}) and {{=dr_t['CYP2D6']['base']}} and {{=dr_t['CYP2D6']['shuffled']}} for CYP2D6 (a change of {{=dr_t['CYP2D6']['loss']}}).
+"""),
+    code(DESCRIPTOR_RATIO_TABLE),
+    md("""
+The verdicts of the rule, as the log prints them: {{="; ".join(dr_checks)}}. {{=dr_reading}}
+
+**The stack, not only a candidate.** A candidate that is hurt by useless columns can be weighted down by the blend. The 16 label-free candidates go through the whole nested procedure for the first repeat, once as they are and once with four times the columns of every candidate that reads columns added as shuffled columns: the AUC of the stack is {{=dr_t['CYP3A4']['stack_plain']}} and {{=dr_t['CYP3A4']['stack_extra']}} for CYP3A4 and {{=dr_t['CYP2D6']['stack_plain']}} and {{=dr_t['CYP2D6']['stack_extra']}} for CYP2D6 at the primary cut. With only five outer folds the test is conservative, so a loss that it cannot rule out is reported as not resolved and not as harmless.
+
+**Fewer columns.** One candidate on a random 5%, 10%, 25%, 50% and 100% of its columns: at 25% the AUC is {{=dr_t['CYP3A4']['f25']}} for CYP3A4 and {{=dr_t['CYP2D6']['f25']}} for CYP2D6, against {{=dr_t['CYP3A4']['f100']}} and {{=dr_t['CYP2D6']['f100']}} on all of them. A curve that rises with the number of columns means that they carry signal; a curve that is flat means that few of them do.
+
+**What was measured before.** The permutation control of section 6.8 applies the whole pipeline to permuted labels and gets an AUC of 0.5, which is the check that matters most against chance correlation, because it uses the same selection that the real run uses. Read the three results together: the permutation control says that the pipeline does not manufacture signal from noise; the extra columns say how much a model loses when it is given four times as many columns as it reads, none of them carrying a signal; the nested design says what the pipeline scores on compounds that it did not see, whatever its width.
+
+*On what actually ran.* `cypmode/challenge/descriptor_ratio.py` computes all five; it reuses the plan and the caches of the final build, refits `lgbm_A_deep` and `lgbm_A+fps_deep` with the extra columns on the outer folds, and runs the stack on the first repeat with a cache of its own in `data/tdi_track/outputs/comparisons/descriptor_ratio_work` that git does not hold. `queue/jobs/288_descriptor_ratio.sh` runs it and `tests/test_descriptor_ratio.py` tests the spectrum, the widths, the extra columns, the one-sided rule, and the summaries.
 """),
 ]

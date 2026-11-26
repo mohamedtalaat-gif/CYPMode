@@ -1,0 +1,1148 @@
+{
+  "blend": {
+    "c_grid": [
+      0.003,
+      0.01,
+      0.03,
+      0.1,
+      0.3,
+      1.0
+    ],
+    "input": "logit of the empirical cdf of the inner out-of-fold score of every member",
+    "max_iter": 20000,
+    "meta_folds": 5,
+    "penalties": [
+      "l1",
+      "l2"
+    ],
+    "selector": "StackedLogit",
+    "solver": "liblinear",
+    "tolerance": 1e-09
+  },
+  "calibration": {
+    "bounds": [
+      0.0001,
+      0.9999
+    ],
+    "method": "isotonic regression on the inner out-of-fold scores of the stack"
+  },
+  "call_rule": "the top share of the test file, a multiple of the prevalence of the scored population, is called positive",
+  "environment": {
+    "lightgbm": "4.7.0",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "python": "3.13.13",
+    "rdkit": "2026.03.6",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1"
+  },
+  "feature_sets": {
+    "A": [
+      "morgan_c2",
+      "rdkit_desc"
+    ],
+    "A+ext": [
+      "morgan_c2",
+      "rdkit_desc",
+      "ext_activity"
+    ],
+    "A+fps": [
+      "morgan_c2",
+      "rdkit_desc",
+      "motif",
+      "maccs",
+      "avalon",
+      "torsion_c",
+      "fmorgan_c2",
+      "erg"
+    ],
+    "A+fps+ext": [
+      "morgan_c2",
+      "rdkit_desc",
+      "motif",
+      "maccs",
+      "avalon",
+      "torsion_c",
+      "fmorgan_c2",
+      "erg",
+      "ext_activity"
+    ],
+    "A+fps+ext+alerts": [
+      "morgan_c2",
+      "rdkit_desc",
+      "motif",
+      "maccs",
+      "avalon",
+      "torsion_c",
+      "fmorgan_c2",
+      "erg",
+      "ext_activity",
+      "tdi_alerts"
+    ],
+    "desc": [
+      "rdkit_desc"
+    ]
+  },
+  "isoforms": {
+    "CYP2D6": {
+      "call_rate_multiplier": 1.0,
+      "called_rate": 0.058666666666666666,
+      "members": [
+        {
+          "blocks": [],
+          "family": "knn_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "knn_tanimoto_k5",
+          "params": {
+            "k": 5
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "knn_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "knn_tanimoto_k15",
+          "params": {
+            "k": 15
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "knn_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "knn_tanimoto_k40",
+          "params": {
+            "k": 40
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "svm_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "svm_tanimoto_C0.3",
+          "params": {
+            "C": 0.3
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "svm_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "svm_tanimoto_C1",
+          "params": {
+            "C": 1.0
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "svm_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "svm_tanimoto_C3",
+          "params": {
+            "C": 3.0
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_desc_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_desc_shallow",
+          "params": {
+            "colsample_bytree": 0.2,
+            "learning_rate": 0.02,
+            "min_child_samples": 20,
+            "n_estimators": 600,
+            "num_leaves": 8,
+            "reg_lambda": 5.0,
+            "subsample": 0.7,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A_shallow",
+          "params": {
+            "colsample_bytree": 0.2,
+            "learning_rate": 0.02,
+            "min_child_samples": 20,
+            "n_estimators": 600,
+            "num_leaves": 8,
+            "reg_lambda": 5.0,
+            "subsample": 0.7,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+fps_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+fps_shallow",
+          "params": {
+            "colsample_bytree": 0.2,
+            "learning_rate": 0.02,
+            "min_child_samples": 20,
+            "n_estimators": 600,
+            "num_leaves": 8,
+            "reg_lambda": 5.0,
+            "subsample": 0.7,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "ext_activity"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+ext_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg",
+            "ext_activity",
+            "tdi_alerts"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+fps+ext+alerts_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg",
+            "ext_activity"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+fps+ext_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "extratrees",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "extratrees_A",
+          "params": {},
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "rf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "rf_A",
+          "params": {},
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": true,
+          "name": "lgbm_A_deep_knnfeat",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_reg_shift",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_reg_shift_A",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_reg_arms",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_reg_arms_A",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": true,
+          "name": "lgbm_A+fps_deep_knnfeat",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_reg_shift",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_reg_shift_A+fps",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_reg_arms",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_reg_arms_A+fps",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        }
+      ],
+      "stack": "default",
+      "target_prevalence": 0.059117573198105
+    },
+    "CYP3A4": {
+      "call_rate_multiplier": 1.3,
+      "called_rate": 0.4026666666666667,
+      "members": [
+        {
+          "blocks": [],
+          "family": "knn_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "knn_tanimoto_k5",
+          "params": {
+            "k": 5
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "knn_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "knn_tanimoto_k15",
+          "params": {
+            "k": 15
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "knn_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "knn_tanimoto_k40",
+          "params": {
+            "k": 40
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "svm_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "svm_tanimoto_C0.3",
+          "params": {
+            "C": 0.3
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "svm_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "svm_tanimoto_C1",
+          "params": {
+            "C": 1.0
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "svm_tanimoto",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "svm_tanimoto_C3",
+          "params": {
+            "C": 3.0
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_desc_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_desc_shallow",
+          "params": {
+            "colsample_bytree": 0.2,
+            "learning_rate": 0.02,
+            "min_child_samples": 20,
+            "n_estimators": 600,
+            "num_leaves": 8,
+            "reg_lambda": 5.0,
+            "subsample": 0.7,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A_shallow",
+          "params": {
+            "colsample_bytree": 0.2,
+            "learning_rate": 0.02,
+            "min_child_samples": 20,
+            "n_estimators": 600,
+            "num_leaves": 8,
+            "reg_lambda": 5.0,
+            "subsample": 0.7,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+fps_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+fps_shallow",
+          "params": {
+            "colsample_bytree": 0.2,
+            "learning_rate": 0.02,
+            "min_child_samples": 20,
+            "n_estimators": 600,
+            "num_leaves": 8,
+            "reg_lambda": 5.0,
+            "subsample": 0.7,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "ext_activity"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+ext_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg",
+            "ext_activity",
+            "tdi_alerts"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+fps+ext+alerts_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg",
+            "ext_activity"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_A+fps+ext_deep",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "extratrees",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "extratrees_A",
+          "params": {},
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "rf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "rf_A",
+          "params": {},
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": true,
+          "name": "lgbm_A_deep_knnfeat",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_reg_shift",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_reg_shift_A",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc"
+          ],
+          "family": "lgbm_reg_arms",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_reg_arms_A",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_clf",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": true,
+          "name": "lgbm_A+fps_deep_knnfeat",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_reg_shift",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_reg_shift_A+fps",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [
+            "morgan_c2",
+            "rdkit_desc",
+            "motif",
+            "maccs",
+            "avalon",
+            "torsion_c",
+            "fmorgan_c2",
+            "erg"
+          ],
+          "family": "lgbm_reg_arms",
+          "group": "default",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "lgbm_reg_arms_A+fps",
+          "params": {
+            "colsample_bytree": 0.3,
+            "learning_rate": 0.04,
+            "min_child_samples": 10,
+            "n_estimators": 300,
+            "num_leaves": 31,
+            "subsample": 0.8,
+            "subsample_freq": 1
+          },
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "cached",
+          "group": "chemprop_foundation",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "chemeleon_minimol_mt_shift",
+          "params": {},
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "cached",
+          "group": "chemprop_foundation",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "chemeleon_surrogate_mt_shift",
+          "params": {},
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "cached",
+          "group": "neural",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "mlp_multitask_label",
+          "params": {},
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "cached",
+          "group": "neural",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "mlp_multitask_shift",
+          "params": {},
+          "weighting": ""
+        },
+        {
+          "blocks": [],
+          "family": "cached",
+          "group": "neural",
+          "hyp": "",
+          "knn_label_features": false,
+          "name": "chemprop_mt_shift",
+          "params": {},
+          "weighting": ""
+        }
+      ],
+      "stack": "default+all_survivors",
+      "target_prevalence": 0.3096528282281229
+    }
+  },
+  "label_rule": "positive when s = t - max(d, 4) > log10(2), t the TDI-arm pIC50 and d the direct-inhibition pIC50",
+  "lightgbm_presets": {
+    "deep": {
+      "colsample_bytree": 0.3,
+      "learning_rate": 0.04,
+      "min_child_samples": 10,
+      "n_estimators": 300,
+      "num_leaves": 31,
+      "subsample": 0.8,
+      "subsample_freq": 1
+    },
+    "shallow": {
+      "colsample_bytree": 0.2,
+      "learning_rate": 0.02,
+      "min_child_samples": 20,
+      "n_estimators": 600,
+      "num_leaves": 8,
+      "reg_lambda": 5.0,
+      "subsample": 0.7,
+      "subsample_freq": 1
+    }
+  },
+  "nested_design": {
+    "inner": 4,
+    "nested plan seed": 0,
+    "outer": 5,
+    "repeats": 3
+  },
+  "network_runners": {
+    "cypmode/challenge/multitask.py": {
+      "ISOFORMS": [
+        "CYP3A4",
+        "CYP2D6"
+      ]
+    },
+    "cypmode/challenge/nested_runners_chemprop.py": {
+      "DEFAULT_VARIANTS": [
+        "chemprop_mt_shift",
+        "chemeleon_mt_shift"
+      ]
+    },
+    "cypmode/challenge/nested_runners_torch.py": {
+      "AUX_HEAD_WEIGHT": 0.5,
+      "CANDIDATES": {
+        "atomjepa_head": [
+          "atomjepa_head"
+        ],
+        "mlp_multitask": [
+          "mlp_multitask_label",
+          "mlp_multitask_shift"
+        ],
+        "mlp_multitask_aux": [
+          "mlp_multitask_aux_label",
+          "mlp_multitask_aux_shift"
+        ],
+        "tabicl_chemeleon": [
+          "tabicl_chemeleon"
+        ],
+        "tabicl_monroe": [
+          "tabicl_monroe"
+        ],
+        "tabicl_svd": [
+          "tabicl_svd"
+        ],
+        "tabpfn": [
+          "tabpfn_svd"
+        ],
+        "tabpfn_chemeleon": [
+          "tabpfn_chemeleon"
+        ]
+      }
+    }
+  }
+}

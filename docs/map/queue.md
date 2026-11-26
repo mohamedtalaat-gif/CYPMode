@@ -1,12 +1,12 @@
 # The queue
 
-Every experiment and every build step of the project is a script of `queue/jobs`; the runner (`scripts/queue_runner.sh`) takes them in the order of their numbers. There are 177 jobs in 4 families, by the first digit of the number, and 52 of them wait until every job with a smaller number has finished.
+Every experiment and every build step of the project is a script of `queue/jobs`; the runner (`scripts/queue_runner.sh`) takes them in the order of their numbers. There are 180 jobs in 4 families, by the first digit of the number, and 52 of them wait until every job with a smaller number has finished.
 
 | family | jobs | first | last |
 | --- | --- | --- | --- |
 | 0xx | 29 | `010_pop_2d6_15fold` | `097_why_no_gain` |
 | 1xx | 39 | `100_boltz_unguided_resume` | `199_basic_centre_experiment` |
-| 2xx | 86 | `200_permutation_control` | `299_requeue_final_chain` |
+| 2xx | 89 | `200_permutation_control` | `299_requeue_final_chain` |
 | 9xx | 23 | `900_tests_and_audit` | `975_clean_clone_check` |
 
 ## The chain that closes the project (23 jobs)
@@ -138,7 +138,7 @@ flowchart LR
 | `198_mlp_addition` | The multitask network (cache complete) added to the default stack, both isoforms. | nothing |
 | `199_basic_centre_experiment` | The basic-centre block added to feature sets A and A+fps, validated alone and inside the stack (it matters most for CYP2D6), both isoforms. | nothing |
 
-## Family 2xx (86 jobs)
+## Family 2xx (89 jobs)
 
 | job | what it does | waits for |
 | --- | --- | --- |
@@ -225,6 +225,9 @@ flowchart LR
 | `283_requeue_final_sequence` | The order of the final sequence (decided 2026-10-25): the audit twice in a row (job 900), then everything that the audit, the code or the counts of the repository change (the explorer bundle, the method report, the documents, the readiness scan, the notebook, the film, the public edition of the notebook, the files of submissions/), then the audit twice in a row again (job 955), then the gate. | every job with a smaller number |
 | `285_label_shift` | An estimate of the positive rate of the scored set that reads no leaderboard (label shift, cross-fitted soft adjusted classify-and-count), compared with the rate of the final build by a rule fixed before the first run. | nothing |
 | `286_ligand_dynamics` | Ligand dynamics in the frozen pocket (the rule of docs/structure_track/structure_ligand_dynamics.md, committed before any number): the pools of the static pharmacophore gate, 20 ps of the ligand in its frozen pocket for every pose, the dynamic scores and the gate. | nothing |
+| `287_external_dataset` | The selection-corrected stack on a second, published data set (the direct-inhibition panel of Veith et al. in the benchmark of the Therapeutics Data Commons), under the rule of cypmode/challenge/external_dataset.py written before the first run: the official protocol, the nested design, the negative control, the reliability by similarity, and the calibration. | nothing |
+| `288_descriptor_ratio` | The number of columns against the number of compounds (the practice that Jorgensen 2006 discourages): widths, effective dimension, extra columns without signal for the candidates and for the stack, fewer columns, under the rule of cypmode/challenge/descriptor_ratio.py written before the first run. | nothing |
+| `289_oecd_principles` | The five OECD principles and the curation of the data, answered from the files of the project, with the goodness of fit and the enrichment of the structural alerts computed for the first time; it reads the results of the second data set and of the ratio of columns to compounds, so it runs after jobs 287 and 288. | `287_external_dataset`, `288_descriptor_ratio` |
 | `295_lint_cleanup` | Lint cleanup of the Python modules (decided 2026-10-17). | every job with a smaller number |
 | `296_release_unblock` | The release after the deadline: the held-back block is removed, the full card is drawn, one local commit holds what becomes visible, and the final chain 900 to 975 is queued again; it waits for the end of the challenge and for the version of the release. | every job with a smaller number |
 | `299_requeue_final_chain` | After the experiments of jobs 190 to 206: the final TDI build reads every gate verdict again (a group whose gate is MET joins the stack), then the chain that describes and packages the final state runs again, in order, on a quiet repository, and the pre-submission gate closes it. | every job with a smaller number |

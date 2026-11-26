@@ -1,0 +1,22 @@
+check,value
+compounds in the training file,6145
+compounds in the blinded file,750
+training SMILES that RDKit cannot parse,0
+blinded SMILES that RDKit cannot parse,0
+duplicated compound names in the training file,0
+duplicated canonical SMILES in the training file,0
+blinded compounds whose canonical SMILES is in the training file,0
+blinded compounds whose name is in the training file,0
+"training compounds written as more than one fragment (salts, solvates)",0
+blinded compounds written as more than one fragment,0
+label columns in the blinded file,0
+CYP3A4: labelled compounds with both arms measured (the pool of every model),2334
+"CYP3A4: labelled compounds without a direct measurement (another labelling convention, left out of the pool)",1249
+CYP3A4: compounds without a label,2562
+"CYP3A4: rows of the pool where the rule s = t - max(d, 4) > log10 2 differs from the given label",0
+CYP3A4: positive rate of the pool,0.3273
+CYP2D6: labelled compounds with both arms measured (the pool of every model),1493
+"CYP2D6: labelled compounds without a direct measurement (another labelling convention, left out of the pool)",4
+CYP2D6: compounds without a label,4648
+"CYP2D6: rows of the pool where the rule s = t - max(d, 4) > log10 2 differs from the given label",0
+CYP2D6: positive rate of the pool,0.217

@@ -50,6 +50,11 @@ data/structure_track/inputs/pdb_cache/
 data/tdi_track/outputs/nested/*/cache/
 data/tdi_track/outputs/caches/feature_store.npz
 
+# prediction caches and feature stores of the validation on the second data set (regenerable by cypmode.challenge.external_dataset)
+data/tdi_track/outputs/external_dataset/work/
+data/tdi_track/outputs/caches/tdc_veith_*_feature_store.npz
+data/tdi_track/outputs/comparisons/descriptor_ratio_work/
+
 # physics, matched-pair and embedding caches of the TDI track (regenerable: physics_block / physics_tierb / mmp_transfer / frozen_embeddings)
 data/tdi_track/outputs/caches/physics_cache.csv
 data/tdi_track/outputs/caches/physics_atoms.csv.gz

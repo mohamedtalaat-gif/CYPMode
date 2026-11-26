@@ -74,6 +74,9 @@ This section lists what the work adds, one claim at a time, with the evidence th
 ### Rigor
 
 - **The pharmacophore of a pose read over a short trajectory, tested under a rule fixed before any number.** The ligand moves for 20 ps in the frozen pocket (protein and heme at their predicted positions, no water) for 104 poses of 10 benchmark ligands; it is not a dynophore of the literature, which follows the whole complex in water (`docs/structure_track/structure_ligand_dynamics.md`, limitation L16). Judged by the gate of the pose rules, none of the three scores met it (mean rho -0.214, +0.042, -0.071 against the bar of 0.3; the static model of the same poses gives -0.240), so the structure entry was not changed. Notebook section 11.13.
+- **The generic part of the procedure was run on a second published data set, under the official protocol of its benchmark.** The label-free candidates and the stack of the final build, on the direct-inhibition sets of CYP3A4 and CYP2D6 in the Therapeutics Data Commons (scaffold-split test sets, five seeds, area under the precision–recall curve, AUPRC): CYP2D6: test AUPRC 0.727 against a published median of 0.649 (19 entries), ABOVE THE MEDIAN, and 0.723 for the best single candidate; CYP3A4: test AUPRC 0.891 against a published median of 0.862 (19 entries), ABOVE THE MEDIAN, and 0.885 for the best single candidate. The negative control and the verdicts of the log: CYP2D6 placement among the published entries: ABOVE THE MEDIAN; CYP2D6 negative control: CHANCE; CYP3A4 placement among the published entries: ABOVE THE MEDIAN; CYP3A4 negative control: CHANCE. The label is direct inhibition and not time-dependent inhibition, so the result supports the features, the stack, and the nested protocol, and says nothing about the label process (limitation L17). Notebook section 6.9.
+- **The ratio of columns to compounds was answered by measurements and not by argument.** The width of every candidate against the rows of its pool, the effective dimension of the widest set, extra columns that cannot carry a signal for two candidates and for the stack, and fewer columns, under a rule written before the run: CYP3A4 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP3A4 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED; CYP3A4 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP3A4 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED (limitation L18). Notebook section 6.10.
+- **The five OECD principles and the curation of the data are answered, cell by cell, from the files of the project.** The endpoint, the algorithm as a machine-readable manifest, the domain of applicability, goodness of fit (first computed here), robustness, predictivity, and the enrichment of the structural alerts (`data/tdi_track/outputs/final/oecd_principles.md`). Notebook section 8.8.
 - **Negative results are results.** `NEGATIVE_RESULTS.md` lists all 178 verdicts that were NOT MET. The negative control, the whole nested procedure on permuted labels, gives an outer AUC of 0.5096 (CYP3A4) and 0.5012 (CYP2D6) at z0 = 1.0. Notebook sections 9.10 and 9.11.
 - **Every number in the reports is copied by code from a log and checked by the audit,** which is generated twice and compared byte for byte (section 4.4). Notebook section 12.2.
 
@@ -203,7 +206,7 @@ pre-registered gate is therefore reported as a pass of the registered rule and n
 ### 4.4 The selection-corrected design and its audit
 
 The label rule reproduces every training label (0 and 0 mismatches); the plans are rebuilt from the raw files and compared; every feature block is checked for leakage; the audit
-is generated twice and compared byte for byte; the test suite has (pending: job 900) passing tests; the summary of the audit is 103 PASS and 1 FAIL (notebook Part XII).
+is generated twice and compared byte for byte; the test suite has 1104 passing tests; the summary of the audit is 104 PASS and 0 FAIL (notebook Part XII).
 
 ### 4.5 What the project built, and what it borrowed
 
@@ -235,7 +238,10 @@ A log that holds no gate line is not a row of the ledger, and the ledger is the 
 | `data_checker_inhibition_vs_test.log` | check of the training file against the blinded file with the challenge data checker | similarity threshold 1.0: 0 pair(s) flagged |
 | `data_checker_tdi_train_vs_test.log` | check of the training file against the blinded file with the challenge data checker | similarity threshold 1.0: 0 pair(s) flagged |
 | `data_checker_tdi_train_vs_test_0.9.log` | check of the training file against the blinded file with the challenge data checker | similarity threshold 0.9: 1 pair(s) flagged, of similarity 0.952 |
+| `descriptor_ratio.log` | the ratio of columns to compounds: the width of every candidate, the effective dimension, extra columns without signal for the candidates and for the stack, fewer columns | CYP3A4 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP3A4 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED; CYP3A4 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP3A4 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A_deep with 4 times its columns added (gaussian): HARMFUL OR NOT RESOLVED; CYP2D6 lgbm_A+fps_deep with 4 times its columns added (shuffled): HARMFUL OR NOT RESOLVED; CYP2D6 stack with 4 times the columns of its column-reading candidates added (shuffled): HARMFUL OR NOT RESOLVED |
+| `external_dataset.log` | the selection-corrected stack on the direct-inhibition sets of the Therapeutics Data Commons (CYP3A4 and CYP2D6): the official protocol with 5 seeds, the nested design, the negative control, the reliability by similarity and the calibration | CYP2D6 placement among the published entries: ABOVE THE MEDIAN; CYP2D6 negative control: CHANCE; CYP3A4 placement among the published entries: ABOVE THE MEDIAN; CYP3A4 negative control: CHANCE |
 | `label_shift.log` | the estimate of the positive rate without a board | CYP2D6: NOT INFORMATIVE; CYP3A4: NOT INFORMATIVE |
+| `oecd_principles.log` | the five OECD principles and the curation of the data, with the goodness of fit and the enrichment of the structural alerts (`data/tdi_track/outputs/final/oecd_principles.md`) | described in the OECD table |
 | `population_panel_CYP2D6.log` | the panel experiments of the selection-aware model | described in section 7 |
 | `population_panel_CYP2D6_r3.log` | the panel experiments of the selection-aware model | described in section 7 |
 | `population_panel_CYP3A4.log` | the panel experiments of the selection-aware model | described in section 7 |
@@ -676,7 +682,7 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 - **L4** (uncertainty): Committee disagreement adds information beyond the decision margin for 1 components on CYP3A4 and 2 on CYP2D6 under the permutation test; where the count is zero the committee is reported as a measured negative result and does not alter predictions.
 - **L5** (calibration): The probabilities the final build publishes (isotonic-calibrated) have calibration slopes of 0.9252 (CYP3A4) and 0.8249 (CYP2D6) on held-out folds. The sigmoid of the regularised blend as it comes out is a ranking score and not a probability (slopes 1.1813 and -0.0164); it is never published as one. Probabilities are calibrated to the weighted validation population, not to the unknown scored test population.
 - **L6** (structure): On the diverse crystal benchmark the model's first-pick pose is 4.1929 A from the crystal pose on average; the structure score depends on a handful of compounds and is noisy. The benchmark ligands come from the PDB, which co-folding models may have seen, so absolute accuracy is optimistic.
-- **L7** (reproducibility): The test suite has 1103 passing and 1 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
+- **L7** (reproducibility): The test suite has 1104 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.
 - **L8** (repository): The working tree has 0 modified and 0 untracked entries: results in this report come from uncommitted code until the work is committed.
 - **L9** (population): The scored CYP2D6 set may contain many compounds the screen would never have promoted (scored as inactive). The selection-aware file gains AUC when they are numerous and loses both AUC and MCC when there are none, by more than it gains at the call rate of the final build (the table of job 016 in section 7), and neither the label-shift estimate nor the public metrics of the baseline identify their share (538 grid points are consistent with the metrics). The live board scores half of the test set and cannot separate the two files (job 016), so the entry is the hits-only file and the selection-aware file is kept, with its SHA-256, to be scored on the test labels if the organisers publish them: that comparison measures the share and tests the hypothesis on data that no choice of this project touched.
 - **L10** (calibration): The CYP2D6 blend as it comes out is close to a constant (weighted expected calibration error 0.3592 against 0.0431 for CYP3A4): it ranks and transfers a call rate but is not a probability. The probabilities that are published pass through an isotonic step fitted on inner out-of-fold scores, which brings the error to 0.0054 (CYP2D6) and 0.0189 (CYP3A4); a monotone step restores calibration and adds no discrimination.
@@ -692,16 +698,16 @@ See `NEGATIVE_RESULTS.md` (generated from the same logs and tables). It also tab
 Reproduce the TDI candidates with `bash scripts/reproduce_tdi.sh`; the audit with `bash scripts/run_audit.sh` (two runs, byte-identical);
 the environment is pinned in `environment/`. The structure recipe runs through `python -m cypmode.validation.final_recipe`.
 
-**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all 179 modules with what each does and what it imports, all 177 jobs of the queue with what each waits for and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` and a test fail when a page differs from the code. The README carries a short loop of the interactive map, `docs/map/explorer.html`, which draws all four views as one page that can be explored, with a search box and, for every module and job, what it is connected to and which section of the notebook names it, and it links to the page on the Pages site and to the file.
+**Where everything is.** The folder `docs/map` is the map of the project: its four pages list all 182 modules with what each does and what it imports, all 180 jobs of the queue with what each waits for and the chain that rebuilds and checks the project, the flow of the data from the inputs through the jobs and the logs to the reports and the submission files, and the kinds of idea that were tried. The pages are written by `cypmode/audit/project_map.py` from the tracked files and from nothing else, so a copy of the repository regenerates them, and `python -m cypmode.audit.project_map --check` and a test fail when a page differs from the code. The README carries a short loop of the interactive map, `docs/map/explorer.html`, which draws all four views as one page that can be explored, with a search box and, for every module and job, what it is connected to and which section of the notebook names it, and it links to the page on the Pages site and to the file.
 
 The flow of the data, from the inputs to the submission files:
 
 ```mermaid
 flowchart LR
   inputs["inputs<br/>data/*/inputs"] --> jobs
-  jobs["queue jobs<br/>161 of 177 write a log"] -->|"206 log names"| logs["logs"]
+  jobs["queue jobs<br/>164 of 180 write a log"] -->|"209 log names"| logs["logs"]
   logs -->|"every log, through gate_rows"| ledger["ledger<br/>cypmode/audit/ledger_kinds.py"]
-  logs -->|"58 logs are read by name"| reports
+  logs -->|"60 logs are read by name"| reports
   ledger --> reports["reports, figures, notebook<br/>built by the chain 900 to 960"]
   reports --> submissions["submission files"]
 ```
@@ -710,7 +716,7 @@ The packages of the code; an arrow goes from a package to a package whose module
 
 ```mermaid
 flowchart LR
-  challenge["challenge (98 modules)"]
+  challenge["challenge (101 modules)"]
   validation["validation (55 modules)"]
   audit["audit (13 modules)"]
   post_deadline["post_deadline (6 modules)"]
@@ -719,11 +725,11 @@ flowchart LR
   top_level["top level (2 modules)"]
   explorer["explorer (1 module)"]
   audit -->|23| challenge
-  challenge -->|18| top_level
+  challenge -->|21| top_level
   validation -->|16| challenge
   audit -->|12| validation
   validation -->|11| top_level
-  challenge -->|7| metrics
+  challenge -->|8| metrics
   audit -->|4| top_level
   challenge -->|3| validation
   post_deadline -->|3| challenge

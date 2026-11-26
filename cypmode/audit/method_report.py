@@ -499,6 +499,9 @@ def innovation_section() -> str:
         "### Rigor",
         "",
         dynamics_bullet(),
+        external_bullet(),
+        ratio_bullet(),
+        oecd_bullet(),
         f"- **Negative results are results.** `NEGATIVE_RESULTS.md` lists all {verdicts - met} verdicts that were NOT MET. The negative control, the whole nested procedure on permuted labels, gives an outer AUC of {permuted['CYP3A4'] or '?'} (CYP3A4) and {permuted['CYP2D6'] or '?'} (CYP2D6) at z0 = 1.0.",
         "- **Every number in the reports is copied by code from a log and checked by the audit,** which is generated twice and compared byte for byte (section 4.4).",
         "",
@@ -530,6 +533,9 @@ NOTEBOOK_OF_CLAIM = (  # each claim of the innovation summary with the sections 
     ("The scorer's own validity call with a margin.", "11.4 11.10"),
     ("A relaxation under a rule written before it was run.", "11.10"),
     ("The pharmacophore of a pose read over a short trajectory, tested under a rule fixed before any number.", "11.13"),
+    ("The generic part of the procedure was run on a second published data set, under the official protocol of its benchmark.", "6.9"),
+    ("The ratio of columns to compounds was answered by measurements and not by argument.", "6.10"),
+    ("The five OECD principles and the curation of the data are answered, cell by cell, from the files of the project.", "8.8"),
     ("Negative results are results.", "9.10 9.11"),
     ("Every number in the reports is copied by code from a log and checked by the audit,", "12.2"),
 )
@@ -575,9 +581,53 @@ def innovation_rows() -> list[tuple[str, str, str]]:
     dynamics = dynamics_row()
     if dynamics:
         rows.append(dynamics)
+    rows.append(("The generic part of the procedure on a second published data set, under its official protocol", external_summary(), "`external_dataset.log`"))
+    rows.append(("The ratio of columns to compounds, answered by measurements under a rule fixed before the run", checks_summary("descriptor_ratio.log"), "`descriptor_ratio.log`"))
     if structure:
         rows.append(("Validity margin of the scorer's own call and a relaxation under a registered rule", f"relaxation adopted for {structure['relaxation']['adopted']} of {structure['relaxation']['of']}; smallest margin {structure['relaxation']['smallest_margin_before']:.3f} to {structure['relaxation']['smallest_margin_after']:.3f}", "`relax_final.log`"))
     return rows
+
+
+def external_summary() -> str:
+    """The place of the stack among the published entries on each enzyme of the second data set, read from the table of job 287."""
+    path = ROOT / "data/tdi_track/outputs/external_dataset/placement.csv"
+    if not path.exists():
+        return pending("job 287")
+    official = pd.read_csv(ROOT / "data/tdi_track/outputs/external_dataset/official_protocol.csv")
+    single = official[(official.selector == "best_single") & (official.part == "test")].groupby("isoform").auprc.mean()
+    return "; ".join(f"{r.isoform}: test AUPRC {r.mean_test_auprc:.3f} against a published median of {r.median_published:.3f} ({int(r.entries)} entries), {r.verdict}, and {single[r.isoform]:.3f} for the best single candidate" for r in pd.read_csv(path).itertuples())
+
+
+def external_bullet() -> str:
+    """The bullet of the innovation summary for the validation on the second data set."""
+    path = LOGS / "external_dataset.log"
+    if not path.exists() or not (ROOT / "data/tdi_track/outputs/external_dataset/placement.csv").exists():
+        return f"- **The generic part of the procedure was run on a second published data set.** {pending('job 287')}"
+    return (
+        "- **The generic part of the procedure was run on a second published data set, under the official protocol of its benchmark.** The label-free candidates and the stack of the final build, on the direct-inhibition sets "
+        f"of CYP3A4 and CYP2D6 in the Therapeutics Data Commons (scaffold-split test sets, five seeds, area under the precision–recall curve, AUPRC): {external_summary()}. The negative control and the verdicts of the log: {checks_summary('external_dataset.log')}. "
+        "The label is direct inhibition and not time-dependent inhibition, so the result supports the features, the stack, and the nested protocol, and says nothing about the label process (limitation L17)."
+    )
+
+
+def ratio_bullet() -> str:
+    """The bullet of the innovation summary for the analysis of the ratio of columns to compounds."""
+    if not (LOGS / "descriptor_ratio.log").exists():
+        return f"- **The ratio of columns to compounds was measured.** {pending('job 288')}"
+    return (
+        "- **The ratio of columns to compounds was answered by measurements and not by argument.** The width of every candidate against the rows of its pool, the effective dimension of the widest set, extra columns that cannot carry "
+        f"a signal for two candidates and for the stack, and fewer columns, under a rule written before the run: {checks_summary('descriptor_ratio.log')} (limitation L18)."
+    )
+
+
+def oecd_bullet() -> str:
+    """The bullet of the innovation summary for the table of the five OECD principles."""
+    if not (FINAL_TDI / "oecd_principles.csv").exists():
+        return f"- **The five OECD principles and the curation of the data are answered from the files of the project.** {pending('job 289')}"
+    return (
+        "- **The five OECD principles and the curation of the data are answered, cell by cell, from the files of the project.** The endpoint, the algorithm as a machine-readable manifest, the domain of applicability, goodness of fit "
+        "(first computed here), robustness, predictivity, and the enrichment of the structural alerts (`data/tdi_track/outputs/final/oecd_principles.md`)."
+    )
 
 
 def dynamics_bullet() -> str:
@@ -840,7 +890,7 @@ def exploration_section() -> str:
 
 
 
-ANALYSES = re.compile(r"^(?:confidence_.*|context_.*|data_checker_.*|why_no_gain|population_sensitivity_.*|population_panel_.*|selection_decision_.*|test_nonhit_share_.*|block_holdout|label_shift|calibration|applicability_domain|conformer_bias|site_representation)\.log$")  # logs that hold a result and carry no gate line: each is named in section 4.7
+ANALYSES = re.compile(r"^(?:confidence_.*|context_.*|data_checker_.*|why_no_gain|population_sensitivity_.*|population_panel_.*|selection_decision_.*|test_nonhit_share_.*|block_holdout|label_shift|calibration|applicability_domain|conformer_bias|site_representation|external_dataset|descriptor_ratio|oecd_principles)\.log$")  # logs that hold a result and carry no gate line: each is named in section 4.7
 INFRASTRUCTURE = re.compile(
     r"^(?:.*_(?:extract|build)|build_.*|lint_.*|audit_run|pre_submission_gate|figures_build|video_render|voices_.*|blender_clips|pymol_clips|explorer_bundle|interactive_card_.*|card_build|submissions_sync|"
     r"method_report|docs_state|public_readiness|public_readiness_after_deadline|release_after_deadline|clean_clone_check|bench_.*|cryoem_.*|pilot_.*|series_.*|restraint_expansion_.*|stereo_.*|affinity_.*|bioemu2_benchmark|openfold3_.*|official_posebusters_.*|ost_pools|"
@@ -887,6 +937,9 @@ ANALYSIS_TEXT = [  # log pattern, what the log holds, and where its result is de
     (r"applicability_domain", "reliability by similarity to the training data", "described in the innovation summary"),
     (r"conformer_bias", "how often the 12-conformer ensemble holds the crystal pose", "limitation L14"),
     (r"site_representation", "variability of the binding site and the support of the pocket fields", "described in notebook 11.11"),
+    (r"external_dataset", "the selection-corrected stack on the direct-inhibition sets of the Therapeutics Data Commons (CYP3A4 and CYP2D6): the official protocol with 5 seeds, the nested design, the negative control, the reliability by similarity and the calibration", "checks"),
+    (r"descriptor_ratio", "the ratio of columns to compounds: the width of every candidate, the effective dimension, extra columns without signal for the candidates and for the stack, fewer columns", "checks"),
+    (r"oecd_principles", "the five OECD principles and the curation of the data, with the goodness of fit and the enrichment of the structural alerts (`data/tdi_track/outputs/final/oecd_principles.md`)", "described in the OECD table"),
 ]
 
 
@@ -913,6 +966,13 @@ def checker_summary(name: str) -> str:
     return f"similarity threshold {threshold}: {n} pair(s) flagged" + (f", of similarity {values}" if flagged else "")
 
 
+def checks_summary(name: str) -> str:
+    """The verdicts of a log that prints lines of the form ``CHECK <what>: <verdict>`` (they are not gate lines and no ledger reads them)."""
+    path = LOGS / name
+    lines = [line.removeprefix("CHECK ").strip() for line in path.read_text(errors="ignore").splitlines() if line.startswith("CHECK ")] if path.exists() else []
+    return "; ".join(lines) if lines else pending(name)
+
+
 def analysis_row(name: str) -> tuple[str, str, str]:
     for pattern, holds, how in ANALYSIS_TEXT:
         if re.fullmatch(pattern + r"\.log", name):
@@ -920,6 +980,8 @@ def analysis_row(name: str) -> tuple[str, str, str]:
                 result = paired_summary(name)
             elif how == "checker":
                 result = checker_summary(name)
+            elif how == "checks":
+                result = checks_summary(name)
             elif how == "shift":
                 shift = label_shift_summary()
                 result = "; ".join(f"{iso}: {v['verdict']}" for iso, v in shift.items()) if shift else pending("job 285")
