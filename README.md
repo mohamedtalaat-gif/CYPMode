@@ -676,7 +676,7 @@ loaded into the same process as LightGBM, so `pyproject.toml` ignores those file
 cache, Boltz-2 outputs or the large caches skip cleanly when those are absent.
 
 The tests that draw the page of the film, and the builders of the film and the cards, drive a headless Chrome. An installed Chrome or Chromium is used; if there is none, the first run
-downloads Chrome for Testing (about 200 MB, checked by size and MD5) into `~/.cache/cypmode`, once. `CYPMODE_CHROME` names a browser of your own, and `CYPMODE_NO_DOWNLOAD=1` forbids the download.
+downloads Chrome for Testing (about 200 MB, checked by size and SHA-256) into `~/.cache/cypmode`, once. `CYPMODE_CHROME` names a browser of your own, and `CYPMODE_NO_DOWNLOAD=1` forbids the download.
 A browser that cannot open a local port makes those tests skip with the reason, and `CYPMODE_REQUIRE_CHROME=1` turns the skip into a failure.
 
 ### Checks before a pull request

@@ -6,7 +6,7 @@
 
 The browser is found without any set-up. ``chrome_path`` takes, in this order: the file that the environment variable ``CYPMODE_CHROME`` names; a Chrome or Chromium that is installed on the machine;
 a Chrome for Testing that an earlier run has put into the cache (``~/.cache/cypmode``, or the folder of ``CYPMODE_CACHE``); and otherwise it downloads Chrome for Testing, Google's own channel of browsers that
-programs drive, once, checks the size and the MD5 of the file against the values that are written below, and unpacks it into the cache. ``CYPMODE_NO_DOWNLOAD=1`` forbids the download."""
+programs drive, once, checks the size and the SHA-256 of the file against the values that are written below, and unpacks it into the cache. ``CYPMODE_NO_DOWNLOAD=1`` forbids the download."""
 
 import base64
 import functools
@@ -32,12 +32,12 @@ from websockets.sync.client import connect
 WIDTH, HEIGHT = 1920, 1080
 CHROME_FOR_TESTING = "158.0.8127.88"  # the stable channel on 2026-11-26: https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json
 CACHE = Path(os.environ.get("CYPMODE_CACHE") or Path.home() / ".cache" / "cypmode") / "chrome-for-testing"
-BUILDS = {  # platform: (size in bytes, MD5 of the zip, the browser inside it); size and MD5 are those of the object in Google's bucket chrome-for-testing-public
-    "mac-arm64": (200337306, "d4d7912724eb6589c9eaf5e94600a1d7", "chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"),
-    "mac-x64": (213548436, "f48b06646432cd0056602fe34c5e2442", "chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"),
-    "linux64": (208082347, "c33654b3ba5bfb8ddc1ace68d546bca4", "chrome-linux64/chrome"),
-    "linux-arm64": (205794810, "d6a58b38acc69479ee8e6ae6f4f54b67", "chrome-linux-arm64/chrome"),
-    "win64": (214931627, "c359776df6c14309988fd0ed3376342c", "chrome-win64/chrome.exe"),
+BUILDS = {  # platform: (size in bytes, SHA-256 of the zip, the browser inside it); computed on 2026-11-26 from the files of Google's bucket chrome-for-testing-public, whose own MD5 each one matched
+    "mac-arm64": (200337306, "6caf16b007aafaf6d4a4db252262be8ebbf0d91a2af005257e388996dbe463d6", "chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"),
+    "mac-x64": (213548436, "4529a2bdbea10cf69f79b8b0ff43a5a23e8dc8b033da85cbe873afb81855579a", "chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"),
+    "linux64": (208082347, "59e3b43f8b3aaa292238fbdcfb36a93127debd53e212510dcdc2cc8812b4b57e", "chrome-linux64/chrome"),
+    "linux-arm64": (205794810, "91669b5de79af808d498037dd974e4b09461776a1b5240b3bb656abd17e5d3ab", "chrome-linux-arm64/chrome"),
+    "win64": (214931627, "fda73ca9ffc7f02c5c85165cb472152540a76a7cecd8ec11314ea781e4454109", "chrome-win64/chrome.exe"),
 }
 
 
@@ -95,7 +95,7 @@ def _extract(archive: Path, target: Path) -> None:
 
 def _download(name: str) -> None:
     """Fetch Chrome for Testing for ``name`` into the cache. The file is checked before it is unpacked, and the folder appears in the cache only when it is complete."""
-    size, md5, _ = BUILDS[name]
+    size, sha256, _ = BUILDS[name]
     target = CACHE / CHROME_FOR_TESTING / name
     url = f"https://storage.googleapis.com/chrome-for-testing-public/{CHROME_FOR_TESTING}/{name}/chrome-{name}.zip"
     print(f"No Chrome was found: downloading Chrome for Testing {CHROME_FOR_TESTING} ({name}, {size / 1e6:.0f} MB) once into {target}. "
@@ -103,14 +103,14 @@ def _download(name: str) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
     work = Path(tempfile.mkdtemp(prefix="download-", dir=target.parent))
     try:
-        archive, digest, received = work / "chrome.zip", hashlib.md5(usedforsecurity=False), 0
+        archive, digest, received = work / "chrome.zip", hashlib.sha256(), 0
         with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "cypmode-chrome-fetch"}), timeout=60) as response, open(archive, "wb") as out:
             for block in iter(lambda: response.read(1 << 20), b""):
                 out.write(block)
                 digest.update(block)
                 received += len(block)
-        if received != size or digest.hexdigest() != md5:
-            raise ChromeUnavailable(f"the file from {url} has {received} bytes and MD5 {digest.hexdigest()}; expected {size} bytes and {md5}, so it was not used")
+        if received != size or digest.hexdigest() != sha256:
+            raise ChromeUnavailable(f"the file from {url} has {received} bytes and SHA-256 {digest.hexdigest()}; expected {size} bytes and {sha256}, so it was not used")
         _extract(archive, work / "unpacked")
         try:
             (work / "unpacked").replace(target)
