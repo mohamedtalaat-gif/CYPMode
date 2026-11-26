@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import shutil
 import socket
 import stat
@@ -230,7 +231,8 @@ class Chrome:
             lines = Path(self.log).read_text(errors="replace").strip().splitlines()
         except OSError:
             lines = []
-        return ": " + (f"it ended with exit code {code}" if code is not None else "it did not answer on its port") + (" and wrote " + " | ".join(lines[-6:])[-700:] if lines else " and wrote nothing")
+        said = [line for line in lines if re.search(r"FATAL|ERROR|sandbox|error while loading", line, re.IGNORECASE)] or lines  # the cause is written before the dump of a crash, which fills the end
+        return ": " + (f"it ended with exit code {code}" if code is not None else "it did not answer on its port") + (" and wrote " + " | ".join(line[:300] for line in said[:5]) if lines else " and wrote nothing")
 
     def restart(self, attempts: int = 12) -> None:
         """Start a new browser after the first one has gone (the page that was open is opened again); every call of the film is a function of the time it is given, so no state is lost.
