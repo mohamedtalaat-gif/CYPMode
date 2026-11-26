@@ -15,3 +15,6 @@ docs/card/vendor/** linguist-vendored=true
 
 # Shell scripts keep the line ending of Unix on every system: bash refuses a loop or a block whose lines end with a carriage return.
 *.sh text eol=lf
+
+# The benchmark files of the Therapeutics Data Commons are compared with SHA-256 sums that are stored beside them: a checkout on Windows must not give them other line endings than the ones that the sums were made from.
+data/tdi_track/inputs/tdc_cache/admet_group/** -text
