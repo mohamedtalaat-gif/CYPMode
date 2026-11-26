@@ -3,6 +3,7 @@
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
 import json
+import os
 import sys
 from itertools import pairwise
 from pathlib import Path
@@ -14,7 +15,7 @@ sys.path[:0] = [str(VIDEO), str(VIDEO / "anime"), "."]
 
 import facts as facts_module
 import render_video
-from chrome import CHROME, Chrome
+from chrome import Chrome, unusable_reason
 
 FACTS = facts_module.Facts(n_train=6145, n_test=750, n_columns=12242, n_models=23, gates=78, gates_not_met=76, auc={"CYP3A4": 0.817, "CYP2D6": 0.731}, mcc={"CYP3A4": 0.44, "CYP2D6": 0.17},
                            poses=20, pose_failures=0, audit_reproducible=True, zip_hash="05a0cfd1")
@@ -39,7 +40,15 @@ STUB = {  # a small stand-in for the real data of facts.real_data(), so that the
 ASSET_STUB = {name: {"file": f"assets/{name}.png", "size": [1800, 1100], "anchors": {"fe": [880, 600], "ligand": [900, 500], "coordinating_n": [870, 540]}}
               for name in ("enzyme", "pocket_type_ii", "pocket_type_i", "cap_pose", "example_restrained", "example_unguided", "example_compare")}
 ASSET_STUB["distances"] = {"ligand": "OCNT-0000002", "restrained": 2.4, "unguided": 5.7, "own": 2.0, "own_ligand": "OCNT-0000001"}
-needs_chrome = pytest.mark.skipif(not Path(CHROME).exists(), reason="Google Chrome is not installed")
+@pytest.fixture(scope="module")
+def chrome_ready():
+    """A browser that starts here. Without one the tests that draw a page are skipped with the reason, or fail when CYPMODE_REQUIRE_CHROME is set, for a run that has to prove that they ran."""
+    reason = unusable_reason()
+    if reason:
+        (pytest.fail if os.environ.get("CYPMODE_REQUIRE_CHROME") else pytest.skip)(reason)
+
+
+needs_chrome = pytest.mark.usefixtures("chrome_ready")
 
 OVERFLOW = """
 (() => {
@@ -78,7 +87,7 @@ def test_the_render_refuses_to_say_the_audit_reproduced_when_it_did_not(monkeypa
 
 
 @pytest.fixture(scope="module")
-def page():
+def page(chrome_ready):
     with Chrome() as chrome:  # a free port for every start: another run of the tests, or a browser left over, never shares it
         chrome.open(VIDEO / "anime" / "index.html")
         chrome.evaluate(facts_module.to_javascript(FACTS, STUB) + f"window.ASSETS = {json.dumps(ASSET_STUB)};")  # the numbers of the test, whatever the real facts.js holds

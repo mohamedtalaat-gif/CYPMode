@@ -2,23 +2,164 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
-"""Drives a headless Chrome over the DevTools protocol: load a page, evaluate a JavaScript expression, take a screenshot. Used to draw the frames of the animation and to preview single frames."""
+"""Drives a headless Chrome over the DevTools protocol: load a page, evaluate a JavaScript expression, take a screenshot. Used to draw the frames of the animation and to preview single frames.
+
+The browser is found without any set-up. ``chrome_path`` takes, in this order: the file that the environment variable ``CYPMODE_CHROME`` names; a Chrome or Chromium that is installed on the machine;
+a Chrome for Testing that an earlier run has put into the cache (``~/.cache/cypmode``, or the folder of ``CYPMODE_CACHE``); and otherwise it downloads Chrome for Testing, Google's own channel of browsers that
+programs drive, once, checks the size and the MD5 of the file against the values that are written below, and unpacks it into the cache. ``CYPMODE_NO_DOWNLOAD=1`` forbids the download."""
 
 import base64
+import functools
+import hashlib
 import json
+import os
+import platform
+import shutil
 import socket
+import stat
 import subprocess
+import sys
 import tempfile
 import time
 import urllib.request
+import zipfile
 from pathlib import Path
 from typing import Self
 
 from websockets.exceptions import ConnectionClosed
 from websockets.sync.client import connect
 
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 WIDTH, HEIGHT = 1920, 1080
+CHROME_FOR_TESTING = "158.0.8127.88"  # the stable channel on 2026-11-26: https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json
+CACHE = Path(os.environ.get("CYPMODE_CACHE") or Path.home() / ".cache" / "cypmode") / "chrome-for-testing"
+BUILDS = {  # platform: (size in bytes, MD5 of the zip, the browser inside it); size and MD5 are those of the object in Google's bucket chrome-for-testing-public
+    "mac-arm64": (200337306, "d4d7912724eb6589c9eaf5e94600a1d7", "chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"),
+    "mac-x64": (213548436, "f48b06646432cd0056602fe34c5e2442", "chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"),
+    "linux64": (208082347, "c33654b3ba5bfb8ddc1ace68d546bca4", "chrome-linux64/chrome"),
+    "linux-arm64": (205794810, "d6a58b38acc69479ee8e6ae6f4f54b67", "chrome-linux-arm64/chrome"),
+    "win64": (214931627, "c359776df6c14309988fd0ed3376342c", "chrome-win64/chrome.exe"),
+}
+
+
+class ChromeUnavailable(RuntimeError):
+    """No Chrome is on the machine and none could be downloaded; the message says what to do."""
+
+
+def build_name() -> str | None:
+    """The name of the Chrome for Testing build that fits this machine, or None."""
+    system, machine = platform.system(), platform.machine().lower()
+    arm = machine in ("arm64", "aarch64")
+    if system == "Darwin":
+        return "mac-arm64" if arm else "mac-x64"
+    if system == "Linux":
+        return "linux-arm64" if arm else "linux64" if machine in ("x86_64", "amd64") else None
+    if system == "Windows":
+        return "win64" if machine in ("amd64", "x86_64") else None
+    return None
+
+
+def installed_chrome() -> str | None:
+    """A Chrome or Chromium that is installed on the machine, the first that is found."""
+    system, candidates = platform.system(), []
+    if system == "Darwin":
+        for base in (Path("/Applications"), Path.home() / "Applications"):
+            candidates += [base / "Google Chrome.app/Contents/MacOS/Google Chrome", base / "Chromium.app/Contents/MacOS/Chromium"]
+    elif system == "Windows":
+        candidates = [Path(os.environ[variable]) / "Google/Chrome/Application/chrome.exe" for variable in ("ProgramFiles", "ProgramFiles(x86)", "LOCALAPPDATA") if os.environ.get(variable)]
+    else:
+        candidates = [Path(found) for name in ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "chrome") if (found := shutil.which(name))]
+    return next((str(path) for path in candidates if path.exists()), None)
+
+
+def _extract(archive: Path, target: Path) -> None:
+    """Unpack a zip with its file modes and its symbolic links, which the app of macOS needs and ``extractall`` does not restore."""
+    root = target.resolve()
+    with zipfile.ZipFile(archive) as bundle:
+        for info in bundle.infolist():
+            destination = target / info.filename
+            if not destination.resolve().is_relative_to(root):
+                raise ChromeUnavailable(f"the archive names a file outside its folder: {info.filename}")
+            if info.is_dir():
+                destination.mkdir(parents=True, exist_ok=True)
+                continue
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            mode = info.external_attr >> 16
+            if stat.S_ISLNK(mode):
+                os.symlink(bundle.read(info).decode(), destination)
+                continue
+            with bundle.open(info) as source, open(destination, "wb") as out:
+                shutil.copyfileobj(source, out)
+            if mode:
+                os.chmod(destination, stat.S_IMODE(mode) | stat.S_IRUSR | stat.S_IWUSR)
+
+
+def _download(name: str) -> None:
+    """Fetch Chrome for Testing for ``name`` into the cache. The file is checked before it is unpacked, and the folder appears in the cache only when it is complete."""
+    size, md5, _ = BUILDS[name]
+    target = CACHE / CHROME_FOR_TESTING / name
+    url = f"https://storage.googleapis.com/chrome-for-testing-public/{CHROME_FOR_TESTING}/{name}/chrome-{name}.zip"
+    print(f"No Chrome was found: downloading Chrome for Testing {CHROME_FOR_TESTING} ({name}, {size / 1e6:.0f} MB) once into {target}. "
+          "Set CYPMODE_CHROME to a browser of your own, or CYPMODE_NO_DOWNLOAD=1 to forbid the download.", file=sys.stderr, flush=True)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    work = Path(tempfile.mkdtemp(prefix="download-", dir=target.parent))
+    try:
+        archive, digest, received = work / "chrome.zip", hashlib.md5(usedforsecurity=False), 0
+        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "cypmode-chrome-fetch"}), timeout=60) as response, open(archive, "wb") as out:
+            for block in iter(lambda: response.read(1 << 20), b""):
+                out.write(block)
+                digest.update(block)
+                received += len(block)
+        if received != size or digest.hexdigest() != md5:
+            raise ChromeUnavailable(f"the file from {url} has {received} bytes and MD5 {digest.hexdigest()}; expected {size} bytes and {md5}, so it was not used")
+        _extract(archive, work / "unpacked")
+        try:
+            (work / "unpacked").replace(target)
+        except OSError:  # another run put the same folder there first
+            if not (target / BUILDS[name][2]).exists():
+                raise
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+
+
+@functools.cache
+def chrome_path() -> str:
+    """The browser to start: the file of ``CYPMODE_CHROME``, an installed Chrome, the Chrome for Testing of the cache, or one that is downloaded now. Raises ``ChromeUnavailable`` when none of them is possible."""
+    given = os.environ.get("CYPMODE_CHROME")
+    if given:
+        if Path(given).exists():
+            return given
+        raise ChromeUnavailable(f"CYPMODE_CHROME names {given}, which does not exist")
+    found = installed_chrome()
+    if found:
+        return found
+    name = build_name()
+    if name is None:
+        raise ChromeUnavailable(f"no Chrome is installed, and Chrome for Testing has no build for {platform.system()} {platform.machine()}; set CYPMODE_CHROME to a Chrome or Chromium")
+    cached = CACHE / CHROME_FOR_TESTING / name / BUILDS[name][2]
+    if cached.exists():
+        return str(cached)
+    if os.environ.get("CYPMODE_NO_DOWNLOAD", "0") not in ("", "0"):
+        raise ChromeUnavailable("no Chrome is installed, and the download of Chrome for Testing is switched off by CYPMODE_NO_DOWNLOAD; install Google Chrome or set CYPMODE_CHROME")
+    try:
+        _download(name)
+    except (OSError, zipfile.BadZipFile) as error:
+        raise ChromeUnavailable(f"no Chrome is installed, and the download of Chrome for Testing failed ({error}); install Google Chrome or set CYPMODE_CHROME") from error
+    return str(cached)
+
+
+@functools.cache
+def unusable_reason() -> str | None:
+    """None when a browser can be started here and opens a local debugging port; otherwise the reason, in a sentence that a test can print when it skips itself.
+    A browser that starts and then gives a wrong answer is not covered: that is a failure of the code under test and stays one."""
+    try:
+        path = chrome_path()
+    except ChromeUnavailable as error:
+        return str(error)
+    try:
+        with Chrome():
+            return None
+    except (RuntimeError, OSError) as error:
+        return f"Chrome ({path}) is on this machine but cannot open a local debugging port here ({error}); the tests that draw a page need it"
 
 
 def free_port() -> int:
@@ -47,7 +188,9 @@ class Chrome:
         self._active_port = self.port or free_port()
         flags = ["--headless=new", f"--remote-debugging-port={self._active_port}", f"--user-data-dir={self._profile.name}", "--hide-scrollbars", f"--window-size={WIDTH},{HEIGHT}",
                  "--force-device-scale-factor=1", "--allow-file-access-from-files", "--disable-background-timer-throttling", "about:blank"]
-        self._process = subprocess.Popen([CHROME, *flags], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if hasattr(os, "geteuid") and os.geteuid() == 0:  # the sandbox of Chrome refuses to start under root, which is how a container runs
+            flags.insert(0, "--no-sandbox")
+        self._process = subprocess.Popen([chrome_path(), *flags], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         for _ in range(100):
             try:
                 tabs = json.load(urllib.request.urlopen(f"http://127.0.0.1:{self._active_port}/json"))

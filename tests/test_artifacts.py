@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Additional terms under section 7(b) of the licence: see NOTICE.
 
+import os
 import sys
 from pathlib import Path
 
@@ -10,9 +11,18 @@ import pytest
 from cypmode.audit import artifacts
 
 sys.path[:0] = ["docs/video", "docs/video/anime"]
-from chrome import CHROME
+from chrome import unusable_reason
 
-needs_chrome = pytest.mark.skipif(not Path(CHROME).exists(), reason="Google Chrome is not installed")
+
+@pytest.fixture(scope="module")
+def chrome_ready():
+    """A browser that starts here. Without one the tests that draw a page are skipped with the reason, or fail when CYPMODE_REQUIRE_CHROME is set, for a run that has to prove that they ran."""
+    reason = unusable_reason()
+    if reason:
+        (pytest.fail if os.environ.get("CYPMODE_REQUIRE_CHROME") else pytest.skip)(reason)
+
+
+needs_chrome = pytest.mark.usefixtures("chrome_ready")
 needs_facts = pytest.mark.skipif(not Path("docs/video/anime/facts.js").exists(), reason="the facts of the film are written by the render of the film and are not in a clean checkout")
 
 

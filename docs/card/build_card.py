@@ -7,7 +7,7 @@
 
 Everything on the card is read from the repository's own files when it is built: the pictures of the enzyme are PyMOL renders of the submitted structures (``final/_pdb_files``), the compounds are
 drawn by RDKit from their SMILES with the nitrogen that coordinates the heme iron marked, the iron-nitrogen distances are measured on the submitted coordinates, and the numbers come from
-``docs/video/facts.py`` (the same files that feed the animation). PyMOL and Google Chrome are needed; renders are cached in ``docs/figures/_pymol_cache``.
+``docs/video/facts.py`` (the same files that feed the animation). PyMOL is needed, and so is a Chrome, which ``docs/video/anime/chrome.py`` finds on the machine or downloads once; renders are cached in ``docs/figures/_pymol_cache``.
 
 Two modes. ``public`` (the default) shows only public structures: the hero is the crystal structure of CYP3A4 with fluconazole (PDB 6MA7) and the six tiles are crystal complexes of the PDB with
 imidazole and pyridine ligands, so that nothing on the card is a predicted structure of a blinded ligand; it is the card that goes into the repository before the challenge closes. ``--full`` draws
