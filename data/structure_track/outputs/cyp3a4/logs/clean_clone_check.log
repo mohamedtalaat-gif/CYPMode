@@ -1,6 +1,6 @@
 restored: tdi-track-outputs, structure-track-boltz-2-outputs, structure-track-openfold3-outputs, structure-track-results
-wrote /private/var/folders/s1/rbbh3x4n34n_2nvyzxwq1z8w0000gn/T/tmp.fCl0sinoZY/clone/audit/AUDIT_REPORT.md (1645 lines); failed checks: 0
-wrote /private/var/folders/s1/rbbh3x4n34n_2nvyzxwq1z8w0000gn/T/tmp.fCl0sinoZY/clone/audit/AUDIT_REPORT.run2.md (1645 lines); failed checks: 0
-REPRODUCIBLE: two runs are byte-identical (1756fea52c79458c)
+wrote /private/var/folders/s1/rbbh3x4n34n_2nvyzxwq1z8w0000gn/T/tmp.0Dzy99tpp1/clone/audit/AUDIT_REPORT.md (1650 lines); failed checks: 1
+wrote /private/var/folders/s1/rbbh3x4n34n_2nvyzxwq1z8w0000gn/T/tmp.0Dzy99tpp1/clone/audit/AUDIT_REPORT.run2.md (1650 lines); failed checks: 1
+REPRODUCIBLE: two runs are byte-identical (416fafced2e644f5)
 checks: 125 in the committed report, 125 in the report of the clean clone
-the clean clone gives the same checks as the committed report
+  status differs: [Check summary] every path that the text names exists or is allowed with a reason: PASS -> FAIL
