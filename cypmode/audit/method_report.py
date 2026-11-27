@@ -1267,13 +1267,19 @@ def outputs() -> dict[Path, str]:
     return {ROOT / "METHOD_REPORT.md": build_method_report(), ROOT / "NEGATIVE_RESULTS.md": negative_results()}
 
 
+def stale_outputs(generated: dict[Path, str] | None = None) -> list[str]:
+    """The names of the files that are missing or differ from a fresh generation: the check of ``--check`` and of the pre-submission gate, which a report built from an audit that was later replaced cannot pass."""
+    generated = outputs() if generated is None else generated
+    return [p.name for p, text in generated.items() if not p.exists() or p.read_text() != text]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="fail if the files on disk differ from a fresh generation")
     args = parser.parse_args()
     generated = outputs()
     if args.check:
-        stale = [p.name for p, text in generated.items() if not p.exists() or p.read_text() != text]
+        stale = stale_outputs(generated)
         print("claim-to-evidence check: " + ("OK, both files equal a fresh generation" if not stale else f"STALE or missing: {stale}"))
         return 1 if stale else 0
     for path, text in generated.items():

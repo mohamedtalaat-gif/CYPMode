@@ -90,6 +90,12 @@ def test_the_scores_of_the_uploads_are_printed_only_when_the_file_of_them_exists
     (tmp_path / "leaderboard_scores.csv").write_text("slot,file,uploaded_utc,cyp2d6_mcc\n1,candidate_A,2026-10-28 10:00,0.31\n")
     text = report.leaderboard_scores()
     assert "candidate_A" in text and "0.31" in text and "| slot | file |" in text
+    # the freshness check that the gate runs names a file that is missing and a file that differs from its fresh generation, and nothing when the file equals it
+    equal, differs = tmp_path / "equal.md", tmp_path / "differs.md"
+    equal.write_text("same\n")
+    differs.write_text("old counts\n")
+    assert report.stale_outputs({equal: "same\n", differs: "new counts\n", tmp_path / "gone.md": "x\n"}) == ["differs.md", "gone.md"]
+    assert report.stale_outputs({equal: "same\n"}) == []
 
 
 @needs_outputs

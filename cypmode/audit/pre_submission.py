@@ -133,6 +133,10 @@ def run_checks() -> list[tuple[str, str, str]]:
         add("the structure zips exist (final and submitted)", False, f"final {zip_final.exists()}, submitted {zip_sub.exists()}")
 
     # -- freshness --------------------------------------------------------------------------------------------------------------------------------------
+    from cypmode.audit.method_report import stale_outputs
+
+    stale = stale_outputs()  # the report is written by a job that runs before the final audit, so it can quote the counts of an earlier audit
+    add("the method report and the negative results equal a fresh generation from the audit and the logs", not stale, "both equal" if not stale else f"stale or missing: {stale}")
     last = newest(final_outputs())
     for label, path in (("METHOD_REPORT.md", ROOT / "METHOD_REPORT.md"), ("README.md", ROOT / "README.md"), ("CYPMode_Architecture_Specification.md", ROOT / "CYPMode_Architecture_Specification.md"),
                         ("docs/video/STORYBOARD.md", ROOT / "docs/video/STORYBOARD.md"), ("docs/figures/CATALOG.md", ROOT / "docs/figures/CATALOG.md")):
