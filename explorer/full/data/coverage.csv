@@ -550,7 +550,8 @@ other,audit/AUDIT_REPORT.md,"2.10, 12.1, 12.2"
 other,environment/SHA256SUMS,Appendix A
 other,environment/openmm-environment.yml,"11.10, Appendix A, Appendix C"
 other,environment/ost-environment.yml,"Appendix A, Appendix C"
-other,environment/requirements-lock-marimo.txt,"12.6, 12.7"
+other,environment/ost2111-environment.yml,"Appendix A, Appendix C"
+other,environment/requirements-lock-marimo.txt,"12.6, 12.7, Appendix A"
 other,environment/requirements-lock-ml.txt,"Appendix A, Appendix C"
 other,environment/requirements-lock.txt,"Appendix A, Appendix C"
 other,notebooks/build_exports.py,0.6

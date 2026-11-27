@@ -3202,8 +3202,8 @@ atom of lowest rank and takes the branches in order of rank. Two strings that de
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"share of the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="si">}</span><span class="s2"> training strings written in Kekule style: </span><span class="si">{</span><span class="n">kekule_style</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">; share already in RDKit's canonical form: </span><span class="si">{</span><span class="n">as_given</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">; the example, as given: </span><span class="si">{</span><span class="n">example</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></details><div class=outputs><pre>canonical form: CC(C)(C)NS(=O)(=O)C1(CNc2c(Br)cncc2C#N)CCC1
 2000 random walks gave 925 different strings, for instance:
-    CC(NS(C1(CCC1)CNc1c(cncc1C#N)Br)(=O)=O)(C)C
-    O=S(NC(C)(C)C)(C1(CCC1)CNc1c(Br)cncc1C#N)=O
+    O=S(C1(CCC1)CNc1c(cncc1C#N)Br)(=O)NC(C)(C)C
+    O=S(=O)(NC(C)(C)C)C1(CNc2c(cncc2C#N)Br)CCC1
 every one of them has the canonical form above: True
 share of the 6145 training strings written in Kekule style: 100.0%; share already in RDKit&#x27;s canonical form: 1.1%; the example, as given: CC(C)(C)NS(=O)(=O)C1(CNC2=C(Br)C=NC=C2C#N)CCC1
 </pre></div></div><section class="cell md"><p>The strings of the file are not in the canonical form of the software used in this project (only 1.1% of them are), because they are written in the Kekule style; reading them with RDKit and writing them again gives the
@@ -6218,13 +6218,13 @@ reached, which gives a lopsided tree that reduces the loss faster than a balance
 <td>the booster written out above (100 rounds, eta 0.1, depth 3)</td>
 <td>0.736</td>
 <td>0.014</td>
-<td>2.786</td>
+<td>3.546</td>
 </tr>
 <tr>
 <td>LightGBM with matching settings</td>
 <td>0.733</td>
 <td>0.012</td>
-<td>0.337</td>
+<td>0.371</td>
 </tr>
 </tbody>
 </table>
@@ -6309,13 +6309,13 @@ source of randomness that decorrelates the trees (section 4.4) and speeds up the
 <td>deep</td>
 <td>0.752</td>
 <td>0.012</td>
-<td>4.457</td>
+<td>4.474</td>
 </tr>
 <tr>
 <td>shallow</td>
 <td>0.754</td>
 <td>0.012</td>
-<td>3.187</td>
+<td>3.181</td>
 </tr>
 </tbody>
 </table>
@@ -7630,7 +7630,7 @@ all six patterns, built into small graphs by the toolkit, and counts how many co
 </tbody>
 </table>
 </div></div></div><section class="cell md"><p><strong>What &quot;matches&quot; means.</strong> Let $x$ be a molecule, seen as a graph whose nodes are its atoms and whose edges are its bonds (section 2.1), and $p$ a pattern, a smaller graph of the same kind. The pattern $p$ <strong>matches</strong> $x$ when its atoms can be laid on a choice of atoms of $x$, no two on the
-same atom, so that every atom of $p$ lies on an atom of the kind it describes and every bond of $p$ lies on a bond of $x$ of the kind it describes. (The name in graph theory is <em>subgraph isomorphism</em>; the toolkit searches for such a laying-on by trying atom after atom and abandoning a try as soon as a bond fails, which for patterns of five or six atoms is fast: reading the 6,895 structures and applying the six patterns to each took 0.4 seconds in the cell above.)
+same atom, so that every atom of $p$ lies on an atom of the kind it describes and every bond of $p$ lies on a bond of $x$ of the kind it describes. (The name in graph theory is <em>subgraph isomorphism</em>; the toolkit searches for such a laying-on by trying atom after atom and abandoning a try as soon as a bond fails, which for patterns of five or six atoms is fast: reading the 6,895 structures and applying the six patterns to each took 0.5 seconds in the cell above.)
 The screen's call for a molecule $x$ is a single number $m(x)$, with $p_1, \dots, p_6$ the six patterns and the index $j$ running over them:</p>
 <p>$$m(x) \;=\; \max_{j=1,\dots,6}\; \mathbb{1}\bigl[\, p_j \text{ matches } x \,\bigr],$$</p>
 <p>where the symbol $\mathbb{1}[\cdot]$, the <strong>indicator</strong>, is 1 when the statement inside the brackets is true and 0 when it is false. In words: $m(x)=1$ when at least one of the six patterns matches. Of the 6,895 compounds of the challenge, 3,107
@@ -19409,7 +19409,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-13.553</td>
 <td>10.849</td>
 <td>2.133</td>
-<td>0.050</td>
+<td>0.051</td>
 </tr>
 <tr>
 <td>LDA (SVWN)</td>
@@ -19417,7 +19417,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-6.309</td>
 <td>12.732</td>
 <td>2.025</td>
-<td>0.174</td>
+<td>0.184</td>
 </tr>
 <tr>
 <td>GGA (PBE)</td>
@@ -19425,7 +19425,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-6.217</td>
 <td>12.381</td>
 <td>1.936</td>
-<td>0.265</td>
+<td>0.290</td>
 </tr>
 <tr>
 <td>hybrid (B3LYP)</td>
@@ -19433,7 +19433,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-7.943</td>
 <td>12.415</td>
 <td>1.982</td>
-<td>0.282</td>
+<td>0.303</td>
 </tr>
 </tbody>
 </table>
@@ -19751,7 +19751,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 </tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>The two methods order the molecules in nearly the same way (a Pearson correlation of 0.92 and a Spearman rank correlation of 0.88), but GFN2-xTB gives values that are higher than B3LYP by 5.0 eV on average, with a scatter of 0.6 eV around that offset. The offset is large and is not a defect of the code: the method was fitted to structures, frequencies and noncovalent interactions and not to the energies of charged molecules, and an ionisation potential taken from it is not an ionisation potential in the experimental sense. It is a number that increases when a molecule is harder to oxidise, which is what a tree model can use, since it splits on the ordering and a constant offset moves no split. The same holds for the other energies of 10.5. The price is that these features carry a role-dependent offset, as the docstring of the module says, which the tree learns from the other columns. The time: GFN2-xTB took 0.3 seconds for the twelve molecules (both charge states) and B3LYP 66, a ratio of about 189 for molecules of at most 15 atoms; the ratio grows with size, because the cost of the density functional method rises more steeply.</p>
+</div></div></div><section class="cell md"><p>The two methods order the molecules in nearly the same way (a Pearson correlation of 0.92 and a Spearman rank correlation of 0.88), but GFN2-xTB gives values that are higher than B3LYP by 5.0 eV on average, with a scatter of 0.6 eV around that offset. The offset is large and is not a defect of the code: the method was fitted to structures, frequencies and noncovalent interactions and not to the energies of charged molecules, and an ionisation potential taken from it is not an ionisation potential in the experimental sense. It is a number that increases when a molecule is harder to oxidise, which is what a tree model can use, since it splits on the ordering and a constant offset moves no split. The same holds for the other energies of 10.5. The price is that these features carry a role-dependent offset, as the docstring of the module says, which the tree learns from the other columns. The time: GFN2-xTB took 0.4 seconds for the twelve molecules (both charge states) and B3LYP 66, a ratio of about 181 for molecules of at most 15 atoms; the ratio grows with size, because the cost of the density functional method rises more steeply.</p>
 <p><em>On what actually ran.</em> <code>tblite</code> (the library that implements the GFN-xTB family, version 0.7.0, called from <code>cypmode/challenge/physics_block.py</code>) and PySCF, each in an isolated interpreter. The decomposition of the energy is the program's own report (verbosity 2); the sum is checked by the cell.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-phys_koopmans"><img class="fig-light" loading="lazy" decoding="async" width="2100" height="880" src="figures/phys_koopmans-light.png" alt="Orbital energies and ionisation potentials: Koopmans&#x27; relation on real compounds"><img class="fig-dark" loading="lazy" decoding="async" width="2100" height="880" src="figures/phys_koopmans-dark.png" alt="Orbital energies and ionisation potentials: Koopmans&#x27; relation on real compounds"><figcaption><p><strong>Figure: Orbital energies and ionisation potentials: Koopmans' relation on real compounds.</strong> Koopmans' approximation on the 6895 compounds of the physics cache: the ionisation potential computed from the energy of the cation (vertical, vertical axis) against minus the energy of the highest occupied orbital (horizontal). Pearson r = 0.858 for the ionisation potential and 0.912 for the electron affinity against minus the lowest unoccupied orbital; the cation-based value sits +2.07 eV from the orbital value on average. Koopmans' approximation ignores how the remaining orbitals relax when an electron is removed, so the two are expected to track each other without being equal. The dashed line is equality.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="10.5-The-quantities-of-the-physics-block">10.5 The quantities of the physics block</h2>
@@ -25402,7 +25402,7 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 <span class="n">summary_line</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">run</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="s2">" passed"</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s2">" failed"</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s2">" error"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">summary_line</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
-</pre></details><div class=outputs><pre>3 passed in 0.12s
+</pre></details><div class=outputs><pre>3 passed in 0.11s
 </pre></div></div><section class="cell md"><p>The summary above is the line a developer reads. The suite is the cheapest of the checks of this part, and the one that runs most often: the queue runs it in the audit (job 900) and in the lint cleanup (job 295).</p>
 <p><em>On what actually ran.</em> The first cell counts the test functions by reading the files with Python's parser, reads the ignore list from <code>pyproject.toml</code> and the steps from the workflow file. The second cell runs <code>tests/test_constants.py</code> as a child process. The workflow itself runs on the hosting service, not in the notebook.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-eng_power_events"><img class="fig-light" loading="lazy" decoding="async" width="2300" height="1160" src="figures/eng_power_events-light.png" alt="What the machine did while the queue ran"><img class="fig-dark" loading="lazy" decoding="async" width="2300" height="1160" src="figures/eng_power_events-dark.png" alt="What the machine did while the queue ran"><figcaption><p><strong>Figure: What the machine did while the queue ran.</strong> Every time the machine entered sleep between 20 Nov and 26 Nov, by the cause its own power log gives: 1151 x Maintenance Sleep, 180 x Sleep Service Back to Sleep, 9 x Software Sleep pid=611, 5 x Clamshell Sleep, 5 x Notification Wake Back to Sleep, 1 x Low Power Sleep. The power log itself begins on 2026-11-20, so nothing is known about earlier days. Read from <code>pmset -g log</code> when the figure is built, so it describes the machine that ran the queue; it records what happened, not why.</p>
@@ -25513,12 +25513,12 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <tr>
 <td>DONE</td>
 <td>a job finished</td>
-<td>550</td>
+<td>558</td>
 </tr>
 <tr>
 <td>RETRY</td>
 <td>a job failed once and was tried again</td>
-<td>43</td>
+<td>44</td>
 </tr>
 <tr>
 <td>FAILED</td>
@@ -25538,13 +25538,13 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <tr>
 <td>IDLE</td>
 <td>nothing could run</td>
-<td>105</td>
+<td>107</td>
 </tr>
 </tbody>
 </table>
 </div></div></div><section class="cell md"><p>Each guard is the answer to something that happened. The memory guard is the one that matters: five Boltz samples in parallel used up the memory and the swap file, and the machine took a <strong>kernel panic</strong>, which is the operating system stopping itself because it cannot continue. From then on one sample at a time, a ceiling on what the graphics unit may take, and a guard that kills the running structure engine when the free memory stays under a few percent. A hard ceiling of 0.9 times the memory, tried first, made every forward pass of the engines fail, so the allowance was loosened and the guard does the protecting. The battery guard asks nothing of the run: a flat battery once stopped a night's run, and the guard therefore sends a notification at two levels of charge and never waits or stops anything (the function that used to wait is kept as an empty one, so that older jobs still call it).</p>
 <p>The runner is started under <code>caffeinate</code>, which keeps the machine awake while it runs; a run that looks hung may turn out to be a machine that went to sleep, and that mistake was made once in this project, so the first question about a quiet job is whether the machine slept.</p>
-<p>The runner's own log shows what this meant in practice. It holds 17953 lines since 10-08 03:02:02. 550 DONE lines are jobs that finished, 43 are retries and 26 are failures that were recorded; the jobs that failed were repaired and queued again, and 0 of the 180 jobs are in the failed state as this notebook is built, while 176 are done. The memory guard acted 25 times, with the swap file as large as 9.2 gibibytes at the worst moment; each of these would otherwise have been a crash of the machine or of the run.</p>
+<p>The runner's own log shows what this meant in practice. It holds 17980 lines since 10-08 03:02:02. 558 DONE lines are jobs that finished, 44 are retries and 26 are failures that were recorded; the jobs that failed were repaired and queued again, and 0 of the 180 jobs are in the failed state as this notebook is built, while 176 are done. The memory guard acted 25 times, with the swap file as large as 9.2 gibibytes at the worst moment; each of these would otherwise have been a crash of the machine or of the run.</p>
 <p><strong>What the hardware taught, in six rules.</strong> A job that is not ready is not a failed job (the status 75). A long job works in chunks and remembers its place in files, so a restart costs a chunk and not a day. The state lives in the repository and not in a temporary folder, which the machine empties when it restarts. The memory of a laptop is shared between its parts, so a guard must watch the free memory and not only the load. Nothing is allowed to wait for a person (the battery), and everything that can hang is given a time limit (the tests, 12.3). And a quiet job is first suspected of sleeping, not of being broken.</p>
 <p><em>On what actually ran.</em> The first cell runs <code>defer</code> and <code>chunk_status</code> for real, in child processes and a temporary folder. The second reads the runner's log, the counters of <code>queue/state</code> and the header of <code>guards.sh</code>. The runner itself ran the jobs; the notebook only reads what it left.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-eng_commit_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-light.png" alt="The history of the repository"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-dark.png" alt="The history of the repository"><figcaption><p><strong>Figure: The history of the repository.</strong> The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-26: 388 commits on 22 days up to commit 234f3ce, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.</p>
@@ -25579,7 +25579,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <span class="n">negative_gates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\| NOT MET \|"</span><span class="p">,</span> <span class="n">negative_report</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">check_line</span><span class="p">)</span>
 <span class="n">freshness_sentence</span> <span class="o">=</span> <span class="s2">"At the time of this build the check passes: the two files are what the code generates from the logs."</span> <span class="k">if</span> <span class="n">report_is_fresh</span> <span class="k">else</span> <span class="s2">"At the time of this build the check reports the files as stale, which is what it is for: the final chain regenerates them (job 910) before the notebook is built."</span>
-</pre></details><div class=outputs><pre>claim-to-evidence check: STALE or missing: [&#x27;METHOD_REPORT.md&#x27;]
+</pre></details><div class=outputs><pre>claim-to-evidence check: OK, both files equal a fresh generation
 </pre><div><table>
 <thead>
 <tr>
@@ -25696,7 +25696,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 
 <span class="n">project_map_modules</span> <span class="o">=</span> <span class="n">project_map</span><span class="o">.</span><span class="n">module_paths</span><span class="p">()</span>
 <span class="n">project_map_jobs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">project_map</span><span class="o">.</span><span class="n">job_facts</span><span class="p">())</span>
-</pre></details></div><section class="cell md"><p>At the time of this build the check reports the files as stale, which is what it is for: the final chain regenerates them (job 910) before the notebook is built. The method report has 15 numbered sections, 18 logged limitations and 2 value(s) still pending, and the ledger of negative results has 205 rows marked NOT MET. The README and the specification hold the generated blocks listed in the first table.</p>
+</pre></details></div><section class="cell md"><p>At the time of this build the check passes: the two files are what the code generates from the logs. The method report has 15 numbered sections, 18 logged limitations and 1 value(s) still pending, and the ledger of negative results has 205 rows marked NOT MET. The README and the specification hold the generated blocks listed in the first table.</p>
 <p><strong>The artifacts that present the results.</strong> The same discipline covers the files that show the results to a reader: the README card, the poster, the film and the figures. <code>cypmode/audit/artifacts.py</code> keeps the record <code>audit/artifacts.json</code>, written by the builders of those four artifacts: for each one the SHA-256 of every file it wrote, a fingerprint of the numbers it was built from (everything that the film's facts module reads from the final outputs, the ledger, the audit and the repository), and the builder's own digests. Its <code>verify</code>, called by the pre-submission gate, asks three questions of every artifact: whether each recorded output is still the file the builder wrote, whether the numbers it shows are the final ones (the recorded fingerprint equals the current one), and whether the artifact's own source still produces the same content. The card's HTML and the DOM of every frame of the film and of the poster are recomputed and compared exactly; the PNG and the H.264 files are not compared pixel by pixel, because rendering the same frame twice differs in a few dozen pixels by less than one level of 255 and the encoder adds its own differences. The gate fails an artifact that was edited after its build, one built from numbers that have changed since, and one whose source no longer reproduces it. The interactive card, one self-contained page built by <code>docs/card/build_interactive_card.py</code> in the queue job <code>946_interactive_card</code>, is recorded and checked the same way (its HTML is recomputed and compared exactly, <code>tests/test_interactive_card.py</code> checks that the iron–nitrogen distance measured on the coordinates it embeds equals the deposited one and that the page makes no request). The notebook itself has two editions for the same reason as the card: results for the blinded compounds must not be public before the challenge closes, and the notebook must be. A cell can be marked <code>held_back</code>; the public edition (the queue job <code>947_notebook_public</code>, <code>python -m notebooks.build_notebook --public</code>) runs it all the same, so that the variables of the later cells exist, but shows a note instead of its outputs and fails when any cell still names an official structure ligand or five or more blinded compounds (<code>tests/test_notebook_public.py</code>). The complete edition replaces it when the challenge has closed.</p>
 <p><strong>The queue is checked too.</strong> Every job of the queue is a shell script that calls modules and scripts of the repository, and a job can promise something that does not exist. <code>cypmode/audit/checklist.py</code> makes the ways in which a job drifts from the repository checkable by a script: a job that calls a module that does not exist, a job that waits for a code file that does not exist (which would make it answer &quot;not ready&quot; for ever), and a script that does not exist. The workflow of 12.3 runs it on every change. In this build it finds 0 problems in 180 jobs.</p>
 <p><strong>What must not be published.</strong> The public-readiness scan (<code>cypmode/audit/public_readiness.py</code>) looks at the files that git tracks or would add. Its detectors find private paths on the author's machine, strings shaped like credentials, e-mail addresses other than the public contact lines, files near the size limit of the hosting service, long verbatim runs from the books used while writing, and, until the challenge closes, results for the blinded compounds: a file that names five or more of them, or a table with one row per blinded compound (750 for the TDI test set, 20 for the structure set), is a prediction and must not be pushed. The files that are held back are the 0 patterns of the HELD BACK block of <code>.gitignore</code>, and the scan can also read every blob of the git history, because a push carries the history. The table shows three detectors firing on a sample that was made for the purpose.</p>
@@ -25805,7 +25805,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <span class="nb">print</span><span class="p">(</span><span class="n">test_summary</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dry_run_line</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">test_run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">dry_run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
-</pre></details><div class=outputs><pre>15 passed in 0.69s
+</pre></details><div class=outputs><pre>15 passed in 0.62s
 HELD BACK block not found; held-back sections not found
 </pre></div></div><section class="cell md"><p>The test file has passed and the dry run reports what the release script would change, without writing anything. After the deadline the script, run without the dry-run option, removes the HELD BACK block and switches on the parts of the README that were held back; before the deadline it refuses.</p>
 <p><strong>What the checks cannot do.</strong> They catch what they were taught to look for: the patterns of the scan, the files of the HELD BACK block, the numbers that the report copies. They do not decide whether a method is right, whether a gate was chosen fairly, or whether a sentence in a document is true. Those are the work of Parts VI and IX, and of the person who reads the text word by word. Engineering for trust is the part that makes the other parts checkable; it is not a substitute for them.</p>
@@ -26003,7 +26003,7 @@ HELD BACK block not found; held-back sections not found
 <tr>
 <td>L7</td>
 <td>reproducibility</td>
-<td>The test suite has 1126 passing and 1 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.</td>
+<td>The test suite has 1127 passing and 0 failing tests in this run. Multi-threaded LightGBM is not guaranteed bit-identical across thread counts (see the determinism section); the pipeline fixes seeds and thread counts, and cached predictions are checked against a fresh fit.</td>
 </tr>
 <tr>
 <td>L8</td>
@@ -26508,7 +26508,7 @@ HELD BACK block not found; held-back sections not found
 <blockquote>
 <p><strong>Field:</strong> Software engineering</p>
 </blockquote>
-<p>Software changes: a package that is updated a year later can give a different number from the same code. The remedy is to <strong>pin</strong> the environment, which means to record the exact version of every package that was installed, in a <strong>lock file</strong> that anyone can install from. The repository holds four pin files in <code>environment/</code>: <code>requirements-lock.txt</code> for the main environment (the TDI track and the tests), <code>requirements-lock-ml.txt</code> for the neural models (Chemprop, TabICL, TabPFN, CheMeleon), <code>openmm-environment.yml</code> for the force-field relaxation of 11.10 and <code>ost-environment.yml</code> for the scoring with OpenStructure. The last two are conda environments, which can install programs that are not Python packages. Boltz-2 and OpenFold3 run in <strong>virtual environments</strong> of their own (a folder with its own copy of Python and its own packages, so that installing one tool cannot break another), <code>.venv-boltz</code> and <code>.venv-openfold3</code>, which are outside the pin files; that is a gap in the record, and the versions that ran are in the manifests of the structure track.</p>
+<p>Software changes: a package that is updated a year later can give a different number from the same code. The remedy is to <strong>pin</strong> the environment, which means to record the exact version of every package that was installed, in a <strong>lock file</strong> that anyone can install from. The repository holds five pin files for the analysis in <code>environment/</code> (a sixth, <code>requirements-lock-marimo.txt</code>, pins the environment of the explorer): <code>requirements-lock.txt</code> for the main environment (the TDI track and the tests), <code>requirements-lock-ml.txt</code> for the neural models (Chemprop, TabICL, TabPFN, CheMeleon), <code>openmm-environment.yml</code> for the force-field relaxation of 11.10, <code>ost-environment.yml</code> for the scoring with OpenStructure, and <code>ost2111-environment.yml</code> for the conda environment <code>ost2111</code>, in which <code>cypmode/post_deadline/structure.py</code> scores the submitted structures with OpenStructure 2.11.1, the version that the organisers name. The last three are conda environments, which can install programs that are not Python packages. Boltz-2 and OpenFold3 run in <strong>virtual environments</strong> of their own (a folder with its own copy of Python and its own packages, so that installing one tool cannot break another), <code>.venv-boltz</code> and <code>.venv-openfold3</code>, which are outside the pin files; that is a gap in the record, and the versions that ran are in the manifests of the structure track.</p>
 <p>The next cell reads the files in <code>environment/</code>, counts the pinned entries of each and checks each file against the checksum recorded in <code>SHA256SUMS</code>. The optional groups of packages that <code>pip install -e &quot;.[...]&quot;</code> accepts are listed from <code>pyproject.toml</code>.</p>
 </section><div class="cell code"><details class="src"><summary>code<span>21 lines</span></summary><pre class="source"><span class="c1"># The environments, read from the files that pin them (environment/). A pinned entry is a package with the exact version it was installed at (name==version in a pip file, name=version in a conda file). The file SHA256SUMS holds the SHA-256 of</span>
 <span class="c1"># every pin file, so that a file that changed since the checksums were written is found, and pyproject.toml lists the optional groups of packages (extras) that pip install -e ".[...]" takes.</span>
@@ -26551,6 +26551,11 @@ HELD BACK block not found; held-back sections not found
 <td>True</td>
 </tr>
 <tr>
+<td>ost2111-environment.yml</td>
+<td>154</td>
+<td>True</td>
+</tr>
+<tr>
 <td>requirements-lock-marimo.txt</td>
 <td>44</td>
 <td>True</td>
@@ -26567,7 +26572,7 @@ HELD BACK block not found; held-back sections not found
 </tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>There are 5 pin files, and every one equals its recorded checksum (the cell requires it). The optional groups of the package are dev (2 packages), tdc (8 packages), validate (4 packages), challenge (9 packages), multitask (2 packages). The quick start of the README installs the main environment with <code>pip install -e &quot;.[challenge,validate]&quot;</code>; the other environments are created from their own files. A job whose environment is missing does not run: its first lines (<code>need_file</code>) make it wait, so that a missing tool is a visible delay and not a wrong result.</p>
+</div></div></div><section class="cell md"><p>There are 6 pin files, and every one equals its recorded checksum (the cell requires it). The optional groups of the package are dev (2 packages), tdc (8 packages), validate (4 packages), challenge (9 packages), multitask (2 packages). The quick start of the README installs the main environment with <code>pip install -e &quot;.[challenge,validate]&quot;</code>; the other environments are created from their own files. A job whose environment is missing does not run: its first lines (<code>need_file</code>) make it wait, so that a missing tool is a visible delay and not a wrong result.</p>
 <p>The reason for several environments is practical. A package such as LightGBM, which runs on every thread of the processor, and a package such as PyTorch, which also uses a library for parallel loops, can disturb each other when both are loaded in one process; the repository learned this when a test of the Atom-JEPA readout, run beside the LightGBM tests, hung for hours. 12.3 tells the story; the consequence here is that the tests that load PyTorch or the quantum-chemistry package run in processes of their own, and the Contributing section of the README says which.</p>
 <h2 id="A.2-The-map-of-the-repository">A.2 The map of the repository</h2>
 <blockquote>
@@ -30944,7 +30949,7 @@ python -m notebooks.build_notebook                         # 9. this notebook
 </tbody>
 </table>
 </div></div></div><section class="cell md"><p>The table holds 12 programs, each with the pin file whose version it shows; the main lock file alone pins 132 entries.</p>
-<p><strong>Programs.</strong> <strong>RDKit</strong> supplies the descriptors, the fingerprints and the SMARTS matching, and <code>README.md</code> records its home as https://www.rdkit.org. <strong>LightGBM</strong> is the gradient-boosted model of most of the notebook: <code>README.md</code> credits it and the work of Ke and co-workers (2017). <strong>scikit-learn</strong> supplies the calibration, the isotonic regression and the metrics. <strong>Chemprop</strong> is the message-passing network of the neural models, credited in <code>README.md</code> to Yang and co-workers (2019). <strong>PyTorch</strong> runs the neural models. <strong>tblite</strong> implements the GFN2-xTB method of the physics block. <strong>OpenMM</strong> and <code>openmmforcefields</code> run the force-field relaxation of a pose, and <strong>OpenStructure</strong> the structural scoring; these two live in conda environments of their own, <code>environment/openmm-environment.yml</code> and <code>environment/ost-environment.yml</code>. <strong>PoseBusters</strong> is the set of pose checks of the structure track, and <strong>TabICL</strong> the in-context tabular model, each from its pin file; <strong>pandas</strong> and <strong>NumPy</strong> are the tabular and numerical base of every cell.</p>
+<p><strong>Programs.</strong> <strong>RDKit</strong> supplies the descriptors, the fingerprints and the SMARTS matching, and <code>README.md</code> records its home as https://www.rdkit.org. <strong>LightGBM</strong> is the gradient-boosted model of most of the notebook: <code>README.md</code> credits it and the work of Ke and co-workers (2017). <strong>scikit-learn</strong> supplies the calibration, the isotonic regression and the metrics. <strong>Chemprop</strong> is the message-passing network of the neural models, credited in <code>README.md</code> to Yang and co-workers (2019). <strong>PyTorch</strong> runs the neural models. <strong>tblite</strong> implements the GFN2-xTB method of the physics block. <strong>OpenMM</strong> and <code>openmmforcefields</code> run the force-field relaxation of a pose, and <strong>OpenStructure</strong> the structural scoring; these two live in conda environments of their own, <code>environment/openmm-environment.yml</code> and <code>environment/ost-environment.yml</code>; the score of the submitted structures after the deadline ran in the environment <code>ost2111</code> with OpenStructure 2.11.1, the version that the organisers name, and <code>environment/ost2111-environment.yml</code> is its export. <strong>PoseBusters</strong> is the set of pose checks of the structure track, and <strong>TabICL</strong> the in-context tabular model, each from its pin file; <strong>pandas</strong> and <strong>NumPy</strong> are the tabular and numerical base of every cell.</p>
 <p><strong>Models and weights.</strong> <strong>Boltz-2</strong> is the co-folding model of the structure track; <code>README.md</code> records it at https://github.com/jwohlwend/boltz under the MIT licence, and its paper is Passaro and co-workers (2025). <strong>OpenFold3</strong> is the OpenFold consortium's reimplementation of AlphaFold 3; <code>METHOD_REPORT.md</code> section 12 names it and the package is installed in <code>.venv-openfold3</code>. <strong>BioEmu2</strong> is the all-atom diffusion model that was examined as a third structure engine; the docstring of <code>cypmode/validation/bioemu2.py</code> records it as the model of Microsoft Research under the MIT licence, at https://github.com/microsoft/bioemu2, with its public checkpoint at https://huggingface.co/microsoft/bioemu2. <strong>CheMeleon</strong> supplies the frozen embeddings, and <code>METHOD_REPORT.md</code> section 12 records the weights at Zenodo, <a href="https://doi.org/10.5281/zenodo.15426600">doi:10.5281/zenodo.15426600</a>. <strong>ChemBERTa</strong> is the checkpoint <code>seyonec/ChemBERTa-zinc-base-v1</code> on Hugging Face, from Chithrananda and co-workers (2020), and <strong>TabPFN</strong> is the in-context tabular model of Hollmann and co-workers (2022). <strong>Kokoro-82M</strong> speaks the film: the docstring of <code>docs/video/voices.py</code> records it as hexgrad's model under the Apache-2.0 licence, at https://huggingface.co/hexgrad/Kokoro-82M, 24 kHz, trained on permissively licensed and synthetic audio, and the film reads it through the <code>kokoro</code> and <code>huggingface_hub</code> packages.</p>
 <p><strong>Data.</strong> The <strong>OpenADMET CYP blind challenge</strong> is the source of the training data, the blinded test set and the definition of the TDI task; <code>README.md</code> records the space at https://huggingface.co/spaces/openadmet/cyp-challenge and the changelog of the data at https://huggingface.co/datasets/openadmet/cyp-challenge-train-test. The <strong>Octant CYP inhibition blog release</strong> is the quantitative panel that the structure track cross-checks against, recorded in <code>README.md</code> at https://huggingface.co/datasets/openadmet/Octant_CYP_inhibition_reactivity_blog_release and https://github.com/OpenADMET/Octant_CYP_blog_post under CC BY 4.0, and loaded by <code>cypmode/data/octant_benchmark.py</code>. The <strong>Therapeutics Data Commons</strong> is the source of the five-isoform CYP panel, recorded in <code>README.md</code> at https://tdc.hub.biolib.com and loaded by <code>cypmode/data/panel.py</code>; its NCATS qHTS measurements are the panel of Veith and co-workers (2009), and its Tox21 readings are the counter-screen of 9.10. The benchmark files of its CYP3A4 and CYP2D6 inhibition sets are stored in <code>data/tdi_track/inputs/tdc_cache/admet_group/</code>, with their SHA-256 sums and the leaderboard table read on 2026-11-26, and are used by <code>cypmode/challenge/external_dataset.py</code> under CC BY 4.0, the licence that the page of the Therapeutics Data Commons gives for those data sets. The auxiliary measurements are the <strong>ChEMBL</strong>, <strong>BindingDB</strong> and <strong>PubChem</strong> readings loaded by <code>cypmode/challenge/chembl_auxiliary.py</code>, <code>bindingdb_auxiliary.py</code> and <code>pubchem_auxiliary.py</code>, the NCATS continuous measurements of <code>cypmode/challenge/external_continuous.py</code>, and the PXR-induction readings of the OpenADMET PXR challenge, published as <code>openadmet/pxr-challenge-train-test</code> under CC BY 4.0. The hydration free energies quoted in 10.5 are from the <strong>FreeSolv</strong> database of Mobley and Guthrie (2014). The reference complexes of the structure track are the <strong>Protein Data Bank</strong> entries that its benchmark lists.</p>
 <p>The entries of this section are the record of what ran, not a second bibliography: the papers behind the models and the data are in C.1, and a version is the pin file's.</p>
@@ -33343,8 +33348,12 @@ python -m notebooks.build_notebook                         # 9. this notebook
 <td>Appendix A, Appendix C</td>
 </tr>
 <tr>
+<td><code>environment/ost2111-environment.yml</code></td>
+<td>Appendix A, Appendix C</td>
+</tr>
+<tr>
 <td><code>environment/requirements-lock-marimo.txt</code></td>
-<td>12.6, 12.7</td>
+<td>12.6, 12.7, Appendix A</td>
 </tr>
 <tr>
 <td><code>environment/requirements-lock-ml.txt</code></td>
