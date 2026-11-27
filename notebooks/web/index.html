@@ -3202,8 +3202,8 @@ atom of lowest rank and takes the branches in order of rank. Two strings that de
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"share of the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="si">}</span><span class="s2"> training strings written in Kekule style: </span><span class="si">{</span><span class="n">kekule_style</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">; share already in RDKit's canonical form: </span><span class="si">{</span><span class="n">as_given</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">; the example, as given: </span><span class="si">{</span><span class="n">example</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></details><div class=outputs><pre>canonical form: CC(C)(C)NS(=O)(=O)C1(CNc2c(Br)cncc2C#N)CCC1
 2000 random walks gave 925 different strings, for instance:
-    O=S(C1(CCC1)CNc1c(cncc1C#N)Br)(=O)NC(C)(C)C
-    O=S(=O)(NC(C)(C)C)C1(CNc2c(cncc2C#N)Br)CCC1
+    O=S(NC(C)(C)C)(=O)C1(CNc2c(C#N)cncc2Br)CCC1
+    Brc1cncc(C#N)c1NCC1(S(=O)(NC(C)(C)C)=O)CCC1
 every one of them has the canonical form above: True
 share of the 6145 training strings written in Kekule style: 100.0%; share already in RDKit&#x27;s canonical form: 1.1%; the example, as given: CC(C)(C)NS(=O)(=O)C1(CNC2=C(Br)C=NC=C2C#N)CCC1
 </pre></div></div><section class="cell md"><p>The strings of the file are not in the canonical form of the software used in this project (only 1.1% of them are), because they are written in the Kekule style; reading them with RDKit and writing them again gives the
@@ -6218,13 +6218,13 @@ reached, which gives a lopsided tree that reduces the loss faster than a balance
 <td>the booster written out above (100 rounds, eta 0.1, depth 3)</td>
 <td>0.736</td>
 <td>0.014</td>
-<td>3.546</td>
+<td>2.735</td>
 </tr>
 <tr>
 <td>LightGBM with matching settings</td>
 <td>0.733</td>
 <td>0.012</td>
-<td>0.371</td>
+<td>0.334</td>
 </tr>
 </tbody>
 </table>
@@ -6309,13 +6309,13 @@ source of randomness that decorrelates the trees (section 4.4) and speeds up the
 <td>deep</td>
 <td>0.752</td>
 <td>0.012</td>
-<td>4.474</td>
+<td>4.396</td>
 </tr>
 <tr>
 <td>shallow</td>
 <td>0.754</td>
 <td>0.012</td>
-<td>3.181</td>
+<td>3.168</td>
 </tr>
 </tbody>
 </table>
@@ -7630,7 +7630,7 @@ all six patterns, built into small graphs by the toolkit, and counts how many co
 </tbody>
 </table>
 </div></div></div><section class="cell md"><p><strong>What &quot;matches&quot; means.</strong> Let $x$ be a molecule, seen as a graph whose nodes are its atoms and whose edges are its bonds (section 2.1), and $p$ a pattern, a smaller graph of the same kind. The pattern $p$ <strong>matches</strong> $x$ when its atoms can be laid on a choice of atoms of $x$, no two on the
-same atom, so that every atom of $p$ lies on an atom of the kind it describes and every bond of $p$ lies on a bond of $x$ of the kind it describes. (The name in graph theory is <em>subgraph isomorphism</em>; the toolkit searches for such a laying-on by trying atom after atom and abandoning a try as soon as a bond fails, which for patterns of five or six atoms is fast: reading the 6,895 structures and applying the six patterns to each took 0.5 seconds in the cell above.)
+same atom, so that every atom of $p$ lies on an atom of the kind it describes and every bond of $p$ lies on a bond of $x$ of the kind it describes. (The name in graph theory is <em>subgraph isomorphism</em>; the toolkit searches for such a laying-on by trying atom after atom and abandoning a try as soon as a bond fails, which for patterns of five or six atoms is fast: reading the 6,895 structures and applying the six patterns to each took 0.4 seconds in the cell above.)
 The screen's call for a molecule $x$ is a single number $m(x)$, with $p_1, \dots, p_6$ the six patterns and the index $j$ running over them:</p>
 <p>$$m(x) \;=\; \max_{j=1,\dots,6}\; \mathbb{1}\bigl[\, p_j \text{ matches } x \,\bigr],$$</p>
 <p>where the symbol $\mathbb{1}[\cdot]$, the <strong>indicator</strong>, is 1 when the statement inside the brackets is true and 0 when it is false. In words: $m(x)=1$ when at least one of the six patterns matches. Of the 6,895 compounds of the challenge, 3,107
@@ -19409,7 +19409,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-13.553</td>
 <td>10.849</td>
 <td>2.133</td>
-<td>0.051</td>
+<td>0.049</td>
 </tr>
 <tr>
 <td>LDA (SVWN)</td>
@@ -19417,7 +19417,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-6.309</td>
 <td>12.732</td>
 <td>2.025</td>
-<td>0.184</td>
+<td>0.193</td>
 </tr>
 <tr>
 <td>GGA (PBE)</td>
@@ -19425,7 +19425,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-6.217</td>
 <td>12.381</td>
 <td>1.936</td>
-<td>0.290</td>
+<td>0.279</td>
 </tr>
 <tr>
 <td>hybrid (B3LYP)</td>
@@ -19433,7 +19433,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 <td>-7.943</td>
 <td>12.415</td>
 <td>1.982</td>
-<td>0.303</td>
+<td>0.293</td>
 </tr>
 </tbody>
 </table>
@@ -19751,7 +19751,7 @@ For the two OpenADMET weights together, stage 1 has finished: added to the defau
 </tr>
 </tbody>
 </table>
-</div></div></div><section class="cell md"><p>The two methods order the molecules in nearly the same way (a Pearson correlation of 0.92 and a Spearman rank correlation of 0.88), but GFN2-xTB gives values that are higher than B3LYP by 5.0 eV on average, with a scatter of 0.6 eV around that offset. The offset is large and is not a defect of the code: the method was fitted to structures, frequencies and noncovalent interactions and not to the energies of charged molecules, and an ionisation potential taken from it is not an ionisation potential in the experimental sense. It is a number that increases when a molecule is harder to oxidise, which is what a tree model can use, since it splits on the ordering and a constant offset moves no split. The same holds for the other energies of 10.5. The price is that these features carry a role-dependent offset, as the docstring of the module says, which the tree learns from the other columns. The time: GFN2-xTB took 0.4 seconds for the twelve molecules (both charge states) and B3LYP 66, a ratio of about 181 for molecules of at most 15 atoms; the ratio grows with size, because the cost of the density functional method rises more steeply.</p>
+</div></div></div><section class="cell md"><p>The two methods order the molecules in nearly the same way (a Pearson correlation of 0.92 and a Spearman rank correlation of 0.88), but GFN2-xTB gives values that are higher than B3LYP by 5.0 eV on average, with a scatter of 0.6 eV around that offset. The offset is large and is not a defect of the code: the method was fitted to structures, frequencies and noncovalent interactions and not to the energies of charged molecules, and an ionisation potential taken from it is not an ionisation potential in the experimental sense. It is a number that increases when a molecule is harder to oxidise, which is what a tree model can use, since it splits on the ordering and a constant offset moves no split. The same holds for the other energies of 10.5. The price is that these features carry a role-dependent offset, as the docstring of the module says, which the tree learns from the other columns. The time: GFN2-xTB took 0.4 seconds for the twelve molecules (both charge states) and B3LYP 69, a ratio of about 183 for molecules of at most 15 atoms; the ratio grows with size, because the cost of the density functional method rises more steeply.</p>
 <p><em>On what actually ran.</em> <code>tblite</code> (the library that implements the GFN-xTB family, version 0.7.0, called from <code>cypmode/challenge/physics_block.py</code>) and PySCF, each in an isolated interpreter. The decomposition of the energy is the program's own report (verbosity 2); the sum is checked by the cell.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-phys_koopmans"><img class="fig-light" loading="lazy" decoding="async" width="2100" height="880" src="figures/phys_koopmans-light.png" alt="Orbital energies and ionisation potentials: Koopmans&#x27; relation on real compounds"><img class="fig-dark" loading="lazy" decoding="async" width="2100" height="880" src="figures/phys_koopmans-dark.png" alt="Orbital energies and ionisation potentials: Koopmans&#x27; relation on real compounds"><figcaption><p><strong>Figure: Orbital energies and ionisation potentials: Koopmans' relation on real compounds.</strong> Koopmans' approximation on the 6895 compounds of the physics cache: the ionisation potential computed from the energy of the cation (vertical, vertical axis) against minus the energy of the highest occupied orbital (horizontal). Pearson r = 0.858 for the ionisation potential and 0.912 for the electron affinity against minus the lowest unoccupied orbital; the cation-based value sits +2.07 eV from the orbital value on average. Koopmans' approximation ignores how the remaining orbitals relax when an electron is removed, so the two are expected to track each other without being equal. The dashed line is equality.</p>
 </figcaption></figure></div><section class="cell md"><h2 id="10.5-The-quantities-of-the-physics-block">10.5 The quantities of the physics block</h2>
@@ -24910,7 +24910,7 @@ probe with the wrapper: bench-YNV, 3 samples, 772.5 s; memory mode written by th
 </tr>
 <tr>
 <td><code>test_card.py</code></td>
-<td>the README card: the iron–nitrogen distance from the ligand's own coordinates, the donor nitrogen marked and the one nearest the iron in the submitted pose circled, and the README pointing to the card and the film</td>
+<td>the README card: the iron–nitrogen distance from the ligand's own coordinates, the donor nitrogen marked and the one nearest the iron in the submitted pose circled, and the README pointing to the card and showing neither the film nor its poster</td>
 </tr>
 <tr>
 <td><code>test_chemberta_features.py</code></td>
@@ -25513,7 +25513,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <tr>
 <td>DONE</td>
 <td>a job finished</td>
-<td>558</td>
+<td>562</td>
 </tr>
 <tr>
 <td>RETRY</td>
@@ -25538,13 +25538,13 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <tr>
 <td>IDLE</td>
 <td>nothing could run</td>
-<td>107</td>
+<td>109</td>
 </tr>
 </tbody>
 </table>
 </div></div></div><section class="cell md"><p>Each guard is the answer to something that happened. The memory guard is the one that matters: five Boltz samples in parallel used up the memory and the swap file, and the machine took a <strong>kernel panic</strong>, which is the operating system stopping itself because it cannot continue. From then on one sample at a time, a ceiling on what the graphics unit may take, and a guard that kills the running structure engine when the free memory stays under a few percent. A hard ceiling of 0.9 times the memory, tried first, made every forward pass of the engines fail, so the allowance was loosened and the guard does the protecting. The battery guard asks nothing of the run: a flat battery once stopped a night's run, and the guard therefore sends a notification at two levels of charge and never waits or stops anything (the function that used to wait is kept as an empty one, so that older jobs still call it).</p>
 <p>The runner is started under <code>caffeinate</code>, which keeps the machine awake while it runs; a run that looks hung may turn out to be a machine that went to sleep, and that mistake was made once in this project, so the first question about a quiet job is whether the machine slept.</p>
-<p>The runner's own log shows what this meant in practice. It holds 17980 lines since 10-08 03:02:02. 558 DONE lines are jobs that finished, 44 are retries and 26 are failures that were recorded; the jobs that failed were repaired and queued again, and 0 of the 180 jobs are in the failed state as this notebook is built, while 176 are done. The memory guard acted 25 times, with the swap file as large as 9.2 gibibytes at the worst moment; each of these would otherwise have been a crash of the machine or of the run.</p>
+<p>The runner's own log shows what this meant in practice. It holds 18020 lines since 10-08 03:02:02. 562 DONE lines are jobs that finished, 44 are retries and 26 are failures that were recorded; the jobs that failed were repaired and queued again, and 0 of the 180 jobs are in the failed state as this notebook is built, while 176 are done. The memory guard acted 25 times, with the swap file as large as 9.2 gibibytes at the worst moment; each of these would otherwise have been a crash of the machine or of the run.</p>
 <p><strong>What the hardware taught, in six rules.</strong> A job that is not ready is not a failed job (the status 75). A long job works in chunks and remembers its place in files, so a restart costs a chunk and not a day. The state lives in the repository and not in a temporary folder, which the machine empties when it restarts. The memory of a laptop is shared between its parts, so a guard must watch the free memory and not only the load. Nothing is allowed to wait for a person (the battery), and everything that can hang is given a time limit (the tests, 12.3). And a quiet job is first suspected of sleeping, not of being broken.</p>
 <p><em>On what actually ran.</em> The first cell runs <code>defer</code> and <code>chunk_status</code> for real, in child processes and a temporary folder. The second reads the runner's log, the counters of <code>queue/state</code> and the header of <code>guards.sh</code>. The runner itself ran the jobs; the notebook only reads what it left.</p>
 </section><div class="cell shown"><figure class="figure" id="fig-eng_commit_timeline"><img class="fig-light" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-light.png" alt="The history of the repository"><img class="fig-dark" loading="lazy" decoding="async" width="2200" height="720" src="figures/eng_commit_timeline-dark.png" alt="The history of the repository"><figcaption><p><strong>Figure: The history of the repository.</strong> The history of the repository as the number of commits of each day, from the first commit on 2026-09-20 to the last on 2026-11-26: 388 commits on 22 days up to commit 234f3ce, the busiest day with 44 (2026-11-05). The history is kept as it is, never squashed, so that the date of every declared gate stays checkable against the date of the result that it judged; the commit messages say what each commit declared or found.</p>
@@ -25805,7 +25805,7 @@ headroom) and the running engine is killed if free memory stays under MIN_FREE_P
 <span class="nb">print</span><span class="p">(</span><span class="n">test_summary</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dry_run_line</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">test_run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">dry_run</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
-</pre></details><div class=outputs><pre>15 passed in 0.62s
+</pre></details><div class=outputs><pre>15 passed in 0.26s
 HELD BACK block not found; held-back sections not found
 </pre></div></div><section class="cell md"><p>The test file has passed and the dry run reports what the release script would change, without writing anything. After the deadline the script, run without the dry-run option, removes the HELD BACK block and switches on the parts of the README that were held back; before the deadline it refuses.</p>
 <p><strong>What the checks cannot do.</strong> They catch what they were taught to look for: the patterns of the scan, the files of the HELD BACK block, the numbers that the report copies. They do not decide whether a method is right, whether a gate was chosen fairly, or whether a sentence in a document is true. Those are the work of Parts VI and IX, and of the person who reads the text word by word. Engineering for trust is the part that makes the other parts checkable; it is not a substitute for them.</p>
