@@ -607,7 +607,7 @@ The tools and data on which the project depends are cited here in full.
 - Castellanos, M.A., MacDermott-Opeskin, H., Ainsley, J., et al., Walters,
   W.P. "Assessing the state of the art in ADMET prediction: Lessons from
   the OpenADMET-ExpansionRx community blind challenge." *ChemRxiv*
-  (2026). https://doi.org/10.26434/chemrxiv.15009342.v1. A separate,
+  (2026). https://doi.org/10.26434/chemrxiv.15009342/v3. A separate,
   completed OpenADMET blind challenge (not the CYP challenge itself),
   whose findings on statistical methodology are compared with
   `cypmode/challenge/stacking_significance.py`; see
