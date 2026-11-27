@@ -97,11 +97,11 @@ Counts: PASS = 104, FAIL = 0, INFO = 6, SKIP = 0
 | structures_unrelaxed.zip: every structure clears a relative distance of 0.8 to the receptor (the scorer's threshold is 0.75) | PASS | smallest 0.801 |
 | structures_unrelaxed.zip: every structure carries the stereochemistry of the official SMILES (the scorer's PoseBusters call does not check it) | PASS | 20 of 20 |
 | the base-run table of the 20 official ligands has no row in error (structure summary and affinity of every ligand) | PASS | 0 in error |
-| the citation file names an author, a repository, a licence and a version | PASS | Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.3.4 |
+| the citation file names an author, a repository, a licence and a version | PASS | Muhammad Talaat; https://github.com/mohamedtalaat-gif/CYPMode; version 0.3.5 |
 | the README names the author and the repository | PASS | found |
 | NOTICE names the author | PASS | found |
 | the archive metadata (.zenodo.json) names the same author | PASS | Talaat |
-| the DOI of the citation file is written in the README | PASS | 10.5281/zenodo.24571611 |
+| the DOI of the citation file is written in the README | PASS | 10.5281/zenodo.24577499 |
 | the licence of the code is the same in the citation file, LICENSE, pyproject.toml and the headers | PASS | citation file: AGPL-3.0-or-later |
 | the texts of the licences are in LICENSES/ | PASS | 4 found |
 | every Python file of the repository carries its SPDX licence header | PASS | all have one |
@@ -132,7 +132,7 @@ Counts: PASS = 104, FAIL = 0, INFO = 6, SKIP = 0
 | rdkit | 2026.3.6 |
 | PyYAML | 6.0.3 |
 
-Git HEAD `9152acd`; working tree: 0 modified, 0 deleted, 0 untracked entries.
+Git HEAD `13e6f15`; working tree: 0 modified, 0 deleted, 0 untracked entries.
 
 Input files (size in bytes, sha256 prefix):
 
@@ -1608,7 +1608,7 @@ Rules checked: the author, the repository and the DOI are the same in the citati
 
 ## 21. Wording of the text files
 
-Every line of the 777 text files that git tracks or would add (vendored libraries, licence texts and the generated audit report are left out) is matched against each rule, and so is every line of the messages of the commits that are not published yet. A rule passes when no line matches.
+Every line of the 778 text files that git tracks or would add (vendored libraries, licence texts and the generated audit report are left out) is matched against each rule, and so is every line of the messages of the commits that are not published yet. A rule passes when no line matches.
 | rule | lines in the files | files | lines in unpublished commit messages |
 |---|---|---|---|
 | role names as the actor of a decision or a step | 0 | 0 | 0 |
